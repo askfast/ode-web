@@ -1,0 +1,263 @@
+<h2>Planboard</h2>
+            
+<!--             <div id="periodrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; margin-right:10px">
+                <i class="icon-calendar icon-large"></i>
+                <span>November 1, 2012 - November 30, 2012</span> <b class="caret" style="margin-top: 8px"></b>
+            </div> -->
+
+<hr>
+
+<div class="span12" style="margin:0">
+
+  <form class="form-inline well">
+    
+     
+    <div class="pull-left">
+
+      <div class="btn-group">
+        <button type="button" class="btn"><i class="icon-thumbs-down"></i> Undo</button>
+        <button type="button" class="btn"><i class="icon-thumbs-up"></i> Redo</button> 
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn"><i class="icon-zoom-in"></i></button>
+        <button type="button" class="btn"><i class="icon-zoom-out"></i></button> 
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn"><i class="icon-arrow-left"></i></button>
+        <button type="button" class="btn"><i class="icon-arrow-right"></i></button>  
+      </div>
+
+
+      <div class="btn-group" bs-buttons-checkbox="" data-toggle="buttons-radio">
+        <button type="button" 
+                class="btn" 
+                ng-model="view.week" 
+                bs-button="">Week</button>
+        <button type="button" 
+                class="btn" 
+                ng-model="view.month" 
+                bs-button="">Month</button>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn dropdown-toggle" data-toggle="dropdown">Today <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="#">Yesterday</a></li>
+          <li><a href="#">Tomorrow</a></li>
+          <li><a href="#">Next Week</a></li>
+          <li><a href="#">Next Month</a></li>
+        </ul>
+      </div>
+
+    </div>
+    
+    <div class="pull-right">
+      <span>Range From</span>
+
+      <div class="control-group input-append">
+        <input  name="date-from" 
+                class="input-small" 
+                type="text" 
+                ng-model="range.from" 
+                data-date-format="dd-mm-yyyy" 
+                bs-datepicker="">
+        <button type="button" 
+                class="btn" 
+                data-toggle="datepicker"><i class="icon-calendar"></i></button>
+      </div>
+      
+      <span style="margin-left: 15px">Range Till</span>
+
+      <div class="control-group input-append">
+        <input  name="date-till" 
+                class="input-small" 
+                type="text" 
+                ng-model="range.till" 
+                data-date-format="dd-mm-yyyy" 
+                bs-datepicker="">
+        <button type="button" 
+                class="btn" 
+                data-toggle="datepicker"><i class="icon-calendar"></i></button>
+      </div>
+
+    </div>
+
+  </form>
+
+  <form class="form-inline well">
+    
+    <span>From</span>
+
+    <div class="control-group input-append">
+      <input  name="date-from" 
+              class="input-small" 
+              type="text" 
+              ng-model="slot.from.date" 
+              data-date-format="dd-mm-yyyy" 
+              bs-datepicker="">
+      <button type="button" 
+              class="btn" 
+              data-toggle="datepicker"><i class="icon-calendar"></i></button>
+    </div>
+
+    <div class="control-group" style="display: inline">
+      <input  name="time-from" 
+              type="text" 
+              class="input-small" 
+              ng-model="slot.from.time" 
+              bs-timepicker>
+      <i class="icon-time" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+    </div>
+    
+    <span style="margin-left: 15px">Till</span>
+
+    <div class="control-group input-append">
+      <input  name="date-till" 
+              class="input-small" 
+              type="text" 
+              ng-model="slot.till.date" 
+              data-date-format="dd-mm-yyyy" 
+              bs-datepicker="">
+      <button type="button" 
+              class="btn" 
+              data-toggle="datepicker"><i class="icon-calendar"></i></button>
+    </div>
+
+    <div class="control-group" style="display: inline">
+      <input  name="time-till" 
+              type="text" 
+              class="input-small" 
+              ng-model="slot.till.time" 
+              bs-timepicker>
+      <i class="icon-time" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+    </div>
+    
+    <span style="margin-left: 15px">State</span>
+    <select ng-model="slot.state" 
+            ng-options="option as value for (option, value) in states">
+      <option value="">-- selecteer state --</option>
+    </select>
+
+    <button type="button" 
+            class="btn" 
+            ng-model="slot.recursive" 
+            style="margin-left: 15px" 
+            bs-button>Wekelijks</button>
+
+    <!-- <label for="reoccuring">Recursive</label>
+      <input  name="reoccuring" 
+              type="checkbox"
+              ng-model="slot.recursive">-->
+
+    <div  class="btn-group" 
+          ng-hide="original" 
+          style="display: inline; margin-left:10px">
+
+      <button type="submit" 
+              ng-click="add(slot)" 
+              class="btn btn-success">Add</button>
+
+    </div>
+
+    <div  class="btn-group" 
+          ng-show="original" 
+          style="display: inline; margin-left:10px">
+
+      <button type="submit" 
+              ng-click="change(slot)" 
+              class="btn btn-success">Change</button>
+
+      <button type="submit" 
+              ng-click="delete(slot.id)" 
+              class="btn btn-danger">Delete</button>
+
+    </div>
+
+  </form>
+
+</div>
+
+<div class="span12" style="margin:0">
+  <form class="form-inline well">
+    
+    <div class="pull-left">
+      <div class="btn-group">
+        <button class="btn dropdown-toggle" data-toggle="dropdown">Sort as <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="#">Availability</a></li>
+          <li><a href="#">Name</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="pull-right">
+    
+      <span style="margin-left: 15px">Group</span>
+      <select ng-model="state__" 
+              ng-options="option as value for (option, value) in groups">
+        <option value="">-- selecteer group --</option>
+      </select>
+    
+      <span style="margin-left: 15px">Division</span>
+      <select ng-model="state__" 
+              ng-options="option as value for (option, value) in divisions">
+        <option value="">-- selecteer division --</option>
+      </select>
+
+      <div  class="btn-group" 
+            style="margin-left: 15px" 
+            bs-buttons-checkbox="" 
+            data-toggle="buttons-checkbox">
+        <button type="button" 
+                class="btn" 
+                ng-model="checkbox.left" 
+                bs-button="">User Timeline</button>
+        <button type="button" 
+                class="btn" 
+                ng-model="checkbox.middle" 
+                bs-button="">Group Total</button>
+
+        <!-- REMOVE eventHAndlerTester -->
+        <button type="button" 
+                class="btn" 
+                ng-model="checkbox.right" 
+                ng-click="eventHandlerTester('from view')"
+                bs-button="">Team Members</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<div id="myTimeline"></div>
+
+
+
+
+<!-- <div class="span12" style="margin:0">
+  <div class="well">
+    <h4>Cached</h4>
+    <ul style="font-size:11px">
+      <li>New Slots:
+        <ul>
+          <li ng-repeat="newSlot in newSlots">{{newSlot}}</li>
+        </ul>
+      </li>
+      <li>Changed Slots:
+        <ul>
+          <li ng-repeat="changedSlot in changedSlots">{{changedSlot}}</li>
+        </ul>
+      </li>
+      <li>Deleted Slots:
+        <ul>
+          <li ng-repeat="deletedSlot in deletedSlots">{{deletedSlot}}</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div> -->
+
+
+<!-- <button class="btn" ng-click="stopTimer()">Stop <span class="label label-success">{{counter}}</span></button> -->
