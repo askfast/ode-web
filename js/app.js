@@ -13,9 +13,14 @@ var WebPaige = angular.module('WebPaige',
     'SlotServices']);
 
 
+/**
+ * Configure app
+ * There is also configuration tree defined in services
+ * for default values
+ */
 WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
   {
-    $httpProvider.defaults.headers.common['X-SESSION_ID'] ='e574dea4f3d76b3d0d2047d5a77d2fbe8f3b01b075800771076ac3410aa70899';
+    $httpProvider.defaults.headers.common['X-SESSION_ID'] ='798ac7fda2c357a74072397ea29682239be26ce706e5cbcd4b9e95d501230879';
 
     $routeProvider
     	/**
@@ -79,23 +84,36 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
 
 
 
-//
-// Run initialers
+/**
+ * Initial run functions
+ */
 WebPaige.run(
 ['$rootScope', '$location', '$timeout', 
 function($rootScope, $location, $timeout)
 {
   
+  /**
+   * TODO
+   * This values should be originating from
+   * resource call data just after login
+   */
   $rootScope.user = {
     uuid: 'apptestknrm'
   };
 
+  /**
+   * TODO
+   */
   $rootScope.page = new Object;
 
+  /**
+   * Detect route change start
+   */
   $rootScope.$on("$routeChangeStart", function (event, next, current) 
   {
     /**
      * TODO
+     * Define a dynamic way for page titles
      */
     $rootScope.page.title = $location.url();
 
@@ -104,6 +122,9 @@ function($rootScope, $location, $timeout)
     $rootScope.active = "progress-striped active progress-warning";
   });
   
+  /**
+   * Route change successfull
+   */
   $rootScope.$on("$routeChangeSuccess", function (event, current, previous) 
   {
     $rootScope.alertType = "alert-success";
@@ -113,6 +134,9 @@ function($rootScope, $location, $timeout)
     $rootScope.newLocation = $location.path();
   });
 
+  /**
+   * Route change is failed!
+   */
   $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) 
   {
     alert("ROUTE CHANGE ERROR: " + rejection);
@@ -121,49 +145,11 @@ function($rootScope, $location, $timeout)
     $rootScope.active = "";
   });
 
+  /**
+   * General status messages
+   */
   $rootScope.alertType = "alert-info";
   $rootScope.alertMessage = "Welcome to the resolve demo";
 
 
-
-
-
-  
-
-  
-
 }]);
-
-
-
-
-
-
-
-
-/**
- * Avoid `console` errors in browsers that lack a console.
- */
-/*
-(function() {
-    var method;
-    var noop = function noop() {};
-    var methods = [
-        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-        'timeStamp', 'trace', 'warn'
-    ];
-    var length = methods.length;
-    var console = (window.console = window.console || {});
-
-    while (length--) {
-        method = methods[length];
-
-        // Only stub undefined methods.
-        if (!console[method]) {
-            console[method] = noop;
-        }
-    }
-}());
-*/

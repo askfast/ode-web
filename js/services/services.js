@@ -61,37 +61,37 @@ angular.module('WebPaige.settings', []).
           'className': 'state-available',
           'label': 'Beschiekbaar',
           'color': '#4f824f',
-          'type': 'Beschiekbaar'
+          'type': 'Beschikbaar'
       },
       'com.ask-cs.State.KNRM.BeschikbaarNoord': {
           'className': 'state-available-north',
           'label': 'Beschikbaar voor Noord',
           'color': '#000',
-          'type': 'Beschiekbaar'
+          'type': 'Beschikbaar'
       },
       'com.ask-cs.State.KNRM.BeschikbaarZuid': {
           'className': 'state-available-south',
-          'label': 'Beschiekbaar voor Zuid',
+          'label': 'Beschikbaar voor Zuid',
           'color': '#e08a0c',
-          'type': 'Beschiekbaar'
+          'type': 'Beschikbaar'
       },
       'com.ask-cs.State.Unavailable': {
           'className': 'state-unavailable',
-          'label': 'Niet Beschiekbaar',
+          'label': 'Niet Beschikbaar',
           'color': '#a93232',
-          'type': 'Niet Beschiekbaar'
+          'type': 'Niet Beschikbaar'
       },
       'com.ask-cs.State.KNRM.SchipperVanDienst': {
           'className': 'state-schipper-service',
           'label': 'Schipper van Dienst',
           'color': '#e0c100',
-          'type': 'Beschiekbaar'
+          'type': 'Beschikbaar'
       },
       'com.ask-cs.State.Unreached': {
           'className': 'state-unreached',
           'label': 'Niet Bereikt',
           'color': '#65619b',
-          'type': 'Niet Beschiekbaar'
+          'type': 'Niet Beschikbaar'
       }
     },
     divisions: {
@@ -140,7 +140,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    * same proxy
    * 
    * Define Slot Resource from back-end
-   * @type {[type]}
    */
   var Slots = $resource(
     $config.host + '/askatars/:user/slots',
@@ -179,25 +178,22 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    * @return {[type]} [description]
    */
   Slots.prototype.query = function (params) 
-  {
-    /*
-    var params = {
-      user: 'apptestknrm',
-      start: $config.timeline.period.bstart, 
-      end: $config.timeline.period.bend
-    };
-    */
-    
+  {    
     var deferred = $q.defer(), 
         localSlots = Storage.get('slots');
 
-    // if (localSlots)
-    // {
-    //   deferred.resolve(angular.fromJson(localSlots));
-    //   return deferred.promise;
-    // }
-    // else
-    // {
+    /**
+     * TODO
+     * Checking for localSlots should be done here?
+     * or in the renderer? if so how to integrate to this check?
+     */
+    if (localSlots)
+    {
+      deferred.resolve(angular.fromJson(localSlots));
+      return deferred.promise;
+    }
+    else
+    {
       var successCb = function (result) 
       {
         if (angular.equals(result, [])) 
@@ -232,7 +228,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       Slots.query(params, successCb);
 
       return deferred.promise;
-    // }
+    }
   };
 
 
@@ -291,8 +287,15 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.change = function (original, changed) 
   {
+
+    console.log('original ->',original);
+    console.log('changed  ->',changed);
+
     var original = naturalize(original);
     var changed = naturalize(changed);
+
+    console.log('original ->', original);
+    console.log('changed  ->', changed);
 
     var localSlots = [];
 
@@ -356,6 +359,32 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       console.log('slot deleted !');
     });
   };
+
+
+
+  /**
+   * TODO
+   * Finish it
+   * 
+   * Slice a slot
+   */
+  Slots.prototype.slice = function (slot, point)
+  {
+    // Slice a slot from a give point
+  }
+
+
+
+  /**
+   * TODO
+   * Finish it
+   * 
+   * Combine two slots
+   */
+  Slots.prototype.combine = function (slots)
+  {
+    // Combine two slots
+  }
   
 
 

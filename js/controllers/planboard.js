@@ -40,9 +40,12 @@
  *
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, data, Slots) 
+function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService) 
 {
-
+  /**
+   * TODO
+   * Always refine this initializers
+   */
   var self = this;
   $scope.slot = {};
   $scope.data = data;
@@ -337,6 +340,23 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots)
     self.timeline.draw( self.process(Slots.local()), $config.timeline.options );
   };
 
+
+
+
+  /**
+   * TODO
+   * Finish it!
+   *
+   * Timer Service for querying slots
+   */
+  timerService.start('SlotsQueryTimer', function()
+  { 
+    Slots.query({
+      start:  $config.timeline.period.bstart, 
+      end:    $config.timeline.period.bend
+    });
+  }, 500);
+
 }
 
 
@@ -578,4 +598,4 @@ planboardCtrl.prototype = {
 
 }
 
-planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots'];
+planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots', 'timerService'];
