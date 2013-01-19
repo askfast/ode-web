@@ -52,9 +52,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   render();
 
 
-
-
-
   /**
    * TODO
    * States for dropdown
@@ -362,6 +359,9 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
 
 
 
+
+
+
 /**
  * TODO
  * Implement eventBus!
@@ -377,6 +377,8 @@ planboardCtrl.resolve = {
     });
   }
 }
+
+
 
 
 

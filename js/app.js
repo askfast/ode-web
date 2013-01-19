@@ -20,7 +20,10 @@ var WebPaige = angular.module('WebPaige',
  */
 WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
   {
-    $httpProvider.defaults.headers.common['X-SESSION_ID'] ='798ac7fda2c357a74072397ea29682239be26ce706e5cbcd4b9e95d501230879';
+    /**
+     * Set custom session header
+     */
+    $httpProvider.defaults.headers.common['X-SESSION_ID'] = localStorage.getItem('sessionID');
 
     $routeProvider
     	/**
@@ -91,6 +94,17 @@ WebPaige.run(
 ['$rootScope', '$location', '$timeout', 
 function($rootScope, $location, $timeout)
 {
+  /**
+   * REMOVE
+   * This part is only needed for by-passing login
+   * only for testing and development
+   */
+  $rootScope.sessionID = localStorage.getItem('sessionID');
+  $rootScope.saveSession = function(sessionID)
+  {
+    localStorage.setItem('sessionID', sessionID);
+  }
+  
   
   /**
    * TODO

@@ -111,6 +111,14 @@
               <li data-match-route="/settings"><a href="#settings">Settings</a></li>
             </ul>
           </div>
+        <form class="navbar-form pull-right">
+          <input  type="text" 
+                  class="span2"
+                  ng-model="sessionID">
+          <button type="submit" 
+                  class="btn"
+                  ng-click="saveSession(sessionID)">Save SessionID</button>
+        </form>
         </div>
       </div>
     </div>
