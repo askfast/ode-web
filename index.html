@@ -115,9 +115,12 @@
           <input  type="text" 
                   class="span2"
                   ng-model="sessionID">
-          <button type="submit" 
+          <button type="button" 
                   class="btn"
                   ng-click="saveSession(sessionID)">Save SessionID</button>
+          <button type="button" 
+                  class="btn btn-warning"
+                  ng-click="clearLocalSlots()">Clear Local Slots</button>
         </form>
         </div>
       </div>

@@ -104,8 +104,12 @@ function($rootScope, $location, $timeout)
   {
     localStorage.setItem('sessionID', sessionID);
   }
+  $rootScope.clearLocalSlots = function()
+  {
+    localStorage.removeItem('WebPaige.slots');
+  }
   
-  
+
   /**
    * TODO
    * This values should be originating from

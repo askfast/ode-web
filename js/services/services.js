@@ -292,15 +292,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.change = function (original, changed) 
   {
-
-    console.log('original ->',original);
-    console.log('changed  ->',changed);
-
+    /**
+     * TODO
+     * Should the conversion done here or in controller?
+     */
     var original = naturalize(original);
     var changed = naturalize(changed);
-
-    console.log('original ->', original);
-    console.log('changed  ->', changed);
 
     var localSlots = [];
 
@@ -589,7 +586,8 @@ timerService.service('timerService', [
  */
 var angularLocalStorage = angular.module('StorageModule', []);
 
-// You should set a prefix to avoid overwriting any local storage variables from the rest of your app
+// You should set a prefix to avoid overwriting any local storage variables 
+// from the rest of your app
 // e.g. angularLocalStorage.constant('prefix', 'youAppName');
 angularLocalStorage.constant('prefix', 'WebPaige');
 
@@ -606,7 +604,8 @@ angularLocalStorage.service('Storage', [
   {
 
 
-  // If there is a prefix set in the config lets use that with an appended period for readability
+  // If there is a prefix set in the config lets use that with an appended 
+  // period for readability
   //var prefix = angularLocalStorage.constant;
   if (prefix.substr(-1)!=='.')
   {
@@ -776,7 +775,13 @@ angularLocalStorage.service('Storage', [
         expiry = "; expires="+expiryDate.toGMTString();
       }
 
-      document.cookie = prefix + key + "=" + encodeURIComponent(value) + expiry + "; path="+cookie.path;
+      document.cookie = prefix + 
+                        key + 
+                        "=" + 
+                        encodeURIComponent(value) + 
+                        expiry + 
+                        "; path=" + 
+                        cookie.path;
     } 
     catch (e) 
     {
@@ -838,7 +843,7 @@ angularLocalStorage.service('Storage', [
       {
         thisCookie = thisCookie.substring(1,thisCookie.length);
       }
-      
+
       key = thisCookie.substring(prefixLength,thisCookie.indexOf('='));
       removeFromCookies(key);
     }

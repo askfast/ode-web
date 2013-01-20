@@ -250,7 +250,11 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    */
   function timelineOnChange()
   { 
+    //console.log($scope.original, selectedSlot());
+    //debugger;
+
     Slots.change($scope.original, selectedSlot());
+    render();
   };
 
   /**
@@ -263,7 +267,26 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    */
   $scope.change = function(original, slot)
   {
-    Slots.change($scope.original, self.backendFriendly(slot));
+    /**
+     * TODO
+     * Ugly fix! Define a common way converting obejcts
+     */
+    var slot = {
+      start: Date.parse(slot.from.date + ' ' + slot.from.time),
+      end: Date.parse(slot.till.date + ' ' + slot.till.time),
+
+      recursive: (slot.recursive) ? true : false,
+      text: slot.state,
+      id: (slot.id) ? slot.id : 0,
+
+      content: angular.toJson({ 
+        id: slot.id, 
+        recursive: slot.recursive, 
+        state: slot.state 
+        })
+    };
+    
+    Slots.change($scope.original, slot);
     render();
   };
 
