@@ -108,7 +108,11 @@ function($rootScope, $location, $timeout)
   $rootScope.clearLocalSlots = function()
   {
     localStorage.removeItem('WebPaige.slots');
-    $rootScope.notify( { message: 'Slots cache deleted.' } );
+    $rootScope.notify(
+      {
+        message: 'Slots cache deleted. Please refresh to get fresh data from back-end.' 
+      }
+    );
   }
   
 

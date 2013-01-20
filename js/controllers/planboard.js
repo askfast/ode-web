@@ -49,7 +49,32 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   var self = this;
   $scope.slot = {};
   $scope.data = data;
+
+
+
+
+
+  /**
+   * TODO
+   * Automatically initialize this function
+   */
   render();
+  
+  /**
+   * TODO
+   * Renderer listener
+   */
+  $rootScope.$on("renderPlanboard", function () 
+  {
+    console.log('---> render inited from:', arguments[1]);
+
+    render();
+  });
+
+
+
+
+
 
 
   /**
@@ -224,18 +249,15 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
      * Date obejcts in return values of function
      * not working properly..
      * @type {Object}
-     */
-    var slot = {
+     */    
+    Slots.add({
       start: Date.parse(slot.from.date + ' ' + slot.from.time),
       end: Date.parse(slot.till.date + ' ' + slot.till.time),
       recursive: (slot.recursive) ? true : false,
       text: slot.state,
       id: (slot.id) ? slot.id : 0
-    };
-    
-    Slots.add(slot);
+    });
     $scope.slot = {};
-    render();
   };
 
 
@@ -268,11 +290,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    */
   function timelineOnChange()
   { 
-    //console.log($scope.original, selectedSlot());
-    //debugger;
-
     Slots.change($scope.original, selectedSlot());
-    render();
   };
 
   /**
@@ -292,11 +310,9 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
     var slot = {
       start: Date.parse(slot.from.date + ' ' + slot.from.time),
       end: Date.parse(slot.till.date + ' ' + slot.till.time),
-
       recursive: (slot.recursive) ? true : false,
       text: slot.state,
       id: (slot.id) ? slot.id : 0,
-
       content: angular.toJson({ 
         id: slot.id, 
         recursive: slot.recursive, 
@@ -305,7 +321,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
     };
     
     Slots.change($scope.original, slot);
-    render();
   };
 
 
@@ -335,7 +350,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   function timelineOnDelete()
   {
     Slots.delete(selectedSlotID(), selectedSlot());
-    render();
   };
 
   /**
@@ -349,7 +363,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   $scope.delete = function(id)
   {
     Slots.delete(id, selectedSlot());
-    render();
   };
 
 

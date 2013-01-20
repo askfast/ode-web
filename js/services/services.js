@@ -187,13 +187,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      * Checking for localSlots should be done here?
      * or in the renderer? if so how to integrate to this check?
      */
-    if (localSlots)
-    {
-      deferred.resolve(angular.fromJson(localSlots));
-      return deferred.promise;
-    }
-    else
-    {
+    // if (localSlots)
+    // {
+    //   deferred.resolve(angular.fromJson(localSlots));
+    //   return deferred.promise;
+    // }
+    // else
+    // {
       var successCb = function (result) 
       {
 
@@ -233,7 +233,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       Slots.query(params, successCb);
 
       return deferred.promise;
-    }
+    // }
   };
 
 
@@ -258,6 +258,14 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.add = function (slot) 
   {
+    /**
+     * TODO
+     * IMPORTANT
+     * Always check before wheter changes or saved
+     * slot is overlaping with other ones!
+     */
+    
+
     var localSlots = angular.fromJson(Storage.get('slots'));
 
     var slot = {
@@ -271,6 +279,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     localSlots.push(slot);
 
     Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.$broadcast('renderPlanboard', 'slot added to localStorage');
     $rootScope.notify( { message: 'Slot added in localStorage.' } );
 
     /**
@@ -278,6 +287,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Slots.save(null, slot, function()
     {
+      $rootScope.$broadcast('renderPlanboard', 'slot added to back-end');
       $rootScope.notify( { message: 'Slot added in back-end.' } );
     });
   };
@@ -298,6 +308,14 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.change = function (original, changed) 
   {
+    /**
+     * TODO
+     * IMPORTANT
+     * Always check before wheter changes or saved
+     * slot is overlaping with other ones!
+     */
+
+
     /**
      * TODO
      * Should the conversion done here or in controller?
@@ -324,6 +342,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     });
 
     Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.$broadcast('renderPlanboard', 'slot changed in localStorage');
     $rootScope.notify( { message: 'Slot changed in localStorage.' } );
 
     /**
@@ -331,6 +350,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Slots.change(changed, original, function()
     {
+      $rootScope.$broadcast('renderPlanboard', 'slot changed in back-end');
       $rootScope.notify( { message: 'Slot changed in back-end.' } );
     });
   };
@@ -359,6 +379,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     });
 
     Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.$broadcast('renderPlanboard', 'slot deleted from localStorage');
     $rootScope.notify( { message: 'Slot deleted from localStorage.' } );
 
     /**
@@ -366,6 +387,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Slots.delete(slot, function()
     {
+      $rootScope.$broadcast('renderPlanboard', 'slot deleted from back-end');
       $rootScope.notify( { message: 'Slot deleted in back-end.' } );
     });
   };
@@ -376,9 +398,40 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    * TODO
    * Finish it
    * 
+   * Check whether slot extends from saturday to sunday and if recursive?
+   */
+  function checkForSatSun(slot)
+  {
+    // Produce timestamps for sunday 00:00 am through the year and
+    // check whether intended to change recursive slot has one of those
+    // timestamps, if so slice slot based on midnight and present as two
+    // slots in timeline.
+  }
+
+
+
+  /**
+   * TODO
+   * Finish it
+   * 
+   * Check for overlaping slots exists?
+   */
+  function preventOverlaps(slot)
+  {
+    // Prevent any overlaping slots by adding new slots or changing
+    // the current ones in front-end so back-end is almost always aligned with
+    // front-end.
+  }
+
+
+
+  /**
+   * TODO
+   * Finish it
+   * 
    * Slice a slot
    */
-  Slots.prototype.slice = function (slot, point)
+  function slice(slot, point)
   {
     // Slice a slot from a give point
   }
@@ -391,7 +444,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    * 
    * Combine two slots
    */
-  Slots.prototype.combine = function (slots)
+  function combine(slots)
   {
     // Combine two slots
   }
