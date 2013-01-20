@@ -23,8 +23,8 @@ angular.module('WebPaige.settings', []).
       period: {
         bstart: (parseInt((new Date()).getTime() / 1000) - 86400 * 7 * 1),
         bend:   (parseInt((new Date()).getTime() / 1000) + 86400 * 7 * 1),
-        start:  Date.today().add({ days: -5 }),
-        end:    Date.today().add({ days: 5 })
+        start:  Date.today().add({ days: -2 }),
+        end:    Date.today().add({ days: 12 })
       },
       /**
        * TODO
@@ -48,8 +48,10 @@ angular.module('WebPaige.settings', []).
         eventMarginAxis: 0,
         //showNavigation: true,
         groupsChangeable: true,
-        //start: "2013-01-01T00:00:00.000Z",
-        //end: "2013-12-31T00:00:00.000Z",
+
+        start: Date.today().add({ days: -2 }),
+        end: Date.today().add({ days: 12 }),
+
         //min: "2013-01-01T00:00:00.000Z",
         //max: "2013-12-31T00:00:00.000Z",
         intervalMin: 1000 * 60 * 60 * 1,
@@ -225,6 +227,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           Storage.add('slots', angular.toJson(localSlots));
 
           $rootScope.notify( { message: 'Downloaded slots added to localStorage.' } );
+
+          $rootScope.$broadcast('renderPlanboard', 'slot added to back-end');
 
           deferred.resolve(result);
         }

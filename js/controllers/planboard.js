@@ -50,6 +50,21 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   $scope.slot = {};
   $scope.data = data;
 
+  $scope.checkbox = {
+    left: true
+  }
+
+  /**
+   * TODO
+   * Optimize this settings
+   * Dynamically set timeline range
+   * @type {Object}
+   */
+  $scope.range = {
+    from: $config.timeline.period.start,
+    till: $config.timeline.period.end
+  };
+
 
 
 
@@ -66,7 +81,16 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    */
   $rootScope.$on("renderPlanboard", function () 
   {
-    console.log('---> render inited from:', arguments[1]);
+    console.log('---> render inited from:', arguments[1]); 
+
+
+    // Causes continious loop :(
+    /*
+    Slots.query({
+      start:  $config.timeline.period.bstart, 
+      end:    $config.timeline.period.bend
+    });
+    */
 
     render();
   });
@@ -389,6 +413,8 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
     links.events.addListener(self.timeline, 'select',        timelineOnSelect);
 
     self.timeline.draw( self.process(Slots.local()), $config.timeline.options );
+
+    self.timeline.setVisibleChartRange($scope.range.from, $scope.range.till);
   };
 
 
@@ -406,7 +432,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
       start:  $config.timeline.period.bstart, 
       end:    $config.timeline.period.bend
     });
-  }, 500);
+  }, 60);
 
 }
 
