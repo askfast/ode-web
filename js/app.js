@@ -103,10 +103,12 @@ function($rootScope, $location, $timeout)
   $rootScope.saveSession = function(sessionID)
   {
     localStorage.setItem('sessionID', sessionID);
+    $rootScope.notify( { message: 'New sessionID is set.' } );
   }
   $rootScope.clearLocalSlots = function()
   {
     localStorage.removeItem('WebPaige.slots');
+    $rootScope.notify( { message: 'Slots cache deleted.' } );
   }
   
 

@@ -263,6 +263,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       id: slot.id
     };
 
+    console.log('slot ready ->', slot);
+
     localSlots.push(slot);
 
     Storage.add('slots', angular.toJson(localSlots));
