@@ -170,4 +170,31 @@ function($rootScope, $location, $timeout)
   $rootScope.alertMessage = "Welcome to the resolve demo";
 
 
+
+
+
+  /**
+   * TODO
+   * Make a service out of this!
+   * @type {Object}
+   */
+  jQuery.fn.notify.defaults = {
+    type: config.notifier.type,
+    closable: config.notifier.closable,
+    transition: config.notifier.transition,
+    fadeOut: {
+      enabled: config.notifier.fadeOut.enabled,
+      delay: config.notifier.fadeOut.delay
+    },
+    message: config.notifier.message,
+    onClose: function () {},
+    onClosed: function () {}
+  };
+
+  $rootScope.notify = function(options)
+  {
+    $('.notifications').notify(options).show();
+  };
+
+
 }]);

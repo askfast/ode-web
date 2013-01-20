@@ -90,13 +90,12 @@ var config = {
   },
 
   notifier: {
-    position: 'bottom-right',
     type: 'bangTidy',
     closable: true,
     transition: 'fade',
     fadeOut: {
-      enabled: false,
-      delay: 60000
+      enabled: true,
+      delay: 6000
     },
     message: null,    
   },

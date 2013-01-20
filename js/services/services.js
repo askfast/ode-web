@@ -266,6 +266,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     localSlots.push(slot);
 
     Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.notify( { message: 'Slot added in localStorage.' } );
 
     /**
      * TODO
@@ -273,6 +274,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     Slots.save(null, slot, function()
     {
       console.log('slot added !');
+      $rootScope.notify( { message: 'Slot added in back-end.' } );
     });
   };
 
@@ -318,6 +320,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     });
 
     Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.notify( { message: 'Slot changed in localStorage.' } );
 
     /**
      * TODO
@@ -325,6 +328,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     Slots.change(changed, original, function()
     {
       console.log('slot changed !');
+      $rootScope.notify( { message: 'Slot changed in back-end.' } );
     });
   };
 
@@ -352,6 +356,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     });
 
     Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.notify( { message: 'Slot deleted from localStorage.' } );
 
     /**
      * TODO
@@ -359,6 +364,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     Slots.delete(slot, function()
     {
       console.log('slot deleted !');
+      $rootScope.notify( { message: 'Slot deleted in back-end.' } );
     });
   };
 
