@@ -196,12 +196,15 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     {
       var successCb = function (result) 
       {
+
         if (angular.equals(result, [])) 
         {
           deferred.reject("There are no records!");
         }
         else 
         {
+          $rootScope.notify( { message: 'Slots downloaded from back-end.' } );
+
           /**
            * TODO
            * Should the id processing made here or in render?
@@ -220,6 +223,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
             });
           });
           Storage.add('slots', angular.toJson(localSlots));
+
+          $rootScope.notify( { message: 'Downloaded slots added to localStorage.' } );
 
           deferred.resolve(result);
         }
@@ -263,8 +268,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       id: slot.id
     };
 
-    console.log('slot ready ->', slot);
-
     localSlots.push(slot);
 
     Storage.add('slots', angular.toJson(localSlots));
@@ -275,7 +278,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Slots.save(null, slot, function()
     {
-      console.log('slot added !');
       $rootScope.notify( { message: 'Slot added in back-end.' } );
     });
   };
@@ -329,7 +331,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Slots.change(changed, original, function()
     {
-      console.log('slot changed !');
       $rootScope.notify( { message: 'Slot changed in back-end.' } );
     });
   };
@@ -365,7 +366,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Slots.delete(slot, function()
     {
-      console.log('slot deleted !');
       $rootScope.notify( { message: 'Slot deleted in back-end.' } );
     });
   };

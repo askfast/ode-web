@@ -193,6 +193,9 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   /**
    * TODO
    * Finish it!
+   * Find a way to dynamically present state menu
+   * after the creation of slot with mouse, or just use 'available'
+   * as default.
    * 
    * Timeline on add
    * @return {[type]} [description]
@@ -215,7 +218,22 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    */
   $scope.add = function(slot)
   {
-    Slots.add(self.backendFriendly(slot));
+    /**
+     * TODO
+     * Build prototype conversion
+     * Date obejcts in return values of function
+     * not working properly..
+     * @type {Object}
+     */
+    var slot = {
+      start: Date.parse(slot.from.date + ' ' + slot.from.time),
+      end: Date.parse(slot.till.date + ' ' + slot.till.time),
+      recursive: (slot.recursive) ? true : false,
+      text: slot.state,
+      id: (slot.id) ? slot.id : 0
+    };
+    
+    Slots.add(slot);
     $scope.slot = {};
     render();
   };
