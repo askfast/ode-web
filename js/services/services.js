@@ -612,7 +612,7 @@ timerService.service('timerService', [
         }
         // REMOVE LATER
         // 
-        $rootScope.counter = timers[id].counter;
+        // $rootScope.counter = timers[id].counter;
         //
       }
       timers[id].mytimeout = $timeout(onTimeout, 1000);  

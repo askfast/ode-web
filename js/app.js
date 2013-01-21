@@ -10,7 +10,8 @@ var WebPaige = angular.module('WebPaige',
     'timerModule',
     'WebPaige.directives', 
     '$strap.directives', 
-    'SlotServices']);
+    'SlotServices', 
+    'ProfileServices']);
 
 
 /**
@@ -60,7 +61,8 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
        */
       .when('/profile', {
           templateUrl: 'partials/profile.html', 
-          controller: profileCtrl
+          controller: profileCtrl,
+          resolve: profileCtrl.resolve
       })
       /**
        * Settings

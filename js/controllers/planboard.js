@@ -16,11 +16,6 @@
 // {
 //   timerService.stop('myTimer');
 // }
-// 
-// timerService.start('SlotsQueryTimer', function()
-// { 
-//   Slots.query(params, successCb);
-// }, 5);
 
 
 /**
@@ -50,6 +45,9 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   $scope.slot = {};
   $scope.data = data;
 
+  /**
+   * Initial timeline layout manager
+   */
   $scope.checkbox = {
     left: true
   }
@@ -79,10 +77,9 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    * TODO
    * Renderer listener
    */
-  $rootScope.$on("renderPlanboard", function () 
+  $rootScope.$on('renderPlanboard', function () 
   {
     console.log('---> render inited from:', arguments[1]); 
-
 
     // Causes continious loop :(
     /*
