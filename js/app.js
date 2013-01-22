@@ -11,7 +11,8 @@ var WebPaige = angular.module('WebPaige',
     'WebPaige.directives', 
     '$strap.directives', 
     'SlotServices', 
-    'ProfileServices']);
+    'ProfileServices', 
+    'GroupServices']);
 
 
 /**
@@ -28,6 +29,8 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
 
     $routeProvider
 
+
+
     	/**
     	 * Dashboard
     	 */
@@ -35,6 +38,8 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
 	    	templateUrl: 'partials/dashboard.html', 
 	    	controller: dashboardCtrl
 	    })
+
+
 
 
       /**
@@ -47,6 +52,8 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
       })
 
 
+
+
       /**
        * Messages
        */
@@ -56,19 +63,33 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
       })
 
 
+
+
       /**
        * Groups
        */
       .when('/groups', {
           templateUrl: 'partials/groups.html', 
-          controller: groupsCtrl
+          controller: groupsCtrl,
+          resolve: groupsCtrl.resolve
       })
+      /**
+       * Groups :: view
+       */
+      .when('/groups/:groupId/:action', {
+          templateUrl: 'partials/groups.html', 
+          controller: groupsCtrl,
+          resolve: groupsCtrl.resolve
+      })
+
+
+
 
 
       /**
        * Profile :: view
        */
-      .when('/profile/view/:userId', {
+      .when('/profile/:userId/view', {
           templateUrl: 'partials/profile.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
@@ -76,7 +97,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
       /**
        * Profile :: edit [userId]
        */
-      .when('/profile/edit/:userId', {
+      .when('/profile/:userId/edit', {
           templateUrl: 'partials/profile-edit.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
@@ -84,11 +105,14 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
       /**
        * Profile :: change password [userId]
        */
-      .when('/profile/password/:userId', {
+      .when('/profile/:userId/password', {
           templateUrl: 'partials/profile-password.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
+
+
+
 
 
       /**
@@ -98,6 +122,9 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           templateUrl: 'partials/settings.html', 
           controller: settingsCtrl
       })
+
+
+
 
 
       /**

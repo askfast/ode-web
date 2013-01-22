@@ -1,41 +1,70 @@
-function groupsCtrl($scope)
-{
-	
-}
-groupsCtrl.$inject = ['$scope'];
-
-
-
-/*
-
-function groupsCtrl($rootScope, $scope, $config, resources, Profile, timerService, $route, $routeParams)
+function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $route, $routeParams)
 {
 	var self = this;
 
+	$scope.groups = groups;
+	$scope.params = $route.current.params;
+
+	switch($scope.params.action)
+	{
+		case 'members':
+			$scope.members = Group.get($scope.params.groupId);
+		break;
+		case 'edit':
+		break;
+	}
 	
   timerService.start('groupsTimer', function()
   { 
-    Groups.query();
+    Group.query();
   }, 60 * 30);
+
+
+  //$('.tabs-left .tab-content').css({ height: $('.tabs-left .nav-tabs').height() - 24 });
 
 };
 
 
-profileCtrl.resolve = {
-  resources: function ($rootScope, $config, Profile, $route) 
+groupsCtrl.resolve = {
+  groups: function ($rootScope, $config, Group, $route) 
   {
-    return Profile.get($route.current.params.userId);
+    return Group.query();
   }
 };
 
 
-profileCtrl.prototype = {
-  constructor: profileCtrl
+groupsCtrl.prototype = {
+  constructor: groupsCtrl
 };
 
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', 'resources', 'Profile', 'timerService', '$route', '$routeParams'];
+groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'groups', 'Group', 'timerService', '$route', '$routeParams'];
+
+
+
+
+
+
+// function membersCtrl($rootScope, $scope, $config, members, Group, timerService, $route, $routeParams)
+// {
+//   var self = this;
+
+//   $scope.members = members;
+
+//   console.log('--> members:', $scope.members);
+
+// };
+
+
+// membersCtrl.resolve = {
+//   members: function ($rootScope, $config, Group, $route) 
+//   {
+//     return Group.get($route.current.params.groupId);
+//   }
+// };
+
+// membersCtrl.$inject = ['$rootScope', '$scope', '$config', 'members', 'Group', 'timerService', '$route', '$routeParams'];
 
 
 
@@ -43,19 +72,44 @@ profileCtrl.$inject = ['$rootScope', '$scope', '$config', 'resources', 'Profile'
 
 
 
-angular.module('ProfileServices', ['ngResource']).
-factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+angular.module('GroupServices', ['ngResource']).
+factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
 {
 
-  var Profile = $resource(
-    $config.host + '/resources',
+  var Group = $resource(
+    $config.host + '/network/:groupId',
     {
-      user: $rootScope.user.uuid
     },
     {
+      query: {
+        method: 'GET',
+        params: {},
+        isArray: true
+      },
       get: {
         method: 'GET',
+        params: {groupId:''}
+      },
+      save: {
+        method: 'POST',
         params: {}
+      }
+    }
+  );
+
+  var Members = $resource(
+    $config.host + '/network/:groupId/members',
+    {
+    },
+    {
+      query: {
+        method: 'GET',
+        params: {groupId:''},
+        isArray: true
+      },
+      get: {
+        method: 'GET',
+        params: {groupId:''}
       },
       save: {
         method: 'POST',
@@ -65,10 +119,46 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
   );
   
 
-  Profile.prototype.get = function (userId) 
+  Group.prototype.query = function () 
   {    
 
-    console.log('user asked to be rendered ->', userId);
+    var deferred = $q.defer(), 
+        localProfile = Storage.get('groups');
+
+    // if (localProfile)
+    // {
+    //   deferred.resolve(angular.fromJson(localSlots));
+    //   return deferred.promise;
+    // }
+    // else
+    // {
+      var successCb = function (result) 
+      {
+
+        if (angular.equals(result, [])) 
+        {
+          deferred.reject("There is no groups!");
+        }
+        else 
+        {
+          $rootScope.notify( { message: 'Groups downloaded from back-end.' } );
+
+          Storage.add('resources', angular.toJson(result));
+          $rootScope.notify( { message: 'Groups data added to localStorage.' } );
+
+          deferred.resolve(result);
+        }
+      };
+
+      Group.query(successCb);
+
+      return deferred.promise;
+    // }
+  };
+  
+
+  Group.prototype.get = function (groupId) 
+  {    
 
     var deferred = $q.defer(), 
         localProfile = Storage.get('resources');
@@ -98,43 +188,41 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
         }
       };
 
-      Profile.get(successCb);
+      Members.query({groupId: groupId}, successCb);
 
       return deferred.promise;
     // }
   };
 
 
-  Profile.prototype.local = function()
+  Group.prototype.local = function()
   {
-    return angular.fromJson(Storage.get('resources'));
+    return angular.fromJson(Storage.get('groups'));
   };
 
 
-  Profile.prototype.save = function (resources) 
-  {    
+  Group.prototype.save = function (group) 
+  {
+    // var localResources = angular.fromJson(Storage.get('resources'));
 
-    var localResources = angular.fromJson(Storage.get('resources'));
+    // localResources['name'] = resources.name;
+    // localResources['EmailAddress'] = resources.EmailAddress;
+    // localResources['PhoneAddress'] = resources.PhoneAddress;
+    // localResources['PostAddress'] = resources.PostAddress;
+    // localResources['PostZip'] = resources.PostZip;
+    // localResources['PostCity'] = resources.PostCity;
 
-    localResources['name'] = resources.name;
-    localResources['EmailAddress'] = resources.EmailAddress;
-    localResources['PhoneAddress'] = resources.PhoneAddress;
-    localResources['PostAddress'] = resources.PostAddress;
-    localResources['PostZip'] = resources.PostZip;
-    localResources['PostCity'] = resources.PostCity;
+    // Storage.add('slots', angular.toJson(localResources));
 
-    Storage.add('slots', angular.toJson(localResources));
+    // $rootScope.notify( { message: 'Profile saved in localStorage.' } );
 
-    $rootScope.notify( { message: 'Profile saved in localStorage.' } );
-
-    Profile.save(null, resources, function()
-    {
-      $rootScope.notify( { message: 'Profile saved in back-end.' } );
-    });
+    // Profile.save(null, resources, function()
+    // {
+    //   $rootScope.notify( { message: 'Profile saved in back-end.' } );
+    // });
   };
 
 
 
-  return new Profile;
+  return new Group;
 });
-*/
