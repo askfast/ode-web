@@ -49,9 +49,9 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
 {
 
   var Profile = $resource(
-    $config.host + '/resources',
+    $config.host + '/node/:user/resource',
     {
-      user: $rootScope.user.uuid
+      user: $route.current.params.userId
     },
     {
       get: {
@@ -59,18 +59,15 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
         params: {}
       },
       save: {
-        method: 'POST',
+        method: 'PUT',
         params: {}
       }
     }
   );
   
 
-  Profile.prototype.get = function (userId) 
+  Profile.prototype.get = function () 
   {    
-
-    console.log('user asked to be rendered ->', userId);
-
     var deferred = $q.defer(), 
         localProfile = Storage.get('resources');
 

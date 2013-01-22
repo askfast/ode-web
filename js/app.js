@@ -36,6 +36,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
 	    	controller: dashboardCtrl
 	    })
 
+
       /**
        * Planboard
        */
@@ -45,6 +46,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           resolve: planboardCtrl.resolve    
       })
 
+
       /**
        * Messages
        */
@@ -53,16 +55,18 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           controller: messagesCtrl
       })
 
+
       /**
-       * Groups&Users
+       * Groups
        */
       .when('/groups', {
           templateUrl: 'partials/groups.html', 
           controller: groupsCtrl
       })
 
+
       /**
-       * Profile view
+       * Profile :: view
        */
       .when('/profile/view/:userId', {
           templateUrl: 'partials/profile.html', 
@@ -70,7 +74,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           resolve: profileCtrl.resolve
       })
       /**
-       * Profile edit
+       * Profile :: edit [userId]
        */
       .when('/profile/edit/:userId', {
           templateUrl: 'partials/profile-edit.html', 
@@ -78,13 +82,14 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           resolve: profileCtrl.resolve
       })
       /**
-       * Profile password change
+       * Profile :: change password [userId]
        */
       .when('/profile/password/:userId', {
           templateUrl: 'partials/profile-password.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
+
 
       /**
        * Settings
@@ -94,6 +99,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           controller: settingsCtrl
       })
 
+
       /**
        * Angular-Strap
        */
@@ -101,6 +107,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           templateUrl: 'partials/angular-strap.html', 
           controller: StrapCtrl
       })
+
 
     /**
      * Redirect
