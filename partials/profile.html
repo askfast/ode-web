@@ -1,68 +1,26 @@
 <h2>Profile: {{resources.name}}</h2>
 <hr>
 
-<form class="form-horizontal">
+<div class="btn-group">
+  <a  class="btn"
+      href="#profile/edit/{{user.id}}"><i class="icon-cog"></i> Edit profile</a>
+  <a  class="btn"
+      href="#profile/password/{{user.id}}"><i class="icon-lock"></i> Change password</a>
+</div>
 
-  <div class="control-group">
-    <label class="control-label">Name</label>
-    <div class="controls">
-      <input  type="text" 
-              ng-model="resources.name"
-              value="{{resources.name}}">
-    </div>
-  </div>
+<hr>
 
-  <div class="control-group">
-    <label class="control-label">Email</label>
-    <div class="controls">
-      <input  type="text" 
-              ng-model="resources.EmailAddress"
-              value="{{resources.EmailAddress}}">
-    </div>
-  </div>
+<h3>View profile</h3>
 
-  <div class="control-group">
-    <label class="control-label">Phone</label>
-    <div class="controls">
-      <input  type="text" 
-              ng-model="resources.PhoneAddress"
-              value="{{resources.PhoneAddress}}">
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">Address</label>
-    <div class="controls">
-      <input  type="text" 
-              ng-model="resources.PostAddress"
-              value="{{resources.PostAddress}}">
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">Postcode</label>
-    <div class="controls">
-      <input  type="text" 
-              ng-model="resources.PostZip"
-              value="{{resources.PostZip}}">
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">City</label>
-    <div class="controls">
-      <input  type="text" 
-              ng-model="resources.PostCity"
-              value="{{resources.PostCity}}">
-    </div>
-  </div>
-
-  <div class="control-group">
-    <div class="controls">
-      <button   type="submit" 
-                class="btn btn-success"
-                ng-click="save(resources)">Save</button>
-    </div>
-  </div>
-
-</form>
+<dl>
+  <dt>Email</dt>
+    <dd>{{resources.EmailAddress}}</dd>
+  <dt>Phone</dt>
+    <dd>{{resources.PhoneAddress}}</dd>
+  <dt>Address</dt>
+    <dd>{{resources.PostAddress}}</dd>
+  <dt>Postcode</dt>
+    <dd>{{resources.PostZip}}</dd>
+  <dt>City</dt>
+    <dd>{{resources.PostCity}}</dd>
+</dl>

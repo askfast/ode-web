@@ -1,15 +1,11 @@
-function profileCtrl($rootScope, $scope, $config, resources, Profile, timerService)
+function profileCtrl($rootScope, $scope, $config, resources, Profile, timerService, $route, $routeParams)
 {
 	var self = this;
   $scope.resources = resources;
 
-  render();
-  
-  $rootScope.$on('renderProfile', function () 
-  {
-    console.log('---> render inited from:', arguments[1]); 
-    render();
-  });
+  $scope.user = {
+    id: $route.current.params.userId
+  };
 
 
   $scope.save = function(resources)
@@ -17,27 +13,19 @@ function profileCtrl($rootScope, $scope, $config, resources, Profile, timerServi
     Profile.save(resources);
   };
 
-
-  function render()
-  {
-  	
-  };
-
-
-
 	
   timerService.start('profileTimer', function()
   { 
     Profile.get();
-  }, 60*30);
+  }, 60 * 30);
 
 };
 
 
 profileCtrl.resolve = {
-  resources: function ($rootScope, $config, Profile) 
+  resources: function ($rootScope, $config, Profile, $route) 
   {
-    return Profile.get();
+    return Profile.get($route.current.params.userId);
   }
 };
 
@@ -48,7 +36,7 @@ profileCtrl.prototype = {
 
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', 'resources', 'Profile', 'timerService'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$config', 'resources', 'Profile', 'timerService', '$route', '$routeParams'];
 
 
 
@@ -78,8 +66,11 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
   );
   
 
-  Profile.prototype.get = function () 
+  Profile.prototype.get = function (userId) 
   {    
+
+    console.log('user asked to be rendered ->', userId);
+
     var deferred = $q.defer(), 
         localProfile = Storage.get('resources');
 
@@ -103,8 +94,6 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
 
           Storage.add('resources', angular.toJson(result));
           $rootScope.notify( { message: 'Profile data added to localStorage.' } );
-
-          $rootScope.$broadcast('renderProfile', 'resource got');
 
           deferred.resolve(result);
         }
@@ -137,13 +126,10 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
 
     Storage.add('slots', angular.toJson(localResources));
 
-    $rootScope.$broadcast('renderProfile', 'resouce saved in localStorage');
-
     $rootScope.notify( { message: 'Profile saved in localStorage.' } );
 
     Profile.save(null, resources, function()
     {
-      $rootScope.$broadcast('renderProfile', 'resource saved in back-end');
       $rootScope.notify( { message: 'Profile saved in back-end.' } );
     });
   };

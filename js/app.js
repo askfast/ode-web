@@ -27,6 +27,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
     $httpProvider.defaults.headers.common['X-SESSION_ID'] = localStorage.getItem('sessionID');
 
     $routeProvider
+
     	/**
     	 * Dashboard
     	 */
@@ -34,6 +35,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
 	    	templateUrl: 'partials/dashboard.html', 
 	    	controller: dashboardCtrl
 	    })
+
       /**
        * Planboard
        */
@@ -42,6 +44,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    
       })
+
       /**
        * Messages
        */
@@ -49,6 +52,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           templateUrl: 'partials/messages.html', 
           controller: messagesCtrl
       })
+
       /**
        * Groups&Users
        */
@@ -56,14 +60,32 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           templateUrl: 'partials/groups.html', 
           controller: groupsCtrl
       })
+
       /**
-       * Profile
+       * Profile view
        */
-      .when('/profile', {
+      .when('/profile/view/:userId', {
           templateUrl: 'partials/profile.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
+      /**
+       * Profile edit
+       */
+      .when('/profile/edit/:userId', {
+          templateUrl: 'partials/profile-edit.html', 
+          controller: profileCtrl,
+          resolve: profileCtrl.resolve
+      })
+      /**
+       * Profile password change
+       */
+      .when('/profile/password/:userId', {
+          templateUrl: 'partials/profile-password.html', 
+          controller: profileCtrl,
+          resolve: profileCtrl.resolve
+      })
+
       /**
        * Settings
        */
@@ -71,6 +93,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           templateUrl: 'partials/settings.html', 
           controller: settingsCtrl
       })
+
       /**
        * Angular-Strap
        */
@@ -78,6 +101,7 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
           templateUrl: 'partials/angular-strap.html', 
           controller: StrapCtrl
       })
+
     /**
      * Redirect
      */
@@ -96,26 +120,39 @@ WebPaige.run(
 ['$rootScope', '$location', '$timeout', 
 function($rootScope, $location, $timeout)
 {
+
   /**
    * REMOVE
    * This part is only needed for by-passing login
    * only for testing and development
    */
   $rootScope.sessionID = localStorage.getItem('sessionID');
+
   $rootScope.saveSession = function(sessionID)
   {
     localStorage.setItem('sessionID', sessionID);
     $rootScope.notify( { message: 'New sessionID is set.' } );
-  }
+  };
+
   $rootScope.clearLocalSlots = function()
   {
-    localStorage.removeItem('WebPaige.slots');
+    var sessionID = localStorage.getItem('sessionID');    
+    for (var i in localStorage)
+    {
+      localStorage.removeItem(i);
+    };
+    localStorage.setItem('sessionID', sessionID);
     $rootScope.notify(
       {
-        message: 'Slots cache deleted. Please refresh to get fresh data from back-end.' 
+        message: 'Cache is deleted.' 
       }
     );
-  }
+    $rootScope.notify(
+      {
+        message: 'Please refresh to get fresh data from back-end.' 
+      }
+    );
+  };
   
 
   /**
@@ -201,7 +238,7 @@ function($rootScope, $location, $timeout)
 
   $rootScope.notify = function(options)
   {
-    $('.notifications').notify(options).show();
+    //$('.notifications').notify(options).show();
   };
 
 

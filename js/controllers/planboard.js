@@ -429,7 +429,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
       start:  $config.timeline.period.bstart, 
       end:    $config.timeline.period.bend
     });
-  }, 60);
+  }, 60 * 5);
 
 }
 
