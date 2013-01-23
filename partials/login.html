@@ -1,0 +1,106 @@
+<!--
+<div id="preloader" class="span3 well">
+  <h2>Setting up the application</h2>
+  <br>
+  <div class="progress">
+    <div class="bar"></div>
+  </div>
+  <span></span>
+</div>
+-->
+
+  
+<div id="loginForm">
+
+  <h2>Login</h2>
+  <hr>
+
+  <form  class="span3" 
+         ng-submit="login()">
+
+    <!--
+    <div id="alertDiv" class="alert alert-error">
+      <button id="alertClose" class="close" type="button" onclick="$('#alertDiv').hide()">×</button><span id="alertMessage"></span>
+    </div>
+    -->
+
+    <div class="control-group">
+      <label for="loginUsername" class="control-label">Username</label>
+      <div class="controls docs-input-sizes">
+        <input 
+          class="" 
+          type="text" 
+          ng-model="logindata.username"
+          placeholder="Username" 
+          autofocus>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label for="loginPassword" class="control-label">Password</label>
+      <div class="controls docs-input-sizes">
+      <input 
+          class="" 
+          type="password" 
+          ng-model="logindata.password"
+          placeholder="Password" >
+      </div>
+    </div>
+
+    <label for="remember" class="checkbox">
+      <input 
+        type="checkbox" 
+        ng-model="logindata.remember"> Remember me
+    </label>
+    <br>
+
+    <button class="btn btn-inverse" type="submit">Login</button>
+
+  </form>
+
+  <div id="knrmAccounts" class="span3 well">
+    <ul id="knrmusers_">
+      <li   
+          ng-repeat="knrm in knrms"
+          style="list-style: none;">
+        <a ng-click="loginAsKNRM(knrm.uuid, knrm.resources.askPass)">{{ knrm.name }} ({{ knrm.resources.role }})</a>
+      </li>
+    </ul>
+  </div>
+  
+</div>
+
+
+<div id="browseHappy" class="span9">
+  <h1>Helaas bieden wij geen ondersteuning voor deze browser.</h1>
+  <h3>Waarom niet? </h3>
+  <br />
+  <p>KNRM Paige is gebaseerd op de nieuwste technologie. 
+  Daardoor werkt KNRM Paige nog niet op alle browser optimaal. 
+  Wij proberen ondersteuning te bieden voor alle moderne browsers. 
+  Op dit moment kunt u KNRM Paige gebruiken met een van de onderstaande browsers.</p>
+  <br /><br />
+  <ul id="browserlist" class="wrap">
+    <li id="chrome">
+      <a href="http://www.google.com/chrome" title="Google Chrome">
+        <div class="icon"></div>
+        <h2>Google Chrome</h2>
+        <p class="website">Bezoek de website voor meer info</p>
+      </a>
+    </li>
+    <li id="firefox">
+      <a href="http://www.firefox.com/" title="Mozilla Firefox">
+        <div class="icon"></div>
+        <h2>Mozilla Firefox</h2>
+        <p class="website">Bezoek de website voor meer info</p>
+      </a>
+    </li>
+    <li id="safari">
+      <a href="http://www.apple.com/safari/" title="Apple Safari">
+        <div class="icon"></div>
+        <h2>Safari</h2>
+        <p class="website">Bezoek de website voor meer info</p>
+      </a>
+    </li>
+  </ul>
+</div><!--/span-->

@@ -12,7 +12,8 @@ var WebPaige = angular.module('WebPaige',
     '$strap.directives', 
     'SlotServices', 
     'ProfileServices', 
-    'GroupServices']);
+    'GroupServices', 
+    'UserServices']);
 
 
 /**
@@ -22,6 +23,8 @@ var WebPaige = angular.module('WebPaige',
  */
 WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
   {
+    //$locationProvider.html5Mode(true);
+    
     /**
      * Set custom session header
      */
@@ -31,13 +34,33 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
 
 
 
-    	/**
-    	 * Dashboard
-    	 */
-    	.when('/dashboard', {
-	    	templateUrl: 'partials/dashboard.html', 
-	    	controller: dashboardCtrl
-	    })
+      /**
+       * Login
+       */
+      .when('/login', {
+        templateUrl: 'partials/login.html', 
+        controller: loginCtrl
+      })
+
+
+
+      /**
+       * Logout
+       */
+      .when('/logout', {
+        templateUrl: 'partials/logout.html', 
+        controller: logoutCtrl
+      })
+
+
+
+      /**
+       * Dashboard
+       */
+      .when('/dashboard', {
+        templateUrl: 'partials/dashboard.html', 
+        controller: dashboardCtrl
+      })
 
 
 
@@ -195,6 +218,7 @@ function($rootScope, $location, $timeout)
    * resource call data just after login
    */
   $rootScope.user = {
+    name: 'AppTest KNRM',
     uuid: 'apptestknrm'
   };
 
