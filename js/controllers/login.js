@@ -3,7 +3,6 @@
 
 var loginCtrl = function($rootScope, $config, $scope, Session, User, $md5)
 {
-
 	var self = this;
 
   if ( self.checkBrowser($config.blacklisted) )
@@ -47,8 +46,6 @@ var loginCtrl = function($rootScope, $config, $scope, Session, User, $md5)
   // login trigger
   $scope.login = function()
   {
-
-
     // reset alerts
     $('#alertDiv').hide();
 
@@ -84,81 +81,109 @@ var loginCtrl = function($rootScope, $config, $scope, Session, User, $md5)
     User.login(uuid, pass)
     .then(function(result)
 	  {
-    	console.log('session ID -> ', result['X-SESSION_ID']);
+	  	Session.set(result["X-SESSION_ID"]);
+
+	  	self.preloader();
 	  });
   };
 
 
+  self.preloader = function()
+  {
+    // presentation
+    $('#loginForm').hide();
+    $('#preloader').show();
+
+    // Load resources
+    // .then -> Load messages
+    // .then -> Load network
+    // .then -> Load group members
+    // 						Unify those members in one unique list
+    // Redirect to Planboard
+    //document.location = "#/planboard";
+    
+  };
+
+
+
+
+
+
 
   // authorize login
-  $scope.auth = function(uuid, pass)
-  {
+  // 
+  // DEPRECIATED !!!!!!
+  // 
+  // $scope.auth = function(uuid, pass)
+  // {
+  //   $.ajax(
+  //   {
+  //     url: host   + '/login' 
+  //                 + '?uuid='
+  //                 + uuid
+  //                 + '&pass=' 
+  //                 + pass
+  //   })
+  //   .success(function(data)
+  //   {
+  //     // save cookie
+  //     //$scope.setSession(data["X-SESSION_ID"]);
+  //     $rootScope.session = Session.set(data["X-SESSION_ID"]);
 
+  //     $.ajaxSetup(
+  //     {
+  //       headers: {
+  //         'X-SESSION_ID': Session.get($rootScope.session)
+  //       } 
+  //     })
 
-
-    $.ajax(
-    {
-      url: host   + '/login' 
-                  + '?uuid='
-                  + uuid
-                  + '&pass=' 
-                  + pass
-    })
-
-
-
-
-    .success(function(data)
-    {
-      // save cookie
-      //$scope.setSession(data["X-SESSION_ID"]);
-      $rootScope.session = Session.set(data["X-SESSION_ID"]);
-
-      $.ajaxSetup(
-      {
-        headers: {
-          'X-SESSION_ID': Session.get($rootScope.session)
-        } 
-      })
-
-      // presentation
-      $('#loginForm').hide();
-      $('#preloader').show();
+  //     // presentation
+  //     $('#loginForm').hide();
+  //     $('#preloader').show();
       
-      // start preloading
-      //$scope.fetchDependencies();
+  //     // start preloading
+  //     //$scope.fetchDependencies();
 
-      // resources
+  //     // resources
 
-    })
-
-
-
-
-
-    .fail(function(jqXHR, exception, options)
-    {
-      // check whether wrong credentials
-      if (jqXHR.status == 400 && 
-          jqXHR.responseText.split('<title>')[1].split('</title>')[0] === '400 bad credentials')
-      {
-        $("#alertDiv").show();
-        $("#alertMessage").html( $scope.ui.error.messages.login );
-      }
-      else
-      {
-        $scope.ajaxErrorHandler(jqXHR, exception, options)
-      }
-      // reset button state
-      $('#loginForm button[type=submit]')
-        .text($scope.ui.login.button_login)
-        .removeAttr('disabled')
-    })    
-  }
+  //   })
+  //   .fail(function(jqXHR, exception, options)
+  //   {
+  //     // check whether wrong credentials
+  //     if (jqXHR.status == 400 && 
+  //         jqXHR.responseText.split('<title>')[1].split('</title>')[0] === '400 bad credentials')
+  //     {
+  //       $("#alertDiv").show();
+  //       $("#alertMessage").html( $scope.ui.error.messages.login );
+  //     }
+  //     else
+  //     {
+  //       $scope.ajaxErrorHandler(jqXHR, exception, options)
+  //     }
+  //     // reset button state
+  //     $('#loginForm button[type=submit]')
+  //       .text($scope.ui.login.button_login)
+  //       .removeAttr('disabled')
+  //   })    
+  // }
 
 
 
-}
+};
+
+
+
+
+loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
+{
+	User.logout()
+	.then(function()
+	{
+		Session.clear();
+		Storage.clearAll();
+		console.log('user logged out successfully! Goodbye!', $rootScope);
+	});
+};
 
 
 
@@ -168,6 +193,17 @@ loginCtrl.prototype = {
 
   constructor: loginCtrl,
 
+  /**
+   * TODO
+   * Add browser version detection as well..
+   * Still issues with targeting some versions of IE!
+   * 
+   * Needs fixing!
+   * 
+   * Check browser
+   * @param  {[type]} blacklisted [description]
+   * @return {[type]}             [description]
+   */
   checkBrowser: function(blacklisted)
   {
     var N = navigator.appName,
@@ -180,20 +216,20 @@ loginCtrl.prototype = {
     }
     browser = browser ? [ browser[1], browser[2] ] : [ N, navigator.appVersion, '-?' ];
     browser = browser[0].toLowerCase();
-    
+
     /**
+     * TODO
+     * 
      * REMOVE
      * Remove underscore library dependency here!!
+     * 
      * @type {Boolean}
      */
     return ( _.contains(blacklisted, browser) ) ? true : false;
+
   }
 
-}
-
-
-
-
+};
 
 loginCtrl.$inject = ['$rootScope', '$config', '$scope', 'Session', 'User', '$md5'];
 
@@ -210,28 +246,30 @@ loginCtrl.$inject = ['$rootScope', '$config', '$scope', 'Session', 'User', '$md5
  * 
  * TimeSlots Service
  */
-angular.module('UserServices', ['ngResource']).
+WebPaige.
 factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
 {
   var self = this;
 
-  var User = $resource(
+  var User = $resource();
+
+  var Login = $resource(
     $config.host + '/login',
     {
     },
     {
-      login: {
+      process: {
         method: 'GET',
         params: {uuid:'', pass:''}
       }
     }
   );
 
+
   User.prototype.login = function (uuid, pass) 
   {    
     var deferred = $q.defer();
-
-    var successCb = function (result) 
+    Login.process({uuid: uuid, pass: pass}, function (result) 
     {
       if (angular.equals(result, [])) 
       {
@@ -241,13 +279,73 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
       {
         deferred.resolve(result);
       }
-    };
-
-    User.login({uuid: uuid, pass: pass}, successCb);
-
+    });
     return deferred.promise;
-
   };
+
+
+  var Logout = $resource(
+    $config.host + '/logout',
+    {
+    },
+    {
+      process: {
+        method: 'GET',
+        params: {}
+      }
+    }
+  );
+
+
+  User.prototype.logout = function () 
+  {    
+    var deferred = $q.defer();
+    Logout.process(null, function (result) 
+    {
+      // if (angular.equals(result, [])) 
+      // {
+      //   deferred.reject("Something went wrong with logout!");
+      // }
+      // else 
+      // {
+
+        deferred.resolve(result);
+      // }
+    });
+    return deferred.promise;
+  };
+
+
+  var Resources = $resource(
+    $config.host + '/resources',
+    {
+    },
+    {
+      get: {
+        method: 'GET',
+        params: {}
+      }
+    }
+  );
+
+
+  User.prototype.resources = function () 
+  {    
+    var deferred = $q.defer();
+    Resources.get(null, function (result) 
+    {
+      if (angular.equals(result, [])) 
+      {
+        deferred.reject("User has no resources!");
+      }
+      else 
+      {
+        deferred.resolve(result);
+      }
+    });
+    return deferred.promise;
+  };
+
 
   return new User;
 
@@ -292,15 +390,18 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
  * TODO
  * Integrate localStorage service into this
  * for cookie reading or setting
+ *
+ * Needs optimizing!!
  * 
  * Organize it more!
  * 
  * Session Service
  */
 WebPaige.
-factory('Session', function ($rootScope, Storage) 
+factory('Session', function ($rootScope, $http, Storage) 
 {
   return {
+
   	/**
   	 * Check session
   	 * @param  {[type]} session [description]
@@ -308,18 +409,24 @@ factory('Session', function ($rootScope, Storage)
   	 */
     check: function(session)
     {
-      if( !session )
+      if(!session)
         session = this.cookie;
-      if( session.id == null )
+
+      if(session.id == null)
         return false;
+
       var time  = new Date();
       var now   = time.getTime();
-      if( (now - session.time) > (60 * 60 * 1000) )
+
+      if((now - session.time) > (60 * 60 * 1000))
       {   
         return false;
-      }
+      };
+
       return true;
     },
+
+
     /**
      * TODO
      * Use cookie optionality of Storage!
@@ -331,16 +438,21 @@ factory('Session', function ($rootScope, Storage)
     cookie: function(session)
     {
       var values;
+
       var pairs = document.cookie.split(";");
+
       for(var i=0; i<pairs.length; i++)
       {
         values = pairs[i].split("=");
+
         if(values[0].trim() == "ask")
         {
-          return JSON.parse(values[1]);
-        }
-      }
+          return angular.fromJson(values[1]);
+        };
+      };
+
     },
+
     /**
      * Get session
      * Prolong session time by every check
@@ -352,20 +464,61 @@ factory('Session', function ($rootScope, Storage)
     {
       this.check(session);
       this.set(session.id);
-      return session.id
+      return session.id;
     },
+
+
     /**
      * Set session
      * @param {[type]} sessionId [description]
      */
     set: function(sessionId)
     {
-      var session     = new Object();
-      var time        = new Date();
-      session.id      = sessionId;
-      session.time    = time;
-      document.cookie = "ask=" + JSON.stringify(session);
-      return session
+      // var session     = new Object();
+      // var time        = new Date();
+      // session.id      = sessionId;
+      // session.time    = time;
+      // document.cookie = "ask=" + angular.toJson(session);
+
+      // $rootScope.session = session;
+      // $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
+      // /**
+      //  * REMOVE
+      //  */
+      // console.log('http headers ->', $http.defaults.headers.common);
+
+      // return session;
+
+
+
+      var session = {
+	    	id: sessionId,
+	    	time: new Date()
+	  	};
+
+	  	Storage.cookie.add('session', angular.toJson(session));
+
+      //document.cookie = "ask=" + angular.toJson(session);
+
+      $rootScope.session = session;
+      $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
+      /**
+       * REMOVE
+       */
+      console.log('http headers ->', $http.defaults.headers.common);
+
+      return session;
+    },
+
+
+    /**
+     * Clear session
+     * @param {[type]} sessionId [description]
+     */
+    clear: function()
+    {
+      $rootScope.session = null;
+      $http.defaults.headers.common['X-SESSION_ID'] = null;
     }
 
   }

@@ -272,7 +272,9 @@ angularLocalStorage.service('Storage', [
   if (prefix.substr(-1)!=='.')
   {
     prefix = !!prefix ? prefix + '.' : '';
-  }
+  };
+
+
 
 
   // Checks the browser to see if local storage is supported
@@ -433,14 +435,16 @@ angularLocalStorage.service('Storage', [
 
       if (cookie.expiry !== 0) 
       {
-        expiryDate.setTime(expiryDate.getTime() + (cookie.expiry*24*60*60*1000));
+        expiryDate.setTime(expiryDate.getTime() + (cookie.expiry * 60 * 60 * 1000));
         expiry = "; expires="+expiryDate.toGMTString();
-      }
+      };
+
 
       document.cookie = prefix + 
                         key + 
                         "=" + 
-                        encodeURIComponent(value) + 
+                        //encodeURIComponent(value) + 
+                        value + 
                         expiry + 
                         "; path=" + 
                         cookie.path;
@@ -453,6 +457,48 @@ angularLocalStorage.service('Storage', [
 
     return true;
   };
+  // var addToCookies = function (key, value) 
+  // {
+
+  //   if (typeof value == "undefined") return false;
+
+  //   if (!browserSupportsCookies()) 
+  //   {
+  //     $rootScope.$broadcast('StorageModule.notification.error','COOKIES_NOT_SUPPORTED');
+  //     return false;
+  //   }
+
+  //   try 
+  //   {
+  //     var expiry = '', expiryDate = new Date();
+  //     if (value === null) 
+  //     {
+  //       cookie.expiry = -1;
+  //       value = '';
+  //     };
+
+  //     if (cookie.expiry !== 0) 
+  //     {
+  //       expiryDate.setTime(expiryDate.getTime() + (cookie.expiry*24*60*60*1000));
+  //       expiry = "; expires="+expiryDate.toGMTString();
+  //     }
+
+  //     document.cookie = prefix + 
+  //                       key + 
+  //                       "=" + 
+  //                       encodeURIComponent(value) + 
+  //                       expiry + 
+  //                       "; path=" + 
+  //                       cookie.path;
+  //   } 
+  //   catch (e) 
+  //   {
+  //     $rootScope.$broadcast('StorageModule.notification.error',e.Description);
+  //     return false;
+  //   }
+
+  //   return true;
+  // };
 
 
   // Directly get a value from a cookie

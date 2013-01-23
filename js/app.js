@@ -12,8 +12,7 @@ var WebPaige = angular.module('WebPaige',
     '$strap.directives', 
     'SlotServices', 
     'ProfileServices', 
-    'GroupServices', 
-    'UserServices']);
+    'GroupServices']);
 
 
 /**
@@ -21,14 +20,9 @@ var WebPaige = angular.module('WebPaige',
  * There is also configuration tree defined in services
  * for default values
  */
-WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
+WebPaige.config(function($locationProvider, $routeProvider)
   {
     //$locationProvider.html5Mode(true);
-    
-    /**
-     * Set custom session header
-     */
-    $httpProvider.defaults.headers.common['X-SESSION_ID'] = localStorage.getItem('sessionID');
 
     $routeProvider
 
@@ -41,15 +35,12 @@ WebPaige.config(function($locationProvider, $routeProvider, $httpProvider)
         templateUrl: 'partials/login.html', 
         controller: loginCtrl
       })
-
-
-
       /**
        * Logout
        */
       .when('/logout', {
-        templateUrl: 'partials/logout.html', 
-        controller: logoutCtrl
+        templateUrl: 'partials/login.html', 
+        controller: loginCtrl.logout
       })
 
 
