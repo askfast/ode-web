@@ -1,5 +1,13 @@
-function messagesCtrl($scope, $eventBus, $log)
+function messagesCtrl($scope, $eventBus, $log, data, Services)
 {
-	
 }
-messagesCtrl.$inject = ['$scope', '$eventBus', '$log'];
+
+
+messagesCtrl.resolve = {
+  data: function ($rootScope, $config) 
+  {
+  }
+}
+
+
+messagesCtrl.$inject = ['$scope', '$eventBus', '$log', 'data', 'Services'];

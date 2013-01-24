@@ -1,7 +1,7 @@
 'use strict';
 /* Login controller */
 
-var loginCtrl = function($rootScope, $config, $scope, Session, User, $md5)
+var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Group)
 {
 	var self = this;
 
@@ -88,11 +88,58 @@ var loginCtrl = function($rootScope, $config, $scope, Session, User, $md5)
   };
 
 
+
+
+
+
+
   self.preloader = function()
   {
     // presentation
     $('#loginForm').hide();
     $('#preloader').show();
+
+
+
+    self.progress(20, 'Loading user information..');
+
+    User.resources()
+    .then(function(resources)
+    {
+      //console.log('user resources ->', resources);
+
+      self.progress(40, 'Loading groups');
+
+      Group.query()
+      .then(function(groups)
+      {
+        //console.log('user groups ->', groups);
+
+        self.progress(40, 'Loading members');
+
+        var calls = [];
+
+        angular.forEach(groups, function(group, index)
+        {
+          calls.push( Group.get(group.uuid) );
+        });
+
+        $q.all(calls)
+        .then(function(result)
+        {
+          console.log('all member calls went well', result);
+        });
+
+      });
+      
+    });
+
+
+
+
+
+
+
 
     // Load resources
     // .then -> Load messages
@@ -103,6 +150,18 @@ var loginCtrl = function($rootScope, $config, $scope, Session, User, $md5)
     //document.location = "#/planboard";
     
   };
+
+
+
+
+  self.progress = function(ratio , message)
+  {
+    $('#preloader .progress .bar').css({ width: ratio + '%' }); 
+    $('#preloader span').text(message);    
+  };
+
+
+
 
 
 
@@ -179,9 +238,10 @@ loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
 	User.logout()
 	.then(function()
 	{
-		Session.clear();
+		//Session.clear();
 		Storage.clearAll();
-		console.log('user logged out successfully! Goodbye!', $rootScope);
+		//console.log('user logged out successfully! Goodbye!', $rootScope);
+    document.location = "logout.html";
 	});
 };
 
@@ -231,7 +291,28 @@ loginCtrl.prototype = {
 
 };
 
-loginCtrl.$inject = ['$rootScope', '$config', '$scope', 'Session', 'User', '$md5'];
+loginCtrl.$inject = ['$rootScope', '$config', '$q', '$scope', 'Session', 'User', '$md5', 'Group'];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -407,23 +488,46 @@ factory('Session', function ($rootScope, $http, Storage)
   	 * @param  {[type]} session [description]
   	 * @return {[type]}         [description]
   	 */
-    check: function(session)
+    check: function()
     {
+      return ($rootScope.session) ? true : false;
+    },
+
+
+    /**
+     * TODO
+     * Take the useful parts to real one 
+     * 
+     * @param  {[type]} session [description]
+     * @return {[type]}         [description]
+     */
+    check__: function(session)
+    {
+      console.log('-> asked session value', session);
+
       if(!session)
-        session = this.cookie;
+      {
+        console.log('there was no session given by check so reading from cookie.');
+        session = this.cookie();
+        console.log('--> cookie read session value:', session); 
+        
+        if(session != null)
+        {
+          if(session.id == null)
+            return false;
 
-      if(session.id == null)
-        return false;
+          var time  = new Date();
+          var now   = time.getTime();
 
-      var time  = new Date();
-      var now   = time.getTime();
-
-      if((now - session.time) > (60 * 60 * 1000))
-      {   
-        return false;
+          if((now - session.time) > (60 * 60 * 1000))
+          {   
+            return false;
+          };
+          return true;
+        }
+             
       };
-
-      return true;
+      //return false;
     },
 
 
@@ -445,7 +549,7 @@ factory('Session', function ($rootScope, $http, Storage)
       {
         values = pairs[i].split("=");
 
-        if(values[0].trim() == "ask")
+        if(values[0].trim() == "WebPaige.session")
         {
           return angular.fromJson(values[1]);
         };

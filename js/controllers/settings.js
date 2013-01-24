@@ -1,5 +1,12 @@
-function settingsCtrl($scope)
+function settingsCtrl($scope, Session, settings, Services)
 {
-	
 }
-settingsCtrl.$inject = ['$scope'];
+
+
+settingsCtrl.resolve = {
+  settings: function ($rootScope, $config) 
+  {
+  }
+};
+
+settingsCtrl.$inject = ['$scope', 'Session', 'settings', 'Services'];

@@ -50,7 +50,8 @@ WebPaige.config(function($locationProvider, $routeProvider)
        */
       .when('/dashboard', {
         templateUrl: 'partials/dashboard.html', 
-        controller: dashboardCtrl
+        controller: dashboardCtrl,
+        resolve: dashboardCtrl.resolve   
       })
 
 
@@ -73,7 +74,8 @@ WebPaige.config(function($locationProvider, $routeProvider)
        */
       .when('/messages', {
           templateUrl: 'partials/messages.html', 
-          controller: messagesCtrl
+          controller: messagesCtrl,
+          resolve: messagesCtrl.resolve   
       })
 
 
@@ -134,7 +136,8 @@ WebPaige.config(function($locationProvider, $routeProvider)
        */
       .when('/settings', {
           templateUrl: 'partials/settings.html', 
-          controller: settingsCtrl
+          controller: settingsCtrl,
+          resolve: settingsCtrl.resolve   
       })
 
 
@@ -154,10 +157,20 @@ WebPaige.config(function($locationProvider, $routeProvider)
      * Redirect
      */
   	.otherwise({
-    	redirectTo: '/dashboard'
+    	redirectTo: '/login'
     });
 
   });
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -165,9 +178,12 @@ WebPaige.config(function($locationProvider, $routeProvider)
  * Initial run functions
  */
 WebPaige.run(
-['$rootScope', '$location', '$timeout', 
-function($rootScope, $location, $timeout)
+['$rootScope', '$location', '$timeout', 'Session',  
+function($rootScope, $location, $timeout, Session)
 {
+
+
+
 
   /**
    * REMOVE
@@ -203,6 +219,11 @@ function($rootScope, $location, $timeout)
   };
   
 
+
+
+
+
+
   /**
    * TODO
    * This values should be originating from
@@ -213,10 +234,22 @@ function($rootScope, $location, $timeout)
     uuid: 'apptestknrm'
   };
 
+
+
+
+
+
   /**
    * TODO
    */
   $rootScope.page = new Object;
+
+
+
+
+
+
+
 
   /**
    * Detect route change start
@@ -229,11 +262,27 @@ function($rootScope, $location, $timeout)
      */
     $rootScope.page.title = $location.url();
 
+
+    /**
+     * TODO
+     * 
+     * !!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * A BIG TODO FINISH THIS !!!!
+     * !!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * 
+     * Prevent Deep Linking
+     * @type {String}
+     */
+    //if (!Session.check()) window.location = "#/login";
+
+
+
     $rootScope.alertType = "";
     $rootScope.alertMessage = "Loading...";
     $rootScope.active = "progress-striped active progress-warning";
   });
   
+
   /**
    * Route change successfull
    */
@@ -246,6 +295,7 @@ function($rootScope, $location, $timeout)
     $rootScope.newLocation = $location.path();
   });
 
+
   /**
    * Route change is failed!
    */
@@ -257,11 +307,14 @@ function($rootScope, $location, $timeout)
     $rootScope.active = "";
   });
 
+
   /**
    * General status messages
    */
   $rootScope.alertType = "alert-info";
   $rootScope.alertMessage = "Welcome to the resolve demo";
+
+
 
 
 
@@ -289,6 +342,9 @@ function($rootScope, $location, $timeout)
   {
     //$('.notifications').notify(options).show();
   };
+
+
+
 
 
 }]);

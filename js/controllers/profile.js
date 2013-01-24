@@ -1,5 +1,6 @@
-function profileCtrl($rootScope, $scope, $config, resources, Profile, timerService, $route, $routeParams)
+function profileCtrl($rootScope, $scope, $config, resources, Profile, timerService, $route, $routeParams, Services)
 {
+
 	var self = this;
   $scope.resources = resources;
 
@@ -36,7 +37,7 @@ profileCtrl.prototype = {
 
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', 'resources', 'Profile', 'timerService', '$route', '$routeParams'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$config', 'resources', 'Profile', 'timerService', '$route', '$routeParams', 'Services'];
 
 
 

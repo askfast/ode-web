@@ -1,5 +1,6 @@
-function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $route, $routeParams)
+function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $route, $routeParams, Services)
 {
+
 	var self = this;
 
 	$scope.groups = groups;
@@ -39,32 +40,12 @@ groupsCtrl.prototype = {
 
 
 
-groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'groups', 'Group', 'timerService', '$route', '$routeParams'];
+groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'groups', 'Group', 'timerService', '$route', '$routeParams', 'Services'];
 
 
 
 
 
-
-// function membersCtrl($rootScope, $scope, $config, members, Group, timerService, $route, $routeParams)
-// {
-//   var self = this;
-
-//   $scope.members = members;
-
-//   console.log('--> members:', $scope.members);
-
-// };
-
-
-// membersCtrl.resolve = {
-//   members: function ($rootScope, $config, Group, $route) 
-//   {
-//     return Group.get($route.current.params.groupId);
-//   }
-// };
-
-// membersCtrl.$inject = ['$rootScope', '$scope', '$config', 'members', 'Group', 'timerService', '$route', '$routeParams'];
 
 
 
@@ -173,19 +154,22 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
       var successCb = function (result) 
       {
 
-        if (angular.equals(result, [])) 
-        {
-          deferred.reject("There is no record!");
-        }
-        else 
-        {
+        // if (angular.equals(result, [])) 
+        // {
+        //   deferred.reject("There is no record!");
+        // }
+        // else 
+        // {
           $rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
 
           Storage.add('resources', angular.toJson(result));
           $rootScope.notify( { message: 'Profile data added to localStorage.' } );
 
-          deferred.resolve(result);
-        }
+          deferred.resolve({
+            id: groupId,
+            data: result
+          });
+        // }
       };
 
       Members.query({groupId: groupId}, successCb);

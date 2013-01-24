@@ -118,6 +118,17 @@ angular.module('WebPaige.settings', []).
 
 
 
+WebPaige.
+service('Services', ['$rootScope', 'Session', 'Storage', 
+function ($rootScope, Session, Storage) 
+{
+  var self = this;
+
+}]);
+
+
+
+
 /**
  * TODO
  * Make history of events

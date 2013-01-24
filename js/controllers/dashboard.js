@@ -1,5 +1,13 @@
-function dashboardCtrl($scope)
+function dashboardCtrl($scope, $rootScope, Services)
 {
-	
 }
-dashboardCtrl.$inject = ['$scope'];
+
+
+dashboardCtrl.resolve = {
+  data: function ($rootScope, $config, Services) 
+  {
+  }
+}
+
+
+dashboardCtrl.$inject = ['$scope', '$rootScope', 'Services'];

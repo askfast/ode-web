@@ -1,11 +1,8 @@
-
-
-
 /**
  * TODO
  * Clear list of dependencies
  * 
- * TimeSlots Service
+ * TimeSlots Resource
  */
 angular.module('SlotServices', ['ngResource']).
 factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
@@ -366,6 +363,43 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 
 // process slots
 //  id slots
@@ -403,8 +437,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
  *
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService) 
+function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, Services) 
 {
+
   /**
    * TODO
    * Always refine this initializers
@@ -1045,4 +1080,4 @@ planboardCtrl.prototype = {
 
 }
 
-planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots', 'timerService'];
+planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots', 'timerService', 'Services'];
