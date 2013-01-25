@@ -4,8 +4,12 @@
 /**
  * Messages Controller
  */
-function messagesCtrl($scope, $eventBus, $log, data)
+function messagesCtrl($scope, $rootScope, messages)
 {
+  var self = this;
+  $scope.messages = messages;
+
+  console.log('messages ->', messages);
 }
 
 
@@ -13,10 +17,11 @@ function messagesCtrl($scope, $eventBus, $log, data)
  * Messages resolver
  */
 messagesCtrl.resolve = {
-  data: function ($rootScope, $config) 
+  messages: function (Messages) 
   {
+    return Messages.query();
   }
 }
 
 
-messagesCtrl.$inject = ['$scope', '$eventBus', '$log', 'data'];
+messagesCtrl.$inject = ['$scope', '$rootScope', 'messages'];

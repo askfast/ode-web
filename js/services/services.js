@@ -603,25 +603,18 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   };
 
 
-  Messages.prototype.save = function (group) 
+  Messages.prototype.send = function () 
   {
-    // var localResources = angular.fromJson(Storage.get('resources'));
+  };
 
-    // localResources['name'] = resources.name;
-    // localResources['EmailAddress'] = resources.EmailAddress;
-    // localResources['PhoneAddress'] = resources.PhoneAddress;
-    // localResources['PostAddress'] = resources.PostAddress;
-    // localResources['PostZip'] = resources.PostZip;
-    // localResources['PostCity'] = resources.PostCity;
 
-    // Storage.add('slots', angular.toJson(localResources));
+  Messages.prototype.state = function () 
+  {
+  };
 
-    // $rootScope.notify( { message: 'Profile saved in localStorage.' } );
 
-    // Profile.save(null, resources, function()
-    // {
-    //   $rootScope.notify( { message: 'Profile saved in back-end.' } );
-    // });
+  Messages.prototype.delete = function (id, empty) 
+  {
   };
 
 
@@ -951,7 +944,23 @@ factory('Session', function ($rootScope, $http, Storage)
      */
     check: function()
     {
-      return ($rootScope.session) ? true : false;
+      if (!$rootScope.session)
+      {
+        var session = angular.fromJson(Storage.cookie.get('session'));
+        if (session)
+        {
+          this.set(session.id);
+          return true;
+        }
+        else
+        {
+          return false;
+        };
+      }
+      else
+      {
+        return true;
+      };
     },
 
 

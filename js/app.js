@@ -257,6 +257,12 @@ WebPaige.run(
 function($rootScope, $location, $timeout, Session)
 {
 
+
+
+  Session.check();
+  
+
+
   /**
    * REMOVE
    * This part is only needed for by-passing login
