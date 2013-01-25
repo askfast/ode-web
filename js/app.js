@@ -33,6 +33,9 @@ WebPaige.
     time: {
       format: 'HH:mm tt'
     },
+    datetime: {
+      format: 'dd-M-yyyy HH:mm tt'
+    },
     timeline: {
       //period: period,
       period: {
@@ -260,7 +263,7 @@ function($rootScope, $location, $timeout, Session)
 
 
   Session.check();
-  
+
 
 
   /**

@@ -1079,7 +1079,7 @@ factory('Session', function ($rootScope, $http, Storage)
       /**
        * REMOVE
        */
-      console.log('http headers ->', $http.defaults.headers.common);
+      //console.log('http headers ->', $http.defaults.headers.common);
 
       return session;
     },
