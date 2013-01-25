@@ -1,3 +1,9 @@
+'use strict';
+
+
+/**
+ * Groups Controller
+ */
 function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $route, $routeParams)
 {
 
@@ -26,6 +32,9 @@ function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $r
 };
 
 
+/**
+ * Groups resolver
+ */
 groupsCtrl.resolve = {
   groups: function ($rootScope, $config, Group, $route) 
   {
@@ -34,17 +43,20 @@ groupsCtrl.resolve = {
 };
 
 
+/**
+ * Groups prototypes
+ */
 groupsCtrl.prototype = {
   constructor: groupsCtrl
 };
 
 
 
-groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'groups', 'Group', 'timerService', '$route', '$routeParams'];
-
-
-
-
-
-
-
+groupsCtrl.$inject = [  '$rootScope', 
+                        '$scope', 
+                        '$config', 
+                        'groups', 
+                        'Group', 
+                        'timerService', 
+                        '$route', 
+                        '$routeParams'];

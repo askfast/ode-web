@@ -1,5 +1,6 @@
 'use strict';
 
+
 /**
  * Declare app level module which depends on filters, and services
  */
@@ -10,8 +11,6 @@ var WebPaige = angular.module('WebPaige',
     'WebPaige.directives', 
     '$strap.directives',
     'ngResource']);
-
-
 
 
 
@@ -290,10 +289,6 @@ function($rootScope, $location, $timeout, Session)
       }
     );
   };
-  
-
-
-
 
 
 
@@ -309,18 +304,10 @@ function($rootScope, $location, $timeout, Session)
 
 
 
-
-
-
   /**
    * TODO
    */
   $rootScope.page = new Object;
-
-
-
-
-
 
 
 
@@ -389,10 +376,6 @@ function($rootScope, $location, $timeout, Session)
 
 
 
-
-
-
-
   /**
    * TODO
    * Make a service out of this!
@@ -415,9 +398,6 @@ function($rootScope, $location, $timeout, Session)
   {
     //$('.notifications').notify(options).show();
   };
-
-
-
 
 
 }]);

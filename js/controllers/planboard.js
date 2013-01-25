@@ -1,3 +1,5 @@
+'use strict';
+
 // 
 // process slots
 //  id slots

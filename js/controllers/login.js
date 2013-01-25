@@ -1,15 +1,21 @@
 'use strict';
-/* Login controller */
 
+
+/**
+ * Login Controller
+ */
 var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Group, Messages)
 {
 	var self = this;
 
 
   /**
+   * TODO
+   * Remove all those jQuery selectors and use ng's
+   * 
    * Check browser if blacklisted
    */
-  if ( self.checkBrowser($config.blacklisted) )
+  if (self.checkBrowser($config.blacklisted))
   {
     $('#loginForm').hide();
     $('#browseHappy').show();
@@ -32,10 +38,13 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
   };
 
 
-  // real knrm users for testing
-  $scope.knrms = knrm_users;
 
-  // knrm users login
+  /**
+   * Real KNRM users for testing
+   * 
+   * @type {[type]}
+   */
+  $scope.knrms = knrm_users;
   $scope.loginAsKNRM = function(uuid, pass)
   {
     $('#loginForm button[type=submit]')
@@ -44,6 +53,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
     self.auth(uuid, pass);
   };
+
 
 
   /**
@@ -60,7 +70,6 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
     // reset alerts
     $('#alertDiv').hide();
 
-
     // check
     if (!$scope.logindata ||
         !$scope.logindata.username || 
@@ -69,12 +78,10 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
       return false;     
     };
 
-
     // button state
     $('#loginForm button[type=submit]')
       .text('Login..')
       .attr('disabled', 'disabled');
-
 
     // save login
     localStorage.setItem('logindata', JSON.stringify({
@@ -85,6 +92,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
     self.auth( $scope.logindata.username, $md5.process($scope.logindata.password ));
   };
+
 
 
   /**
@@ -163,23 +171,9 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
       })
       
     });
-
-
-
-
-
-
-
-
-    // Load resources
-    // .then -> Load messages
-    // .then -> Load network
-    // .then -> Load group members
-    // 						Unify those members in one unique list
-    // Redirect to Planboard
-    //document.location = "#/planboard";
     
   };
+
 
 
 
@@ -268,19 +262,13 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
 
 
+
+
 /**
  * TODO
  * Remove unneccessary dependencies
  * 
  * Logout from app
- * 
- * @param  {[type]} $rootScope [description]
- * @param  {[type]} $config    [description]
- * @param  {[type]} $scope     [description]
- * @param  {[type]} Session    [description]
- * @param  {[type]} User       [description]
- * @param  {[type]} Storage    [description]
- * @return {[type]}            [description]
  */
 loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
 {
@@ -297,10 +285,9 @@ loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
 
 
 
+
 /**
  * Login prototypes
- * 
- * @type {Object}
  */
 loginCtrl.prototype = {
 
@@ -344,5 +331,13 @@ loginCtrl.prototype = {
 
 };
 
-loginCtrl.$inject = ['$rootScope', '$config', '$q', '$scope', 'Session', 'User', '$md5', 'Group', 'Messages'];
+loginCtrl.$inject = [ '$rootScope', 
+                      '$config', 
+                      '$q', 
+                      '$scope', 
+                      'Session', 
+                      'User', 
+                      '$md5', 
+                      'Group', 
+                      'Messages'];
 

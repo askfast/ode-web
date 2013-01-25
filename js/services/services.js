@@ -1,277 +1,23 @@
 'use strict';
 
-
-
-
-
-
-
-
-
-
-
-
-WebPaige.
-factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
-{
-
-  var Profile = $resource(
-    $config.host + '/node/:user/resource',
-    {
-      user: $route.current.params.userId
-    },
-    {
-      get: {
-        method: 'GET',
-        params: {}
-      },
-      save: {
-        method: 'PUT',
-        params: {}
-      }
-    }
-  );
-  
-
-  Profile.prototype.get = function () 
-  {    
-    var deferred = $q.defer(), 
-        localProfile = Storage.get('resources');
-
-    // if (localProfile)
-    // {
-    //   deferred.resolve(angular.fromJson(localSlots));
-    //   return deferred.promise;
-    // }
-    // else
-    // {
-      var successCb = function (result) 
-      {
-
-        if (angular.equals(result, [])) 
-        {
-          deferred.reject("There is no record!");
-        }
-        else 
-        {
-          $rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
-
-          Storage.add('resources', angular.toJson(result));
-          $rootScope.notify( { message: 'Profile data added to localStorage.' } );
-
-          deferred.resolve(result);
-        }
-      };
-
-      Profile.get(successCb);
-
-      return deferred.promise;
-    // }
-  };
-
-
-  Profile.prototype.local = function()
-  {
-    return angular.fromJson(Storage.get('resources'));
-  };
-
-
-  Profile.prototype.save = function (resources) 
-  {    
-
-    var localResources = angular.fromJson(Storage.get('resources'));
-
-    localResources['name'] = resources.name;
-    localResources['EmailAddress'] = resources.EmailAddress;
-    localResources['PhoneAddress'] = resources.PhoneAddress;
-    localResources['PostAddress'] = resources.PostAddress;
-    localResources['PostZip'] = resources.PostZip;
-    localResources['PostCity'] = resources.PostCity;
-
-    Storage.add('slots', angular.toJson(localResources));
-
-    $rootScope.notify( { message: 'Profile saved in localStorage.' } );
-
-    Profile.save(null, resources, function()
-    {
-      $rootScope.notify( { message: 'Profile saved in back-end.' } );
-    });
-  };
-
-
-
-  return new Profile;
-});
-
-
-
-
-
-
-
-
-
-
-WebPaige.
-factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
-{
-
-
-  var Group = $resource(
-    $config.host + '/network/:groupId',
-    {
-    },
-    {
-      query: {
-        method: 'GET',
-        params: {},
-        isArray: true
-      },
-      get: {
-        method: 'GET',
-        params: {groupId:''}
-      },
-      save: {
-        method: 'POST',
-        params: {}
-      }
-    }
-  );
-
-
-  var Members = $resource(
-    $config.host + '/network/:groupId/members',
-    {
-    },
-    {
-      query: {
-        method: 'GET',
-        params: {groupId:''},
-        isArray: true
-      },
-      get: {
-        method: 'GET',
-        params: {groupId:''}
-      },
-      save: {
-        method: 'POST',
-        params: {}
-      }
-    }
-  );
-  
-
-  Group.prototype.query = function () 
-  {    
-
-    var deferred = $q.defer(), 
-        localProfile = Storage.get('groups');
-
-    // if (localProfile)
-    // {
-    //   deferred.resolve(angular.fromJson(localSlots));
-    //   return deferred.promise;
-    // }
-    // else
-    // {
-      var successCb = function (result) 
-      {
-
-        if (angular.equals(result, [])) 
-        {
-          deferred.reject("There is no groups!");
-        }
-        else 
-        {
-          $rootScope.notify( { message: 'Groups downloaded from back-end.' } );
-
-          Storage.add('resources', angular.toJson(result));
-          $rootScope.notify( { message: 'Groups data added to localStorage.' } );
-
-          deferred.resolve(result);
-        }
-      };
-
-      Group.query(successCb);
-
-      return deferred.promise;
-    // }
-  };
-  
-
-  Group.prototype.get = function (groupId) 
-  {    
-
-    var deferred = $q.defer(), 
-        localProfile = Storage.get('resources');
-
-    // if (localProfile)
-    // {
-    //   deferred.resolve(angular.fromJson(localSlots));
-    //   return deferred.promise;
-    // }
-    // else
-    // {
-      var successCb = function (result) 
-      {
-
-        // if (angular.equals(result, [])) 
-        // {
-        //   deferred.reject("There is no record!");
-        // }
-        // else 
-        // {
-          $rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
-
-          Storage.add('resources', angular.toJson(result));
-          $rootScope.notify( { message: 'Profile data added to localStorage.' } );
-
-          deferred.resolve({
-            id: groupId,
-            data: result
-          });
-        // }
-      };
-
-      Members.query({groupId: groupId}, successCb);
-
-      return deferred.promise;
-    // }
-  };
-
-
-  Group.prototype.local = function()
-  {
-    return angular.fromJson(Storage.get('groups'));
-  };
-
-
-  Group.prototype.save = function (group) 
-  {
-    // var localResources = angular.fromJson(Storage.get('resources'));
-
-    // localResources['name'] = resources.name;
-    // localResources['EmailAddress'] = resources.EmailAddress;
-    // localResources['PhoneAddress'] = resources.PhoneAddress;
-    // localResources['PostAddress'] = resources.PostAddress;
-    // localResources['PostZip'] = resources.PostZip;
-    // localResources['PostCity'] = resources.PostCity;
-
-    // Storage.add('slots', angular.toJson(localResources));
-
-    // $rootScope.notify( { message: 'Profile saved in localStorage.' } );
-
-    // Profile.save(null, resources, function()
-    // {
-    //   $rootScope.notify( { message: 'Profile saved in back-end.' } );
-    // });
-  };
-
-
-  return new Group;
-});
-
-
+/**
+ * Services
+ *
+ * User resources
+ * Slots resources
+ * Messages resources
+ * Groups resources
+ * Profile resources
+ * Settings resources
+ *
+ * $eventBus service
+ * timerService service
+ *
+ * Session service
+ *
+ * localStorage service
+ * md5 service
+ */
 
 
 
@@ -390,6 +136,12 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
 
 
 
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
 
@@ -756,9 +508,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
 
 
-
-
-
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
 
@@ -880,12 +635,294 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
 
 
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
 
 
 
 
+WebPaige.
+factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+{
+
+
+  var Group = $resource(
+    $config.host + '/network/:groupId',
+    {
+    },
+    {
+      query: {
+        method: 'GET',
+        params: {},
+        isArray: true
+      },
+      get: {
+        method: 'GET',
+        params: {groupId:''}
+      },
+      save: {
+        method: 'POST',
+        params: {}
+      }
+    }
+  );
+
+
+  var Members = $resource(
+    $config.host + '/network/:groupId/members',
+    {
+    },
+    {
+      query: {
+        method: 'GET',
+        params: {groupId:''},
+        isArray: true
+      },
+      get: {
+        method: 'GET',
+        params: {groupId:''}
+      },
+      save: {
+        method: 'POST',
+        params: {}
+      }
+    }
+  );
+  
+
+  Group.prototype.query = function () 
+  {    
+
+    var deferred = $q.defer(), 
+        localProfile = Storage.get('groups');
+
+    // if (localProfile)
+    // {
+    //   deferred.resolve(angular.fromJson(localSlots));
+    //   return deferred.promise;
+    // }
+    // else
+    // {
+      var successCb = function (result) 
+      {
+
+        if (angular.equals(result, [])) 
+        {
+          deferred.reject("There is no groups!");
+        }
+        else 
+        {
+          $rootScope.notify( { message: 'Groups downloaded from back-end.' } );
+
+          Storage.add('resources', angular.toJson(result));
+          $rootScope.notify( { message: 'Groups data added to localStorage.' } );
+
+          deferred.resolve(result);
+        }
+      };
+
+      Group.query(successCb);
+
+      return deferred.promise;
+    // }
+  };
+  
+
+  Group.prototype.get = function (groupId) 
+  {    
+
+    var deferred = $q.defer(), 
+        localProfile = Storage.get('resources');
+
+    // if (localProfile)
+    // {
+    //   deferred.resolve(angular.fromJson(localSlots));
+    //   return deferred.promise;
+    // }
+    // else
+    // {
+      var successCb = function (result) 
+      {
+
+        // if (angular.equals(result, [])) 
+        // {
+        //   deferred.reject("There is no record!");
+        // }
+        // else 
+        // {
+          $rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
+
+          Storage.add('resources', angular.toJson(result));
+          $rootScope.notify( { message: 'Profile data added to localStorage.' } );
+
+          deferred.resolve({
+            id: groupId,
+            data: result
+          });
+        // }
+      };
+
+      Members.query({groupId: groupId}, successCb);
+
+      return deferred.promise;
+    // }
+  };
+
+
+  Group.prototype.local = function()
+  {
+    return angular.fromJson(Storage.get('groups'));
+  };
+
+
+  Group.prototype.save = function (group) 
+  {
+    // var localResources = angular.fromJson(Storage.get('resources'));
+
+    // localResources['name'] = resources.name;
+    // localResources['EmailAddress'] = resources.EmailAddress;
+    // localResources['PhoneAddress'] = resources.PhoneAddress;
+    // localResources['PostAddress'] = resources.PostAddress;
+    // localResources['PostZip'] = resources.PostZip;
+    // localResources['PostCity'] = resources.PostCity;
+
+    // Storage.add('slots', angular.toJson(localResources));
+
+    // $rootScope.notify( { message: 'Profile saved in localStorage.' } );
+
+    // Profile.save(null, resources, function()
+    // {
+    //   $rootScope.notify( { message: 'Profile saved in back-end.' } );
+    // });
+  };
+
+
+  return new Group;
+});
+
+
+
+
+
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
+
+
+
+
+
+WebPaige.
+factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+{
+
+  var Profile = $resource(
+    $config.host + '/node/:user/resource',
+    {
+      user: $route.current.params.userId
+    },
+    {
+      get: {
+        method: 'GET',
+        params: {}
+      },
+      save: {
+        method: 'PUT',
+        params: {}
+      }
+    }
+  );
+  
+
+  Profile.prototype.get = function () 
+  {    
+    var deferred = $q.defer(), 
+        localProfile = Storage.get('resources');
+
+    // if (localProfile)
+    // {
+    //   deferred.resolve(angular.fromJson(localSlots));
+    //   return deferred.promise;
+    // }
+    // else
+    // {
+      var successCb = function (result) 
+      {
+
+        if (angular.equals(result, [])) 
+        {
+          deferred.reject("There is no record!");
+        }
+        else 
+        {
+          $rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
+
+          Storage.add('resources', angular.toJson(result));
+          $rootScope.notify( { message: 'Profile data added to localStorage.' } );
+
+          deferred.resolve(result);
+        }
+      };
+
+      Profile.get(successCb);
+
+      return deferred.promise;
+    // }
+  };
+
+
+  Profile.prototype.local = function()
+  {
+    return angular.fromJson(Storage.get('resources'));
+  };
+
+
+  Profile.prototype.save = function (resources) 
+  {    
+
+    var localResources = angular.fromJson(Storage.get('resources'));
+
+    localResources['name'] = resources.name;
+    localResources['EmailAddress'] = resources.EmailAddress;
+    localResources['PhoneAddress'] = resources.PhoneAddress;
+    localResources['PostAddress'] = resources.PostAddress;
+    localResources['PostZip'] = resources.PostZip;
+    localResources['PostCity'] = resources.PostCity;
+
+    Storage.add('slots', angular.toJson(localResources));
+
+    $rootScope.notify( { message: 'Profile saved in localStorage.' } );
+
+    Profile.save(null, resources, function()
+    {
+      $rootScope.notify( { message: 'Profile saved in back-end.' } );
+    });
+  };
+
+
+
+  return new Profile;
+});
+
+
+
+
+
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
 
@@ -1058,6 +1095,17 @@ factory('Session', function ($rootScope, $http, Storage)
 
 
 
+
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
+
+
+
+
 /**
  * TODO
  * Make history of events
@@ -1129,14 +1177,12 @@ function($rootScope)
 
 
 
-
-
-
-
-
-
-
-
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
 
@@ -1195,17 +1241,12 @@ timerService.service('timerService', [
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
 
@@ -1551,44 +1592,12 @@ angularLocalStorage.service('Storage', [
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
 

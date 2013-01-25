@@ -1,3 +1,9 @@
+'use strict';
+
+
+/**
+ * Profile Controller
+ */
 function profileCtrl($rootScope, $scope, $config, resources, Profile, timerService, $route, $routeParams)
 {
 
@@ -23,6 +29,10 @@ function profileCtrl($rootScope, $scope, $config, resources, Profile, timerServi
 };
 
 
+
+/**
+ * Profile resolver
+ */
 profileCtrl.resolve = {
   resources: function ($rootScope, $config, Profile, $route) 
   {
@@ -31,10 +41,20 @@ profileCtrl.resolve = {
 };
 
 
+/**
+ * Profile prototypes
+ */
 profileCtrl.prototype = {
   constructor: profileCtrl
 };
 
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', 'resources', 'Profile', 'timerService', '$route', '$routeParams'];
+profileCtrl.$inject = [ '$rootScope', 
+                        '$scope', 
+                        '$config', 
+                        'resources', 
+                        'Profile', 
+                        'timerService', 
+                        '$route', 
+                        '$routeParams'];
