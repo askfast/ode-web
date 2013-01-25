@@ -1,4 +1,4 @@
-function messagesCtrl($scope, $eventBus, $log, data, Services)
+function messagesCtrl($scope, $eventBus, $log, data)
 {
 }
 
@@ -10,4 +10,4 @@ messagesCtrl.resolve = {
 }
 
 
-messagesCtrl.$inject = ['$scope', '$eventBus', '$log', 'data', 'Services'];
+messagesCtrl.$inject = ['$scope', '$eventBus', '$log', 'data'];

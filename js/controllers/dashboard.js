@@ -1,13 +1,13 @@
-function dashboardCtrl($scope, $rootScope, Services)
+function dashboardCtrl($scope, $rootScope)
 {
 }
 
 
 dashboardCtrl.resolve = {
-  data: function ($rootScope, $config, Services) 
+  data: function ($rootScope, $config) 
   {
   }
 }
 
 
-dashboardCtrl.$inject = ['$scope', '$rootScope', 'Services'];
+dashboardCtrl.$inject = ['$scope', '$rootScope'];

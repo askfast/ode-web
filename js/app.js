@@ -4,15 +4,126 @@
  * Declare app level module which depends on filters, and services
  */
 var WebPaige = angular.module('WebPaige', 
-  [ 'WebPaige.settings', 
-    'WebPaige.filters', 
+  [ 'WebPaige.filters', 
     'StorageModule',
     'timerModule',
     'WebPaige.directives', 
-    '$strap.directives', 
-    'SlotServices', 
-    'ProfileServices', 
-    'GroupServices']);
+    '$strap.directives',
+    'ngResource']);
+
+
+
+
+
+
+/**
+ * TODO
+ * Finish all the config items and move from other config file
+ * Dynamically creating config items??
+ * 
+ * App configuration
+ */
+WebPaige.
+  value('$config', {
+    version: '0.2.0',
+    blacklisted: ['msie'],
+    host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    date: {
+      format: 'dd-M-yyyy'
+    },
+    time: {
+      format: 'HH:mm tt'
+    },
+    timeline: {
+      //period: period,
+      period: {
+        bstart: (parseInt((new Date()).getTime() / 1000) - 86400 * 7 * 1),
+        bend:   (parseInt((new Date()).getTime() / 1000) + 86400 * 7 * 1),
+        start:  Date.today().add({ days: -2 }),
+        end:    Date.today().add({ days: 12 })
+      },
+      /**
+       * TODO
+       * setting properties dynamically is not working yet!!
+       */
+      settings: {
+        ranges: {
+          period: this.period,
+          reset: this.period
+        }
+      },
+      // TODO combine options with settings
+      options: {
+        axisOnTop: true,
+        width: '100%',
+        height: 'auto',
+        selectable: true,
+        editable: true,
+        style: 'box',
+        groupsWidth: '150px',
+        eventMarginAxis: 0,
+        //showNavigation: true,
+        groupsChangeable: true,
+        // periods
+        start: Date.today().add({ days: -2 }),
+        end: Date.today().add({ days: 12 }),
+        // end periods
+        //min: "2013-01-01T00:00:00.000Z",
+        //max: "2013-12-31T00:00:00.000Z",
+        intervalMin: 1000 * 60 * 60 * 1,
+        intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
+      }
+    },
+    states: {
+      'com.ask-cs.State.Available': {
+          'className': 'state-available',
+          'label': 'Beschiekbaar',
+          'color': '#4f824f',
+          'type': 'Beschikbaar'
+      },
+      'com.ask-cs.State.KNRM.BeschikbaarNoord': {
+          'className': 'state-available-north',
+          'label': 'Beschikbaar voor Noord',
+          'color': '#000',
+          'type': 'Beschikbaar'
+      },
+      'com.ask-cs.State.KNRM.BeschikbaarZuid': {
+          'className': 'state-available-south',
+          'label': 'Beschikbaar voor Zuid',
+          'color': '#e08a0c',
+          'type': 'Beschikbaar'
+      },
+      'com.ask-cs.State.Unavailable': {
+          'className': 'state-unavailable',
+          'label': 'Niet Beschikbaar',
+          'color': '#a93232',
+          'type': 'Niet Beschikbaar'
+      },
+      'com.ask-cs.State.KNRM.SchipperVanDienst': {
+          'className': 'state-schipper-service',
+          'label': 'Schipper van Dienst',
+          'color': '#e0c100',
+          'type': 'Beschikbaar'
+      },
+      'com.ask-cs.State.Unreached': {
+          'className': 'state-unreached',
+          'label': 'Niet Bereikt',
+          'color': '#65619b',
+          'type': 'Niet Beschikbaar'
+      }
+    },
+    divisions: {
+      'knrm.StateGroup.BeschikbaarNoord': {
+        'label': 'Noord'
+      },
+      'knrm.StateGroup.BeschikbaarZuid': {
+        'label': 'Zuid'
+      }
+    }
+  }
+);
+
+
 
 
 /**
@@ -25,9 +136,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
     //$locationProvider.html5Mode(true);
 
     $routeProvider
-
-
-
       /**
        * Login
        */
@@ -42,9 +150,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
         templateUrl: 'partials/login.html', 
         controller: loginCtrl.logout
       })
-
-
-
       /**
        * Dashboard
        */
@@ -53,10 +158,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
         controller: dashboardCtrl,
         resolve: dashboardCtrl.resolve   
       })
-
-
-
-
       /**
        * Planboard
        */
@@ -65,10 +166,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    
       })
-
-
-
-
       /**
        * Messages
        */
@@ -77,10 +174,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
           controller: messagesCtrl,
           resolve: messagesCtrl.resolve   
       })
-
-
-
-
       /**
        * Groups
        */
@@ -97,11 +190,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
           controller: groupsCtrl,
           resolve: groupsCtrl.resolve
       })
-
-
-
-
-
       /**
        * Profile :: view
        */
@@ -126,11 +214,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
-
-
-
-
-
       /**
        * Settings
        */
@@ -139,11 +222,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
           controller: settingsCtrl,
           resolve: settingsCtrl.resolve   
       })
-
-
-
-
-
       /**
        * Angular-Strap
        */
@@ -151,8 +229,6 @@ WebPaige.config(function($locationProvider, $routeProvider)
           templateUrl: 'partials/angular-strap.html', 
           controller: StrapCtrl
       })
-
-
     /**
      * Redirect
      */
@@ -181,9 +257,6 @@ WebPaige.run(
 ['$rootScope', '$location', '$timeout', 'Session',  
 function($rootScope, $location, $timeout, Session)
 {
-
-
-
 
   /**
    * REMOVE

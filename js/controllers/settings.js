@@ -1,4 +1,4 @@
-function settingsCtrl($scope, Session, settings, Services)
+function settingsCtrl($scope)
 {
 }
 
@@ -9,4 +9,4 @@ settingsCtrl.resolve = {
   }
 };
 
-settingsCtrl.$inject = ['$scope', 'Session', 'settings', 'Services'];
+settingsCtrl.$inject = ['$scope'];

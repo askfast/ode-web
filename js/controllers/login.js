@@ -1,10 +1,14 @@
 'use strict';
 /* Login controller */
 
-var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Group)
+var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Group, Messages)
 {
 	var self = this;
 
+
+  /**
+   * Check browser if blacklisted
+   */
   if ( self.checkBrowser($config.blacklisted) )
   {
     $('#loginForm').hide();
@@ -12,8 +16,12 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
   };
 
 
-  // TODO : use native JSON functions of angular
-  // and Store service
+  /**
+   * TODO
+   * use native JSON functions of angular and Store service
+   * 
+   * @type {[type]}
+   */
   var logindata = localStorage.getItem('logindata');
   if (logindata)
   {
@@ -22,8 +30,6 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
       $scope.logindata = JSON.parse(logindata);
     };
   };
-
-
 
 
   // real knrm users for testing
@@ -40,10 +46,15 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
   };
 
 
-
-
-
-  // login trigger
+  /**
+   * TODO
+   * Remove unneccessary DOM manipulation
+   * Use cookies for user credentials
+   * 
+   * Login trigger
+   * 
+   * @return {[type]} [description]
+   */
   $scope.login = function()
   {
     // reset alerts
@@ -76,6 +87,13 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
   };
 
 
+  /**
+   * Authorize user
+   * 
+   * @param  {[type]} uuid [description]
+   * @param  {[type]} pass [description]
+   * @return {[type]}      [description]
+   */
   self.auth = function(uuid, pass)
   {    
     User.login(uuid, pass)
@@ -90,47 +108,59 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
 
 
-
-
-
+  /**
+   * TODO
+   * Optimize preloader and messages
+   * Use local caceh for returned data
+   * 
+   * Initialize preloader
+   * @return {[type]} [description]
+   */
   self.preloader = function()
   {
     // presentation
     $('#loginForm').hide();
     $('#preloader').show();
 
-
-
     self.progress(20, 'Loading user information..');
 
     User.resources()
     .then(function(resources)
     {
-      //console.log('user resources ->', resources);
+      console.log('user resources ->', resources);
+      self.progress(40, 'Loading messages..');
 
-      self.progress(40, 'Loading groups');
-
-      Group.query()
-      .then(function(groups)
+      Messages.query()
+      .then(function()
       {
-        //console.log('user groups ->', groups);
+        console.log('messages count ->', Messages.unread());
+        self.progress(60, 'Loading groups..');
 
-        self.progress(40, 'Loading members');
-
-        var calls = [];
-
-        angular.forEach(groups, function(group, index)
+        Group.query()
+        .then(function(groups)
         {
-          calls.push( Group.get(group.uuid) );
+          console.log('user groups ->', groups);
+          self.progress(80, 'Loading members..');
+
+          var calls = [];
+          angular.forEach(groups, function(group, index)
+          {
+            calls.push(Group.get(group.uuid));
+          });
+
+          $q.all(calls)
+          .then(function(result)
+          {
+            console.log('all member calls went well ->', result);
+            self.progress(100, 'Everything loaded!');
+
+            document.location = "#/planboard";
+          });
+
         });
 
-        $q.all(calls)
-        .then(function(result)
-        {
-          console.log('all member calls went well', result);
-        });
 
-      });
+      })
       
     });
 
@@ -153,7 +183,13 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
 
 
-
+  /**
+   * Progress bar
+   * 
+   * @param  {[type]} ratio   [description]
+   * @param  {[type]} message [description]
+   * @return {[type]}         [description]
+   */
   self.progress = function(ratio , message)
   {
     $('#preloader .progress .bar').css({ width: ratio + '%' }); 
@@ -232,7 +268,20 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
 
 
-
+/**
+ * TODO
+ * Remove unneccessary dependencies
+ * 
+ * Logout from app
+ * 
+ * @param  {[type]} $rootScope [description]
+ * @param  {[type]} $config    [description]
+ * @param  {[type]} $scope     [description]
+ * @param  {[type]} Session    [description]
+ * @param  {[type]} User       [description]
+ * @param  {[type]} Storage    [description]
+ * @return {[type]}            [description]
+ */
 loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
 {
 	User.logout()
@@ -248,7 +297,11 @@ loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
 
 
 
-
+/**
+ * Login prototypes
+ * 
+ * @type {Object}
+ */
 loginCtrl.prototype = {
 
   constructor: loginCtrl,
@@ -291,624 +344,5 @@ loginCtrl.prototype = {
 
 };
 
-loginCtrl.$inject = ['$rootScope', '$config', '$q', '$scope', 'Session', 'User', '$md5', 'Group'];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * TODO
- * Clear list of dependencies
- * 
- * TimeSlots Service
- */
-WebPaige.
-factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
-{
-  var self = this;
-
-  var User = $resource();
-
-  var Login = $resource(
-    $config.host + '/login',
-    {
-    },
-    {
-      process: {
-        method: 'GET',
-        params: {uuid:'', pass:''}
-      }
-    }
-  );
-
-
-  User.prototype.login = function (uuid, pass) 
-  {    
-    var deferred = $q.defer();
-    Login.process({uuid: uuid, pass: pass}, function (result) 
-    {
-      if (angular.equals(result, [])) 
-      {
-        deferred.reject("Something went wrong with login!");
-      }
-      else 
-      {
-        deferred.resolve(result);
-      }
-    });
-    return deferred.promise;
-  };
-
-
-  var Logout = $resource(
-    $config.host + '/logout',
-    {
-    },
-    {
-      process: {
-        method: 'GET',
-        params: {}
-      }
-    }
-  );
-
-
-  User.prototype.logout = function () 
-  {    
-    var deferred = $q.defer();
-    Logout.process(null, function (result) 
-    {
-      // if (angular.equals(result, [])) 
-      // {
-      //   deferred.reject("Something went wrong with logout!");
-      // }
-      // else 
-      // {
-
-        deferred.resolve(result);
-      // }
-    });
-    return deferred.promise;
-  };
-
-
-  var Resources = $resource(
-    $config.host + '/resources',
-    {
-    },
-    {
-      get: {
-        method: 'GET',
-        params: {}
-      }
-    }
-  );
-
-
-  User.prototype.resources = function () 
-  {    
-    var deferred = $q.defer();
-    Resources.get(null, function (result) 
-    {
-      if (angular.equals(result, [])) 
-      {
-        deferred.reject("User has no resources!");
-      }
-      else 
-      {
-        deferred.resolve(result);
-      }
-    });
-    return deferred.promise;
-  };
-
-
-  return new User;
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * TODO
- * Integrate localStorage service into this
- * for cookie reading or setting
- *
- * Needs optimizing!!
- * 
- * Organize it more!
- * 
- * Session Service
- */
-WebPaige.
-factory('Session', function ($rootScope, $http, Storage) 
-{
-  return {
-
-  	/**
-  	 * Check session
-  	 * @param  {[type]} session [description]
-  	 * @return {[type]}         [description]
-  	 */
-    check: function()
-    {
-      return ($rootScope.session) ? true : false;
-    },
-
-
-    /**
-     * TODO
-     * Take the useful parts to real one 
-     * 
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
-     */
-    check__: function(session)
-    {
-      console.log('-> asked session value', session);
-
-      if(!session)
-      {
-        console.log('there was no session given by check so reading from cookie.');
-        session = this.cookie();
-        console.log('--> cookie read session value:', session); 
-        
-        if(session != null)
-        {
-          if(session.id == null)
-            return false;
-
-          var time  = new Date();
-          var now   = time.getTime();
-
-          if((now - session.time) > (60 * 60 * 1000))
-          {   
-            return false;
-          };
-          return true;
-        }
-             
-      };
-      //return false;
-    },
-
-
-    /**
-     * TODO
-     * Use cookie optionality of Storage!
-     * 
-     * Read cookie value
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
-     */
-    cookie: function(session)
-    {
-      var values;
-
-      var pairs = document.cookie.split(";");
-
-      for(var i=0; i<pairs.length; i++)
-      {
-        values = pairs[i].split("=");
-
-        if(values[0].trim() == "WebPaige.session")
-        {
-          return angular.fromJson(values[1]);
-        };
-      };
-
-    },
-
-    /**
-     * Get session
-     * Prolong session time by every check
-     * 
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
-     */
-    get: function(session)
-    {
-      this.check(session);
-      this.set(session.id);
-      return session.id;
-    },
-
-
-    /**
-     * Set session
-     * @param {[type]} sessionId [description]
-     */
-    set: function(sessionId)
-    {
-      // var session     = new Object();
-      // var time        = new Date();
-      // session.id      = sessionId;
-      // session.time    = time;
-      // document.cookie = "ask=" + angular.toJson(session);
-
-      // $rootScope.session = session;
-      // $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
-      // /**
-      //  * REMOVE
-      //  */
-      // console.log('http headers ->', $http.defaults.headers.common);
-
-      // return session;
-
-
-
-      var session = {
-	    	id: sessionId,
-	    	time: new Date()
-	  	};
-
-	  	Storage.cookie.add('session', angular.toJson(session));
-
-      //document.cookie = "ask=" + angular.toJson(session);
-
-      $rootScope.session = session;
-      $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
-      /**
-       * REMOVE
-       */
-      console.log('http headers ->', $http.defaults.headers.common);
-
-      return session;
-    },
-
-
-    /**
-     * Clear session
-     * @param {[type]} sessionId [description]
-     */
-    clear: function()
-    {
-      $rootScope.session = null;
-      $http.defaults.headers.common['X-SESSION_ID'] = null;
-    }
-
-  }
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/** 
- * MD5 Service
- */
-WebPaige.service('$md5', 
-function() 
-{
-	var self = this;
-  
-  self.process = function(string)
-  {
-    function RotateLeft(lValue, iShiftBits)
-    {
-      return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
-    }
-   
-    function AddUnsigned(lX,lY)
-    {
-      var lX4,lY4,lX8,lY8,lResult;
-      lX8 = (lX & 0x80000000);
-      lY8 = (lY & 0x80000000);
-      lX4 = (lX & 0x40000000);
-      lY4 = (lY & 0x40000000);
-      lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
-
-      if (lX4 & lY4)
-      {
-        return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
-      }
-
-      if (lX4 | lY4)
-      {
-        if (lResult & 0x40000000)
-        {
-          return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-        }
-        else
-        {
-          return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
-        }
-      }
-      else
-      {
-        return (lResult ^ lX8 ^ lY8);
-      }
-    }
-   
-    function F(x,y,z) { return (x & y) | ((~x) & z) }
-    function G(x,y,z) { return (x & z) | (y & (~z)) }
-    function H(x,y,z) { return (x ^ y ^ z) }
-    function I(x,y,z) { return (y ^ (x | (~z))) }
-   
-    function FF(a,b,c,d,x,s,ac)
-    {
-      a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
-      return AddUnsigned(RotateLeft(a, s), b);
-    }
-   
-    function GG(a,b,c,d,x,s,ac)
-    {
-      a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
-      return AddUnsigned(RotateLeft(a, s), b);
-    }
-   
-    function HH(a,b,c,d,x,s,ac)
-    {
-      a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
-      return AddUnsigned(RotateLeft(a, s), b);
-    }
-   
-    function II(a,b,c,d,x,s,ac)
-    {
-      a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
-      return AddUnsigned(RotateLeft(a, s), b);
-    }
-   
-    function ConvertToWordArray(string)
-    {
-      var lWordCount;
-      var lMessageLength = string.length;
-      var lNumberOfWords_temp1=lMessageLength + 8;
-      var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
-      var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
-      var lWordArray=Array(lNumberOfWords-1);
-      var lBytePosition = 0;
-      var lByteCount = 0;
-
-      while ( lByteCount < lMessageLength )
-      {
-        lWordCount = (lByteCount-(lByteCount % 4))/4;
-        lBytePosition = (lByteCount % 4)*8;
-        lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
-        lByteCount++;
-      }
-
-      lWordCount = (lByteCount-(lByteCount % 4))/4;
-      lBytePosition = (lByteCount % 4)*8;
-      lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
-      lWordArray[lNumberOfWords-2] = lMessageLength<<3;
-      lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
-      return lWordArray;
-    }
-   
-    function WordToHex(lValue)
-    {
-      var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
-
-      for (lCount = 0;lCount<=3;lCount++)
-      {
-        lByte = (lValue>>>(lCount*8)) & 255;
-        WordToHexValue_temp = "0" + lByte.toString(16);
-        WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
-      }
-
-      return WordToHexValue;
-    };
-   
-    function Utf8Encode(string)
-    {
-      string = string.replace(/\r\n/g,"\n");
-      var utftext = "";
-   
-      for (var n = 0; n < string.length; n++)
-      {
-        var c = string.charCodeAt(n);
-   
-        if (c < 128)
-        {
-          utftext += String.fromCharCode(c);
-        }
-        else if((c > 127) && (c < 2048))
-        {
-          utftext += String.fromCharCode((c >> 6) | 192);
-          utftext += String.fromCharCode((c & 63) | 128);
-        }
-        else
-        {
-          utftext += String.fromCharCode((c >> 12) | 224);
-          utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-          utftext += String.fromCharCode((c & 63) | 128);
-        }
-   
-      }
-   
-      return utftext;
-    };
-   
-    var x=Array();
-    var k,AA,BB,CC,DD,a,b,c,d;
-    var S11=7, S12=12, S13=17, S14=22;
-    var S21=5, S22=9 , S23=14, S24=20;
-    var S31=4, S32=11, S33=16, S34=23;
-    var S41=6, S42=10, S43=15, S44=21;
-   
-    string = Utf8Encode(string);
-   
-    x = ConvertToWordArray(string);
-   
-    a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
-   
-    for (k=0;k<x.length;k+=16)
-    {
-      AA=a; BB=b; CC=c; DD=d;
-      a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
-      d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
-      c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
-      b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
-      a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
-      d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
-      c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
-      b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
-      a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
-      d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
-      c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
-      b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
-      a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
-      d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
-      c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
-      b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
-      a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
-      d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
-      c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
-      b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
-      a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
-      d=GG(d,a,b,c,x[k+10],S22,0x2441453);
-      c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
-      b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
-      a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
-      d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
-      c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
-      b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
-      a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
-      d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
-      c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
-      b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
-      a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
-      d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
-      c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
-      b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
-      a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
-      d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
-      c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
-      b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
-      a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
-      d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
-      c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
-      b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
-      a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
-      d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
-      c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
-      b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
-      a=II(a,b,c,d,x[k+0], S41,0xF4292244);
-      d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
-      c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
-      b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
-      a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
-      d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
-      c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
-      b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
-      a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
-      d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
-      c=II(c,d,a,b,x[k+6], S43,0xA3014314);
-      b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
-      a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
-      d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
-      c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
-      b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
-      a=AddUnsigned(a,AA);
-      b=AddUnsigned(b,BB);
-      c=AddUnsigned(c,CC);
-      d=AddUnsigned(d,DD);
-    }
-   
-    var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
-   
-    return temp.toLowerCase();
-  }
-});
-
+loginCtrl.$inject = ['$rootScope', '$config', '$q', '$scope', 'Session', 'User', '$md5', 'Group', 'Messages'];
 
