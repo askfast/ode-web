@@ -27,7 +27,10 @@ function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $r
   //   Group.query();
   // }, 60 * 30);
 
-  //$('.tabs-left .tab-content').css({ height: $('.tabs-left .nav-tabs').height() - 24 });
+  $scope.fixTabHeight = function(uuid)
+  {
+    $('.tabs-left .tab-content #grp-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
+  };
 
 };
 

@@ -16,50 +16,85 @@
 
 <div class="tabbable tabs-left">
 
-  <ul class="nav nav-tabs" style="width: 210px">
+  <ul class="nav nav-tabs" 
+      style="width: 210px;
+              margin-right: -1px">
     <li ng-repeat="group in groups" 
         class="{{($index == 0) && 'active'}}">
 
-      <a href="#grp-{{group.uuid}}" data-toggle="tab">
-        {{group.name}}
+      <a href="#grp-{{group.uuid}}" 
+          data-toggle="tab"
+          ng-click="fixTabHeight(group.uuid)">
+        {{group.name}} ({{members[group.uuid].length}})
       </a>
     </li>
   </ul>
 
-  <div class="tab-content">
+  <div class="tab-content"
+        style="background-color: white; 
+                border: 1px solid #ddd; 
+                padding: 20px;">
 
     <div  ng-repeat="group in groups"
           class="{{($index == 0) && 'tab-pane active' || 'tab-pane'}}"
           id="grp-{{group.uuid}}">
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Tel</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
+      <div style="overflow: hidden; height: 35px">
+        <h3 style="margin-top: 0;" class="pull-left">{{group.name}}</h3>
 
-          <tr ng-repeat="member in members[group.uuid]">
-            <td>{{$index + 1}}</td>
-            <td><a href="#/profile/{{member.uuid}}/view">{{member.name}}</a></td>
-            <td>{{member.resources.role|translateRole}}</td>
-            <td>{{member.resources.PhoneAddress}}</td>
-            <td>
-              <a href="#/profile/{{member.uuid}}/edit" 
-                class="btn btn-mini"><i class="icon-edit"></i> Edit</a>
-              <button type="submit" 
-                      ng-click="removeMember(member.uuid)" 
-                      class="btn btn-mini"><i class="icon-trash"></i> Remove</button>
-            </td>
-          </tr>
+        <div class="btn-group pull-right">
+          <button type="button" 
+                  ng-click="" 
+                  class="btn"><i class="icon-edit"></i> Edit Group</button>
+          <button type="button" 
+                  ng-click="delete(message.uuid)" 
+                  class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete Group</button>
+        </div>
+      </div>
 
-        </tbody>
-      </table>
+      <hr>
+
+      <p ng-hide="members[group.uuid].length > 0">There are no members in this group. Please add some.</p>
+
+      <div ng-show="members[group.uuid].length > 0">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><input type="checkbox"></th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Tel</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr ng-repeat="member in members[group.uuid]">
+              <td><input type="checkbox"></td>
+              <td><a href="#/profile/{{member.uuid}}/view">{{member.name}}</a></td>
+              <td>{{member.resources.role|translateRole}}</td>
+              <td>{{member.resources.PhoneAddress}}</td>
+              <td>
+                <a href="#/profile/{{member.uuid}}/edit" 
+                  class="btn btn-mini"><i class="icon-edit"></i> Edit</a>
+                <button type="submit" 
+                        ng-click="removeMember(member.uuid)" 
+                        class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i> Remove</button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <button type="button" 
+                ng-click="removeMembers()" 
+                class="btn btn-small btn-danger pull-left">
+                <i class="icon-trash icon-white"></i> Remove Selected Members</button>
+
+        <span class="muted pull-right"><i>There are {{members[group.uuid].length}} member(s)</i></span>
+      </div>
+
+
 
     </div>
 
