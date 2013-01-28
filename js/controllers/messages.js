@@ -8,10 +8,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
 {
   var self = this;
 
-  $scope.boxes = {
-    inbox: true
-  };
-
   $scope.fixTabHeight = function(uuid)
   {
     var tabHeight = $('.tabs-left .nav-tabs').height();
@@ -25,6 +21,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
 
   $scope.boxer = function(box)
   {
+    $scope.composeView = false;
+    $scope.boxes = {
+      inbox: false,
+      outbox: false,
+      trash: false
+    };
+    $scope.boxes[box] = true;
+
     $scope.messages = [];
     var filtered = [];
     angular.forEach(messages, function(message, index)
@@ -60,6 +64,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
   };
   $scope.boxer('inbox');
 
+  
+
+  $scope.composeView = true;
+
 
   $scope.delete = function(uuid)
   {
@@ -72,6 +80,16 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
       $scope.messages = Messages.query();
       $scope.boxer('inbox'); 
     });
+  };
+
+  $scope.composeMessage = function()
+  {
+    $scope.composeView = true;
+    $scope.boxes = {
+      inbox: false,
+      outbox: false,
+      trash: false
+    };
   };
 
 };

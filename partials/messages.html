@@ -42,14 +42,16 @@
 
 <div class="btn-group pull-right">
   <button type="submit" 
-          ng-click="" 
+          ng-click="composeMessage()" 
+          ng-hide="composeView"
           class="btn btn-success">Compose a message</button>
 </div>
 
 
 <hr>
 
-<div class="tabbable tabs-left">
+<div class="tabbable tabs-left"
+      ng-hide="composeView">
 
   <ul class="nav nav-tabs" 
       style="width: 210px;
@@ -116,3 +118,85 @@
   </div>
 
 </div>
+
+<div class=""
+      style="background-color: white; 
+                border: 1px solid #ddd; 
+                padding: 20px;" 
+      ng-show="composeView">
+
+  <div style="overflow: hidden; height: 35px">
+    <h3 style="margin-top: 0;" class="pull-left">Compose a message</h3>
+  </div>
+
+  <hr>
+
+  <form ng-submit="composeMessage(message)">
+    <fieldset>
+  
+      <div class="control-group">
+        <label>Message Types</label>
+        <div  class="btn-group"  
+              bs-buttons-checkbox="" 
+              data-toggle="buttons-checkbox">
+
+          <button type="button" 
+                  class="btn" 
+                  ng-model="message.type.sms" 
+                  ng-click=""
+                  bs-button="">SMS</button>
+          <button type="button" 
+                  class="btn" 
+                  ng-model="message.type.message" 
+                  ng-click=""  
+                  bs-button="">Intern Bericht</button>
+
+          <button type="button" 
+                  class="btn" 
+                  ng-model="message.type.email" 
+                  ng-click=""
+                  bs-button="">Email</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Label name</label>
+        <input type="text" placeholder="Type something…">
+      </div>
+
+      <div class="control-group">
+        <label class="checkbox">
+          <input type="checkbox"> Check me out
+        </label>
+      </div>
+
+      <button type="submit" class="btn">Submit</button>
+    </fieldset>
+  </form>
+
+  <hr>
+
+  <div class="btn-group">
+    <button type="submit" 
+            ng-click="" 
+            class="btn btn-success">Send Message</button>
+    <button type="submit" 
+            ng-click="boxer('inbox')" 
+            class="btn">Cancel</button>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
