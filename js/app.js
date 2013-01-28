@@ -187,11 +187,11 @@ WebPaige.config(function($locationProvider, $routeProvider)
       /**
        * Groups :: view
        */
-      .when('/groups/:groupId/:action', {
-          templateUrl: 'partials/groups.html', 
-          controller: groupsCtrl,
-          resolve: groupsCtrl.resolve
-      })
+      // .when('/groups/:groupId/:action', {
+      //     templateUrl: 'partials/groups.html', 
+      //     controller: groupsCtrl,
+      //     resolve: groupsCtrl.resolve
+      // })
       /**
        * Profile :: view
        */

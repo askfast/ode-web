@@ -1,7 +1,7 @@
 <h2>Groups</h2>
 <hr>
 
-<form class="form-search" style="display: inline; float: right">
+<form class="form-search pull-right" style="display: inline;">
   <div class="input-append">
     <input type="text" class="span2 search-query">
     <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
@@ -14,40 +14,54 @@
 
 <hr>
 
-<div class="row">
+<div class="tabbable tabs-left">
 
-  <div class="span2">
-  	<div class="tabbable tabs-left">
-		  <ul class="nav nav-tabs">
-				<li ng-repeat="group in groups">
-					<a href="#groups/{{group.uuid}}/members">{{group.name}}</a>
-				</li>
-		  </ul>
-		</div>
-  </div>
+  <ul class="nav nav-tabs" style="width: 210px">
+    <li ng-repeat="group in groups" 
+        class="{{($index == 0) && 'active'}}">
 
-  <div class="span10">
+      <a href="#grp-{{group.uuid}}" data-toggle="tab">
+        {{group.name}}
+      </a>
+    </li>
+  </ul>
 
-  	<!-- <p>Please select a group.</p> -->
+  <div class="tab-content">
 
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Role</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="member in members">
-          <td>{{index}}</td>
-          <td>{{member.name}}</td>
-          <td>{{member.role}}</td>
-          <td>{{member.email}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div  ng-repeat="group in groups"
+          class="{{($index == 0) && 'tab-pane active' || 'tab-pane'}}"
+          id="grp-{{group.uuid}}">
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Tel</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr ng-repeat="member in members[group.uuid]">
+            <td>{{$index + 1}}</td>
+            <td><a href="#/profile/{{member.uuid}}/view">{{member.name}}</a></td>
+            <td>{{member.resources.role}}</td>
+            <td>{{member.resources.PhoneAddress}}</td>
+            <td>
+              <a href="#/profile/{{member.uuid}}/edit" 
+                class="btn btn-mini">Edit</a>
+              <button type="submit" 
+                      ng-click="removeMember(member.uuid)" 
+                      class="btn btn-mini">Remove</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
 
   </div>
 

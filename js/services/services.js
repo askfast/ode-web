@@ -703,6 +703,29 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
       }
     }
   );
+
+
+  Group.prototype.all = function()
+  {
+    Group.prototype.query()
+    .then(function(groups)
+    {
+      var calls = [];
+      angular.forEach(groups, function(group, index)
+      {
+        calls.push(Group.prototype.get(group.uuid));
+      });
+      $q.all(calls)
+      .then(function(result)
+      {
+        Group.prototype.uniqueMembers();
+        return {
+          list: groups,
+          members: calls
+        }
+      });
+    });
+  };
   
 
   Group.prototype.query = function () 
@@ -792,7 +815,7 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
   {
     angular.forEach(angular.fromJson(Storage.get('groups')), function(group, index)
     {
-      var members = angular.fromJson(Storage.get('members'));
+      var members = angular.fromJson(Storage.get('members')) || {};
 
       angular.forEach(angular.fromJson(Storage.get(group.uuid)), function(member, index)
       {

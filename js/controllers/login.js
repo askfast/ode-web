@@ -130,7 +130,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
     $('#loginForm').hide();
     $('#preloader').show();
 
-    Storage.add('members', angular.toJson({}));
+    //Storage.add('members', angular.toJson({}));
 
     self.progress(20, 'Loading user information..');
     User.resources()
