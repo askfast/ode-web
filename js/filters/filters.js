@@ -10,13 +10,21 @@ angular.module('WebPaige.filters', [])
     }
   }])
 
-/*
-.filter('boxer', function()
+.filter('translateRole', function()
 {
-	return function(messages, box)
+	return function(role)
 	{
-		console.log('boxer called for', messages, box);
-		return true;
+		switch (role)
+		{
+			case '1':
+				return 'Planner';
+			break;
+			case '2':
+				return 'Schipper';
+			break;
+			case '3':
+				return 'Opstapper';
+			break;
+		}
 	}
 });
-*/

@@ -690,7 +690,7 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
     {
       query: {
         method: 'GET',
-        params: {groupId:''},
+        params: {groupId:'', fields: '[role]'},
         isArray: true
       },
       get: {

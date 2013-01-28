@@ -47,14 +47,14 @@
           <tr ng-repeat="member in members[group.uuid]">
             <td>{{$index + 1}}</td>
             <td><a href="#/profile/{{member.uuid}}/view">{{member.name}}</a></td>
-            <td>{{member.resources.role}}</td>
+            <td>{{member.resources.role|translateRole}}</td>
             <td>{{member.resources.PhoneAddress}}</td>
             <td>
               <a href="#/profile/{{member.uuid}}/edit" 
-                class="btn btn-mini">Edit</a>
+                class="btn btn-mini"><i class="icon-edit"></i> Edit</a>
               <button type="submit" 
                       ng-click="removeMember(member.uuid)" 
-                      class="btn btn-mini">Remove</button>
+                      class="btn btn-mini"><i class="icon-trash"></i> Remove</button>
             </td>
           </tr>
 

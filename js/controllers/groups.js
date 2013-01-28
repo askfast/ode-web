@@ -21,17 +21,6 @@ function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $r
       $scope.members[group.uuid].push(member);
     });
   });
-
-  console.log('members ->', $scope.members);
-
-	// switch($scope.params.action)
-	// {
-	// 	case 'members':
-	// 		$scope.members = Group.get($scope.params.groupId);
-	// 	break;
-	// 	case 'edit':
-	// 	break;
-	// };
 	
   // timerService.start('groupsTimer', function()
   // { 
