@@ -98,6 +98,20 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
 
 
 
+  $scope.fixTabHeight = function(section)
+  {
+    var tabHeight = $('.tabs-left .nav-tabs').height();
+    var contentHeight = $('.tabs-left .tab-content #' + section).height();
+
+    if (tabHeight > contentHeight)
+    {
+      $('.tabs-left .tab-content #' + section).css({ height: $('.tabs-left .nav-tabs').height() });
+    };
+  };
+
+
+
+
 
 
 

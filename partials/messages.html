@@ -51,11 +51,15 @@
 
 <div class="tabbable tabs-left">
 
-  <ul class="nav nav-tabs" style="width: 210px">
+  <ul class="nav nav-tabs" 
+      style="width: 210px;
+              margin-right: -1px">
     <li ng-repeat="message in messages" 
     		class="{{($index == 0) && 'active'}}">
 
-    	<a href="#msg-{{message.uuid}}" data-toggle="tab">
+    	<a href="#msg-{{message.uuid}}" 
+          data-toggle="tab"
+          ng-click="fixTabHeight(message.uuid)">
     		<strong>{{message.sender}}</strong><br>
     		{{message.subject}}<br>
     		{{message.creationTime}}
@@ -63,19 +67,29 @@
     </li>
   </ul>
 
-  <div class="tab-content">
+  <div class="tab-content"
+        style="background-color: white; 
+                border: 1px solid #ddd; 
+                padding: 20px;">
+
     <div 	ng-repeat="message in messages"
     			class="{{($index == 0) && 'tab-pane active' || 'tab-pane'}}"
     			id="msg-{{message.uuid}}">
 
-			<div class="btn-group pull-right">
-			  <button type="submit" 
-			          ng-click="" 
-			          class="btn">Reply</button>
-			  <button type="submit" 
-			          ng-click="delete(message.uuid)" 
-			          class="btn btn-danger">Delete</button>
-			</div>
+      <div style="overflow: hidden; height: 35px">
+        <h3 style="margin-top: 0;" class="pull-left">{{message.subject}}</h3>
+
+        <div class="btn-group pull-right">
+          <button type="submit" 
+                  ng-click="" 
+                  class="btn">Reply</button>
+          <button type="submit" 
+                  ng-click="delete(message.uuid)" 
+                  class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+
+      <hr>
 
       <dl>
 			  <dt>Sender</dt>

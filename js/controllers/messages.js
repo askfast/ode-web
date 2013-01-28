@@ -12,6 +12,17 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
     inbox: true
   };
 
+  $scope.fixTabHeight = function(uuid)
+  {
+    var tabHeight = $('.tabs-left .nav-tabs').height();
+    var contentHeight = $('.tabs-left .tab-content #msg-' + uuid).height();
+
+    if (tabHeight > contentHeight)
+    {
+      $('.tabs-left .tab-content #msg-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
+    };
+  };
+
   $scope.boxer = function(box)
   {
     $scope.messages = [];
@@ -27,13 +38,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
               message.state != 'TRASH')
           {
             filtered.push(message);
-          };  
+          };
         break;
         case 'outbox':
           if (message.box == 'outbox')
           {
             filtered.push(message);
-          }; 
+          };
         break;
         case 'trash':
           if (message.box == 'inbox' &&
@@ -45,6 +56,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
       };
     });
     $scope.messages = filtered;
+    //$scope.fixTabHeight(filtered[0].uuid);
   };
   $scope.boxer('inbox');
 
