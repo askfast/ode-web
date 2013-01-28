@@ -24,8 +24,7 @@ function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $r
   timerService.start('groupsTimer', function()
   { 
     Group.query();
-  }, 60 * 30);
-
+    }, 60 * 30);
 
   //$('.tabs-left .tab-content').css({ height: $('.tabs-left .nav-tabs').height() - 24 });
 

@@ -4,7 +4,7 @@
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Group, Messages)
+var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Group, Messages, Storage)
 {
 	var self = this;
 
@@ -130,48 +130,36 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
     $('#loginForm').hide();
     $('#preloader').show();
 
-    self.progress(20, 'Loading user information..');
+    Storage.add('members', angular.toJson({}));
 
+    self.progress(20, 'Loading user information..');
     User.resources()
     .then(function(resources)
     {
-      console.log('user resources ->', resources);
       self.progress(40, 'Loading messages..');
-
       Messages.query()
-      .then(function()
+      .then(function(messages)
       {
-        console.log('messages count ->', Messages.unread());
         self.progress(60, 'Loading groups..');
-
         Group.query()
         .then(function(groups)
         {
-          console.log('user groups ->', groups);
           self.progress(80, 'Loading members..');
-
           var calls = [];
           angular.forEach(groups, function(group, index)
           {
             calls.push(Group.get(group.uuid));
           });
-
           $q.all(calls)
           .then(function(result)
           {
-            console.log('all member calls went well ->', result);
             self.progress(100, 'Everything loaded!');
-
+            Group.uniqueMembers();
             document.location = "#/planboard";
           });
-
         });
-
-
       })
-      
     });
-    
   };
 
 
@@ -339,5 +327,6 @@ loginCtrl.$inject = [ '$rootScope',
                       'User', 
                       '$md5', 
                       'Group', 
-                      'Messages'];
+                      'Messages',
+                      'Storage'];
 

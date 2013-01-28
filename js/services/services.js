@@ -524,22 +524,30 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 {
 
   var Messages = $resource(
-    $config.host + '/question',
+    $config.host + '/question/:action',
     {
     },
     {
       query: {
         method: 'GET',
-        params: { 0: 'dm' },
+        params: {action: '', 0: 'dm'},
         isArray: true
       },
       get: {
         method: 'GET',
-        params: {groupId:''}
+        params: {}
       },
       save: {
         method: 'POST',
         params: {}
+      },
+      change: {
+        method: 'POST',
+        params: {action : 'changeState'}
+      },
+      delete: {
+        method: 'POST',
+        params: {action: 'deleteQuestions'}
       }
     }
   );
@@ -608,13 +616,21 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   };
 
 
-  Messages.prototype.state = function () 
+  Messages.prototype.state = function (state) 
   {
+
   };
 
 
-  Messages.prototype.delete = function (id, empty) 
+  Messages.prototype.delete = function (uuids) 
   {
+    var deferred = $q.defer();
+    var successCb = function (result) 
+    {
+      deferred.resolve(result);
+    };
+    Messages.delete(null, {members: uuids}, successCb);
+    return deferred.promise;
   };
 
 
@@ -711,10 +727,11 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
         }
         else 
         {
-          $rootScope.notify( { message: 'Groups downloaded from back-end.' } );
+          //$rootScope.notify( { message: 'Groups downloaded from back-end.' } );
 
-          Storage.add('resources', angular.toJson(result));
-          $rootScope.notify( { message: 'Groups data added to localStorage.' } );
+          Storage.add('groups', angular.toJson(result));
+
+          //$rootScope.notify( { message: 'Groups data added to localStorage.' } );
 
           deferred.resolve(result);
         }
@@ -749,10 +766,11 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
         // }
         // else 
         // {
-          $rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
+          //$rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
 
-          Storage.add('resources', angular.toJson(result));
-          $rootScope.notify( { message: 'Profile data added to localStorage.' } );
+          Storage.add(groupId, angular.toJson(result));
+
+          //$rootScope.notify( { message: 'Profile data added to localStorage.' } );
 
           deferred.resolve({
             id: groupId,
@@ -766,6 +784,27 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
       return deferred.promise;
     // }
   };
+
+
+
+
+  Group.prototype.uniqueMembers = function()
+  {
+    angular.forEach(angular.fromJson(Storage.get('groups')), function(group, index)
+    {
+      var members = angular.fromJson(Storage.get('members'));
+
+      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function(member, index)
+      {
+        members[member.uuid] = member;
+      });
+
+      Storage.add('members', angular.toJson(members));
+      
+    });
+  };
+
+
 
 
   Group.prototype.local = function()
