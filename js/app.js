@@ -309,6 +309,7 @@ function($rootScope, $location, $timeout, Session)
     name: 'AppTest KNRM',
     uuid: 'apptestknrm'
   };
+  //$rootScope.user = angular.fromJson((localStorage.getItem('resources') || {}));
 
 
 

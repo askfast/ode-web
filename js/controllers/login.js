@@ -106,6 +106,7 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
       }
       else 
       {
+        Storage.add('resources', angular.toJson(result));
         deferred.resolve(result);
       }
     });
@@ -136,7 +137,7 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Group, Messages, Storage)
+var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Groups, Messages, Storage)
 {
 	var self = this;
 
@@ -273,20 +274,20 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
       .then(function(messages)
       {
         self.progress(60, 'Loading groups..');
-        Group.query()
+        Groups.query()
         .then(function(groups)
         {
           self.progress(80, 'Loading members..');
           var calls = [];
           angular.forEach(groups, function(group, index)
           {
-            calls.push(Group.get(group.uuid));
+            calls.push(Groups.get(group.uuid));
           });
           $q.all(calls)
           .then(function(result)
           {
             self.progress(100, 'Everything loaded!');
-            Group.uniqueMembers();
+            Groups.uniqueMembers();
             document.location = "#/planboard";
           });
         });
@@ -458,7 +459,7 @@ loginCtrl.$inject = [ '$rootScope',
                       'Session', 
                       'User', 
                       '$md5', 
-                      'Group', 
+                      'Groups', 
                       'Messages',
                       'Storage'];
 

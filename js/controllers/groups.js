@@ -8,12 +8,12 @@
 
 
 WebPaige.
-factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
 {
 
 
-  var Group = $resource(
-    $config.host + '/network/:groupId',
+  var Groups = $resource(
+    $config.host + '/network/:id',
     {
     },
     {
@@ -24,29 +24,29 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
       },
       get: {
         method: 'GET',
-        params: {groupId:''}
+        params: {id:''}
       },
       save: {
         method: 'POST',
-        params: {}
+        params: {id:''}
       }
     }
   );
 
 
   var Members = $resource(
-    $config.host + '/network/:groupId/members',
+    $config.host + '/network/:id/members',
     {
     },
     {
       query: {
         method: 'GET',
-        params: {groupId:'', fields: '[role]'},
+        params: {id:'', fields: '[role]'},
         isArray: true
       },
       get: {
         method: 'GET',
-        params: {groupId:''}
+        params: {id:''}
       },
       save: {
         method: 'POST',
@@ -56,20 +56,20 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
   );
 
 
-  Group.prototype.all = function()
+  Groups.prototype.all = function()
   {
-    Group.prototype.query()
+    Groups.prototype.query()
     .then(function(groups)
     {
       var calls = [];
       angular.forEach(groups, function(group, index)
       {
-        calls.push(Group.prototype.get(group.uuid));
+        calls.push(Groups.prototype.get(group.uuid));
       });
       $q.all(calls)
       .then(function(result)
       {
-        Group.prototype.uniqueMembers();
+        Groups.prototype.uniqueMembers();
         return {
           list: groups,
           members: calls
@@ -79,137 +79,84 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
   };
   
 
-  Group.prototype.query = function () 
+  Groups.prototype.query = function () 
   {    
-
-    var deferred = $q.defer(), 
-        localProfile = Storage.get('groups');
-
-    // if (localProfile)
-    // {
-    //   deferred.resolve(angular.fromJson(localSlots));
-    //   return deferred.promise;
-    // }
-    // else
-    // {
-      var successCb = function (result) 
+    var deferred = $q.defer();
+    var successCb = function (result) 
+    {
+      if (angular.equals(result, [])) 
       {
-
-        if (angular.equals(result, [])) 
-        {
-          deferred.reject("There is no groups!");
-        }
-        else 
-        {
-          //$rootScope.notify( { message: 'Groups downloaded from back-end.' } );
-
-          Storage.add('groups', angular.toJson(result));
-
-          //$rootScope.notify( { message: 'Groups data added to localStorage.' } );
-
-          deferred.resolve(result);
-        }
-      };
-
-      Group.query(successCb);
-
-      return deferred.promise;
-    // }
+        deferred.reject("There are no groups!");
+      }
+      else 
+      {
+        Storage.add('groups', angular.toJson(result));
+        deferred.resolve(result);
+      }
+    };
+    Groups.query(successCb);
+    return deferred.promise;
   };
   
 
-  Group.prototype.get = function (groupId) 
-  {    
-
-    var deferred = $q.defer(), 
-        localProfile = Storage.get('resources');
-
-    // if (localProfile)
-    // {
-    //   deferred.resolve(angular.fromJson(localSlots));
-    //   return deferred.promise;
-    // }
-    // else
-    // {
-      var successCb = function (result) 
-      {
-
-        // if (angular.equals(result, [])) 
-        // {
-        //   deferred.reject("There is no record!");
-        // }
-        // else 
-        // {
-          //$rootScope.notify( { message: 'Profile data downloaded from back-end.' } );
-
-          Storage.add(groupId, angular.toJson(result));
-
-          //$rootScope.notify( { message: 'Profile data added to localStorage.' } );
-
-          deferred.resolve({
-            id: groupId,
-            data: result
-          });
-        // }
-      };
-
-      Members.query({groupId: groupId}, successCb);
-
-      return deferred.promise;
-    // }
+  Groups.prototype.get = function (id) 
+  {   
+    var deferred = $q.defer(); 
+    var successCb = function (result) 
+    {
+      Storage.add(id, angular.toJson(result));
+      deferred.resolve({
+        id: id,
+        data: result
+      });
+    };
+    Members.query({id: id}, successCb);
+    return deferred.promise;
   };
 
 
 
-
-  Group.prototype.uniqueMembers = function()
+  Groups.prototype.uniqueMembers = function()
   {
     angular.forEach(angular.fromJson(Storage.get('groups')), function(group, index)
     {
       var members = angular.fromJson(Storage.get('members')) || {};
-
       angular.forEach(angular.fromJson(Storage.get(group.uuid)), function(member, index)
       {
         members[member.uuid] = member;
       });
-
       Storage.add('members', angular.toJson(members));
-      
     });
   };
 
 
 
 
-  Group.prototype.local = function()
+  Groups.prototype.local = function()
   {
     return angular.fromJson(Storage.get('groups'));
   };
 
 
-  Group.prototype.save = function (group) 
+
+  Groups.prototype.save = function (group) 
   {
-    // var localResources = angular.fromJson(Storage.get('resources'));
+    console.log('group to be saved ->', group);
 
-    // localResources['name'] = resources.name;
-    // localResources['EmailAddress'] = resources.EmailAddress;
-    // localResources['PhoneAddress'] = resources.PhoneAddress;
-    // localResources['PostAddress'] = resources.PostAddress;
-    // localResources['PostZip'] = resources.PostZip;
-    // localResources['PostCity'] = resources.PostCity;
+    var resources = angular.fromJson(Storage.get('resources'));
 
-    // Storage.add('slots', angular.toJson(localResources));
+    var deferred = $q.defer();
+    var successCb = function (result) 
+    {
+      deferred.resolve(result);
+    };
 
-    // $rootScope.notify( { message: 'Profile saved in localStorage.' } );
-
-    // Profile.save(null, resources, function()
-    // {
-    //   $rootScope.notify( { message: 'Profile saved in back-end.' } );
-    // });
+    Groups.save({id: resources.uuid}, group, successCb);
+    return deferred.promise;
   };
 
 
-  return new Group;
+  return new Groups;
 });
 
 
@@ -232,15 +179,20 @@ factory('Group', function ($resource, $config, $q, $route, $timeout, Storage, $r
 /**
  * Groups Controller
  */
-function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $route, $routeParams, Storage)
+function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $route, $routeParams, Storage)
 {
 
 	var self = this;
 
+  $scope.addGroupView = true;
+
+  /**
+   * TODO
+   * Put these ones in rendering function
+   * @type {[type]}
+   */
 	$scope.groups = groups;
-
   $scope.members = {};
-
   angular.forEach(angular.fromJson(Storage.get('groups')), function(group, gindex)
   {
     $scope.members[group.uuid] = [];
@@ -249,6 +201,31 @@ function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $r
       $scope.members[group.uuid].push(member);
     });
   });
+
+
+
+  $scope.searchMembers = function(q)
+  {
+        
+  };
+
+
+
+  $scope.groupSubmit = function(group)
+  {
+    if ($scope.addGroupView)
+    {
+      Groups.save(group).
+      then(function()
+      {
+        $scope.groups = Groups.query();
+        $scope.addGroupView = false;
+      });
+    };
+  };
+
+
+
 	
   // timerService.start('groupsTimer', function()
   // { 
@@ -267,9 +244,9 @@ function groupsCtrl($rootScope, $scope, $config, groups, Group, timerService, $r
  * Groups resolver
  */
 groupsCtrl.resolve = {
-  groups: function ($rootScope, $config, Group, $route) 
+  groups: function ($rootScope, $config, Groups, $route) 
   {
-    return Group.query();
+    return Groups.query();
   }
 };
 
@@ -287,8 +264,11 @@ groupsCtrl.$inject = [  '$rootScope',
                         '$scope', 
                         '$config', 
                         'groups', 
-                        'Group', 
+                        'Groups', 
                         'timerService', 
                         '$route', 
                         '$routeParams',
                         'Storage'];
+
+
+

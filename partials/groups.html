@@ -1,18 +1,70 @@
 <h2>Groups</h2>
 <hr>
 
-<form class="form-search pull-right" style="display: inline;">
-  <div class="input-append">
-    <input type="text" class="span2 search-query">
-    <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
-  </div>
-</form>
 
-<div class="btn-group">
-  <button class="btn"><i class="icon-plus"></i> New group</button>
+
+<!-- Search members -->
+<form class="form-search pull-right" 
+      style="display: inline;"
+      ng-submit="searchMembers(search.q)">
+
+  <div class="input-append">
+
+    <input type="text" 
+            class="span2 search-query"
+            ng-model="search.q">
+
+    <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
+
+  </div>
+
+</form>
+<!-- End Search -->
+
+
+
+
+<!-- Group Add / Edit -->
+<div style="overflow: hidden">
+
+  <!-- Add Group -->
+  <div class="btn-group"
+        ng-hide="addGroupView">
+
+    <button class="btn"
+            ng-click="addGroupView=true"><i class="icon-plus"></i> New group</button>
+  </div>
+  <!-- End Add Group -->
+
+  <!-- Group Add / Edit Form -->
+  <form class="form-inline pull-left" 
+        style="display: inline;" 
+        ng-show="addGroupView"
+        ng-submit="groupSubmit(group)">
+
+    <h4 style="display: inline;">Add Group</h4>
+
+    <input type="text" 
+            class="span2"
+            ng-model="group.name">
+
+    <button type="submit" class="btn btn-success"><i class="icon-plus icon-white"></i> Add group</button>
+
+    <button type="button" 
+            class="btn"
+            ng-click="addGroupView=false">Cancel</button>
+
+  </form>
+  <!-- Group Add / Edit Form -->
+   
 </div>
+<!-- End Group Add / Edit -->
+
+
 
 <hr>
+
+
 
 <div class="tabbable tabs-left">
 
