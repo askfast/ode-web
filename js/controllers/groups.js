@@ -30,6 +30,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
         method: 'POST',
         params: {id:''}
       },
+      edit: {
+        method: 'PUT',
+        params: {id:''}
+      },
       delete: {
         method: 'DELETE',
         params: {id:''}
@@ -145,13 +149,24 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
   Groups.prototype.save = function (group) 
   {
-    var resources = angular.fromJson(Storage.get('resources'));
     var deferred = $q.defer();
     var successCb = function (result) 
     {
       deferred.resolve(result);
     };
-    Groups.save({id: resources.uuid}, group, successCb);
+
+    if (group.id)
+    {
+      Groups.edit({id: group.id}, {
+        name: group.name
+      }, successCb);
+    }
+    else
+    {
+      var resources = angular.fromJson(Storage.get('resources'));
+      Groups.save({id: resources.uuid}, group, successCb); 
+    };    
+
     return deferred.promise;
   };
 
@@ -197,7 +212,10 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
 	var self = this;
 
-  $scope.addGroupView = false;
+  $scope.groupFormView = {
+    add: false,
+    edit: false
+  };
 
   /**
    * TODO
@@ -226,16 +244,33 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
   $scope.groupSubmit = function(group)
   {
-    if ($scope.addGroupView)
+    Groups.save(group).
+    then(function()
     {
-      Groups.save(group).
-      then(function()
+      $scope.groups = Groups.query();
+
+      if ($scope.groupFormView.add)
       {
-        $scope.groups = Groups.query();
-        $scope.addGroupView = false;
-      });
-    };
+        $scope.groupFormView.add = false;
+      }
+      else if ($scope.groupFormView.edit)
+      {
+        $scope.groupFormView.edit = false;
+      };
+
+    });
   };
+
+
+  $scope.editGroup = function(group)
+  {
+    $scope.groupFormView.edit = true;
+    $scope.groupForm = {
+      id: group.uuid,
+      name: group.name
+    };  
+  };
+
 
 
   $scope.deleteGroup = function(id)
