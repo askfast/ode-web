@@ -29,6 +29,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       save: {
         method: 'POST',
         params: {id:''}
+      },
+      delete: {
+        method: 'DELETE',
+        params: {id:''}
       }
     }
   );
@@ -141,17 +145,26 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
   Groups.prototype.save = function (group) 
   {
-    console.log('group to be saved ->', group);
-
     var resources = angular.fromJson(Storage.get('resources'));
-
     var deferred = $q.defer();
     var successCb = function (result) 
     {
       deferred.resolve(result);
     };
-
     Groups.save({id: resources.uuid}, group, successCb);
+    return deferred.promise;
+  };
+
+
+
+  Groups.prototype.delete = function (id) 
+  {
+    var deferred = $q.defer();
+    var successCb = function (result) 
+    {
+      deferred.resolve(result);
+    };
+    Groups.delete({id: id}, successCb);
     return deferred.promise;
   };
 
@@ -184,7 +197,7 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
 	var self = this;
 
-  $scope.addGroupView = true;
+  $scope.addGroupView = false;
 
   /**
    * TODO
@@ -222,6 +235,16 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
         $scope.addGroupView = false;
       });
     };
+  };
+
+
+  $scope.deleteGroup = function(id)
+  {
+    Groups.delete(id).
+    then(function()
+    {
+      $scope.groups = Groups.query();
+    });
   };
 
 
