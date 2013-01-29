@@ -13,7 +13,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
 
   var Groups = $resource(
-    $config.host + '/network/:id',
+    $config.host + '/network/:action:id',
     {
     },
     {
@@ -37,6 +37,11 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       delete: {
         method: 'DELETE',
         params: {id:''}
+      },
+      search: {
+        method: 'POST',
+        params: {id:'', action:'searchPaigeUser'},
+        isArray: true
       }
     }
   );
@@ -184,6 +189,19 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   };
 
 
+
+  Groups.prototype.search = function (query) 
+  {
+    var deferred = $q.defer();
+    var successCb = function (result) 
+    {
+      deferred.resolve(result);
+    };
+    Groups.search(null, {key: query}, successCb);
+    return deferred.promise;
+  };
+
+
   return new Groups;
 });
 
@@ -217,6 +235,8 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
     edit: false
   };
 
+  $scope.searchView = false;
+
   /**
    * TODO
    * Put these ones in rendering function
@@ -237,7 +257,12 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
   $scope.searchMembers = function(q)
   {
-        
+    Groups.search(q).
+    then(function(results)
+    {
+      $scope.searchView = true;
+      $scope.candidates = results;
+    });
   };
 
 

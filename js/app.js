@@ -25,7 +25,8 @@ WebPaige.
   value('$config', {
     version: '0.2.0',
     blacklisted: ['msie'],
-    host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    //host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
     date: {
       format: 'dd-M-yyyy'
     },

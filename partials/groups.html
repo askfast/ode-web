@@ -72,7 +72,9 @@
 
 
 
-<div class="tabbable tabs-left">
+<!-- GROUPS & MEMBERS -->
+<div class="tabbable tabs-left"
+      ng-hide="searchView">
 
   <ul class="nav nav-tabs" 
       style="width: 210px;
@@ -164,3 +166,84 @@
   </div>
 
 </div>
+<!-- END GROUPS & MEMBERS -->
+
+
+
+<!-- SEARCH RESULTS -->
+<div class="tabbable tabs-left"
+      ng-show="searchView">
+
+  <ul class="nav nav-tabs" 
+      style="width: 210px;
+              margin-right: -1px">
+    <li class="active">
+
+      <a href="#src" 
+          data-toggle="tab">
+        Search results
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content"
+        style="background-color: white; 
+                border: 1px solid #ddd; 
+                padding: 20px;">
+
+    <div  class="tab-pane active"
+          id="src">
+
+      <div style="overflow: hidden; height: 35px">
+        <h3 style="margin-top: 0;" class="pull-left">Search results</h3>
+
+        <button type="button" 
+                ng-click="searchView=false" 
+                style="margin-right: 15px"
+                class="btn pull-right">Close</button>
+      </div>
+
+      <hr>
+
+      <p ng-hide="candidates.length > 0">Sorry but we couldn't find what you are looking for.</p>
+
+      <div ng-show="candidates.length > 0">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><input type="checkbox"></th>
+              <th>Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr ng-repeat="candidate in candidates">
+              <td><input type="checkbox"></td>
+              <td>{{candidate.name}}</td>
+              <td>
+                <button ng-click="addMember(candidate)" 
+                  class="btn btn-mini"><i class="icon-plus"></i> Add to group</a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <button type="button" 
+                ng-click="addMembers()" 
+                class="btn btn-small pull-left">
+                <i class="icon-plus"></i> Add Selected Members</button>
+
+        <span class="muted pull-right"><i>There are {{candidates.length}} results in your query</i></span>
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+</div>
+<!-- END SEARCH RESULTS -->
+
