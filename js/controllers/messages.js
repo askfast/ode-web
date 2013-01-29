@@ -8,6 +8,28 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
 {
   var self = this;
 
+
+
+  $scope.receviersList = Messages.receviersList();
+
+
+
+  $scope.sendMessage = function(message)
+  {
+    Messages.send(message).
+    then(function(result)
+    {
+      $scope.composeView = false;
+      
+      // TODO
+      // Reset compose form
+      
+      console.log('message sent', result);
+    });
+  };
+
+
+
   $scope.fixTabHeight = function(uuid)
   {
     var tabHeight = $('.tabs-left .nav-tabs').height();
@@ -18,6 +40,8 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
       $('.tabs-left .tab-content #msg-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
     };
   };
+
+
 
   $scope.boxer = function(box)
   {
@@ -66,7 +90,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
 
   
 
-  $scope.composeView = true;
+  //$scope.composeView = true;
 
 
   $scope.delete = function(uuid)
@@ -91,6 +115,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
       trash: false
     };
   };
+
+
+
+
+
+
 
 };
 

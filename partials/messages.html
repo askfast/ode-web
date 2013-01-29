@@ -131,7 +131,7 @@
 
   <hr>
 
-  <form ng-submit="composeMessage(message)">
+  <form>
     <fieldset>
   
       <div class="control-group">
@@ -160,30 +160,45 @@
       </div>
 
       <div class="control-group">
-        <label>Label name</label>
-        <input type="text" placeholder="Type something…">
+        <label>Receviers</label>
+        <select data-placeholder="Choose a Recipient" 
+                multiple class="span5 chzn-select" 
+                chosen
+                ng-model="message.receivers" 
+                ng-options="receiver.name group by receiver.group for receiver in receviersList">
+        </select>
+        <!-- <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
       </div>
 
       <div class="control-group">
-        <label class="checkbox">
-          <input type="checkbox"> Check me out
-        </label>
+        <label>Subject</label>
+        <input type="text" 
+                class="span5"
+                ng-model="message.subject"
+                placeholder="Type a subject…">
       </div>
 
-      <button type="submit" class="btn">Submit</button>
+
+      <div class="control-group">
+        <label>Message</label>
+        <textarea rows="7" 
+                  class="span7"
+                  ng-model="message.body"></textarea>
+      </div>
+
+      <hr>
+
+      <div class="btn-group">
+        <button type="submit" 
+                ng-click="sendMessage(message)" 
+                class="btn btn-success">Send Message</button>
+        <button type="submit" 
+                ng-click="boxer('inbox')" 
+                class="btn">Cancel</button>
+      </div>
+
     </fieldset>
   </form>
-
-  <hr>
-
-  <div class="btn-group">
-    <button type="submit" 
-            ng-click="" 
-            class="btn btn-success">Send Message</button>
-    <button type="submit" 
-            ng-click="boxer('inbox')" 
-            class="btn">Cancel</button>
-  </div>
 
 </div>
 
