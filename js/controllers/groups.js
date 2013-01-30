@@ -259,7 +259,7 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
     Groups.save(group).
     then(function()
     {
-      $scope.groups = Groups.query();
+      //$scope.groups = Groups.query();
 
       if ($scope.groupFormView.add)
       {
@@ -269,6 +269,12 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
       {
         $scope.groupFormView.edit = false;
       };
+
+      Groups.query().
+      then(function(groups)
+      {
+        render(groups);
+      });
 
     });
   };
@@ -290,7 +296,12 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
     Groups.delete(id).
     then(function()
     {
-      $scope.groups = Groups.query();
+      //$scope.groups = Groups.query();
+      Groups.query().
+      then(function(groups)
+      {
+        render(groups);
+      });
     });
   };
 
@@ -306,9 +317,6 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
   {
     $('.tabs-left .tab-content #grp-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
   };
-
-
-
 
 
 
@@ -343,7 +351,7 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
     });
   };
 
-  
+
 
 };
 
