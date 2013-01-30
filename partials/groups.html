@@ -11,7 +11,7 @@
   <div class="input-append">
 
     <input type="text" 
-            class="span2 search-query"
+          class="span2 search-query" 
             ng-model="search.q">
 
     <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
@@ -211,7 +211,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th><input type="checkbox"></th>
+              <th>#</th>
               <th>Name</th>
               <th></th>
             </tr>
@@ -219,11 +219,23 @@
           <tbody>
 
             <tr ng-repeat="candidate in candidates">
-              <td><input type="checkbox"></td>
+              <td>{{$index + 1}}</td>
               <td>{{candidate.name}}</td>
               <td>
-                <button ng-click="addMember(candidate)" 
-                  class="btn btn-mini"><i class="icon-plus"></i> Add to group</a>
+              
+                <select style="margin:0" 
+                        ng-model="candidate.group" 
+                        ng-options="group.name for group in groups">
+                        <!-- ng-options="option as value for (option, value) in groups"> -->
+                  <option value="">-- select a group --</option>
+                </select>
+
+                <button style="margin-left: 5px;" 
+                        ng-click="addMember(candidate)" 
+                        class="btn btn-success"><i class="icon-plus icon-white"></i> Add to group</button>
+
+                <span ng-show="candidateAddedView.candidate.id">User is added to group.</span>
+
               </td>
             </tr>
 
@@ -232,8 +244,8 @@
 
         <button type="button" 
                 ng-click="addMembers()" 
-                class="btn btn-small pull-left">
-                <i class="icon-plus"></i> Add Selected Members</button>
+                class="btn btn-success pull-left">
+                <i class="icon-plus icon-white"></i> Add Selected Members To Groups</button>
 
         <span class="muted pull-right"><i>There are {{candidates.length}} results in your query</i></span>
       </div>

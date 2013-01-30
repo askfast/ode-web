@@ -13,7 +13,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
 
   var Groups = $resource(
-    $config.host + '/network/:action:id',
+    $config.host + '/network/:action/:id',
     {
     },
     {
@@ -48,7 +48,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
 
   var Members = $resource(
-    $config.host + '/network/:id/members',
+    $config.host + '/network/:id/members/:mid',
     {
     },
     {
@@ -64,15 +64,66 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       save: {
         method: 'POST',
         params: {}
+      },
+      add: {
+        method: 'POST',
+        params: {id:'', mid:''} 
       }
     }
   );
 
 
-  Groups.prototype.all = function()
+
+
+  Groups.prototype.addMember = function(candidate)
   {
-    Groups.prototype.query()
-    .then(function(groups)
+    console.log('candidate from resource ->', candidate);
+
+    var deferred = $q.defer();
+    var successCb = function (result) 
+    {
+      deferred.resolve(result);
+    };
+
+    console.log('params ->', { id: candidate.group.uuid, mid: candidate.id });
+
+    Members.add({ id: candidate.group.uuid, mid: candidate.id }, {}, successCb);
+    return deferred.promise;    
+  };
+
+
+
+
+  // Groups.prototype.all_ = function()
+  // {
+  //   Groups.prototype.query()
+  //   .then(function(groups)
+  //   {
+  //     var calls = [];
+  //     angular.forEach(groups, function(group, index)
+  //     {
+  //       calls.push(Groups.prototype.get(group.uuid));
+  //     });
+  //     $q.all(calls)
+  //     .then(function(result)
+  //     {
+  //       Groups.prototype.uniqueMembers();
+
+  //       console.log('results ->', {
+  //         list: groups,
+  //         members: calls
+  //       });
+
+  //       return groups;
+  //     });
+  //   });
+  // };
+
+
+  Groups.prototype.query = function()
+  {
+    var deferred = $q.defer();
+    var successCb = function (groups) 
     {
       var calls = [];
       angular.forEach(groups, function(group, index)
@@ -83,33 +134,59 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       .then(function(result)
       {
         Groups.prototype.uniqueMembers();
-        return {
-          list: groups,
-          members: calls
-        }
+        
+        Storage.add('groups', angular.toJson(groups));
+        deferred.resolve(groups);
       });
-    });
-  };
-  
-
-  Groups.prototype.query = function () 
-  {    
-    var deferred = $q.defer();
-    var successCb = function (result) 
-    {
-      if (angular.equals(result, [])) 
-      {
-        deferred.reject("There are no groups!");
-      }
-      else 
-      {
-        Storage.add('groups', angular.toJson(result));
-        deferred.resolve(result);
-      }
     };
     Groups.query(successCb);
     return deferred.promise;
   };
+  
+
+
+  // Groups.prototype.query = function () 
+  // {    
+  //   var deferred = $q.defer();
+  //   var successCb = function (result) 
+  //   {
+  //     if (angular.equals(result, [])) 
+  //     {
+  //       deferred.reject("There are no groups!");
+  //     }
+  //     else 
+  //     {
+  //       Storage.add('groups', angular.toJson(result));
+  //       deferred.resolve(result);
+  //     }
+  //   };
+  //   Groups.query(successCb);
+  //   return deferred.promise;
+  // };
+
+
+  // Groups.prototype.query = function()
+  // {
+  //   var deferred = $q.defer();
+  //   var successCb = function (groups) 
+  //   {
+  //     var calls = [];
+  //     angular.forEach(groups, function(group, index)
+  //     {
+  //       calls.push(Groups.prototype.get(group.uuid));
+  //     });
+  //     $q.all(calls)
+  //     .then(function(result)
+  //     {
+  //       Groups.prototype.uniqueMembers();
+  //     });
+
+  //     Storage.add('groups', angular.toJson(groups));
+  //     deferred.resolve(groups);
+  //   };
+  //   Groups.query(successCb);
+  //   return deferred.promise;
+  // };
   
 
   Groups.prototype.get = function (id) 
@@ -230,29 +307,6 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
 	var self = this;
 
-  $scope.groupFormView = {
-    add: false,
-    edit: false
-  };
-
-  $scope.searchView = false;
-
-  /**
-   * TODO
-   * Put these ones in rendering function
-   * @type {[type]}
-   */
-	$scope.groups = groups;
-  $scope.members = {};
-  angular.forEach(angular.fromJson(Storage.get('groups')), function(group, gindex)
-  {
-    $scope.members[group.uuid] = [];
-    angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, mindex)
-    {
-      $scope.members[group.uuid].push(member);
-    });
-  });
-
 
 
   $scope.searchMembers = function(q)
@@ -262,6 +316,21 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
     {
       $scope.searchView = true;
       $scope.candidates = results;
+    });
+  };
+
+  //$scope.search = {q : 'ce'};
+  //$scope.searchMembers('ce');
+
+
+  $scope.addMember = function(candidate)
+  {
+    console.log('candidate from controller ->', candidate);
+
+    Groups.addMember(candidate).
+    then(function(result)
+    {
+      $scope.candidateAddedView[candidate.id] = true;
     });
   };
 
@@ -318,6 +387,43 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
   $scope.fixTabHeight = function(uuid)
   {
     $('.tabs-left .tab-content #grp-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
+  };
+
+
+
+
+
+
+
+
+  render(groups);
+
+
+  function render(groups)
+  {
+    $scope.groupFormView = {
+      add: false,
+      edit: false
+    };
+
+    $scope.searchView = false;
+
+    /**
+     * TODO
+     * Put these ones in rendering function
+     * @type {[type]}
+     */
+    $scope.groups = groups;
+
+    $scope.members = {};
+    angular.forEach(angular.fromJson(Storage.get('groups')), function(group, gindex)
+    {
+      $scope.members[group.uuid] = [];
+      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, mindex)
+      {
+        $scope.members[group.uuid].push(member);
+      });
+    });
   };
 
 };
