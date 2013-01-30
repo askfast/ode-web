@@ -226,15 +226,12 @@
                 <select style="margin:0" 
                         ng-model="candidate.group" 
                         ng-options="group.name for group in groups">
-                        <!-- ng-options="option as value for (option, value) in groups"> -->
                   <option value="">-- select a group --</option>
                 </select>
 
                 <button style="margin-left: 5px;" 
                         ng-click="addMember(candidate)" 
                         class="btn btn-success"><i class="icon-plus icon-white"></i> Add to group</button>
-
-                <span ng-show="candidateAddedView.candidate.id">User is added to group.</span>
 
               </td>
             </tr>

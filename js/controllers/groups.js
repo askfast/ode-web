@@ -1,12 +1,6 @@
 'use strict';
 
 
-
-
-
-
-
-
 WebPaige.
 factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
 {
@@ -77,47 +71,14 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
   Groups.prototype.addMember = function(candidate)
   {
-    console.log('candidate from resource ->', candidate);
-
     var deferred = $q.defer();
     var successCb = function (result) 
     {
       deferred.resolve(result);
     };
-
-    console.log('params ->', { id: candidate.group.uuid, mid: candidate.id });
-
     Members.add({ id: candidate.group.uuid, mid: candidate.id }, {}, successCb);
     return deferred.promise;    
   };
-
-
-
-
-  // Groups.prototype.all_ = function()
-  // {
-  //   Groups.prototype.query()
-  //   .then(function(groups)
-  //   {
-  //     var calls = [];
-  //     angular.forEach(groups, function(group, index)
-  //     {
-  //       calls.push(Groups.prototype.get(group.uuid));
-  //     });
-  //     $q.all(calls)
-  //     .then(function(result)
-  //     {
-  //       Groups.prototype.uniqueMembers();
-
-  //       console.log('results ->', {
-  //         list: groups,
-  //         members: calls
-  //       });
-
-  //       return groups;
-  //     });
-  //   });
-  // };
 
 
   Groups.prototype.query = function()
@@ -142,51 +103,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     Groups.query(successCb);
     return deferred.promise;
   };
-  
-
-
-  // Groups.prototype.query = function () 
-  // {    
-  //   var deferred = $q.defer();
-  //   var successCb = function (result) 
-  //   {
-  //     if (angular.equals(result, [])) 
-  //     {
-  //       deferred.reject("There are no groups!");
-  //     }
-  //     else 
-  //     {
-  //       Storage.add('groups', angular.toJson(result));
-  //       deferred.resolve(result);
-  //     }
-  //   };
-  //   Groups.query(successCb);
-  //   return deferred.promise;
-  // };
-
-
-  // Groups.prototype.query = function()
-  // {
-  //   var deferred = $q.defer();
-  //   var successCb = function (groups) 
-  //   {
-  //     var calls = [];
-  //     angular.forEach(groups, function(group, index)
-  //     {
-  //       calls.push(Groups.prototype.get(group.uuid));
-  //     });
-  //     $q.all(calls)
-  //     .then(function(result)
-  //     {
-  //       Groups.prototype.uniqueMembers();
-  //     });
-
-  //     Storage.add('groups', angular.toJson(groups));
-  //     deferred.resolve(groups);
-  //   };
-  //   Groups.query(successCb);
-  //   return deferred.promise;
-  // };
   
 
   Groups.prototype.get = function (id) 
@@ -325,12 +241,14 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
   $scope.addMember = function(candidate)
   {
-    console.log('candidate from controller ->', candidate);
-
     Groups.addMember(candidate).
     then(function(result)
     {
-      $scope.candidateAddedView[candidate.id] = true;
+      Groups.query().
+      then(function(groups)
+      {
+        render(groups);
+      });
     });
   };
 
@@ -398,7 +316,6 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
   render(groups);
 
-
   function render(groups)
   {
     $scope.groupFormView = {
@@ -425,6 +342,8 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
       });
     });
   };
+
+  
 
 };
 
@@ -461,3 +380,77 @@ groupsCtrl.$inject = [  '$rootScope',
 
 
 
+
+
+
+
+
+  // Groups.prototype.all_ = function()
+  // {
+  //   Groups.prototype.query()
+  //   .then(function(groups)
+  //   {
+  //     var calls = [];
+  //     angular.forEach(groups, function(group, index)
+  //     {
+  //       calls.push(Groups.prototype.get(group.uuid));
+  //     });
+  //     $q.all(calls)
+  //     .then(function(result)
+  //     {
+  //       Groups.prototype.uniqueMembers();
+
+  //       console.log('results ->', {
+  //         list: groups,
+  //         members: calls
+  //       });
+
+  //       return groups;
+  //     });
+  //   });
+  // };
+  
+
+
+  // Groups.prototype.query = function () 
+  // {    
+  //   var deferred = $q.defer();
+  //   var successCb = function (result) 
+  //   {
+  //     if (angular.equals(result, [])) 
+  //     {
+  //       deferred.reject("There are no groups!");
+  //     }
+  //     else 
+  //     {
+  //       Storage.add('groups', angular.toJson(result));
+  //       deferred.resolve(result);
+  //     }
+  //   };
+  //   Groups.query(successCb);
+  //   return deferred.promise;
+  // };
+
+
+  // Groups.prototype.query = function()
+  // {
+  //   var deferred = $q.defer();
+  //   var successCb = function (groups) 
+  //   {
+  //     var calls = [];
+  //     angular.forEach(groups, function(group, index)
+  //     {
+  //       calls.push(Groups.prototype.get(group.uuid));
+  //     });
+  //     $q.all(calls)
+  //     .then(function(result)
+  //     {
+  //       Groups.prototype.uniqueMembers();
+  //     });
+
+  //     Storage.add('groups', angular.toJson(groups));
+  //     deferred.resolve(groups);
+  //   };
+  //   Groups.query(successCb);
+  //   return deferred.promise;
+  // };

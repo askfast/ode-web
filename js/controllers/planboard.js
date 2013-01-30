@@ -820,13 +820,13 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    *
    * Timer Service for querying slots
    */
-  timerService.start('SlotsQueryTimer', function()
-  { 
-    Slots.query({
-      start:  $config.timeline.period.bstart, 
-      end:    $config.timeline.period.bend
-    });
-  }, 60 * 5);
+  // timerService.start('SlotsQueryTimer', function()
+  // { 
+  //   Slots.query({
+  //     start:  $config.timeline.period.bstart, 
+  //     end:    $config.timeline.period.bend
+  //   });
+  // }, 60 * 5);
 
 }
 
