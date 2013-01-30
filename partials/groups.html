@@ -228,6 +228,7 @@
             <tr>
               <th>#</th>
               <th>Name</th>
+              <th>Groups</th>
               <th></th>
             </tr>
           </thead>
@@ -236,6 +237,7 @@
             <tr ng-repeat="candidate in candidates">
               <td>{{$index + 1}}</td>
               <td>{{candidate.name}}</td>
+              <td>{{candidate.groups}}</td>
               <td>
               
                 <select style="margin:0" 
