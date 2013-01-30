@@ -62,6 +62,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       add: {
         method: 'POST',
         params: {id:'', mid:''} 
+      },
+      remove: {
+        method: 'DELETE',
+        params: {id:'', mid:''} 
       }
     }
   );
@@ -77,6 +81,20 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       deferred.resolve(result);
     };
     Members.add({ id: candidate.group.uuid, mid: candidate.id }, {}, successCb);
+    return deferred.promise;    
+  };
+
+
+
+
+  Groups.prototype.removeMember = function(member, group)
+  {
+    var deferred = $q.defer();
+    var successCb = function (result) 
+    {
+      deferred.resolve(result);
+    };
+    Members.remove({ id: group.uuid, mid: member.uuid }, successCb);
     return deferred.promise;    
   };
 
@@ -242,6 +260,20 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
   $scope.addMember = function(candidate)
   {
     Groups.addMember(candidate).
+    then(function(result)
+    {
+      Groups.query().
+      then(function(groups)
+      {
+        render(groups);
+      });
+    });
+  };
+
+
+  $scope.removeMember = function(member, group)
+  {
+    Groups.removeMember(member, group).
     then(function(result)
     {
       Groups.query().
