@@ -31,8 +31,8 @@
   <div class="btn-group"
         ng-hide="(groupFormView.add || groupFormView.edit)">
 
-    <button class="btn"
-            ng-click="groupFormView.add=true"><i class="icon-plus"></i> New group</button>
+    <button class="btn btn-success"
+            ng-click="groupFormView.add=true"><i class="icon-plus icon-white"></i> New group</button>
   </div>
   <!-- End Add Group -->
 
@@ -51,9 +51,16 @@
             class="span2"
             ng-model="groupForm.name">
 
-    <button type="submit" class="btn btn-success">
-      <span ng-show="groupFormView.add"><i class="icon-plus icon-white"></i> Add group</span>
-      <span ng-show="groupFormView.edit"><i class="icon-edit icon-white"></i> Save group</span>
+    <button type="submit" 
+            class="btn btn-success"
+            ng-show="groupFormView.add">
+      <i class="icon-plus icon-white"></i> Add group
+    </button>
+
+    <button type="submit" 
+            class="btn btn-warning"
+            ng-show="groupFormView.edit">
+      <i class="icon-edit icon-white"></i> Save group
     </button>
 
     <button type="button" 
@@ -105,16 +112,16 @@
         <div class="btn-group pull-right">
           <button type="button" 
                   ng-click="editGroup(group)" 
-                  class="btn"><i class="icon-edit"></i> Edit Group</button>
+                  class="btn btn-warning"><i class="icon-edit icon-white"></i> Edit Group</button>
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
                   class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete Group</button>
         </div>
 
-        <button type="button" 
+        <!-- <button type="button" 
                 ng-click="" 
                 style="margin-right: 15px"
-                class="btn pull-right"><i class="icon-plus"></i> Add Members</button>
+                class="btn btn-success pull-right"><i class="icon-plus icon-white"></i> Add Members</button> -->
       </div>
 
       <hr>
@@ -125,7 +132,11 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th><input type="checkbox"></th>
+              <th>
+                <input type="checkbox"
+                        ng-model="selectionMaster"
+                        ng-click="toggleSelection(group, selectionMaster)">
+              </th>
               <th>Name</th>
               <th>Role</th>
               <th>Tel</th>
@@ -135,15 +146,19 @@
           <tbody>
 
             <tr ng-repeat="member in members[group.uuid]">
-              <td><input type="checkbox"></td>
+              <td>
+                <input type="checkbox"
+                        ng-model="selection[member.uuid]"
+                        ng-checked="selectionMaster">
+              </td>
               <td><a href="#/profile/{{member.uuid}}/view">{{member.name}}</a></td>
               <td>{{member.resources.role|translateRole}}</td>
               <td>{{member.resources.PhoneAddress}}</td>
               <td>
                 <a href="#/profile/{{member.uuid}}/edit" 
-                  class="btn btn-mini"><i class="icon-edit"></i> Edit</a>
+                  class="btn btn-warning btn-mini"><i class="icon-edit icon-white"></i> Edit</a>
                 <button type="submit" 
-                        ng-click="removeMember(member, group)" 
+                        ng-click="removeMember(member.uuid, group.uuid)" 
                         class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i> Remove</button>
               </td>
             </tr>
@@ -152,7 +167,7 @@
         </table>
 
         <button type="button" 
-                ng-click="removeMembers()" 
+                ng-click="removeMembers(selection, group)" 
                 class="btn btn-small btn-danger pull-left">
                 <i class="icon-trash icon-white"></i> Remove Selected Members</button>
 

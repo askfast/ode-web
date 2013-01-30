@@ -87,17 +87,36 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
 
 
-  Groups.prototype.removeMember = function(member, group)
+  Groups.prototype.removeMember = function(memberId, groupId)
   {
     var deferred = $q.defer();
     var successCb = function (result) 
     {
       deferred.resolve(result);
     };
-    Members.remove({ id: group.uuid, mid: member.uuid }, successCb);
+    Members.remove({ id: groupId, mid: memberId }, successCb);
     return deferred.promise;    
   };
 
+
+  Groups.prototype.removeMembers = function(selection, group)
+  {
+    var deferred = $q.defer();
+    var calls = [];
+    angular.forEach(selection, function(value, id)
+    {
+      if (id)
+      {
+        calls.push(Groups.prototype.removeMember(id, group.uuid));
+      }
+    });
+    $q.all(calls)
+    .then(function(result)
+    {
+      deferred.resolve(result);
+    });
+    return deferred.promise; 
+  };
 
   Groups.prototype.query = function()
   {
@@ -121,7 +140,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     Groups.query(successCb);
     return deferred.promise;
   };
-  
 
   Groups.prototype.get = function (id) 
   {   
@@ -138,8 +156,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     return deferred.promise;
   };
 
-
-
   Groups.prototype.uniqueMembers = function()
   {
     angular.forEach(angular.fromJson(Storage.get('groups')), function(group, index)
@@ -153,15 +169,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     });
   };
 
-
-
-
   Groups.prototype.local = function()
   {
     return angular.fromJson(Storage.get('groups'));
   };
-
-
 
   Groups.prototype.save = function (group) 
   {
@@ -186,8 +197,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     return deferred.promise;
   };
 
-
-
   Groups.prototype.delete = function (id) 
   {
     var deferred = $q.defer();
@@ -198,8 +207,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     Groups.delete({id: id}, successCb);
     return deferred.promise;
   };
-
-
 
   Groups.prototype.search = function (query) 
   {
@@ -212,11 +219,8 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     return deferred.promise;
   };
 
-
   return new Groups;
 });
-
-
 
 
 
@@ -226,10 +230,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
-
-
-
 
 
 
@@ -240,8 +240,6 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 {
 
 	var self = this;
-
-
 
   $scope.searchMembers = function(q)
   {
@@ -281,6 +279,39 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
       {
         render(groups);
       });
+    });
+  };
+
+
+
+  $scope.removeMembers = function(selection, group)
+  {
+    Groups.removeMembers(selection, group).
+    then(function(result)
+    {
+      $scope.selection = {};
+      Groups.query().
+      then(function(groups)
+      {
+        render(groups);
+      });
+    });
+
+    /**
+     * TODO
+     * not working to reset master checkbox!
+     */
+    //$scope.selectionMaster = {};
+  };
+
+
+  $scope.toggleSelection = function(group, master)
+  {
+    var flag = (master) ? true : false;    
+    var members = angular.fromJson(Storage.get(group.uuid));
+    angular.forEach(members, function(member, index)
+    {
+      $scope.selection[member.uuid] = flag;
     });
   };
 
@@ -365,6 +396,8 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, timerService, $
 
     $scope.searchView = false;
 
+    $scope.selection = {};
+
     /**
      * TODO
      * Put these ones in rendering function
@@ -420,77 +453,3 @@ groupsCtrl.$inject = [  '$rootScope',
 
 
 
-
-
-
-
-
-  // Groups.prototype.all_ = function()
-  // {
-  //   Groups.prototype.query()
-  //   .then(function(groups)
-  //   {
-  //     var calls = [];
-  //     angular.forEach(groups, function(group, index)
-  //     {
-  //       calls.push(Groups.prototype.get(group.uuid));
-  //     });
-  //     $q.all(calls)
-  //     .then(function(result)
-  //     {
-  //       Groups.prototype.uniqueMembers();
-
-  //       console.log('results ->', {
-  //         list: groups,
-  //         members: calls
-  //       });
-
-  //       return groups;
-  //     });
-  //   });
-  // };
-  
-
-
-  // Groups.prototype.query = function () 
-  // {    
-  //   var deferred = $q.defer();
-  //   var successCb = function (result) 
-  //   {
-  //     if (angular.equals(result, [])) 
-  //     {
-  //       deferred.reject("There are no groups!");
-  //     }
-  //     else 
-  //     {
-  //       Storage.add('groups', angular.toJson(result));
-  //       deferred.resolve(result);
-  //     }
-  //   };
-  //   Groups.query(successCb);
-  //   return deferred.promise;
-  // };
-
-
-  // Groups.prototype.query = function()
-  // {
-  //   var deferred = $q.defer();
-  //   var successCb = function (groups) 
-  //   {
-  //     var calls = [];
-  //     angular.forEach(groups, function(group, index)
-  //     {
-  //       calls.push(Groups.prototype.get(group.uuid));
-  //     });
-  //     $q.all(calls)
-  //     .then(function(result)
-  //     {
-  //       Groups.prototype.uniqueMembers();
-  //     });
-
-  //     Storage.add('groups', angular.toJson(groups));
-  //     deferred.resolve(groups);
-  //   };
-  //   Groups.query(successCb);
-  //   return deferred.promise;
-  // };
