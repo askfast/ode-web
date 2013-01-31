@@ -35,5 +35,3 @@ directive('chosen',function()
     link: linker
   }
 });
-
-
