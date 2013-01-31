@@ -16,7 +16,10 @@
 
 <hr>
 
-<div class="span12" style="margin:0">
+
+
+
+<div class="row" style="padding-left: 30px">
 
   <form class="form-inline well">
     
@@ -188,7 +191,11 @@
 
 </div>
 
-<div class="span12" style="margin:0">
+
+
+
+
+<div class="row" style="padding-left: 30px">
   <form class="form-inline well">
     
     <div class="pull-left">
@@ -241,36 +248,41 @@
 </div>
 
 
-<div class="tabbable tabs-left">
 
-  <ul class="nav nav-tabs"
-      style="width: 100px;
-              margin-right: -1px">
-    <li class="active">
-      <a href="#timelineTab" 
-          data-toggle="tab"
-          ng-click="fixTabHeight('timelineTab')">Timeline</a>
-    </li>
-    <li>
-      <a href="#statisticsTab" 
-          data-toggle="tab"
-          ng-click="fixTabHeight('statisticsTab')">Statistics</a>
-    </li>
-  </ul>
 
-  <div class="tab-content"
-        style="background-color: white; 
-                border: 1px solid #ddd; 
-                padding: 20px;">
 
-    <div class="tab-pane active" id="timelineTab">
-      <div id="myTimeline"></div>
+<div class="row" style="padding-left: 30px">
+  <div class="tabbable tabs-left">
+
+    <ul class="nav nav-tabs"
+        style="width: 100px;
+                margin-right: -1px">
+      <li class="active">
+        <a href="#timelineTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('timelineTab')">Timeline</a>
+      </li>
+      <li>
+        <a href="#statisticsTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('statisticsTab')">Statistics</a>
+      </li>
+    </ul>
+
+    <div class="tab-content"
+          style="background-color: white; 
+                  border: 1px solid #ddd; 
+                  padding: 20px;">
+
+      <div class="tab-pane active" id="timelineTab">
+        <div id="myTimeline"></div>
+      </div>
+
+      <div class="tab-pane" id="statisticsTab">
+        <p>Statistics content</p>
+      </div>
+
     </div>
-
-    <div class="tab-pane" id="statisticsTab">
-      <p>Statistics content</p>
-    </div>
-
   </div>
 </div>
 
