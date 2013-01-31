@@ -1,10 +1,5 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" ng-app="WebPaige">
-  <!--<![endif]-->
+<html ng-app="WebPaige">
   <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -24,91 +19,96 @@
     -->
     
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="css/responsive.css" type="text/css">
     <link rel="stylesheet" href="libs/chosen/chosen.css">
     <link rel="stylesheet" href="css/custom.css" type="text/css">
+    <link rel="stylesheet" href="css/responsive.css" type="text/css">
 
   </head>
   <body>
 
-    <div class='notifications bottom-right'></div>
+    <div id="wrap">
 
-    <div class="navbar navbar-inverse navbar-fixed-top" bs-navbar>
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></a> 
-          <a class="brand" href="#">WebPaige</a>
+      <div class='notifications bottom-right'></div>
 
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li data-match-route="/dashboard">
-                <a href="#dashboard">Dashboard</a>
-              </li>
-              <li data-match-route="/planboard">
-                <a href="#planboard">Planboard</a>
-              </li>
-              <li data-match-route="/messages">
-                <a href="#messages">Messages</a>
-              </li>
-              <li data-match-route="/groups">
-                <a href="#groups">Groups</a>
-              </li>
-              <!--               
-              <li data-match-route="/profile/view/{{user.uuid}}">
-                <a href="#profile/{{user.uuid}}/view">Profile</a>
-              </li>
-              <li data-match-route="/settings">
-                <a href="#settings">Settings</a>
-              </li>
-              -->
-            </ul>
+      <div class="navbar navbar-inverse navbar-fixed-top" bs-navbar>
+        <div class="navbar-inner">
+          <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></a> 
+            <a class="brand" href="#">WebPaige</a>
+            <div class="nav-collapse collapse">
+              <ul class="nav">
+                <li data-match-route="/dashboard">
+                  <a href="#dashboard">Dashboard</a>
+                </li>
+                <li data-match-route="/planboard">
+                  <a href="#planboard">Planboard</a>
+                </li>
+                <li data-match-route="/messages">
+                  <a href="#messages">Messages</a>
+                </li>
+                <li data-match-route="/groups">
+                  <a href="#groups">Groups</a>
+                </li>
+                <!--               
+                <li data-match-route="/profile/view/{{user.uuid}}">
+                  <a href="#profile/{{user.uuid}}/view">Profile</a>
+                </li>
+                <li data-match-route="/settings">
+                  <a href="#settings">Settings</a>
+                </li>
+                -->
+              </ul>
+            </div>
+            <div class="btn-group pull-right" style="margin-left: 10px;">
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                {{ user.name }} <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#profile/{{user.uuid}}/view"><i class="icon-user"></i> Profile</a></li>
+                <li><a href="#settings"><i class="icon-cog"></i> Settings</a></li>
+                <li class="divider"></li>
+                <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
+              </ul>
+            </div>
+            <!--
+            <form class="navbar-form pull-right">
+              <input  type="text" 
+                      class="span1"
+                      ng-model="sessionID">
+              <button type="button" 
+                      class="btn"
+                      ng-click="saveSession(sessionID)">Save SessionID</button>
+              <button type="button" 
+                      class="btn btn-warning"
+                      ng-click="clearLocalSlots()">Clear LocalCache</button>
+            </form>
+            -->
           </div>
-
-          <div class="btn-group pull-right" style="margin-left: 10px;">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              {{ user.name }} <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#profile/{{user.uuid}}/view"><i class="icon-user"></i> Profile</a></li>
-              <li><a href="#settings"><i class="icon-cog"></i> Settings</a></li>
-              <li class="divider"></li>
-              <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
-            </ul>
-          </div>
-
-          <!--
-          <form class="navbar-form pull-right">
-            <input  type="text" 
-                    class="span1"
-                    ng-model="sessionID">
-            <button type="button" 
-                    class="btn"
-                    ng-click="saveSession(sessionID)">Save SessionID</button>
-            <button type="button" 
-                    class="btn btn-warning"
-                    ng-click="clearLocalSlots()">Clear LocalCache</button>
-          </form>
-          -->
-
         </div>
       </div>
 
-    </div>
+      <div class="content">
 
-    <div class="container">
-      <div ng-view></div>
+        <div ng-view></div>
 
-      <footer class="span12" style="margin-left: 0">
-        <hr>
-        <div class="progress span1" ng-class="active" ng-cloak style="margin-left:0;">
-            <div class="bar" style="width: 100%;"></div>
+      </div><!-- end container -->
+
+      <div id="push"></div>
+      
+    </div><!-- end wrap -->
+
+
+      <footer>
+        <div class="footcon">
+          <div class="progress span1" ng-class="active" ng-cloak style="margin-left:0;">
+              <div class="bar" style="width: 100%;"></div>
+          </div>
+          <span class="muted" style="margin-left: 10px; font-size: 12px">{{alertMessage}}</span>
+          <button type="button" 
+                      class="btn btn-small btn-danger pull-right"
+                      ng-click="clearLocalSlots()"><i class="icon-trash icon-white"></i> Clear LocalCache</button>
         </div>
-        <span class="muted" style="margin-left: 10px; font-size: 12px">{{alertMessage}}</span>
-        <button type="button" 
-                    class="btn btn-small btn-danger pull-right"
-                    ng-click="clearLocalSlots()"><i class="icon-trash icon-white"></i> Clear LocalCache</button>
       </footer>
 
-    </div>
 
     <script src="libs/jquery/jquery-1.8.3.min.js"></script>
     <script src="libs/chosen/chosen.jquery.min.js"></script>

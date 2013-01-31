@@ -308,10 +308,15 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
     Messages.delete(uuids).
     then(function()
     {
-      $scope.messages = Messages.query();
-      $scope.boxer('inbox'); 
+      $scope.messages = Messages.query().
+      then(function()
+      {
+        $scope.boxer('inbox');
+      });
+      
     });
   };
+
 
   $scope.composeMessage = function()
   {
