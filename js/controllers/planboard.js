@@ -845,10 +845,13 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
 planboardCtrl.resolve = {
   data: function ($rootScope, $config, Slots) 
   {
+    /*
     return Slots.query({
       start:  $config.timeline.period.bstart, 
       end:    $config.timeline.period.bend
     });
+    */
+    return {};
   }
 }
 
