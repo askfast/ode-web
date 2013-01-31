@@ -35,3 +35,54 @@ directive('chosen',function()
     link: linker
   }
 });
+
+
+
+
+/**
+ * TODO
+ * Needs attention :)
+ * 
+ */
+WebPaige.
+directive('daterangepicker', function($timeout)
+{
+  'use strict';
+
+  return {
+
+    restrict: 'A',
+
+    link: function postLink(scope, element, attrs, controller)
+    {
+      var startDate = Date.create().addDays(-6),
+          endDate   = Date.create();              
+
+      element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' - ' + endDate.format('{MM}-{dd}-{yyyy}'));
+
+      element.daterangepicker({
+        startDate: startDate,
+        endDate: endDate,
+        ranges: {
+                'Today': ['today', 'today'],
+                'Yesterday': ['yesterday', 'yesterday'],
+                'Last 7 Days': [Date.create().addDays(-6), 'today'],
+                'Last 30 Days': [Date.create().addDays(-29), 'today']
+            }
+      },function(start, end)
+      {
+      });
+
+      element.attr('data-toggle', 'daterangepicker');
+      element.daterangepicker({
+        autoclose: true
+      });
+
+    }
+
+  };
+
+});
+
+
+

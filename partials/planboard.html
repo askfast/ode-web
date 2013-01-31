@@ -1,4 +1,4 @@
-page header -->
+<!-- page header -->
 <div style="overflow:hidden;">
   <h2 class="pull-left">Planboard</h2>
   <div class="pull-right" style="margin-top: 35px;">
@@ -15,62 +15,26 @@ page header -->
   
 
   <!-- core timeline controls -->
-  <div class="pull-left">
-
-
-    <script type="text/javascript">
-      $(function() {
-        // Set the default dates
-        var startDate = Date.create().addDays(-6),  // 7 days ago
-            endDate   = Date.create();              // today
-        var range = $('#range');
-        // Show the dates in the range input
-        range.val(startDate.format('{MM}-{dd}-{yyyy}') + ' - ' + endDate.format('{MM}-{dd}-{yyyy}'));
-        range.daterangepicker({
-          startDate: startDate,
-          endDate: endDate,
-          ranges: {
-                  'Today': ['today', 'today'],
-                  'Yesterday': ['yesterday', 'yesterday'],
-                  'Last 7 Days': [Date.create().addDays(-6), 'today'],
-                  'Last 30 Days': [Date.create().addDays(-29), 'today']
-              }
-        },function(start, end)
-        {
-          //ajaxLoadChart(start, end);
-        });
-      });
-    </script>
+  <div class="pull-left" style="margin-top: 10px">
 
 
     <!-- dateranger -->
-    <div class="control-group input-append">
-      <span>Range</span>
-      <input type="text" name="range" id="range" />
+    <div class="control-group input-append pull-left"
+          style="margin-right: 5px;">
+      <input type="text" 
+            name="range" 
+            daterangepicker="">
       <button type="button" 
               class="btn"><i class="icon-calendar"></i></button>
     </div>
     <!-- end dateranger -->
 
 
-    <!-- zooms -->
-    <div class="btn-group">
-      <button type="button" class="btn"><i class="icon-zoom-in"></i></button>
-      <button type="button" class="btn"><i class="icon-zoom-out"></i></button> 
-    </div>
-    <!-- end zooms -->
-
-
-    <!-- before after -->
-    <div class="btn-group">
-      <button type="button" class="btn"><i class="icon-arrow-left"></i></button>
-      <button type="button" class="btn"><i class="icon-arrow-right"></i></button>  
-    </div>
-    <!-- end before after -->
-
-
     <!-- view togglers -->
-    <div class="btn-group" bs-buttons-checkbox="" data-toggle="buttons-radio">
+    <div class="btn-group pull-left" 
+          bs-buttons-checkbox="" 
+          data-toggle="buttons-radio"
+          style="margin-right: 5px">
       <button type="button" 
               class="btn" 
               ng-model="view.week" 
@@ -83,8 +47,75 @@ page header -->
     <!-- end view togglers -->
 
 
+    <!-- zooms -->
+    <div class="btn-group pull-left"
+          style="margin-right: 5px">
+      <button type="button" class="btn"><i class="icon-zoom-in"></i></button>
+      <button type="button" class="btn"><i class="icon-zoom-out"></i></button> 
+    </div>
+    <!-- end zooms -->
+
+
+    <!-- before after -->
+    <div class="btn-group pull-left">
+      <button type="button" class="btn"><i class="icon-arrow-left"></i></button>
+      <button type="button" class="btn"><i class="icon-arrow-right"></i></button>  
+    </div>
+    <!-- end before after -->
+
+
   </div>
   <!-- end core timeline controls -->
+
+
+  <!-- groups members controls -->
+  <div class="pull-right">
+
+
+    <!-- groups list -->
+    <!-- <span style="margin-left: 15px">Group</span> -->
+    <select ng-model="state__" 
+            style="margin-top: 10px"
+            ng-options="option as value for (option, value) in groups">
+      <option value="">-- selecteer group --</option>
+    </select>
+    <!-- end groups list -->
+
+
+    <!-- divisions list -->
+    <!-- <span style="margin-left: 15px">Division</span> -->
+    <select ng-model="state__" 
+            style="margin-top: 10px"
+            ng-options="option as value for (option, value) in divisions">
+      <option value="">-- selecteer division --</option>
+    </select>
+    <!-- end divisions list -->
+
+
+    <!-- timeline layout manager -->
+    <div  class="btn-group" 
+          style="margin-left: 15px" 
+          bs-buttons-checkbox="" 
+          data-toggle="buttons-checkbox">
+      <button type="button" 
+              class="btn" 
+              ng-model="checkbox.left" 
+              bs-button="">User</button>
+      <button type="button" 
+              class="btn" 
+              ng-model="checkbox.middle" 
+              bs-button="">Group</button>
+      <button type="button" 
+              class="btn" 
+              ng-model="checkbox.right" 
+              ng-click=""
+              bs-button="">Team</button>
+    </div>
+    <!-- end timeline layout manager -->
+
+
+  </div>
+  <!--end groups members controls -->
 
 
 </div>
@@ -210,63 +241,6 @@ page header -->
 </div>
 <!-- end slot controls -->
 
-
-<!-- groups members timelines -->
-<div class="row" style="padding-left: 30px">
-  <form class="form-inline well">
-
-
-    <!-- groups members controls -->
-    <div class="pull-right">
-
-
-      <!-- groups list -->
-      <span style="margin-left: 15px">Group</span>
-      <select ng-model="state__" 
-              ng-options="option as value for (option, value) in groups">
-        <option value="">-- selecteer group --</option>
-      </select>
-      <!-- end groups list -->
-
-
-      <!-- divisions list -->
-      <span style="margin-left: 15px">Division</span>
-      <select ng-model="state__" 
-              ng-options="option as value for (option, value) in divisions">
-        <option value="">-- selecteer division --</option>
-      </select>
-      <!-- end divisions list -->
-
-
-      <!-- timeline layout manager -->
-      <div  class="btn-group" 
-            style="margin-left: 15px" 
-            bs-buttons-checkbox="" 
-            data-toggle="buttons-checkbox">
-        <button type="button" 
-                class="btn" 
-                ng-model="checkbox.left" 
-                bs-button="">User Timeline</button>
-        <button type="button" 
-                class="btn" 
-                ng-model="checkbox.middle" 
-                bs-button="">Group Total</button>
-        <button type="button" 
-                class="btn" 
-                ng-model="checkbox.right" 
-                ng-click=""
-                bs-button="">Team Members</button>
-      </div>
-      <!-- end timeline layout manager -->
-
-
-    </div>
-    <!--end groups members controls -->
-
-
-  </form>
-</div>
-<!-- end groups members timelines -->
 
 
 <!-- timelines statistics -->
