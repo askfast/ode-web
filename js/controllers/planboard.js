@@ -506,7 +506,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
    */
   function timelineGetRange()
   {
-    $scope.$apply(function()
+    $scope.$watch(function()
     {
       var range = self.timeline.getVisibleChartRange();
       $scope.range.from = new Date(range.start).toString( $config.date.stringFormat );
@@ -536,6 +536,31 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   };
 
 
+  /**
+   * Timeline zoom in
+   * @return {[type]} [description]
+   */
+  $scope.timelineZoomIn = function()
+  {
+    links.Timeline.preventDefault(event);
+    links.Timeline.stopPropagation(event);
+    self.timeline.zoom( $config.timeline.settings.zoomValue );
+    self.timeline.trigger("rangechange");
+    self.timeline.trigger("rangechanged");
+  };
+
+  /**
+   * Timeline zoom out
+   * @return {[type]} [description]
+   */
+  $scope.timelineZoomOut = function()
+  {
+    links.Timeline.preventDefault(event);
+    links.Timeline.stopPropagation(event);
+    self.timeline.zoom( -$config.timeline.settings.zoomValue  );
+    self.timeline.trigger("rangechange");
+    self.timeline.trigger("rangechanged");
+  };
 
 
   /**

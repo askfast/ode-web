@@ -33,9 +33,6 @@
     <!-- end dateranger -->
 
 
-    //ranges : {{daterange}}
-
-
     <!-- view togglers -->
     <div class="btn-group pull-left" 
           bs-buttons-checkbox="" 
@@ -53,21 +50,24 @@
     <!-- end view togglers -->
 
 
-    <!-- zooms -->
+    <!-- timeline navigation -->
     <div class="btn-group pull-left"
           style="margin-right: 5px">
-      <button type="button" class="btn"><i class="icon-zoom-in"></i></button>
-      <button type="button" class="btn"><i class="icon-zoom-out"></i></button> 
-    </div>
-    <!-- end zooms -->
 
-
-    <!-- before after -->
-    <div class="btn-group pull-left">
       <button type="button" class="btn"><i class="icon-arrow-left"></i></button>
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
+
       <button type="button" class="btn"><i class="icon-arrow-right"></i></button>  
+
     </div>
-    <!-- end before after -->
+    <!-- end timeline navigation -->
 
 
   </div>

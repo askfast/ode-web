@@ -52,7 +52,8 @@ WebPaige.
         ranges: {
           period: this.period,
           reset: this.period
-        }
+        },
+        zoomValue: '0.4' 
       },
       // TODO combine options with settings
       options: {
