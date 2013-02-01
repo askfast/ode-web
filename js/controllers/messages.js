@@ -96,7 +96,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         members = [],
         groupsLocal = angular.fromJson(Storage.get('groups')),
         groups = [];
-
     angular.forEach(membersLocal, function(member, index)
     {
       members.push({
@@ -105,7 +104,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         group: 'Users'
       });
     });
-
     angular.forEach(groupsLocal, function(group, index)
     {
       groups.push({
@@ -114,7 +112,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         group: 'Groups'
       });
     });
-
     return angular.extend(members, groups);
   };
 

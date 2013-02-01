@@ -288,7 +288,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
           {
             self.progress(100, 'Everything loaded!');
             Groups.uniqueMembers();
-            document.location = "#/planboard";
+            document.location = "#/dashboard";
           });
         });
       })

@@ -2,7 +2,8 @@
 <div style="overflow:hidden;">
   <h2 class="pull-left">Planboard</h2>
   <div class="pull-right" style="margin-top: 35px;">
-  {{range.from}} - {{range.till}}
+  <h4 class="pull-right"
+      style="font-weight: normal">{{range.from|nicelyDate}} / {{range.till|nicelyDate}}</h4>
   </div>
 </div>
 <!-- end page header -->
@@ -20,7 +21,7 @@
 
     <!-- dateranger -->
     <div class="control-group input-append pull-left"
-          style="margin-right: 5px;">
+          style="margin-right: 10px;">
       <input type="text" 
             style="width: 165px" 
             name="daterange" 
@@ -54,7 +55,9 @@
     <div class="btn-group pull-left"
           style="margin-right: 5px">
 
-      <button type="button" class="btn"><i class="icon-arrow-left"></i></button>
+      <button type="button" 
+              class="btn"
+              ng-click="timelineBefore()"><i class="icon-arrow-left"></i></button>
 
       <button type="button" 
               class="btn"
@@ -64,7 +67,9 @@
               class="btn"
               ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
 
-      <button type="button" class="btn"><i class="icon-arrow-right"></i></button>  
+      <button type="button" 
+              class="btn"
+              ng-click="timeline"><i class="icon-arrow-right"></i></button>  
 
     </div>
     <!-- end timeline navigation -->

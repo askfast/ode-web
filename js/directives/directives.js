@@ -59,9 +59,6 @@ directive('daterangepicker', function($timeout)
       //     endDate   = Date.create();              
 
       // element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
-
-
-
      
       element.daterangepicker({
         //startDate: startDate,
@@ -69,11 +66,19 @@ directive('daterangepicker', function($timeout)
         ranges: {
                 'Today': ['today', 'today'],
                 'Yesterday': ['yesterday', 'yesterday'],
-                'Last 7 Days': [Date.create().addDays(-6), 'today'],
+                'Last 7 Days': [Date.create().addDays(-7), 'today'],
                 'Last 30 Days': [Date.create().addDays(-29), 'today']
             }
       },function(start, end)
       {
+        if (start.getTime() == end.getTime())
+        {
+          /**
+           * TODO
+           * Get timeline zoom into one day!
+           */
+          console.log('same date');
+        };
       });
 
       // scope.$watch(function()
