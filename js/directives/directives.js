@@ -55,14 +55,17 @@ directive('daterangepicker', function($timeout)
 
     link: function postLink(scope, element, attrs, controller)
     {
-      var startDate = Date.create().addDays(-6),
-          endDate   = Date.create();              
+      // var startDate = Date.create().addDays(-6),
+      //     endDate   = Date.create();              
 
-      element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' - ' + endDate.format('{MM}-{dd}-{yyyy}'));
+      // element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
+
+
+     
       element.daterangepicker({
-        startDate: startDate,
-        endDate: endDate,
+        //startDate: startDate,
+        //endDate: endDate,
         ranges: {
                 'Today': ['today', 'today'],
                 'Yesterday': ['yesterday', 'yesterday'],
@@ -73,10 +76,28 @@ directive('daterangepicker', function($timeout)
       {
       });
 
+      // scope.$watch(function()
+      // {
+      //   //var dates = element.context.value.split(' / ');
+      //   // element.daterangepicker({
+      //   //   startDate: dates[0],
+      //   //   endDate: dates[1]
+      //   // });
+      //   //element.val(dates[0] + ' / ' + dates[1]);
+        
+      //   console.log('val ->', element.context.value);
+
+      //   //scope.$watch(function()
+      //   //{
+      //     scope.daterange = element.context.value;
+      //   //});
+      // });
+
       element.attr('data-toggle', 'daterangepicker');
-      element.daterangepicker({
-        autoclose: true
-      });
+
+      // element.daterangepicker({
+      //   autoclose: true
+      // });
 
     }
 

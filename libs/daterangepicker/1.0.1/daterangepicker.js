@@ -22,8 +22,8 @@
         this.ranges = {};
         this.opens = 'right';
         this.cb = function () { };
-        this.format = '{MM}/{dd}/{yyyy}';
-        this.separator = ' - ';
+        this.format = '{dd}-{MM}-{yyyy}';
+        this.separator = ' / ';
         this.showWeekNumbers = false;
         this.buttonClasses = ['btn-success'];
         this.locale = {

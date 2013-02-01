@@ -180,6 +180,199 @@ factory('Session', function ($rootScope, $http, Storage)
 
 
 
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
+
+
+
+
+
+
+WebPaige.
+factory('Dater', function ($rootScope, Storage) 
+{
+  return {
+
+    /**
+     * TODO
+     * Fix it later..
+     * Not beautiful but works!!
+     * 
+     * @param  {[type]} dates [description]
+     * @return {[type]}       [description]
+     */
+    convertRangeDates: function(dates)
+    {
+      var dates = dates.split(' / ');
+      var starts = dates[0].split('-');
+      var start = starts[1] + '-' + starts[0] + '-' + starts[2];
+      var ends = dates[1].split('-');
+      var end = ends[1] + '-' + ends[0] + '-' + ends[2];
+      return {
+        start: Date.parse(start + ' 00:00:00 AM'),
+        end: Date.parse(end + ' 00:00:00 AM')
+      }
+    },
+
+    /**
+     * TODO
+     * Move to prototypes or
+     * place in DATE service
+     * 
+     * Make time readable for user
+     * @param  {[type]} time [description]
+     * @return {[type]}      [description]
+     */
+    readableTime: function(time, format)
+    {
+      return new Date(time).toString(format); 
+    },
+
+    /**
+     * TODO
+     * Move to prototypes or
+     * place in DATE service
+     * 
+     * Make date readable for user
+     * @param  {[type]} date [description]
+     * @return {[type]}      [description]
+     */
+    readableDate: function(date, format)
+    {
+      return new Date(date).toString(format);
+    },
+
+    /**
+     * Get the current month
+     * @return {[type]} [description]
+     */
+    getThisMonth: function()
+    {
+      return new Date().toString('M');
+    },
+
+    /**
+     * Get the current year
+     * @return {[type]} [description]
+     */
+    getThisYear: function()
+    {
+      return new Date().toString('yyyy');
+    },
+
+    /**
+     * Get begin and end timestamps of months
+     * in the current year
+     * @return {[type]} [description]
+     */
+    getMonthTimeStamps: function()
+    {
+      var months = {};
+      var year = planboardCtrl.prototype.getThisYear();
+      for (var i = 0; i < 12; i++)
+      {
+        var firstDay = new Date(year, i).moveToFirstDayOfMonth();
+        var lastDay = new Date(year, i).moveToLastDayOfMonth();
+        var month = {
+          first: {
+            day: firstDay,
+            timeStamp: firstDay.getTime()
+          },
+          last: { 
+            day: lastDay,
+            timeStamp: lastDay.getTime() 
+          },
+          // use it if needed
+          //totalDays: Date.getDaysInMonth(year, i)
+        };
+        months[i+1] = month;
+      }
+      return months;
+    },
+
+    /**
+     * TODO
+     * Finish it!
+     * 
+     * Get begin and end timestamps of weeks
+     * @return {[type]} [description]
+     */
+    getWeekTimeStamps: function()
+    {
+      var weeks = {};
+      var year = planboardCtrl.prototype.getThisYear();
+      var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
+
+      var swapDay = firstDayInYear;
+      var first, nextMonday;
+
+      var firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
+
+      console.log('firstMondayOfYear ->', firstMondayOfYear);
+
+      for (var i = 1; i < 52; i++)
+      {
+        if (first)
+        {
+          var week = {
+            first: nextMonday
+          }
+          nextMonday = nextMonday.addWeeks(i);
+          console.log('first week is true', nextMonday);  
+          first = false;       
+        }
+        else
+        {
+          var week = {
+            first: firstMondayOfYear
+          }
+          nextMonday = firstMondayOfYear.addWeeks(1);
+          console.log('others', nextMonday);       
+        }
+
+        console.log('fm ->', week.first );
+
+        // DEPRECIATED!
+        // if (!first)
+        // {
+        //   var firstDay = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
+        //   var lastDay = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(1);
+        //   first = true;      
+        // }
+        // else
+        // {
+        //   var firstDay = swapDay.last().monday().addWeeks(i);
+        //   var lastDay = swapDay.last().sunday().addWeeks(i);         
+        // }
+        // var swapDay = firstDay;
+        // console.log('swapDay', swapDay);
+        // console.log('week:', i, 'fday', firstDay, 'lday', lastDay);
+        // var month = {
+        //   first: {
+        //     day: firstDay,
+        //     timeStamp: firstDay.getTime()
+        //   },
+        //   last: { 
+        //     day: lastDay,
+        //     timeStamp: lastDay.getTime() 
+        //   },
+        //   // use it if needed
+        //   //totalDays: Date.getDaysInMonth(year, i)
+        // };
+        // months[i+1] = month;
+
+      }
+      return weeks; 
+    }
+  }
+});
+
+
+
 
 
 

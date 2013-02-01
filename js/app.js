@@ -72,8 +72,9 @@ WebPaige.
         // end periods
         //min: "2013-01-01T00:00:00.000Z",
         //max: "2013-12-31T00:00:00.000Z",
-        intervalMin: 1000 * 60 * 60 * 1,
-        intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
+        
+        //intervalMin: 1000 * 60 * 60 * 1,
+        //intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
       }
     },
     states: {

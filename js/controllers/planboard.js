@@ -1,9 +1,6 @@
 'use strict';
 
 
-
-
-
 /**
  * TODO
  * Clear list of dependencies
@@ -18,8 +15,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    * Still needed?
    */
   var self = this;
-
-
 
   /**
    * TODO
@@ -54,8 +49,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       }
     }
   );
-  
-
 
   /**
    * TODO
@@ -69,7 +62,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   {    
     var deferred = $q.defer(), 
         localSlots = Storage.get('slots');
-
     /**
      * TODO
      * Checking for localSlots should be done here?
@@ -84,7 +76,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     // {
       var successCb = function (result) 
       {
-
         if (angular.equals(result, [])) 
         {
           deferred.reject("There are no records!");
@@ -92,7 +83,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         else 
         {
           $rootScope.notify( { message: 'Slots downloaded from back-end.' } );
-
           /**
            * TODO
            * Should the id processing made here or in render?
@@ -111,21 +101,15 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
             });
           });
           Storage.add('slots', angular.toJson(localSlots));
-
           $rootScope.notify( { message: 'Downloaded slots added to localStorage.' } );
-
           $rootScope.$broadcast('renderPlanboard', 'slot added to back-end');
-
           deferred.resolve(result);
         }
       };
-
       Slots.query(params, successCb);
-
       return deferred.promise;
     // }
   };
-
 
   /**
    * Return local slots
@@ -135,9 +119,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   {
     return angular.fromJson(Storage.get('slots'));
   };
-  
-
-
 
   /**
    * TODO
@@ -182,8 +163,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     });
   };
 
-
-
   /**
    * TODO
    * Add back-end
@@ -205,16 +184,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      * slot is overlaping with other ones!
      */
 
-
     /**
      * TODO
      * Should the conversion done here or in controller?
      */
     var original = naturalize(original);
     var changed = naturalize(changed);
-
     var localSlots = [];
-
     angular.forEach(angular.fromJson(Storage.get('slots')), 
     function(slot, index)
     {
@@ -230,11 +206,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       };
       localSlots.push(slot);    
     });
-
     Storage.add('slots', angular.toJson(localSlots));
     $rootScope.$broadcast('renderPlanboard', 'slot changed in localStorage');
     $rootScope.notify( { message: 'Slot changed in localStorage.' } );
-
     /**
      * TODO
      */
@@ -244,8 +218,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       $rootScope.notify( { message: 'Slot changed in back-end.' } );
     });
   };
-
-
 
   /**
    * TODO
@@ -258,7 +230,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   {
     var slot = naturalize(slot);
     var localSlots = [];
-
     angular.forEach(angular.fromJson(Storage.get('slots')), 
     function(slot, index)
     {
@@ -267,11 +238,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         localSlots.push(slot);
       };  
     });
-
     Storage.add('slots', angular.toJson(localSlots));
     $rootScope.$broadcast('renderPlanboard', 'slot deleted from localStorage');
     $rootScope.notify( { message: 'Slot deleted from localStorage.' } );
-
     /**
      * TODO
      */
@@ -281,8 +250,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       $rootScope.notify( { message: 'Slot deleted in back-end.' } );
     });
   };
-
-
 
   /**
    * TODO
@@ -298,8 +265,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     // slots in timeline.
   };
 
-
-
   /**
    * TODO
    * Finish it
@@ -313,8 +278,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     // front-end.
   };
 
-
-
   /**
    * TODO
    * Finish it
@@ -325,8 +288,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   {
     // Slice a slot from a give point
   };
-
-
 
   /**
    * TODO
@@ -339,8 +300,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     // Combine two slots
   };
   
-
-
   /**
    * Naturalize Slot for back-end injection
    * @slot  {object} slot [slot that should be naturalized]
@@ -356,9 +315,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       id: content.id
     }
   };
-
-
-
   return new Slots;
 });
 
@@ -372,11 +328,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
-
-
-
-
 
 
 
@@ -417,9 +368,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
  *
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService) 
+function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, Dater) 
 {
-
   /**
    * TODO
    * Always refine this initializers
@@ -433,7 +383,16 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
    */
   $scope.checkbox = {
     left: true
-  }
+  };
+
+  /**
+   * Default values for timeline scope
+   * @type {Object}
+   */
+  $scope.timelineScope = {
+    week: true,
+    month: false
+  };
 
   /**
    * TODO
@@ -445,10 +404,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
     from: $config.timeline.period.start,
     till: $config.timeline.period.end
   };
-
-
-
-
 
   /**
    * TODO
@@ -463,7 +418,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   $rootScope.$on('renderPlanboard', function () 
   {
     console.log('---> render inited from:', arguments[1]); 
-
     // Causes continious loop :(
     /*
     Slots.query({
@@ -471,29 +425,25 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
       end:    $config.timeline.period.bend
     });
     */
-
     render();
   });
 
-
-
-
+  /**
+   * TODO
+   * Quick fix for tabs on the left!
+   * Make a permanent fix for this
+   * @param  {[type]} section [description]
+   * @return {[type]}         [description]
+   */
   $scope.fixTabHeight = function(section)
   {
     var tabHeight = $('.tabs-left .nav-tabs').height();
     var contentHeight = $('.tabs-left .tab-content #' + section).height();
-
     if (tabHeight > contentHeight)
     {
       $('.tabs-left .tab-content #' + section).css({ height: $('.tabs-left .nav-tabs').height() });
     };
   };
-
-
-
-
-
-
 
   /**
    * TODO
@@ -503,7 +453,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   angular.forEach($config.states, function(state, key)
   {
     states[key] = state.label;
-  })
+  });
   $scope.states = states;
 
   /**
@@ -514,7 +464,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   angular.forEach(databank.groups, function(group, key)
   {
     groups[key] = group.name;
-  })
+  });
   $scope.groups = groups;
 
   /**
@@ -525,10 +475,8 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   angular.forEach($config.divisions, function(division, key)
   {
     divisions[key] = division.label;
-  })
+  });
   $scope.divisions = divisions;
-
-
 
 
 
@@ -546,6 +494,10 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   $scope.range.from = new Date(range.start).toString( $config.date.stringFormat );
   $scope.range.till = new Date(range.end).toString( $config.date.stringFormat );
 
+  $scope.daterange_ =  new Date(new Date(range.start).getTime()).toString('dd-MM-yyyy') + 
+                      ' / ' + 
+                      new Date(new Date(range.end).getTime()).toString('dd-MM-yyyy');
+
   /**
    * TODO
    *
@@ -559,8 +511,32 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
       var range = self.timeline.getVisibleChartRange();
       $scope.range.from = new Date(range.start).toString( $config.date.stringFormat );
       $scope.range.till = new Date(range.end).toString( $config.date.stringFormat );
+
+      $scope.daterange =  new Date(new Date(range.start).getTime()).toString('dd-MM-yyyy') + 
+                          ' / ' + 
+                          new Date(new Date(range.end).getTime()).toString('dd-MM-yyyy');
+
     });
   };
+
+  /**
+   * Set timeline range manually
+   * @param {[type]} dates [description]
+   */
+  $scope.setTimelineRange = function()
+  {
+    /**
+     * TODO
+     * Lose jquery hook later on
+     * @type {[type]}
+     */
+    var dates = $scope.daterange = $('input[name=daterange]').val();
+    var dates = Dater.convertRangeDates(dates);
+    self.timeline.setVisibleChartRange(dates.start, dates.end);
+  };
+
+
+
 
   /**
    * TODO
@@ -576,23 +552,20 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
     if (selection = self.timeline.getSelection()[0])
     {
       var values = $scope.original = self.timeline.getItem(selection.row);
-
       var content = angular.fromJson(values.content);
-
       $scope.slot = {
         from: {
-          date: self.readableDate(values.start, $config.date.format),
-          time: self.readableTime(values.start, $config.time.format)
+          date: Dater.readableDate(values.start, $config.date.format),
+          time: Dater.readableTime(values.start, $config.time.format)
         },
         till: {
-          date: self.readableDate(values.end, $config.date.format),
-          time: self.readableTime(values.end, $config.time.format)
+          date: Dater.readableDate(values.end, $config.date.format),
+          time: Dater.readableTime(values.end, $config.time.format)
         },
         state: content.state,
         recursive: content.recursive,
         id: content.id
-      };
-            
+      };   
       return values;
     }
   };
@@ -604,7 +577,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   function selectedSlotID()
   {
     return angular.fromJson(selectedSlot().content).id;
-  }
+  };
 
   /**
    * TODO
@@ -621,17 +594,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
       $scope.selectedOriginal = selectedSlot();
     });
   };
-
-
-
-
-
-
-
-
-
-
-
 
   /**
    * TODO
@@ -677,15 +639,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
     });
     $scope.slot = {};
   };
-
-
-
-
-
-
-
-
-
 
   /**
    * TODO
@@ -737,26 +690,8 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
         state: slot.state 
         })
     };
-    
     Slots.change($scope.original, slot);
   };
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
 
   /**
    * TODO
@@ -783,12 +718,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
     Slots.delete(id, selectedSlot());
   };
 
-
-
-
-
-
-
   /**
    * TODO
    * Define a better way with dealing localStorage and Resolver
@@ -798,21 +727,15 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService)
   function render()
   {
     self.timeline = new links.Timeline(document.getElementById('myTimeline'));
-
     links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
     links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
     links.events.addListener(self.timeline, 'add',           timelineOnAdd);
     links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
     links.events.addListener(self.timeline, 'change',        timelineOnChange);
     links.events.addListener(self.timeline, 'select',        timelineOnSelect);
-
     self.timeline.draw( self.process(Slots.local()), $config.timeline.options );
-
     self.timeline.setVisibleChartRange($scope.range.from, $scope.range.till);
   };
-
-
-
 
   /**
    * TODO
@@ -849,7 +772,6 @@ planboardCtrl.resolve = {
       start:  $config.timeline.period.bstart, 
       end:    $config.timeline.period.bend
     });
-    //return {};
   }
 }
 
@@ -889,34 +811,6 @@ planboardCtrl.prototype = {
       id: (slot.id) ? slot.id : 0
     }
   },
-
-  /**
-   * TODO
-   * Move to prototypes or
-   * place in DATE service
-   * 
-   * Make date readable for user
-   * @param  {[type]} date [description]
-   * @return {[type]}      [description]
-   */
-  readableDate: function(date, format)
-  {
-    return new Date(date).toString(format);
-  },
-
-  /**
-   * TODO
-   * Move to prototypes or
-   * place in DATE service
-   * 
-   * Make time readable for user
-   * @param  {[type]} time [description]
-   * @return {[type]}      [description]
-   */
-  readableTime: function(time, format)
-  {
-    return new Date(time).toString(format); 
-  },
   
   /**
    * TODO
@@ -946,133 +840,11 @@ planboardCtrl.prototype = {
       })  
     });
     return timedata;
-  },
-
-
-
-  /**
-   * Get the current month
-   * @return {[type]} [description]
-   */
-  getThisMonth: function()
-  {
-    return new Date().toString('M');
-  },
-
-  /**
-   * Get the current year
-   * @return {[type]} [description]
-   */
-  getThisYear: function()
-  {
-    return new Date().toString('yyyy');
-  },
-
-  /**
-   * Get begin and end timestamps of months
-   * in the current year
-   * @return {[type]} [description]
-   */
-  getMonthTimeStamps: function()
-  {
-    var months = {};
-    var year = planboardCtrl.prototype.getThisYear();
-    for (var i = 0; i < 12; i++)
-    {
-      var firstDay = new Date(year, i).moveToFirstDayOfMonth();
-      var lastDay = new Date(year, i).moveToLastDayOfMonth();
-      var month = {
-        first: {
-          day: firstDay,
-          timeStamp: firstDay.getTime()
-        },
-        last: { 
-          day: lastDay,
-          timeStamp: lastDay.getTime() 
-        },
-        // use it if needed
-        //totalDays: Date.getDaysInMonth(year, i)
-      };
-      months[i+1] = month;
-    }
-    return months;
-  },
-
-  /**
-   * TODO
-   * Finish it!
-   * 
-   * Get begin and end timestamps of weeks
-   * @return {[type]} [description]
-   */
-  getWeekTimeStamps: function()
-  {
-    var weeks = {};
-    var year = planboardCtrl.prototype.getThisYear();
-    var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
-
-    var swapDay = firstDayInYear;
-    var first, nextMonday;
-
-    var firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
-
-    console.log('firstMondayOfYear ->', firstMondayOfYear);
-
-    for (var i = 1; i < 52; i++)
-    {
-      if (first)
-      {
-        var week = {
-          first: nextMonday
-        }
-        nextMonday = nextMonday.addWeeks(i);
-        console.log('first week is true', nextMonday);  
-        first = false;       
-      }
-      else
-      {
-        var week = {
-          first: firstMondayOfYear
-        }
-        nextMonday = firstMondayOfYear.addWeeks(1);
-        console.log('others', nextMonday);       
-      }
-
-      console.log('fm ->', week.first );
-
-      // DEPRECIATED!
-      // if (!first)
-      // {
-      //   var firstDay = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
-      //   var lastDay = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(1);
-      //   first = true;      
-      // }
-      // else
-      // {
-      //   var firstDay = swapDay.last().monday().addWeeks(i);
-      //   var lastDay = swapDay.last().sunday().addWeeks(i);         
-      // }
-      // var swapDay = firstDay;
-      // console.log('swapDay', swapDay);
-      // console.log('week:', i, 'fday', firstDay, 'lday', lastDay);
-      // var month = {
-      //   first: {
-      //     day: firstDay,
-      //     timeStamp: firstDay.getTime()
-      //   },
-      //   last: { 
-      //     day: lastDay,
-      //     timeStamp: lastDay.getTime() 
-      //   },
-      //   // use it if needed
-      //   //totalDays: Date.getDaysInMonth(year, i)
-      // };
-      // months[i+1] = month;
-
-    }
-    return weeks; 
   }
 
 }
 
-planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots', 'timerService'];
+planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots', 'timerService', 'Dater'];
+
+
+
