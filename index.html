@@ -30,9 +30,16 @@
 
       <div class='notifications bottom-right'></div>
 
-      <div class="navbar navbar-inverse navbar-fixed-top" bs-navbar>
-        <div class="navbar-inner">
-          <div class="container">
+      <div class="navbar navbar-inverse navbar-fixed-top" 
+            style="" 
+            bs-navbar>
+
+        <div class="navbar-inner"
+              style="">
+
+          <div class="container"
+                style="width:100%;">
+
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></a> 
             <a class="brand" href="#">WebPaige</a>
             <div class="nav-collapse collapse">
@@ -59,9 +66,12 @@
                 -->
               </ul>
             </div>
-            <div class="btn-group pull-right" style="margin-left: 10px;">
+
+            <div class="btn-group pull-right" 
+                  style="margin-right: 60px;">
+
               <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                {{ user.name }} <span class="caret"></span></a>
+                User Name <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#profile/{{user.uuid}}/view"><i class="icon-user"></i> Profile</a></li>
                 <li><a href="#settings"><i class="icon-cog"></i> Settings</a></li>
@@ -69,6 +79,7 @@
                 <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
               </ul>
             </div>
+
             <!--
             <form class="navbar-form pull-right">
               <input  type="text" 

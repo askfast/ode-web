@@ -137,7 +137,7 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Groups, Messages, Storage)
+var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Groups, Messages, Storage, Dater)
 {
 	var self = this;
 
@@ -263,6 +263,9 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
     $('#loginForm').hide();
     $('#preloader').show();
 
+    Dater.getMonthTimeStamps();
+    Dater.getWeekTimeStamps();
+
     //Storage.add('members', angular.toJson({}));
 
     self.progress(20, 'Loading user information..');
@@ -288,7 +291,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
           {
             self.progress(100, 'Everything loaded!');
             Groups.uniqueMembers();
-            document.location = "#/planboard";
+            document.location = "#/dashboard";
           });
         });
       })
@@ -461,5 +464,6 @@ loginCtrl.$inject = [ '$rootScope',
                       '$md5', 
                       'Groups', 
                       'Messages',
-                      'Storage'];
+                      'Storage',
+                      'Dater'];
 

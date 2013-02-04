@@ -1,8 +1,8 @@
 <!-- page header -->
 <div style="overflow:hidden;">
   <h2 class="pull-left">Planboard</h2>
-  <div class="pull-right" style="margin-top: 35px;">
-  {{range.from}} - {{range.till}}
+  <div class="pull-right" style="margin-top: 13px;">
+  <h4 style="font-weight: normal">{{range.from|nicelyDate}} / {{range.till|nicelyDate}}</h4>
   </div>
 </div>
 <!-- end page header -->
@@ -20,12 +20,15 @@
 
     <!-- dateranger -->
     <div class="control-group input-append pull-left"
-          style="margin-right: 5px;">
+          style="margin-right: 10px;">
       <input type="text" 
-            name="range" 
+            style="width: 165px" 
+            name="daterange" 
+            ng-model="daterange" 
             daterangepicker="">
       <button type="button" 
-              class="btn"><i class="icon-calendar"></i></button>
+              ng-click="setTimelineRange()"
+              class="btn">Go</button>
     </div>
     <!-- end dateranger -->
 
@@ -37,31 +40,38 @@
           style="margin-right: 5px">
       <button type="button" 
               class="btn" 
-              ng-model="view.week" 
+              ng-model="timelineScope.week" 
               bs-button="">Week</button>
       <button type="button" 
               class="btn" 
-              ng-model="view.month" 
+              ng-model="timelineScope.month" 
               bs-button="">Month</button>
     </div>
     <!-- end view togglers -->
 
 
-    <!-- zooms -->
+    <!-- timeline navigation -->
     <div class="btn-group pull-left"
           style="margin-right: 5px">
-      <button type="button" class="btn"><i class="icon-zoom-in"></i></button>
-      <button type="button" class="btn"><i class="icon-zoom-out"></i></button> 
-    </div>
-    <!-- end zooms -->
 
+      <button type="button" 
+              class="btn"
+              ng-click="timelineBefore()"><i class="icon-arrow-left"></i></button>
 
-    <!-- before after -->
-    <div class="btn-group pull-left">
-      <button type="button" class="btn"><i class="icon-arrow-left"></i></button>
-      <button type="button" class="btn"><i class="icon-arrow-right"></i></button>  
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
+
+      <button type="button" 
+              class="btn"
+              ng-click="timeline"><i class="icon-arrow-right"></i></button>  
+
     </div>
-    <!-- end before after -->
+    <!-- end timeline navigation -->
 
 
   </div>
@@ -75,9 +85,9 @@
     <!-- groups list -->
     <!-- <span style="margin-left: 15px">Group</span> -->
     <select ng-model="state__" 
-            style="margin-top: 10px"
+            style="margin-top: 10px; width: 160px;"
             ng-options="option as value for (option, value) in groups">
-      <option value="">-- selecteer group --</option>
+      <option value="">-- group</option>
     </select>
     <!-- end groups list -->
 
@@ -85,9 +95,9 @@
     <!-- divisions list -->
     <!-- <span style="margin-left: 15px">Division</span> -->
     <select ng-model="state__" 
-            style="margin-top: 10px"
+            style="margin-top: 10px; width: 160px;"
             ng-options="option as value for (option, value) in divisions">
-      <option value="">-- selecteer division --</option>
+      <option value="">-- division</option>
     </select>
     <!-- end divisions list -->
 

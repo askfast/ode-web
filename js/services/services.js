@@ -179,8 +179,181 @@ factory('Session', function ($rootScope, $http, Storage)
 });
 
 
+/**
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ * ************************************************************************************************
+ */
 
 
+
+WebPaige.
+factory('Dater', function ($rootScope, Storage) 
+{
+  return {
+
+    /**
+     * TODO
+     * Fix it later..
+     * Not beautiful but works!!
+     * 
+     * @param  {[type]} dates [description]
+     * @return {[type]}       [description]
+     */
+    convertRangeDates: function(dates)
+    {
+      var dates = dates.split(' / ');
+      var starts = dates[0].split('-');
+      var start = starts[1] + '-' + starts[0] + '-' + starts[2];
+      var ends = dates[1].split('-');
+      var end = ends[1] + '-' + ends[0] + '-' + ends[2];
+      return {
+        start: Date.parse(start + ' 00:00:00 AM'),
+        end: Date.parse(end + ' 00:00:00 AM')
+      }
+    },
+
+    /**
+     * TODO
+     * Move to prototypes or
+     * place in DATE service
+     * 
+     * Make time readable for user
+     * @param  {[type]} time [description]
+     * @return {[type]}      [description]
+     */
+    readableTime: function(time, format)
+    {
+      return new Date(time).toString(format); 
+    },
+
+    /**
+     * TODO
+     * Move to prototypes or
+     * place in DATE service
+     * 
+     * Make date readable for user
+     * @param  {[type]} date [description]
+     * @return {[type]}      [description]
+     */
+    readableDate: function(date, format)
+    {
+      return new Date(date).toString(format);
+    },
+
+    /**
+     * Get the current month
+     * @return {[type]} [description]
+     */
+    getThisMonth: function()
+    {
+      return new Date().toString('M');
+    },
+
+    /**
+     * Get the current year
+     * @return {[type]} [description]
+     */
+    getThisYear: function()
+    {
+      return new Date().toString('yyyy');
+    },
+
+    /**
+     * Get begin and end timestamps of months
+     * in the current year
+     * @return {[type]} [description]
+     */
+    getMonthTimeStamps: function()
+    {
+      var months = {};
+      var year = this.getThisYear();
+      for (var i = 0; i < 12; i++)
+      {
+        var firstDay = new Date(year, i).moveToFirstDayOfMonth();
+        var lastDay = new Date(year, i).moveToLastDayOfMonth();
+        var month = {
+          first: {
+            day: firstDay,
+            timeStamp: firstDay.getTime()
+          },
+          last: { 
+            day: lastDay,
+            timeStamp: lastDay.getTime() 
+          },
+          totalDays: Date.getDaysInMonth(year, i)
+        };
+        months[i+1] = month;
+      };
+      /**
+       * Register monthly periods
+       */
+      var periods = angular.fromJson(Storage.get('periods') || '{}');
+      periods.months = months;
+      Storage.add('periods', angular.toJson(periods));
+    },
+
+
+    /**
+     * TODO
+     * Finish it!
+     * 
+     * Get begin and end timestamps of weeks
+     * @return {[type]} [description]
+     */
+    getWeekTimeStamps: function()
+    {
+      var nweeks = [],
+          weeks = {},
+          nextMonday;
+      var year = this.getThisYear();
+      var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
+      var firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
+      var firstMonday = new Date(firstMondayOfYear);
+      for (var i = 0; i < 53; i++)
+      {
+        if (i == 0)
+        {
+          nextMonday = firstMondayOfYear.addWeeks(1);
+        }
+        else
+        {
+          nextMonday = new Date(nweeks[i-1]).addWeeks(1);
+        }
+        nweeks.push(new Date(nextMonday));
+      };
+      nweeks.unshift(firstMonday);
+      var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
+      for (var i = 0; i < 55; i++)
+      {
+        weeks[i+1] = {
+          first: {
+            day: nweeks[i],
+            timeStamp: new Date(nweeks[i]).getTime()
+          },
+          last: {
+            day: nweeks[i+1],
+            timeStamp: new Date(nweeks[i+1]).getTime()
+          }
+        }
+      };
+      /**
+       * Remove unneccessary periods
+       */
+      delete weeks[54];
+      delete weeks[55];
+      /**
+       * Register weekly periods
+       */
+      var periods = angular.fromJson(Storage.get('periods') || '{}');
+      periods.weeks = weeks;
+      Storage.add('periods', angular.toJson(periods));
+    }
+
+
+  }
+});
 
 
 
@@ -190,7 +363,6 @@ factory('Session', function ($rootScope, $http, Storage)
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
 
 
 
@@ -262,17 +434,12 @@ function($rootScope)
 });
 
 
-
-
-
 /**
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
-
 
 
 
@@ -327,15 +494,12 @@ timerService.service('timerService', [
 
 
 
-
-
 /**
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
 
 
 
@@ -676,18 +840,12 @@ angularLocalStorage.service('Storage', [
 
 
 
-
-
-
-
 /**
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
-
 
 
 /** 

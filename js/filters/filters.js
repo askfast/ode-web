@@ -27,4 +27,17 @@ angular.module('WebPaige.filters', [])
 			break;
 		}
 	}
-});
+})
+
+.filter('nicelyDate', ['Dater', function(Dater)
+{
+	return function(date)
+	{
+
+		//console.log('date ->', Dater.readableDate(date) );
+
+		return new Date(date).toString('dddd MMMM d, yyyy');
+		
+		//return date;
+	}
+}]);

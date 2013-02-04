@@ -93,12 +93,10 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.receviersList = function()
   {
     var membersLocal = angular.fromJson(Storage.get('members')),
-        members = [],
-        groupsLocal = angular.fromJson(Storage.get('groups')),
-        groups = [];
+        groupsLocal = angular.fromJson(Storage.get('groups'));
     
     var receivers  = [];
-    
+
     angular.forEach(membersLocal, function(member, index)
     {
         receivers.push({
@@ -107,7 +105,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         group: 'Users'
       });
     });
-    
+
     angular.forEach(groupsLocal, function(group, index)
     {
         receivers.push({
@@ -116,7 +114,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         group: 'Groups'
       });
     });
-    
+
     return receivers;
   };
 
