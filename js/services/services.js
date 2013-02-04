@@ -179,16 +179,12 @@ factory('Session', function ($rootScope, $http, Storage)
 });
 
 
-
 /**
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
-
-
 
 
 
@@ -272,7 +268,7 @@ factory('Dater', function ($rootScope, Storage)
     getMonthTimeStamps: function()
     {
       var months = {};
-      var year = planboardCtrl.prototype.getThisYear();
+      var year = this.getThisYear();
       for (var i = 0; i < 12; i++)
       {
         var firstDay = new Date(year, i).moveToFirstDayOfMonth();
@@ -286,13 +282,13 @@ factory('Dater', function ($rootScope, Storage)
             day: lastDay,
             timeStamp: lastDay.getTime() 
           },
-          // use it if needed
-          //totalDays: Date.getDaysInMonth(year, i)
+          totalDays: Date.getDaysInMonth(year, i)
         };
         months[i+1] = month;
       }
       return months;
     },
+
 
     /**
      * TODO
@@ -303,77 +299,58 @@ factory('Dater', function ($rootScope, Storage)
      */
     getWeekTimeStamps: function()
     {
-      var weeks = {};
-      var year = planboardCtrl.prototype.getThisYear();
-      var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
+      var nweeks = [],
+          weeks = {},
+          nextMonday;
 
-      var swapDay = firstDayInYear;
-      var first, nextMonday;
+      var year = this.getThisYear();
+
+      var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
 
       var firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
 
-      console.log('firstMondayOfYear ->', firstMondayOfYear);
+      var firstMonday = new Date(firstMondayOfYear);
 
-      for (var i = 1; i < 52; i++)
+      for (var i = 0; i < 53; i++)
       {
-        if (first)
+        if (i == 0)
         {
-          var week = {
-            first: nextMonday
-          }
-          nextMonday = nextMonday.addWeeks(i);
-          console.log('first week is true', nextMonday);  
-          first = false;       
+          nextMonday = firstMondayOfYear.addWeeks(1);
         }
         else
         {
-          var week = {
-            first: firstMondayOfYear
-          }
-          nextMonday = firstMondayOfYear.addWeeks(1);
-          console.log('others', nextMonday);       
+          nextMonday = new Date(nweeks[i-1]).addWeeks(1);
         }
+        nweeks.push(new Date(nextMonday));
+      };
 
-        console.log('fm ->', week.first );
+      nweeks.unshift(firstMonday);
 
-        // DEPRECIATED!
-        // if (!first)
-        // {
-        //   var firstDay = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
-        //   var lastDay = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(1);
-        //   first = true;      
-        // }
-        // else
-        // {
-        //   var firstDay = swapDay.last().monday().addWeeks(i);
-        //   var lastDay = swapDay.last().sunday().addWeeks(i);         
-        // }
-        // var swapDay = firstDay;
-        // console.log('swapDay', swapDay);
-        // console.log('week:', i, 'fday', firstDay, 'lday', lastDay);
-        // var month = {
-        //   first: {
-        //     day: firstDay,
-        //     timeStamp: firstDay.getTime()
-        //   },
-        //   last: { 
-        //     day: lastDay,
-        //     timeStamp: lastDay.getTime() 
-        //   },
-        //   // use it if needed
-        //   //totalDays: Date.getDaysInMonth(year, i)
-        // };
-        // months[i+1] = month;
+      var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
 
-      }
-      return weeks; 
+      for (var i = 0; i < 55; i++)
+      {
+        weeks[i+1] = {
+          first: {
+            day: nweeks[i],
+            timeStamp: new Date(nweeks[i]).getTime()
+          },
+          last: {
+            day: nweeks[i+1],
+            timeStamp: new Date(nweeks[i+1]).getTime()
+          }
+        }
+      };
+
+      delete weeks[54];
+      delete weeks[55];
+
+      //return weeks; 
     }
+
+
   }
 });
-
-
-
-
 
 
 
@@ -383,7 +360,6 @@ factory('Dater', function ($rootScope, Storage)
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
 
 
 
@@ -455,17 +431,12 @@ function($rootScope)
 });
 
 
-
-
-
 /**
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
-
 
 
 
@@ -520,15 +491,12 @@ timerService.service('timerService', [
 
 
 
-
-
 /**
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
 
 
 
@@ -869,18 +837,12 @@ angularLocalStorage.service('Storage', [
 
 
 
-
-
-
-
 /**
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  * ************************************************************************************************
  */
-
-
 
 
 /** 

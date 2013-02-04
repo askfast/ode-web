@@ -482,6 +482,12 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
 
 
 
+  console.log('months ->', Dater.getMonthTimeStamps());
+  
+  Dater.getWeekTimeStamps();
+
+
+
   /**
    * TODO
    * Angularize it!
@@ -490,34 +496,37 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
    * @type {Object}
    */
   $scope.range = new Object;
-  var range = self.timeline.getVisibleChartRange();
-  $scope.range.from = new Date(range.start).toString( $config.date.stringFormat );
-  $scope.range.till = new Date(range.end).toString( $config.date.stringFormat );
+  
 
-  $scope.daterange_ =  new Date(new Date(range.start).getTime()).toString('dd-MM-yyyy') + 
-                      ' / ' + 
-                      new Date(new Date(range.end).getTime()).toString('dd-MM-yyyy');
 
   /**
-   * TODO
-   *
+   * Watch for changes in timeline range
+   */
+  $scope.$watch(function()
+  {
+    var range = self.timeline.getVisibleChartRange();
+    $scope.range.from = new Date(range.start).toString( $config.date.stringFormat );
+    $scope.range.till = new Date(range.end).toString( $config.date.stringFormat );
+  });
+
+
+  /**
    * Timeline get ranges
    * @return {[type]} [description]
    */
   function timelineGetRange()
   {
-    $scope.$watch(function()
+    var range = self.timeline.getVisibleChartRange();
+    $scope.$apply(function()
     {
-      var range = self.timeline.getVisibleChartRange();
       $scope.range.from = new Date(range.start).toString( $config.date.stringFormat );
-      $scope.range.till = new Date(range.end).toString( $config.date.stringFormat );
-
+      $scope.range.till = new Date(range.end).toString( $config.date.stringFormat );  
       $scope.daterange =  new Date(new Date(range.start).getTime()).toString('dd-MM-yyyy') + 
                           ' / ' + 
                           new Date(new Date(range.end).getTime()).toString('dd-MM-yyyy');
-
     });
   };
+
 
   /**
    * Set timeline range manually
