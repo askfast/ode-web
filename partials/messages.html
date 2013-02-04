@@ -113,7 +113,7 @@
 
         <div class="btn-group pull-right">
           <button type="submit" 
-                  ng-click="" 
+                  ng-click="replyMessage(message)" 
                   class="btn">Reply</button>
           <button type="submit" 
                   ng-click="delete(message.uuid)" 
@@ -204,7 +204,7 @@
                 ng-model="message.receivers" 
                 ng-options="receiver.name group by receiver.group for receiver in receviersList">
         </select>
-        <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p>
+<!--         <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
       </div>
 
       <div class="control-group">
