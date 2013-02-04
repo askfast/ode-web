@@ -285,8 +285,13 @@ factory('Dater', function ($rootScope, Storage)
           totalDays: Date.getDaysInMonth(year, i)
         };
         months[i+1] = month;
-      }
-      return months;
+      };
+      /**
+       * Register monthly periods
+       */
+      var periods = angular.fromJson(Storage.get('periods') || '{}');
+      periods.months = months;
+      Storage.add('periods', angular.toJson(periods));
     },
 
 
@@ -302,15 +307,10 @@ factory('Dater', function ($rootScope, Storage)
       var nweeks = [],
           weeks = {},
           nextMonday;
-
       var year = this.getThisYear();
-
       var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
-
       var firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
-
       var firstMonday = new Date(firstMondayOfYear);
-
       for (var i = 0; i < 53; i++)
       {
         if (i == 0)
@@ -323,11 +323,8 @@ factory('Dater', function ($rootScope, Storage)
         }
         nweeks.push(new Date(nextMonday));
       };
-
       nweeks.unshift(firstMonday);
-
       var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
-
       for (var i = 0; i < 55; i++)
       {
         weeks[i+1] = {
@@ -341,11 +338,17 @@ factory('Dater', function ($rootScope, Storage)
           }
         }
       };
-
+      /**
+       * Remove unneccessary periods
+       */
       delete weeks[54];
       delete weeks[55];
-
-      //return weeks; 
+      /**
+       * Register weekly periods
+       */
+      var periods = angular.fromJson(Storage.get('periods') || '{}');
+      periods.weeks = weeks;
+      Storage.add('periods', angular.toJson(periods));
     }
 
 

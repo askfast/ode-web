@@ -478,15 +478,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   });
   $scope.divisions = divisions;
 
-
-
-
-
-  console.log('months ->', Dater.getMonthTimeStamps());
   
-  Dater.getWeekTimeStamps();
-
-
 
   /**
    * TODO
