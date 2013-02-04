@@ -22,11 +22,16 @@ directive('chosen',function()
 {
   var linker = function(scope,element,attr)
   {
-    scope.$watch('recipientsList',function()
-    {
+    scope.$watch('receviersList',function()
+    {   
        element.trigger('liszt:updated');
     });
-
+    
+    scope.$watch('message.receviers',function()
+    {   
+       $(element[0]).trigger('liszt:updated');
+    });
+    
     element.chosen();
   };
 

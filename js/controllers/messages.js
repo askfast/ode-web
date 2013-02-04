@@ -93,26 +93,29 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.receviersList = function()
   {
     var membersLocal = angular.fromJson(Storage.get('members')),
-        members = [],
-        groupsLocal = angular.fromJson(Storage.get('groups')),
-        groups = [];
+        groupsLocal = angular.fromJson(Storage.get('groups'));
+    
+    var receivers  = [];
+
     angular.forEach(membersLocal, function(member, index)
     {
-      members.push({
-        id: index,
+        receivers.push({
+        id: member.uuid,
         name: member.name,
         group: 'Users'
       });
     });
+
     angular.forEach(groupsLocal, function(group, index)
     {
-      groups.push({
+        receivers.push({
         id: group.uuid,
         name: group.name,
         group: 'Groups'
       });
     });
-    return angular.extend(members, groups);
+
+    return receivers;
   };
 
 
@@ -212,14 +215,24 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
 {
   var self = this;
 
-
-
   $scope.receviersList = Messages.receviersList();
-
-
+	
+  $("div[ng-show='composeView'] select.chzn-select").chosen().change( function(item){
+  	$.each($(this).next().find("ul li.result-selected"),function(i,li){
+  		var req_name = $(li).html();
+  		$.each($("div[ng-show='composeView'] select.chzn-select option"),function(j,opt){
+	      if(opt.innerHTML == req_name){
+	      	  console.log(opt.innerHTML);
+	          opt.selected = true;
+	      }
+	    });
+  	});
+  });
 
   $scope.sendMessage = function(message)
   {
+  	console.log(message);
+  	return false;
     Messages.send(message).
     then(function(result)
     {
@@ -325,10 +338,39 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
     };
   };
 
-
-
-
-
+  $scope.replyMessage = function(message)
+  {
+      
+    $scope.composeMessage();  
+    
+    var requester = message.requester.split('personalagent/')[1].split('/')[0];    
+    var req_name = requester;
+    
+    
+     
+    $.each($scope.receviersList,function(i,rec){
+        if(rec.id == requester){
+            req_name = rec.name;    
+        }
+    });
+    
+    // only preset the message when receiver exists in the receiver list
+    if(req_name != requester){
+    	$scope.message = {
+	            subject: 'RE: ' + message.subject,
+	            receivers: [{group : "Users" , id : requester , name : req_name}],
+	            type : { message : true}
+	    }
+    }
+    
+    $.each($("div[ng-show='composeView'] select.chzn-select option"),function(i,opt){
+      if(opt.innerHTML == req_name){
+          opt.selected = true;
+      }
+    });
+    
+	$("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");    
+  };
 
 
 };
