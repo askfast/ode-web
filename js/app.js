@@ -261,11 +261,13 @@ WebPaige.config(function($locationProvider, $routeProvider)
  * Initial run functions
  */
 WebPaige.run(
-['$rootScope', '$location', '$timeout', 'Session',  
-function($rootScope, $location, $timeout, Session)
+['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage',
+function($rootScope, $location, $timeout, Session, Dater, Storage)
 {
-
-
+  if (!Storage.get('periods'))
+  {
+    Dater.registerPeriods();
+  };
 
   Session.check();
 

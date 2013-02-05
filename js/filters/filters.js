@@ -29,15 +29,21 @@ angular.module('WebPaige.filters', [])
 	}
 })
 
-.filter('nicelyDate', ['Dater', function(Dater)
+.filter('niceRange', ['Dater', function(Dater)
 {
-	return function(date)
+	return function(dates)
 	{
-
-		//console.log('date ->', Dater.readableDate(date) );
-
-		return new Date(date).toString('dddd MMMM d, yyyy');
-		
-		//return date;
+		var dates = {
+			from: new Date(dates.from).toString('dddd, MMMM d'),
+			till: new Date(dates.till).toString('dddd, MMMM d')
+		};
+		if (dates.from == dates.till)
+		{
+			return dates.from;
+		}
+		else
+		{
+			return dates.from + ' / ' + dates.till;
+		};
 	}
 }]);
