@@ -67,13 +67,16 @@ WebPaige.
         eventMarginAxis: 0,
         //showNavigation: true,
         groupsChangeable: true,
+
         // periods
-        start: Date.today().add({ days: -2 }),
-        end: Date.today().add({ days: 12 }),
+        //start: Date.today().add({ days: -2 }),
+        //end: Date.today().add({ days: 12 }),
+        
         // end periods
         //min: "2013-01-01T00:00:00.000Z",
         //max: "2013-12-31T00:00:00.000Z",
         
+        // intervals
         //intervalMin: 1000 * 60 * 60 * 1,
         //intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
       }

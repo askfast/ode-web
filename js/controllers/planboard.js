@@ -368,7 +368,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
  *
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, Dater) 
+function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, Dater, Storage) 
 {
   /**
    * TODO
@@ -379,11 +379,51 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   $scope.data = data;
 
   /**
+   * TODO
+   * States for dropdown
+   */
+  var states = {};
+  angular.forEach($config.states, function(state, key)
+  {
+    states[key] = state.label;
+  });
+  $scope.states = states;
+
+  /**
+   * TODO
+   * Groups for dropdown
+   */
+  var groups = {};
+  angular.forEach(databank.groups, function(group, key)
+  {
+    groups[key] = group.name;
+  });
+  $scope.groups = groups;
+
+  /**
+   * TODO
+   * Groups for dropdown
+   */
+  var divisions = {};
+  angular.forEach($config.divisions, function(division, key)
+  {
+    divisions[key] = division.label;
+  });
+  $scope.divisions = divisions;
+
+  /**
    * Initial timeline layout manager
    */
   $scope.checkbox = {
     left: true
   };
+
+
+
+
+
+
+
 
   /**
    * Default values for timeline scope
@@ -400,10 +440,26 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
    * Dynamically set timeline range
    * @type {Object}
    */
+  var periods = angular.fromJson(Storage.get('periods'));
+  var currentWeek = $scope.currentWeek = new Date().getWeek();
+  var currentMonth = $scope.currentMonth = new Date().getMonth() + 1;
+  
   $scope.range = {
-    from: $config.timeline.period.start,
-    till: $config.timeline.period.end
+    from: periods.weeks[currentWeek].first.day,
+    till: periods.weeks[currentWeek].last.day
   };
+
+  $scope.session = {
+    timeline: {
+      start:  new Date(periods.weeks[currentWeek].first.day),
+      end:    new Date(periods.weeks[currentWeek].last.day),
+      min:    new Date(periods.weeks[currentWeek].first.day),
+      max:    new Date(periods.weeks[currentWeek].last.day)
+    }
+  };
+
+
+
 
   /**
    * TODO
@@ -447,41 +503,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
 
   /**
    * TODO
-   * States for dropdown
-   */
-  var states = {};
-  angular.forEach($config.states, function(state, key)
-  {
-    states[key] = state.label;
-  });
-  $scope.states = states;
-
-  /**
-   * TODO
-   * Groups for dropdown
-   */
-  var groups = {};
-  angular.forEach(databank.groups, function(group, key)
-  {
-    groups[key] = group.name;
-  });
-  $scope.groups = groups;
-
-  /**
-   * TODO
-   * Groups for dropdown
-   */
-  var divisions = {};
-  angular.forEach($config.divisions, function(division, key)
-  {
-    divisions[key] = division.label;
-  });
-  $scope.divisions = divisions;
-
-  
-
-  /**
-   * TODO
    * Angularize it!
    * 
    * Timeline Range
@@ -489,8 +510,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
    */
   $scope.range = new Object;
   
-
-
   /**
    * Watch for changes in timeline range
    */
@@ -500,7 +519,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     $scope.range.from = new Date(range.start).toString( $config.date.stringFormat );
     $scope.range.till = new Date(range.end).toString( $config.date.stringFormat );
   });
-
 
   /**
    * Timeline get ranges
@@ -519,7 +537,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     });
   };
 
-
   /**
    * Set timeline range manually
    * @param {[type]} dates [description]
@@ -535,7 +552,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     var dates = Dater.convertRangeDates(dates);
     self.timeline.setVisibleChartRange(dates.start, dates.end);
   };
-
 
   /**
    * Timeline zoom in
@@ -563,6 +579,165 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     self.timeline.trigger("rangechanged");
   };
 
+  $scope.timelineBefore = function(timelineScope)
+  {
+    if ($scope.timelineScope.week != true)
+    {
+      if ($scope.currentWeek != 1)
+      {
+
+        //$scope.session = ;
+        timeliner({
+          // timeline: {
+            start:  periods.weeks[$scope.currentWeek - 1].first.day,
+            end:    periods.weeks[$scope.currentWeek - 1].last.day,
+            min:    periods.weeks[$scope.currentWeek - 1].first.day,
+            max:    periods.weeks[$scope.currentWeek - 1].last.day
+          // }
+        });
+
+        // self.timeline.setVisibleChartRange(
+        //   periods.weeks[$scope.currentWeek - 1].first.day, 
+        //   periods.weeks[$scope.currentWeek - 1].last.day
+        // );
+
+        $scope.currentWeek--;
+      }
+    }
+    else if ($scope.timelineScope.month != true)
+    {
+      if ($scope.currentMonth != 1)
+      {
+
+        //$scope.session = ;
+        timeliner({
+          // timeline: {
+            start:  periods.months[$scope.currentMonth - 1].first.day,
+            end:    periods.months[$scope.currentMonth - 1].last.day,
+            min:    periods.months[$scope.currentMonth - 1].first.day,
+            max:    periods.months[$scope.currentMonth - 1].last.day
+          // }
+        });
+
+        // self.timeline.setVisibleChartRange(
+        //   periods.months[$scope.currentMonth - 1].first.day, 
+        //   periods.months[$scope.currentMonth - 1].last.day
+        // );
+
+        $scope.currentMonth--;
+      }
+    };
+  };
+
+  $scope.timelineAfter = function(timelineScope)
+  {
+    if ($scope.timelineScope.week != true)
+    {
+      if ($scope.currentWeek != 53)
+      {
+
+        //$scope.session = ;
+        timeliner({
+          // timeline: {
+            start:  periods.weeks[$scope.currentWeek + 1].first.day,
+            end:    periods.weeks[$scope.currentWeek + 1].last.day,
+            min:    periods.weeks[$scope.currentWeek + 1].first.day,
+            max:    periods.weeks[$scope.currentWeek + 1].last.day
+          // }
+        });
+
+        // self.timeline.setVisibleChartRange(
+        //   periods.weeks[$scope.currentWeek + 1].first.day, 
+        //   periods.weeks[$scope.currentWeek + 1].last.day
+        // );
+
+        $scope.currentWeek++;
+      }
+    }
+    else if ($scope.timelineScope.month != true)
+    {
+      if ($scope.currentMonth != 12)
+      {
+
+        //$scope.session = ;
+        timeliner({
+          // timeline: {
+            start:  periods.months[$scope.currentMonth + 1].first.day,
+            end:    periods.months[$scope.currentMonth + 1].last.day,
+            min:    periods.months[$scope.currentMonth + 1].first.day,
+            max:    periods.months[$scope.currentMonth + 1].last.day
+          // }
+        });
+
+        // self.timeline.setVisibleChartRange(
+        //   periods.months[$scope.currentMonth + 1].first.day, 
+        //   periods.months[$scope.currentMonth + 1].last.day
+        // );
+
+        $scope.currentMonth++;
+      }
+    };
+  };
+
+  $scope.timelineScoper = function()
+  {
+    if ($scope.timelineScope.week == true && $scope.timelineScope.month != true)
+    {
+      $scope.timelineScope = {
+        week: false,
+        month: true
+      };
+
+
+      //$scope.session = ;
+      timeliner({
+        // timeline: {
+          start:  periods.weeks[$scope.currentWeek].first.day,
+          end:    periods.weeks[$scope.currentWeek].last.day,
+          min:    periods.weeks[$scope.currentWeek].first.day,
+          max:    periods.weeks[$scope.currentWeek].last.day
+        // }
+      });
+
+
+      // self.timeline.draw( self.process(Slots.local()), {
+      //   min: new Date(periods.weeks[$scope.currentWeek].first.day),
+      //   max: new Date(periods.weeks[$scope.currentWeek].last.day)
+      // });
+      // self.timeline.setVisibleChartRange(
+      //   periods.weeks[$scope.currentWeek].first.day, 
+      //   periods.weeks[$scope.currentWeek].last.day
+      // );
+
+    }
+    else if ($scope.timelineScope.month == true && $scope.timelineScope.week != true)
+    {
+      $scope.timelineScope = {
+        week: true,
+        month: false
+      };
+
+
+      //$scope.session = ;
+      timeliner({
+        // timeline: {
+          start:  periods.months[$scope.currentMonth].first.day,
+          end:    periods.months[$scope.currentMonth].last.day,
+          min:    periods.months[$scope.currentMonth].first.day,
+          max:    periods.months[$scope.currentMonth].last.day
+        // }
+      });
+
+      // self.timeline.draw( self.process(Slots.local()), {
+      //   min: new Date(periods.months[$scope.currentMonth].first.day),
+      //   max: new Date(periods.months[$scope.currentMonth].last.day)
+      // });
+      // self.timeline.setVisibleChartRange(
+      //   periods.months[$scope.currentMonth].first.day, 
+      //   periods.months[$scope.currentMonth].last.day
+      // );
+    };
+  };
 
   /**
    * TODO
@@ -596,6 +771,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     }
   };
 
+
   /**
    * Extract Slot ID of the selected slot
    * @return {[type]} [description]
@@ -604,6 +780,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   {
     return angular.fromJson(selectedSlot().content).id;
   };
+
 
   /**
    * TODO
@@ -620,6 +797,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
       $scope.selectedOriginal = selectedSlot();
     });
   };
+
 
   /**
    * TODO
@@ -639,6 +817,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     //   $scope.newSlots.push(selectedSlot());
     // });
   };
+
 
   /**
    * TODO
@@ -666,6 +845,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     $scope.slot = {};
   };
 
+
   /**
    * TODO
    * Finish it!
@@ -678,6 +858,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     console.log('double click edit mode!');
   };
 
+
   /**
    * TODO
    * Find ways of combining with triggers from view
@@ -689,6 +870,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   { 
     Slots.change($scope.original, selectedSlot());
   };
+
 
   /**
    * TODO
@@ -719,6 +901,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     Slots.change($scope.original, slot);
   };
 
+
   /**
    * TODO
    * Find ways of combining with triggers from view
@@ -730,6 +913,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   {
     Slots.delete(selectedSlotID(), selectedSlot());
   };
+
 
   /**
    * TODO
@@ -753,14 +937,30 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   function render()
   {
     self.timeline = new links.Timeline(document.getElementById('myTimeline'));
+
     links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
     links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
     links.events.addListener(self.timeline, 'add',           timelineOnAdd);
     links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
     links.events.addListener(self.timeline, 'change',        timelineOnChange);
     links.events.addListener(self.timeline, 'select',        timelineOnSelect);
-    self.timeline.draw( self.process(Slots.local()), $config.timeline.options );
-    self.timeline.setVisibleChartRange($scope.range.from, $scope.range.till);
+
+    timeliner($scope.session.timeline);
+  };
+
+  function timeliner(options)
+  {
+    $scope.session = {
+      timeline: {
+        start:  new Date(options.start),
+        end:    new Date(options.end),
+        min:    new Date(options.min),
+        max:    new Date(options.max)
+      }
+    };
+    angular.extend($scope.session.timeline, $config.timeline.options);
+    self.timeline.draw( self.process(Slots.local()), $scope.session.timeline );
+    self.timeline.setVisibleChartRange($scope.session.timeline.start, $scope.session.timeline.end);    
   };
 
   /**
@@ -870,7 +1070,7 @@ planboardCtrl.prototype = {
 
 }
 
-planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots', 'timerService', 'Dater'];
+planboardCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Slots', 'timerService', 'Dater', 'Storage'];
 
 
 

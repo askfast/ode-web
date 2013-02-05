@@ -309,7 +309,7 @@ factory('Dater', function ($rootScope, Storage)
           nextMonday;
       var year = this.getThisYear();
       var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
-      var firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().monday().addWeeks(0);
+      var firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0);
       var firstMonday = new Date(firstMondayOfYear);
       for (var i = 0; i < 53; i++)
       {
