@@ -29,21 +29,53 @@ angular.module('WebPaige.filters', [])
 	}
 })
 
-.filter('niceRange', ['Dater', function(Dater)
+.filter('niceRange', ['Dater', 'Storage', function(Dater, Storage)
 {
+	var periods = angular.fromJson(Storage.get('periods'));
 	return function(dates)
 	{
 		var dates = {
-			from: new Date(dates.from).toString('dddd, MMMM d'),
-			till: new Date(dates.till).toString('dddd, MMMM d')
+			from: {
+				real: new Date(dates.from).toString('dddd, MMMM d'),
+				month: new Date(dates.from).toString('MMMM'),
+				day: new Date(dates.from).toString('d'),
+				hour: new Date(dates.from).toString('HH:mm')
+			},
+			till: {
+				real: new Date(dates.till).toString('dddd, MMMM d'),
+				month: new Date(dates.till).toString('MMMM'),
+				day: new Date(dates.till).toString('d'),
+				hour: new Date(dates.till).toString('HH:mm')
+			}
 		};
-		if (dates.from == dates.till)
+
+		var monthNumber = Date.getMonthNumberFromName(dates.from.month);
+
+		/**
+		 * if a day is selected
+		 */
+		if ((((Math.round(dates.from.day) + 1) == dates.till.day && 
+				dates.from.hour == dates.till.hour) ||
+				dates.from.day == dates.till.day) && 
+				dates.from.month == dates.till.month)
 		{
-			return dates.from;
+			return dates.from.real + ', ' + Dater.getThisYear();
 		}
+		/**
+		 * if a month selected
+		 */
+		else if(dates.from.day == 1 && 
+						dates.till.day == periods.months[monthNumber + 1].totalDays)
+		{
+			return dates.from.month + ', ' + Dater.getThisYear();
+		}
+		/**
+		 * if a week or any other range is selected
+		 */
 		else
 		{
-			return dates.from + ' / ' + dates.till;
+			return dates.from.real + ' / ' + dates.till.real;
 		};
+
 	}
 }]);

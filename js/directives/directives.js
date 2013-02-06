@@ -65,8 +65,9 @@ directive('daterangepicker', function($timeout)
         //endDate: endDate,
         ranges: {
                 'Today': ['today', 'today'],
+                'Tomorrow': ['tomorrow', 'tomorrow'],
                 'Yesterday': ['yesterday', 'yesterday'],
-                'Last 7 Days': [Date.create().addDays(-7), 'today'],
+                'Next 7 Days': [Date.create().addDays(7), 'today'],
                 'Last 30 Days': [Date.create().addDays(-29), 'today']
             }
       },function(start, end)
