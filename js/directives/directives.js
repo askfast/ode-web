@@ -45,7 +45,7 @@ directive('chosen',function()
  * 
  */
 WebPaige.
-directive('daterangepicker', function($timeout)
+directive('daterangepicker', function($rootScope, $timeout)
 {
   'use strict';
 
@@ -58,52 +58,86 @@ directive('daterangepicker', function($timeout)
       // var startDate = Date.create().addDays(-6),
       //     endDate   = Date.create();              
 
-      // element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
+      //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
      
       element.daterangepicker({
-        //startDate: startDate,
-        //endDate: endDate,
+        // startDate: startDate,
+        // endDate: endDate,
         ranges: {
                 'Today': ['today', 'today'],
                 'Tomorrow': ['tomorrow', 'tomorrow'],
                 'Yesterday': ['yesterday', 'yesterday'],
-                'Next 7 Days': [Date.create().addDays(7), 'today'],
-                'Last 30 Days': [Date.create().addDays(-29), 'today']
+                // 'Next 7 Days': [new Date.create().addDays(7), 'today'],
+                // 'Last 30 Days': [new Date.create().addDays(-29), 'today']
             }
-      },function(start, end)
+      },
+      function(start, end)
       {
-        if (start.getTime() == end.getTime())
+        scope.$apply(function()
         {
           /**
-           * TODO
-           * Get timeline zoom into one day!
+           * Scope is a day
            */
-          console.log('same date');
-        };
+          if (start.getTime() == end.getTime())
+          {
+            console.log('scope is day');
+            scope.timeline.range = {
+              start: start,
+              end: start
+            };
+            scope.timeline.scope = {
+              day: true,
+              week: false,
+              month: false
+            };
+          }
+          /**
+           * Scope is less than a week
+           */
+          else if ((end.getTime() - start.getTime()) < 604800000)
+          {
+            console.log('scope is week ->', scope.timeline);
+            scope.timeline.range = {
+              start: start,
+              end: end
+            };
+            scope.timeline.scope = {
+              day: false,
+              week: true,
+              month: false
+            };
+          }
+          /**
+           * Scope is more than a week
+           */
+          else if ((end.getTime() - start.getTime()) > 604800000)
+          {
+            console.log('scope is month');
+            scope.timeline.range = {
+              start: start,
+              end: end
+            };
+            scope.timeline.scope = {
+              day: false,
+              week: false,
+              month: true
+            };
+          };
+          /**
+           * Broadcast for timeliner
+           */
+          $rootScope.$broadcast('timeliner', {
+            from: start,
+            till: end
+          });
+        });
       });
-
-      // scope.$watch(function()
-      // {
-      //   //var dates = element.context.value.split(' / ');
-      //   // element.daterangepicker({
-      //   //   startDate: dates[0],
-      //   //   endDate: dates[1]
-      //   // });
-      //   //element.val(dates[0] + ' / ' + dates[1]);
-        
-      //   console.log('val ->', element.context.value);
-
-      //   //scope.$watch(function()
-      //   //{
-      //     scope.daterange = element.context.value;
-      //   //});
-      // });
 
       element.attr('data-toggle', 'daterangepicker');
 
-      // element.daterangepicker({
-      //   autoclose: true
-      // });
+      element.daterangepicker({
+        autoclose: true
+      });
 
     }
 

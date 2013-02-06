@@ -651,6 +651,20 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     timeliner($scope.timeline.options);
   };
 
+
+  /**
+   * Timeliner listener
+   */
+  $rootScope.$on('timeliner', function() 
+  {
+    var options = {
+      start: arguments[1].from,
+      end: arguments[1].till
+    };
+    //console.log('options ->', options);
+    timeliner(options);
+  });
+
   /**
    * Draw and limit timeline
    */

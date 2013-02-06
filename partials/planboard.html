@@ -2,92 +2,10 @@
 <div style="overflow:hidden;">
   <h2 class="pull-left">Planboard</h2>
 
-  <!-- range indicator -->
-  <div class="pull-right" style="margin-top: 13px; text-align: right">
-    <h4 style="font-weight: normal">
-      {{timeline.range|niceRange}}
-    </h4>
-  </div>
-  <!-- end range indicator -->
 
-</div>
-<!-- end page header -->
-
-<hr>
-
-<!-- timeline controls -->
-<div class="row" style="padding-left: 30px; overflow: hidden">
-
-  <!-- core timeline controls -->
-  <div class="pull-left" style="margin-top: 10px">
-
-    <!-- dateranger -->
-    <div class="control-group input-append pull-left"
-          style="margin-right: 10px;">
-
-      <input type="text" 
-            style="width: 165px" 
-            name="daterange" 
-            ng-model="daterange" 
-            daterangepicker="">
-
-      <button type="button" 
-              ng-click="setTimelineRange()"
-              class="btn">Go</button>
-
-    </div>
-    <!-- end dateranger -->
-
-    <!-- timeline scopers -->
-    <div class="btn-group pull-left" 
-          style="margin-right: 5px">
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
-
-      <button type="button" 
-              ng-model="timeline.scope.day" 
-              class="btn {{(timeline.scope.day==true) && 'active'}}" 
-              ng-click="timelineScoper('day')">Day</button>
-
-      <button type="button" 
-              ng-model="timeline.scope.week" 
-              class="btn {{(timeline.scope.week==true) && 'active'}}" 
-              ng-click="timelineScoper('week')">Week</button>
-
-      <button type="button" 
-              ng-model="timeline.scope.month" 
-              class="btn {{(timeline.scope.month==true) && 'active'}}" 
-              ng-click="timelineScoper('month')">Month</button>
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>  
-
-    </div>
-    <!-- end timeline scopers -->
-
-    <!-- timeline zooms -->
-    <div class="btn-group pull-left"
-          style="margin-right: 5px">
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
-
-    </div>
-    <!-- end timeline zooms -->
-
-  </div>
-  <!-- end core timeline controls -->
 
   <!-- groups members controls -->
-  <div class="pull-right">
+  <div class="pull-right" style="margin-top: 10px;">
 
     <!-- groups list -->
     <!-- <span style="margin-left: 15px">Group</span> -->
@@ -135,6 +53,108 @@
   </div>
   <!--end groups members controls -->
 
+
+
+</div>
+<!-- end page header -->
+
+<hr>
+
+<!-- timeline controls -->
+<div class="row" style="padding-left: 30px; overflow: hidden">
+
+  <!-- core timeline controls -->
+  <div class="pull-left" style="margin-top: 10px">
+
+    <!-- dateranger -->
+    <div class="control-group pull-left"
+          style="margin-right: 5px;">
+
+      <!-- <span style="margin-top: -10px;">Range</span> -->
+
+      <input type="text" 
+            style="width: 190px" 
+            name="daterange" 
+            ng-model="daterange" 
+            daterangepicker="">
+
+      <i class="icon-calendar" style="position: relative; margin: -2px 0 0 -24px;"></i>
+
+      <!-- <button type="button" 
+              ng-click="setTimelineRange()"
+              class="btn">Go</button> -->
+
+    </div>
+    <!-- end dateranger -->
+
+    <!-- timeline scopers -->
+    <div class="btn-group pull-left" 
+          style="margin-right: 5px">
+
+      <button type="button" 
+              ng-model="timeline.scope.day" 
+              class="btn {{(timeline.scope.day==true) && 'active'}}" 
+              ng-click="timelineScoper('day')">Day</button>
+
+      <button type="button" 
+              ng-model="timeline.scope.week" 
+              class="btn {{(timeline.scope.week==true) && 'active'}}" 
+              ng-click="timelineScoper('week')">Week</button>
+
+      <button type="button" 
+              ng-model="timeline.scope.month" 
+              class="btn {{(timeline.scope.month==true) && 'active'}}" 
+              ng-click="timelineScoper('month')">Month</button>
+
+    </div>
+    <!-- end timeline scopers -->
+
+    <!-- timeline navigation -->
+    <div class="btn-group pull-left" 
+          style="margin-right: 5px">
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>  
+
+    </div>
+    <!-- end timeline navigation -->
+
+    <!-- timeline zooms -->
+    <div class="btn-group pull-left"
+          style="margin-right: 5px">
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
+
+    </div>
+    <!-- end timeline zooms -->
+
+  </div>
+  <!-- end core timeline controls -->
+
+  <!-- range indicator -->
+  <div class="pull-right" style="text-align: right">
+    <h4 style="font-weight: normal">
+      {{timeline.range|rangeMainFilter}}<br>
+      <!-- timeline scope info -->
+      <div style="font-size: 15px; font-weight: lighter">
+        <span>{{timeline|rangeInfoFilter}}</span>
+      </div>
+      <!-- end timeline scope info -->
+    </h4>
+  </div>
+  <!-- end range indicator -->
+
 </div>
 <!-- end timeline controls -->
 
@@ -148,24 +168,26 @@
     <span>From</span>
 
     <!-- date -->
-    <div class="control-group input-append">
+    <div class="control-group" style="display: inline;">
 
       <input  name="date-from" 
-              class="input-small" 
+              style="width: 105px" 
               type="text" 
               ng-model="slot.from.date" 
               data-date-format="dd-mm-yyyy" 
               bs-datepicker="">
 
-      <button type="button" 
+      <i class="icon-calendar" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+
+      <!-- <button type="button" 
               class="btn" 
-              data-toggle="datepicker"><i class="icon-calendar"></i></button>
+              data-toggle="datepicker"><i class="icon-calendar"></i></button> -->
 
     </div>
     <!-- end date -->
 
     <!-- time -->
-    <div class="control-group" style="display: inline">
+    <div class="control-group" style="display: inline; margin-left: 5px">
 
       <input  name="time-from" 
               type="text" 
@@ -183,24 +205,26 @@
     <span style="margin-left: 15px">Till</span>
 
     <!-- date -->
-    <div class="control-group input-append">
+    <div class="control-group" style="display: inline;">
 
       <input  name="date-till" 
-              class="input-small" 
+              style="width: 105px"  
               type="text" 
               ng-model="slot.till.date" 
               data-date-format="dd-mm-yyyy" 
               bs-datepicker="">
 
-      <button type="button" 
+      <i class="icon-calendar" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+
+      <!-- <button type="button" 
               class="btn" 
-              data-toggle="datepicker"><i class="icon-calendar"></i></button>
+              data-toggle="datepicker"><i class="icon-calendar"></i></button> -->
 
     </div>
     <!-- end date -->
 
     <!-- time -->
-    <div class="control-group" style="display: inline">
+    <div class="control-group" style="display: inline; margin-left: 5px">
 
       <input  name="time-till" 
               type="text" 
@@ -288,20 +312,6 @@
       
       <!-- timelines -->
       <div class="tab-pane active" id="timelineTab">
-        
-        <!-- timeline scope info -->
-        <div style="position: relative; top:40px; left: 20px; z-index: 1000">
-          <span ng-show="(timeline.scope.day)" class="label label-warning" style="padding: 5px">
-            Day: {{timeline.current.day}}
-          </span>
-          <span ng-show="(timeline.scope.week)" class="label label-warning" style="padding: 5px">
-            Week: {{timeline.current.week}}
-          </span>
-          <span ng-show="(timeline.scope.month)" class="label label-warning" style="padding: 5px">
-            Month: {{timeline.current.month}}
-          </span>
-        </div>
-        <!-- end timeline scope info -->
 
         <!-- user timeline -->
         <div id="myTimeline"></div>

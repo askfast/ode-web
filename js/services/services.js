@@ -416,6 +416,11 @@ factory('Dater', function ($rootScope, Storage)
         weeks: this.getWeekTimeStamps(),
         days: this.getDayTimeStamps()
       }));      
+    },
+
+    getPeriods: function()
+    {
+      return angular.fromJson(Storage.get('periods'));
     }
 
 
