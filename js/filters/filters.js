@@ -1,15 +1,10 @@
 'use strict';
 
 /* Filters */
-
 angular.module('WebPaige.filters', [])
-
-// .filter('interpolate', ['version', function(version) {
-//     return function(text) {
-//       return String(text).replace(/\%VERSION\%/mg, version);
-//     }
-//   }])
-
+/**
+ * Translate roles
+ */
 .filter('translateRole', function()
 {
 	return function(role)
@@ -28,11 +23,18 @@ angular.module('WebPaige.filters', [])
 		}
 	}
 })
-
+/**
+ * Main range filter
+ */
 .filter('rangeMainFilter', ['Dater', 'Storage', function(Dater, Storage)
 {
+	/**
+	 * Get periods
+	 */
 	var periods = Dater.getPeriods();
-
+	/**
+	 * Return constructor
+	 */
 	return function(dates)
 	{
 		/**
@@ -44,7 +46,6 @@ angular.module('WebPaige.filters', [])
 		{
 			dates.from = new Date(dates.till).addDays(-1);
 		};
-
 		/**
 		 * Process the variables
 		 */
@@ -60,12 +61,10 @@ angular.module('WebPaige.filters', [])
 				day: new Date(dates.till).toString('d')
 			}
 		};
-
 		/**
 		 * Get the current month
 		 */
 		var monthNumber = Date.getMonthNumberFromName(dates.from.month);
-
 		/**
 		 * if a day is selected
 		 */
@@ -84,6 +83,9 @@ angular.module('WebPaige.filters', [])
 		else if(dates.from.day == 1 && 
 						dates.till.day == periods.months[monthNumber + 1].totalDays)
 		{
+			/**
+			 * Return values
+			 */
 			return 	dates.from.month + 
 							', ' + 
 							Dater.getThisYear();
@@ -93,6 +95,9 @@ angular.module('WebPaige.filters', [])
 		 */
 		else
 		{
+			/**
+			 * Return values
+			 */
 			return 	dates.from.real + 
 							' / ' + 
 							dates.till.real + 
@@ -102,107 +107,81 @@ angular.module('WebPaige.filters', [])
 
 	}
 }])
-
+/**
+ * Range info filter
+ */
 .filter('rangeInfoFilter', ['Dater', 'Storage', function(Dater, Storage)
 {
+	/**
+	 * Get periods
+	 */
 	var periods = Dater.getPeriods();
-
+	/**
+	 * Return values
+	 */
 	return function(timeline)
 	{
-		if (timeline.scope.day)
+		/**
+		 * Calculate difference
+		 */
+		var diff = new Date(timeline.range.till).getTime() - new Date(timeline.range.from).getTime();
+		/**
+		 * Custom range is more than 4 weeks
+		 * show total days
+		 */
+		if (diff > (2419200000 + 259200000))
 		{
-			var hours = {
-				from: new Date(timeline.range.from).toString('HH:mm'),
-				till: new Date(timeline.range.till).toString('HH:mm')
+			return 'Total selected days: ' + Math.round(diff / 86400000);
+		}
+		else
+		{
+			/**
+			 * Day
+			 */
+			if (timeline.scope.day)
+			{
+				/**
+				 * Process hours
+				 */
+				var hours = {
+					from: new Date(timeline.range.from).toString('HH:mm'),
+					till: new Date(timeline.range.till).toString('HH:mm')
+				};
+				/**
+				 *  00:00 fix => 24:00
+				 */
+				if (hours.till == '00:00')
+				{
+					hours.till = '24:00';
+				};
+				/**
+				 * Returns values
+				 */
+				return 	hours.from + 
+								' / ' + 
+								hours.till;
+			}
+			/**
+			 * Week
+			 */
+			else if (timeline.scope.week)
+			{
+				return 	'Week number: ' + 
+								timeline.current.week;
+			}
+			/**
+			 * Month
+			 */
+			else if (timeline.scope.month)
+			{
+				return 	'Month number: ' + 
+								timeline.current.month + 
+								', Total days: ' + 
+								periods.months[timeline.current.month].totalDays;
 			};
-			return 	hours.from + 
-							' / ' + 
-							hours.till;
-		}
-		else if (timeline.scope.week)
-		{
-			return 	'Week number: ' + 
-							timeline.current.week;
-		}
-		else if (timeline.scope.month)
-		{
-			return 	'Month number: ' + 
-							timeline.current.month + 
-							', Total days: ' + 
-							periods.months[timeline.current.month].totalDays;
-		}
-
-		// /**
-		//  * Does this work always?
-		//  * Time will tell :]
-		//  * One milisecond fix
-		//  */
-		// if ((new Date(dates.till).getTime() - new Date(dates.from).getTime()) == 86401000)
-		// {
-		// 	dates.from = new Date(dates.till).addDays(-1);
-		// };
-
-		// /**
-		//  * Process the variables
-		//  */
-		// var dates = {
-		// 	from: {
-		// 		real: new Date(dates.from).toString('dddd, MMMM d'),
-		// 		month: new Date(dates.from).toString('MMMM'),
-		// 		day: new Date(dates.from).toString('d'),
-		// 		hour: new Date(dates.from).toString('HH:mm')
-		// 	},
-		// 	till: {
-		// 		real: new Date(dates.till).toString('dddd, MMMM d'),
-		// 		month: new Date(dates.till).toString('MMMM'),
-		// 		day: new Date(dates.till).toString('d'),
-		// 		hour: new Date(dates.till).toString('HH:mm')
-		// 	}
-		// };
-
-		// /**
-		//  * Get the current month
-		//  */
-		// var monthNumber = Date.getMonthNumberFromName(dates.from.month);
-
-		// /**
-		//  * if a day is selected
-		//  */
-		// if ((((Math.round(dates.from.day) + 1) == dates.till.day && 
-		// 				dates.from.hour == dates.till.hour) || 
-		// 				dates.from.day == dates.till.day) && 
-		// 				dates.from.month == dates.till.month)
-		// {
-		// 	return dates.from.real + 
-		// 					', ' + 
-		// 					Dater.getThisYear() + 
-		// 					', ' +
-		// 					dates.from.hour + 
-		// 					' / ' + 
-		// 					dates.till.hour;
-		// }
-		// /**
-		//  * if a month selected
-		//  */
-		// else if(dates.from.day == 1 && 
-		// 				dates.till.day == periods.months[monthNumber + 1].totalDays)
-		// {
-		// 	return dates.from.month + 
-		// 					', ' + 
-		// 					Dater.getThisYear();
-		// }
-		// /**
-		//  * if a week or any other range is selected
-		//  */
-		// else
-		// {
-		// 	return dates.from.real + 
-		// 					' / ' + 
-		// 					dates.till.real;
-		// };
-
-	}
-}])
+		};
+	};
+}]);
 
 
 

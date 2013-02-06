@@ -356,6 +356,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     left: true
   };
 
+
   /**
    * TODO
    * Optimize this settings
@@ -367,7 +368,6 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     week: new Date().getWeek(),
     month: new Date().getMonth() + 1
   };
-
   /**
    * Set defaults for timeline
    */
@@ -389,6 +389,14 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
       month: false
     }
   };
+  /**
+   * TODO
+   * Look for ways to implement in scope.timeline!!
+   */
+  $scope.daterange =  new Date($scope.timeline.range.from).toString('dd-MM-yyyy') + 
+                      ' / ' + 
+                      new Date($scope.timeline.range.till).toString('dd-MM-yyyy');
+
 
   /**
    * TODO
@@ -423,11 +431,61 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
    */
   $scope.$watch(function()
   {
+    /**
+     * Get timeline range
+     */
     var range = self.timeline.getVisibleChartRange();
+    /**
+     * Calculate difference
+     */
+    var diff = new Date(range.end).getTime() - new Date(range.start).getTime();
+    /**
+     * Scope is a day
+     */
+    // TODO
+    // try later on!
+    // new Date(range.start).toString('d') == new Date(range.end).toString('d')
+    if (diff <= 86400000)
+    {
+      $scope.timeline.scope = {
+        day: true,
+        week: false,
+        month: false
+      };
+    }
+    /**
+     * Scope is less than a week
+     */
+    else if (diff < 604800000)
+    {
+      $scope.timeline.scope = {
+        day: false,
+        week: true,
+        month: false
+      };
+    }
+    /**
+     * Scope is more than a week
+     */
+    else if (diff > 604800000)
+    {
+      $scope.timeline.scope = {
+        day: false,
+        week: false,
+        month: true
+      };
+    };
+    /**
+     * Set ranges
+     */
     $scope.timeline.range = {
       from: new Date(range.start).toString($config.date.stringFormat),
       till: new Date(range.end).toString($config.date.stringFormat)
     };
+
+    $scope.daterange =  new Date($scope.timeline.range.from).toString('dd-MM-yyyy') + 
+                        ' / ' + 
+                        new Date($scope.timeline.range.till).toString('dd-MM-yyyy');
   });
 
   /**
@@ -448,22 +506,29 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     });
   };
 
+
+
+
+
   /**
    * Set timeline range manually
    */
-  $scope.setTimelineRange = function()
-  {
-    /**
-     * TODO
-     * Lose jquery hook later on
-     */
-    var dates = $scope.daterange = $('input[name=daterange]').val();
-    var dates = Dater.convertRangeDates(dates);
-    timeliner({
-      start:  dates.start,
-      end:    dates.end
-    });
-  };
+  // $scope.setTimelineRange = function()
+  // {
+  //   /**
+  //    * TODO
+  //    * Lose jquery hook later on
+  //    */
+  //   var dates = $scope.daterange = $('input[name=daterange]').val();
+  //   var dates = Dater.convertRangeDates(dates);
+  //   timeliner({
+  //     start:  dates.start,
+  //     end:    dates.end
+  //   });
+  // };
+
+
+
 
   /**
    * TODO

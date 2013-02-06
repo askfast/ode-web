@@ -2,21 +2,6 @@
 
 /* Directives */
 
-
-// angular.module('WebPaige.directives', []).
-//   directive('appVersion', ['version', function(version) 
-//   {
-//     return function(scope, elm, attrs) {
-//       elm.text(version);
-//     };
-//   }]);
-
-
-
-
-
-
-
 WebPaige.
 directive('chosen',function()
 {
@@ -34,32 +19,27 @@ directive('chosen',function()
     restrict:'A',
     link: linker
   }
-});
-
-
-
-
+})
 /**
  * TODO
  * Needs attention :)
  * 
  */
-WebPaige.
-directive('daterangepicker', function($rootScope, $timeout)
+.directive('daterangepicker', function($rootScope, $timeout)
 {
-  'use strict';
-
   return {
-
+    /**
+     * Directive type
+     */
     restrict: 'A',
-
+    /**
+     * Directive linker
+     */
     link: function postLink(scope, element, attrs, controller)
     {
       // var startDate = Date.create().addDays(-6),
-      //     endDate   = Date.create();              
-
+      //     endDate   = Date.create();       
       //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
-     
       element.daterangepicker({
         // startDate: startDate,
         // endDate: endDate,
@@ -76,11 +56,14 @@ directive('daterangepicker', function($rootScope, $timeout)
         scope.$apply(function()
         {
           /**
+           * Calculate difference
+           */
+          var diff = end.getTime() - start.getTime();
+          /**
            * Scope is a day
            */
-          if (start.getTime() == end.getTime())
+          if (diff <= 86400000)
           {
-            console.log('scope is day');
             scope.timeline.range = {
               start: start,
               end: start
@@ -94,9 +77,8 @@ directive('daterangepicker', function($rootScope, $timeout)
           /**
            * Scope is less than a week
            */
-          else if ((end.getTime() - start.getTime()) < 604800000)
+          else if (diff < 604800000)
           {
-            console.log('scope is week ->', scope.timeline);
             scope.timeline.range = {
               start: start,
               end: end
@@ -110,9 +92,8 @@ directive('daterangepicker', function($rootScope, $timeout)
           /**
            * Scope is more than a week
            */
-          else if ((end.getTime() - start.getTime()) > 604800000)
+          else if (diff > 604800000)
           {
-            console.log('scope is month');
             scope.timeline.range = {
               start: start,
               end: end
@@ -132,17 +113,21 @@ directive('daterangepicker', function($rootScope, $timeout)
           });
         });
       });
-
+      /**
+       * TODO
+       * Maybe better hardcoded?
+       * Set data toggle
+       */
       element.attr('data-toggle', 'daterangepicker');
-
+      /**
+       * TODO
+       * Investigate if its really needed!!
+       */
       element.daterangepicker({
         autoclose: true
       });
-
     }
-
   };
-
 });
 
 
