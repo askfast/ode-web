@@ -6,30 +6,11 @@
 
 <!-- Messages toolbar -->
 <div class="row" style="padding-left: 30px;">
-  <div  class="btn-group" 
-        style="margin-left: 15px" 
-        bs-buttons-checkbox="" 
-        data-toggle="buttons-radio">
-
-    <button type="button" 
-            class="btn" 
-            ng-model="boxes.inbox" 
-            ng-click="boxer('inbox')"
-            bs-button="">Inbox</button>
-    <button type="button" 
-            class="btn" 
-            ng-model="boxes.outbox" 
-            ng-click="boxer('outbox')"  
-            bs-button="">Outbox</button>
-
-    <button type="button" 
-            class="btn" 
-            ng-model="boxes.trash" 
-            ng-click="boxer('trash')"
-            bs-button="">Trash</button>
+  <div class="btn-group" style="margin-left: 15px" bs-buttons-radio>
+    <button type="button" class="btn" ng-model="boxes.inbox">Inbox</button>
+    <button type="button" class="btn" ng-model="boxes.outbox">Outbox</button>
+    <button type="button" class="btn" ng-model="boxes.trash">Trash</button>
   </div>
-
-
 
   <div class="btn-group">
     <button class="btn dropdown-toggle" data-toggle="dropdown">Sort by <span class="caret"></span></button>
@@ -42,7 +23,6 @@
       <li><a href="#">Descending</a></li>
     </ul>
   </div>
-
 
   <div class="btn-group pull-right">
     <button type="submit" 
@@ -95,6 +75,8 @@
     		{{message.subject}}<br>
     		{{message.creationTime}}
     	</a>
+    	
+    	
     </li>
   </ul>
 
@@ -103,23 +85,31 @@
                 border: 1px solid #ddd; 
                 padding: 20px;
                 height: 600px">
+  
 
-    <div 	ng-repeat="message in messages"
+    <div ng-repeat="message in messages"
     			class="{{($index == 0) && 'tab-pane active' || 'tab-pane'}}"
     			id="msg-{{message.uuid}}">
 
       <div style="overflow: hidden; height: 35px">
         <h3 style="margin-top: 0;" class="pull-left">{{message.subject}}</h3>
 
-        <div class="btn-group pull-right">
-          <button type="submit" 
-                  ng-click="replyMessage(message)" 
-                  class="btn">Reply</button>
-          <button type="submit" 
-                  ng-click="delete(message.uuid)" 
-                  class="btn btn-danger">Delete</button>
-        </div>
+	        <div class="pull-right">
+	          <button type="submit" ng-show="boxes.inbox"
+	                  ng-click="replyMessage(message)" class="btn">Reply</button>
+	       	  <button type="button" ng-show="boxes.inbox || boxes.outbox"
+	                  class="btn btn-danger" ng-click="askDelete(message)" 
+	                  bs-modal="'partials/modal.html'" >Delete</button>
+	          <button type="submit" ng-show="boxes.trash"
+	                  ng-click="restore(message)" 
+	                  class="btn ">Restore</button>
+	          <button type="submit" ng-show="boxes.trash"
+	                  ng-click="askDeleteforever(message)" 
+	                  class="btn btn-danger" bs-modal="'partials/modal.html'" >Delete Forever</button>
+	        </div>
+        
       </div>
+      
 
       <hr>
 
