@@ -1,7 +1,7 @@
 'use strict';
 // where is my host
 //var host = 'http://localhost:9000/ns_knrm';
-var host = 'http://3rc2.ask-services.appspot.com/ns_knrm';
+//var host = 'http://3rc2.ask-services.appspot.com/ns_knrm';
 
 
 
@@ -12,58 +12,61 @@ var host = 'http://3rc2.ask-services.appspot.com/ns_knrm';
 //                   "data":[{"label":"slots","url":"askatars/ulusoy.cengiz@gmail.com/slots?start=1334305782&end=1348820982"},
 //                   {"label":"messages","url":"question"},{"label":"groups","url":"network"}]}}]';
 
+
 // let's define some states
-var states = {
-    'com.ask-cs.State.Available': {
-        'className': 'state-available',
-        'label': 'Beschiekbaar',
-        'color': '#4f824f',
-        'type': 'Beschiekbaar'
-    },
-    'com.ask-cs.State.KNRM.BeschikbaarNoord': {
-        'className': 'state-available-north',
-        'label': 'Beschikbaar voor Noord',
-        'color': '#000',
-        'type': 'Beschiekbaar'
-    },
-    'com.ask-cs.State.KNRM.BeschikbaarZuid': {
-        'className': 'state-available-south',
-        'label': 'Beschiekbaar voor Zuid',
-        'color': '#e08a0c',
-        'type': 'Beschiekbaar'
-    },
-    'com.ask-cs.State.Unavailable': {
-        'className': 'state-unavailable',
-        'label': 'Niet Beschiekbaar',
-        'color': '#a93232',
-        'type': 'Niet Beschiekbaar'
-    },
-    'com.ask-cs.State.KNRM.SchipperVanDienst': {
-        'className': 'state-schipper-service',
-        'label': 'Schipper van Dienst',
-        'color': '#e0c100',
-        'type': 'Beschiekbaar'
-    },
-    'com.ask-cs.State.Unreached': {
-        'className': 'state-unreached',
-        'label': 'Niet Bereikt',
-        'color': '#65619b',
-        'type': 'Niet Beschiekbaar'
-    }
-}
+// var states = {
+//     'com.ask-cs.State.Available': {
+//         'className': 'state-available',
+//         'label': 'Beschiekbaar',
+//         'color': '#4f824f',
+//         'type': 'Beschiekbaar'
+//     },
+//     'com.ask-cs.State.KNRM.BeschikbaarNoord': {
+//         'className': 'state-available-north',
+//         'label': 'Beschikbaar voor Noord',
+//         'color': '#000',
+//         'type': 'Beschiekbaar'
+//     },
+//     'com.ask-cs.State.KNRM.BeschikbaarZuid': {
+//         'className': 'state-available-south',
+//         'label': 'Beschiekbaar voor Zuid',
+//         'color': '#e08a0c',
+//         'type': 'Beschiekbaar'
+//     },
+//     'com.ask-cs.State.Unavailable': {
+//         'className': 'state-unavailable',
+//         'label': 'Niet Beschiekbaar',
+//         'color': '#a93232',
+//         'type': 'Niet Beschiekbaar'
+//     },
+//     'com.ask-cs.State.KNRM.SchipperVanDienst': {
+//         'className': 'state-schipper-service',
+//         'label': 'Schipper van Dienst',
+//         'color': '#e0c100',
+//         'type': 'Beschiekbaar'
+//     },
+//     'com.ask-cs.State.Unreached': {
+//         'className': 'state-unreached',
+//         'label': 'Niet Bereikt',
+//         'color': '#65619b',
+//         'type': 'Niet Beschiekbaar'
+//     }
+// }
+
 
 
 // population density colors for group aggregrated view in timeline
-var density = ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'];
+//var density = ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'];
 
 
 // determine divisions
-var divisions = [
-	'knrm.StateGroup.BeschikbaarNoord',
-	'knrm.StateGroup.BeschikbaarZuid',
-]
+// var divisions = [
+// 	'knrm.StateGroup.BeschikbaarNoord',
+// 	'knrm.StateGroup.BeschikbaarZuid',
+// ]
 // for testing
 //var divisions_ = []
+//
 
 // TODO
 // Some application general settings
@@ -71,11 +74,11 @@ var divisions = [
 var now = parseInt((new Date()).getTime() / 1000);
 
 var config = {
-  lang: 'nl',
+  // lang: 'nl',
 
-  knrmAccounts: true,
+  // knrmAccounts: true,
 
-  blacklisted: ['msie'],
+  // blacklisted: ['msie'],
 
   validator: {
     errorClass: "label label-important", // "error"
@@ -106,40 +109,41 @@ var config = {
     }
   },
 
-  timeline: {
-    period: {
-      bstart: (now - 86400 * 7 * 1),
-      bend: (now + 86400 * 7 * 1),
-      start: Date.today().add({ days: -5 }),
-      end: Date.today().add({ days: 5 })
-    },
-    // TODO
-    // combine options with settings
-    options: {
-      axisOnTop: true,
-      width: '100%',
-      height: 'auto',
-      selectable: true,
-      editable: true,
-      style: 'box',
-      groupsWidth: '150px',
-      eventMarginAxis: 0,
-      /*
-      min: new Date(trange.start), 
-      max: new Date(trange.end),
-      */
-      intervalMin: 1000 * 60 * 60 * 1,
-      intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
-    }     
-  }
+  // timeline: {
+  //   period: {
+  //     bstart: (now - 86400 * 7 * 1),
+  //     bend: (now + 86400 * 7 * 1),
+  //     start: Date.today().add({ days: -5 }),
+  //     end: Date.today().add({ days: 5 })
+  //   },
+  //   // TODO
+  //   // combine options with settings
+  //   options: {
+  //     axisOnTop: true,
+  //     width: '100%',
+  //     height: 'auto',
+  //     selectable: true,
+  //     editable: true,
+  //     style: 'box',
+  //     groupsWidth: '150px',
+  //     eventMarginAxis: 0,
+  //     /*
+  //     min: new Date(trange.start), 
+  //     max: new Date(trange.end),
+  //     */
+  //     intervalMin: 1000 * 60 * 60 * 1,
+  //     intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
+  //   }     
+  // }
+  
 }
 
-config.timeline.settings = {
-  ranges: {
-    period: config.timeline.period,
-    reset: config.timeline.period
-  }
-}
+// config.timeline.settings = {
+//   ranges: {
+//     period: config.timeline.period,
+//     reset: config.timeline.period
+//   }
+// }
 
 
 

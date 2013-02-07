@@ -157,7 +157,8 @@ angular.module('WebPaige.filters', [])
 				/**
 				 * Returns values
 				 */
-				return 	hours.from + 
+				return 	'Time: ' + 
+								hours.from + 
 								' / ' + 
 								hours.till;
 			}

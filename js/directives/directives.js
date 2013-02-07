@@ -44,11 +44,11 @@ directive('chosen',function()
         // startDate: startDate,
         // endDate: endDate,
         ranges: {
-                'Today': ['today', 'today'],
-                'Tomorrow': ['tomorrow', 'tomorrow'],
-                'Yesterday': ['yesterday', 'yesterday'],
-                // 'Next 7 Days': [new Date.create().addDays(7), 'today'],
-                // 'Last 30 Days': [new Date.create().addDays(-29), 'today']
+                'Today': ['today', 'tomorrow'],
+                'Tomorrow': ['tomorrow', new Date.today().addDays(2)],
+                'Yesterday': ['yesterday', 'today'],
+                'Next 3 Days': ['today', new Date.create().addDays(3)],
+                'Next 7 Days': ['today', new Date.create().addDays(7)]
             }
       },
       function(start, end)
