@@ -274,7 +274,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
       $scope.composeView = false;
       // TODO
       // Reset compose form
-      console.log('message sent', result);
     });
   };
 
@@ -311,12 +310,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
           {
             filtered.push(message);
           };
+          $scope.listview = true;
         break;
         case 'outbox':
           if (message.box == 'outbox' && message.state != 'TRASH')
           {
             filtered.push(message);
           };
+          $scope.listview = true;
         break;
         case 'trash':
           if ((message.box == 'inbox' || message.box == 'outbox') &&
@@ -324,6 +325,8 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
           {
             filtered.push(message);
           };
+          $scope.listview = false;
+          $scope.trashview = true;
         break;
       };
     });
@@ -342,6 +345,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
     uuids.push(uuid);
 
     Messages.delete(uuids).then(function(){
+    	
       $scope.messages = Messages.query().then(function(){
       	if($scope.boxes.inbox){
       		$scope.boxer('inbox');
@@ -368,6 +372,9 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
   $scope.composeMessage = function()
   {
     $scope.composeView = true;
+    $scope.listview = false;
+    $scope.trashview = false;
+    
     $scope.message = {
             subject: '',
             receivers: [],
@@ -407,17 +414,19 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
     });
     
 	$("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");    
+	console.log(message);
   };
 
 	$scope.composeCancel = function(){
 		$scope.composeView = false;
-		$scope.boxes.inbox = true;
+		if($scope.boxes.inbox == true || $scope.boxes.outbox == true){
+			$scope.listview = true;
+		}else if($scope.boxes.trash == true){
+			$scope.trashview = true;
+		}  
 	};
 	
-	
-	
 	$scope.askDelete = function(message){
-		console.log(message);
 		$scope.modal =  {
 		  header : "Delete Message",
 		  title : "Do you want to delete this messsage ? ",
@@ -468,6 +477,5 @@ messagesCtrl.resolve = {
     return Messages.query();
   }
 };
-
 
 messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', 'messages', 'Messages'];

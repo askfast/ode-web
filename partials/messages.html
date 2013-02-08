@@ -58,7 +58,7 @@
 
 <!-- messages list -->
 <div class="tabbable tabs-left"
-      ng-hide="composeView">
+      ng-show="listview">
 
   <ul class="nav nav-tabs" 
       style="width: 210px;
@@ -220,7 +220,7 @@
                 ng-click="sendMessage(message)" 
                 class="btn btn-success">Send Message</button>
         <button type="submit" 
-                ng-click="boxer('inbox')" 
+                ng-click="composeCancel()" 
                 class="btn">Cancel</button>
       </div>
 
@@ -232,8 +232,90 @@
 
 
 
+<!-- Trash view --> 
+<div ng-show="trashview" ng-hide="listview">
+	
+<div>
+	<div class="pull-right">
+		<button type="button"
+		ng-click="restoreSelectedMsg()"
+		class="btn">
+			<i class="icon-edit icon-white"></i> Restore
+		</button>
+		<button type="button"
+		ng-click="deleteSelectedMsg()"
+		class="btn btn-danger">
+			<i class="icon-trash icon-white"></i> Delete Forever
+		</button>
+		<button type="button"
+		ng-click="emptyMsgTrash()"
+		class="btn btn-warning">
+			<i class="icon-trash icon-white"></i> Empty Trash
+		</button>
+	</div>
+	<!-- <button type="button"
+	ng-click=""
+	style="margin-right: 15px"
+	class="btn btn-success pull-right"><i class="icon-plus icon-white"></i> Add Members</button> -->
+</div>
+<p ng-hide="messages.length > 0">
+	Trash is empty. 
+</p>
+<div ng-show="messages.length > 0">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>
+				<input type="checkbox"
+				ng-model="selectionMaster"
+				ng-click="toggleSelection(selectionMaster)">
+				</th>
+				<th>Subject</th>
+				<th>Sender</th>
+				<th>Receiver</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="message in messages">
+				<td>
+				<input type="checkbox"
+				ng-model="selection[message.uuid]"
+				ng-checked="selectionMaster">
+				</td>
+				<td><a href="#/message/{{message.uuid}}/view">{{message.subject}}</a></td>
+				<td><span wp-name="message.requester | eveURL2Id"></span></td>
+				<td>
+					<ul>
+						<li ng-repeat="rec in message.responder">
+							<span wp-name="rec | eveURL2Id">
+						</li>
+					</ul>
+				</td>
+				<td>{{message.creationTime | nicelyDate}}</td>
+				<td>
+					 <div class="pull-right">
+				          <button type="submit" ng-show="boxes.trash"
+				                  ng-click="restore(message)" 
+				                  class="btn ">Restore</button>
+				          <button type="submit" ng-show="boxes.trash"
+				                  ng-click="askDeleteforever(message)" 
+				                  class="btn btn-danger " bs-modal="'partials/modal.html'" >
+				                  <i class="icon-trash icon-white"></i></button>
+			          </div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<span class="muted pull-right"><i>There are {{messages.length}} message(s)</i></span>
+</div>
+
+</div>
+     
 
 
+<!-- end Trash view -->
 
 
 

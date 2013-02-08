@@ -115,5 +115,31 @@ directive('daterangepicker', function($timeout)
 
 });
 
+'use strict';
+
+WebPaige.directive('wpName', function(Storage){
+    return {
+        restrict : 'A',
+        link : function linkfn(scope, element, attrs){
+            var getmemberName = function(uid){
+                var members = angular.fromJson(Storage.get('members'));
+                var retName = uid; 
+                angular.forEach(members , function(mem, i){
+                   if(mem.uuid == uid){
+                       retName = mem.name;
+                       return false;
+                   } 
+                });
+                return retName;
+            }
+            
+            scope.$watch(attrs.wpName,function(uid){
+                element.text(getmemberName(uid)); 
+            });
+            
+        }
+    }
+});
+
 
 

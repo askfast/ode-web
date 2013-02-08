@@ -20,7 +20,7 @@ angular.module('WebPaige.filters', [])
 				return 'Planner';
 			break;
 			case '2':
-				return 'Schipper';
+			    return 'Schipper';
 			break;
 			case '3':
 				return 'Opstapper';
@@ -33,11 +33,21 @@ angular.module('WebPaige.filters', [])
 {
 	return function(date)
 	{
-
-		//console.log('date ->', Dater.readableDate(date) );
-
+	    var cov_date = Dater.readableDate(date);
+		if(cov_date == "Invalid Date"){
+		    // could be unix time stamp 
+		    date =  Math.round(date);
+		}
 		return new Date(date).toString('dddd MMMM d, yyyy');
-		
-		//return date;
 	}
-}]);
+}])
+
+.filter('eveURL2Id', function()
+{
+    return function(url)
+    {
+        var uuidArray = url.split("/");
+        var uuid = uuidArray[uuidArray.length-2];
+        return uuid;
+    }
+});
