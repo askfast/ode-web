@@ -29,7 +29,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
 
   //
   //
-  console.log(data);
+  console.log('data ->', data);
   //
   //
 
@@ -785,7 +785,7 @@ planboardCtrl.resolve = {
       var groupId = $route.current.params.groupId;
     };
 
-    return Slots.query({
+    return Slots.all({
       groupId: groupId,
       month: new Date().toString('M'),
       toggles: {

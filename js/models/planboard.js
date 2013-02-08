@@ -10,28 +10,12 @@ WebPaige.
 factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Dater) 
 {
   /**
-   * TODO
-   * Still needed?
-   */
-  var self = this;
-
-
-  /**
-   * TODO
-   * make uuid parameter dynamic and
-   * add functionality for calls of different types
-   * same proxy
-   * 
    * Define Slot Resource from back-end
    */
   var Slots = $resource(
     $config.host + '/askatars/:user/slots',
     {
-      /**
-       * TODO
-       * Use a better way dealing with it user.uuid
-       */
-      user: angular.fromJson(Storage.get('resources')).uuid
+      user: ''
     },
     {
       query: {
@@ -55,6 +39,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   );
 
 
+  /**
+   * Group aggs resource
+   */
   var Aggs = $resource(
     $config.host + '/calc_planning/:id',
     {
@@ -70,46 +57,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
 
   /**
-   * TODO
-   * Organize and make it compacter
-   * Make slot query to back-end unless
-   * there are no slots in the localStorage
-   * 
-   * @return {[type]} [description]
+   * Get group aggs
    */
-  // Slots.prototype.query__ = function (month) 
-  // {    
-  //   var deferred = $q.defer(),
-  //       periods = Dater.getPeriods(),
-  //       params = {
-  //         start:  periods.months[month].first.timeStamp / 1000, 
-  //         end:    periods.months[month].last.timeStamp / 1000
-  //       },
-  //       data = {};
-  //   var successCb = function (result) 
-  //   {
-  //     var localSlots = [];
-  //     angular.forEach(result, function(slot, index)
-  //     {
-  //       localSlots.push({
-  //         start: slot.start,
-  //         end: slot.end,
-  //         recursive: slot.recursive,
-  //         text: slot.text,
-  //         id: index + 1
-  //       });
-  //     });
-  //     Storage.add('slots', angular.toJson(localSlots));
-
-  //     deferred.resolve({
-  //       user : result
-  //     });
-  //   };
-  //   Slots.query(params, successCb);
-  //   return deferred.promise;
-  // };
-
-
   Slots.prototype.aggs = function (options) 
   {
     var deferred = $q.defer();
@@ -128,21 +77,27 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   };
 
 
-
-
-
-  Slots.prototype.query = function (options) 
+  /**
+   * Get slot bundels; user, group aggs and members
+   */
+  Slots.prototype.all = function (options) 
   {
     var deferred = $q.defer(),
         periods = Dater.getPeriods(),
         params = {
+          user:   angular.fromJson(Storage.get('resources')).uuid,
           start:  periods.months[options.month].first.timeStamp / 1000, 
           end:    periods.months[options.month].last.timeStamp / 1000
         },
         data = {};
-
+    /**
+     * Fetch first user slots
+     */
     Slots.query(params, function(user) 
     {
+      /**
+       * Add empty slots for not displaying timeline bug
+       */
       user.push({
         count: 0,
         end: 0,
@@ -152,7 +107,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         type: "availability",
         wish: 0
       });
-
       user.push({
         count: 0,
         end: 0,
@@ -162,145 +116,79 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         type: "availability",
         wish: 0
       });
-
+      /**
+       * Fetch group aggs
+       */
       Slots.prototype.aggs({
           id: options.groupId,
           start: params.start,
           end: params.end
       }).then(function(aggs)
-      {        
-        deferred.resolve({
-          user: user,
-          groupId: options.groupId,
-          aggs: aggs
-        });        
-      });
-
-    });
-
-    return deferred.promise;
-  };
-
-
-
-
-
-  Slots.prototype.query___ = function (options) 
-  {
-    var deferred = $q.defer(),
-        periods = Dater.getPeriods(),
-        params = {
-          start:  periods.months[options.month].first.timeStamp / 1000, 
-          end:    periods.months[options.month].last.timeStamp / 1000
-        },
-        data = {};
-
-    Slots.query(params, function(user) 
-    {
-      user.push({
-        count: 0,
-        end: 0,
-        recursive: true,
-        start: 0,
-        text: "com.ask-cs.State.Available",
-        type: "availability",
-        wish: 0
-      });
-
-      user.push({
-        count: 0,
-        end: 0,
-        recursive: false,
-        start: 0,
-        text: "com.ask-cs.State.Available",
-        type: "availability",
-        wish: 0
-      });
-
-      var groups = angular.fromJson(Storage.get('groups'));
-      var calls = [];
-      
-      angular.forEach(groups, function(group, index)
       {
-        calls.push(Slots.prototype.aggs({
-          id: group.uuid,
-          start: params.start,
-          end: params.end
-        }));
-      });
-
-      $q.all(calls)
-      .then(function(aggs)
-      {
-        // 
-        // var localSlots = [];
-        // angular.forEach(result, function(slot, index)
-        // {
-        //   localSlots.push({
-        //     start: slot.start,
-        //     end: slot.end,
-        //     recursive: slot.recursive,
-        //     text: slot.text,
-        //     id: index + 1
-        //   });
-        // });
-        // Storage.add('slots', angular.toJson(localSlots));
-        // 
-        
-        deferred.resolve({
-          user: user,
-          aggs: aggs
+        /**
+         * Get members of given group
+         */
+        var members = angular.fromJson(Storage.get(options.groupId));
+        /**
+         * Reset calls
+         */
+        var calls = [];
+        /**
+         * Loop through the members
+         */
+        angular.forEach(members, function(member, index)
+        {
+          /**
+           * Push members in calls pool
+           */
+          calls.push(Slots.prototype.user({
+            user: member.uuid,
+            start: periods.months[options.month].first.timeStamp / 1000,
+            end: periods.months[options.month].last.timeStamp / 1000
+          }));
         });
-
-
-
-        // var members = angular.fromJson(Storage.get('members'));
-
-        // var calls = [];
-        
-        // angular.forEach(members, function(member, index)
-        // {
-        //   calls.push(Slots.prototype.query({
-        //     user: member.uuid,
-        //     start: params.start,
-        //     end: params.end
-        //   }));
-        // });
-
-        // $q.all(calls)
-        // .then(function(members)
-        // {
-        //   // 
-        //   // var localSlots = [];
-        //   // angular.forEach(result, function(slot, index)
-        //   // {
-        //   //   localSlots.push({
-        //   //     start: slot.start,
-        //   //     end: slot.end,
-        //   //     recursive: slot.recursive,
-        //   //     text: slot.text,
-        //   //     id: index + 1
-        //   //   });
-        //   // });
-        //   // Storage.add('slots', angular.toJson(localSlots));
-        //   // 
-          
-        //   deferred.resolve({
-        //     user: user,
-        //     aggs: aggs,
-        //     members: members
-        //   });
-        // });
-
-
+        /**
+         * Run pool of calls
+         */
+        $q.all(calls)
+        .then(function(members)
+        {
+          /**
+           * Return promised values
+           */
+          deferred.resolve({
+            user: user,
+            groupId: options.groupId,
+            aggs: aggs,
+            members: members
+          });
+        });
+         
       });
+
     });
 
     return deferred.promise;
   };
 
 
-
+  /**
+   * Fetch user slots
+   * This is needed as a seperate promise object
+   * for making the process wait in Slots.all call bundle
+   */
+  Slots.prototype.user = function (params) 
+  {
+    var deferred = $q.defer();
+    Slots.query(params, function (result) 
+    {
+      deferred.resolve({
+        id: params.user,
+        data: result
+      });
+    });
+    return deferred.promise;
+  };
 
 
   /**
