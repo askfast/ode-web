@@ -128,7 +128,64 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   };
 
 
+
+
+
   Slots.prototype.query = function (options) 
+  {
+    var deferred = $q.defer(),
+        periods = Dater.getPeriods(),
+        params = {
+          start:  periods.months[options.month].first.timeStamp / 1000, 
+          end:    periods.months[options.month].last.timeStamp / 1000
+        },
+        data = {};
+
+    Slots.query(params, function(user) 
+    {
+      user.push({
+        count: 0,
+        end: 0,
+        recursive: true,
+        start: 0,
+        text: "com.ask-cs.State.Available",
+        type: "availability",
+        wish: 0
+      });
+
+      user.push({
+        count: 0,
+        end: 0,
+        recursive: false,
+        start: 0,
+        text: "com.ask-cs.State.Available",
+        type: "availability",
+        wish: 0
+      });
+
+      Slots.prototype.aggs({
+          id: options.groupId,
+          start: params.start,
+          end: params.end
+      }).then(function(aggs)
+      {        
+        deferred.resolve({
+          user: user,
+          groupId: options.groupId,
+          aggs: aggs
+        });        
+      });
+
+    });
+
+    return deferred.promise;
+  };
+
+
+
+
+
+  Slots.prototype.query___ = function (options) 
   {
     var deferred = $q.defer(),
         periods = Dater.getPeriods(),
@@ -173,7 +230,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       });
 
       $q.all(calls)
-      .then(function(result)
+      .then(function(aggs)
       {
         // 
         // var localSlots = [];
@@ -189,10 +246,52 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         // });
         // Storage.add('slots', angular.toJson(localSlots));
         // 
+        
         deferred.resolve({
           user: user,
-          aggs: result
+          aggs: aggs
         });
+
+
+
+        // var members = angular.fromJson(Storage.get('members'));
+
+        // var calls = [];
+        
+        // angular.forEach(members, function(member, index)
+        // {
+        //   calls.push(Slots.prototype.query({
+        //     user: member.uuid,
+        //     start: params.start,
+        //     end: params.end
+        //   }));
+        // });
+
+        // $q.all(calls)
+        // .then(function(members)
+        // {
+        //   // 
+        //   // var localSlots = [];
+        //   // angular.forEach(result, function(slot, index)
+        //   // {
+        //   //   localSlots.push({
+        //   //     start: slot.start,
+        //   //     end: slot.end,
+        //   //     recursive: slot.recursive,
+        //   //     text: slot.text,
+        //   //     id: index + 1
+        //   //   });
+        //   // });
+        //   // Storage.add('slots', angular.toJson(localSlots));
+        //   // 
+          
+        //   deferred.resolve({
+        //     user: user,
+        //     aggs: aggs,
+        //     members: members
+        //   });
+        // });
+
 
       });
     });

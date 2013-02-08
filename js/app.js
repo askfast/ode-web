@@ -105,6 +105,10 @@ WebPaige.
       },
       config: {
         /**
+         * Bar charts for group agg. data
+         */
+        bar: false,
+        /**
          * Availability states
          */
         states: {
@@ -159,7 +163,18 @@ WebPaige.
         /**
          * Density based colors for group aggs.
          */
-        densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330']        
+        //densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'] 
+        densities: {
+          less: '#a0a0a0',
+          even: '#ba6a24',
+          one: '#415e6b',
+          two: '#3d5865',
+          three: '#344c58',
+          four: '#2f4550',
+          five: '#2c424c',
+          six: '#253943',
+          more: '#486877'
+        }   
       }
     },
   }
@@ -202,9 +217,17 @@ WebPaige.
         resolve: dashboardCtrl.resolve   
       })
       /**
+       * Planboard group selected
+       */
+      .when('/planboard/:groupId', {
+          templateUrl: 'partials/planboard.html', 
+          controller: planboardCtrl,
+          resolve: planboardCtrl.resolve    
+      })
+      /**
        * Planboard
        */
-      .when('/planboard', {
+      .when('/planboard/', {
           templateUrl: 'partials/planboard.html', 
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    

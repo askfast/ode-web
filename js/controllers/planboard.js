@@ -25,7 +25,13 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
    * Pass time slots data
    */
   
+
+
+  //
+  //
   console.log(data);
+  //
+  //
 
   $scope.data = data;
 
@@ -76,6 +82,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
       month: false
     },
     config: {
+      bar: $config.timeline.config.bar,
       states: $config.timeline.config.states,
       divisions: $config.timeline.config.divisions,
       densities: $config.timeline.config.densities
@@ -192,6 +199,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
                         ' / ' + 
                         new Date($scope.timeline.range.till).toString('dd-MM-yyyy');
   });
+ 
 
   /**
    * TODO
@@ -285,7 +293,7 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
     self.timeline.draw(
       self.process(
         $scope.data, 
-        $scope.timeline.config.states,
+        $scope.timeline.config,
         angular.fromJson(Storage.get('groups'))
       ), 
       $scope.timeline.options
@@ -484,6 +492,25 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
         break;
     };
   };
+  
+
+  /**
+   * Group aggs barCharts toggler
+   */
+  $scope.barCharts = function()
+  {
+    $scope.timeline.bar = !$scope.timeline.bar;
+    timeliner({
+      start:  $scope.timeline.range.from,
+      end:    $scope.timeline.range.till
+    });    
+  };
+  /*
+  $scope.$watch('timeline.config.bar', function()
+  {
+    render();
+  });
+  */
 
 
   /**
@@ -721,6 +748,24 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * TODO
  * Implement eventBus!
@@ -728,9 +773,20 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
  * Resolve planboard
  */
 planboardCtrl.resolve = {
-  data: function ($rootScope, $config, Slots) 
+  data: function ($rootScope, $config, $route, Slots, Storage) 
   {
+    if (!$route.current.params.groupId)
+    {
+      var groups = angular.fromJson(Storage.get('groups'));
+      var groupId = groups[0].uuid;
+    }
+    else
+    {
+      var groupId = $route.current.params.groupId;
+    };
+
     return Slots.query({
+      groupId: groupId,
       month: new Date().toString('M'),
       toggles: {
         user: true,
@@ -740,6 +796,23 @@ planboardCtrl.resolve = {
     });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -780,7 +853,7 @@ planboardCtrl.prototype = {
    *
    * Timeline data processing
    */
-  process: function (data, states, ngroups)
+  process: function (data, config, ngroups)
   {
     var timedata = [];
 
@@ -797,27 +870,178 @@ planboardCtrl.prototype = {
             recursive: slot.recursive, 
             state: slot.text 
             }),
-          className: states[slot.text].className,
+          className: config.states[slot.text].className,
           editable: true
         });        
       });
     };
 
-
+    /**
+     * Process group slots
+     */
     if (data.aggs)
     {
+      /**
+       * Get groups
+       */
       var groups = {};
       angular.forEach(ngroups, function(group, index)
       {
         groups[group.uuid] = group.name;
       });
-
-      angular.forEach(data.aggs, function(agg, index)
+      /**
+       * Group bar charts
+       */
+      if (config.bar)
       {
-        angular.forEach(agg.data, function(slot, i)
+        /**
+         * TODO
+         * Optimize code below
+         */
+        var maxh = 0;
+        /**
+         * TODO
+         * Still needed? Since the top range is fixed already?
+         *
+         * Calculate the max
+         */
+        angular.forEach(data.aggs.data, function(slot, index)
         {
-          var cn;
+          if (slot.wish > maxh)
+          {
+            maxh = slot.wish;
+          };
+        });
+        /**
+         * Loop through the slots
+         */
+        angular.forEach(data.aggs.data, function(slot, index)
+        {
+          /**
+           * Calculate initial values
+           */
+          var maxNum = maxh,
+              num = slot.wish,
+              xwish = num,
+              // a percentage, with a lower bound on 20%
+              height = Math.round(num / maxNum * 80 + 20),
+              minHeight = height,
+              style = 'height:' + height + 'px;',
+              requirement = '<div class="requirement" style="' + 
+                            style + 
+                            '" ' + 
+                            'title="Minimum aantal benodigden: ' + 
+                            num + 
+                            ' personen"></div>';
+          /**
+           * ?
+           */
+          num = slot.wish + slot.diff;
+          /**
+           * ?
+           */
+          var xcurrent = num;
 
+          // a percentage, with a lower bound on 20%
+          height = Math.round(num / maxNum * 80 + 20);
+          /**
+           * Base color based on density
+           */
+          if (slot.diff >= 0 && 
+              slot.diff < 8)
+          {
+            switch(slot.diff)
+            {
+              case 0:
+                var color = config.densities.even;
+                break
+              case 1:
+                var color = config.densities.one;
+                break;
+              case 2:
+                var color = config.densities.two;
+                break;
+              case 3:
+                var color = config.densities.three;
+                break;
+              case 4:
+                var color = config.densities.four;
+                break;
+              case 5:
+                var color = config.densities.five;
+                break;
+              case 6:
+                var color = config.densities.six;
+                break;
+            }
+          }
+          else if (slot.diff >= 8)
+          {
+            var color = config.densities.more;
+          }
+          else
+          {
+            var color = config.densities.less;
+          };
+          /**
+           * Show diff value in badge
+           */
+          var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+          /**
+           * ?
+           */
+          if (xcurrent > xwish)
+          {
+            height = minHeight;
+          };
+          /**
+           * Set the style for bar
+           */
+          style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+          /**
+           * TODO
+           * Strip hard-coded local texts
+           *
+           * Style for actual
+           */
+          var actual = '<div class="bar" style="' + 
+                        style + 
+                        '" ' + 
+                        ' title="Huidig aantal beschikbaar: ' + 
+                        num + 
+                        ' personen">' + 
+                        span + 
+                        '</div>';
+          /**
+           * Push in pool
+           */
+          timedata.push({
+            start: Math.round(slot.start * 1000),
+            end: Math.round(slot.end * 1000),
+            group: groups[data.aggs.id],
+            content: requirement + actual,
+            className: 'group-aggs',
+            editable: false
+          });
+        });
+      }
+      /**
+       * Normal view for group slots
+       */
+      else
+      {
+        /**
+         * Loop throught the slots
+         */
+        angular.forEach(data.aggs.data, function(slot, index)
+        {
+          /**
+           * Class indicator
+           */
+          var cn;
+          /**
+           * Base color based on density
+           */
           if (slot.diff >= 0 && 
               slot.diff < 8)
           {
@@ -844,9 +1068,6 @@ planboardCtrl.prototype = {
               case 6:
                 cn = 6;
                 break
-              case 7:
-                cn = 7;
-                break
             }
           }
           else if (slot.diff >= 8)
@@ -857,140 +1078,19 @@ planboardCtrl.prototype = {
           {
             cn = 'less'
           };
-
+          /**
+           * Push in pool
+           */
           timedata.push({
             start: Math.round(slot.start * 1000),
             end: Math.round(slot.end * 1000),
-            group: groups[agg.id],
+            group: groups[data.aggs.id],
             content: cn,
             className: 'agg-' + cn,
             editable: false
           });
-
         });
-      });
-      
-      
-      
-
-      // var maxh = 0;
-
-      // angular.forEach(data.aggs, function(agg, index)
-      // {
-      //   angular.forEach(agg.data, function(slot, i)
-      //   {
-      //     if (slot.wish > maxh)
-      //     {
-      //       maxh = slot.wish;
-      //     }
-      //   });
-      // });
-
-      // angular.forEach(data.aggs, function(agg, index)
-      // {
-      //   angular.forEach(agg.data, function(slot, i)
-      //   {
-      //     var maxNum = maxh;
-
-      //     var num = slot.wish;
-
-      //     var xwish = num;
-
-      //     var height = Math.round(num / maxNum * 80 + 20);
-      //     // a percentage, with a lower bound on 20%
-
-      //     var minHeight = height;
-
-      //     var style = 'height:' + height + 'px;';
-
-      //     var requirement = '<div class="requirement" style="' + 
-      //                       style + 
-      //                       '" ' + 
-      //                       'title="Minimum aantal benodigden: ' + 
-      //                       num + 
-      //                       ' personen"></div>';
-
-      //     num = slot.wish + slot.diff;
-
-      //     var xcurrent = num;
-
-      //     // a percentage, with a lower bound on 20%
-      //     height = Math.round(num / maxNum * 80 + 20);
-
-      //     if (xcurrent < xwish)
-      //     {
-      //       var color = '#a0a0a0';
-      //       var span = '';
-      //     }
-      //     else if (xcurrent == xwish)
-      //     {
-      //       var color = '#ba6a24';
-      //       var span = '';
-      //     }
-      //     else if (xcurrent > xwish)
-      //     {
-      //       switch (num)
-      //       {
-      //         case 1:
-      //           var color = '#415e6b';
-      //           break;
-      //         case 2:
-      //           var color = '#3d5865';
-      //           break;
-      //         case 3:
-      //           var color = '#3d5865';
-      //           break;
-      //         case 4:
-      //           var color = '#344c58';
-      //           break;
-      //         case 5:
-      //           var color = '#2f4550';
-      //           break;
-      //         case 6:
-      //           var color = '#2c424c';
-      //           break;
-      //         case 7:
-      //           var color = '#253943';
-      //           break;
-      //         default:
-      //           var color = '#486877';
-      //       }
-      //       var span = '<span class="badge badge-inverse">' + num + '</span>';
-      //     }
-
-      //     if (xcurrent > xwish)
-      //     {
-      //       height = minHeight;
-      //     }
-
-      //     style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
-
-      //     var actual = '<div class="bar" style="' + 
-      //                   style + 
-      //                   '" ' + 
-      //                   ' title="Huidig aantal beschikbaar: ' + 
-      //                   num + 
-      //                   ' personen">' + 
-      //                   span + 
-      //                   '</div>';
-
-
-      //     timedata.push({
-      //       start: Math.round(slot.start * 1000),
-      //       end: Math.round(slot.end * 1000),
-      //       group: groups[agg.id],
-      //       content: requirement + actual,
-      //       className: 'group-aggs',
-      //       editable: false
-      //     });
-          
-      //   });
-      // });
-
-
-
-
-
+      };
     };
 
     return timedata;
