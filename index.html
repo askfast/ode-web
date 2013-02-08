@@ -10,13 +10,11 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="ico/favicon.ico">
-    
-    <!--     
+       
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
-    -->
     
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="libs/chosen/chosen.css">
@@ -48,7 +46,7 @@
                   <a href="#dashboard">Dashboard</a>
                 </li>
                 <li data-match-route="/planboard">
-                  <a href="#planboard">Planboard</a>
+                  <a href="#planboard/{{layouts}}/{{firstGroup}}/{{currentDivision}}/{{currentMonth}}">Planboard</a>
                 </li>
                 <li data-match-route="/messages">
                   <a href="#messages">Messages</a>
@@ -56,14 +54,6 @@
                 <li data-match-route="/groups">
                   <a href="#groups">Groups</a>
                 </li>
-                <!--               
-                <li data-match-route="/profile/view/{{user.uuid}}">
-                  <a href="#profile/{{user.uuid}}/view">Profile</a>
-                </li>
-                <li data-match-route="/settings">
-                  <a href="#settings">Settings</a>
-                </li>
-                -->
               </ul>
             </div>
 
@@ -79,20 +69,6 @@
                 <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
               </ul>
             </div>
-
-            <!--
-            <form class="navbar-form pull-right">
-              <input  type="text" 
-                      class="span1"
-                      ng-model="sessionID">
-              <button type="button" 
-                      class="btn"
-                      ng-click="saveSession(sessionID)">Save SessionID</button>
-              <button type="button" 
-                      class="btn btn-warning"
-                      ng-click="clearLocalSlots()">Clear LocalCache</button>
-            </form>
-            -->
           </div>
         </div>
       </div>
@@ -158,7 +134,7 @@
     <script src="js/directives/directives.js"></script>
     <script src="js/services/services.js"></script>
     <script src="js/filters/filters.js"></script>
-    <script src="libs/angular-strap/0.5.10/angular-strap.min.js"></script>
+    <script src="libs/angular-strap/0.6.4/angular-strap.min.js"></script>
 
   </body>
 </html>

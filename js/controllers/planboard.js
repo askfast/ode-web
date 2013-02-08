@@ -6,13 +6,33 @@
  *
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, Dater, Storage) 
+function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slots, Dater, Storage) 
 {
   /**
    * TODO
    * Always refine this initializers
+   * 
+   * Set default currents
    */
-  var self = this;
+  var self = this,
+      // Set preiods
+      periods = Dater.getPeriods(),
+      // Timelines
+      layouts = ($route.current.params.layouts).split(':'),
+      // Set current values
+      current = {
+        layouts: {
+          user:     (layouts[0] == 1) ? true : false,
+          group:    (layouts[1] == 1) ? true : false,
+          members:  (layouts[2] == 1) ? true : false
+        },
+        day: Date.today().getDayOfYear() + 1,
+        week: new Date().getWeek(),
+        month: new Date().getMonth() + 1,
+        group: $route.current.params.groupId,
+        division: $route.current.params.division
+      };
+
 
   /**
    * Reset slot container
@@ -20,45 +40,10 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
    * slots
    */
   $scope.slot = {};
-
   /**
    * Pass time slots data
    */
-  
-
-
-  //
-  //
-  console.log('data ->', data);
-  //
-  //
-
   $scope.data = data;
-
-
-  /**
-   * Initial timeline layout manager
-   */
-  $scope.checkbox = {
-    left: true
-  };
-
-
-  /**
-   * Get periods
-   */
-  //var periods = angular.fromJson(Storage.get('periods'));
-  var periods = Dater.getPeriods();
-
-
-  /**
-   * Set default currents
-   */
-  var current = {
-    day: Date.today().getDayOfYear() + 1,
-    week: new Date().getWeek(),
-    month: new Date().getMonth() + 1
-  };
 
 
   /**
@@ -112,100 +97,136 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
   $scope.states = states;
 
 
+
+
+
   /**
-   * TODO
    * Groups for dropdown
    */
-  var groups = {};
-  angular.forEach(angular.fromJson(Storage.get('groups')), function(group, key)
+  $scope.groups = angular.fromJson(Storage.get('groups'));
+
+
+  $scope.changeLocation = function(current, section)
   {
-    groups[key] = group.name;
-  });
-  $scope.groups = groups;
+    switch (section)
+    {
+      case 'user':
+          $scope.timeline.current.layouts.user = !$scope.timeline.current.layouts.user;
+        break;
+      case 'group':
+          $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
+        break;
+      case 'members':
+          $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
+        break;
+    };
+
+    var layout =  (($scope.timeline.current.layouts.user) ? 1 : 0) +
+                  ':' +
+                  (($scope.timeline.current.layouts.group) ? 1 : 0) + 
+                  ':' + 
+                  (($scope.timeline.current.layouts.members) ? 1 : 0);
+
+    $location.path(
+      '/planboard/' + 
+      layout + 
+      '/' + 
+      current.group + 
+      '/' + 
+      current.division + 
+      '/' + 
+      current.month
+    );
+
+  };
 
 
   /**
    * TODO
    * Groups for dropdown
    */
-  var divisions = {};
-  angular.forEach($scope.timeline.config.divisions, function(division, key)
-  {
-    divisions[key] = division.label;
-  });
-  $scope.divisions = divisions;
+  $scope.divisions = $scope.timeline.config.divisions;
   
+
+
+
 
   /**
    * Watch for changes in timeline range
    */
-  $scope.$watch(function()
-  {
-    /**
-     * Get timeline range
-     */
-    var range = self.timeline.getVisibleChartRange();
-    /**
-     * Calculate difference
-     */
-    var diff = new Date(range.end).getTime() - new Date(range.start).getTime();
-    /**
-     * Scope is a day
-     */
-    // TODO
-    // try later on!
-    // new Date(range.start).toString('d') == new Date(range.end).toString('d')
-    if (diff <= 86400000)
+  // if (data)
+  // {
+    $scope.$watch(function()
     {
-      $scope.timeline.scope = {
-        day: true,
-        week: false,
-        month: false
+      /**
+       * Get timeline range
+       */
+      var range = self.timeline.getVisibleChartRange();
+      /**
+       * Calculate difference
+       */
+      var diff = new Date(range.end).getTime() - new Date(range.start).getTime();
+      /**
+       * Scope is a day
+       */
+      // TODO
+      // try later on!
+      // new Date(range.start).toString('d') == new Date(range.end).toString('d')
+      if (diff <= 86400000)
+      {
+        $scope.timeline.scope = {
+          day: true,
+          week: false,
+          month: false
+        };
+      }
+      /**
+       * Scope is less than a week
+       */
+      else if (diff < 604800000)
+      {
+        $scope.timeline.scope = {
+          day: false,
+          week: true,
+          month: false
+        };
+      }
+      /**
+       * Scope is more than a week
+       */
+      else if (diff > 604800000)
+      {
+        $scope.timeline.scope = {
+          day: false,
+          week: false,
+          month: true
+        };
       };
-    }
-    /**
-     * Scope is less than a week
-     */
-    else if (diff < 604800000)
-    {
-      $scope.timeline.scope = {
-        day: false,
-        week: true,
-        month: false
+      /**
+       * Set ranges
+       */
+      $scope.timeline.range = {
+        from: new Date(range.start).toString($config.date.stringFormat),
+        till: new Date(range.end).toString($config.date.stringFormat)
       };
-    }
-    /**
-     * Scope is more than a week
-     */
-    else if (diff > 604800000)
-    {
-      $scope.timeline.scope = {
-        day: false,
-        week: false,
-        month: true
-      };
-    };
-    /**
-     * Set ranges
-     */
-    $scope.timeline.range = {
-      from: new Date(range.start).toString($config.date.stringFormat),
-      till: new Date(range.end).toString($config.date.stringFormat)
-    };
-    /**
-     * Pass range to dateranger
-     */
-    $scope.daterange =  new Date($scope.timeline.range.from).toString('dd-MM-yyyy') + 
-                        ' / ' + 
-                        new Date($scope.timeline.range.till).toString('dd-MM-yyyy');
-  });
+      /**
+       * Pass range to dateranger
+       */
+      $scope.daterange =  new Date($scope.timeline.range.from).toString('dd-MM-yyyy') + 
+                          ' / ' + 
+                          new Date($scope.timeline.range.till).toString('dd-MM-yyyy');
+    });
+  // };
  
 
   /**
    * TODO
    * Automatically initialize this function
    */
-  render();
+  // if (data)
+  // {
+    render();    
+  // };
 
 
   /**
@@ -294,7 +315,8 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
       self.process(
         $scope.data, 
         $scope.timeline.config,
-        angular.fromJson(Storage.get('groups'))
+        angular.fromJson(Storage.get('groups')),
+        angular.fromJson(Storage.get('members'))
       ), 
       $scope.timeline.options
     );
@@ -773,21 +795,12 @@ function planboardCtrl($rootScope, $scope, $config, data, Slots, timerService, D
  * Resolve planboard
  */
 planboardCtrl.resolve = {
-  data: function ($rootScope, $config, $route, Slots, Storage) 
-  {
-    if (!$route.current.params.groupId)
-    {
-      var groups = angular.fromJson(Storage.get('groups'));
-      var groupId = groups[0].uuid;
-    }
-    else
-    {
-      var groupId = $route.current.params.groupId;
-    };
-
+  data: function ($route, Slots) 
+  {    
     return Slots.all({
-      groupId: groupId,
-      month: new Date().toString('M'),
+      layouts: $route.current.params.layouts,
+      groupId: $route.current.params.groupId,
+      month: $route.current.params.month,
       toggles: {
         user: true,
         group: true,
@@ -853,10 +866,31 @@ planboardCtrl.prototype = {
    *
    * Timeline data processing
    */
-  process: function (data, config, ngroups)
+  process: function (data, config, ngroups, nmembers)
   {
     var timedata = [];
 
+    /**
+     * Get groups
+     */
+    var groups = {};
+    angular.forEach(ngroups, function(group, index)
+    {
+      groups[group.uuid] = group.name;
+    });
+
+    /**
+     * Get members
+     */
+    var members = {};
+    angular.forEach(nmembers, function(member, index)
+    {
+      members[member.uuid] = member.name;
+    });
+
+    /**
+     * Process user slots
+     */
     if (data.user)
     {
       angular.forEach(data.user, function(slot, index)
@@ -881,14 +915,6 @@ planboardCtrl.prototype = {
      */
     if (data.aggs)
     {
-      /**
-       * Get groups
-       */
-      var groups = {};
-      angular.forEach(ngroups, function(group, index)
-      {
-        groups[group.uuid] = group.name;
-      });
       /**
        * Group bar charts
        */
@@ -941,14 +967,14 @@ planboardCtrl.prototype = {
            * ?
            */
           var xcurrent = num;
-
-          // a percentage, with a lower bound on 20%
+          /**
+           * A percentage, with a lower bound on 20%
+           */
           height = Math.round(num / maxNum * 80 + 20);
           /**
            * Base color based on density
            */
-          if (slot.diff >= 0 && 
-              slot.diff < 8)
+          if (slot.diff >= 0 && slot.diff < 8)
           {
             switch(slot.diff)
             {
@@ -1042,8 +1068,7 @@ planboardCtrl.prototype = {
           /**
            * Base color based on density
            */
-          if (slot.diff >= 0 && 
-              slot.diff < 8)
+          if (slot.diff >= 0 && slot.diff < 8)
           {
             switch(slot.diff)
             {
@@ -1093,6 +1118,42 @@ planboardCtrl.prototype = {
       };
     };
 
+    /**
+     * Process members slots
+     */
+    if (data.members)
+    {
+      /**
+       * Get members
+       */
+      //var members = angular.fromJson(Storage.get('members'));
+      /**
+       * Loop through members
+       */
+      angular.forEach(data.members, function(member, index)
+      {
+        /**
+         * Loop through slots of member
+         */
+        angular.forEach(member.data, function(slot, i)
+        {
+          timedata.push({
+            start: Math.round(slot.start * 1000),
+            end: Math.round(slot.end * 1000),
+            group: (slot.recursive) ? members[member.id] + 'Wekelijkse planning' 
+                                    : members[member.id] + 'Planning',
+            content: angular.toJson({ 
+              id: slot.id, 
+              recursive: slot.recursive, 
+              state: slot.text 
+              }),
+            className: config.states[slot.text].className,
+            editable: true
+          });
+        });                
+      });
+    };
+
     return timedata;
   }
 
@@ -1100,10 +1161,11 @@ planboardCtrl.prototype = {
 
 planboardCtrl.$inject = ['$rootScope', 
                           '$scope', 
-                          '$config', 
+                          '$config',
+                          '$location',
+                          '$route',
                           'data', 
                           'Slots', 
-                          'timerService', 
                           'Dater', 
                           'Storage'];
 

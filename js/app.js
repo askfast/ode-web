@@ -152,14 +152,20 @@ WebPaige.
         /**
          * Any given divisions
          */
-        divisions: {
-          'knrm.StateGroup.BeschikbaarNoord': {
-            'label': 'Noord'
+        divisions: [
+          {
+            id: 'all',
+            label: 'All divisions'
           },
-          'knrm.StateGroup.BeschikbaarZuid': {
-            'label': 'Zuid'
+          {
+            id: 'knrm.StateGroup.BeschikbaarNoord',
+            label: 'Noord'
+          },
+          {
+            id: 'knrm.StateGroup.BeschikbaarZuid',
+            label: 'Zuid'
           }
-        },
+        ],
         /**
          * Density based colors for group aggs.
          */
@@ -217,9 +223,9 @@ WebPaige.
         resolve: dashboardCtrl.resolve   
       })
       /**
-       * Planboard group selected
+       * Planboard
        */
-      .when('/planboard/:groupId', {
+      .when('/planboard/:layouts/:groupId/:division/:month', {
           templateUrl: 'partials/planboard.html', 
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    
@@ -227,11 +233,11 @@ WebPaige.
       /**
        * Planboard
        */
-      .when('/planboard/', {
-          templateUrl: 'partials/planboard.html', 
-          controller: planboardCtrl,
-          resolve: planboardCtrl.resolve    
-      })
+      // .when('/planboard/', {
+      //     templateUrl: 'partials/planboard.html', 
+      //     controller: planboardCtrl,
+      //     resolve: planboardCtrl.resolve    
+      // })
       /**
        * Messages
        */
@@ -325,6 +331,15 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
    * Cehck for valid session
    */
   Session.check();
+
+
+  /**
+   * Set first group and current month for the planboard link
+   */
+  $rootScope.firstGroup = angular.fromJson(Storage.get('groups'))[0].uuid;
+  $rootScope.currentDivision = 'all';
+  $rootScope.currentMonth = new Date().toString('M');
+  $rootScope.layouts = "1:1:0"
 
 
   /**

@@ -7,23 +7,31 @@
   <!-- groups members controls -->
   <div class="pull-right" style="margin-top: 10px;">
 
+
     <!-- groups list -->
     <!-- <span style="margin-left: 15px">Group</span> -->
-    <select ng-model="state__" 
+    <select ng-model="timeline.current.group" 
             style="margin-top: 10px; width: 160px;"
-            ng-options="option as value for (option, value) in groups">
-      <option value="">-- group</option>
+            ng-options="group.uuid as group.name for group in groups"
+            ng-selected="timeline.current.group"
+            ng-change="changeLocation(timeline.current)">
     </select>
     <!-- end groups list -->
 
+
     <!-- divisions list -->
     <!-- <span style="margin-left: 15px">Division</span> -->
-    <select ng-model="state__" 
+    <select ng-model="timeline.current.division" 
             style="margin-top: 10px; width: 160px;"
-            ng-options="option as value for (option, value) in divisions">
-      <option value="">-- division</option>
+            ng-options="division.id as division.label for division in divisions"
+            ng-selected="timeline.current.division"
+            ng-change="changeLocation(timeline.current)">
+            
     </select>
     <!-- end divisions list -->
+
+
+
 
     <!-- timeline bar charts -->
     <div  class="btn-group" 
@@ -38,27 +46,28 @@
     </div>
     <!-- end timeline bar charts -->
 
+
+
+
     <!-- timeline layout manager -->
     <div  class="btn-group" 
           style="margin-left: 15px" 
-          bs-buttons-checkbox="" 
-          data-toggle="buttons-checkbox">
+          bs-buttons-checkbox>
 
       <button type="button" 
               class="btn" 
-              ng-model="checkbox.left" 
-              bs-button="">User</button>
+              ng-model="timeline.current.layouts.user" 
+              ng-click="changeLocation(timeline.current, 'user')">User</button>
 
       <button type="button" 
               class="btn" 
-              ng-model="checkbox.middle" 
-              bs-button="">Group</button>
+              ng-model="timeline.current.layouts.group" 
+              ng-click="changeLocation(timeline.current, 'group')">Group</button>
 
       <button type="button" 
               class="btn" 
-              ng-model="checkbox.right" 
-              ng-click=""
-              bs-button="">Team</button>
+              ng-model="timeline.current.layouts.members" 
+              ng-click="changeLocation(timeline.current, 'members')">Members</button>
 
     </div>
     <!-- end timeline layout manager -->
@@ -344,4 +353,4 @@
 
   </div>
 </div>
-<!-- end timelines & statistics -->
+<!-- end timelines & statistics

@@ -89,7 +89,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           start:  periods.months[options.month].first.timeStamp / 1000, 
           end:    periods.months[options.month].last.timeStamp / 1000
         },
-        data = {};
+        data = {},
+        layouts = ($route.current.params.layouts).split(':'),
+        section = {
+          user:     (layouts[0] == 1) ? true : false,
+          group:    (layouts[1] == 1) ? true : false,
+          members:  (layouts[2] == 1) ? true : false
+        };
     /**
      * Fetch first user slots
      */
@@ -116,55 +122,85 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         type: "availability",
         wish: 0
       });
-      /**
-       * Fetch group aggs
-       */
-      Slots.prototype.aggs({
-          id: options.groupId,
-          start: params.start,
-          end: params.end
-      }).then(function(aggs)
+
+      console.log('section ->', section);
+
+      if (section.group)
       {
         /**
-         * Get members of given group
+         * Fetch group aggs
          */
-        var members = angular.fromJson(Storage.get(options.groupId));
-        /**
-         * Reset calls
-         */
-        var calls = [];
-        /**
-         * Loop through the members
-         */
-        angular.forEach(members, function(member, index)
+        Slots.prototype.aggs({
+            id: options.groupId,
+            start: params.start,
+            end: params.end
+        }).then(function(aggs)
         {
-          /**
-           * Push members in calls pool
-           */
-          calls.push(Slots.prototype.user({
-            user: member.uuid,
-            start: periods.months[options.month].first.timeStamp / 1000,
-            end: periods.months[options.month].last.timeStamp / 1000
-          }));
+            
+          if (section.members)
+          {
+            /**
+             * Get members of given group
+             */
+            var members = angular.fromJson(Storage.get(options.groupId));
+            /**
+             * Reset calls
+             */
+            var calls = [];
+            /**
+             * Loop through the members
+             */
+            angular.forEach(members, function(member, index)
+            {
+              /**
+               * Push members in calls pool
+               */
+              calls.push(Slots.prototype.user({
+                user: member.uuid,
+                start: periods.months[options.month].first.timeStamp / 1000,
+                end: periods.months[options.month].last.timeStamp / 1000
+              }));
+            });
+            /**
+             * Run pool of calls
+             */
+            $q.all(calls)
+            .then(function(members)
+            {
+              /**
+               * Return promised values
+               */
+              deferred.resolve({
+                user: user,
+                groupId: options.groupId,
+                aggs: aggs,
+                members: members
+              });
+            });
+          }
+          else
+          {
+            deferred.resolve({
+              user: user,
+              groupId: options.groupId,
+              aggs: aggs
+            });
+          }
+
+
+           
         });
-        /**
-         * Run pool of calls
-         */
-        $q.all(calls)
-        .then(function(members)
-        {
-          /**
-           * Return promised values
-           */
-          deferred.resolve({
-            user: user,
-            groupId: options.groupId,
-            aggs: aggs,
-            members: members
-          });
+        
+      }
+      else
+      {
+        
+        deferred.resolve({
+          user: user
         });
-         
-      });
+      }
+
+
 
     });
 
