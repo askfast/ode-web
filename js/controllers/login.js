@@ -288,6 +288,20 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
           {
             self.progress(100, 'Everything loaded!');
             Groups.uniqueMembers();
+
+            /**
+             * Set first group and current month for the planboard link
+             */
+
+            //$rootScope.firstGroup = angular.fromJson(Storage.get('groups'))[0].uuid;
+            $rootScope.firstGroup = groups[0].uuid;
+            
+            console.log('groups are present', $rootScope.firstGroup);
+
+            $rootScope.currentDivision = 'all';
+            $rootScope.currentMonth = new Date().toString('M');
+            $rootScope.layouts = "1:1:0";
+
             document.location = "#/dashboard";
           });
         });

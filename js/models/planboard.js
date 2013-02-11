@@ -61,15 +61,30 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.aggs = function (options) 
   {
-    var deferred = $q.defer();
-    Aggs.query({
-      id: options.id,
-      start: options.start,
-      end: options.end
-    }, function (result) 
+    /**
+     * Default params
+     */
+    var deferred = $q.defer(),
+        params = {
+          id: options.id,
+          start: options.start,
+          end: options.end
+        };
+    /**
+     * If specific division is selected
+     */
+    if (options.division != undefined)
+    {
+      params.stateGroup = options.division;
+    };
+    /**
+     * Fetch aggs
+     */
+    Aggs.query(params, function (result) 
     {
       deferred.resolve({
         id: options.id,
+        division: options.division,
         data: result
       });
     });
@@ -82,6 +97,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.all = function (options) 
   {
+    /**
+     * Define vars
+     */
     var deferred = $q.defer(),
         periods = Dater.getPeriods(),
         params = {
@@ -122,21 +140,35 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         type: "availability",
         wish: 0
       });
-
-      console.log('section ->', section);
-
+      /**
+       * Check whether group is selected
+       */
       if (section.group)
       {
         /**
-         * Fetch group aggs
+         * Given params
          */
-        Slots.prototype.aggs({
+        var gparams = {
             id: options.groupId,
             start: params.start,
             end: params.end
-        }).then(function(aggs)
+        };
+        /**
+         * If specific division is selected
+         */
+        if (options.division != 'all')
         {
-            
+          gparams.division = options.division;
+        };
+        /**
+         * Fetch group aggs
+         */
+        Slots.prototype.aggs(gparams)
+        .then(function(aggs)
+        {
+          /**
+           * Check whether members are selected
+           */
           if (section.members)
           {
             /**
@@ -158,7 +190,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
               calls.push(Slots.prototype.user({
                 user: member.uuid,
                 start: periods.months[options.month].first.timeStamp / 1000,
-                end: periods.months[options.month].last.timeStamp / 1000
+                end: periods.months[options.month].last.timeStamp / 1000,
+                type: 'both'
               }));
             });
             /**
@@ -185,25 +218,19 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
               groupId: options.groupId,
               aggs: aggs
             });
-          }
-
-
-           
+          };
         });
-        
       }
       else
       {
-        
         deferred.resolve({
           user: user
         });
-      }
-
-
-
+      };
     });
-
+    /**
+     * Return what promised
+     */
     return deferred.promise;
   };
 

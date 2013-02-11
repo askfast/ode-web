@@ -334,15 +334,6 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
 
 
   /**
-   * Set first group and current month for the planboard link
-   */
-  $rootScope.firstGroup = angular.fromJson(Storage.get('groups'))[0].uuid;
-  $rootScope.currentDivision = 'all';
-  $rootScope.currentMonth = new Date().toString('M');
-  $rootScope.layouts = "1:1:0"
-
-
-  /**
    * REMOVE
    * This part is only needed for by-passing login
    * only for testing and development

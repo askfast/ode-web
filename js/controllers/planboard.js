@@ -104,6 +104,25 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
    * Groups for dropdown
    */
   $scope.groups = angular.fromJson(Storage.get('groups'));
+  
+
+  /**
+   * Group aggs barCharts toggler
+   */
+  $scope.barCharts = function()
+  {
+    $scope.timeline.bar = !$scope.timeline.bar;
+    timeliner({
+      start:  $scope.timeline.range.from,
+      end:    $scope.timeline.range.till
+    });    
+  };
+  /*
+  $scope.$watch('timeline.config.bar', function()
+  {
+    render();
+  });
+  */
 
 
   $scope.changeLocation = function(current, section)
@@ -316,7 +335,8 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
         $scope.data, 
         $scope.timeline.config,
         angular.fromJson(Storage.get('groups')),
-        angular.fromJson(Storage.get('members'))
+        angular.fromJson(Storage.get('members')),
+        $scope.divisions
       ), 
       $scope.timeline.options
     );
@@ -514,25 +534,6 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
         break;
     };
   };
-  
-
-  /**
-   * Group aggs barCharts toggler
-   */
-  $scope.barCharts = function()
-  {
-    $scope.timeline.bar = !$scope.timeline.bar;
-    timeliner({
-      start:  $scope.timeline.range.from,
-      end:    $scope.timeline.range.till
-    });    
-  };
-  /*
-  $scope.$watch('timeline.config.bar', function()
-  {
-    render();
-  });
-  */
 
 
   /**
@@ -800,6 +801,7 @@ planboardCtrl.resolve = {
     return Slots.all({
       layouts: $route.current.params.layouts,
       groupId: $route.current.params.groupId,
+      division: $route.current.params.division,
       month: $route.current.params.month,
       toggles: {
         user: true,
@@ -866,7 +868,7 @@ planboardCtrl.prototype = {
    *
    * Timeline data processing
    */
-  process: function (data, config, ngroups, nmembers)
+  process: function (data, config, ngroups, nmembers, divisions)
   {
     var timedata = [];
 
@@ -889,6 +891,14 @@ planboardCtrl.prototype = {
     });
 
     /**
+     * Wrap hidden span for sorting workaround in timeline rows
+     */
+    function wrapper(rank)
+    {
+      return '<span style="display:none;">' + rank + '</span>';
+    };
+
+    /**
      * Process user slots
      */
     if (data.user)
@@ -898,7 +908,8 @@ planboardCtrl.prototype = {
         timedata.push({
           start: Math.round(slot.start * 1000),
           end: Math.round(slot.end * 1000),
-          group: (slot.recursive) ? 'Wekelijkse planning' : 'Planning',
+          group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' : 
+                                    wrapper('a') + 'Planning',
           content: angular.toJson({ 
             id: slot.id, 
             recursive: slot.recursive, 
@@ -915,6 +926,32 @@ planboardCtrl.prototype = {
      */
     if (data.aggs)
     {
+      /**
+       * Check whether a division is selected
+       */
+      if (data.aggs.division == 'all' || data.aggs.division == undefined)
+      {
+        var name = groups[data.aggs.id];
+      }
+      else
+      {
+        var label;
+        /**
+         * Loop over the divisions
+         */
+        angular.forEach(divisions, function(division, index)
+        {
+          if (division.id == data.aggs.division)
+          {
+            label = division.label;
+          }
+        });
+        /**
+         * Set division in the name
+         */
+        var name =  groups[data.aggs.id] + ' (' + label + ')';
+      };
+
       /**
        * Group bar charts
        */
@@ -974,7 +1011,7 @@ planboardCtrl.prototype = {
           /**
            * Base color based on density
            */
-          if (slot.diff >= 0 && slot.diff < 8)
+          if (slot.diff >= 0 && slot.diff < 7)
           {
             switch(slot.diff)
             {
@@ -1001,7 +1038,7 @@ planboardCtrl.prototype = {
                 break;
             }
           }
-          else if (slot.diff >= 8)
+          else if (slot.diff >= 7)
           {
             var color = config.densities.more;
           }
@@ -1044,7 +1081,7 @@ planboardCtrl.prototype = {
           timedata.push({
             start: Math.round(slot.start * 1000),
             end: Math.round(slot.end * 1000),
-            group: groups[data.aggs.id],
+            group: wrapper('c') + groups[data.aggs.id],
             content: requirement + actual,
             className: 'group-aggs',
             editable: false
@@ -1068,7 +1105,7 @@ planboardCtrl.prototype = {
           /**
            * Base color based on density
            */
-          if (slot.diff >= 0 && slot.diff < 8)
+          if (slot.diff >= 0 && slot.diff < 7)
           {
             switch(slot.diff)
             {
@@ -1095,7 +1132,7 @@ planboardCtrl.prototype = {
                 break
             }
           }
-          else if (slot.diff >= 8)
+          else if (slot.diff >= 7)
           {
             cn = 'more';
           }
@@ -1109,7 +1146,7 @@ planboardCtrl.prototype = {
           timedata.push({
             start: Math.round(slot.start * 1000),
             end: Math.round(slot.end * 1000),
-            group: groups[data.aggs.id],
+            group: wrapper('c') + name,
             content: cn,
             className: 'agg-' + cn,
             editable: false
@@ -1140,8 +1177,9 @@ planboardCtrl.prototype = {
           timedata.push({
             start: Math.round(slot.start * 1000),
             end: Math.round(slot.end * 1000),
-            group: (slot.recursive) ? members[member.id] + 'Wekelijkse planning' 
-                                    : members[member.id] + 'Planning',
+            group: wrapper('d') + members[member.id],
+            // group: (slot.recursive) ? wrapper('d') + members[member.id] + 'Wekelijkse planning' 
+            //                         : wrapper('d') + members[member.id] + 'Planning',
             content: angular.toJson({ 
               id: slot.id, 
               recursive: slot.recursive, 
