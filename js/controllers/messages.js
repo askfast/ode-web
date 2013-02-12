@@ -233,6 +233,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
   var self = this;
 
   $scope.receviersList = Messages.receviersList();
+  $scope.selection = {};
   
   $scope.boxes = {
   	inbox : true,
@@ -268,12 +269,27 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
   
   $scope.sendMessage = function(message)
   {
-    Messages.send(message).
-    then(function(result)
-    {
-      $scope.composeView = false;
-      // TODO
-      // Reset compose form
+    Messages.send(message).then(function(result){
+      	$scope.composeView = false;
+      	console.log(message);
+      	console.log("sended" , result);
+      	
+	  	$scope.messages = Messages.query().then(function(){
+	  		if($scope.boxes.inbox == true){
+	  			$scope.boxer('inbxo');
+	  		}else if($scope.boxes.outbox == true){
+	  			$scope.boxer('oubox');
+	  		}else if($scope.boxes.trash== true){
+	  			$scope.boxer('trash');
+	  		}
+	  		
+	  		if($scope.boxes.inbox == true || $scope.boxes.outbox == true){
+				$scope.listview = true;
+			}else if($scope.boxes.trash == true){
+				$scope.trashview = true;
+			}  
+		});
+		
     });
   };
 
@@ -298,31 +314,26 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
     
     $scope.messages = [];
     var filtered = [];
-    angular.forEach(messages, function(message, index)
-    {
+    angular.forEach(messages, function(message, index){
       message.date = new Date(message.creationTime).toString($config.datetime.format);
       message.sender = message.requester.split('personalagent/')[1].split('/')[0];
-      switch (box)
-      {
+      switch (box){
         case 'inbox':          
-          if (message.box == 'inbox' &&
-              message.state != 'TRASH' && message.state != 'FOREVER' )
-          {
+          if (message.box == 'inbox' && message.state != 'TRASH' && message.state != 'FOREVER' ){
             filtered.push(message);
           };
           $scope.listview = true;
+          $scope.trashview = false;
         break;
         case 'outbox':
-          if (message.box == 'outbox' && message.state != 'TRASH')
-          {
+          if (message.box == 'outbox' && message.state != 'TRASH' && message.state != 'FOREVER'){
             filtered.push(message);
           };
           $scope.listview = true;
+          $scope.trashview = false;
         break;
         case 'trash':
-          if ((message.box == 'inbox' || message.box == 'outbox') &&
-              message.state == 'TRASH')
-          {
+          if ((message.box == 'inbox' || message.box == 'outbox') && message.state == 'TRASH'){
             filtered.push(message);
           };
           $scope.listview = false;
@@ -414,7 +425,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
     });
     
 	$("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");    
-	console.log(message);
+	console.log($scope.trashview);
   };
 
 	$scope.composeCancel = function(){
@@ -464,6 +475,104 @@ function messagesCtrl($scope, $rootScope, $config, $q, messages, Messages)
 	        $scope.boxer('trash');
 	      });
 	    });
+	}
+	
+	$scope.toggleSelection = function(master){
+	    var flag = (master) ? true : false;    
+	    var messages = $scope.messages;
+	    angular.forEach(messages, function(message, index){
+	      $scope.selection[message.uuid] = flag;
+	    });
+	};
+	
+	$scope.restoreSelectedMsg = function(selection){
+		var uuids = [];
+		angular.forEach(selection, function(checked, id){
+			angular.forEach($scope.messages , function(message,index){
+				if(id == message.uuid && checked == true){
+					message.state = "NEW";
+					uuids.push(message.uuid);
+				}
+			});
+		});
+			
+		if(uuids.length == 0 ){
+			return ; 
+		}
+		
+	    Messages.changeState(uuids, "NEW").then(function(){
+	      $scope.messages = Messages.query().then(function(){
+	        $scope.boxer('trash');
+	      });
+	    });
+	};
+	
+	$scope.askDeleteSelectedMsg = function(selection){
+		var uuids = [];
+		angular.forEach(selection, function(checked, id){
+			angular.forEach($scope.messages , function(message,index){
+				if(id == message.uuid && checked == true){
+					uuids.push(message.uuid);
+				}
+			});
+		});
+		
+		$scope.modal =  {
+		  header : "Delete Forever",
+		  title : uuids.length +" messsage(s) will be deleted , go on?",
+		  content : "Message will be deleted forever and can't be restored.",
+		  left : { show : true , text : "Cancel"} ,
+		  
+		  
+		  middle : { show : false } ,
+		  right : { show : true , style : "btn-primary", text : "OK", func : function(){
+		  	if(uuids.length == 0 ){
+				return ; 
+			} 
+						
+			angular.forEach($scope.messages , function(message,index){
+				angular.forEach(uuids, function(uuid, i){
+					if(message.uuid = uuid){
+						message.state = "FOREVER";
+					}
+				});
+			});
+			
+		  	Messages.deleteforever(uuids).then(function(){
+		      $scope.messages = Messages.query().then(function(){
+		        $scope.boxer('trash');
+		      });
+		    });
+		  }}
+		};
+		
+	    
+	};
+	
+	$scope.askEmptyMsgTrash = function(){
+		$scope.modal =  {
+		  header : "Empty the trash",
+		  title : "All the messsages in trash will be deleted , continue ?",
+		  content : "Message will be deleted forever and can't be restored.",
+		  left : { show : true , text : "Cancel"} ,
+		  middle : { show : false } ,
+		  right : { show : true , style : "btn-primary", text : "OK", func : function(){
+		  	
+			var uuids = [];
+			angular.forEach($scope.messages , function(message,index){
+				if(message.state == "TRASH"){
+					uuids.push(message.uuid);
+					message.state = "FOREVER";
+				}
+			});
+			
+		  	Messages.deleteforever(uuids).then(function(){
+		      $scope.messages = Messages.query().then(function(){
+		        $scope.boxer('trash');
+		      });
+		    });
+		  }}
+		};
 	}
 };
 
