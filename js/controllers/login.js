@@ -289,19 +289,6 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
             self.progress(100, 'Everything loaded!');
             Groups.uniqueMembers();
 
-            /**
-             * Set first group and current month for the planboard link
-             */
-
-            //$rootScope.firstGroup = angular.fromJson(Storage.get('groups'))[0].uuid;
-            $rootScope.firstGroup = groups[0].uuid;
-            
-            console.log('groups are present', $rootScope.firstGroup);
-
-            $rootScope.currentDivision = 'all';
-            $rootScope.currentMonth = new Date().toString('M');
-            $rootScope.layouts = "1:1:0";
-
             document.location = "#/dashboard";
           });
         });
@@ -461,6 +448,19 @@ loginCtrl.prototype = {
      * @type {Boolean}
      */
     return ( _.contains(blacklisted, browser) ) ? true : false;
+
+    /*
+     * Underscore contains function
+     */    
+    // // Determine if the array or object contains a given value (using `===`).
+    // // Aliased as `include`.
+    // _.contains = _.include = function(obj, target) {
+    //   if (obj == null) return false;
+    //   if (nativeIndexOf && obj.indexOf === nativeIndexOf) return obj.indexOf(target) != -1;
+    //   return any(obj, function(value) {
+    //     return value === target;
+    //   });
+    // };
 
   }
 

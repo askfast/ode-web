@@ -215,13 +215,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           start:  periods.months[options.month].first.timeStamp / 1000, 
           end:    periods.months[options.month].last.timeStamp / 1000
         },
-        data = {};
-        // layouts = ($route.current.params.layouts).split(':'),
-        // section = {
-        //   user:     (layouts[0] == 1) ? true : false,
-        //   group:    (layouts[1] == 1) ? true : false,
-        //   members:  (layouts[2] == 1) ? true : false
-        // };
+        data = {},
+        layouts = ($route.current.params.layouts).split(':'),
+        section = {
+          user:     (layouts[0] == 1) ? true : false,
+          group:    (layouts[1] == 1) ? true : false,
+          members:  (layouts[2] == 1) ? true : false
+        };
 
     /**
      * Fetch first user slots
@@ -231,7 +231,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       /**
        * Check whether group is selected
        */
-      if (options.layouts.group)
+      if (section.group)
       {
         /**
          * Given params
@@ -260,7 +260,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           /**
            * Check whether members are selected
            */
-          if (options.layouts.members)
+          if (section.members)
           {
             /**
              * Get members of given group

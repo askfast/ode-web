@@ -32,6 +32,7 @@ WebPaige.
      * Data source host
      */
     host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    //host: 'http://10.200.200.201\\:8888/ns_knrmtest',
     //host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
     /**
      * TODO
@@ -225,19 +226,19 @@ WebPaige.
       /**
        * Planboard
        */
-      .when('/planboard/:layouts/:groupId/:division/:month', {
-          templateUrl: 'partials/planboard.html', 
-          controller: planboardCtrl,
-          resolve: planboardCtrl.resolve    
-      })
-      /**
-       * Planboard
-       */
-      // .when('/planboard/', {
+      // .when('/planboard/:layouts/:groupId/:division/:month', {
       //     templateUrl: 'partials/planboard.html', 
       //     controller: planboardCtrl,
       //     resolve: planboardCtrl.resolve    
       // })
+      /**
+       * Planboard
+       */
+      .when('/planboard/', {
+          templateUrl: 'partials/planboard.html', 
+          controller: planboardCtrl,
+          resolve: planboardCtrl.resolve    
+      })
       /**
        * Messages
        */
@@ -431,7 +432,7 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
   $rootScope.$on("$routeChangeSuccess", function (event, current, previous) 
   {
     $rootScope.alertType = "alert-success";
-    $rootScope.alertMessage = "Successfully changed routes :]";
+    $rootScope.alertMessage = "Successfully loaded :]";
     $rootScope.active = "progress-success";
 
     $rootScope.newLocation = $location.path();
@@ -445,7 +446,7 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
   {
     alert("ROUTE CHANGE ERROR: " + rejection);
     $rootScope.alertType = "alert-error";
-    $rootScope.alertMessage = "Failed to change routes :[";
+    $rootScope.alertMessage = "Failed to load data :[";
     $rootScope.active = "";
   });
 

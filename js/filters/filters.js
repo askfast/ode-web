@@ -182,7 +182,18 @@ angular.module('WebPaige.filters', [])
 			};
 		};
 	};
-}]);
+}])
+
+/**
+ * Convert timeStamp to readable date and time
+ */
+.filter('convertTimeStamp', function()
+{
+	return function(stamp)
+	{
+		return Date(stamp).toString('dd-M-yyyy HH:mm');
+	};
+});
 
 
 
