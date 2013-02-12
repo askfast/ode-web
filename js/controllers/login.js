@@ -137,7 +137,7 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Groups, Messages, Storage, Dater)
+var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Groups, Messages, Storage)
 {
 	var self = this;
 
@@ -263,9 +263,6 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
     $('#loginForm').hide();
     $('#preloader').show();
 
-    Dater.getMonthTimeStamps();
-    Dater.getWeekTimeStamps();
-
     //Storage.add('members', angular.toJson({}));
 
     self.progress(20, 'Loading user information..');
@@ -291,6 +288,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
           {
             self.progress(100, 'Everything loaded!');
             Groups.uniqueMembers();
+
             document.location = "#/dashboard";
           });
         });
@@ -451,6 +449,19 @@ loginCtrl.prototype = {
      */
     return ( _.contains(blacklisted, browser) ) ? true : false;
 
+    /*
+     * Underscore contains function
+     */    
+    // // Determine if the array or object contains a given value (using `===`).
+    // // Aliased as `include`.
+    // _.contains = _.include = function(obj, target) {
+    //   if (obj == null) return false;
+    //   if (nativeIndexOf && obj.indexOf === nativeIndexOf) return obj.indexOf(target) != -1;
+    //   return any(obj, function(value) {
+    //     return value === target;
+    //   });
+    // };
+
   }
 
 };
@@ -464,6 +475,5 @@ loginCtrl.$inject = [ '$rootScope',
                       '$md5', 
                       'Groups', 
                       'Messages',
-                      'Storage',
-                      'Dater'];
+                      'Storage'];
 

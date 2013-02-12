@@ -2,21 +2,6 @@
 
 /* Directives */
 
-
-// angular.module('WebPaige.directives', []).
-//   directive('appVersion', ['version', function(version) 
-//   {
-//     return function(scope, elm, attrs) {
-//       elm.text(version);
-//     };
-//   }]);
-
-
-
-
-
-
-
 WebPaige.
 directive('chosen',function()
 {
@@ -39,80 +24,116 @@ directive('chosen',function()
     restrict:'A',
     link: linker
   }
-});
-
-
-
-
+})
 /**
  * TODO
  * Needs attention :)
  * 
  */
-WebPaige.
-directive('daterangepicker', function($timeout)
+.directive('daterangepicker', function($rootScope, $timeout)
 {
-  'use strict';
-
   return {
-
+    /**
+     * Directive type
+     */
     restrict: 'A',
-
+    /**
+     * Directive linker
+     */
     link: function postLink(scope, element, attrs, controller)
     {
       // var startDate = Date.create().addDays(-6),
-      //     endDate   = Date.create();              
-
-      // element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
-     
+      //     endDate   = Date.create();       
+      //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
       element.daterangepicker({
-        //startDate: startDate,
-        //endDate: endDate,
+        // startDate: startDate,
+        // endDate: endDate,
         ranges: {
-                'Today': ['today', 'today'],
-                'Yesterday': ['yesterday', 'yesterday'],
-                'Last 7 Days': [Date.create().addDays(-7), 'today'],
-                'Last 30 Days': [Date.create().addDays(-29), 'today']
+                'Today': ['today', 'tomorrow'],
+                'Tomorrow': ['tomorrow', new Date.today().addDays(2)],
+                'Yesterday': ['yesterday', 'today'],
+                'Next 3 Days': ['today', new Date.create().addDays(3)],
+                'Next 7 Days': ['today', new Date.create().addDays(7)]
             }
-      },function(start, end)
+      },
+      function(start, end)
       {
-        if (start.getTime() == end.getTime())
+        scope.$apply(function()
         {
           /**
-           * TODO
-           * Get timeline zoom into one day!
+           * Calculate difference
            */
-          console.log('same date');
-        };
+          var diff = end.getTime() - start.getTime();
+          /**
+           * Scope is a day
+           */
+          if (diff <= 86400000)
+          {
+            scope.timeline.range = {
+              start: start,
+              end: start
+            };
+            scope.timeline.scope = {
+              day: true,
+              week: false,
+              month: false
+            };
+          }
+          /**
+           * Scope is less than a week
+           */
+          else if (diff < 604800000)
+          {
+            scope.timeline.range = {
+              start: start,
+              end: end
+            };
+            scope.timeline.scope = {
+              day: false,
+              week: true,
+              month: false
+            };
+          }
+          /**
+           * Scope is more than a week
+           */
+          else if (diff > 604800000)
+          {
+            scope.timeline.range = {
+              start: start,
+              end: end
+            };
+            scope.timeline.scope = {
+              day: false,
+              week: false,
+              month: true
+            };
+          };
+          /**
+           * Broadcast for timeliner
+           */
+          $rootScope.$broadcast('timeliner', {
+            from: start,
+            till: end
+          });
+          
+        });
       });
-
-      // scope.$watch(function()
-      // {
-      //   //var dates = element.context.value.split(' / ');
-      //   // element.daterangepicker({
-      //   //   startDate: dates[0],
-      //   //   endDate: dates[1]
-      //   // });
-      //   //element.val(dates[0] + ' / ' + dates[1]);
-        
-      //   console.log('val ->', element.context.value);
-
-      //   //scope.$watch(function()
-      //   //{
-      //     scope.daterange = element.context.value;
-      //   //});
-      // });
-
+      /**
+       * TODO
+       * Maybe better hardcoded?
+       * Set data toggle
+       */
       element.attr('data-toggle', 'daterangepicker');
-
-      // element.daterangepicker({
-      //   autoclose: true
-      // });
-
+      /**
+       * TODO
+       * Investigate if its really needed!!
+       */
+      element.daterangepicker({
+        autoclose: true
+      });
     }
-
   };
-
 });
 
 'use strict';

@@ -11,10 +11,10 @@
     <!-- groups list -->
     <!-- <span style="margin-left: 15px">Group</span> -->
     <select ng-model="timeline.current.group" 
-            style="margin-top: 10px; width: 160px;" 
+            style="margin-top: 10px; width: 160px;"
             ng-options="group.uuid as group.name for group in groups"
             ng-selected="timeline.current.group"
-            ng-change="requestTimeline(timeline.current)">
+            ng-change="changeLocation(timeline.current)">
     </select>
     <!-- end groups list -->
 
@@ -25,10 +25,12 @@
             style="margin-top: 10px; width: 160px;"
             ng-options="division.id as division.label for division in divisions"
             ng-selected="timeline.current.division"
-            ng-change="requestTimeline(timeline.current)">
+            ng-change="changeLocation(timeline.current)">
             
     </select>
     <!-- end divisions list -->
+
+
 
 
     <!-- timeline bar charts -->
@@ -49,29 +51,31 @@
 
     <!-- timeline layout manager -->
     <div  class="btn-group" 
-          style="margin-left: 15px">
-          <!-- bs-buttons-checkbox> -->
+          style="margin-left: 15px" 
+          bs-buttons-checkbox>
 
-      <!-- <button type="button" 
+      <button type="button" 
+              class="btn" 
               ng-model="timeline.current.layouts.user" 
-              class="btn {{(timeline.current.layouts.user==true) && 'active'}}" 
-              ng-click="requestTimeline(timeline.current, 'user')">User</button> -->
+              ng-click="changeLocation(timeline.current, 'user')">User</button>
 
       <button type="button" 
+              class="btn" 
               ng-model="timeline.current.layouts.group" 
-              class="btn {{(timeline.current.layouts.group==true) && 'active'}}" 
-              ng-click="requestTimeline(timeline.current, 'group')">Group</button>
+              ng-click="changeLocation(timeline.current, 'group')">Group</button>
 
       <button type="button" 
+              class="btn" 
               ng-model="timeline.current.layouts.members" 
-              class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-              ng-click="requestTimeline(timeline.current, 'members')">Members</button>
+              ng-click="changeLocation(timeline.current, 'members')">Members</button>
 
     </div>
     <!-- end timeline layout manager -->
 
   </div>
   <!--end groups members controls -->
+
+
 
 </div>
 <!-- end page header -->

@@ -1,6 +1,5 @@
 'use strict';
 
-
 /**
  * Declare app level module which depends on filters, and services
  */
@@ -12,8 +11,6 @@ var WebPaige = angular.module('WebPaige',
     'ngResource']);
 
 
-
-
 /**
  * TODO
  * Finish all the config items and move from other config file
@@ -23,10 +20,24 @@ var WebPaige = angular.module('WebPaige',
  */
 WebPaige.
   value('$config', {
+    /**
+     * App version
+     */
     version: '0.2.0',
+    /**
+     * Blacklisted browsers
+     */
     blacklisted: ['msie'],
+    /**
+     * Data source host
+     */
     host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    //host: 'http://10.200.200.201\\:8888/ns_knrmtest',
     //host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    /**
+     * TODO
+     * All date time related values into one place!
+     */
     date: {
       format: 'dd-M-yyyy'
     },
@@ -36,8 +47,14 @@ WebPaige.
     datetime: {
       format: 'dd-M-yyyy HH:mm tt'
     },
+    /**
+     * Timeline options
+     */
     timeline: {
-      //period: period,
+      /**
+       * REMOVE
+       * Still needed?
+       */
       period: {
         bstart: (parseInt((new Date()).getTime() / 1000) - 86400 * 7 * 1),
         bend:   (parseInt((new Date()).getTime() / 1000) + 86400 * 7 * 1),
@@ -49,13 +66,23 @@ WebPaige.
        * setting properties dynamically is not working yet!!
        */
       settings: {
+        /**
+         * REMOVE
+         * Still needed?
+         */
         ranges: {
           period: this.period,
           reset: this.period
         },
+        /**
+         * Zoom value
+         */
         zoomValue: '0.4' 
       },
-      // TODO combine options with settings
+      /**
+       * TODO 
+       * Combine options with settings
+       */
       options: {
         axisOnTop: true,
         width: '100%',
@@ -68,66 +95,97 @@ WebPaige.
         //showNavigation: true,
         groupsChangeable: true,
         // periods
-        start: Date.today().add({ days: -2 }),
-        end: Date.today().add({ days: 12 }),
+        //start: Date.today().add({ days: -2 }),
+        //end: Date.today().add({ days: 12 }),
         // end periods
         //min: "2013-01-01T00:00:00.000Z",
         //max: "2013-12-31T00:00:00.000Z",
-        
-        //intervalMin: 1000 * 60 * 60 * 1,
+        // intervals
+        intervalMin: 1000 * 60 * 60 * 1,
         //intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
+      },
+      config: {
+        /**
+         * Bar charts for group agg. data
+         */
+        bar: false,
+        /**
+         * Availability states
+         */
+        states: {
+          'com.ask-cs.State.Available': {
+              'className': 'state-available',
+              'label': 'Beschikbaar',
+              'color': '#4f824f',
+              'type': 'Beschikbaar'
+          },
+          'com.ask-cs.State.KNRM.BeschikbaarNoord': {
+              'className': 'state-available-north',
+              'label': 'Beschikbaar voor Noord',
+              'color': '#000',
+              'type': 'Beschikbaar'
+          },
+          'com.ask-cs.State.KNRM.BeschikbaarZuid': {
+              'className': 'state-available-south',
+              'label': 'Beschikbaar voor Zuid',
+              'color': '#e08a0c',
+              'type': 'Beschikbaar'
+          },
+          'com.ask-cs.State.Unavailable': {
+              'className': 'state-unavailable',
+              'label': 'Niet Beschikbaar',
+              'color': '#a93232',
+              'type': 'Niet Beschikbaar'
+          },
+          'com.ask-cs.State.KNRM.SchipperVanDienst': {
+              'className': 'state-schipper-service',
+              'label': 'Schipper van Dienst',
+              'color': '#e0c100',
+              'type': 'Beschikbaar'
+          },
+          'com.ask-cs.State.Unreached': {
+              'className': 'state-unreached',
+              'label': 'Niet Bereikt',
+              'color': '#65619b',
+              'type': 'Niet Beschikbaar'
+          }
+        },
+        /**
+         * Any given divisions
+         */
+        divisions: [
+          {
+            id: 'all',
+            label: 'All divisions'
+          },
+          {
+            id: 'knrm.StateGroup.BeschikbaarNoord',
+            label: 'Noord'
+          },
+          {
+            id: 'knrm.StateGroup.BeschikbaarZuid',
+            label: 'Zuid'
+          }
+        ],
+        /**
+         * Density based colors for group aggs.
+         */
+        //densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'] 
+        densities: {
+          less: '#a0a0a0',
+          even: '#ba6a24',
+          one: '#415e6b',
+          two: '#3d5865',
+          three: '#344c58',
+          four: '#2f4550',
+          five: '#2c424c',
+          six: '#253943',
+          more: '#486877'
+        }   
       }
     },
-    states: {
-      'com.ask-cs.State.Available': {
-          'className': 'state-available',
-          'label': 'Beschiekbaar',
-          'color': '#4f824f',
-          'type': 'Beschikbaar'
-      },
-      'com.ask-cs.State.KNRM.BeschikbaarNoord': {
-          'className': 'state-available-north',
-          'label': 'Beschikbaar voor Noord',
-          'color': '#000',
-          'type': 'Beschikbaar'
-      },
-      'com.ask-cs.State.KNRM.BeschikbaarZuid': {
-          'className': 'state-available-south',
-          'label': 'Beschikbaar voor Zuid',
-          'color': '#e08a0c',
-          'type': 'Beschikbaar'
-      },
-      'com.ask-cs.State.Unavailable': {
-          'className': 'state-unavailable',
-          'label': 'Niet Beschikbaar',
-          'color': '#a93232',
-          'type': 'Niet Beschikbaar'
-      },
-      'com.ask-cs.State.KNRM.SchipperVanDienst': {
-          'className': 'state-schipper-service',
-          'label': 'Schipper van Dienst',
-          'color': '#e0c100',
-          'type': 'Beschikbaar'
-      },
-      'com.ask-cs.State.Unreached': {
-          'className': 'state-unreached',
-          'label': 'Niet Bereikt',
-          'color': '#65619b',
-          'type': 'Niet Beschikbaar'
-      }
-    },
-    divisions: {
-      'knrm.StateGroup.BeschikbaarNoord': {
-        'label': 'Noord'
-      },
-      'knrm.StateGroup.BeschikbaarZuid': {
-        'label': 'Zuid'
-      }
-    }
   }
-);
-
-
+)
 
 
 /**
@@ -135,10 +193,13 @@ WebPaige.
  * There is also configuration tree defined in services
  * for default values
  */
-WebPaige.config(function($locationProvider, $routeProvider)
+.config(function($locationProvider, $routeProvider)
   {
     //$locationProvider.html5Mode(true);
 
+    /**
+     * Routes
+     */
     $routeProvider
       /**
        * Login
@@ -165,7 +226,15 @@ WebPaige.config(function($locationProvider, $routeProvider)
       /**
        * Planboard
        */
-      .when('/planboard', {
+      // .when('/planboard/:layouts/:groupId/:division/:month', {
+      //     templateUrl: 'partials/planboard.html', 
+      //     controller: planboardCtrl,
+      //     resolve: planboardCtrl.resolve    
+      // })
+      /**
+       * Planboard
+       */
+      .when('/planboard/', {
           templateUrl: 'partials/planboard.html', 
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    
@@ -240,32 +309,29 @@ WebPaige.config(function($locationProvider, $routeProvider)
     	redirectTo: '/login'
     });
 
-  });
-
-
-
-
-
-
-
-
-
-
-
+  })
 
 
 /**
  * Initial run functions
  */
-WebPaige.run(
-['$rootScope', '$location', '$timeout', 'Session',  
-function($rootScope, $location, $timeout, Session)
+.run(
+['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage',
+function($rootScope, $location, $timeout, Session, Dater, Storage)
 {
+  /**
+   * If periods are not present calculate them
+   */
+  if (!Storage.get('periods'))
+  {
+    Dater.registerPeriods();
+  };
 
 
-
+  /**
+   * Cehck for valid session
+   */
   Session.check();
-
 
 
   /**
@@ -275,12 +341,22 @@ function($rootScope, $location, $timeout, Session)
    */
   $rootScope.sessionID = localStorage.getItem('sessionID');
 
+
+  /**
+   * REMOVE
+   * Still needed?
+   */
   $rootScope.saveSession = function(sessionID)
   {
     localStorage.setItem('sessionID', sessionID);
     $rootScope.notify( { message: 'New sessionID is set.' } );
   };
 
+
+  /**
+   * REMOVE
+   * Still needed?
+   */
   $rootScope.clearLocalSlots = function()
   {
     var sessionID = localStorage.getItem('sessionID');    
@@ -302,7 +378,6 @@ function($rootScope, $location, $timeout, Session)
   };
 
 
-
   /**
    * TODO
    * This values should be originating from
@@ -315,12 +390,10 @@ function($rootScope, $location, $timeout, Session)
   //$rootScope.user = angular.fromJson((localStorage.getItem('resources') || {}));
 
 
-
   /**
    * TODO
    */
   $rootScope.page = new Object;
-
 
 
   /**
@@ -333,7 +406,6 @@ function($rootScope, $location, $timeout, Session)
      * Define a dynamic way for page titles
      */
     $rootScope.page.title = $location.url();
-
 
     /**
      * TODO
@@ -348,7 +420,6 @@ function($rootScope, $location, $timeout, Session)
     //if (!Session.check()) window.location = "#/login";
 
 
-
     $rootScope.alertType = "";
     $rootScope.alertMessage = "Loading...";
     $rootScope.active = "progress-striped active progress-warning";
@@ -361,7 +432,7 @@ function($rootScope, $location, $timeout, Session)
   $rootScope.$on("$routeChangeSuccess", function (event, current, previous) 
   {
     $rootScope.alertType = "alert-success";
-    $rootScope.alertMessage = "Successfully changed routes :]";
+    $rootScope.alertMessage = "Successfully loaded :]";
     $rootScope.active = "progress-success";
 
     $rootScope.newLocation = $location.path();
@@ -375,7 +446,7 @@ function($rootScope, $location, $timeout, Session)
   {
     alert("ROUTE CHANGE ERROR: " + rejection);
     $rootScope.alertType = "alert-error";
-    $rootScope.alertMessage = "Failed to change routes :[";
+    $rootScope.alertMessage = "Failed to load data :[";
     $rootScope.active = "";
   });
 
@@ -385,7 +456,6 @@ function($rootScope, $location, $timeout, Session)
    */
   $rootScope.alertType = "alert-info";
   $rootScope.alertMessage = "Welcome to the resolve demo";
-
 
 
   /**
@@ -413,48 +483,3 @@ function($rootScope, $location, $timeout, Session)
 
 
 }]);
-
-
-
-
-
-/**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- */
-
-
-
-
-
-
-/* Other Controllers */
-
-// function StrapCtrl($scope)
-// {
-//   $scope.dropdown = [
-//     {text: 'Another action', href: '#anotherAction'},
-//     {text: 'Something else here', href: '#', click: 'modal.saved=true'},
-//     {divider: true},
-//     {text: 'Separated link', href: '#',
-//       submenu: [
-//         {text: 'Second level link', href: '#'},
-//         {text: 'Second level link 2', href: '#'}
-//       ]
-//     }
-//   ];
-//   $scope.formattedDropdown = "[\n  {text: 'Another action', href:'#anotherAction'},\n  {text: 'Another action', href:'#anotherAction'},\n  {divider: true},\n  {text: 'Separated link', href:'#', submenu: [\n    {text: 'Second level link', href: '#'},\n    {text: 'Second level link 2', href: '#'}\n  ]}\n]";
-//   $scope.modal = {content: 'Hello Modal', saved: false};
-//   $scope.tooltip = {title: "Hello Tooltip<br />This is a multiline message!"};
-//   $scope.popover = {content: "Hello Popover<br />This is a multiline message!", saved: false};
-//   $scope.button = {active: true};
-//   $scope.buttonSelect = {price: '89,99', currency: '€'};
-//   $scope.checkbox = {left: false, middle: true, right: false};
-//   $scope.typeahead = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
-//   $scope.datepicker = {date: ''};
-//   $scope.timepicker = {time: '01:45 PM'}; 
-// }
-// StrapCtrl.$inject = ['$scope'];
-
