@@ -56,6 +56,23 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   );
 
 
+  /**
+   * Wishes resource
+   */
+  var Wishes = $resource(
+    $config.host + '/network/:id/wish',
+    {
+    },
+    {
+      query: {
+        method: 'GET',
+        params: {id: '', start:'', end:''},
+        isArray: true
+      }
+    }
+  );
+
+
 
 
 
@@ -215,22 +232,25 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
            * TODO
            * This causes an issue of rendering someone else's timeline
            */
-          user:   angular.fromJson(Storage.get('resources')).uuid
+          user:   angular.fromJson(Storage.get('resources')).uuid,
+          start:  options.stamps.start / 1000,
+          end:    options.stamps.end / 1000
         },
         data = {};
-    /**
-     * Is it monthly view or custom range?
-     */
-    if (options.custom)
-    {
-      params.start = options.custom.start / 1000;
-      params.end = options.custom.end / 1000;
-    }
-    else
-    {
-      params.start = periods.months[options.month].first.timeStamp / 1000;
-      params.end = periods.months[options.month].last.timeStamp / 1000;
-    }
+
+    // /**
+    //  * Is it monthly view or custom range?
+    //  */
+    // if (options.custom)
+    // {
+    //   params.start = options.periods.start / 1000;
+    //   params.end = options.periods.end / 1000;
+    // }
+    // else
+    // {
+    //   params.start = periods.months[options.month].first.timeStamp / 1000;
+    //   params.end = periods.months[options.month].last.timeStamp / 1000;
+    // }
 
     /**
      * Fetch first user slots
@@ -289,8 +309,10 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
                */
               calls.push(Slots.prototype.user({
                 user: member.uuid,
-                start: periods.months[options.month].first.timeStamp / 1000,
-                end: periods.months[options.month].last.timeStamp / 1000,
+                //start: periods.months[options.month].first.timeStamp / 1000,
+                //end: periods.months[options.month].last.timeStamp / 1000,
+                start: params.start,
+                end: params.end,
                 type: 'both'
               }));
             });

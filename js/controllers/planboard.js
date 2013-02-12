@@ -110,7 +110,7 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
    */
   $scope.barCharts = function()
   {
-    $scope.timeline.bar = !$scope.timeline.bar;
+    $scope.timeline.config.bar = !$scope.timeline.config.bar;
     timeliner({
       start:  $scope.timeline.range.from,
       end:    $scope.timeline.range.till
@@ -122,6 +122,19 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
     render();
   });
   */
+  
+
+  /**
+   * Group wishes toggler
+   */
+  $scope.groupWishes = function()
+  {
+    $scope.timeline.bar = !$scope.timeline.bar;
+    timeliner({
+      start:  $scope.timeline.range.from,
+      end:    $scope.timeline.range.till
+    });    
+  };
 
 
   /**
@@ -275,9 +288,15 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
       Slots.all({
         groupId: $scope.timeline.current.group,
         division: $scope.timeline.current.division,
-        month: $scope.timeline.current.month,
         layouts: $scope.timeline.current.layouts,
-        custom: options
+          
+        month: $scope.timeline.current.month,
+        stamps: {
+          // start:  options.start.getTime(),
+          // end:    options.end.getTime()
+          start:  new Date($scope.timeline.range.start).getTime(),
+          end:    new Date($scope.timeline.range.end).getTime()
+        },
       })
       .then(function(data)
       {
@@ -444,7 +463,15 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
         Slots.all({
           groupId: $scope.timeline.current.group,
           division: $scope.timeline.current.division,
+          
           month: $scope.timeline.current.month,
+          stamps: {
+            // start:  periods.months[$scope.timeline.current.month].first.timeStamp,
+            // end:    periods.months[$scope.timeline.current.month].last.timeStamp
+            start:  new Date($scope.timeline.range.from).getTime(),
+            end:    new Date($scope.timeline.range.till).getTime()
+          },
+
           layouts: $scope.timeline.current.layouts
         })
         .then(function(data)
@@ -545,7 +572,15 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
         Slots.all({
           groupId: $scope.timeline.current.group,
           division: $scope.timeline.current.division,
+          
           month: $scope.timeline.current.month,
+          stamps: {
+            // start:  periods.months[$scope.timeline.current.month].first.timeStamp,
+            // end:    periods.months[$scope.timeline.current.month].last.timeStamp
+            start:  new Date($scope.timeline.range.from).getTime(),
+            end:    new Date($scope.timeline.range.till).getTime()
+          },
+
           layouts: $scope.timeline.current.layouts
         })
         .then(function(data)
@@ -615,7 +650,15 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
     Slots.all({
       groupId: $scope.timeline.current.group,
       division: $scope.timeline.current.division,
+
       month: $scope.timeline.current.month,
+      stamps: {
+        // start:  periods.months[$scope.timeline.current.month].first.timeStamp,
+        // end:    periods.months[$scope.timeline.current.month].last.timeStamp
+        start:  new Date($scope.timeline.range.from).getTime(),
+        end:    new Date($scope.timeline.range.till).getTime()
+      },
+
       layouts: $scope.timeline.current.layouts
     })
     .then(function(data)
@@ -1021,16 +1064,34 @@ planboardCtrl.resolve = {
   data: function ($route, Slots, Storage) 
   {
     /**
-     * Set first group and current month for the planboard link
+     * Fetch periods
      */
-    var groups = angular.fromJson(Storage.get('groups'));
+    var periods = angular.fromJson(Storage.get('periods')),
+        /**
+         * Set initial period for starting timeline
+         */
+        initial = periods.months[new Date().toString('M')],
+        /**
+         * Set first group and current month for the planboard link
+         */
+        groups = angular.fromJson(Storage.get('groups'));
     /**
      * Fetch the data from model
      */
     return Slots.all({
+      // Startup group
       groupId: groups[0].uuid,
+      // Startup division
       division: 'all',
+      // Startup periods
+      stamps: {
+        start:  initial.first.timeStamp,
+        end:    initial.last.timeStamp
+      },
+
       month: new Date().toString('M'),
+
+      // Startup layouts
       layouts: {
         user: true,
         group: true,

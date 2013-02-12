@@ -11,7 +11,7 @@
     <!-- groups list -->
     <!-- <span style="margin-left: 15px">Group</span> -->
     <select ng-model="timeline.current.group" 
-            style="margin-top: 10px; width: 160px;" 
+            style="margin-top: 10px; width: 160px; margin-right:10px" 
             ng-options="group.uuid as group.name for group in groups"
             ng-selected="timeline.current.group"
             ng-change="requestTimeline(timeline.current)">
@@ -37,19 +37,33 @@
 
       <button type="button" 
               class="btn" 
-              ng-click="barCharts()"
-              ng-model="timeline.config.bar" 
-              bs-button>Bar charts</button>
+              ng-click="barCharts()" 
+              class="btn {{(timeline.config.bar==true) && 'active'}}" 
+              ng-model="timeline.config.bar">Bar charts</button>
 
     </div>
     <!-- end timeline bar charts -->
+
+
+    <!-- group wishes -->
+    <div  class="btn-group" 
+          style="margin-left: 10px">
+
+      <button type="button" 
+              class="btn btn-warning" 
+              ng-click="groupWishes()"
+              class="btn {{(timeline.config.wishes==true) && 'active'}}" 
+              ng-model="timeline.config.wishes">Wishes</button>
+
+    </div>
+    <!-- end group wishes -->
 
 
 
 
     <!-- timeline layout manager -->
     <div  class="btn-group" 
-          style="margin-left: 15px">
+          style="margin-left: 10px">
           <!-- bs-buttons-checkbox> -->
 
       <!-- <button type="button" 
@@ -77,6 +91,12 @@
 <!-- end page header -->
 
 <hr>
+
+
+
+{{timeline.config}}
+
+
 
 <!-- timeline controls -->
 <div class="row" style="padding-left: 30px; overflow: hidden">
