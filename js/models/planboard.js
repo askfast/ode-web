@@ -211,17 +211,26 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     var deferred = $q.defer(),
         periods = Dater.getPeriods(),
         params = {
-          user:   angular.fromJson(Storage.get('resources')).uuid,
-          start:  periods.months[options.month].first.timeStamp / 1000, 
-          end:    periods.months[options.month].last.timeStamp / 1000
+          /**
+           * TODO
+           * This causes an issue of rendering someone else's timeline
+           */
+          user:   angular.fromJson(Storage.get('resources')).uuid
         },
         data = {};
-        // layouts = ($route.current.params.layouts).split(':'),
-        // section = {
-        //   user:     (layouts[0] == 1) ? true : false,
-        //   group:    (layouts[1] == 1) ? true : false,
-        //   members:  (layouts[2] == 1) ? true : false
-        // };
+    /**
+     * Is it monthly view or custom range?
+     */
+    if (options.custom)
+    {
+      params.start = options.custom.start / 1000;
+      params.end = options.custom.end / 1000;
+    }
+    else
+    {
+      params.start = periods.months[options.month].first.timeStamp / 1000;
+      params.end = periods.months[options.month].last.timeStamp / 1000;
+    }
 
     /**
      * Fetch first user slots

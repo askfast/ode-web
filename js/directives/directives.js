@@ -111,6 +111,7 @@ directive('chosen',function()
             from: start,
             till: end
           });
+          
         });
       });
       /**
