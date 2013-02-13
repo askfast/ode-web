@@ -197,6 +197,25 @@ div.timeline-navigation-move-right {
 
 
 
+.state-loading-left {
+    margin:0;
+    background-color: #ddd;
+    /*border:1px solid #4f824f;*/
+    border-bottom: 10px solid #ddd;
+    // text-indent: -9999px;
+    text-align: right;
+}
+
+.state-loading-right {
+    margin:0;
+    background-color: #ddd;
+    /*border:1px solid #4f824f;*/
+    border-bottom: 10px solid #ddd;
+    // text-indent: -9999px;
+    text-align: left;
+}
+
+
 .state-available {
     margin:0;
     background-color: #4f824f;
@@ -316,6 +335,82 @@ div.timeline-navigation-move-right {
     /*border:1px solid #486877;*/
     border-bottom: 10px solid #486877;
     text-indent: -9999px;
+}
+
+
+
+
+.wishes-less {
+    margin:0;
+    background-color: #a0a0a0;
+    /*border:1px solid #a0a0a0;*/
+    border-bottom: 10px solid #a0a0a0;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-even {
+    margin:0;
+    background-color: #ba6a24;
+    /*border:1px solid #ba6a24;*/
+    border-bottom: 10px solid #ba6a24;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-1 {
+    margin:0;
+    background-color: #415e6b;
+    /*border:1px solid #415e6b;*/
+    border-bottom: 10px solid #415e6b;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-2 {
+    margin:0;
+    background-color: #3d5865;
+    /*border:1px solid #3d5865;*/
+    border-bottom: 10px solid #3d5865;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-3 {
+    margin:0;
+    background-color: #344c58;
+    /*border:1px solid #344c58;*/
+    border-bottom: 10px solid #344c58;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-4 {
+    margin:0;
+    background-color: #2f4550;
+    /*border:1px solid #2f4550;*/
+    border-bottom: 10px solid #2f4550;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-5 {
+    margin:0;
+    background-color: #2c424c;
+    /*border:1px solid #2c424c;*/
+    border-bottom: 10px solid #2c424c;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-6 {
+    margin:0;
+    background-color: #253943;
+    /*border:1px solid #253943;*/
+    border-bottom: 10px solid #253943;
+    // text-indent: -9999px;
+    text-align: center;
+}
+.wishes-more {
+    margin:0;
+    background-color: #486877;
+    /*border:1px solid #486877;*/
+    border-bottom: 10px solid #486877;
+    // text-indent: -9999px;
+    text-align: center;
 }
 
 

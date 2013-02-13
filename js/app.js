@@ -32,7 +32,7 @@ WebPaige.
      * Data source host
      */
     host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
-    //host: 'http://10.200.200.201\\:8888/ns_knrmtest',
+    //host: 'http://10.200.200.100\\:8888/ns_knrmtest',
     //host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
     /**
      * TODO
@@ -109,6 +109,10 @@ WebPaige.
          * Bar charts for group agg. data
          */
         bar: false,
+        /**
+         * Group wishes setting
+         */
+        wishes: true,
         /**
          * Availability states
          */

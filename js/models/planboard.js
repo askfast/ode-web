@@ -79,6 +79,35 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
 
 
+  /**
+   * Get group aggs
+   */
+  Slots.prototype.wishes = function (options) 
+  {
+    /**
+     * Default params
+     */
+    var deferred = $q.defer(),
+        params = {
+          id: options.id,
+          start: options.start,
+          end: options.end
+        };
+    /**
+     * Fetch wishes
+     */
+    Wishes.query(params, function (result) 
+    {
+      deferred.resolve(result);
+    });
+    return deferred.promise;
+  };
+
+
+
+
+
+
 
 
 
@@ -113,107 +142,22 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Aggs.query(params, function (result) 
     {
-      deferred.resolve({
-        id: options.id,
-        division: options.division,
-        data: result
+      /**
+       * Fetch the wishes
+       */
+      Slots.prototype.wishes(params)
+      .then(function(wishes)
+      {
+        deferred.resolve({
+          id: options.id,
+          division: options.division,
+          wishes: wishes,
+          data: result
+        });
       });
     });
     return deferred.promise;
   };
-
-
-
-
-
-
-
-
-
-
-
-  // /**
-  //  * Get group aggs
-  //  */
-  // Slots.prototype.aggs___ = function (options) 
-  // {
-  //   /**
-  //    * Default params
-  //    */
-  //   var deferred = $q.defer(),
-  //       params = {
-  //         id: options.id,
-  //         start: options.start,
-  //         end: options.end
-  //       };
-  //       //,aggs = angular.fromJson(Storage.get('aggs')) || {};
-
-  //   /**
-  //    * Check if box exists otherwsie create it
-  //    */
-  //   if (aggs[params.id] && aggs[params.id][options.month])
-  //   {
-  //     deferred.resolve({
-  //         id: params.id,
-  //         division: options.division,
-  //         data: aggs[params.id][options.month]
-  //     });
-  //   }
-  //   else
-  //   {
-  //     /**
-  //      * If specific division is selected
-  //      */
-  //     if (options.division != undefined)
-  //     {
-  //       params.stateGroup = options.division;
-  //     };
-
-  //     /**
-  //      * Fetch aggs
-  //      */
-  //     Aggs.query(params, function (result) 
-  //     {
-  //       /**
-  //        * Check if box exists otherwsie create it
-  //        */
-  //       if (aggs[params.id])
-  //       {
-  //         aggs[params.id][options.month] = result;
-  //       }
-  //       else
-  //       {
-  //         aggs[params.id] = {};
-  //         aggs[params.id][options.month] = result;
-  //       };
-  //       /**
-  //        * Save data to localstorage
-  //        */
-  //       Storage.add('aggs', angular.toJson(aggs));
-          
-  //       deferred.resolve({
-  //         id: options.id,
-  //         division: options.division,
-  //         data: result
-  //       });
-  //     });
-      
-  //   };
-
-  //   return deferred.promise;
-  // };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -330,7 +274,11 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
                 groupId: options.groupId,
                 aggs: aggs,
                 members: members,
-                synced: new Date().getTime()
+                synced: new Date().getTime(),
+                periods: {
+                  start: options.stamps.start,
+                  end: options.stamps.end
+                }
               });
 
             });
@@ -341,7 +289,11 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
               user: user,
               groupId: options.groupId,
               aggs: aggs,
-              synced: new Date().getTime()
+              synced: new Date().getTime(),
+              periods: {
+                start: options.stamps.start,
+                end: options.stamps.end
+              }
             });
           };
         });
@@ -351,7 +303,11 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       {
         deferred.resolve({
           user: user,
-          synced: new Date().getTime()
+          synced: new Date().getTime(),
+          periods: {
+            start: options.stamps.start,
+            end: options.stamps.end
+          }
         });
 
         // /**
