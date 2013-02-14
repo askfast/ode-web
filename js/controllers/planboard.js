@@ -285,58 +285,42 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
       end: arguments[1].end
     };
     /**
-     * Check whether custom scope is outside of of timeline.current.month
+     * TODO
+     * Unify this later on with route change preloader
+     * Workaround for preloader
      */
-    if (options.start.getTime() <= periods.months[$scope.timeline.current.month].first.timeStamp || 
-        options.end.getTime() >= periods.months[$scope.timeline.current.month].last.timeStamp)
+    $rootScope.alertType = "";
+    $rootScope.alertMessage = "Loading...";
+    $rootScope.active = "progress-striped active progress-warning";
+    /**
+     * Fetch new data
+     */
+    Slots.all({
+      groupId: $scope.timeline.current.group,
+      division: $scope.timeline.current.division,
+      layouts: $scope.timeline.current.layouts,
+        
+      month: $scope.timeline.current.month,
+      stamps: {
+        start:  new Date($scope.timeline.range.start).getTime(),
+        end:    new Date($scope.timeline.range.end).getTime()
+      },
+    })
+    .then(function(data)
     {
+      $scope.data = data;
       /**
-       * TODO
-       * Unify this later on with route change preloader
-       * Workaround for preloader
-       */
-      $rootScope.alertType = "";
-      $rootScope.alertMessage = "Loading...";
-      $rootScope.active = "progress-striped active progress-warning";
-      /**
-       * Fetch new data
-       */
-      Slots.all({
-        groupId: $scope.timeline.current.group,
-        division: $scope.timeline.current.division,
-        layouts: $scope.timeline.current.layouts,
-          
-        month: $scope.timeline.current.month,
-        stamps: {
-          // start:  options.start.getTime(),
-          // end:    options.end.getTime()
-          start:  new Date($scope.timeline.range.start).getTime(),
-          end:    new Date($scope.timeline.range.end).getTime()
-        },
-      })
-      .then(function(data)
-      {
-        $scope.data = data;
-        /**
-         * Adjust timeline for new period
-         */
-        timeliner(options);
-        /**
-         * TODO
-         * Workaround for preloader
-         */
-        $rootScope.alertType = "alert-success";
-        $rootScope.alertMessage = "Successfully loaded :]";
-        $rootScope.active = "progress-success";
-      }); 
-    }
-    else
-    {   
-      /**
-       * Timeline it baby!
+       * Adjust timeline for new period
        */
       timeliner(options);
-    };
+      /**
+       * TODO
+       * Workaround for preloader
+       */
+      $rootScope.alertType = "alert-success";
+      $rootScope.alertMessage = "Successfully loaded :]";
+      $rootScope.active = "progress-success";
+    }); 
   });
 
 
@@ -405,7 +389,80 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
 
 
 
+  /**
+   * Handle new requests for timeline
+   */
+  $scope.requestTimeline = function(current, section)
+  {
+    switch (section)
+    {
+      case 'group':
+          $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
+          /**
+           * Check if when group is deselected when members is deselected as well
+           */
+          if ($scope.timeline.current.layouts.members && 
+              !$scope.timeline.current.layouts.group)
+          {
+            $scope.timeline.current.layouts.members = false;
+          };
+        break;
+      case 'members':
+          $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
+          /**
+           * Check if group is selected when members is selected
+           */
+          if ($scope.timeline.current.layouts.members && 
+              !$scope.timeline.current.layouts.group)
+          {
+            $scope.timeline.current.layouts.group = true;
+          };
+        break;
+    };
 
+    /**
+     * TODO
+     * Unify this later on with route change preloader
+     * Workaround for preloader
+     */
+    $rootScope.alertType = "";
+    $rootScope.alertMessage = "Loading...";
+    $rootScope.active = "progress-striped active progress-warning";
+    /**
+     * Fetch new data
+     */
+    Slots.all({
+      groupId: $scope.timeline.current.group,
+      division: $scope.timeline.current.division,
+
+      month: $scope.timeline.current.month,
+      stamps: {
+        start:  new Date($scope.timeline.range.start).getTime(),
+        end:    new Date($scope.timeline.range.end).getTime()
+      },
+
+      layouts: $scope.timeline.current.layouts
+    })
+    .then(function(data)
+    {
+      $scope.data = data;
+      render();
+      /**
+       * TODO
+       * Workaround for preloader
+       */
+      $rootScope.alertType = "alert-success";
+      $rootScope.alertMessage = "Successfully loaded :]";
+      $rootScope.active = "progress-success";
+    });
+
+  };
+
+
+
+  /**
+   * Generic data loader and timeline renderer
+   */
   function loadTimeline(options)
   {
     /**
@@ -551,75 +608,6 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
         loadTimeline(periods.months[$scope.timeline.current.month]);
       };
     };
-  };
-
-
-
-  /**
-   * Handle new requests for timeline
-   */
-  $scope.requestTimeline = function(current, section)
-  {
-    switch (section)
-    {
-      case 'group':
-          $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
-          /**
-           * Check if when group is deselected when members is deselected as well
-           */
-          if ($scope.timeline.current.layouts.members && 
-              !$scope.timeline.current.layouts.group)
-          {
-            $scope.timeline.current.layouts.members = false;
-          };
-        break;
-      case 'members':
-          $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
-          /**
-           * Check if group is selected when members is selected
-           */
-          if ($scope.timeline.current.layouts.members && 
-              !$scope.timeline.current.layouts.group)
-          {
-            $scope.timeline.current.layouts.group = true;
-          };
-        break;
-    };
-    /**
-     * TODO
-     * Unify this later on with route change preloader
-     * Workaround for preloader
-     */
-    $rootScope.alertType = "";
-    $rootScope.alertMessage = "Loading...";
-    $rootScope.active = "progress-striped active progress-warning";
-    /**
-     * Fetch new data
-     */
-    Slots.all({
-      groupId: $scope.timeline.current.group,
-      division: $scope.timeline.current.division,
-
-      month: $scope.timeline.current.month,
-      stamps: {
-        start:  new Date($scope.timeline.range.start).getTime(),
-        end:    new Date($scope.timeline.range.end).getTime()
-      },
-
-      layouts: $scope.timeline.current.layouts
-    })
-    .then(function(data)
-    {
-      $scope.data = data;
-      render();
-      /**
-       * TODO
-       * Workaround for preloader
-       */
-      $rootScope.alertType = "alert-success";
-      $rootScope.alertMessage = "Successfully loaded :]";
-      $rootScope.active = "progress-success";
-    });
   };
 
 
