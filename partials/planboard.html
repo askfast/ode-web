@@ -11,7 +11,7 @@
     <!-- groups list -->
     <!-- <span style="margin-left: 15px">Group</span> -->
     <select ng-model="timeline.current.group" 
-            style="margin-top: 10px; width: 160px;" 
+            style="margin-top: 10px; width: 160px; margin-right:10px" 
             ng-options="group.uuid as group.name for group in groups"
             ng-selected="timeline.current.group"
             ng-change="requestTimeline(timeline.current)">
@@ -36,20 +36,32 @@
           style="margin-left: 10px">
 
       <button type="button" 
-              class="btn" 
-              ng-click="barCharts()"
-              ng-model="timeline.config.bar" 
-              bs-button>Bar charts</button>
+              ng-click="barCharts()" 
+              class="btn {{(timeline.config.bar==true) && 'active'}}" 
+              ng-model="timeline.config.bar">Bar charts</button>
 
     </div>
     <!-- end timeline bar charts -->
+
+
+    <!-- group wishes -->
+    <div  class="btn-group" 
+          style="margin-left: 10px">
+
+      <button type="button" 
+              ng-click="groupWishes()"
+              class="btn {{(timeline.config.wishes==true) && 'active'}}" 
+              ng-model="timeline.config.wishes">Wishes</button>
+
+    </div>
+    <!-- end group wishes -->
 
 
 
 
     <!-- timeline layout manager -->
     <div  class="btn-group" 
-          style="margin-left: 15px">
+          style="margin-left: 10px">
           <!-- bs-buttons-checkbox> -->
 
       <!-- <button type="button" 
@@ -182,16 +194,16 @@
 <div class="row" style="padding-left: 30px">
   <form class="form-inline well">
 
-    <!-- slot from -->
+    <!-- slot start -->
     <span>From</span>
 
     <!-- date -->
     <div class="control-group" style="display: inline;">
 
-      <input  name="date-from" 
+      <input  name="date-start" 
               style="width: 105px" 
               type="text" 
-              ng-model="slot.from.date" 
+              ng-model="slot.start.date" 
               data-date-format="dd-mm-yyyy" 
               bs-datepicker="">
 
@@ -207,28 +219,28 @@
     <!-- time -->
     <div class="control-group" style="display: inline; margin-left: 5px">
 
-      <input  name="time-from" 
+      <input  name="time-start" 
               type="text" 
               class="input-small" 
-              ng-model="slot.from.time" 
+              ng-model="slot.start.time" 
               bs-timepicker>
 
       <i class="icon-time" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
     </div>
     <!-- end time -->
 
-    <!-- end slot from -->
+    <!-- end slot start -->
 
-    <!-- slot till -->
+    <!-- slot end -->
     <span style="margin-left: 15px">Till</span>
 
     <!-- date -->
     <div class="control-group" style="display: inline;">
 
-      <input  name="date-till" 
+      <input  name="date-end" 
               style="width: 105px"  
               type="text" 
-              ng-model="slot.till.date" 
+              ng-model="slot.end.date" 
               data-date-format="dd-mm-yyyy" 
               bs-datepicker="">
 
@@ -244,17 +256,17 @@
     <!-- time -->
     <div class="control-group" style="display: inline; margin-left: 5px">
 
-      <input  name="time-till" 
+      <input  name="time-end" 
               type="text" 
               class="input-small" 
-              ng-model="slot.till.time" 
+              ng-model="slot.end.time" 
               bs-timepicker>
 
       <i class="icon-time" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
     </div>
     <!-- end time -->
 
-    <!-- end slot till -->
+    <!-- end slot end -->
 
     <!-- slot state -->
     <span style="margin-left: 15px">State</span>
