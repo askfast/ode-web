@@ -115,6 +115,10 @@ WebPaige.
          */
         wishes: false,
         /**
+         * Timeline legenda setting
+         */
+        legenda: true,
+        /**
          * Availability states
          */
         states: {

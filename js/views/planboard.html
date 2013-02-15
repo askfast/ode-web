@@ -290,61 +290,6 @@
           <div id="timeline-toolbar">
 
 
-            <!-- legenda
-            <div class="btn-group">
-              <button class="btn dropdown-toggle" data-toggle="dropdown">Legenda <span class="caret"></span></button>
-              <ul class="dropdown-menu">
-
-                <li>
-                  <a href="">
-                    <div style="background-color: #4f824f;"></div> 
-                    Beschikbaar Beide
-                  </a>
-                </li>
-                <li>
-                  <a href="">
-                    <div style="border-top:7px solid black; background-color: #4f824f; height: 7px"></div> 
-                    Beschikbaar Noord
-                  </a>
-                </li>
-                <li>
-                  <a href="">
-                    <div style="border-top:7px solid #e08a0c; background-color: #4f824f; height: 7px;"></div> 
-                    Beschikbaar Zuid
-                  </a>
-                </li>
-                <li>
-                  <a href="">
-                    <div style="border-top:7px solid #e0c100; background-color: #4f824f; height: 7px;"></div> 
-                    Schipper Van Dienst
-                  </a>
-                </li>
-                <li>
-                  <a href="">
-                    <div style="background-color: #a93232;"></div> 
-                    Niet Beschikbaar
-                  </a>
-                </li>
-                <li>
-                  <a href="">
-                    <div style="background-color: #65619b;"></div> 
-                    Niet Bereikt
-                  </a>
-                </li>
-
-                <li class="divider"></li>
-
-                <li><a href="#">Separated link</a></li>
-
-              </ul>
-            </div>
-            end legenda -->
-
-
-
-
-
-
             <!-- groups members controls -->
             <div class="pull-left">
 
@@ -402,16 +347,22 @@
               <!-- end group wishes -->
 
 
+              <!-- legenda -->
+              <div  class="btn-group">
+
+                <button type="button" 
+                        ng-click="showLegenda()"
+                        class="btn {{(timeline.config.legenda==true) && 'active'}}" 
+                        ng-model="timeline.config.legenda">Legenda</button>
+
+              </div>
+              <!-- end legenda -->
+
+
 
 
               <!-- timeline layout manager -->
               <div  class="btn-group">
-                    <!-- bs-buttons-checkbox> -->
-
-                <!-- <button type="button" 
-                        ng-model="timeline.current.layouts.user" 
-                        class="btn {{(timeline.current.layouts.user==true) && 'active'}}" 
-                        ng-click="requestTimeline(timeline.current, 'user')">User</button> -->
 
                 <button type="button" 
                         ng-model="timeline.current.layouts.group" 
@@ -435,6 +386,81 @@
           </div>
 
           <hr>
+
+
+          <!-- timeline legenda content -->
+          <div class="legenda" ng-show="timeline.config.legenda">
+
+            <div class="legenda-row">
+              <strong>Members</strong>
+              <ul>
+                <li class="legenda-Available">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.members.available">Beschikbaar Beide
+                  </label>
+                </li>
+                <li class="legenda-BeschikbaarNoord">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.members.north">Beschikbaar Noord
+                  </label>
+                </li>
+                <li class="legenda-BeschikbaarZuid">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.members.south">Beschikbaar Zuid
+                  </label>
+                </li>
+                <li class="legenda-SchipperVanDienst">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.members.service">Schipper Van Dienst
+                  </label>
+                </li>
+                <li class="legenda-Unavailable">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.members.notAvailable">Niet Beschikbaar
+                  </label>
+                </li>
+                <li class="legenda-NotReached">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.members.notReached">Niet Bereikt
+                  </label>
+                </li>
+              </ul>
+            </div>
+
+            <div class="legenda-row">
+              <strong>Groups</strong>
+              <ul>
+                <li class="legenda-more">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.groups.more">More people
+                  </label>
+                </li>
+                <li class="legenda-even">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.groups.even">Just enough people
+                  </label>
+                </li>
+                <li class="legenda-less">
+                  <label>
+                    <div class="square"></div>
+                    <input type="checkbox" ng-model="legenda.groups.less">Less people
+                  </label>
+                </li>
+              </ul>
+            </div>
+
+            <hr>
+          </div>
+          <!-- end timeline legenda content -->
+
 
           <!-- user timeline -->
           <div id="myTimeline"></div>
@@ -512,6 +538,19 @@
 
             <!-- groups members controls -->
             <div class="pull-right">
+
+
+              <!-- legenda -->
+              <div  class="btn-group">
+
+                <button type="button" 
+                        ng-click="showLegenda()"
+                        class="btn {{(timeline.config.legenda==true) && 'active'}}" 
+                        ng-model="timeline.config.legenda">Legenda</button>
+
+              </div>
+              <!-- end legenda -->
+
 
               <!-- timeline layout manager -->
               <div  class="btn-group">

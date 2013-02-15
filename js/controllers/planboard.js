@@ -74,13 +74,39 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
       month: false
     },
     config: {
-      bar: $config.timeline.config.bar,
-      wishes: $config.timeline.config.wishes,
-      states: $config.timeline.config.states,
-      divisions: $config.timeline.config.divisions,
-      densities: $config.timeline.config.densities
+      bar:        $config.timeline.config.bar,
+      wishes:     $config.timeline.config.wishes,
+      legenda:    $config.timeline.config.legenda,
+      states:     $config.timeline.config.states,
+      divisions:  $config.timeline.config.divisions,
+      densities:  $config.timeline.config.densities
     }
   };
+
+
+  /**
+   * Legenda defaults
+   */
+  $scope.legenda = {
+    members: {
+      available:  true,
+      north:      true,
+      south:      true,
+      service:    true,
+      notAvailable: true,
+      notReached: true
+    },
+    groups: {
+      more: true,
+      even: true,
+      less: true
+    }
+  };
+
+  $scope.$watch('legenda', function(newLegenda, oldLegenda)
+  {
+    console.warn('legenda changing', newLegenda, oldLegenda);
+  });
 
 
 
@@ -145,6 +171,18 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
     });
+  };
+  
+
+
+  /**
+   * Timeline legenda toggler
+   */
+  $scope.showLegenda = function()
+  {
+    console.log('it comes here');
+
+    $scope.timeline.config.legenda = !$scope.timeline.config.legenda;
   };
 
 
@@ -214,8 +252,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
       start: new Date(range.start).toString($config.date.stringFormat),
       end: new Date(range.end).toString($config.date.stringFormat)
     };
-
-    //console.warn('new range ->', $scope.timeline.range);
 
     /**
      * Pass range to dateranger
@@ -287,22 +323,15 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
       start: arguments[1].start,
       end: arguments[1].end
     };
-    /**
-     * TODO
-     * Unify this later on with route change preloader
-     * Workaround for preloader
-     */
-    // $rootScope.alertType = "";
-    // $rootScope.alertMessage = "Loading...";
-    // $rootScope.active = "progress-striped active progress-warning";
+
     $rootScope.loading = true;
     /**
      * Fetch new data
      */
     Slots.all({
-      groupId: $scope.timeline.current.group,
+      groupId:  $scope.timeline.current.group,
       division: $scope.timeline.current.division,
-      layouts: $scope.timeline.current.layouts,
+      layouts:  $scope.timeline.current.layouts,
         
       month: $scope.timeline.current.month,
       stamps: {
@@ -317,13 +346,7 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
        * Adjust timeline for new period
        */
       timeliner(options);
-      /**
-       * TODO
-       * Workaround for preloader
-       */
-      // $rootScope.alertType = "alert-success";
-      // $rootScope.alertMessage = "Successfully loaded :]";
-      // $rootScope.active = "progress-success";
+
       $rootScope.loading = false;
     }); 
   });
@@ -339,9 +362,9 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
      * Timeline options
      */
     $scope.timeline = {
-      current: $scope.timeline.current,
-      scope: $scope.timeline.scope,
-      config: $scope.timeline.config,
+      current:  $scope.timeline.current,
+      scope:    $scope.timeline.scope,
+      config:   $scope.timeline.config,
       options: {
         start:  new Date(options.start),
         end:    new Date(options.end),
@@ -434,14 +457,7 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
         break;
     };
 
-    /**
-     * TODO
-     * Unify this later on with route change preloader
-     * Workaround for preloader
-     */
-    // $rootScope.alertType = "";
-    // $rootScope.alertMessage = "Loading...";
-    // $rootScope.active = "progress-striped active progress-warning";
+
     $rootScope.loading = true;
     /**
      * Fetch new data
@@ -462,13 +478,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
     {
       $scope.data = data;
       render();
-      /**
-       * TODO
-       * Workaround for preloader
-       */
-      // $rootScope.alertType = "alert-success";
-      // $rootScope.alertMessage = "Successfully loaded :]";
-      // $rootScope.active = "progress-success";
       $rootScope.loading = false;
     });
 
@@ -497,21 +506,17 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
     }
     else
     {
-      /**
-       * Workaround for preloader
-       */
-      // $rootScope.alertType = "";
-      // $rootScope.alertMessage = "Loading...";
-      // $rootScope.active = "progress-striped active progress-warning";
+
+
       $rootScope.loading = true;
       /**
        * Fetch new data
        */
       Slots.all({
-        groupId: $scope.timeline.current.group,
+        groupId:  $scope.timeline.current.group,
         division: $scope.timeline.current.division,
-        layouts: $scope.timeline.current.layouts,
-        month: $scope.timeline.current.month,
+        layouts:  $scope.timeline.current.layouts,
+        month:    $scope.timeline.current.month,
         stamps: {
           start:  options.first.timeStamp,
           end:    options.last.timeStamp
@@ -530,12 +535,7 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
           start:  options.first.day,
           end:    options.last.day
         });
-        /**
-         * Workaround for preloader
-         */
-        // $rootScope.alertType = "alert-success";
-        // $rootScope.alertMessage = "Successfully loaded :]";
-        // $rootScope.active = "progress-success";
+
         $rootScope.loading = false;
       });
     };
@@ -1042,7 +1042,7 @@ planboardCtrl.resolve = {
       layouts: {
         user: true,
         group: true,
-        members: false
+        members: true
       }
     });
   }
@@ -1561,7 +1561,7 @@ planboardCtrl.prototype = {
     /**
      * Group availabity ratios pie chart
      */
-    if (data.aggs.ratios)
+    if (data.aggs && data.aggs.ratios)
     {
       var ratios = [];
       var legends = [];

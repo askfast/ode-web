@@ -53,6 +53,12 @@
 
 
 
+#memberBars .bar {
+  width: 300px;
+}
+
+
+
 #memberBars .bar-Available {
  
   background-color: #4f824f;
@@ -87,6 +93,121 @@
   background-image: none;
   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+.legenda {
+}
+
+.legenda-row {
+  overflow: hidden;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.legenda-row strong {
+  width: 90px;
+  display: inline;
+  float: left;
+}
+
+.legenda-row ul {
+  list-style-type: none;
+}
+
+.legenda-row ul li {
+  float: left;
+  margin-right: 15px;
+  border-right: 1px solid #ddd;
+  padding-right: 15px;
+  min-width: 130px;
+}
+
+.legenda-row ul li:last-child {
+  margin-right: 0;
+  border-right: none;
+  padding-right: 0;
+}
+
+.legenda-row ul li label {
+  font-size: 11px;
+}
+
+.legenda-row ul li label:hover {
+  cursor: pointer;
+  color: #65619b;
+}
+
+.legenda-row ul li label input[type=checkbox] {
+  margin: -2px 4px 0 0;
+}
+
+
+.legenda-row  .square {
+  display: block;
+  height: 12px;
+  width: 12px;
+  margin-top: 4px;
+}
+
+
+.legenda-row .legenda-Available .square {
+  background-color: #4f824f;
+}
+
+.legenda-row  .legenda-BeschikbaarZuid .square {
+  border-top:6px solid #e08a0c;
+  background-color: #4f824f;
+  height: 6px;  
+}
+
+.legenda-row  .legenda-BeschikbaarNoord .square {
+  border-top:6px solid black; 
+  background-color: #4f824f; 
+  height: 6px
+}
+
+.legenda-row  .legenda-SchipperVanDienst .square {
+  border-top:6px solid #e0c100; 
+  background-color: #4f824f; 
+  height: 6px;  
+}
+
+.legenda-row  .legenda-Unavailable .square {
+  background-color: #a93232;  
+}
+
+.legenda-row  .legenda-NotReached .square {
+  background-color: #65619b;  
+}
+
+
+.legenda-row  .legenda-more .square {
+  background-color: #415e6b;  
+}
+
+.legenda-row  .legenda-even .square {
+  background-color: #ba6a24;  
+}
+
+.legenda-row  .legenda-less .square {
+  background-color: #a0a0a0;  
+}
+
+
+
+
+
 
 
 
