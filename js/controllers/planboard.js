@@ -6,7 +6,7 @@
  *
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slots, Dater, Storage) 
+function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots, Dater, Storage) 
 {
   /**
    * Set default currents
@@ -31,6 +31,9 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
         // DEfault division
         division: 'all'
       };
+
+
+  $scope.slotForm = false;
 
 
 
@@ -289,9 +292,10 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
      * Unify this later on with route change preloader
      * Workaround for preloader
      */
-    $rootScope.alertType = "";
-    $rootScope.alertMessage = "Loading...";
-    $rootScope.active = "progress-striped active progress-warning";
+    // $rootScope.alertType = "";
+    // $rootScope.alertMessage = "Loading...";
+    // $rootScope.active = "progress-striped active progress-warning";
+    $rootScope.loading = true;
     /**
      * Fetch new data
      */
@@ -317,9 +321,10 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
        * TODO
        * Workaround for preloader
        */
-      $rootScope.alertType = "alert-success";
-      $rootScope.alertMessage = "Successfully loaded :]";
-      $rootScope.active = "progress-success";
+      // $rootScope.alertType = "alert-success";
+      // $rootScope.alertMessage = "Successfully loaded :]";
+      // $rootScope.active = "progress-success";
+      $rootScope.loading = false;
     }); 
   });
 
@@ -365,6 +370,15 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
      * Set range dynamically
      */
     self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+  };
+
+
+  /**
+   * Redraw timeline on window resize
+   */
+  $window.onresize = function ()
+  {
+    self.timeline.redraw();
   };
 
 
@@ -425,9 +439,10 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
      * Unify this later on with route change preloader
      * Workaround for preloader
      */
-    $rootScope.alertType = "";
-    $rootScope.alertMessage = "Loading...";
-    $rootScope.active = "progress-striped active progress-warning";
+    // $rootScope.alertType = "";
+    // $rootScope.alertMessage = "Loading...";
+    // $rootScope.active = "progress-striped active progress-warning";
+    $rootScope.loading = true;
     /**
      * Fetch new data
      */
@@ -451,9 +466,10 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
        * TODO
        * Workaround for preloader
        */
-      $rootScope.alertType = "alert-success";
-      $rootScope.alertMessage = "Successfully loaded :]";
-      $rootScope.active = "progress-success";
+      // $rootScope.alertType = "alert-success";
+      // $rootScope.alertMessage = "Successfully loaded :]";
+      // $rootScope.active = "progress-success";
+      $rootScope.loading = false;
     });
 
   };
@@ -484,9 +500,10 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
       /**
        * Workaround for preloader
        */
-      $rootScope.alertType = "";
-      $rootScope.alertMessage = "Loading...";
-      $rootScope.active = "progress-striped active progress-warning";
+      // $rootScope.alertType = "";
+      // $rootScope.alertMessage = "Loading...";
+      // $rootScope.active = "progress-striped active progress-warning";
+      $rootScope.loading = true;
       /**
        * Fetch new data
        */
@@ -516,9 +533,10 @@ function planboardCtrl($rootScope, $scope, $config, $location, $route, data, Slo
         /**
          * Workaround for preloader
          */
-        $rootScope.alertType = "alert-success";
-        $rootScope.alertMessage = "Successfully loaded :]";
-        $rootScope.active = "progress-success";
+        // $rootScope.alertType = "alert-success";
+        // $rootScope.alertMessage = "Successfully loaded :]";
+        // $rootScope.active = "progress-success";
+        $rootScope.loading = false;
       });
     };
   };
@@ -1527,8 +1545,65 @@ planboardCtrl.prototype = {
         timedata = addLoading(timedata, [
           wrapper('d') + members[member.id]
         ]);
+        /**
+         * Produce member stats
+         */
+        angular.forEach(member.stats, function(stat, index)
+        {
+          var state = stat.state.split('.');
+          state.reverse();
+          stat.state = 'bar-' + state[0];
+        });
       });
     };
+   
+
+    /**
+     * Group availabity ratios pie chart
+     */
+    if (data.aggs.ratios)
+    {
+      var ratios = [];
+      var legends = [];
+      angular.forEach(data.aggs.ratios, function(ratio, index)
+      {
+        ratios.push(ratio);
+        legends.push('[ ' + index + ' people ] - ' + ratio + '%');
+      });
+
+      var r = Raphael("groupPie"),
+          pie = r.piechart(140, 120, 100, ratios, 
+          { 
+            legend: legends
+            //,legendpos: "west", href: ["http://raphaeljs.com", "http://g.raphaeljs.com"]
+          });
+
+      r.text(140, 240, name).attr({ font: "20px sans-serif" });
+
+      pie.hover(
+      function()
+      {
+        this.sector.stop();
+        this.sector.scale(1.1, 1.1, this.cx, this.cy);
+        if (this.label) {
+            this.label[0].stop();
+            this.label[0].attr({ r: 7.5 });
+            this.label[1].attr({ "font-weight": 800 });
+        }
+      },
+      function()
+      {
+        this.sector.animate({
+          transform: 's1 1 ' + this.cx + ' ' + this.cy
+        }, 500, "bounce");
+        if (this.label) {
+            this.label[0].animate({ r: 5 }, 500, "bounce");
+            this.label[1].attr({ "font-weight": 400 });
+        }
+      });
+
+    };
+
 
     return timedata;
   }
@@ -1538,7 +1613,7 @@ planboardCtrl.prototype = {
 planboardCtrl.$inject = ['$rootScope', 
                           '$scope', 
                           '$config',
-                          '$location',
+                          '$window',
                           '$route',
                           'data', 
                           'Slots', 

@@ -142,6 +142,50 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Aggs.query(params, function (result) 
     {
+
+
+
+      /**
+       * TODO
+       * Clean it up a bit!
+       *
+       * Produce statistics for group
+       */
+      var stats = {},
+          total = 0;
+      angular.forEach(result, function(slot, index)
+      {
+        if (stats[slot.diff])
+        {
+          stats[slot.diff]++;
+        }
+        else
+        {
+          stats[slot.diff] = 1;
+        };
+        total++;
+      });
+      // console.warn('stats ->', stats, total);
+
+      var ratios = {};
+      angular.forEach(stats, function(stat, index)
+      {
+        //console.warn(stat, index);
+        ratios[index] = Math.round((stat / total) * 100);
+      });
+      // console.warn('ratios ->', ratios);
+
+      // var confirm = 0;
+      // angular.forEach(ratios, function(ratio, index)
+      // {
+      //   confirm = confirm + ratio;
+      // });
+      // console.warn('confirm ->', confirm);
+
+
+
+
+
       /**
        * Fetch the wishes
        */
@@ -152,9 +196,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           id: options.id,
           division: options.division,
           wishes: wishes,
-          data: result
+          data: result,
+          ratios: ratios
         });
       });
+
+
     });
     return deferred.promise;
   };
@@ -362,9 +409,64 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     var deferred = $q.defer();
     Slots.query(params, function (result) 
     {
+      //console.log('result', result);
+
+
+
+
+
+
+      /**
+       * TODO
+       * Clean it up a bit!
+       *
+       * Produce statistics for member
+       */
+      var stats = {},
+          total = 0;
+      angular.forEach(result, function(slot, index)
+      {
+        if (stats[slot.text])
+        {
+          stats[slot.text]++;
+        }
+        else
+        {
+          stats[slot.text] = 1;
+        };
+        total++;
+      });
+      //console.warn('stats ->', stats, total);
+
+      var ratios = [];
+      angular.forEach(stats, function(stat, index)
+      {
+        ratios.push({
+          state: index,
+          ratio: (stat / total) * 100
+        });
+        //console.warn(stat, index);
+        //ratios[index] = (stat / total) * 100;
+      });
+      //console.warn('ratios ->', ratios);
+
+      // var confirm = 0;
+      // angular.forEach(ratios, function(ratio, index)
+      // {
+      //   confirm = confirm + ratio;
+      // });
+      // console.warn('confirm ->', confirm);
+
+
+
+
+
+
+
       deferred.resolve({
         id: params.user,
-        data: result
+        data: result,
+        stats: ratios
       });
     });
     return deferred.promise;

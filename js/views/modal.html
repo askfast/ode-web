@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+  <h3 id="myModalLabel">{{modal.header}}</h3>
+</div>
+<div class="modal-body">
+  <p>{{modal.title}}</p>
+  <br/>
+  <pre>{{modal.content}}</pre>
+</div>
+<div class="modal-footer">
+  <button ng-show="modal.left.show" class="btn" ng-class="modal.left.style" ng-click="modal.left.func();dismiss()">{{modal.left.text}}</button>
+  <button ng-show="modal.middle.show" class="btn" ng-class="modal.middle.style" ng-click="modal.middle.func();dismiss()">{{modal.middle.text}}</button>
+  <button ng-show="modal.right.show" class="btn" ng-class="modal.right.style" ng-click="modal.right.func();dismiss()">{{modal.right.text}}</button>
+</div>

@@ -6,6 +6,7 @@
  */
 function dashboardCtrl($scope, $rootScope)
 {
+
 }
 
 

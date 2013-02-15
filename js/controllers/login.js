@@ -1,139 +1,5 @@
 'use strict';
 
-
-
-
-
-/**
- * TODO
- * Clear list of dependencies
- * 
- * TimeSlots Service
- */
-WebPaige.
-factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
-{
-  var self = this;
-
-
-  var User = $resource();
-
-
-  var Login = $resource(
-    $config.host + '/login',
-    {
-    },
-    {
-      process: {
-        method: 'GET',
-        params: {uuid:'', pass:''}
-      }
-    }
-  );
-
-
-  User.prototype.login = function (uuid, pass) 
-  {    
-    var deferred = $q.defer();
-    Login.process({uuid: uuid, pass: pass}, function (result) 
-    {
-      if (angular.equals(result, [])) 
-      {
-        deferred.reject("Something went wrong with login!");
-      }
-      else 
-      {
-        deferred.resolve(result);
-      }
-    });
-    return deferred.promise;
-  };
-
-
-  var Logout = $resource(
-    $config.host + '/logout',
-    {
-    },
-    {
-      process: {
-        method: 'GET',
-        params: {}
-      }
-    }
-  );
-
-
-  User.prototype.logout = function () 
-  {    
-    var deferred = $q.defer();
-    Logout.process(null, function (result) 
-    {
-      // if (angular.equals(result, [])) 
-      // {
-      //   deferred.reject("Something went wrong with logout!");
-      // }
-      // else 
-      // {
-
-        deferred.resolve(result);
-      // }
-    });
-    return deferred.promise;
-  };
-
-
-  var Resources = $resource(
-    $config.host + '/resources',
-    {
-    },
-    {
-      get: {
-        method: 'GET',
-        params: {}
-      }
-    }
-  );
-
-
-  User.prototype.resources = function () 
-  {    
-    var deferred = $q.defer();
-    Resources.get(null, function (result) 
-    {
-      if (angular.equals(result, [])) 
-      {
-        deferred.reject("User has no resources!");
-      }
-      else 
-      {
-        Storage.add('resources', angular.toJson(result));
-        deferred.resolve(result);
-      }
-    });
-    return deferred.promise;
-  };
-
-
-  return new User;
-
-});
-
-
-
-
-
-/**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- */
-
-
-
-
-
-
 /**
  * Login Controller
  */
@@ -141,6 +7,12 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 {
 	var self = this;
 
+  $('.navbar').hide();
+  $('#footer').hide();
+  $('body').css({
+    'background': 'url(../img/login_bg.jpg) no-repeat center center fixed',
+    'backgroundSize': 'cover'
+  });
 
   /**
    * TODO
@@ -148,11 +20,11 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
    * 
    * Check browser if blacklisted
    */
-  if (self.checkBrowser($config.blacklisted))
-  {
-    $('#loginForm').hide();
-    $('#browseHappy').show();
-  };
+  // if (self.checkBrowser($config.blacklisted))
+  // {
+  //   $('#loginForm').hide();
+  //   $('#browseHappy').show();
+  // };
 
 
   /**
@@ -180,7 +52,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
   $scope.knrms = knrm_users;
   $scope.loginAsKNRM = function(uuid, pass)
   {
-    $('#loginForm button[type=submit]')
+    $('#login button[type=submit]')
       .text('Login..')
       .attr('disabled', 'disabled');
 
@@ -212,7 +84,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
     };
 
     // button state
-    $('#loginForm button[type=submit]')
+    $('#login button[type=submit]')
       .text('Login..')
       .attr('disabled', 'disabled');
 
@@ -260,7 +132,7 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
   self.preloader = function()
   {
     // presentation
-    $('#loginForm').hide();
+    $('#login').hide();
     $('#preloader').show();
 
     //Storage.add('members', angular.toJson({}));
@@ -288,6 +160,12 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
           {
             self.progress(100, 'Everything loaded!');
             Groups.uniqueMembers();
+            
+            $('.navbar').show();
+            $('#footer').show();
+            $('body').css({
+              'background': 'url(../img/bg.jpg) repeat'
+            });
 
             document.location = "#/dashboard";
           });
@@ -394,6 +272,9 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
  */
 loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
 {
+  $('.navbar').hide();
+  $('#footer').hide();
+
 	User.logout()
 	.then(function()
 	{

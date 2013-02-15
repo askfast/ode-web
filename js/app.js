@@ -93,7 +93,8 @@ WebPaige.
         groupsWidth: '150px',
         eventMarginAxis: 0,
         //showNavigation: true,
-        groupsChangeable: true,
+        showCustomTime: true,
+        groupsChangeable: false,
         // periods
         //start: Date.today().add({ days: -2 }),
         //end: Date.today().add({ days: 12 }),
@@ -112,7 +113,7 @@ WebPaige.
         /**
          * Group wishes setting
          */
-        wishes: true,
+        wishes: false,
         /**
          * Availability states
          */
@@ -209,21 +210,21 @@ WebPaige.
        * Login
        */
       .when('/login', {
-        templateUrl: 'partials/login.html', 
+        templateUrl: 'js/views/login.html', 
         controller: loginCtrl
       })
       /**
        * Logout
        */
       .when('/logout', {
-        templateUrl: 'partials/login.html', 
+        templateUrl: 'js/views/logout.html', 
         controller: loginCtrl.logout
       })
       /**
        * Dashboard
        */
       .when('/dashboard', {
-        templateUrl: 'partials/dashboard.html', 
+        templateUrl: 'js/views/dashboard.html', 
         controller: dashboardCtrl,
         resolve: dashboardCtrl.resolve   
       })
@@ -231,15 +232,15 @@ WebPaige.
        * Planboard
        */
       // .when('/planboard/:layouts/:groupId/:division/:month', {
-      //     templateUrl: 'partials/planboard.html', 
+      //     templateUrl: 'js/views/planboard.html', 
       //     controller: planboardCtrl,
       //     resolve: planboardCtrl.resolve    
       // })
       /**
        * Planboard
        */
-      .when('/planboard/', {
-          templateUrl: 'partials/planboard.html', 
+      .when('/planboard', {
+          templateUrl: 'js/views/planboard.html', 
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    
       })
@@ -247,7 +248,7 @@ WebPaige.
        * Messages
        */
       .when('/messages', {
-          templateUrl: 'partials/messages.html', 
+          templateUrl: 'js/views/messages.html', 
           controller: messagesCtrl,
           resolve: messagesCtrl.resolve   
       })
@@ -255,7 +256,7 @@ WebPaige.
        * Groups
        */
       .when('/groups', {
-          templateUrl: 'partials/groups.html', 
+          templateUrl: 'js/views/groups.html', 
           controller: groupsCtrl,
           resolve: groupsCtrl.resolve
       })
@@ -263,7 +264,7 @@ WebPaige.
        * Groups :: view
        */
       // .when('/groups/:groupId/:action', {
-      //     templateUrl: 'partials/groups.html', 
+      //     templateUrl: 'js/views/groups.html', 
       //     controller: groupsCtrl,
       //     resolve: groupsCtrl.resolve
       // })
@@ -271,7 +272,7 @@ WebPaige.
        * Profile :: view
        */
       .when('/profile/:userId/view', {
-          templateUrl: 'partials/profile.html', 
+          templateUrl: 'js/views/profile.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
@@ -279,7 +280,7 @@ WebPaige.
        * Profile :: edit [userId]
        */
       .when('/profile/:userId/edit', {
-          templateUrl: 'partials/profile-edit.html', 
+          templateUrl: 'js/views/profile-edit.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
@@ -287,7 +288,7 @@ WebPaige.
        * Profile :: change password [userId]
        */
       .when('/profile/:userId/password', {
-          templateUrl: 'partials/profile-password.html', 
+          templateUrl: 'js/views/profile-password.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
@@ -295,7 +296,7 @@ WebPaige.
        * Settings
        */
       .when('/settings', {
-          templateUrl: 'partials/settings.html', 
+          templateUrl: 'js/views/settings.html', 
           controller: settingsCtrl,
           resolve: settingsCtrl.resolve   
       })
@@ -303,7 +304,7 @@ WebPaige.
        * Angular-Strap
        */
       // .when('/angular-strap', {
-      //     templateUrl: 'partials/angular-strap.html', 
+      //     templateUrl: 'js/views/angular-strap.html', 
       //     controller: StrapCtrl
       // })
     /**
@@ -424,9 +425,13 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
     //if (!Session.check()) window.location = "#/login";
 
 
-    $rootScope.alertType = "";
-    $rootScope.alertMessage = "Loading...";
-    $rootScope.active = "progress-striped active progress-warning";
+    // $rootScope.alertType = "";
+    // $rootScope.alertMessage = "Loading...";
+    // $rootScope.active = "progress-striped active progress-warning";
+
+    $rootScope.loadingBig = true;
+    $rootScope.loading = true;
+    $('div[ng-view]').hide();
   });
   
 
@@ -435,11 +440,15 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
    */
   $rootScope.$on("$routeChangeSuccess", function (event, current, previous) 
   {
-    $rootScope.alertType = "alert-success";
-    $rootScope.alertMessage = "Successfully loaded :]";
-    $rootScope.active = "progress-success";
+    // $rootScope.alertType = "alert-success";
+    // $rootScope.alertMessage = "Successfully loaded :]";
+    // $rootScope.active = "progress-success";
 
     $rootScope.newLocation = $location.path();
+
+    $rootScope.loadingBig = false;
+    $rootScope.loading = false;
+    $('div[ng-view]').show();
   });
 
 
@@ -449,17 +458,18 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
   $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) 
   {
     alert("ROUTE CHANGE ERROR: " + rejection);
-    $rootScope.alertType = "alert-error";
-    $rootScope.alertMessage = "Failed to load data :[";
-    $rootScope.active = "";
+
+    // $rootScope.alertType = "alert-error";
+    // $rootScope.alertMessage = "Failed to load data :[";
+    // $rootScope.active = "";
   });
 
 
   /**
    * General status messages
    */
-  $rootScope.alertType = "alert-info";
-  $rootScope.alertMessage = "Welcome to the resolve demo";
+  // $rootScope.alertType = "alert-info";
+  // $rootScope.alertMessage = "Welcome to the resolve demo";
 
 
   /**

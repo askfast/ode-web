@@ -1,0 +1,109 @@
+<div class="page-header">
+  <h2>Profile</h2>
+</div>
+
+
+
+<!-- <div class="btn-group">
+  <a  class="btn"
+      href="#profile/{{user.id}}/edit"><i class="icon-cog"></i> Edit profile</a>
+  <a  class="btn"
+      href="#profile/{{user.id}}/password"><i class="icon-lock"></i> Change password</a>
+</div>
+
+<hr> -->
+
+
+
+
+
+
+<!-- profile -->
+<div class="row-fluid">
+  <div class="tabbable tabs-left">
+    
+    <!-- tabs -->
+    <ul class="nav nav-tabs nav-tabs-app">
+
+      <li class="active">
+        <a href="#profileTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('profileTab')"><span class="entypo">&#128100;</span> Profile</a>
+      </li>
+      <li>
+        <a href="#timelineTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('timelineTab')"><span class="entypo">&#128340;</span> Timeline</a>
+      </li>
+      <li>
+        <a href="#editTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('trashTab')"><span class="entypo">&#9998;</span> Edit</a>
+      </li>
+      <li>
+        <a href="#passwordTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('trashTab')"><span class="entypo">&#128274;</span> Password</a>
+      </li>
+
+    </ul>
+    <!-- end tabs -->
+
+
+    <!-- tabs content -->
+    <div class="tab-content">
+
+      
+      <!-- profileTab -->
+      <div class="tab-pane active" id="profileTab">
+
+
+        <div style="overflow: hidden; height: 35px">
+          <h3 style="margin-top: 0;" class="pull-left">View profile</h3>
+        </div>
+
+        <hr>
+
+        <dl>
+          <dt>Email</dt>
+            <dd>{{resources.EmailAddress}}</dd>
+          <dt>Phone</dt>
+            <dd>{{resources.PhoneAddress}}</dd>
+          <dt>Address</dt>
+            <dd>{{resources.PostAddress}}</dd>
+          <dt>Postcode</dt>
+            <dd>{{resources.PostZip}}</dd>
+          <dt>City</dt>
+            <dd>{{resources.PostCity}}</dd>
+        </dl>  
+
+      </div>
+      <!-- end profileTab -->
+
+      <!-- timelineTab -->
+      <div class="tab-pane" id="timelineTab">
+        <p>timelineTab content</p>
+      </div>
+      <!-- end timelineTab -->
+
+      <!-- editTab -->
+      <div class="tab-pane" id="editTab">
+        <p>editTab content</p>
+      </div>
+      <!-- end editTab -->
+
+      <!-- passwordTab -->
+      <div class="tab-pane" id="passwordTab">
+        <p>passwordTab content</p>
+      </div>
+      <!-- end passwordTab -->
+
+    </div>
+    <!-- end tabs content -->
+
+  </div>
+</div>
+<!-- end profile -->
+
+
+

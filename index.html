@@ -5,96 +5,121 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>webpaige{{page.title}}</title>
+    <title>WebPaige v2.0.0</title>
     
-    <meta name="description" content="">
+    <meta name="description" content="WebPaige v2.0.0">
     <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" href="ico/favicon.ico">
-       
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
     
-    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="libs/chosen/chosen.css">
-    <link rel="stylesheet" href="css/custom.css" type="text/css">
-    <link rel="stylesheet" href="css/responsive.css" type="text/css">
+    <link rel="shortcut icon" href="img/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="img/ico/apple-touch-icon-57-precomposed.png">
 
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/chosen.css">
+    
+    <!-- <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script> -->
+    
   </head>
   <body>
 
-    <div id="wrap">
 
-      <div class='notifications bottom-right'></div>
+    <!-- <div class="notifications bottom-right"></div> -->
 
-      <div class="navbar navbar-inverse navbar-fixed-top" 
-            style="" 
-            bs-navbar>
 
-        <div class="navbar-inner"
-              style="">
-
-          <div class="container"
-                style="width:100%;">
-
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></a> 
-            <a class="brand" href="#">WebPaige</a>
-            <div class="nav-collapse collapse">
-              <ul class="nav">
-                <li data-match-route="/dashboard">
-                  <a href="#dashboard">Dashboard</a>
-                </li>
-                <li data-match-route="/planboard">
-                  <a href="#planboard">Planboard</a>
-                </li>
-                <li data-match-route="/messages">
-                  <a href="#messages">Messages</a>
-                </li>
-                <li data-match-route="/groups">
-                  <a href="#groups">Groups</a>
-                </li>
-              </ul>
-            </div>
-
-            <div class="btn-group pull-right" 
-                  style="margin-right: 60px;">
-
-              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                User Name <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#profile/{{user.uuid}}/view"><i class="icon-user"></i> Profile</a></li>
-                <li><a href="#settings"><i class="icon-cog"></i> Settings</a></li>
-                <li class="divider"></li>
-                <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
-              </ul>
-            </div>
+    <!-- navbar -->
+    <div class="navbar navbar-fixed-top" bs-navbar>
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#dashboard">WebPaige</a>
+          <!-- nav-collapse -->
+          <div class="nav-collapse collapse">
+            <!-- main nav -->
+            <ul class="nav">
+              <li data-match-route="/dashboard">
+                <a href="#dashboard">Dashboard</a>
+              </li>
+              <li data-match-route="/planboard">
+                <a href="#planboard">Planboard</a>
+              </li>
+              <li data-match-route="/messages">
+                <a href="#messages">Messages <span class="badge badge-success">2</span></a>
+              </li>
+              <li data-match-route="/groups">
+                <a href="#groups">Groups</a>
+              </li>
+            </ul>
+            <!-- end main nav -->
+            <!-- user menu -->
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user icon-white"></i> Cengiz Ulusoy <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#profile/{{user.uuid}}/view"><i class="icon-user"></i> Profile</a></li>
+                  <li><a href="#settings"><i class="icon-cog"></i> Settings</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+            <!-- end user menu -->
           </div>
+          <!-- end nav-collapse -->
         </div>
       </div>
+    </div>
+    <!-- end navbar -->
 
-      <div class="content">
 
+    <!-- loading -->
+    <div id="loading" ng-show="loadingBig">
+      <span class="entypo">&#9203;</span>
+      <p>Loading..</p>
+    </div>
+    <!-- end loading -->
+
+    
+    <!-- wrap -->
+    <div id="wrap">
+      <!-- container-fluid -->
+      <div class="container-fluid">
         <div ng-view></div>
-
-      </div><!-- end content -->
-
+      </div>
+      <!-- end container-fluid -->
       <div id="push"></div>
-      
-    </div><!-- end wrap -->
+    </div>
+    <!-- end wrap -->
 
 
-    <footer>
-        <div class="footcon">
-          <div class="progress span1" ng-class="active" ng-cloak style="margin-left:0;">
-              <div class="bar" style="width: 100%;"></div>
-          </div>
-          <span class="muted" style="margin-left: 10px; font-size: 12px">{{alertMessage}}</span>
-          <button type="button" 
-                      class="btn btn-small btn-danger pull-right"
-                      ng-click="clearLocalSlots()"><i class="icon-trash icon-white"></i> Clear LocalCache</button>
+    <!-- footer -->
+    <div id="footer">
+      <div class="container-fluid">
+        <!-- <div class="progress span1" ng-class="active" ng-cloak>
+            <div class="bar" style="width: 100%;"></div>
         </div>
-      </footer>
+        <span class="muted" style="margin-left: 10px; font-size: 12px">{{alertMessage}}</span> -->
+
+        <div id="copyrights">
+          <span class="muted"><small>Ask Community Systems, 2013<br><i>WebPaige v2.0.0</i></small></span>
+        </div>
+
+        <p class="muted" ng-show="loading">
+          <img src="img/ajax-loader.gif"><small>Loading..</small>
+        </p>
+
+      </div>
+    </div>
+    <!-- end footer -->
 
 
     <script src="libs/jquery/jquery-1.8.3.min.js"></script>
@@ -121,20 +146,36 @@
     <script src="js/app.js"></script>
 
     <script src="js/controllers/login.js"></script>
+    <script src="js/models/login.js"></script>
+
     <script src="js/controllers/dashboard.js"></script>
+    <script src="js/models/dashboard.js"></script>
 
     <script src="js/controllers/planboard.js"></script>
     <script src="js/models/planboard.js"></script>
 
     <script src="js/controllers/messages.js"></script>
+    <script src="js/models/messages.js"></script>
+
     <script src="js/controllers/groups.js"></script>
+    <script src="js/models/groups.js"></script>
+
     <script src="js/controllers/profile.js"></script>
+    <script src="js/models/profile.js"></script>
+
     <script src="js/controllers/settings.js"></script>
+    <script src="js/models/settings.js"></script>
     
     <script src="js/directives/directives.js"></script>
     <script src="js/services/services.js"></script>
     <script src="js/filters/filters.js"></script>
+
     <script src="libs/angular-strap/0.6.4/angular-strap.min.js"></script>
 
+    <script src="libs/raphael/0.5.1/raphael-min.js"></script>
+    <script src="libs/raphael/0.5.1/g.raphael-min.js"></script>
+    <script src="libs/raphael/0.5.1/g.pie-min.js"></script>
+
+      
   </body>
 </html>
