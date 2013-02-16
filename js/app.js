@@ -23,7 +23,7 @@ WebPaige.
     /**
      * App version
      */
-    version: '0.2.0',
+    version: '2.0.0',
     /**
      * Blacklisted browsers
      */
@@ -117,7 +117,8 @@ WebPaige.
         /**
          * Timeline legenda setting
          */
-        legenda: true,
+        legenda: {},
+        legendarer: true,
         /**
          * Availability states
          */

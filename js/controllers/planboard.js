@@ -76,7 +76,8 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
     config: {
       bar:        $config.timeline.config.bar,
       wishes:     $config.timeline.config.wishes,
-      legenda:    $config.timeline.config.legenda,
+      legenda:    {},
+      legendarer: $config.timeline.config.legendarer,
       states:     $config.timeline.config.states,
       divisions:  $config.timeline.config.divisions,
       densities:  $config.timeline.config.densities
@@ -84,29 +85,31 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
   };
 
 
+
   /**
    * Legenda defaults
    */
-  $scope.legenda = {
-    members: {
-      available:  true,
-      north:      true,
-      south:      true,
-      service:    true,
-      notAvailable: true,
-      notReached: true
-    },
-    groups: {
-      more: true,
-      even: true,
-      less: true
-    }
-  };
-
-  $scope.$watch('legenda', function(newLegenda, oldLegenda)
+  angular.forEach($config.timeline.config.states, function(state, index)
   {
-    console.warn('legenda changing', newLegenda, oldLegenda);
+    $scope.timeline.config.legenda[index] = true;
   });
+
+
+  // $scope.legenda = {
+  //   members: {
+  //     available:  false,
+  //     north:      false,
+  //     south:      false,
+  //     service:    false,
+  //     notAvailable: false,
+  //     notReached: false
+  //   },
+  //   groups: {
+  //     more: false,
+  //     even: false,
+  //     less: false
+  //   }
+  // };
 
 
 
@@ -180,10 +183,19 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
    */
   $scope.showLegenda = function()
   {
-    console.log('it comes here');
-
-    $scope.timeline.config.legenda = !$scope.timeline.config.legenda;
+    $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
   };
+
+  $scope.alterLegenda = function(legenda)
+  {
+    //console.warn('changing legenda ->', legenda);
+    $scope.timeline.config.legenda = legenda; 
+    timeliner({
+      start:  $scope.timeline.range.start,
+      end:    $scope.timeline.range.end
+    });
+  };
+
 
 
 
@@ -457,7 +469,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
         break;
     };
 
-
     $rootScope.loading = true;
     /**
      * Fetch new data
@@ -480,7 +491,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
       render();
       $rootScope.loading = false;
     });
-
   };
 
 
@@ -1106,7 +1116,6 @@ planboardCtrl.prototype = {
    */
   process: function (data, config, ngroups, nmembers, divisions)
   {
-    //console.warn('periods ->', data.periods.start, data.periods.end);
     var timedata = [];
 
     /**
@@ -1443,6 +1452,7 @@ planboardCtrl.prototype = {
           ]);
         });
       };
+    
     };
 
     /**
@@ -1512,19 +1522,29 @@ planboardCtrl.prototype = {
          */
         angular.forEach(member.data, function(slot, i)
         {
-          timedata.push({
-            start: Math.round(slot.start * 1000),
-            end: Math.round(slot.end * 1000),
-            group: wrapper('d') + members[member.id],
-            // group: (slot.recursive) ? wrapper('d') + members[member.id] + 'Wekelijkse planning' 
-            //                         : wrapper('d') + members[member.id] + 'Planning',
-            content: angular.toJson({ 
-              id: slot.id, 
-              recursive: slot.recursive, 
-              state: slot.text 
-              }),
-            className: config.states[slot.text].className,
-            editable: true
+          /**
+           * Loop through legenda items
+           */
+          angular.forEach(config.legenda, function(value, legenda)
+          {
+            /**
+             * Check whether legenda item is selected
+             */
+            if (slot.text == legenda && value)
+            {
+              timedata.push({
+                start: Math.round(slot.start * 1000),
+                end: Math.round(slot.end * 1000),
+                group: wrapper('d') + members[member.id],
+                content: angular.toJson({ 
+                  id: slot.id, 
+                  recursive: slot.recursive, 
+                  state: slot.text 
+                  }),
+                className: config.states[slot.text].className,
+                editable: true
+              });
+            };
           });
         });
         /**
@@ -1619,6 +1639,3 @@ planboardCtrl.$inject = ['$rootScope',
                           'Slots', 
                           'Dater', 
                           'Storage'];
-
-
-
