@@ -107,18 +107,26 @@
 
 /*legenda*/
 .legenda {
+  background-color: #f5f4ee;
+  padding-top: 10px;
+  margin-top: -20px;
 }
 
 .legenda-row {
   overflow: hidden;
   display: block;
-  margin-bottom: 10px;
+  margin: 10px 20px;
+}
+
+.last-legenda-row {
+  margin-bottom: -5px;
 }
 
 .legenda-row strong {
   width: 90px;
   display: inline;
   float: left;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
 }
 
 .legenda-row ul {
@@ -153,7 +161,7 @@
 }
 
 
-.legenda-row  .square {
+.legenda-row .square {
   display: block;
   height: 12px;
   width: 12px;
@@ -165,45 +173,44 @@
   background-color: #4f824f;
 }
 
-.legenda-row  .legenda-BeschikbaarZuid .square {
+.legenda-row .legenda-BeschikbaarZuid .square {
   border-top:6px solid #e08a0c;
   background-color: #4f824f;
   height: 6px;  
 }
 
-.legenda-row  .legenda-BeschikbaarNoord .square {
+.legenda-row .legenda-BeschikbaarNoord .square {
   border-top:6px solid black; 
   background-color: #4f824f; 
   height: 6px
 }
 
-.legenda-row  .legenda-SchipperVanDienst .square {
+.legenda-row .legenda-SchipperVanDienst .square {
   border-top:6px solid #e0c100; 
   background-color: #4f824f; 
   height: 6px;  
 }
 
-.legenda-row  .legenda-Unavailable .square {
+.legenda-row .legenda-Unavailable .square {
   background-color: #a93232;  
 }
 
-.legenda-row  .legenda-NotReached .square {
+.legenda-row .legenda-NotReached .square {
   background-color: #65619b;  
 }
 
 
-.legenda-row  .legenda-more .square {
+.legenda-row .legenda-more .square {
   background-color: #415e6b;  
 }
 
-.legenda-row  .legenda-even .square {
+.legenda-row .legenda-even .square {
   background-color: #ba6a24;  
 }
 
-.legenda-row  .legenda-less .square {
+.legenda-row .legenda-less .square {
   background-color: #a0a0a0;  
 }
-
 
 
 
@@ -425,13 +432,13 @@ div.timeline-navigation-move-right {
 
 
 
-.available {
-  margin:0;
+/*.available {
+  margin:0;*/
   /* padding: 5px; */
   /*background-color: #4f824f;*/
-  background-color: #4f824f;
+/*  background-color: #4f824f;
   border-bottom: 10px solid #4f824f;
-  text-indent: -9999px;
+  text-indent: -9999px;*/
 /*
   color: #333333;
   text-align: center;
@@ -462,19 +469,19 @@ div.timeline-navigation-move-right {
      -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 */
-}
+/*}*/
 
-.availableS {
-  margin:0;
-  /* background-color: #69b369; */
+/*.availableS {
+  margin:0;*/
+/*   background-color: #69b369; 
   background-color: #4f824f;
   text-indent: -9999px;
   border-top: 10px solid #e08a0c;
-}
+}*/
 
-.availableN {
-  margin:0;
-  /* background-color: #3e673e; */
+/*.availableN {
+  margin:0;*/
+  /* background-color: #3e673e; 
   background-color: #4f824f;
   border-top: 10px solid black;
   text-indent: -9999px;
@@ -483,25 +490,30 @@ div.timeline-navigation-move-right {
 .schipper {
   margin:0;
   /* background-color: #3e673e; */
-  background-color: #4f824f;
+/*  background-color: #4f824f;
   border-top: 10px solid #e0c100;
   text-indent: -9999px;
-}
+}*/
 
-.unreachable {
-  margin:0;
+/*.unreachable {
+  margin:0;*/
   /* background-color: #3e673e; */
-  background-color: #65619b;
+/*  background-color: #65619b;
   border-top: 10px solid #65619b;
   text-indent: -9999px;
-}
+}*/
 
-.unavailable {
+/*.unavailable {
   margin: 0;
   background-color: #a93232;  
   border-top: 10px solid #a93232;
   text-indent: -9999px;
 }
+*/
+
+
+
+
 
 
 

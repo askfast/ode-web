@@ -1055,6 +1055,7 @@ planboardCtrl.resolve = {
         members: true
       }
     });
+    //return ''
   }
 };
 
@@ -1535,7 +1536,7 @@ planboardCtrl.prototype = {
               timedata.push({
                 start: Math.round(slot.start * 1000),
                 end: Math.round(slot.end * 1000),
-                group: wrapper('d') + members[member.id],
+                group: wrapper('d') + '<a href="#">' + members[member.id] + '</a>',
                 content: angular.toJson({ 
                   id: slot.id, 
                   recursive: slot.recursive, 
@@ -1554,7 +1555,7 @@ planboardCtrl.prototype = {
         timedata.push({
           start: 0,
           end: 0,
-          group: wrapper('d') + members[member.id],
+          group: wrapper('d') + '<a href="#">' + members[member.id] + '</a>',
           content: null,
           className: null,
           editable: false
@@ -1563,7 +1564,7 @@ planboardCtrl.prototype = {
          * Add loading slots
          */
         timedata = addLoading(timedata, [
-          wrapper('d') + members[member.id]
+          wrapper('d') + '<a href="#">' + members[member.id] + '</a>'
         ]);
         /**
          * Produce member stats
