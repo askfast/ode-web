@@ -152,9 +152,18 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
        * Produce statistics for group
        */
       var stats = {},
+          durations = {
+            less: 0,
+            even: 0,
+            more: 0,
+            total: 0
+          },
           total = 0;
       angular.forEach(result, function(slot, index)
       {
+        /**
+         * Count diffs
+         */
         if (stats[slot.diff])
         {
           stats[slot.diff]++;
@@ -164,6 +173,24 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           stats[slot.diff] = 1;
         };
         total++;
+        /**
+         * Calculate total absence
+         */
+        var slotDiff = slot.end - slot.start;
+        if (slot.diff < 0)
+        {
+          durations.less = durations.less + slotDiff;
+        }
+        else if (slot.diff == 0)
+        {
+          durations.even = durations.even + slotDiff;
+        }
+        else
+        {
+          durations.more = durations.more + slotDiff;
+        };
+        durations.total = durations.total + slotDiff;
+
       });
       // console.warn('stats ->', stats, total);
 
@@ -181,6 +208,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       //   confirm = confirm + ratio;
       // });
       // console.warn('confirm ->', confirm);
+      // 
+    
+
 
 
 
@@ -197,7 +227,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           division: options.division,
           wishes: wishes,
           data: result,
-          ratios: ratios
+          ratios: ratios,
+          durations: durations
         });
       });
 

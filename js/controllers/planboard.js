@@ -1041,7 +1041,7 @@ planboardCtrl.resolve = {
       layouts: {
         user: true,
         group: true,
-        members: true
+        members: false
       }
     });
     //return ''

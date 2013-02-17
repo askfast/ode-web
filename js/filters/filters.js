@@ -228,6 +228,75 @@ angular.module('WebPaige.filters', [])
 
 
 
+/** 
+ * Calculate time in days, hours and minutes
+ */
+.filter('calculateTimeInDays', function()
+{
+	return function(stamp)
+	{
+		var day 		= 1000 * 60 * 60 * 24,
+				hour		=	1000 * 60 * 60,
+				days 		= 0,
+				hours 	= 0,
+				stamp 	= stamp * 1000;
+		/**
+		 * Calculate durations
+		 */
+		var hours 	= stamp % day;
+		var days 		= stamp - hours;
+		/**
+		 * Return
+		 */
+		return 	Math.floor(days / day);
+	};
+})
+.filter('calculateTimeInHours', function()
+{
+	return function(stamp)
+	{
+		var day 		= 1000 * 60 * 60 * 24,
+				hour		=	1000 * 60 * 60,
+				days 		= 0,
+				hours 	= 0,
+				stamp 	= stamp * 1000;
+		/**
+		 * Calculate durations
+		 */
+		var hours 	= stamp % day;
+		var days 		= stamp - hours;
+		/**
+		 * Return
+		 */
+		return 	Math.floor(hours / hour);
+	};
+})
+.filter('calculateTimeInMinutes', function()
+{
+	return function(stamp)
+	{
+		var day 		= 1000 * 60 * 60 * 24,
+				hour		=	1000 * 60 * 60,
+				minute 	= 1000 * 60,
+				days 		= 0,
+				hours 	= 0,
+				minutes = 0,
+				stamp 	= stamp * 1000;
+		/**
+		 * Calculate durations
+		 */
+		var hours 	= stamp % day;
+		var days 		= stamp - hours;
+		var minutes = stamp % hour;
+		/**
+		 * Return
+		 */
+		return 	Math.floor(minutes / minute);
+	};
+})
+
+
+
 
 
 .filter('eveURL2Id', function()

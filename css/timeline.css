@@ -42,6 +42,34 @@
 
 #groupStats {
   display: block;
+  overflow: hidden;
+}
+
+#groupStats #groupPie {
+  float:left;
+}
+
+#groupStats .groupStatInfo {
+  
+}
+
+#groupStats .groupStatInfo ul {
+  list-style: none;
+}
+
+#groupStats .groupStatInfo ul li {
+  width: 300px;
+  margin-right: 15px;
+  float: left;
+  margin-bottom: 25px;
+  display: inline;
+}
+
+#groupStats .groupStatInfo ul li h5 {
+  display: inline;
+}
+
+#groupStats .groupStatInfo ul li small {
 }
 
 #memberBars {

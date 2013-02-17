@@ -631,6 +631,41 @@
           <!-- group charts -->
           <div id="groupStats">
             <div id="groupPie"></div>
+            
+            <div class="groupStatInfo">
+              <h3>Total Durations In Period</h3>
+              <hr>
+              <ul>
+                <li>
+                  <h4>More people then expected</h4>
+                  <h5>{{data.aggs.durations.more|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.more|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.more|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+                <li>
+                  <h4>Just so many people as wished</h4>
+                  <h5>{{data.aggs.durations.even|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.even|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.even|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+                <li>
+                  <h4>Less people then expected</h4>
+                  <h5>{{data.aggs.durations.less|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.less|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.less|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+              </ul>
+            </div>
+
           </div>
           <!-- end group charts -->
 
