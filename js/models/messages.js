@@ -50,11 +50,17 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.query = function () 
   {
     var deferred = $q.defer();
+
     Messages.query(function(result) 
     {
+      /**
+       * Save to localStorage
+       */
       Storage.add('messages', angular.toJson(result));
+
       deferred.resolve(Messages.prototype.filter(result));
     });
+
     return deferred.promise;
   };
 
@@ -81,8 +87,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        * Inbox
        */
       if (message.box == 'inbox' &&
-          message.state != 'TRASH' && 
-          message.state != 'FOREVER')
+          message.state != 'TRASH')
       {
         filtered.inbox.push(message);
       }
@@ -138,12 +143,17 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
    */
   Messages.prototype.receviersList = function ()
   {
-    var membersLocal = angular.fromJson(Storage.get('members')),
-        groupsLocal = angular.fromJson(Storage.get('groups'));
-    
-    var receivers  = [];
+    /**
+     * Get local unique members list and groups, and init receivers list
+     */
+    var members   = angular.fromJson(Storage.get('members')),
+        groups    = angular.fromJson(Storage.get('groups')),
+        receivers = [];
 
-    angular.forEach(membersLocal, function(member, index)
+    /**
+     * Loop through members
+     */
+    angular.forEach(members, function(member, index)
     {
         receivers.push({
         id: member.uuid,
@@ -152,7 +162,10 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       });
     });
 
-    angular.forEach(groupsLocal, function(group, index)
+    /**
+     * Loop through groups
+     */
+    angular.forEach(groups, function(group, index)
     {
         receivers.push({
         id: group.uuid,
@@ -289,37 +302,31 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
    */
   Messages.prototype.emptyTrash = function (ids)
   {
-    var deferred = $q.defer();
+    var deferred = $q.defer(),
+        messages = Messages.prototype.local(),
+        bulk = [];
+
+    /**
+     * Loop through messages
+     */
+    angular.forEach(messages, function(message, index)
+    {
+      if ( (message.box == 'inbox' || message.box == 'outbox') &&
+                message.state == 'TRASH')
+      {
+        bulk.push(message.uuid);
+      };
+    });
 
     Messages.delete(null, { 
-      members: ids 
+      members: bulk 
     }, function (result) 
     {
       deferred.resolve(result);
     });
 
     return deferred.promise;
-  }
-
-
-
-  /**
-   * Delete a message
-   */
-  Messages.prototype.delete__ = function (uuids) 
-  {
-    var deferred = $q.defer();
-    Messages.delete(null, { ids: uuids, state: "TRASH" }, function (result) 
-    {
-      deferred.resolve(result);
-    });
-    return deferred.promise;
   };
-
-
-
-
-
 
 
   return new Messages;

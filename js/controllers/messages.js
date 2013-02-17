@@ -5,9 +5,12 @@
  */
 function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, Messages)
 {
+  /**
+   * REMOVE
+   * this if no prototypes used
+   */
   var self = this;
 
-  //console.log('messages ->', data);
 
   /**
    * Receivers list
@@ -19,6 +22,26 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    * Set messages
    */
   $scope.messages = data;
+
+
+  /**
+   * Selections
+   */
+  $scope.selection = {
+    inbox: {},
+    outbox: {},
+    trash: {}
+  };
+
+
+  /**
+   * Selection masters
+   */
+  $scope.selectionMaster = {
+    inbox: '',
+    outbox: '',
+    trash: ''
+  };
 
 
   /**
@@ -108,23 +131,18 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   };
 
 
-
-  $scope.selection = {
-    inbox: {},
-    outbox: {},
-    trash: {}
-  };
-
-  $scope.selectionMaster = {
-    inbox: '',
-    outbox: '',
-    trash: ''
-  };
-
-
+  /**
+   * Toggle selections
+   */
   $scope.toggleSelection = function(messages, inbox, master)
   {
+    /**
+     * Set flag
+     */
     var flag = (master) ? true : false;
+    /**
+     * Loop through
+     */
     angular.forEach(messages, function(message, index)
     {
       $scope.selection[inbox][message.uuid] = flag;
@@ -132,105 +150,225 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   };
 
 
-
+  /**
+   * Remove message
+   */
   $scope.removeMessage = function (id)
   {
+    /**
+     * Set preloader
+     */
     $rootScope.loading = true;
+    /**
+     * Init bulk
+     */
     var bulk = [];
+    /**
+     * Push it
+     */
     bulk.push(id);
+    /**
+     * Remove message
+     */
     Messages.remove(bulk)
     .then(function(result)
     {
+      /**
+       * Query messages
+       */
       Messages.query()
       .then(function(messages)
       {
+        /**
+         * Reload messages
+         */
         $scope.messages = messages;
+        /**
+         * Set preloader
+         */
         $rootScope.loading = false;
       });
     });
   };
 
 
-
-
+  /**
+   * Remove messages
+   */
   $scope.removeMessages = function (selection)
   {
+    /**
+     * Init vars
+     */
     var ids = [];
+    /**
+     * Loop through the selection
+     */
     angular.forEach(selection, function(flag, id)
     {
+      /**
+       * If true push it
+       */
       if (flag)
       {
         ids.push(id);
       }
     });
+    /**
+     * Set preloader
+     */
     $rootScope.loading = true;
+    /**
+     * Remove messages
+     */
     Messages.remove(ids)
     .then(function(result)
     {
+      /**
+       * Query messages
+       */
       Messages.query()
       .then(function(messages)
       {
+        /**
+         * Reload messages
+         */
         $scope.messages = messages;
+        /**
+         * Set preloader
+         */
         $rootScope.loading = false;
       });
     });
   };
 
 
-
+  /**
+   * Restore a message
+   */
   $scope.restoreMessage = function (id)
   {
+    /**
+     * Set preloader
+     */
     $rootScope.loading = true;
+    /**
+     * Init var
+     */
     var bulk = [];
+    /**
+     * Push it
+     */
     bulk.push(id);
+    /**
+     * Restore message
+     */
     Messages.restore(bulk)
     .then(function(result)
     {
+      /**
+       * Query messages
+       */
       Messages.query()
       .then(function(messages)
       {
+        /**
+         * Reload messages
+         */
         $scope.messages = messages;
+        /**
+         * Set preloader
+         */
         $rootScope.loading = false;
       });
     });
   };
 
 
+  /**
+   * Restore messages
+   */
   $scope.restoreMessages = function (selection)
   {
+    /**
+     * Init vars
+     */
     var ids = [];
+    /**
+     * Loop through
+     */
     angular.forEach(selection, function(flag, id)
     {
+      /**
+       * If true push it
+       */
       if (flag)
       {
         ids.push(id);
       }
     });
+    /**
+     * Set preloader
+     */
     $rootScope.loading = true;
+    /**
+     * Restore message
+     */
     Messages.restore(ids)
     .then(function(result)
     {
+      /**
+       * Query messages
+       */
       Messages.query()
       .then(function(messages)
       {
+        /**
+         * Reload messages
+         */
         $scope.messages = messages;
+        /**
+         * Set preloader
+         */
         $rootScope.loading = false;
       });
     });
   };
 
 
+  /**
+   * Empty trash
+   */
+  $scope.emptyTrash = function ()
+  {
+    /**
+     * Set preloader
+     */
+    $rootScope.loading = true;
+    /**
+     * Empty trash
+     */
+    Messages.emptyTrash()
+    .then(function(result)
+    {
+      /**
+       * Query messages
+       */
+      Messages.query()
+      .then(function(messages)
+      {
+        /**
+         * Reload messages
+         */
+        $scope.messages = messages;
+        /**
+         * Set preloader
+         */
+        $rootScope.loading = false;
+      });
+    });    
+  };
 
-
-
-  //console.warn('messages ->', data);
-
-  
-  // $scope.boxes = {
-  // 	inbox : true,
-  // 	outbox : false,
-  // 	trash : false,
-  // };
 
 
 
@@ -287,116 +425,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
 
 
-  // $scope.boxer = function(box)
-  // {
-  //   $scope.composeView = false;
-    
-  //   $scope.messages = [];
-  //   var filtered = [];
-  //   angular.forEach(messages, function(message, index)
-  //   {
-  //     message.date = new Date(message.creationTime).toString($config.datetime.format);
-  //     message.sender = message.requester.split('personalagent/')[1].split('/')[0];
-  //     switch (box)
-  //     {
-  //       case 'inbox':          
-  //         if (message.box == 'inbox' &&
-  //             message.state != 'TRASH' && message.state != 'FOREVER' )
-  //         {
-  //           filtered.push(message);
-  //         };
-  //         $scope.listview = true;
-  //       break;
-  //       case 'outbox':
-  //         if (message.box == 'outbox' && message.state != 'TRASH')
-  //         {
-  //           filtered.push(message);
-  //         };
-  //         $scope.listview = true;
-  //       break;
-  //       case 'trash':
-  //         if ((message.box == 'inbox' || message.box == 'outbox') &&
-  //             message.state == 'TRASH')
-  //         {
-  //           filtered.push(message);
-  //         };
-  //         $scope.listview = false;
-  //         $scope.trashview = true;
-  //       break;
-  //     };
-  //   });
-  //   $scope.messages = filtered;
-  //   //$scope.fixTabHeight(filtered[0].uuid);
-  // };
-  
-  // $scope.boxer('inbox');
-
-  
-
-
-
-  // $scope.composeView = true;
-
-
-
-
-
-  // $scope.delete = function(uuid)
-  // {
-  //   var uuids = [];
-  //   uuids.push(uuid);
-
-  //   Messages.delete(uuids).then(function(){
-    	
-  //     $scope.messages = Messages.query().then(function(){
-  //     	if($scope.boxes.inbox){
-  //     		$scope.boxer('inbox');
-  //     	}else if($scope.boxes.outbox){
-  //     		$scope.boxer('outbox');
-  //     	}
-  //     });
-      
-  //   });
-  // };
-
-
-
-
-  
-	// $scope.deleteforever = function(uuid){
-	// 	var uuids = [];
-	// 	uuids.push(uuid);
-		
-	// 	Messages.deleteforever(uuids).then(function(){
-	// 	  $scope.messages = Messages.query().then(function(){
-	// 	  	$scope.boxer('trash');
-	// 	  });
-		  
-	// 	});
-	// };
-
-
-
-
-	
-  // $scope.composeMessage = function()
-  // {
-  //   $scope.composeView = true;
-  //   $scope.listview = false;
-  //   $scope.trashview = false;
-    
-  //   $scope.message = {
-  //           subject: '',
-  //           receivers: [],
-  //           type : { message : true}
-  //   };
-    
-  //   $("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated"); 
-  // };
-
-
-
-
 
 
  //  $scope.replyMessage = function(message)
@@ -431,70 +459,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 	// $("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");    
 	// console.log(message);
  //  };
-
-
-
-
-
-
-	// $scope.composeCancel = function(){
-	// 	$scope.composeView = false;
-	// 	if($scope.boxes.inbox == true || $scope.boxes.outbox == true){
-	// 		$scope.listview = true;
-	// 	}else if($scope.boxes.trash == true){
-	// 		$scope.trashview = true;
-	// 	}  
-	// };
-
-
-	
-	// $scope.askDelete = function(message){
-	// 	$scope.modal =  {
-	// 	  header : "Delete Message",
-	// 	  title : "Do you want to delete this messsage ? ",
-	// 	  content : "You can still find the message in the trash box after deleting.",
-	// 	  left : { show : true , text : "Cancel"} ,
-	// 	  middle : { show : false } ,
-	// 	  right : { show : true , style : "btn-primary", text : "OK", func : function(){
-	// 	  	 message.state = "TRASH";
-	// 	  	 $scope.delete(message.uuid);
-	// 	  }}
-	// 	};
-	// }
-
-
-
-
-	
-	// $scope.askDeleteforever = function(message){
-	// 	$scope.modal =  {
-	// 	  header : "Delete Forever",
-	// 	  title : "Do you want to delete this messsage ?",
-	// 	  content : "Message will be deleted forever and can't be restored.",
-	// 	  left : { show : true , text : "Cancel"} ,
-	// 	  middle : { show : false } ,
-	// 	  right : { show : true , style : "btn-primary", text : "OK", func : function(){
-	// 	  	 message.state = "FOREVER";
-	// 	  	 $scope.deleteforever(message.uuid);
-	// 	  }}
-	// 	};
-	// }
-
-
-
-
-	
-	// $scope.restore = function(message){
-	// 	var uuids = [];
-	//     uuids.push(message.uuid);
-	    
-	//     Messages.changeState(uuids, "NEW").then(function(){
-	//       message.state = "NEW";
-	//       $scope.messages = Messages.query().then(function(){
-	//         $scope.boxer('trash');
-	//       });
-	//     });
-	// }
 
 
 
