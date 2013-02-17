@@ -324,7 +324,7 @@ WebPaige.
      * Redirect
      */
   	.otherwise({
-    	redirectTo: '/dashboard'
+    	redirectTo: '/login'
     });
 
   })
@@ -476,6 +476,27 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
     // $rootScope.alertMessage = "Failed to load data :[";
     // $rootScope.active = "";
   });
+
+
+
+
+
+  $rootScope.fixTabHeight = function(uuid)
+  {
+    var tabHeight = $('.tabs-left .nav-tabs').height();
+    var contentHeight = $('.tabs-left .tab-content #' + uuid).height();
+    if (tabHeight > contentHeight)
+    {
+      $('.tabs-left .tab-content #' + uuid).css({ height: $('.tabs-left .nav-tabs').height() - 41 });
+    }
+    // else if (contentHeight > tabHeight)
+    // {
+    //   //console.warn('content is bigger than tabs ->', contentHeight);
+    //   $('.tabs-left .nav-tabs').css( { height: contentHeight } );
+    // };
+  };
+
+
 
 
   /**

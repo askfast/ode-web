@@ -1,3 +1,65 @@
-<h2>Settings</h2>
-<hr>
-<p>Application settings.</p>
+<div class="page-header">
+  <h2>Settings</h2>
+</div>
+
+
+<!-- settings -->
+<div class="row-fluid">
+  <div class="tabbable tabs-left">
+    
+    <!-- tabs -->
+    <ul class="nav nav-tabs nav-tabs-app">
+
+      <li class="active">
+        <a href="#userSettingsTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('userSettingsTab')"><span class="entypo">&#128100;</span> User</a>
+      </li>
+      <li>
+        <a href="#appSettingsTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('appSettingsTab')"><span class="entypo">&#9881;</span> Application</a>
+      </li>
+    </ul>
+    <!-- end tabs -->
+
+
+    <!-- tabs content -->
+    <div class="tab-content">
+
+      <!-- userSettingsTab -->
+      <div class="tab-pane active" id="userSettingsTab">
+
+
+        <div style="overflow: hidden; height: 35px">
+          <h3 style="margin-top: 0;" class="pull-left">User Settings</h3>
+        </div>
+
+        <hr>
+
+        <p>User settings.</p>
+
+      </div>
+      <!-- end userSettingsTab -->
+
+      <!-- appSettingsTab -->
+      <div class="tab-pane" id="appSettingsTab">
+
+
+        <div style="overflow: hidden; height: 35px">
+          <h3 style="margin-top: 0;" class="pull-left">Application Settings</h3>
+        </div>
+
+        <hr>
+
+        <p>Application settings.</p>
+
+      </div>
+      <!-- end appSettingsTab -->
+
+    </div>
+    <!-- end tabs content -->
+
+  </div>
+</div>
+<!-- end settings -->

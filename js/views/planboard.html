@@ -241,8 +241,7 @@
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app"
         style="width: 100px;
-                margin-right: -1px">
-
+                margin-right: -1px;">
       <li class="active">
         <a href="#timelineTab" 
             data-toggle="tab"
@@ -253,24 +252,17 @@
             data-toggle="tab"
             ng-click="fixTabHeight('statisticsTab')"><span class="entypo">&#128200;</span> Statistics</a>
       </li>
-
     </ul>
     <!-- end tabs -->
 
 
-
-
-
     <!-- tabs content -->
     <div class="tab-content">
-
-      
       <!-- timelines -->
       <div class="tab-pane active" id="timelineTab">
-
-
+        <!-- timeline -->
         <div id="timeline">
-
+          <!-- timeline-toolbar -->
           <div id="timeline-toolbar">
 
 
@@ -362,10 +354,8 @@
 
 
           </div>
-
+          <!-- end timeline-toolbar -->
           <hr>
-
-
           <!-- timeline legenda content -->
           <div class="legenda" ng-show="timeline.config.legendarer">
 
@@ -462,16 +452,13 @@
             <hr>
           </div>
           <!-- end timeline legenda content -->
-
-
           <!-- user timeline -->
           <div id="myTimeline"></div>
           <!-- end user timeline -->
-
         </div>
-
+        <!-- end timeline -->
         <hr>
-
+        <!-- planbaord footer -->
         <p>
           <small class="pull-left">
             <span class="text-warning">Last sync time: </span>
@@ -485,24 +472,20 @@
             <span class="muted">{{data.periods.end}}</span>
           </small>
         </p>
-
+        <!-- end planbaord footer -->
       </div>
       <!-- end timelines -->
 
 
       <!-- statistics -->
       <div class="tab-pane" id="statisticsTab">
-
         <!-- timeline toolbar -->
         <div id="timeline-toolbar">
-
 
           <!-- groups members controls -->
           <div class="pull-left">
 
-
             <!-- groups list -->
-            <!-- <span style="margin-left: 15px">Group</span> -->
             <select ng-model="timeline.current.group" 
                     ng-options="group.uuid as group.name for group in groups"
                     ng-selected="timeline.current.group"
@@ -512,7 +495,6 @@
 
 
             <!-- divisions list -->
-            <!-- <span style="margin-left: 15px">Division</span> -->
             <select ng-model="timeline.current.division" 
                     ng-options="division.id as division.label for division in divisions"
                     ng-selected="timeline.current.division"
@@ -528,7 +510,6 @@
 
             <!-- timeline layout manager -->
             <div  class="btn-group">
-                  <!-- bs-buttons-checkbox> -->
 
               <button type="button" 
                       ng-model="timeline.current.layouts.group" 
@@ -546,12 +527,9 @@
           </div>
           <!--end groups members controls -->
 
-
         </div>
         <!-- end timeline toolbar -->
         <hr>
-
-
         <!-- timeline legenda content -->
         <div class="legenda">
 
@@ -624,7 +602,6 @@
           <hr>
         </div>
         <!-- end timeline legenda content -->
-
         <!-- statistics -->
         <div id="stats">
 
@@ -687,9 +664,8 @@
 
         </div>
         <!-- end statistics -->
-
         <hr>
-
+        <!-- planbaord footer -->
         <p>
           <small class="pull-left">
             <span class="text-warning">Last sync time: </span>
@@ -703,7 +679,7 @@
             <span class="muted">{{data.periods.end}}</span>
           </small>
         </p>
-
+        <!-- end planbaord footer -->
       </div>
       <!-- end statistics -->
 

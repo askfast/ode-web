@@ -7,8 +7,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 {
   var self = this;
 
-
-  console.log('messages ->', data);
+  //console.log('messages ->', data);
 
 
   /**
@@ -21,7 +20,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    * Set messages
    */
   $scope.messages = data;
-
 
   /**
    * Defaults for views
@@ -59,7 +57,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       compose: false,
       message: false,
       default: true
-    };   
+    };
+
+    $scope.fixTabHeight('inboxTab');
+
   };
 
   
@@ -71,13 +72,25 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     /**
      * Set views
      */
-    $scope.views = {
-      compose: !$scope.views.compose,
-      message: false,
-      default: false
-    }; 
-    // $scope.views.compose = !$scope.views.compose;
-    // $scope.views.default = !$scope.views.default;
+    if ($scope.views.compose)
+    {
+      $scope.views = {
+        compose: false,
+        message: false,
+        default: true
+      };
+          
+      $scope.fixTabHeight('inboxTab');
+
+    }
+    else
+    {
+      $scope.views = {
+        compose: true,
+        message: false,
+        default: false
+      };      
+    };
   };
 
 
@@ -96,7 +109,9 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       compose: false,
       message: false,
       default: true
-    }; 
+    };    
+    // console.warn('location ->', $location.replace(), $location);
+    // $location.$$rewriteAppUrl('/messages');
   };
 
 
@@ -164,18 +179,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   //   });
   // };
 
-
-
-  $scope.fixTabHeight = function(uuid)
-  {
-    var tabHeight = $('.tabs-left .nav-tabs').height();
-    var contentHeight = $('.tabs-left .tab-content #msg-' + uuid).height();
-
-    if (tabHeight > contentHeight)
-    {
-      $('.tabs-left .tab-content #msg-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
-    };
-  };
 
 
 
@@ -390,7 +393,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 	//       });
 	//     });
 	// }
-
 
 
 

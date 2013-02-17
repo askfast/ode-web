@@ -213,6 +213,12 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   };
 
 
+
+
+
+  
+
+
   Messages.prototype.changeState = function (uuids,state){
 	var deferred = $q.defer();
 	var successCb = function (result) 

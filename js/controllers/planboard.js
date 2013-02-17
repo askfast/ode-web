@@ -8,6 +8,9 @@
  */
 function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots, Dater, Storage) 
 {
+
+  //$rootScope.fixTabHeight('timelineTab');
+
   /**
    * Set default currents
    */
@@ -963,20 +966,20 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
 
 
 
-  /**
-   * TODO
-   * Quick fix for tabs on the left!
-   * Make a permanent fix for this
-   */
-  $scope.fixTabHeight = function(section)
-  {
-    var tabHeight = $('.tabs-left .nav-tabs').height();
-    var contentHeight = $('.tabs-left .tab-content #' + section).height();
-    if (tabHeight > contentHeight)
-    {
-      $('.tabs-left .tab-content #' + section).css({ height: $('.tabs-left .nav-tabs').height() });
-    };
-  };
+  // /**
+  //  * TODO
+  //  * Quick fix for tabs on the left!
+  //  * Make a permanent fix for this
+  //  */
+  // $scope.fixTabHeight = function(section)
+  // {
+  //   var tabHeight = $('.tabs-left .nav-tabs').height();
+  //   var contentHeight = $('.tabs-left .tab-content #' + section).height();
+  //   if (tabHeight > contentHeight)
+  //   {
+  //     $('.tabs-left .tab-content #' + section).css({ height: $('.tabs-left .nav-tabs').height() });
+  //   };
+  // };
 
 
 };

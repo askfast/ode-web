@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2>Profile</h2>
+  <h2>{{resources.name}}</h2>
 </div>
 
 
@@ -31,21 +31,20 @@
             ng-click="fixTabHeight('profileTab')"><span class="entypo">&#128100;</span> Profile</a>
       </li>
       <li>
-        <a href="#timelineTab" 
-            data-toggle="tab"
-            ng-click="fixTabHeight('timelineTab')"><span class="entypo">&#128340;</span> Timeline</a>
-      </li>
-      <li>
         <a href="#editTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('trashTab')"><span class="entypo">&#9998;</span> Edit</a>
+            ng-click="fixTabHeight('editTab')"><span class="entypo">&#9998;</span> Edit</a>
       </li>
       <li>
         <a href="#passwordTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('trashTab')"><span class="entypo">&#128274;</span> Password</a>
+            ng-click="fixTabHeight('passwordTab')"><span class="entypo">&#128274;</span> Password</a>
       </li>
-
+      <li>
+        <a href="#userTimelineTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('userTimelineTab')"><span class="entypo">&#128340;</span> Timeline</a>
+      </li>
     </ul>
     <!-- end tabs -->
 
@@ -59,7 +58,7 @@
 
 
         <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">View profile</h3>
+          <h3 style="margin-top: 0;" class="pull-left">Profile View</h3>
         </div>
 
         <hr>
@@ -80,23 +79,44 @@
       </div>
       <!-- end profileTab -->
 
-      <!-- timelineTab -->
-      <div class="tab-pane" id="timelineTab">
-        <p>timelineTab content</p>
-      </div>
-      <!-- end timelineTab -->
-
       <!-- editTab -->
       <div class="tab-pane" id="editTab">
-        <p>editTab content</p>
+
+
+        <div style="overflow: hidden; height: 35px">
+          <h3 style="margin-top: 0;" class="pull-left">Edit Profile</h3>
+        </div>
+
+        <hr>
+
       </div>
       <!-- end editTab -->
 
       <!-- passwordTab -->
       <div class="tab-pane" id="passwordTab">
-        <p>passwordTab content</p>
+
+
+        <div style="overflow: hidden; height: 35px">
+          <h3 style="margin-top: 0;" class="pull-left">Password Change</h3>
+        </div>
+
+        <hr>
+
       </div>
       <!-- end passwordTab -->
+
+      <!-- userTimelineTab -->
+      <div class="tab-pane" id="userTimelineTab">
+
+
+        <div style="overflow: hidden; height: 35px">
+          <h3 style="margin-top: 0;" class="pull-left">User Timeline</h3>
+        </div>
+
+        <hr>
+
+      </div>
+      <!-- end userTimelineTab -->
 
     </div>
     <!-- end tabs content -->

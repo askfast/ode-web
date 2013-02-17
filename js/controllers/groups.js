@@ -142,10 +142,10 @@ function groupsCtrl($rootScope, $scope, $config, groups, Groups, $route, $routeP
   //   Group.query();
   // }, 60 * 30);
 
-  $scope.fixTabHeight = function(uuid)
-  {
-    $('.tabs-left .tab-content #grp-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
-  };
+  // $scope.fixTabHeight = function(uuid)
+  // {
+  //   $('.tabs-left .tab-content #grp-' + uuid).css({ height: $('.tabs-left .nav-tabs').height() });
+  // };
 
 
 

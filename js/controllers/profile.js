@@ -14,18 +14,10 @@ function profileCtrl($rootScope, $scope, $config, resources, Profile, $route, $r
     id: $route.current.params.userId
   };
 
-
   $scope.save = function(resources)
   {
     Profile.save(resources);
   };
-
-	
-  timerService.start('profileTimer', function()
-  { 
-    Profile.get();
-  }, 60 * 30);
-
 };
 
 
