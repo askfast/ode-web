@@ -3,15 +3,107 @@
 /**
  * Messages Controller
  */
-function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
+function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, Messages)
 {
   var self = this;
 
-  // $scope.receviersList = Messages.receviersList();
 
+  console.log('messages ->', data);
+
+
+  /**
+   * Receivers list
+   */
+  $scope.receviersList = Messages.receviersList();
+
+
+  /**
+   * Set messages
+   */
   $scope.messages = data;
 
-  console.warn('messages ->', data);
+
+  /**
+   * Defaults for views
+   */
+  if ($route.current.params.messageId)
+  {
+    /**
+     * TODO
+     * Remove jquery hook later on, use reg. expression
+     * for url in data-match-role for bs-navbar
+     *
+     * Ugly fix for making messages link active
+     */
+    $("ul.nav li:nth-child(3)").addClass('active');
+    /**
+     * Set views
+     */
+    $scope.views = {
+      compose: false,
+      message: true,
+      default: false
+    };
+    /**
+     * Set message
+     */
+    $scope.message = Messages.find($route.current.params.messageId);
+    console.warn('message ->', $scope.message);
+  }
+  else
+  {
+    /**
+     * Set views
+     */
+    $scope.views = {
+      compose: false,
+      message: false,
+      default: true
+    };   
+  };
+
+  
+  /**
+   * Compose message view toggler
+   */
+  $scope.composeMessage = function()
+  {
+    /**
+     * Set views
+     */
+    $scope.views = {
+      compose: !$scope.views.compose,
+      message: false,
+      default: false
+    }; 
+    // $scope.views.compose = !$scope.views.compose;
+    // $scope.views.default = !$scope.views.default;
+  };
+
+
+  /**
+   * TODO
+   * Find a way to clear url if there is message uuid in url!
+   * 
+   * Reset views
+   */
+  $scope.resetViews = function()
+  {
+    /**
+     * Set views
+     */
+    $scope.views = {
+      compose: false,
+      message: false,
+      default: true
+    }; 
+  };
+
+
+
+
+
+  //console.warn('messages ->', data);
 
   
   // $scope.boxes = {
@@ -19,8 +111,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
   // 	outbox : false,
   // 	trash : false,
   // };
+
+
+
+
 	
-  // $("div[ng-show='composeView'] select.chzn-select").chosen().change( function(item){
+  // $("div[ng-show='defaultView'] select.chzn-select").chosen().change( function(item){
   // 	$.each($(this).next().find("ul li.result-selected"),function(i,li){
   // 		var req_name = $(li).html();
   // 		$.each($("div[ng-show='composeView'] select.chzn-select option"),function(j,opt){
@@ -30,6 +126,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 	 //    });
   // 	});
   // });
+
+
+
+
+
 
   // $scope.$watch('boxes', function(newbox, oldbox)
   // {
@@ -46,6 +147,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 	 // 	$scope.boxer("trash");
 	 // }
   // },true);
+
+
+
+
+
   
   // $scope.sendMessage = function(message)
   // {
@@ -115,9 +221,16 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
   //   //$scope.fixTabHeight(filtered[0].uuid);
   // };
   
-  //$scope.boxer('inbox');
+  // $scope.boxer('inbox');
 
-  //$scope.composeView = true;
+  
+
+
+
+  // $scope.composeView = true;
+
+
+
 
 
   // $scope.delete = function(uuid)
@@ -137,6 +250,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
       
   //   });
   // };
+
+
+
+
   
 	// $scope.deleteforever = function(uuid){
 	// 	var uuids = [];
@@ -149,6 +266,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 		  
 	// 	});
 	// };
+
+
+
+
 	
   // $scope.composeMessage = function()
   // {
@@ -164,6 +285,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
     
   //   $("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated"); 
   // };
+
+
+
+
+
 
  //  $scope.replyMessage = function(message)
  //  {
@@ -198,6 +324,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 	// console.log(message);
  //  };
 
+
+
+
+
+
 	// $scope.composeCancel = function(){
 	// 	$scope.composeView = false;
 	// 	if($scope.boxes.inbox == true || $scope.boxes.outbox == true){
@@ -206,6 +337,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 	// 		$scope.trashview = true;
 	// 	}  
 	// };
+
+
+
+
+
 	
 	// $scope.askDelete = function(message){
 	// 	$scope.modal =  {
@@ -220,6 +356,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 	// 	  }}
 	// 	};
 	// }
+
+
+
+
 	
 	// $scope.askDeleteforever = function(message){
 	// 	$scope.modal =  {
@@ -234,6 +374,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 	// 	  }}
 	// 	};
 	// }
+
+
+
+
 	
 	// $scope.restore = function(message){
 	// 	var uuids = [];
@@ -247,17 +391,40 @@ function messagesCtrl($scope, $rootScope, $config, $q, data, Messages)
 	//     });
 	// }
 
+
+
+
+
+
 };
+
+
+
+
+
 
 
 /**
  * Messages resolver
  */
 messagesCtrl.resolve = {
-  data: function (Messages) 
+  data: function ($route, Messages, Storage) 
   {
-    return Messages.query();
+    if ($route.current.params.messageId)
+    {
+      return Messages.filter(Messages.local());
+    }
+    else{
+      return Messages.query();
+    }
   }
 };
 
-messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', 'data', 'Messages'];
+
+
+
+
+
+
+
+messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', '$route', 'data', 'Messages'];

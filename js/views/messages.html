@@ -3,8 +3,7 @@
   <div class="btn-group pull-right">
     <button type="submit" 
             ng-click="composeMessage()" 
-            ng-hide="composeView"
-            class="btn btn-success">Compose a message</button>
+            class="btn btn-success {{(views.compose==true) && 'active'}}">Compose a message</button>
   </div>
 </div>
 
@@ -40,20 +39,34 @@
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app">
 
-      <li class="active">
+      <li class="{{(views.compose==true) && 'active'}}" ng-show="views.compose">
+        <a href="#composeTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('composeTab')"><span class="entypo">&#9998;</span> Compose</a>
+      </li>
+
+      <li class="{{(views.message==true) && 'active'}}"  ng-show="views.message">
+        <a href="#viewTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('viewTab')"><span class="entypo">&#128196;</span> Message</a>
+      </li>
+
+      <li class="{{(views.default==true) && 'active'}}">
         <a href="#inboxTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('inboxTab')"><span class="entypo">&#128229;</span> Inbox</a>
+            ng-click="fixTabHeight('inboxTab'); resetViews()"><span class="entypo">&#128229;</span> Inbox</a>
       </li>
+
       <li>
         <a href="#outboxTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('outboxTab')"><span class="entypo">&#128228;</span> Outbox</a>
+            ng-click="fixTabHeight('outboxTab'); resetViews()"><span class="entypo">&#128228;</span> Outbox</a>
       </li>
+
       <li>
         <a href="#trashTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('trashTab')"><span class="entypo">&#9749;</span> Trash</a>
+            ng-click="fixTabHeight('trashTab'); resetViews()"><span class="entypo">&#9749;</span> Trash</a>
       </li>
 
     </ul>
@@ -67,8 +80,131 @@
     <div class="tab-content">
 
       
+
+
+
+      <!-- composeTab -->
+      <div class="tab-pane active" id="composeTab" ng-show="views.compose">
+
+        <div class="tab-header">
+          <h3 class="pull-left">Compose message</h3>
+        </div>
+        <hr>
+
+        <form>
+          <fieldset>
+        
+            <div class="control-group">
+              <label>Broadcast</label>
+              <div  class="btn-group"  
+                    bs-buttons-checkbox="" 
+                    data-toggle="buttons-checkbox">
+
+                <button type="button" 
+                        class="btn" 
+                        ng-model="message.type.sms" 
+                        ng-click=""
+                        bs-button="">SMS</button>
+
+                <button type="button" 
+                        class="btn" 
+                        ng-model="message.type.email" 
+                        ng-click=""
+                        bs-button="">Email</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>Receviers</label>
+              <select data-placeholder="Choose a Recipient" 
+                      multiple class="span5 chzn-select" 
+                      chosen
+                      ng-model="message.receivers" 
+                      ng-options="receiver.name group by receiver.group for receiver in receviersList">
+              </select>
+      <!--         <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
+            </div>
+
+            <div class="control-group">
+              <label>Subject</label>
+              <input type="text" 
+                      class="span5"
+                      ng-model="message.subject"
+                      placeholder="Type a subject…">
+            </div>
+
+
+            <div class="control-group">
+              <label>Message</label>
+              <textarea rows="7" 
+                        class="span7"
+                        ng-model="message.body"></textarea>
+            </div>
+
+            <hr>
+
+            <button type="submit" 
+                    ng-click="sendMessage(message)" 
+                    class="btn btn-success">Send Message</button>
+
+            <button type="submit" 
+                    ng-click="composeCancel()" 
+                    class="btn">Cancel</button>
+
+          </fieldset>
+        </form>
+
+      </div>
+      <!-- end composeTab -->
+
+
+
+
+
+
+      
+      <!-- viewTab -->
+      <div class="tab-pane {{(views.message==true) && 'active'}}" id="viewTab" ng-show="views.message">
+
+        <div class="tab-header">
+          <h3 class="pull-left">Message</h3>
+        </div>
+        <hr>
+
+        <dl>
+          <dt>Sender</dt>
+            <dd>{{message.sender}}</dd>
+          <dt>Receiver</dt>
+            <dd>{{message.receiver}}</dd>
+          <dt>Date</dt>
+            <dd>{{message.datetime}}</dd>
+          <dt>Module</dt>
+            <dd>{{message.module}}</dd>
+          <dt>Priority</dt>
+            <dd>{{message.priority}}</dd>
+          <dt>Question Text</dt>
+            <dd>{{message.question_text}}</dd>
+          <dt>State</dt>
+            <dd>{{message.state}}</dd>
+          <dt>Subject</dt>
+            <dd>{{message.subject}}</dd>
+          <dt>Type</dt>
+            <dd>{{message.type}}</dd>
+        </dl>
+
+
+      </div>
+      <!-- end composeTab -->
+
+
+
+
+
+
+
+      
       <!-- inboxTab -->
-      <div class="tab-pane active" id="inboxTab">
+      <div class="tab-pane {{(views.default==true) && 'active'}}" id="inboxTab">
 
         <div class="tab-header">
           <h3 class="pull-left">Inbox</h3>
@@ -100,7 +236,7 @@
                           ng-model="selection[member.uuid]"
                           ng-checked="selectionMaster">
                 </td>
-                <td><a href="#/profile/{{member.uuid}}/view">{{message.subject}}</a></td>
+                <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
                 <td>{{message.creationTime}}</td>
                 <td>{{message.state}}</td>
                 <td>
@@ -132,6 +268,11 @@
 
       </div>
       <!-- end inboxTab -->
+
+
+
+
+
 
       <!-- outboxTab -->
       <div class="tab-pane" id="outboxTab">
@@ -198,6 +339,14 @@
 
       </div>
       <!-- end outboxTab -->
+
+
+
+
+
+
+
+
 
       <!-- trashTab -->
       <div class="tab-pane" id="trashTab">
@@ -288,6 +437,29 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- messages list -->
 <!-- 
 <div class="tabbable tabs-left"
@@ -345,27 +517,6 @@
       
 
       <hr>
-
-      <dl>
-			  <dt>Sender</dt>
-			  	<dd>{{message.sender}}</dd>
-			  <dt>Receiver</dt>
-			  	<dd>{{message.receiver}}</dd>
-			  <dt>Date</dt>
-			  	<dd>{{message.datetime}}</dd>
-			  <dt>Module</dt>
-			  	<dd>{{message.module}}</dd>
-			  <dt>Priority</dt>
-			  	<dd>{{message.priority}}</dd>
-			  <dt>Question Text</dt>
-			  	<dd>{{message.question_text}}</dd>
-			  <dt>State</dt>
-			  	<dd>{{message.state}}</dd>
-			  <dt>Subject</dt>
-			  	<dd>{{message.subject}}</dd>
-			  <dt>Type</dt>
-			  	<dd>{{message.type}}</dd>
-			</dl>
     
     </div>
   </div>
@@ -376,94 +527,6 @@
 
 
 
-
-
-<!-- Compose view -->
-<!-- 
-<div class=""
-      style="background-color: white; 
-                border: 1px solid #ddd; 
-                padding: 20px;" 
-      ng-show="composeView">
-
-  <div style="overflow: hidden; height: 35px">
-    <h3 style="margin-top: 0;" class="pull-left">Compose a message</h3>
-  </div>
-
-  <hr>
-
-  <form>
-    <fieldset>
-  
-      <div class="control-group">
-        <label>Message Types</label>
-        <div  class="btn-group"  
-              bs-buttons-checkbox="" 
-              data-toggle="buttons-checkbox">
-
-          <button type="button" 
-                  class="btn" 
-                  ng-model="message.type.sms" 
-                  ng-click=""
-                  bs-button="">SMS</button>
-          <button type="button" 
-                  class="btn" 
-                  ng-model="message.type.message" 
-                  ng-click=""  
-                  bs-button="">Intern Bericht</button>
-
-          <button type="button" 
-                  class="btn" 
-                  ng-model="message.type.email" 
-                  ng-click=""
-                  bs-button="">Email</button>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <label>Receviers</label>
-        <select data-placeholder="Choose a Recipient" 
-                multiple class="span5 chzn-select" 
-                chosen
-                ng-model="message.receivers" 
-                ng-options="receiver.name group by receiver.group for receiver in receviersList">
-        </select>
-<!--         <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
-<!-- 
-      </div>
-
-      <div class="control-group">
-        <label>Subject</label>
-        <input type="text" 
-                class="span5"
-                ng-model="message.subject"
-                placeholder="Type a subject…">
-      </div>
-
-
-      <div class="control-group">
-        <label>Message</label>
-        <textarea rows="7" 
-                  class="span7"
-                  ng-model="message.body"></textarea>
-      </div>
-
-      <hr>
-
-      <div class="btn-group">
-        <button type="submit" 
-                ng-click="sendMessage(message)" 
-                class="btn btn-success">Send Message</button>
-        <button type="submit" 
-                ng-click="composeCancel()" 
-                class="btn">Cancel</button>
-      </div>
-
-    </fieldset>
-  </form>
-
-</div>
-<!-- end compose view -->
 
 
 
@@ -564,62 +627,6 @@
 
 
 
-
-
-
-
-<!-- New messages view 
-<div class="row" class="messagesView"
-      style="margin-left: 0;
-              background-color: white; 
-              border: 1px solid #ddd; 
-              min-height: 600px;">
-  
-
-  <div style="border-width: 250px;
-              height: 600px;
-              width: 20%;
-              border-right: 1px solid #ddd;
-              float: left;
-              overflow: auto">
-
-    <ul style="list-style: none; margin: 0">
-
-      <li ng-repeat="message in messages" 
-          style="padding: 10px; border-bottom: 1px solid #ddd; cursor: pointer;">
-
-        <a href="#msg-{{message.uuid}}" 
-            data-toggle="tab"
-            ng-click="fixTabHeight(message.uuid)">
-          <strong>{{message.sender}}</strong><br>
-          {{message.subject}}<br>
-          {{message.creationTime}}
-        </a>
-
-      </li>
-
-    </ul>
-
-  </div>
-
-  <div style="float: left;
-              width: 79%;">
-
-    <div style="padding:20px">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </div>
-
-  </div>
-
-
-</div>
-
--->
 
 
 

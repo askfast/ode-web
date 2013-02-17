@@ -25,6 +25,7 @@ directive('chosen',function()
     link: linker
   }
 })
+
 /**
  * TODO
  * Needs attention :)

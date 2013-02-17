@@ -510,6 +510,8 @@ angular.module('$strap.directives')
 						pattern = $li.data('match-route'),
 						regexp = new RegExp('^' + pattern + '$', ["i"]);
 
+            console.warn('pattern ->', pattern, 'rg ->', regexp);
+
 					if(regexp.test(newValue)) {
 						$li.addClass('active');
 					} else {

@@ -3,7 +3,9 @@
 WebPaige.
 factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
 {
-
+  /**
+   * Messages resource
+   */
   var Messages = $resource(
     $config.host + '/question/:action',
     {
@@ -42,66 +44,57 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   );
   
 
+  /**
+   * Query messages from back-end
+   */
   Messages.prototype.query = function () 
-  {    
-
+  {
     var deferred = $q.defer();
-        //,localProfile = Storage.get('messages');
-
-    // if (localProfile)
-    // {
-    //   deferred.resolve(angular.fromJson(localSlots));
-    //   return deferred.promise;
-    // }
-    // else
-    // {
-      var successCb = function (result) 
-      {
-
-        // if (angular.equals(result, [])) 
-        // {
-        //   deferred.reject("There is no groups!");
-        // }
-        // else 
-        // {
-        //   $rootScope.notify( { message: 'Groups downloaded from back-end.' } );
-
-          Storage.add('messages', angular.toJson(result));
-        //   $rootScope.notify( { message: 'Groups data added to localStorage.' } );
-
-          deferred.resolve(Messages.prototype.filterMessages(result));
-        // }
-      };
-
-      Messages.query(successCb);
-
-      return deferred.promise;
-    // }
+    Messages.query(function(result) 
+    {
+      Storage.add('messages', angular.toJson(result));
+      deferred.resolve(Messages.prototype.filter(result));
+    });
+    return deferred.promise;
   };
 
 
   /**
    * Filter messages based on box
    */
-  Messages.prototype.filterMessages = function(messages)
+  Messages.prototype.filter = function(messages)
   {
+    /**
+     * Set inboxes
+     */
     var filtered = {
       inbox: [],
       outbox: [],
       trash: []
     };
-
+    /**
+     * Loop through messages
+     */
     angular.forEach(messages, function(message, index)
-    {         
+    {
+      /**
+       * Inbox
+       */
       if (message.box == 'inbox' &&
           message.state != 'TRASH' && message.state != 'FOREVER' )
       {
         filtered.inbox.push(message);
       }
+      /**
+       * Outbox
+       */
       else if (message.box == 'outbox' && message.state != 'TRASH')
       {
         filtered.inbox.push(message);
       }
+      /**
+       * Trash
+       */
       else if ((message.box == 'inbox' || message.box == 'outbox') &&
           message.state == 'TRASH')
       {
@@ -112,14 +105,35 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   };
 
 
+  /**
+   * Serve messages from localStorage
+   */
   Messages.prototype.local = function()
   {
     return angular.fromJson(Storage.get('messages'));
   };
 
 
+  /**
+   * Find a message in cache
+   */
+  Messages.prototype.find = function(id)
+  {
+    var gem;
+    angular.forEach(Messages.prototype.local(), function(message, index)
+    {
+      if (message.uuid == id)
+      {
+        gem = message;
+      }
+    });
+    return gem;
+  };
 
 
+  /**
+   * Serve receivers list
+   */
   Messages.prototype.receviersList = function()
   {
     var membersLocal = angular.fromJson(Storage.get('members')),

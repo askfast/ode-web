@@ -250,6 +250,14 @@ WebPaige.
           resolve: planboardCtrl.resolve    
       })
       /**
+       * Message
+       */
+      .when('/messages/:messageId', {
+          templateUrl: 'js/views/messages.html', 
+          controller: messagesCtrl,
+          resolve: messagesCtrl.resolve   
+      })
+      /**
        * Messages
        */
       .when('/messages', {
@@ -316,7 +324,7 @@ WebPaige.
      * Redirect
      */
   	.otherwise({
-    	redirectTo: '/login'
+    	redirectTo: '/dashboard'
     });
 
   })

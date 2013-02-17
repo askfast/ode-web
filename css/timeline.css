@@ -91,6 +91,10 @@
   
 }
 
+#memberBars ul li .progress {
+  margin-bottom: 5px;
+}
+
 #memberBars ul li .bar {
   width: 100%;
 }
