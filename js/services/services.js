@@ -586,15 +586,24 @@ timerService.service('timerService', [
  */
 var angularLocalStorage = angular.module('StorageModule', []);
 
+
+
+
 // You should set a prefix to avoid overwriting any local storage variables 
 // from the rest of your app
 // e.g. angularLocalStorage.constant('prefix', 'youAppName');
 angularLocalStorage.constant('prefix', 'WebPaige');
 
+
+
+
 // Cookie options (usually in case of fallback)
 // expiry = Number of days before cookies expire // 0 = Does not expire
 // path = The web path the cookie represents
 angularLocalStorage.constant('cookie', { expiry:30, path: '/'});
+
+
+
 
 angularLocalStorage.service('Storage', [
   '$rootScope', 
@@ -615,6 +624,9 @@ angularLocalStorage.service('Storage', [
 
 
 
+
+
+
   // Checks the browser to see if local storage is supported
   var browserSupportsLocalStorage = function ()
   {
@@ -624,7 +636,7 @@ angularLocalStorage.service('Storage', [
     }
     catch (e)
     {
-      $rootScope.$broadcast('StorageModule.notification.error',e.Description);
+      //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
       return false;
     }
   };
@@ -638,7 +650,7 @@ angularLocalStorage.service('Storage', [
     // If this browser does not support local storage use cookies
     if (!browserSupportsLocalStorage())
     {
-      $rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
+      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -651,7 +663,7 @@ angularLocalStorage.service('Storage', [
     }
     catch (e)
     {
-      $rootScope.$broadcast('StorageModule.notification.error',e.Description);
+      //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
       return false;
     }
     return true;
@@ -664,7 +676,7 @@ angularLocalStorage.service('Storage', [
   {
     if (!browserSupportsLocalStorage()) 
     {
-      $rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
+      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -680,7 +692,7 @@ angularLocalStorage.service('Storage', [
   {
     if (!browserSupportsLocalStorage()) 
     {
-      $rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
+      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -690,7 +702,7 @@ angularLocalStorage.service('Storage', [
     } 
     catch (e) 
     {
-      $rootScope.$broadcast('StorageModule.notification.error',e.Description);
+      //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
       return false;
     }
     return true;
@@ -705,7 +717,7 @@ angularLocalStorage.service('Storage', [
 
     if (!browserSupportsLocalStorage()) 
     {
-      $rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
+      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -722,13 +734,144 @@ angularLocalStorage.service('Storage', [
         } 
         catch (e) 
         {
-          $rootScope.$broadcast('StorageModule.notification.error',e.Description);
+          //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
           return false;
         }
       }
     }
     return true;
   };
+
+
+
+
+
+
+
+
+
+  /**
+   * Checks the browser to see if session storage is supported
+   */
+  var browserSupportsSessionStorage = function ()
+  {
+    try
+    {
+      return ('sessionStorage' in window && window['sessionStorage'] !== null);           
+    }
+    catch (e)
+    {
+      return false;
+    }
+  };
+
+
+
+  /**
+   * Directly adds a value to session storage
+   */
+  var addToSessionStorage = function (key, value)
+  {
+    if (!browserSupportsSessionStorage())
+    {
+      return false;
+    };
+
+    if (!value && value!==0 && value!=="") return false;
+
+    try
+    {
+      sessionStorage.setItem(prefix+key, value);
+    }
+    catch (e)
+    {
+      return false;
+    };
+
+    return true;
+  };
+
+
+
+  /**
+   * Get value from session storage
+   */
+  var getFromSessionStorage = function (key)
+  {
+    if (!browserSupportsSessionStorage()) 
+    {
+      return false;
+    };
+
+    var item = sessionStorage.getItem(prefix+key);
+    if (!item) return null;
+
+    return item;
+  };
+
+
+
+  /**
+   * Remove item from session storage
+   */
+  var removeFromSessionStorage = function (key) 
+  {
+    if (!browserSupportsSessionStorage()) 
+    {
+      return false;
+    };
+
+    try 
+    {
+      sessionStorage.removeItem(prefix+key);
+    } 
+    catch (e) 
+    {
+      return false;
+    };
+
+    return true;
+  };
+
+
+
+  /**
+   * Remove all data from session storage
+   */
+  var clearAllFromSessionStorage = function () 
+  {
+
+    if (!browserSupportsSessionStorage()) 
+    {
+      return false;
+    };
+
+    var prefixLength = prefix.length;
+
+    for (var key in sessionStorage) 
+    {
+      // Only remove items that are for this app
+      if (key.substr(0,prefixLength) === prefix) 
+      {
+        try 
+        {
+          removeFromSessionStorage(key.substr(prefixLength));
+        } 
+        catch (e) 
+        {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+
+
+
+
+
+
 
 
   // Checks the browser to see if cookies are supported
@@ -902,6 +1045,12 @@ angularLocalStorage.service('Storage', [
     get: getFromLocalStorage,
     remove: removeFromLocalStorage,
     clearAll: clearAllFromLocalStorage,
+    session: {
+      add: addToSessionStorage,
+      get: getFromSessionStorage,
+      remove: removeFromSessionStorage,
+      clearAll: clearAllFromSessionStorage
+    },
     cookie: {
       add: addToCookies,
       get: getFromCookies,

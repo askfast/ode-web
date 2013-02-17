@@ -1,9 +1,5 @@
 'use strict';
 
-
-
-
-
 /**
  * TODO
  * Clear list of dependencies
@@ -15,10 +11,15 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
 {
   var self = this;
 
-
+  /**
+   * User resource (general)
+   */
   var User = $resource();
 
 
+  /**
+   * Login resource
+   */
   var Login = $resource(
     $config.host + '/login',
     {
@@ -32,6 +33,25 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
   );
 
 
+  /**
+   * Resources resource
+   */
+  var Resources = $resource(
+    $config.host + '/resources',
+    {
+    },
+    {
+      get: {
+        method: 'GET',
+        params: {}
+      }
+    }
+  );
+
+
+  /**
+   * User login
+   */
   User.prototype.login = function (uuid, pass) 
   {    
     var deferred = $q.defer();
@@ -50,6 +70,9 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
   };
 
 
+  /**
+   * Logout resource
+   */
   var Logout = $resource(
     $config.host + '/logout',
     {
@@ -63,38 +86,23 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
   );
 
 
+  /**
+   * User logout
+   */
   User.prototype.logout = function () 
   {    
     var deferred = $q.defer();
     Logout.process(null, function (result) 
     {
-      // if (angular.equals(result, [])) 
-      // {
-      //   deferred.reject("Something went wrong with logout!");
-      // }
-      // else 
-      // {
-
-        deferred.resolve(result);
-      // }
+      deferred.resolve(result);
     });
     return deferred.promise;
   };
 
 
-  var Resources = $resource(
-    $config.host + '/resources',
-    {
-    },
-    {
-      get: {
-        method: 'GET',
-        params: {}
-      }
-    }
-  );
-
-
+  /**
+   * Get user resources
+   */
   User.prototype.resources = function () 
   {    
     var deferred = $q.defer();

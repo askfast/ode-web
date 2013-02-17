@@ -334,8 +334,8 @@ WebPaige.
  * Initial run functions
  */
 .run(
-['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage',
-function($rootScope, $location, $timeout, Session, Dater, Storage)
+['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', 
+function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
 {
   /**
    * If periods are not present calculate them
@@ -347,7 +347,21 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
 
 
   /**
-   * Cehck for valid session
+   * Set important info back if refreshed
+   */
+  $rootScope.app = $rootScope.app || {};
+   // if (!$rootScope.app.resources)
+   // {
+     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+   // };
+   if (!$rootScope.app.unreadMessages)
+   {
+     $rootScope.app.unreadMessages = Messages.unread();
+   };
+
+
+  /**
+   * Check for valid session
    */
   Session.check();
 

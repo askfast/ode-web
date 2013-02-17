@@ -224,6 +224,9 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         counter++;
       };
     });
+
+    console.warn('unread ->', counter);
+    
     return counter;
   };
 

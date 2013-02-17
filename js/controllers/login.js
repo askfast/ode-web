@@ -7,6 +7,16 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 {
 	var self = this;
 
+
+  /**
+   * Init rootScope app info container
+   */
+  // $rootScope.app = {};
+  if (!Storage.session.get('app'))
+  {
+    Storage.session.add('app', '{}');
+  };
+
   /**
    * TODO
    * Lose this jQuery stuff later on!
@@ -159,6 +169,9 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
     $('#login').hide();
     $('#preloader').show();
 
+    /**
+     * Preloader
+     */
     self.progress(20, 'Loading user information..');
 
     /**
@@ -167,7 +180,14 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
     User.resources()
     .then(function(resources)
     {
+      /**
+       * Fill app info container
+       */
+      $rootScope.app.resources = resources;
 
+      /**
+       * Preloader
+       */
       self.progress(40, 'Loading messages..');
 
       /**
@@ -176,7 +196,15 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
       Messages.query()
       .then(function(messages)
       {
+        /**
+         * Fill app info container for unread messages
+         */
+        $rootScope.app.unreadMessages = Messages.unread();
+        Storage.session.unreadMessages = Messages.unread();
 
+        /**
+         * Preloader
+         */
         self.progress(60, 'Loading groups..');
 
         /**
@@ -186,6 +214,9 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
         .then(function(groups)
         {
 
+          /**
+           * Preloader
+           */
           self.progress(80, 'Loading members..');
 
           /**
@@ -196,6 +227,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
           {
             calls.push(Groups.get(group.uuid));
           });
+
           /**
            * Loop through member calls pool
            */
@@ -203,6 +235,9 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
           .then(function(result)
           {
 
+            /**
+             * Preloader
+             */
             self.progress(100, 'Everything loaded!');
 
             /**
@@ -223,8 +258,6 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
              * Redirect to dashboard
              */
             $location.path('/dashboard');
-            //$window.location.href('#/dashboard');
-            //document.location = "#/dashboard";
           });
         });
       })
@@ -236,10 +269,6 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 
   /**
    * Progress bar
-   * 
-   * @param  {[type]} ratio   [description]
-   * @param  {[type]} message [description]
-   * @return {[type]}         [description]
    */
   self.progress = function(ratio , message)
   {
@@ -352,6 +381,11 @@ loginCtrl.logout = function($rootScope, $config, $scope, $window, Session, User,
      * Clear localStorage
      */
 		Storage.clearAll();
+
+    /**
+     * Clear sessionStorage
+     */
+    Storage.session.clearAll();
 
     /**
      * Set logindata back

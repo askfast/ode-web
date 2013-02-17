@@ -344,6 +344,8 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
 
 
+  Messages.unread();
+
 
 	
 	// $scope.askDelete = function(message){
