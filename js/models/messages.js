@@ -22,7 +22,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       },
       send: {
         method: 'POST',
-        params: {action : 'sendDirectMessage'}
+        params: {action: 'sendDirectMessage'}
       },
       save: {
         method: 'POST',
@@ -30,13 +30,13 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       },
       changeState: {
         method: 'POST',
-        params: {action : 'changeState'}
+        params: {action: 'changeState'}
       },
-      delete: {
-        method: 'POST',
-        params: {action : 'changeState'}
-      },
-      deleteforever : {
+      // delete: {
+      //   method: 'POST',
+      //   params: {action : 'changeState'}
+      // },
+      delete : {
       	method: 'POST',
         params: {action: 'deleteQuestions'}
       }
@@ -62,7 +62,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   /**
    * Filter messages based on box
    */
-  Messages.prototype.filter = function(messages)
+  Messages.prototype.filter = function (messages)
   {
     /**
      * Set inboxes
@@ -92,7 +92,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       else if ( message.box == 'outbox' && 
                 message.state != 'TRASH')
       {
-        filtered.inbox.push(message);
+        filtered.outbox.push(message);
       }
       /**
        * Trash
@@ -100,7 +100,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       else if ( (message.box == 'inbox' || message.box == 'outbox') &&
                 message.state == 'TRASH')
       {
-        filtered.inbox.push(message);
+        filtered.trash.push(message);
       };
     });
     return filtered;
@@ -110,7 +110,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   /**
    * Serve messages from localStorage
    */
-  Messages.prototype.local = function()
+  Messages.prototype.local = function ()
   {
     return angular.fromJson(Storage.get('messages'));
   };
@@ -119,7 +119,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   /**
    * Find a message in cache
    */
-  Messages.prototype.find = function(id)
+  Messages.prototype.find = function (id)
   {
     var gem;
     angular.forEach(Messages.prototype.local(), function(message, index)
@@ -136,7 +136,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   /**
    * Serve receivers list
    */
-  Messages.prototype.receviersList = function()
+  Messages.prototype.receviersList = function ()
   {
     var membersLocal = angular.fromJson(Storage.get('members')),
         groupsLocal = angular.fromJson(Storage.get('groups'));
@@ -165,14 +165,16 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   };
 
 
-
-
+  /**
+   * Send a message
+   */
   Messages.prototype.send = function (message) 
   {
-    var members = [],
+    var deferred = $q.defer(),
+        members = [],
         types = [];
 
-    angular.forEach(message.receivers, function(receiver, index)
+    angular.forEach(message.receivers, function (receiver, index)
     {
       members.push(receiver.id);
     });
@@ -188,32 +190,30 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       types: types
     };
 
-    var deferred = $q.defer();
-    var successCb = function (result) 
+    Messages.send(null, message, function (result) 
     {
       deferred.resolve(result);
-    };
-    Messages.send(null, message, successCb);
+    });
+
     return deferred.promise;
   };
-
-
 
 
   /**
    * Count unread messages
    */
-  Messages.prototype.unread = function()
+  Messages.prototype.unread = function ()
   {
     /**
      * Get messages and init counter
      */
     var messages = Messages.prototype.local(),
         counter = 0;
+    
     /**
      * Loop through local messages
      */
-    angular.forEach(messages, function(message, index)
+    angular.forEach(messages, function (message, index)
     {
       /**
        * Checks
@@ -225,49 +225,82 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       };
     });
 
-    console.warn('unread ->', counter);
-    
     return counter;
   };
 
 
 
 
-
-
-
-
-  Messages.prototype.changeState = function (uuids,state){
-	var deferred = $q.defer();
-	var successCb = function (result) 
-	{
-	  deferred.resolve(result);
-	};
-	Messages.changeState(null, {ids: uuids, state: state}, successCb);
-	return deferred.promise;
+  /**
+   * Change message state
+   */
+  Messages.prototype.changeState = function (ids, state)
+  {
+  	var deferred = $q.defer();
+  	Messages.changeState(null, {
+      ids: ids, 
+      state: state 
+    }, function (result) 
+    {
+      deferred.resolve(result);
+    });
+  	return deferred.promise;
   };
 
 
-  Messages.prototype.delete = function (uuids) 
+
+  /**
+   * Delete a message
+   */
+  Messages.prototype.delete = function (ids)
   {
     var deferred = $q.defer();
-    var successCb = function (result) 
+    Messages.changeState(null, { 
+      ids: ids, 
+      state: 'TRASH' 
+    }, function (result) 
     {
       deferred.resolve(result);
-    };
-    Messages.delete(null, {ids: uuids, state: "TRASH"}, successCb);
+    });
     return deferred.promise;
   };
 
-  Messages.prototype.deleteforever = function (uuids){
-  	var deferred = $q.defer();
-    var successCb = function (result) 
+
+  /**
+   * Delete forever
+   */
+  Messages.prototype.emptyTrash = function (ids)
+  {
+    var deferred = $q.defer();
+    Messages.delete(null, { 
+      members: ids 
+    }, function (result) 
     {
       deferred.resolve(result);
-    };
-    Messages.deleteforever(null, {members: uuids}, successCb);
+    });
     return deferred.promise;
   }
+
+
+
+  /**
+   * Delete a message
+   */
+  Messages.prototype.delete__ = function (uuids) 
+  {
+    var deferred = $q.defer();
+    Messages.delete(null, { ids: uuids, state: "TRASH" }, function (result) 
+    {
+      deferred.resolve(result);
+    });
+    return deferred.promise;
+  };
+
+
+
+
+
+
 
   return new Messages;
 });

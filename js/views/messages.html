@@ -84,7 +84,7 @@
 
 
       <!-- composeTab -->
-      <div class="tab-pane active" id="composeTab" ng-show="views.compose">
+      <div class="tab-pane {{(views.compose==true) && 'active'}}" id="composeTab" ng-show="views.compose">
 
         <div class="tab-header">
           <h3 class="pull-left">Compose message</h3>
@@ -117,7 +117,8 @@
             <div class="control-group">
               <label>Receviers</label>
               <select data-placeholder="Choose a Recipient" 
-                      multiple class="span5 chzn-select" 
+                      multiple 
+                      class="chzn-select" 
                       chosen
                       ng-model="message.receivers" 
                       ng-options="receiver.name group by receiver.group for receiver in receviersList">
@@ -148,8 +149,8 @@
                     class="btn btn-success">Send Message</button>
 
             <button type="submit" 
-                    ng-click="composeCancel()" 
-                    class="btn">Cancel</button>
+                    ng-click="resetViews()" 
+                    class="btn">Discard</button>
 
           </fieldset>
         </form>
@@ -219,9 +220,10 @@
               <tr>
                 <th>
                   <input type="checkbox"
-                          ng-model="selectionMaster"
-                          ng-click="toggleSelection(group, selectionMaster)">
+                          ng-model="selectionMaster.inbox"
+                          ng-click="toggleSelection(messages.inbox, 'inbox', selectionMaster.inbox)">
                 </th>
+                <th></th>
                 <th>Subject</th>
                 <th>Date</th>
                 <th>State</th>
@@ -233,20 +235,21 @@
               <tr ng-repeat="message in messages.inbox">
                 <td>
                   <input type="checkbox"
-                          ng-model="selection[member.uuid]"
-                          ng-checked="selectionMaster">
+                          ng-model="selection.inbox[message.uuid]"
+                          ng-checked="selectionMaster.inbox">
                 </td>
+                <td><span class="label label-warning" ng-show="(message.state=='NEW')">New</span></td>
                 <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
                 <td>{{message.creationTime}}</td>
                 <td>{{message.state}}</td>
                 <td>
                   <div class="pull-right">
                   
-                    <a href="#/profile/{{member.uuid}}/edit" 
-                      class="btn btn-mini"><i class="icon-share-alt"></i></a>
+                    <button class="btn btn-mini"
+                            ng-click=""><i class="icon-share-alt"></i></button>
 
                     <button type="submit" 
-                            ng-click="removeMember(member.uuid, group.uuid)" 
+                            ng-click="removeMessage(message.uuid)" 
                             class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
 
                   </div>
@@ -257,12 +260,12 @@
           </table>
 
           <button type="button" 
-                  ng-click="removeMembers(selection, group)" 
+                  ng-click="removeMessages(selection.inbox)" 
                   class="btn btn-small btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i> Remove Selected Members</button>
+                  <i class="icon-trash icon-white"></i> Delete Selected Messages</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{members[group.uuid].length}} member(s)</i></small>
+            <small><i>There are {{messages.inbox.length}} message(s)</i></small>
           </span>
         </div>
 
@@ -290,8 +293,8 @@
               <tr>
                 <th>
                   <input type="checkbox"
-                          ng-model="selectionMaster"
-                          ng-click="toggleSelection(group, selectionMaster)">
+                          ng-model="selectionMaster.outbox"
+                          ng-click="toggleSelection(messages.outbox, 'outbox', selectionMaster.outbox)">
                 </th>
                 <th>Subject</th>
                 <th>Date</th>
@@ -304,20 +307,20 @@
               <tr ng-repeat="message in messages.outbox">
                 <td>
                   <input type="checkbox"
-                          ng-model="selection[member.uuid]"
-                          ng-checked="selectionMaster">
+                          ng-model="selection.outbox[message.uuid]"
+                          ng-checked="selectionMaster.outbox">
                 </td>
-                <td><a href="#/profile/{{member.uuid}}/view">{{message.subject}}</a></td>
+                <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
                 <td>{{message.creationTime}}</td>
                 <td>{{message.state}}</td>
                 <td>
                   <div class="pull-right">
-
-                    <a href="#/profile/{{member.uuid}}/edit" 
-                      class="btn btn-mini"><i class="icon-share-alt"></i></a>
+                  
+                    <button class="btn btn-mini"
+                            ng-click=""><i class="icon-share-alt"></i></button>
 
                     <button type="submit" 
-                            ng-click="removeMember(member.uuid, group.uuid)" 
+                            ng-click="removeMessage(message.uuid)" 
                             class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
 
                   </div>
@@ -328,12 +331,12 @@
           </table>
 
           <button type="button" 
-                  ng-click="removeMembers(selection, group)" 
+                  ng-click="removeMessages(selection.outbox)" 
                   class="btn btn-small btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i> Remove Selected Members</button>
+                  <i class="icon-trash icon-white"></i> Delete Selected Messages</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{members[group.uuid].length}} member(s)</i></small>
+            <small><i>There are {{messages.outbox.length}} message(s)</i></small>
           </span>
         </div>
 
@@ -356,17 +359,12 @@
         </div>
         <hr>
 
-        <p ng-hide="messages.outbox.length > 0">There are no messages in outbox.</p>
+        <p ng-hide="messages.trash.length > 0">There are no messages in trash.</p>
 
-        <div ng-show="messages.outbox.length > 0">
+        <div ng-show="messages.trash.length > 0">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>
-                  <input type="checkbox"
-                          ng-model="selectionMaster"
-                          ng-click="toggleSelection(group, selectionMaster)">
-                </th>
                 <th>Subject</th>
                 <th>Date</th>
                 <th>State</th>
@@ -375,12 +373,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.outbox">
-                <td>
-                  <input type="checkbox"
-                          ng-model="selection[member.uuid]"
-                          ng-checked="selectionMaster">
-                </td>
+              <tr ng-repeat="message in messages.trash">
                 <td><a href="#/profile/{{member.uuid}}/view">{{message.subject}}</a></td>
                 <td>{{message.creationTime}}</td>
                 <td>{{message.state}}</td>
@@ -404,10 +397,10 @@
           <button type="button" 
                   ng-click="removeMembers(selection, group)" 
                   class="btn btn-small btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i> Remove Selected Members</button>
+                  <i class="icon-trash icon-white"></i> Empty Trash</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{members[group.uuid].length}} member(s)</i></small>
+            <small><i>There are {{messages.trash.length}} message(s)</i></small>
           </span>
         </div>
 

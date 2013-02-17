@@ -9,7 +9,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
   //console.log('messages ->', data);
 
-
   /**
    * Receivers list
    */
@@ -20,6 +19,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    * Set messages
    */
   $scope.messages = data;
+
 
   /**
    * Defaults for views
@@ -46,7 +46,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Set message
      */
     $scope.message = Messages.find($route.current.params.messageId);
-    console.warn('message ->', $scope.message);
   }
   else
   {
@@ -58,12 +57,9 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       message: false,
       default: true
     };
-
-    $scope.fixTabHeight('inboxTab');
-
   };
 
-  
+
   /**
    * Compose message view toggler
    */
@@ -78,10 +74,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         compose: false,
         message: false,
         default: true
-      };
-          
-      $scope.fixTabHeight('inboxTab');
-
+      }; 
     }
     else
     {
@@ -112,6 +105,51 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     };    
     // console.warn('location ->', $location.replace(), $location);
     // $location.$$rewriteAppUrl('/messages');
+  };
+
+
+
+  $scope.selection = {
+    inbox: {},
+    outbox: {}
+  };
+
+  $scope.selectionMaster = {
+    inbox: '',
+    outbox: ''
+  };
+
+
+  $scope.toggleSelection = function(messages, inbox, master)
+  {
+    var flag = (master) ? true : false;
+    angular.forEach(messages, function(message, index)
+    {
+      $scope.selection[inbox][message.uuid] = flag;
+    });
+  };
+
+
+
+  $scope.removeMessage = function (id)
+  {
+    console.log('remove messge id ->', id);
+  };
+
+
+
+
+  $scope.removeMessages = function (selection)
+  {
+    var ids = [];
+    angular.forEach(selection, function(flag, id)
+    {
+      if (flag)
+      {
+        ids.push(id);
+      }
+    });
+    console.log('ids ->', ids);
   };
 
 
@@ -340,11 +378,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 	// 		$scope.trashview = true;
 	// 	}  
 	// };
-
-
-
-
-  Messages.unread();
 
 
 	
