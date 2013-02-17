@@ -111,12 +111,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
   $scope.selection = {
     inbox: {},
-    outbox: {}
+    outbox: {},
+    trash: {}
   };
 
   $scope.selectionMaster = {
     inbox: '',
-    outbox: ''
+    outbox: '',
+    trash: ''
   };
 
 
@@ -133,7 +135,19 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
   $scope.removeMessage = function (id)
   {
-    console.log('remove messge id ->', id);
+    $rootScope.loading = true;
+    var bulk = [];
+    bulk.push(id);
+    Messages.remove(bulk)
+    .then(function(result)
+    {
+      Messages.query()
+      .then(function(messages)
+      {
+        $scope.messages = messages;
+        $rootScope.loading = false;
+      });
+    });
   };
 
 
@@ -149,7 +163,60 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         ids.push(id);
       }
     });
-    console.log('ids ->', ids);
+    $rootScope.loading = true;
+    Messages.remove(ids)
+    .then(function(result)
+    {
+      Messages.query()
+      .then(function(messages)
+      {
+        $scope.messages = messages;
+        $rootScope.loading = false;
+      });
+    });
+  };
+
+
+
+  $scope.restoreMessage = function (id)
+  {
+    $rootScope.loading = true;
+    var bulk = [];
+    bulk.push(id);
+    Messages.restore(bulk)
+    .then(function(result)
+    {
+      Messages.query()
+      .then(function(messages)
+      {
+        $scope.messages = messages;
+        $rootScope.loading = false;
+      });
+    });
+  };
+
+
+  $scope.restoreMessages = function (selection)
+  {
+    var ids = [];
+    angular.forEach(selection, function(flag, id)
+    {
+      if (flag)
+      {
+        ids.push(id);
+      }
+    });
+    $rootScope.loading = true;
+    Messages.restore(ids)
+    .then(function(result)
+    {
+      Messages.query()
+      .then(function(messages)
+      {
+        $scope.messages = messages;
+        $rootScope.loading = false;
+      });
+    });
   };
 
 

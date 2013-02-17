@@ -229,14 +229,13 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   };
 
 
-
-
   /**
    * Change message state
    */
   Messages.prototype.changeState = function (ids, state)
   {
   	var deferred = $q.defer();
+
   	Messages.changeState(null, {
       ids: ids, 
       state: state 
@@ -244,24 +243,43 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
     {
       deferred.resolve(result);
     });
+
   	return deferred.promise;
   };
 
 
 
   /**
-   * Delete a message
+   * Delete message(s)
    */
-  Messages.prototype.delete = function (ids)
+  Messages.prototype.remove = function (id)
   {
     var deferred = $q.defer();
-    Messages.changeState(null, { 
-      ids: ids, 
-      state: 'TRASH' 
-    }, function (result) 
+
+    Messages.prototype.changeState(id, 'TRASH')
+    .then(function (result) 
     {
       deferred.resolve(result);
     });
+
+    return deferred.promise;
+  };
+
+
+
+  /**
+   * Restore message(s)
+   */
+  Messages.prototype.restore = function (id)
+  {
+    var deferred = $q.defer();
+
+    Messages.prototype.changeState(id, 'SEEN')
+    .then(function (result) 
+    {
+      deferred.resolve(result);
+    });
+
     return deferred.promise;
   };
 
@@ -272,12 +290,14 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.emptyTrash = function (ids)
   {
     var deferred = $q.defer();
+
     Messages.delete(null, { 
       members: ids 
     }, function (result) 
     {
       deferred.resolve(result);
     });
+
     return deferred.promise;
   }
 
