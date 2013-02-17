@@ -356,7 +356,7 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
    // };
    if (!$rootScope.app.unreadMessages)
    {
-     $rootScope.app.unreadMessages = Messages.unread();
+     $rootScope.app.unreadMessages = Messages.unreadCount();
    };
 
 

@@ -199,8 +199,8 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
         /**
          * Fill app info container for unread messages
          */
-        $rootScope.app.unreadMessages = Messages.unread();
-        Storage.session.unreadMessages = Messages.unread();
+        $rootScope.app.unreadMessages = Messages.unreadCount();
+        Storage.session.unreadMessages = Messages.unreadCount();
 
         /**
          * Preloader

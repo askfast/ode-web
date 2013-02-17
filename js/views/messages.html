@@ -8,30 +8,6 @@
 </div>
 
 
-
-<!-- Messages toolbar -->
-<!-- <div class="row" style="padding-left: 30px;">
-  <div class="btn-group" style="margin-left: 15px" bs-buttons-radio>
-    <button type="button" class="btn" ng-model="boxes.inbox">Inbox</button>
-    <button type="button" class="btn" ng-model="boxes.outbox">Outbox</button>
-    <button type="button" class="btn" ng-model="boxes.trash">Trash</button>
-  </div>
-  <hr>
-</div> -->
-<!-- end of messages toolbar -->
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- inboxes -->
 <div class="row-fluid">
   <div class="tabbable tabs-left">
@@ -73,16 +49,10 @@
     <!-- end tabs -->
 
 
-
-
-
     <!-- tabs content -->
     <div class="tab-content">
 
       
-
-
-
       <!-- composeTab -->
       <div class="tab-pane {{(views.compose==true) && 'active'}}" id="composeTab" ng-show="views.compose">
 
@@ -158,11 +128,6 @@
       </div>
       <!-- end composeTab -->
 
-
-
-
-
-
       
       <!-- viewTab -->
       <div class="tab-pane {{(views.message==true) && 'active'}}" id="viewTab" ng-show="views.message">
@@ -198,12 +163,6 @@
       <!-- end composeTab -->
 
 
-
-
-
-
-
-      
       <!-- inboxTab -->
       <div class="tab-pane {{(views.default==true) && 'active'}}" id="inboxTab">
 
@@ -272,11 +231,6 @@
       </div>
       <!-- end inboxTab -->
 
-
-
-
-
-
       <!-- outboxTab -->
       <div class="tab-pane" id="outboxTab">
 
@@ -342,13 +296,6 @@
 
       </div>
       <!-- end outboxTab -->
-
-
-
-
-
-
-
 
 
       <!-- trashTab -->
@@ -427,218 +374,4 @@
 
   </div>
 </div>
-<!-- end inboxes -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- messages list -->
-<!-- 
-<div class="tabbable tabs-left"
-      ng-show="listview">
-
-  <ul class="nav nav-tabs" 
-      style="width: 210px;
-              height: 600px;
-              overflow: hidden;
-              margin-right: -1px">
-    <li ng-repeat="message in messages" 
-    		class="{{($index == 0) && 'active'}}">
-
-    	<a href="#msg-{{message.uuid}}" 
-          data-toggle="tab"
-          ng-click="fixTabHeight(message.uuid)">
-    		<strong>{{message.sender}}</strong><br>
-    		{{message.subject}}<br>
-    		{{message.creationTime}}
-    	</a>
-    	
-    	
-    </li>
-  </ul>
-
-  <div class="tab-content"
-        style="background-color: white; 
-                border: 1px solid #ddd; 
-                padding: 20px;
-                height: 600px">
-  
-
-    <div ng-repeat="message in messages"
-    			class="{{($index == 0) && 'tab-pane active' || 'tab-pane'}}"
-    			id="msg-{{message.uuid}}">
-
-      <div style="overflow: hidden; height: 35px">
-        <h3 style="margin-top: 0;" class="pull-left">{{message.subject}}</h3>
-
-	        <div class="pull-right">
-	          <button type="submit" ng-show="boxes.inbox"
-	                  ng-click="replyMessage(message)" class="btn">Reply</button>
-	       	  <button type="button" ng-show="boxes.inbox || boxes.outbox"
-	                  class="btn btn-danger" ng-click="askDelete(message)" 
-	                  bs-modal="'partials/modal.html'" >Delete</button>
-	          <button type="submit" ng-show="boxes.trash"
-	                  ng-click="restore(message)" 
-	                  class="btn ">Restore</button>
-	          <button type="submit" ng-show="boxes.trash"
-	                  ng-click="askDeleteforever(message)" 
-	                  class="btn btn-danger" bs-modal="'partials/modal.html'" >Delete Forever</button>
-	        </div>
-        
-      </div>
-      
-
-      <hr>
-    
-    </div>
-  </div>
-
-</div>
-<!-- end messages list -->
-
-
-
-
-
-
-
-<!-- Trash view --> 
-<!-- 
-<div ng-show="trashview" ng-hide="listview">
-	
-<div>
-	<div class="pull-right">
-		<button type="button"
-		ng-click="restoreSelectedMsg()"
-		class="btn">
-			<i class="icon-edit icon-white"></i> Restore
-		</button>
-		<button type="button"
-		ng-click="deleteSelectedMsg()"
-		class="btn btn-danger">
-			<i class="icon-trash icon-white"></i> Delete Forever
-		</button>
-		<button type="button"
-		ng-click="emptyMsgTrash()"
-		class="btn btn-warning">
-			<i class="icon-trash icon-white"></i> Empty Trash
-		</button>
-	</div>
-	<!-- <button type="button"
-	ng-click=""
-	style="margin-right: 15px"
-	class="btn btn-success pull-right"><i class="icon-plus icon-white"></i> Add Members</button> -->
-
-  <!-- 
-</div>
-<p ng-hide="messages.length > 0">
-	Trash is empty. 
-</p>
-<div ng-show="messages.length > 0">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>
-				<input type="checkbox"
-				ng-model="selectionMaster"
-				ng-click="toggleSelection(selectionMaster)">
-				</th>
-				<th>Subject</th>
-				<th>Sender</th>
-				<th>Receiver</th>
-				<th>Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="message in messages">
-				<td>
-				<input type="checkbox"
-				ng-model="selection[message.uuid]"
-				ng-checked="selectionMaster">
-				</td>
-				<td><a href="#/message/{{message.uuid}}/view">{{message.subject}}</a></td>
-				<td><span wp-name="message.requester | eveURL2Id"></span></td>
-				<td>
-					<ul>
-						<li ng-repeat="rec in message.responder">
-							<span wp-name="rec | eveURL2Id">
-						</li>
-					</ul>
-				</td>
-				<td>{{message.creationTime | nicelyDate}}</td>
-				<td>
-					 <div class="pull-right">
-				          <button type="submit" ng-show="boxes.trash"
-				                  ng-click="restore(message)" 
-				                  class="btn ">Restore</button>
-				          <button type="submit" ng-show="boxes.trash"
-				                  ng-click="askDeleteforever(message)" 
-				                  class="btn btn-danger " bs-modal="'partials/modal.html'" >
-				                  <i class="icon-trash icon-white"></i></button>
-			          </div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	
-	<span class="muted pull-right"><i>There are {{messages.length}} message(s)</i></span>
-</div>
-
-</div>
-     
-
-
-<!-- end Trash view -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- end inboxes

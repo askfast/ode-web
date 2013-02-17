@@ -213,9 +213,39 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
 
   /**
-   * Count unread messages
+   * Get unread messages
    */
   Messages.prototype.unread = function ()
+  {
+    /**
+     * Get messages and init counter
+     */
+    var messages = Messages.prototype.local(),
+        unread = [];
+    
+    /**
+     * Loop through local messages
+     */
+    angular.forEach(messages, function (message, index)
+    {
+      /**
+       * Checks
+       */
+      if (message.box   == 'inbox' &&
+          message.state == 'NEW')
+      {
+        unread.push(message);
+      };
+    });
+
+    return unread;
+  };
+
+
+  /**
+   * Count unread messages
+   */
+  Messages.prototype.unreadCount = function ()
   {
     /**
      * Get messages and init counter
