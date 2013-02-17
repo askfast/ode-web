@@ -327,18 +327,41 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
  * 
  * Logout from app
  */
-loginCtrl.logout = function($rootScope, $config, $scope, Session, User, Storage)
+loginCtrl.logout = function($rootScope, $config, $scope, $window, Session, User, Storage)
 {
+  /**
+   * Presentation
+   */
   $('.navbar').hide();
   $('#footer').hide();
 
+  /**
+   * Get logindata
+   */
+  var logindata = angular.fromJson(Storage.get('logindata'));
+
+  /**
+   * Log user out
+   */
 	User.logout()
 	.then(function()
 	{
 		//Session.clear();
+    
+    /**
+     * Clear localStorage
+     */
 		Storage.clearAll();
-		//console.log('user logged out successfully! Goodbye!', $rootScope);
-    document.location = "logout.html";
+
+    /**
+     * Set logindata back
+     */
+    Storage.add('logindata', angular.toJson(logindata));
+
+    /**
+     * Rediret back to login
+     */
+    $window.location.href = 'logout.html';
 	});
 };
 
