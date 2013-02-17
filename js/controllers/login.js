@@ -3,16 +3,23 @@
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, Groups, Messages, Storage)
+var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage)
 {
 	var self = this;
 
+  /**
+   * TODO
+   * Lose this jQuery stuff later on!
+   * 
+   * Jquery solution of toggling between login and app view
+   */
   $('.navbar').hide();
   $('#footer').hide();
   $('body').css({
     'background': 'url(../img/login_bg.jpg) no-repeat center center fixed',
     'backgroundSize': 'cover'
   });
+
 
   /**
    * TODO
@@ -33,12 +40,15 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
    * 
    * @type {[type]}
    */
-  var logindata = localStorage.getItem('logindata');
+  var logindata = angular.fromJson(Storage.get('logindata'));
   if (logindata)
   {
-    if ((JSON.parse(logindata)).remember)
+    /**
+     * If remember is on
+     */
+    if (logindata.remember)
     {
-      $scope.logindata = JSON.parse(logindata);
+      $scope.logindata = logindata;
     };
   };
 
@@ -46,8 +56,6 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
   /**
    * Real KNRM users for testing
-   * 
-   * @type {[type]}
    */
   $scope.knrms = knrm_users;
   $scope.loginAsKNRM = function(uuid, pass)
@@ -72,10 +80,14 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
    */
   $scope.login = function()
   {
-    // reset alerts
+    /**
+     * Reset alerts
+     */
     $('#alertDiv').hide();
 
-    // check
+    /**
+     * Checks
+     */
     if (!$scope.logindata ||
         !$scope.logindata.username || 
         !$scope.logindata.password)
@@ -83,18 +95,25 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
       return false;     
     };
 
-    // button state
+    /**
+     * Change button state
+     */
     $('#login button[type=submit]')
       .text('Login..')
       .attr('disabled', 'disabled');
 
-    // save login
-    localStorage.setItem('logindata', JSON.stringify({
+    /**
+     * Save login to localStorage
+     */
+    Storage.add('logindata', angular.toJson({
       username: $scope.logindata.username,
       password: $scope.logindata.password,
       remember: $scope.logindata.remember
     }));
 
+    /**
+     * Authorize
+     */
     self.auth( $scope.logindata.username, $md5.process($scope.logindata.password ));
   };
 
@@ -102,18 +121,22 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
 
   /**
    * Authorize user
-   * 
-   * @param  {[type]} uuid [description]
-   * @param  {[type]} pass [description]
-   * @return {[type]}      [description]
    */
   self.auth = function(uuid, pass)
-  {    
+  {
+    /**
+     * Backend login
+     */
     User.login(uuid, pass)
     .then(function(result)
 	  {
+      /**
+       * Set session
+       */
 	  	Session.set(result["X-SESSION_ID"]);
-
+      /**
+       * Init preloader
+       */
 	  	self.preloader();
 	  });
   };
@@ -127,47 +150,81 @@ var loginCtrl = function($rootScope, $config, $q, $scope, Session, User, $md5, G
    * Use local caceh for returned data
    * 
    * Initialize preloader
-   * @return {[type]} [description]
    */
   self.preloader = function()
   {
-    // presentation
+    /**
+     * Presentations
+     */
     $('#login').hide();
     $('#preloader').show();
 
-    //Storage.add('members', angular.toJson({}));
-
     self.progress(20, 'Loading user information..');
+
+    /**
+     * Get user resources
+     */
     User.resources()
     .then(function(resources)
     {
+
       self.progress(40, 'Loading messages..');
+
+      /**
+       * Get messages
+       */
       Messages.query()
       .then(function(messages)
       {
+
         self.progress(60, 'Loading groups..');
+
+        /**
+         * Get groups
+         */
         Groups.query()
         .then(function(groups)
         {
+
           self.progress(80, 'Loading members..');
+
+          /**
+           * Compile member calls into one pool
+           */
           var calls = [];
           angular.forEach(groups, function(group, index)
           {
             calls.push(Groups.get(group.uuid));
           });
+          /**
+           * Loop through member calls pool
+           */
           $q.all(calls)
           .then(function(result)
           {
+
             self.progress(100, 'Everything loaded!');
+
+            /**
+             * Make unique list of members
+             */
             Groups.uniqueMembers();
             
+            /**
+             * Presentations
+             */
             $('.navbar').show();
             $('#footer').show();
             $('body').css({
               'background': 'url(../img/bg.jpg) repeat'
             });
 
-            document.location = "#/dashboard";
+            /**
+             * Redirect to dashboard
+             */
+            $location.path('/dashboard');
+            //$window.location.href('#/dashboard');
+            //document.location = "#/dashboard";
           });
         });
       })
@@ -349,6 +406,7 @@ loginCtrl.prototype = {
 
 loginCtrl.$inject = [ '$rootScope', 
                       '$config', 
+                      '$location',
                       '$q', 
                       '$scope', 
                       'Session', 

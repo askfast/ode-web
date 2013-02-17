@@ -81,22 +81,24 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        * Inbox
        */
       if (message.box == 'inbox' &&
-          message.state != 'TRASH' && message.state != 'FOREVER' )
+          message.state != 'TRASH' && 
+          message.state != 'FOREVER')
       {
         filtered.inbox.push(message);
       }
       /**
        * Outbox
        */
-      else if (message.box == 'outbox' && message.state != 'TRASH')
+      else if ( message.box == 'outbox' && 
+                message.state != 'TRASH')
       {
         filtered.inbox.push(message);
       }
       /**
        * Trash
        */
-      else if ((message.box == 'inbox' || message.box == 'outbox') &&
-          message.state == 'TRASH')
+      else if ( (message.box == 'inbox' || message.box == 'outbox') &&
+                message.state == 'TRASH')
       {
         filtered.inbox.push(message);
       };
@@ -198,25 +200,38 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
 
 
-
+  /**
+   * Count unread messages
+   */
   Messages.prototype.unread = function()
   {
+    /**
+     * Get messages and init counter
+     */
     var messages = Messages.prototype.local(),
-        count = 0;
+        counter = 0;
+    /**
+     * Loop through local messages
+     */
     angular.forEach(messages, function(message, index)
     {
-      //console.log('sender ->', message.requester.split('personalagent/')[1].split('/')[0], message.state);
-      if (message.state == 'NEW' &&
-          message.requester.split('personalagent/')[1].split('/')[0] == 'apptestknrm') count++;
+      /**
+       * Checks
+       */
+      if (message.box   == 'inbox' &&
+          message.state == 'NEW')
+      {
+        counter++;
+      };
     });
-    return count;
+    return counter;
   };
 
 
 
 
 
-  
+
 
 
   Messages.prototype.changeState = function (uuids,state){
