@@ -107,27 +107,6 @@ angular.module('WebPaige.filters', [])
 
 	}
 }])
-.filter('eveURL2Id', function()
-{
-    return function(url)
-    {
-        var uuidArray = url.split("/");
-        var uuid = uuidArray[uuidArray.length-2];
-        return uuid;
-    }
-})
-.filter('nicelyDate', ['Dater', function(Dater)
-{
-	return function(date)
-	{
-	    var cov_date = Dater.readableDate(date);
-		if(cov_date == "Invalid Date"){
-		    // could be unix time stamp 
-		    date =  Math.round(date);
-		}
-		return new Date(date).toString('dddd MMMM d, yyyy');
-	}
-}])
 /**
  * Range info filter
  */
@@ -214,7 +193,65 @@ angular.module('WebPaige.filters', [])
 	{
 		return Date(stamp).toString('dd-M-yyyy HH:mm');
 	};
-});
+})
+
+/**
+ * TODO
+ * Implement state conversion from config later on!
+ * 
+ * Convert ratios to readable formats
+ */
+.filter('convertRatios', ['$config', function($config)
+{
+	return function(stats)
+	{
+		var ratios = '';
+		angular.forEach(stats, function(stat, index)
+		{
+			ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
+		})
+		return ratios.substring(0, ratios.length - 2);
+	};
+}])
+
+/** 
+ * Convert user uuid to name
+ */
+.filter('convertUserIdToName', ['Storage', function(Storage)
+{
+	var members = angular.fromJson(Storage.get('members'));
+	return function(id)
+	{
+		return members[id].name;
+	};
+}])
+
+
+
+
+
+.filter('eveURL2Id', function()
+{
+    return function(url)
+    {
+        var uuidArray = url.split("/");
+        var uuid = uuidArray[uuidArray.length-2];
+        return uuid;
+    }
+})
+
+.filter('nicelyDate', ['Dater', function(Dater)
+{
+	return function(date)
+	{
+	    var cov_date = Dater.readableDate(date);
+		if(cov_date == "Invalid Date"){
+		    // could be unix time stamp 
+		    date =  Math.round(date);
+		}
+		return new Date(date).toString('dddd MMMM d, yyyy');
+	}
+}])
 
 
 

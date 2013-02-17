@@ -118,7 +118,7 @@ WebPaige.
          * Timeline legenda setting
          */
         legenda: {},
-        legendarer: true,
+        legendarer: false,
         /**
          * Availability states
          */

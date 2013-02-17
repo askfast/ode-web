@@ -94,22 +94,11 @@ function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots
     $scope.timeline.config.legenda[index] = true;
   });
 
-
-  // $scope.legenda = {
-  //   members: {
-  //     available:  false,
-  //     north:      false,
-  //     south:      false,
-  //     service:    false,
-  //     notAvailable: false,
-  //     notReached: false
-  //   },
-  //   groups: {
-  //     more: false,
-  //     even: false,
-  //     less: false
-  //   }
-  // };
+  $scope.timeline.config.legenda.groups = {
+    more: true,
+    even: true,
+    less: true
+  };
 
 
 
@@ -1179,19 +1168,34 @@ planboardCtrl.prototype = {
     {
       angular.forEach(data.user, function(slot, index)
       {
-        timedata.push({
-          start: Math.round(slot.start * 1000),
-          end: Math.round(slot.end * 1000),
-          group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' : 
-                                    wrapper('a') + 'Planning',
-          content: angular.toJson({ 
-            id: slot.id, 
-            recursive: slot.recursive, 
-            state: slot.text 
-            }),
-          className: config.states[slot.text].className,
-          editable: true
-        });        
+        /**
+         * Loop through legenda items
+         */
+        angular.forEach(config.legenda, function(value, legenda)
+        {
+          /**
+           * Check whether legenda item is selected
+           */
+          if (slot.text == legenda && value)
+          {
+            /**
+             * Push slot in the pool
+             */
+            timedata.push({
+              start: Math.round(slot.start * 1000),
+              end: Math.round(slot.end * 1000),
+              group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' : 
+                                        wrapper('a') + 'Planning',
+              content: angular.toJson({ 
+                id: slot.id, 
+                recursive: slot.recursive, 
+                state: slot.text 
+                }),
+              className: config.states[slot.text].className,
+              editable: true
+            });
+          };
+        });       
       });
       /**
        * Add loading slots
@@ -1360,17 +1364,25 @@ planboardCtrl.prototype = {
                         span + 
                         '</div>';
           /**
-           * Push in pool
+           * Filter aggs based on selection
            */
-          timedata.push({
-            start: Math.round(slot.start * 1000),
-            end: Math.round(slot.end * 1000),
-            //group: wrapper('c') + groups[data.aggs.id],
-            group: wrapper('c') + name,
-            content: requirement + actual,
-            className: 'group-aggs',
-            editable: false
-          });
+          if (  (slot.diff > 0 && config.legenda.groups.more) ||
+                (slot.diff == 0 && config.legenda.groups.even) || 
+                (slot.diff < 0 && config.legenda.groups.less) )
+          {
+            /**
+             * Push in pool
+             */
+            timedata.push({
+              start: Math.round(slot.start * 1000),
+              end: Math.round(slot.end * 1000),
+              //group: wrapper('c') + groups[data.aggs.id],
+              group: wrapper('c') + name,
+              content: requirement + actual,
+              className: 'group-aggs',
+              editable: false
+            });
+          };
           /**
            * Add loading slots
            */
@@ -1435,16 +1447,24 @@ planboardCtrl.prototype = {
             cn = 'less'
           };
           /**
-           * Push in pool
+           * Filter aggs based on selection
            */
-          timedata.push({
-            start: Math.round(slot.start * 1000),
-            end: Math.round(slot.end * 1000),
-            group: wrapper('c') + name,
-            content: cn,
-            className: 'agg-' + cn,
-            editable: false
-          });
+          if (  (slot.diff > 0 && config.legenda.groups.more) ||
+                (slot.diff == 0 && config.legenda.groups.even) || 
+                (slot.diff < 0 && config.legenda.groups.less) )
+          {
+            /**
+             * Push in pool
+             */
+            timedata.push({
+              start: Math.round(slot.start * 1000),
+              end: Math.round(slot.end * 1000),
+              group: wrapper('c') + name,
+              content: cn,
+              className: 'agg-' + cn,
+              editable: false
+            });
+          };
           /**
            * Add loading slots
            */
@@ -1584,23 +1604,46 @@ planboardCtrl.prototype = {
      */
     if (data.aggs && data.aggs.ratios)
     {
+      /**
+       * Clean group pie chart holder
+       */
+      document.getElementById("groupPie").innerHTML = '';
+      /**
+       * Init vars
+       */
       var ratios = [];
       var legends = [];
+      /**
+       * Loop through group agg. ratios
+       */
       angular.forEach(data.aggs.ratios, function(ratio, index)
       {
+        /**
+         * Ratios
+         */
         ratios.push(ratio);
+        /**
+         * Legends
+         */
         legends.push('[ ' + index + ' people ] - ' + ratio + '%');
       });
-
+      /**
+       * Pie chart it baby!
+       */
       var r = Raphael("groupPie"),
           pie = r.piechart(140, 120, 100, ratios, 
           { 
             legend: legends
-            //,legendpos: "west", href: ["http://raphaeljs.com", "http://g.raphaeljs.com"]
           });
-
-      r.text(140, 240, name).attr({ font: "20px sans-serif" });
-
+      /**
+       * Pie chart title
+       */
+      r.text(140, 240, name).attr({
+        font: "20px sans-serif"
+      });
+      /**
+       * Decorate it with mouse effects
+       */
       pie.hover(
       function()
       {
