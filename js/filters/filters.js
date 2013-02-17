@@ -2,6 +2,8 @@
 
 /* Filters */
 angular.module('WebPaige.filters', [])
+
+
 /**
  * Translate roles
  */
@@ -23,6 +25,8 @@ angular.module('WebPaige.filters', [])
 		}
 	}
 })
+
+
 /**
  * Main range filter
  */
@@ -107,6 +111,8 @@ angular.module('WebPaige.filters', [])
 
 	}
 }])
+
+
 /**
  * Range info filter
  */
@@ -184,6 +190,7 @@ angular.module('WebPaige.filters', [])
 	};
 }])
 
+
 /**
  * Convert timeStamp to readable date and time
  */
@@ -194,6 +201,7 @@ angular.module('WebPaige.filters', [])
 		return Date(stamp).toString('dd-M-yyyy HH:mm');
 	};
 })
+
 
 /**
  * TODO
@@ -214,22 +222,9 @@ angular.module('WebPaige.filters', [])
 	};
 }])
 
-/** 
- * Convert user uuid to name
- */
-.filter('convertUserIdToName', ['Storage', function(Storage)
-{
-	var members = angular.fromJson(Storage.get('members'));
-	return function(id)
-	{
-		return members[id].name;
-	};
-}])
-
-
 
 /** 
- * Calculate time in days, hours and minutes
+ * Calculate time in days
  */
 .filter('calculateTimeInDays', function()
 {
@@ -251,6 +246,11 @@ angular.module('WebPaige.filters', [])
 		return 	Math.floor(days / day);
 	};
 })
+
+
+/**
+ * Calculate time in hours
+ */
 .filter('calculateTimeInHours', function()
 {
 	return function(stamp)
@@ -271,6 +271,11 @@ angular.module('WebPaige.filters', [])
 		return 	Math.floor(hours / hour);
 	};
 })
+
+
+/**
+ * Calculate time in minutes
+ */
 .filter('calculateTimeInMinutes', function()
 {
 	return function(stamp)
@@ -296,33 +301,44 @@ angular.module('WebPaige.filters', [])
 })
 
 
-
-
-
-.filter('eveURL2Id', function()
+/**
+ * Convert eve urls to ids
+ */
+.filter('convertEve', function()
 {
-    return function(url)
-    {
-        var uuidArray = url.split("/");
-        var uuid = uuidArray[uuidArray.length-2];
-        return uuid;
-    }
+  return function(url)
+  {
+    var eve = url.split("/");
+    return eve[eve.length-2];
+  }
 })
 
-.filter('nicelyDate', ['Dater', function(Dater)
+
+/** 
+ * Convert user uuid to name
+ */
+.filter('convertUserIdToName', ['Storage', function(Storage)
 {
-	return function(date)
+	var members = angular.fromJson(Storage.get('members'));
+	return function(id)
 	{
-	    var cov_date = Dater.readableDate(date);
-		if(cov_date == "Invalid Date"){
-		    // could be unix time stamp 
-		    date =  Math.round(date);
-		}
-		return new Date(date).toString('dddd MMMM d, yyyy');
-	}
-}])
+		return members[id].name;
+	};
+}]);
 
 
-
-
-
+/**
+ * Convert timeStamps to dates
+ */
+// .filter('nicelyDate', ['Dater', function(Dater)
+// {
+// 	return function(date)
+// 	{
+// 	  var cov_date = Dater.readableDate(date);
+// 		if(cov_date == "Invalid Date"){
+// 		    // could be unix time stamp 
+// 		    date =  Math.round(date);
+// 		}
+// 		return new Date(date).toString('dddd MMMM d, yyyy');
+// 	}
+// }])

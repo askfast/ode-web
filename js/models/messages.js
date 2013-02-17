@@ -58,6 +58,15 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        */
       Storage.add('messages', angular.toJson(result));
 
+      // /**
+      //  * Set sender and receiver
+      //  */
+      // angular.forEach(result, function(message, index)
+      // {
+      //   message.sender = message.requester.split('personalagent/')[1].split('/')[0];
+      //   console.log('sender ->', message.requester.split('personalagent/')[1].split('/')[0]);
+      // });
+
       deferred.resolve(Messages.prototype.filter(result));
     });
 
