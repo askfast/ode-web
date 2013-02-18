@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, data, Profile, $route, Storage)
+function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage)
 {
   /**
    * Self this
@@ -213,45 +213,67 @@ function profileCtrl($rootScope, $scope, $config, $q, data, Profile, $route, Sto
         }
       };
       return false;
+    }
+    /**
+     * Check if current password is correct
+     */
+    else if ($rootScope.app.resources.askPass == $md5.process(passwords.current))
+    {
+      /**
+       * Set preloader
+       */
+      $rootScope.loading = true;
+      /**
+       * Save profile
+       */
+      Profile.changePassword(passwords)
+      .then(function(result)
+      {
+        /**
+         * Get fresh profile data
+         */
+        Profile.get($rootScope.app.resources.uuid, true)
+        .then(function(resources)
+        {
+          /**
+           * Reload resources
+           */
+          $scope.resources = resources;
+          /**
+           * Set preloader
+           */
+          $rootScope.loading = false;
+          /**
+           * Inform user
+           */
+          $scope.alert = {
+            password: {
+              display: true,
+              type: 'alert-success',
+              message: 'Password is succesfully changed.'
+            }
+          };
+        });
+      });
+    }
+    /**
+     * Current password is wrong
+     */
+    else
+    {
+      /**
+       * Inform user
+       */
+      $scope.alert = {
+        password: {
+          display: true,
+          type: 'alert-error',
+          message: 'Given current password is wrong! Please try it again.'
+        }
+      };
     };
-
-    // /**
-    //  * Set preloader
-    //  */
-    // $rootScope.loading = true;
-    // /**
-    //  * Save profile
-    //  */
-    // Profile.save(resources)
-    // .then(function(result)
-    // {
-    //   /**
-    //    * Get fresh profile data
-    //    */
-    //   Profile.get()
-    //   .then(function(resources)
-    //   {
-    //     /**
-    //      * Reload resources
-    //      */
-    //     $scope.resources = resources;
-    //     /**
-    //      * Set preloader
-    //      */
-    //     $rootScope.loading = false;
-    //     /**
-    //      * Inform user
-    //      */
-    //     $scope.alert = {
-    //       edit: {
-    //         display: true,
-    //         type: 'alert-success',
-    //         message: 'Profile data is succesfully changed.'
-    //       }
-    //     };
-    //   });
-    // });
   };
+
 
 
 };
@@ -278,4 +300,4 @@ profileCtrl.prototype = {
 
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 'data', 'Profile', '$route', 'Storage'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', '$md5', 'data', 'Profile', '$route', 'Storage'];

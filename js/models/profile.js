@@ -1,19 +1,15 @@
 'use strict';
 
 WebPaige.
-factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope) 
 {
 
   /**
-   * TODO
-   * lose route parameter later on from here
-   * 
    * Profile resource
    */
   var Profile = $resource(
     $config.host + '/node/:id/resource',
     {
-      //user: $route.current.params.userId
     },
     {
       get: {
@@ -26,6 +22,51 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
       }
     }
   );
+
+
+  /**
+   * Resources resource
+   */
+  var Resources = $resource(
+    $config.host + '/resources',
+    {
+    },
+    {
+      get: {
+        method: 'GET',
+        params: {}
+      },
+      save: {
+        method: 'POST',
+        params: {
+          /**
+           * It seems like backend accepts data in request payload as body as well
+           */
+          //tags: ''
+        }
+      }
+    }
+  );
+
+
+  /**
+   * Change password for user
+   */
+  Profile.prototype.changePassword = function (passwords) 
+  {    
+    var deferred = $q.defer();
+    /**
+     * Change passwords
+     */
+    Resources.save(null, {
+      askPass: $md5.process(passwords.new1)
+    }, function (result) 
+    {
+      deferred.resolve(result);
+    });
+
+    return deferred.promise;
+  };
 
 
   /**
