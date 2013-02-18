@@ -5,6 +5,9 @@
  */
 var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage)
 {
+  /**
+   * Self this
+   */
 	var self = this;
 
 
