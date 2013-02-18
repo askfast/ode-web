@@ -10,22 +10,25 @@
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app">
 
-      <li class="active">
+      <li class="{{(views.view==true) && 'active'}}">
         <a href="#profileTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('profileTab')"><span class="entypo">&#128100;</span> Profile</a>
       </li>
-      <li>
+
+      <li class="{{(views.edit==true) && 'active'}}">
         <a href="#editTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('editTab')"><span class="entypo">&#9998;</span> Edit</a>
       </li>
-      <li>
+
+      <li class="{{(views.password==true) && 'active'}}">
         <a href="#passwordTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('passwordTab')"><span class="entypo">&#128274;</span> Password</a>
       </li>
-      <li>
+
+      <li class="{{(views.timeline==true) && 'active'}}">
         <a href="#userTimelineTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('userTimelineTab')"><span class="entypo">&#128340;</span> Timeline</a>
@@ -39,15 +42,16 @@
 
       
       <!-- profileTab -->
-      <div class="tab-pane active" id="profileTab">
+      <div class="tab-pane {{(views.view==true) && 'active'}}" id="profileTab">
 
-
+        <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">Profile View</h3>
         </div>
-
+        <!-- end tab header -->
         <hr>
 
+        <!-- profile info -->
         <dl>
           <dt>Email</dt>
             <dd>{{resources.EmailAddress}}</dd>
@@ -59,21 +63,25 @@
             <dd>{{resources.PostZip}}</dd>
           <dt>City</dt>
             <dd>{{resources.PostCity}}</dd>
-        </dl>  
+        </dl>
+        <!-- end profile info -->
 
       </div>
       <!-- end profileTab -->
 
+
+
       <!-- editTab -->
-      <div class="tab-pane" id="editTab">
+      <div class="tab-pane {{(views.edit==true) && 'active'}}" id="editTab">
 
-
+        <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">Edit Profile</h3>
         </div>
-
+        <!-- end tab header -->
         <hr>
 
+        <!-- edit profile form -->
         <form class="form-vertical">
 
           <div class="control-group">
@@ -147,21 +155,24 @@
           </div>
 
         </form>
-
+        <!-- end edit profile form -->
 
       </div>
       <!-- end editTab -->
 
+
+
       <!-- passwordTab -->
-      <div class="tab-pane" id="passwordTab">
+      <div class="tab-pane {{(views.password==true) && 'active'}}" id="passwordTab">
 
-
+        <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">Password Change</h3>
         </div>
-
+        <!-- end tab header -->
         <hr>
 
+        <!-- password form -->
         <form class="form-vertical">
 
           <div class="control-group">
@@ -202,22 +213,30 @@
           </div>
 
         </form>
+        <!-- end password form -->
 
       </div>
       <!-- end passwordTab -->
 
+
+
       <!-- userTimelineTab -->
-      <div class="tab-pane" id="userTimelineTab">
+      <div class="tab-pane {{(views.timeline==true) && 'active'}}" id="userTimelineTab">
 
-
+        <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">User Timeline</h3>
         </div>
-
+        <!-- end tab header -->
         <hr>
+
+        <!-- user timeline -->
+        <!-- end user timeline -->
 
       </div>
       <!-- end userTimelineTab -->
+
+
 
     </div>
     <!-- end tabs content -->
