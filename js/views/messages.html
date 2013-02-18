@@ -343,7 +343,9 @@
                           ng-checked="selectionMaster.trash">
                 </td>
                 <td><span class="label">{{message.box}}</span></td>
-                <td></td>
+                <td>
+                  <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
+                </td>
                 <td><a href="#/profile/{{member.uuid}}/view">{{message.subject}}</a></td>
                 <td>{{message.creationTime|convertTimeStamp}}</td>
                 <td>

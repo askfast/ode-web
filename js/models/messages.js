@@ -93,6 +93,10 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
     angular.forEach(messages, function(message, index)
     {
       /**
+       * If message has no subject
+       */
+      if (message.subject == '') message.subject = '-No Subject-';
+      /**
        * Inbox
        */
       if (message.box == 'inbox' &&
