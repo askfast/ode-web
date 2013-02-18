@@ -92,18 +92,18 @@ WebPaige.
         style: 'box',
         groupsWidth: '150px',
         eventMarginAxis: 0,
-        //showNavigation: true,
         showCustomTime: true,
         groupsChangeable: false,
+        // showNavigation: true,
         // periods
-        //start: Date.today().add({ days: -2 }),
-        //end: Date.today().add({ days: 12 }),
+        // start: Date.today().add({ days: -2 }),
+        // end: Date.today().add({ days: 12 }),
         // end periods
-        //min: "2013-01-01T00:00:00.000Z",
-        //max: "2013-12-31T00:00:00.000Z",
+        // min: "2013-01-01T00:00:00.000Z",
+        // max: "2013-12-31T00:00:00.000Z",
         // intervals
         intervalMin: 1000 * 60 * 60 * 1,
-        //intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
+        // intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
       },
       config: {
         /**
@@ -115,7 +115,7 @@ WebPaige.
          */
         wishes: false,
         /**
-         * Timeline legenda setting
+         * Timeline legenda settings
          */
         legenda: {},
         legendarer: false,
@@ -180,7 +180,7 @@ WebPaige.
         /**
          * Density based colors for group aggs.
          */
-        //densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'] 
+        // densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'] 
         densities: {
           less: '#a0a0a0',
           even: '#ba6a24',
