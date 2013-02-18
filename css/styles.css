@@ -339,6 +339,13 @@ label {
 }
 
 
+#login label {
+  font-weight: normal;
+}
+
+#login p {
+  margin-top:15px;
+}
 
 
 

@@ -77,33 +77,54 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
    * Save profile
    */
   Profile.prototype.save = function (resources) 
-  {    
+  {
+    var deferred = $q.defer();
     /**
-     * Local resources
+     * Save profile data
      */
-    var localResources = angular.fromJson(Storage.get('resources'));
-
-    /**
-     * Set values
-     */
-    localResources['name'] = resources.name;
-    localResources['EmailAddress'] = resources.EmailAddress;
-    localResources['PhoneAddress'] = resources.PhoneAddress;
-    localResources['PostAddress'] = resources.PostAddress;
-    localResources['PostZip'] = resources.PostZip;
-    localResources['PostCity'] = resources.PostCity;
-
-    /**
-     * Add to storage
-     */
-    Storage.add('slots', angular.toJson(localResources));
-
-    // $rootScope.notify( { message: 'Profile saved in localStorage.' } );
-
-    Profile.save(null, resources, function()
+    Profile.save(null, resources, function(result) 
     {
-      // $rootScope.notify( { message: 'Profile saved in back-end.' } );
+      /**
+       * Save to localStorage
+       */
+      Storage.add('resources', angular.toJson(result));
+      /**
+       * Return result
+       */
+      deferred.resolve(result);
     });
+    /**
+     * Return promise
+     */
+    return deferred.promise;
+
+
+    // /**
+    //  * Local resources
+    //  */
+    // var localResources = angular.fromJson(Storage.get('resources'));
+
+    // /**
+    //  * Set values
+    //  */
+    // localResources['name'] = resources.name;
+    // localResources['EmailAddress'] = resources.EmailAddress;
+    // localResources['PhoneAddress'] = resources.PhoneAddress;
+    // localResources['PostAddress'] = resources.PostAddress;
+    // localResources['PostZip'] = resources.PostZip;
+    // localResources['PostCity'] = resources.PostCity;
+
+    // /**
+    //  * Add to storage
+    //  */
+    // Storage.add('slots', angular.toJson(localResources));
+
+    // // $rootScope.notify( { message: 'Profile saved in localStorage.' } );
+
+    // Profile.save(null, resources, function()
+    // {
+    //   // $rootScope.notify( { message: 'Profile saved in back-end.' } );
+    // });
   };
 
 

@@ -22,7 +22,7 @@
             ng-click="fixTabHeight('editTab')"><span class="entypo">&#9998;</span> Edit</a>
       </li>
 
-      <li class="{{(views.password==true) && 'active'}}">
+      <li class="{{(views.password==true) && 'active'}}" ng-show="views.user">
         <a href="#passwordTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('passwordTab')"><span class="entypo">&#128274;</span> Password</a>
@@ -80,6 +80,13 @@
         </div>
         <!-- end tab header -->
         <hr>
+
+        <!-- alert edit -->
+        <div class="alert {{alert.edit.type}}" ng-show="alert.edit.display">
+          <button class="close" type="button" ng-click="alert.edit=false">×</button>
+          {{alert.edit.message}}
+        </div>
+        <!-- end edit password -->
 
         <!-- edit profile form -->
         <form class="form-vertical">
@@ -163,7 +170,7 @@
 
 
       <!-- passwordTab -->
-      <div class="tab-pane {{(views.password==true) && 'active'}}" id="passwordTab">
+      <div class="tab-pane {{(views.password==true) && 'active'}}" id="passwordTab" ng-show="views.user">
 
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
@@ -171,6 +178,13 @@
         </div>
         <!-- end tab header -->
         <hr>
+
+        <!-- alert password -->
+        <div class="alert {{alert.password.type}}" ng-show="alert.password.display">
+          <button class="close" type="button" ng-click="alert.password=false">×</button>
+          {{alert.password.message}}
+        </div>
+        <!-- end alert password -->
 
         <!-- password form -->
         <form class="form-vertical">
@@ -185,11 +199,11 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">New passowrd</label>
+            <label class="control-label">New password</label>
             <div class="controls">
               <input  type="password" 
                       class="span3" 
-                      ng-model="passwords.new">
+                      ng-model="passwords.new1">
             </div>
           </div>
 
@@ -198,7 +212,7 @@
             <div class="controls">
               <input  type="password" 
                       class="span3" 
-                      ng-model="passwords.new_repeat">
+                      ng-model="passwords.new2">
             </div>
           </div>
 
@@ -208,7 +222,7 @@
             <div class="controls">
               <button   type="submit" 
                         class="btn btn-success"
-                        ng-click="save(resources)">Change password</button>
+                        ng-click="change(passwords)">Change password</button>
             </div>
           </div>
 
