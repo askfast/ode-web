@@ -380,6 +380,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   };
 
 
+
 	/**
    * Fix for not displaying original sender in multiple receivers selector
    * in the case that user wants to add more receivers to the list  
@@ -399,7 +400,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 	    });
   	});
   });
-
 
 
   /**
@@ -435,6 +435,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       subject: 'RE: ' + message.subject,
       receivers: [ {group: "Users" , id: senderId , name: name} ]
     };
+
 
     /**
      * Trigger chosen
@@ -486,13 +487,159 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         $rootScope.loading = false;
       });
     });
+    
+	$("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");    
+	console.log($scope.trashview);
   };
 
+	$scope.composeCancel = function(){
+		$scope.composeView = false;
+		if($scope.boxes.inbox == true || $scope.boxes.outbox == true){
+			$scope.listview = true;
+		}else if($scope.boxes.trash == true){
+			$scope.trashview = true;
+		}  
+	};
+	
+	$scope.askDelete = function(message){
+		$scope.modal =  {
+		  header : "Delete Message",
+		  title : "Do you want to delete this messsage ? ",
+		  content : "You can still find the message in the trash box after deleting.",
+		  left : { show : true , text : "Cancel"} ,
+		  middle : { show : false } ,
+		  right : { show : true , style : "btn-primary", text : "OK", func : function(){
+		  	 message.state = "TRASH";
+		  	 $scope.delete(message.uuid);
+		  }}
+		};
+	}
+	
+	$scope.askDeleteforever = function(message){
+		$scope.modal =  {
+		  header : "Delete Forever",
+		  title : "Do you want to delete this messsage ?",
+		  content : "Message will be deleted forever and can't be restored.",
+		  left : { show : true , text : "Cancel"} ,
+		  middle : { show : false } ,
+		  right : { show : true , style : "btn-primary", text : "OK", func : function(){
+		  	 message.state = "FOREVER";
+		  	 $scope.deleteforever(message.uuid);
+		  }}
+		};
+	}
+	
+	$scope.restore = function(message){
+		var uuids = [];
+	    uuids.push(message.uuid);
+	    
+	    Messages.changeState(uuids, "NEW").then(function(){
+	      message.state = "NEW";
+	      $scope.messages = Messages.query().then(function(){
+	        $scope.boxer('trash');
+	      });
+	    });
+	}
+	
+	$scope.toggleSelection = function(master){
+	    var flag = (master) ? true : false;    
+	    var messages = $scope.messages;
+	    angular.forEach(messages, function(message, index){
+	      $scope.selection[message.uuid] = flag;
+	    });
+	};
+	
+	$scope.restoreSelectedMsg = function(selection){
+		var uuids = [];
+		angular.forEach(selection, function(checked, id){
+			angular.forEach($scope.messages , function(message,index){
+				if(id == message.uuid && checked == true){
+					message.state = "NEW";
+					uuids.push(message.uuid);
+				}
+			});
+		});
+			
+		if(uuids.length == 0 ){
+			return ; 
+		}
+		
+	    Messages.changeState(uuids, "NEW").then(function(){
+	      $scope.messages = Messages.query().then(function(){
+	        $scope.boxer('trash');
+	      });
+	    });
+	};
+	
+	$scope.askDeleteSelectedMsg = function(selection){
+		var uuids = [];
+		angular.forEach(selection, function(checked, id){
+			angular.forEach($scope.messages , function(message,index){
+				if(id == message.uuid && checked == true){
+					uuids.push(message.uuid);
+				}
+			});
+		});
+		
+		$scope.modal =  {
+		  header : "Delete Forever",
+		  title : uuids.length +" messsage(s) will be deleted , go on?",
+		  content : "Message will be deleted forever and can't be restored.",
+		  left : { show : true , text : "Cancel"} ,
+		  
+		  
+		  middle : { show : false } ,
+		  right : { show : true , style : "btn-primary", text : "OK", func : function(){
+		  	if(uuids.length == 0 ){
+				return ; 
+			} 
+						
+			angular.forEach($scope.messages , function(message,index){
+				angular.forEach(uuids, function(uuid, i){
+					if(message.uuid = uuid){
+						message.state = "FOREVER";
+					}
+				});
+			});
+			
+		  	Messages.deleteforever(uuids).then(function(){
+		      $scope.messages = Messages.query().then(function(){
+		        $scope.boxer('trash');
+		      });
+		    });
+		  }}
+		};
+		
+	    
+	};
+	
+	$scope.askEmptyMsgTrash = function(){
+		$scope.modal =  {
+		  header : "Empty the trash",
+		  title : "All the messsages in trash will be deleted , continue ?",
+		  content : "Message will be deleted forever and can't be restored.",
+		  left : { show : true , text : "Cancel"} ,
+		  middle : { show : false } ,
+		  right : { show : true , style : "btn-primary", text : "OK", func : function(){
+		  	
+			var uuids = [];
+			angular.forEach($scope.messages , function(message,index){
+				if(message.state == "TRASH"){
+					uuids.push(message.uuid);
+					message.state = "FOREVER";
+				}
+			});
+			
+		  	Messages.deleteforever(uuids).then(function(){
+		      $scope.messages = Messages.query().then(function(){
+		        $scope.boxer('trash');
+		      });
+		    });
+		  }}
+		};
+	}
+
 };
-
-
-
-
 
 
 
@@ -511,10 +658,6 @@ messagesCtrl.resolve = {
     }
   }
 };
-
-
-
-
 
 
 
