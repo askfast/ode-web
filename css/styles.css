@@ -318,11 +318,21 @@ html,body {
 
 
 .control-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 
+dl {
+  
+}
 
+dl dt {
+  
+}
+
+dl dd {
+  margin-bottom: 15px;
+}
 
 
 
