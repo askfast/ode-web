@@ -3,7 +3,7 @@
 /**
  * Messages Controller
  */
-function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, Messages)
+function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, Messages, Storage)
 {
   /**
    * REMOVE
@@ -15,7 +15,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   /**
    * Receivers list
    */
-  $scope.receviersList = Messages.receviersList();
+  $scope.receviersList = Messages.receviers();
 
 
   /**
@@ -41,6 +41,15 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     inbox: '',
     outbox: '',
     trash: ''
+  };
+
+
+  /**
+   * Initial value for broadcasting
+   */
+  $scope.broadcast = {
+    sms: false,
+    email: false
   };
 
 
@@ -370,99 +379,113 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   };
 
 
+	/**
+   * Fix for not displaying original sender in multiple receivers selector
+   * in the case that user wants to add more receivers to the list  
+   */
+  $("div#composeTab select.chzn-select").chosen()
+  .change(function(item)
+  {
+  	$.each($(this).next().find("ul li.result-selected"),function(i,li)
+    {
+  		var name = $(li).html();
+  		$.each($("div#composeTab select.chzn-select option"),function(j,opt)
+      {
+	      if(opt.innerHTML == name)
+        {
+          opt.selected = true;
+	      };
+	    });
+  	});
+  });
 
 
 
-	
-  // $("div[ng-show='defaultView'] select.chzn-select").chosen().change( function(item){
-  // 	$.each($(this).next().find("ul li.result-selected"),function(i,li){
-  // 		var req_name = $(li).html();
-  // 		$.each($("div[ng-show='composeView'] select.chzn-select option"),function(j,opt){
-	 //      if(opt.innerHTML == req_name){
-	 //          opt.selected = true;
-	 //      }
-	 //    });
-  // 	});
-  // });
+  /**
+   * Reply a amessage
+   */
+  $scope.reply = function(message)
+  {
+    /**
+     * Switch in views
+     */
+    $scope.views = {
+      compose: true,
+      message: false,
+      default: false
+    };
+    /**
+     * Get members from localStorage
+     */
+    var members = angular.fromJson(Storage.get('members')),
+        /**
+         * Extract sender id
+         */
+        senderId = message.requester.split('personalagent/')[1].split('/')[0],
+        /**
+         * Find sender's name in members list
+         */
+        name = members[senderId].name;
 
+    /**
+     * Set data in compose form
+     */
+    $scope.message = {
+      subject: 'RE: ' + message.subject,
+      receivers: [ {group: "Users" , id: senderId , name: name} ]
+    };
 
+    /**
+     * Trigger chosen
+     */
+    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+    {
+      if (option.innerHTML == name)
+      {
+        option.selected = true;
+      };
+    });
 
-
-
-
-  // $scope.$watch('boxes', function(newbox, oldbox)
-  // {
-	 // if(typeof newbox == "undefined"){
-	 // 	return ;
-	 // }
-	 // if(newbox.inbox == false && newbox.outbox == false && newbox.trash == false ){
-	 // 	// do nothing , Intermediate state
-	 // }else if(newbox.inbox == true){
-	 // 	$scope.boxer("inbox");
-	 // }else if(newbox.outbox == true){
-	 // 	$scope.boxer("outbox");
-	 // }else if(newbox.trash == true){
-	 // 	$scope.boxer("trash");
-	 // }
-  // },true);
-
-
-
-
+    /**
+     * Let chosen know list is updated
+     * @type {[type]}
+     */
+    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+  };
 
   
-  // $scope.sendMessage = function(message)
-  // {
-  //   Messages.send(message).
-  //   then(function(result)
-  //   {
-  //     $scope.composeView = false;
-  //     // TODO
-  //     // Reset compose form
-  //   });
-  // };
-
-
-
-
-
-
- //  $scope.replyMessage = function(message)
- //  {
-      
- //    var requester = message.requester.split('personalagent/')[1].split('/')[0];    
- //    var req_name = requester;
-    
- //    $scope.composeMessage();
-     
- //    $.each($scope.receviersList,function(i,rec){
- //        if(rec.id == requester){
- //            req_name = rec.name;    
- //        }
- //    });
-    
- //    // only preset the message when receiver exists in the receiver list
- //    if(req_name != requester){
- //    	$scope.message = {
-	//             subject: 'RE: ' + message.subject,
-	//             receivers: [{group : "Users" , id : requester , name : req_name}],
-	//             type : { message : true}
-	//     }
- //    }
-    
- //    $.each($("div[ng-show='composeView'] select.chzn-select option"),function(i,opt){
- //      if(opt.innerHTML == req_name){
- //          opt.selected = true;
- //      }
- //    });
-    
-	// $("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");    
-	// console.log(message);
- //  };
-
-
-
-
+  /**
+   * Send message
+   */
+  $scope.send = function (message, broadcast)
+  {
+    /**
+     * Set preloader
+     */
+    $rootScope.loading = true;
+    /**
+     * Empty trash
+     */
+    Messages.send(message, broadcast)
+    .then(function(result)
+    {
+      /**
+       * Query messages
+       */
+      Messages.query()
+      .then(function(messages)
+      {
+        /**
+         * Reload messages
+         */
+        $scope.messages = messages;
+        /**
+         * Set preloader
+         */
+        $rootScope.loading = false;
+      });
+    });
+  };
 
 };
 
@@ -495,4 +518,4 @@ messagesCtrl.resolve = {
 
 
 
-messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', '$route', 'data', 'Messages'];
+messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', '$route', 'data', 'Messages', 'Storage'];

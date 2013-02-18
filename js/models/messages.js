@@ -154,7 +154,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   /**
    * Serve receivers list
    */
-  Messages.prototype.receviersList = function ()
+  Messages.prototype.receviers = function ()
   {
     /**
      * Get local unique members list and groups, and init receivers list
@@ -194,21 +194,33 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   /**
    * Send a message
    */
-  Messages.prototype.send = function (message) 
+  Messages.prototype.send = function (message, broadcast) 
   {
+    /**
+     * Init vars
+     */
     var deferred = $q.defer(),
         members = [],
         types = [];
 
+    /**
+     * Loop through receivers
+     */
     angular.forEach(message.receivers, function (receiver, index)
     {
       members.push(receiver.id);
     });
 
-    if (message.type.sms) types.push('sms');
-    if (message.type.message) types.push('paige');
-    if (message.type.email) types.push('email');
+    /**
+     * Set types
+     */
+    types.push('paige');
+    if (broadcast.sms) types.push('sms');
+    if (broadcast.email) types.push('email');
 
+    /**
+     * Construct message
+     */
     var message = {
       members: members,
       content: message.body,
@@ -216,6 +228,9 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       types: types
     };
 
+    /**
+     * Send message
+     */
     Messages.send(null, message, function (result) 
     {
       deferred.resolve(result);

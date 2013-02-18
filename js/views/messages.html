@@ -72,13 +72,13 @@
 
                 <button type="button" 
                         class="btn" 
-                        ng-model="message.type.sms" 
+                        ng-model="broadcast.sms" 
                         ng-click=""
                         bs-button="">SMS</button>
 
                 <button type="button" 
                         class="btn" 
-                        ng-model="message.type.email" 
+                        ng-model="broadcast.email" 
                         ng-click=""
                         bs-button="">Email</button>
               </div>
@@ -89,11 +89,14 @@
               <select data-placeholder="Choose a Recipient" 
                       multiple 
                       class="chzn-select" 
+                      id="receivers" 
                       chosen
                       ng-model="message.receivers" 
                       ng-options="receiver.name group by receiver.group for receiver in receviersList">
               </select>
-      <!--         <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
+
+              <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p>
+
             </div>
 
             <div class="control-group">
@@ -115,7 +118,7 @@
             <hr>
 
             <button type="submit" 
-                    ng-click="sendMessage(message)" 
+                    ng-click="send(message, broadcast)" 
                     class="btn btn-success">Send Message</button>
 
             <button type="submit" 
@@ -140,6 +143,7 @@
                     ng-click="resetViews()" 
                     class="btn">Discard</button>
             <button type="button" 
+                    ng-click="reply(message)"
                     class="btn btn-success"><i class="icon-share-alt icon-white"></i> Reply Message</button>
             <button type="button" 
                     class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete Message</button>
@@ -149,10 +153,12 @@
 
         <dl>
           <dt>Sender</dt>
-            <dd>{{message.requester|convertEve|convertUserIdToName}}</dd>
+            <dd><!-- {{message.requester|convertEve|convertUserIdToName}} --></dd>
           <dt>Receiver(s)</dt>
             <dd>
-              <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
+              <!-- <span ng-repeat="receiver in message.responder">
+                {{receiver|convertEve|convertUserIdToName}}, 
+              </span> -->
             </dd>
           <dt>Date</dt>
             <dd>{{message.datetime|convertTimeStamp}}</dd>
