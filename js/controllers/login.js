@@ -18,46 +18,20 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 
 
   /**
-   * Failed attempt to initialize meny plugin
+   * Set default alerts
    */
-  // // Create an instance of Meny
-  // var meny = Meny.create({
-  //   // The element that will be animated in from off screen
-  //   menuElement: document.querySelector( '.meny' ),
-
-  //   // The contents that gets pushed aside while Meny is active
-  //   contentsElement: document.querySelector( '.contents' ),
-
-  //   // [optional] The alignment of the menu (top/right/bottom/left)
-  //   position: Meny.getQuery().p || 'left',
-
-  //   // [optional] The height of the menu (when using top/bottom position)
-  //   height: 200,
-
-  //   // [optional] The width of the menu (when using left/right position)
-  //   width: 260,
-
-  //   // [optional] Distance from mouse (in pixels) when menu should open
-  //   threshold: 40
-  // });
-
-  // // API Methods:
-  // // meny.open();
-  // // meny.close();
-  // // meny.isOpen();
-  
-  // // Events:
-  // // meny.addEventListener( 'open', function(){ console.log( 'open' ); } );
-  // // meny.addEventListener( 'close', function(){ console.log( 'close' ); } );
-
-  // // Embed an iframe if a URL is passed in
-  // if( Meny.getQuery().u && Meny.getQuery().u.match( /^http/gi ) ) {
-  //   var contents = document.querySelector( '.contents' );
-  //   contents.style.padding = '0px';
-  //   contents.innerHTML = '<div class="cover"></div><iframe src="'+ 
-  //                        Meny.getQuery().u + 
-  //                        '" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
-  // }
+  $scope.alert = {
+    login: {
+      display: false,
+      type: '',
+      message: ''
+    },
+    forgot: {
+      display: false,
+      type: '',
+      message: ''
+    }
+  };
 
 
   /**
@@ -153,6 +127,24 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
         !$scope.logindata.username || 
         !$scope.logindata.password)
     {
+      /**
+       * Inform user
+       */
+      $scope.alert = {
+        login: {
+          display: true,
+          type: 'alert-error',
+          message: 'Please fill all fields!'
+        }
+      };
+
+      /**
+       * Put button state back to default
+       */
+      $('#login button[type=submit]')
+        .text('Login')
+        .removeAttr('disabled');
+
       return false;     
     };
 
@@ -191,13 +183,44 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
     .then(function(result)
 	  {
       /**
-       * Set session
+       * Check if bad credentials
        */
-	  	Session.set(result["X-SESSION_ID"]);
+      if (result.status == 400)
+      {      
+        /**
+         * Inform user
+         */
+        $scope.alert = {
+          login: {
+            display: true,
+            type: 'alert-error',
+            message: 'Wrong username or password!'
+          }
+        };
+
+        /**
+         * Put button state back to default
+         */
+        $('#login button[type=submit]')
+          .text('Login')
+          .removeAttr('disabled');
+
+        return false;
+      }
       /**
-       * Init preloader
+       * Successful login
        */
-	  	self.preloader();
+      else
+      {
+        /**
+         * Set session
+         */
+        Session.set(result["X-SESSION_ID"]);
+        /**
+         * Init preloader
+         */
+        self.preloader();
+      };
 	  });
   };
 
@@ -321,65 +344,6 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
     $('#preloader .progress .bar').css({ width: ratio + '%' }); 
     $('#preloader span').text(message);    
   };
-
- 
-  // DEPRECIATED !!!!!!
-  // 
-  // $scope.auth = function(uuid, pass)
-  // {
-  //   $.ajax(
-  //   {
-  //     url: host   + '/login' 
-  //                 + '?uuid='
-  //                 + uuid
-  //                 + '&pass=' 
-  //                 + pass
-  //   })
-  //   .success(function(data)
-  //   {
-  //     // save cookie
-  //     //$scope.setSession(data["X-SESSION_ID"]);
-  //     $rootScope.session = Session.set(data["X-SESSION_ID"]);
-
-  //     $.ajaxSetup(
-  //     {
-  //       headers: {
-  //         'X-SESSION_ID': Session.get($rootScope.session)
-  //       } 
-  //     })
-
-  //     // presentation
-  //     $('#loginForm').hide();
-  //     $('#preloader').show();
-      
-  //     // start preloading
-  //     //$scope.fetchDependencies();
-
-  //     // resources
-
-  //   })
-  //   .fail(function(jqXHR, exception, options)
-  //   {
-  //     // check whether wrong credentials
-  //     if (jqXHR.status == 400 && 
-  //         jqXHR.responseText.split('<title>')[1].split('</title>')[0] === '400 bad credentials')
-  //     {
-  //       $("#alertDiv").show();
-  //       $("#alertMessage").html( $scope.ui.error.messages.login );
-  //     }
-  //     else
-  //     {
-  //       $scope.ajaxErrorHandler(jqXHR, exception, options)
-  //     }
-  //     // reset button state
-  //     $('#loginForm button[type=submit]')
-  //       .text($scope.ui.login.button_login)
-  //       .removeAttr('disabled')
-  //   })    
-  // }
-
-
-
 
 
   /**
@@ -522,4 +486,50 @@ loginCtrl.$inject = [ '$rootScope',
                       'Groups', 
                       'Messages',
                       'Storage'];
+
+
+
+
+
+  /**
+   * Failed attempt to initialize meny plugin
+   */
+  // // Create an instance of Meny
+  // var meny = Meny.create({
+  //   // The element that will be animated in from off screen
+  //   menuElement: document.querySelector( '.meny' ),
+
+  //   // The contents that gets pushed aside while Meny is active
+  //   contentsElement: document.querySelector( '.contents' ),
+
+  //   // [optional] The alignment of the menu (top/right/bottom/left)
+  //   position: Meny.getQuery().p || 'left',
+
+  //   // [optional] The height of the menu (when using top/bottom position)
+  //   height: 200,
+
+  //   // [optional] The width of the menu (when using left/right position)
+  //   width: 260,
+
+  //   // [optional] Distance from mouse (in pixels) when menu should open
+  //   threshold: 40
+  // });
+
+  // // API Methods:
+  // // meny.open();
+  // // meny.close();
+  // // meny.isOpen();
+  
+  // // Events:
+  // // meny.addEventListener( 'open', function(){ console.log( 'open' ); } );
+  // // meny.addEventListener( 'close', function(){ console.log( 'close' ); } );
+
+  // // Embed an iframe if a URL is passed in
+  // if( Meny.getQuery().u && Meny.getQuery().u.match( /^http/gi ) ) {
+  //   var contents = document.querySelector( '.contents' );
+  //   contents.style.padding = '0px';
+  //   contents.innerHTML = '<div class="cover"></div><iframe src="'+ 
+  //                        Meny.getQuery().u + 
+  //                        '" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
+  // }
 

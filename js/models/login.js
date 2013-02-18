@@ -99,6 +99,10 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
       {
         deferred.resolve(result);
       }
+    },
+    function (error)
+    {
+      deferred.resolve(error);
     });
     return deferred.promise;
   };

@@ -43,10 +43,12 @@
 			<!-- <h2>WebPaige</h2> -->
 		  <h4 class="form-signin-heading">Please sign in</h4>
 
-	    <!-- <div id="alertDiv" class="alert alert-error">
-	      <button id="alertClose" class="close" type="button" onclick="$('#alertDiv').hide()">×</button>
-	      <span id="alertMessage"></span>
-	    </div> -->
+      <!-- alert login -->
+      <div class="alert {{alert.login.type}}" ng-show="alert.login.display">
+        <button class="close" type="button" ng-click="alert.login=false">×</button>
+        {{alert.login.message}}
+      </div>
+      <!-- end login password -->
 
 		  <input 
 		    class="" 
