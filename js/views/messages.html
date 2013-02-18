@@ -71,13 +71,13 @@
                     data-toggle="buttons-checkbox">
 
                 <button type="button" 
-                        class="btn" 
+                        class="btn btn-small" 
                         ng-model="broadcast.sms" 
                         ng-click=""
                         bs-button="">SMS</button>
 
                 <button type="button" 
-                        class="btn" 
+                        class="btn btn-small" 
                         ng-model="broadcast.email" 
                         ng-click=""
                         bs-button="">Email</button>
@@ -89,13 +89,13 @@
               <select data-placeholder="Choose a Recipient" 
                       multiple 
                       class="chzn-select" 
-                      id="receivers" 
+                      style="width:530px" 
                       chosen
                       ng-model="message.receivers" 
                       ng-options="receiver.name group by receiver.group for receiver in receviersList">
               </select>
 
-              <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p>
+              <!-- <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
 
             </div>
 

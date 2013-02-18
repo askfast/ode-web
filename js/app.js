@@ -284,27 +284,27 @@ WebPaige.
       /**
        * Profile :: view
        */
-      .when('/profile/:userId/view', {
+      .when('/profile/:userId/:action', {
           templateUrl: 'js/views/profile.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
-      /**
-       * Profile :: edit [userId]
-       */
-      .when('/profile/:userId/edit', {
-          templateUrl: 'js/views/profile-edit.html', 
-          controller: profileCtrl,
-          resolve: profileCtrl.resolve
-      })
-      /**
-       * Profile :: change password [userId]
-       */
-      .when('/profile/:userId/password', {
-          templateUrl: 'js/views/profile-password.html', 
-          controller: profileCtrl,
-          resolve: profileCtrl.resolve
-      })
+      // /**
+      //  * Profile :: edit [userId]
+      //  */
+      // .when('/profile/:userId/edit', {
+      //     templateUrl: 'js/views/profile-edit.html', 
+      //     controller: profileCtrl,
+      //     resolve: profileCtrl.resolve
+      // })
+      // /**
+      //  * Profile :: change password [userId]
+      //  */
+      // .when('/profile/:userId/password', {
+      //     templateUrl: 'js/views/profile-password.html', 
+      //     controller: profileCtrl,
+      //     resolve: profileCtrl.resolve
+      // })
       /**
        * Settings
        */
