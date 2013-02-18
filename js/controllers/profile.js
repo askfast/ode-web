@@ -141,13 +141,17 @@ function profileCtrl($rootScope, $scope, $config, $q, data, Profile, $route, Sto
     /**
      * Save profile
      */
-    Profile.save(resources)
+    Profile.save($route.current.params.userId, resources)
     .then(function(result)
     {
       /**
+       * Determine if it is user
+       */
+      var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
+      /**
        * Get fresh profile data
        */
-      Profile.get()
+      Profile.get($route.current.params.userId, flag)
       .then(function(resources)
       {
         /**
