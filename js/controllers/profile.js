@@ -250,8 +250,6 @@ function profileCtrl($rootScope, $scope, $config, $q, data, Profile, $route, Sto
   };
 
 
-
-
 };
 
 

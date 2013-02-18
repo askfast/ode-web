@@ -11,14 +11,14 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
    * Profile resource
    */
   var Profile = $resource(
-    $config.host + '/node/:user/resource',
+    $config.host + '/node/:id/resource',
     {
-      user: $route.current.params.userId
+      //user: $route.current.params.userId
     },
     {
       get: {
         method: 'GET',
-        params: {}
+        params: {id:''}
       },
       save: {
         method: 'PUT',
@@ -31,14 +31,14 @@ factory('Profile', function ($resource, $config, $q, $route, $timeout, Storage, 
   /**
    * Get profile of given user
    */
-  Profile.prototype.get = function (localize) 
+  Profile.prototype.get = function (id, localize) 
   {    
-    var deferred = $q.defer(), 
-        localProfile = Storage.get('resources');
+    var deferred = $q.defer();
+        //,localProfile = Storage.get('resources');
     /**
      * Get profile data
      */
-    Profile.get(function (result) 
+    Profile.get({id: id}, function (result) 
     {
       /**
        * No profile found with that given user id
