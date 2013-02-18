@@ -34,8 +34,10 @@
 	</div>
 	<!-- end preloader -->
 
+
+
 	<!-- loginForm -->
-	<div id="login">
+	<div id="login" ng-show="views.login">
 		<form ng-submit="login()">
 		  <img src="img/login_knrm_logo.png" alt="KNRM" />
 			<!-- <h2>WebPaige</h2> -->
@@ -52,23 +54,57 @@
 		    ng-model="logindata.username"
 		    placeholder="Username" 
 		    autofocus>
+		    
 		  <input 
 		      class="" 
 		      type="password" 
 		      ng-model="logindata.password"
 		      placeholder="Password">
+
 		  <label class="checkbox span3">
 		    <input 
 		      type="checkbox" 
 		      ng-model="logindata.remember">Remember me
 		  </label>
+
 		  <button class="btn btn-large btn-primary" type="submit">Sign in</button>
 
-		  <p><small><a href="">forgot your password?</a></small></p>
+		  <p><small><a ng-click="views.forgot=true; views.login=false">forgot your password?</a></small></p>
 
 		  <span class="version">v2.0.0</span>
 		</form>
 	</div>
 	<!-- end loginForm -->
+
+
+
+	<!-- remember login -->
+	<div id="forgot" ng-show="views.forgot">
+		<form ng-submit="forgot()">
+		  <img src="img/login_knrm_logo.png" alt="KNRM" />
+			<!-- <h2>WebPaige</h2> -->
+		  <h4 class="form-signin-heading">Please sign in</h4>
+
+	    <!-- <div id="alertDiv" class="alert alert-error">
+	      <button id="alertClose" class="close" type="button" onclick="$('#alertDiv').hide()">×</button>
+	      <span id="alertMessage"></span>
+	    </div> -->
+
+		  <input 
+		    class="" 
+		    type="text" 
+		    ng-model="remember.email"
+		    placeholder="email address">
+
+		  <button class="btn btn-large btn-primary" type="submit">Reset Password</button>
+
+		  <p><small><a ng-click="views.login=true; views.forgot=false">return back to login</a></small></p>
+
+		  <span class="version">v2.0.0</span>
+		</form>
+	</div>
+	<!-- end remember login -->
+
+
 
 </div>

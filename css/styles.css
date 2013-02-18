@@ -122,25 +122,38 @@ html,body {
   font-weight: normal;
 }
 
-#login {
+
+
+
+
+
+
+#login,
+#forgot {
   margin: 0;
 }
 
-#login form {
-}
-
 #login form input[type=text],
-#login form input[type=password] {
+#login form input[type=password],
+#forgot form input[type=text],
+#forgot form input[type=password] {
   margin-bottom: 15px;
   padding: 7px 9px;
   height: auto;
   width: 90%;
 }
 
-#login form input[type=submit] {
+#login form button {
   display: block;
   margin: 0 auto;
   margin-top: 15px;
+}
+
+#forgot form button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 #login form .checkbox {
@@ -150,7 +163,8 @@ html,body {
   padding-left: 35px;
 }
 
-#login span.version {
+#login span.version,
+#forgot span.version {
   display: block;
   margin-top: 10px;
   margin-bottom: -20px;
@@ -158,6 +172,14 @@ html,body {
   text-align: center;
   font-size: 11px;
 }
+
+
+
+
+
+
+
+
 
 #alertDiv {
   display: none;
