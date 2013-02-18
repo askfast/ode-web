@@ -4,9 +4,11 @@
 /**
  * Settings Controller
  */
-function settingsCtrl($scope)
+function settingsCtrl($rootScope, $scope)
 {
-}
+	$rootScope.fixTabHeight('userSettingsTab');
+
+};
 
 
 /**
@@ -19,4 +21,4 @@ settingsCtrl.resolve = {
 };
 
 
-settingsCtrl.$inject = ['$scope'];
+settingsCtrl.$inject = ['$rootScope', '$scope'];

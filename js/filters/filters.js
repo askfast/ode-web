@@ -2,6 +2,8 @@
 
 /* Filters */
 angular.module('WebPaige.filters', [])
+
+
 /**
  * Translate roles
  */
@@ -23,6 +25,8 @@ angular.module('WebPaige.filters', [])
 		}
 	}
 })
+
+
 /**
  * Main range filter
  */
@@ -42,51 +46,51 @@ angular.module('WebPaige.filters', [])
 		 * Time will tell :]
 		 * One milisecond fix
 		 */
-		if ((new Date(dates.till).getTime() - new Date(dates.from).getTime()) == 86401000)
+		if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
 		{
-			dates.from = new Date(dates.till).addDays(-1);
+			dates.start = new Date(dates.end).addDays(-1);
 		};
 		/**
 		 * Process the variables
 		 */
 		var dates = {
-			from: {
-				real: new Date(dates.from).toString('dddd, MMMM d'),
-				month: new Date(dates.from).toString('MMMM'),
-				day: new Date(dates.from).toString('d')
+			start: {
+				real: new Date(dates.start).toString('dddd, MMMM d'),
+				month: new Date(dates.start).toString('MMMM'),
+				day: new Date(dates.start).toString('d')
 			},
-			till: {
-				real: new Date(dates.till).toString('dddd, MMMM d'),
-				month: new Date(dates.till).toString('MMMM'),
-				day: new Date(dates.till).toString('d')
+			end: {
+				real: new Date(dates.end).toString('dddd, MMMM d'),
+				month: new Date(dates.end).toString('MMMM'),
+				day: new Date(dates.end).toString('d')
 			}
 		};
 		/**
 		 * Get the current month
 		 */
-		var monthNumber = Date.getMonthNumberFromName(dates.from.month);
+		var monthNumber = Date.getMonthNumberFromName(dates.start.month);
 		/**
 		 * if a day is selected
 		 */
-		if ((((Math.round(dates.from.day) + 1) == dates.till.day && 
-						dates.from.hour == dates.till.hour) || 
-						dates.from.day == dates.till.day) && 
-						dates.from.month == dates.till.month)
+		if ((((Math.round(dates.start.day) + 1) == dates.end.day && 
+						dates.start.hour == dates.end.hour) || 
+						dates.start.day == dates.end.day) && 
+						dates.start.month == dates.end.month)
 		{
-			return 	dates.from.real + 
+			return 	dates.start.real + 
 							', ' + 
 							Dater.getThisYear();
 		}
 		/**
 		 * if a month selected
 		 */
-		else if(dates.from.day == 1 && 
-						dates.till.day == periods.months[monthNumber + 1].totalDays)
+		else if(dates.start.day == 1 && 
+						dates.end.day == periods.months[monthNumber + 1].totalDays)
 		{
 			/**
 			 * Return values
 			 */
-			return 	dates.from.month + 
+			return 	dates.start.month + 
 							', ' + 
 							Dater.getThisYear();
 		}
@@ -98,36 +102,17 @@ angular.module('WebPaige.filters', [])
 			/**
 			 * Return values
 			 */
-			return 	dates.from.real + 
+			return 	dates.start.real + 
 							' / ' + 
-							dates.till.real + 
+							dates.end.real + 
 							', ' + 
 							Dater.getThisYear();
 		};
 
 	}
 }])
-.filter('eveURL2Id', function()
-{
-    return function(url)
-    {
-        var uuidArray = url.split("/");
-        var uuid = uuidArray[uuidArray.length-2];
-        return uuid;
-    }
-})
-.filter('nicelyDate', ['Dater', function(Dater)
-{
-	return function(date)
-	{
-	    var cov_date = Dater.readableDate(date);
-		if(cov_date == "Invalid Date"){
-		    // could be unix time stamp 
-		    date =  Math.round(date);
-		}
-		return new Date(date).toString('dddd MMMM d, yyyy');
-	}
-}])
+
+
 /**
  * Range info filter
  */
@@ -145,7 +130,7 @@ angular.module('WebPaige.filters', [])
 		/**
 		 * Calculate difference
 		 */
-		var diff = new Date(timeline.range.till).getTime() - new Date(timeline.range.from).getTime();
+		var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
 		/**
 		 * Custom range is more than 4 weeks
 		 * show total days
@@ -165,23 +150,23 @@ angular.module('WebPaige.filters', [])
 				 * Process hours
 				 */
 				var hours = {
-					from: new Date(timeline.range.from).toString('HH:mm'),
-					till: new Date(timeline.range.till).toString('HH:mm')
+					start: new Date(timeline.range.start).toString('HH:mm'),
+					end: new Date(timeline.range.end).toString('HH:mm')
 				};
 				/**
 				 *  00:00 fix => 24:00
 				 */
-				if (hours.till == '00:00')
+				if (hours.end == '00:00')
 				{
-					hours.till = '24:00';
+					hours.end = '24:00';
 				};
 				/**
 				 * Returns values
 				 */
 				return 	'Time: ' + 
-								hours.from + 
+								hours.start + 
 								' / ' + 
-								hours.till;
+								hours.end;
 			}
 			/**
 			 * Week
@@ -205,6 +190,7 @@ angular.module('WebPaige.filters', [])
 	};
 }])
 
+
 /**
  * Convert timeStamp to readable date and time
  */
@@ -214,9 +200,145 @@ angular.module('WebPaige.filters', [])
 	{
 		return Date(stamp).toString('dd-M-yyyy HH:mm');
 	};
-});
+})
 
 
+/**
+ * TODO
+ * Implement state conversion from config later on!
+ * 
+ * Convert ratios to readable formats
+ */
+.filter('convertRatios', ['$config', function($config)
+{
+	return function(stats)
+	{
+		var ratios = '';
+		angular.forEach(stats, function(stat, index)
+		{
+			ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
+		})
+		return ratios.substring(0, ratios.length - 2);
+	};
+}])
 
 
+/** 
+ * Calculate time in days
+ */
+.filter('calculateTimeInDays', function()
+{
+	return function(stamp)
+	{
+		var day 		= 1000 * 60 * 60 * 24,
+				hour		=	1000 * 60 * 60,
+				days 		= 0,
+				hours 	= 0,
+				stamp 	= stamp * 1000;
+		/**
+		 * Calculate durations
+		 */
+		var hours 	= stamp % day;
+		var days 		= stamp - hours;
+		/**
+		 * Return
+		 */
+		return 	Math.floor(days / day);
+	};
+})
 
+
+/**
+ * Calculate time in hours
+ */
+.filter('calculateTimeInHours', function()
+{
+	return function(stamp)
+	{
+		var day 		= 1000 * 60 * 60 * 24,
+				hour		=	1000 * 60 * 60,
+				days 		= 0,
+				hours 	= 0,
+				stamp 	= stamp * 1000;
+		/**
+		 * Calculate durations
+		 */
+		var hours 	= stamp % day;
+		var days 		= stamp - hours;
+		/**
+		 * Return
+		 */
+		return 	Math.floor(hours / hour);
+	};
+})
+
+
+/**
+ * Calculate time in minutes
+ */
+.filter('calculateTimeInMinutes', function()
+{
+	return function(stamp)
+	{
+		var day 		= 1000 * 60 * 60 * 24,
+				hour		=	1000 * 60 * 60,
+				minute 	= 1000 * 60,
+				days 		= 0,
+				hours 	= 0,
+				minutes = 0,
+				stamp 	= stamp * 1000;
+		/**
+		 * Calculate durations
+		 */
+		var hours 	= stamp % day;
+		var days 		= stamp - hours;
+		var minutes = stamp % hour;
+		/**
+		 * Return
+		 */
+		return 	Math.floor(minutes / minute);
+	};
+})
+
+
+/**
+ * Convert eve urls to ids
+ */
+.filter('convertEve', function()
+{
+  return function(url)
+  {
+    var eve = url.split("/");
+    return eve[eve.length-2];
+  }
+})
+
+
+/** 
+ * Convert user uuid to name
+ */
+.filter('convertUserIdToName', ['Storage', function(Storage)
+{
+	var members = angular.fromJson(Storage.get('members'));
+	return function(id)
+	{
+		return members[id].name;
+	};
+}]);
+
+
+/**
+ * Convert timeStamps to dates
+ */
+// .filter('nicelyDate', ['Dater', function(Dater)
+// {
+// 	return function(date)
+// 	{
+// 	  var cov_date = Dater.readableDate(date);
+// 		if(cov_date == "Invalid Date"){
+// 		    // could be unix time stamp 
+// 		    date =  Math.round(date);
+// 		}
+// 		return new Date(date).toString('dddd MMMM d, yyyy');
+// 	}
+// }])

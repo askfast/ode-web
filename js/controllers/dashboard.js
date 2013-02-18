@@ -4,19 +4,21 @@
 /**
  * Dashboard Controller
  */
-function dashboardCtrl($scope, $rootScope)
+function dashboardCtrl($scope, $rootScope, data)
 {
-}
+	$scope.messages = data;
+};
 
 
 /**
  * Dashboard resolver
  */
 dashboardCtrl.resolve = {
-  data: function ($rootScope, $config) 
+  data: function ($rootScope, $config, Messages) 
   {
+  	return Messages.unread();
   }
 }
 
 
-dashboardCtrl.$inject = ['$scope', '$rootScope'];
+dashboardCtrl.$inject = ['$scope', '$rootScope', 'data'];

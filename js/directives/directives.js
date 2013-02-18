@@ -25,6 +25,7 @@ directive('chosen',function()
     link: linker
   }
 })
+
 /**
  * TODO
  * Needs attention :)
@@ -113,8 +114,8 @@ directive('chosen',function()
            * Broadcast for timeliner
            */
           $rootScope.$broadcast('timeliner', {
-            from: start,
-            till: end
+            start: start,
+            end: end
           });
           
         });

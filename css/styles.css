@@ -1,0 +1,604 @@
+html,body {
+  height: 100%;
+/* The html and body elements cannot have any padding or margin. */
+}
+
+
+#wrap .container-fluid {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  margin: 0 auto -60px;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+/* Negative indent footer by it's height */
+}
+
+/* Set the fixed height of the footer here */
+#push, #footer {
+  height: 60px;
+}
+
+#footer {
+  /*margin-top: -80px;*/
+  background-color: #433c2d;
+}
+
+#footer .container-fluid {
+	padding-top: 10px;
+	height: 100%;
+	display: table;
+}
+
+#footer .container-fluid p {
+	display:  table-cell;
+	vertical-align: middle;
+}
+
+#wrap .container {
+	padding-top: 75px;
+}
+
+#footer p.muted {
+  margin: 0;
+}
+
+#footer p.muted img {
+  height: 20px;
+  margin-right: 5px;
+}
+
+#footer #copyrights {
+  position: absolute;
+  right: 20px;
+  margin-top: 5px;
+  text-align: right;
+  line-height: 16px;
+}
+
+
+.brand {
+	margin-top: 0px;
+	margin-bottom: 0;
+	margin-left: 20px;
+	padding-bottom: 0;
+	/*width: 50px;
+	height: 10px;
+	background: url(../img/knrm-logo.png) no-repeat;
+	text-indent: -9999px;
+	background-position: 0 8px;*/
+}
+
+
+
+.header {
+	display: table;
+	margin-bottom: 15px;
+}
+.header h2 {
+	float: left;
+	display: inline;
+	margin: 0;
+}
+.header form {
+	float: right;
+	margin: 0;
+	margin-top: 5px;
+}
+
+
+
+
+
+
+
+/* @group login */
+
+#welcome {
+  margin: 30px auto 20px auto;
+  padding: 35px 29px 19px 29px;
+  max-width: 300px;
+  border: 1px solid #d0cec1;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(103,97,83,.05);
+  text-align: center;
+}
+
+#welcome h2 {
+  text-align: center;
+  color: #333;
+}
+
+#welcome h4 {
+  padding-bottom: 25px;
+  text-align: center;
+  font-size: 22px;
+  color: #bbb;
+  font-weight: normal;
+}
+
+#login {
+  margin: 0;
+}
+
+#login form {
+}
+
+#login form input[type=text],
+#login form input[type=password] {
+  margin-bottom: 15px;
+  padding: 7px 9px;
+  height: auto;
+  width: 90%;
+}
+
+#login form input[type=submit] {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+#login form .checkbox {
+  text-align: left;
+  width: 90%;
+  margin: 0 auto 25px;
+  padding-left: 35px;
+}
+
+#login span.version {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  color: #aaa;
+  text-align: center;
+  font-size: 11px;
+}
+
+#alertDiv {
+  display: none;
+}
+
+#preloader {
+  display: none;
+}
+
+
+
+#loading {
+  position: absolute;
+  top: 180px;
+  width: 100%;
+  text-align: center;
+}
+
+#loading p {
+  font-size: 18px;
+  color: #a19781;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);  
+}
+
+#loading span.entypo {
+  font-size: 360px;
+  display: block;
+  line-height: 210px;
+  color: #a19781;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);  
+}
+
+
+
+#loggin-out {
+  position: absolute;
+  top: 180px;
+  width: 100%;
+  text-align: center;
+}
+
+#loggin-out p {
+  font-size: 18px;
+  color: #a19781;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);  
+}
+
+#loggin-out span.entypo {
+  font-size: 360px;
+  display: block;
+  line-height: 210px;
+  color: #a19781;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);  
+}
+
+/* @end */
+
+
+
+
+
+
+
+
+
+
+
+
+
+.page {
+  overflow: hidden;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  /*margin-top: 15px;*/
+  /*padding: 20px;
+  margin-left: 30px;*/
+}
+.page .content {
+	padding: 20px;
+}
+
+
+
+
+.page-header {
+  overflow: hidden;
+  height: 40px;
+}
+
+.page-header h2 {
+  margin-top: 0;
+  padding-top: 0;
+  display: inline;
+}
+
+.page-header .btn-group {
+  margin-left: 15px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.navbar ul.pull-right li a.dropdown-toggle {
+	margin-right: -20px;
+}
+
+
+
+/*.tabs-left {
+  position: relative;
+}*/
+
+/*.nav-tabs {
+  height: 100%;
+  min-height: 100%;
+  position: absolute;
+}*/
+
+
+.nav-tabs-app li {
+  text-align: center;
+}
+.nav-tabs-app li span {
+  font-size: 52px;
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+
+
+.tab-header {
+  overflow: hidden;
+  height: 35px
+}
+
+
+.tab-header h3 {
+  margin-top: 0;
+}
+
+
+
+
+
+
+
+
+.control-group {
+  margin-bottom: 15px;
+}
+
+
+dl {
+  
+}
+
+dl dt {
+  
+}
+
+dl dd {
+  margin-bottom: 15px;
+}
+
+
+
+
+
+
+
+
+
+/*.meny {
+  display: none;
+  padding: 20px;
+  overflow: auto;
+  background: #333;
+  color: #eee;
+
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+  .meny ul {
+    margin-top: 10px;
+  }
+    .meny ul li {
+      display: inline-block;
+      width: 200px;
+      list-style: none;
+      font-size: 20px;
+      padding: 3px 10px;
+    }
+      .meny ul li:before {
+        content: '-';
+        margin-right: 5px;
+        color: rgba( 255, 255, 255, 0.2 );
+      }*/
+
+/**
+ * Hint graphic that appears while menu is inactive
+ */
+/*.meny-arrow {
+  position: absolute;
+  z-index: 10;
+
+  border: 10px solid transparent;
+
+  -webkit-transition: opacity 0.4s ease 0.4s; 
+     -moz-transition: opacity 0.4s ease 0.4s; 
+      -ms-transition: opacity 0.4s ease 0.4s; 
+       -o-transition: opacity 0.4s ease 0.4s; 
+          transition: opacity 0.4s ease 0.4s;
+}
+  .meny-left .meny-arrow {
+    left: 14px;
+    top: 50%;
+    margin-top: -16px;
+    border-left: 16px solid #333;
+  }
+  .meny-right .meny-arrow {
+    right: 14px;
+    top: 50%;
+    margin-top: -16px;
+    border-right: 16px solid #333;
+  }
+  .meny-top .meny-arrow {
+    left: 50%;
+    top: 14px;
+    margin-left: -16px;
+    border-top: 16px solid #333;
+  }
+  .meny-bottom .meny-arrow {
+    left: 50%;
+    bottom: 14px;
+    margin-left: -16px;
+    border-bottom: 16px solid #333;
+  }
+  .meny-active .meny-arrow {
+    opacity: 0;
+
+    -webkit-transition: opacity 0.2s ease; 
+       -moz-transition: opacity 0.2s ease; 
+        -ms-transition: opacity 0.2s ease; 
+         -o-transition: opacity 0.2s ease; 
+            transition: opacity 0.2s ease;
+  }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Lastly, apply responsive CSS fixes as necessary */
+
+@media (min-width: 768px) and (max-width: 979px) {
+}
+
+
+@media (max-width: 767px) {
+}
+
+
+@media (min-width: 1200px) {
+}
+
+
+@media (min-width: 768px) and (max-width: 979px) {
+}
+
+
+@media (max-width: 767px) {
+  .navbar-fixed-top {
+    margin-bottom: 0;
+    position: absolute;
+  }
+
+  .navbar {
+    width: 100%;
+  }
+
+  .navbar .navbar-inner {
+    padding-left: 25px;
+    margin-right: -20px;
+    padding-right: 15px;
+  }
+  
+  #footer {
+    width: 100%;
+    margin-left: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .brand {
+    margin-top: 20px;
+    background-position: 0 8px;
+  }
+
+  .nav-collapse.collapse ul {
+    margin-top: 10px;
+  }
+}
+
+
+@media (max-width: 979px) {
+
+  .navbar-fixed-top {
+    margin-bottom: 0;
+    position: absolute;
+  }
+
+  .brand {
+    background-position: 0 8px;
+  }
+
+  .nav-collapse.collapse ul {
+    margin-top: 10px;
+  }
+}
+
+
+@media (min-width: 980px) {
+}
+
+
+@media (max-width: 480px) {
+
+  .navbar-fixed-top {
+    margin-bottom: 0;
+    position: absolute;
+  }
+
+  .navbar {
+    width: 100%;
+  }
+
+  .navbar .navbar-inner {
+    padding-left: 25px;
+    margin-right: -20px;
+    padding-right: 15px;
+  }
+
+  #footer {
+    width: 100%;
+    margin-left: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .brand {
+    margin-top: 30px;
+    background-position: 0 8px;
+  }
+
+  .nav-collapse.collapse ul {
+    margin-top: 10px;
+  }
+
+  .header form {
+    clear: right;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+
+
+

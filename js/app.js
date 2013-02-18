@@ -23,7 +23,7 @@ WebPaige.
     /**
      * App version
      */
-    version: '0.2.0',
+    version: '2.0.0',
     /**
      * Blacklisted browsers
      */
@@ -32,7 +32,7 @@ WebPaige.
      * Data source host
      */
     host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
-    //host: 'http://10.200.200.201\\:8888/ns_knrmtest',
+    //host: 'http://10.200.200.100\\:8888/ns_knrmtest',
     //host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
     /**
      * TODO
@@ -92,23 +92,33 @@ WebPaige.
         style: 'box',
         groupsWidth: '150px',
         eventMarginAxis: 0,
-        //showNavigation: true,
-        groupsChangeable: true,
+        showCustomTime: true,
+        groupsChangeable: false,
+        // showNavigation: true,
         // periods
-        //start: Date.today().add({ days: -2 }),
-        //end: Date.today().add({ days: 12 }),
+        // start: Date.today().add({ days: -2 }),
+        // end: Date.today().add({ days: 12 }),
         // end periods
-        //min: "2013-01-01T00:00:00.000Z",
-        //max: "2013-12-31T00:00:00.000Z",
+        // min: "2013-01-01T00:00:00.000Z",
+        // max: "2013-12-31T00:00:00.000Z",
         // intervals
         intervalMin: 1000 * 60 * 60 * 1,
-        //intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
+        // intervalMax: 1000 * 60 * 60 * 24 * 7 * 2
       },
       config: {
         /**
          * Bar charts for group agg. data
          */
         bar: false,
+        /**
+         * Group wishes setting
+         */
+        wishes: false,
+        /**
+         * Timeline legenda settings
+         */
+        legenda: {},
+        legendarer: false,
         /**
          * Availability states
          */
@@ -170,7 +180,7 @@ WebPaige.
         /**
          * Density based colors for group aggs.
          */
-        //densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'] 
+        // densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'] 
         densities: {
           less: '#a0a0a0',
           even: '#ba6a24',
@@ -205,21 +215,21 @@ WebPaige.
        * Login
        */
       .when('/login', {
-        templateUrl: 'partials/login.html', 
+        templateUrl: 'js/views/login.html', 
         controller: loginCtrl
       })
       /**
        * Logout
        */
       .when('/logout', {
-        templateUrl: 'partials/login.html', 
+        templateUrl: 'js/views/logout.html', 
         controller: loginCtrl.logout
       })
       /**
        * Dashboard
        */
       .when('/dashboard', {
-        templateUrl: 'partials/dashboard.html', 
+        templateUrl: 'js/views/dashboard.html', 
         controller: dashboardCtrl,
         resolve: dashboardCtrl.resolve   
       })
@@ -227,23 +237,31 @@ WebPaige.
        * Planboard
        */
       // .when('/planboard/:layouts/:groupId/:division/:month', {
-      //     templateUrl: 'partials/planboard.html', 
+      //     templateUrl: 'js/views/planboard.html', 
       //     controller: planboardCtrl,
       //     resolve: planboardCtrl.resolve    
       // })
       /**
        * Planboard
        */
-      .when('/planboard/', {
-          templateUrl: 'partials/planboard.html', 
+      .when('/planboard', {
+          templateUrl: 'js/views/planboard.html', 
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    
+      })
+      /**
+       * Message
+       */
+      .when('/messages/:messageId', {
+          templateUrl: 'js/views/messages.html', 
+          controller: messagesCtrl,
+          resolve: messagesCtrl.resolve   
       })
       /**
        * Messages
        */
       .when('/messages', {
-          templateUrl: 'partials/messages.html', 
+          templateUrl: 'js/views/messages.html', 
           controller: messagesCtrl,
           resolve: messagesCtrl.resolve   
       })
@@ -251,7 +269,7 @@ WebPaige.
        * Groups
        */
       .when('/groups', {
-          templateUrl: 'partials/groups.html', 
+          templateUrl: 'js/views/groups.html', 
           controller: groupsCtrl,
           resolve: groupsCtrl.resolve
       })
@@ -259,7 +277,7 @@ WebPaige.
        * Groups :: view
        */
       // .when('/groups/:groupId/:action', {
-      //     templateUrl: 'partials/groups.html', 
+      //     templateUrl: 'js/views/groups.html', 
       //     controller: groupsCtrl,
       //     resolve: groupsCtrl.resolve
       // })
@@ -267,7 +285,7 @@ WebPaige.
        * Profile :: view
        */
       .when('/profile/:userId/view', {
-          templateUrl: 'partials/profile.html', 
+          templateUrl: 'js/views/profile.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
@@ -275,7 +293,7 @@ WebPaige.
        * Profile :: edit [userId]
        */
       .when('/profile/:userId/edit', {
-          templateUrl: 'partials/profile-edit.html', 
+          templateUrl: 'js/views/profile-edit.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
@@ -283,7 +301,7 @@ WebPaige.
        * Profile :: change password [userId]
        */
       .when('/profile/:userId/password', {
-          templateUrl: 'partials/profile-password.html', 
+          templateUrl: 'js/views/profile-password.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
@@ -291,7 +309,7 @@ WebPaige.
        * Settings
        */
       .when('/settings', {
-          templateUrl: 'partials/settings.html', 
+          templateUrl: 'js/views/settings.html', 
           controller: settingsCtrl,
           resolve: settingsCtrl.resolve   
       })
@@ -299,7 +317,7 @@ WebPaige.
        * Angular-Strap
        */
       // .when('/angular-strap', {
-      //     templateUrl: 'partials/angular-strap.html', 
+      //     templateUrl: 'js/views/angular-strap.html', 
       //     controller: StrapCtrl
       // })
     /**
@@ -316,8 +334,8 @@ WebPaige.
  * Initial run functions
  */
 .run(
-['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage',
-function($rootScope, $location, $timeout, Session, Dater, Storage)
+['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', 
+function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
 {
   /**
    * If periods are not present calculate them
@@ -329,7 +347,21 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
 
 
   /**
-   * Cehck for valid session
+   * Set important info back if refreshed
+   */
+  $rootScope.app = $rootScope.app || {};
+   // if (!$rootScope.app.resources)
+   // {
+     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+   // };
+   if (!$rootScope.app.unreadMessages)
+   {
+     $rootScope.app.unreadMessages = Messages.unreadCount();
+   };
+
+
+  /**
+   * Check for valid session
    */
   Session.check();
 
@@ -420,9 +452,13 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
     //if (!Session.check()) window.location = "#/login";
 
 
-    $rootScope.alertType = "";
-    $rootScope.alertMessage = "Loading...";
-    $rootScope.active = "progress-striped active progress-warning";
+    // $rootScope.alertType = "";
+    // $rootScope.alertMessage = "Loading...";
+    // $rootScope.active = "progress-striped active progress-warning";
+
+    $rootScope.loadingBig = true;
+    $rootScope.loading = true;
+    $('div[ng-view]').hide();
   });
   
 
@@ -431,11 +467,15 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
    */
   $rootScope.$on("$routeChangeSuccess", function (event, current, previous) 
   {
-    $rootScope.alertType = "alert-success";
-    $rootScope.alertMessage = "Successfully loaded :]";
-    $rootScope.active = "progress-success";
+    // $rootScope.alertType = "alert-success";
+    // $rootScope.alertMessage = "Successfully loaded :]";
+    // $rootScope.active = "progress-success";
 
     $rootScope.newLocation = $location.path();
+
+    $rootScope.loadingBig = false;
+    $rootScope.loading = false;
+    $('div[ng-view]').show();
   });
 
 
@@ -445,17 +485,39 @@ function($rootScope, $location, $timeout, Session, Dater, Storage)
   $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) 
   {
     alert("ROUTE CHANGE ERROR: " + rejection);
-    $rootScope.alertType = "alert-error";
-    $rootScope.alertMessage = "Failed to load data :[";
-    $rootScope.active = "";
+
+    // $rootScope.alertType = "alert-error";
+    // $rootScope.alertMessage = "Failed to load data :[";
+    // $rootScope.active = "";
   });
+
+
+
+
+
+  $rootScope.fixTabHeight = function(uuid)
+  {
+    var tabHeight = $('.tabs-left .nav-tabs').height();
+    var contentHeight = $('.tabs-left .tab-content #' + uuid).height();
+    if (tabHeight > contentHeight)
+    {
+      $('.tabs-left .tab-content #' + uuid).css({ height: $('.tabs-left .nav-tabs').height() - 41 });
+    }
+    // else if (contentHeight > tabHeight)
+    // {
+    //   //console.warn('content is bigger than tabs ->', contentHeight);
+    //   $('.tabs-left .nav-tabs').css( { height: contentHeight } );
+    // };
+  };
+
+
 
 
   /**
    * General status messages
    */
-  $rootScope.alertType = "alert-info";
-  $rootScope.alertMessage = "Welcome to the resolve demo";
+  // $rootScope.alertType = "alert-info";
+  // $rootScope.alertMessage = "Welcome to the resolve demo";
 
 
   /**

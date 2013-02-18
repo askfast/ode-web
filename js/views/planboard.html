@@ -1,0 +1,692 @@
+<!-- page header -->
+<div class="page-header">
+  <h2>Planboard</h2>
+  <div class="btn-group pull-right">
+    <button type="submit" 
+            class="btn btn-success">Change Availability</button>
+  </div>
+</div>
+<!-- end page header -->
+
+
+
+
+
+
+
+
+
+<!-- timeline controls -->
+<div class="row-fluid" id="timeline-controls">
+
+  <!-- core timeline controls -->
+  <div class="pull-left" style="margin-top: 10px">
+
+    <!-- dateranger -->
+    <div class="control-group pull-left"
+          style="margin-right: 5px;">
+
+      <input type="text" 
+            style="width: 190px" 
+            name="daterange" 
+            ng-model="daterange" 
+            daterangepicker="">
+
+      <i class="icon-calendar" style="position: relative; margin: -2px 0 0 -24px;"></i>
+
+    </div>
+    <!-- end dateranger -->
+
+    <!-- timeline scopers -->
+    <div class="btn-group pull-left" 
+          style="margin-right: 5px">
+
+      <button type="button" 
+              ng-model="timeline.scope.day" 
+              class="btn {{(timeline.scope.day==true) && 'active'}}" 
+              ng-click="timelineScoper('day')">Day</button>
+
+      <button type="button" 
+              ng-model="timeline.scope.week" 
+              class="btn {{(timeline.scope.week==true) && 'active'}}" 
+              ng-click="timelineScoper('week')">Week</button>
+
+      <button type="button" 
+              ng-model="timeline.scope.month" 
+              class="btn {{(timeline.scope.month==true) && 'active'}}" 
+              ng-click="timelineScoper('month')">Month</button>
+
+    </div>
+    <!-- end timeline scopers -->
+
+    <!-- timeline navigation -->
+    <div class="btn-group pull-left" 
+          style="margin-right: 5px">
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>  
+
+    </div>
+    <!-- end timeline navigation -->
+
+    <!-- timeline zooms -->
+    <div class="btn-group pull-left"
+          style="margin-right: 5px">
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
+
+      <button type="button" 
+              class="btn"
+              ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
+
+    </div>
+    <!-- end timeline zooms -->
+
+  </div>
+  <!-- end core timeline controls -->
+
+  <!-- range indicator -->
+  <div class="pull-right" style="text-align: right">
+    <h4 style="font-weight: normal">
+      {{timeline.range|rangeMainFilter}}<br>
+      <!-- timeline scope info -->
+      <div style="font-size: 15px; font-weight: lighter">
+      <span>{{timeline|rangeInfoFilter}}</span>
+      </div>
+      <!-- end timeline scope info -->
+    </h4>
+  </div>
+  <!-- end range indicator -->
+
+</div>
+<!-- end timeline controls -->
+
+
+
+
+
+
+<!-- slot controls -->
+<div class="row-fluid" ng-show="slotForm">
+  <form class="form-inline well">
+
+    <!-- slot start -->
+    <span>From</span>
+
+    <!-- date -->
+    <div class="control-group" style="display: inline;">
+
+      <input  name="date-start" 
+              style="width: 105px" 
+              type="text" 
+              ng-model="slot.start.date" 
+              data-date-format="dd-mm-yyyy" 
+              bs-datepicker="">
+
+      <i class="icon-calendar" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+
+    </div>
+    <!-- end date -->
+
+    <!-- time -->
+    <div class="control-group" style="display: inline; margin-left: 5px">
+
+      <input  name="time-start" 
+              type="text" 
+              class="input-small" 
+              ng-model="slot.start.time" 
+              bs-timepicker>
+
+      <i class="icon-time" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+    </div>
+    <!-- end time -->
+
+    <!-- end slot start -->
+
+    <!-- slot end -->
+    <span style="margin-left: 15px">Till</span>
+
+    <!-- date -->
+    <div class="control-group" style="display: inline;">
+
+      <input  name="date-end" 
+              style="width: 105px"  
+              type="text" 
+              ng-model="slot.end.date" 
+              data-date-format="dd-mm-yyyy" 
+              bs-datepicker="">
+
+      <i class="icon-calendar" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+
+    </div>
+    <!-- end date -->
+
+    <!-- time -->
+    <div class="control-group" style="display: inline; margin-left: 5px">
+
+      <input  name="time-end" 
+              type="text" 
+              class="input-small" 
+              ng-model="slot.end.time" 
+              bs-timepicker>
+
+      <i class="icon-time" style="position: relative; margin: 2.5px 0 0 -24px;"></i>
+    </div>
+    <!-- end time -->
+
+    <!-- end slot end -->
+
+    <!-- slot state -->
+    <span style="margin-left: 15px">State</span>
+    <select ng-model="slot.state" 
+            ng-options="option as value for (option, value) in states">
+      <option value="">-- selecteer state --</option>
+    </select>
+    <!-- end slot state -->
+
+    <!-- slot recursive -->
+    <button type="button" 
+            class="btn" 
+            ng-model="slot.recursive" 
+            style="margin-left: 15px" 
+            bs-button>Wekelijks</button>
+    <!-- end slot recursive -->
+
+    <!-- slot actions -->
+    <div  class="btn-group" 
+          ng-hide="original" 
+          style="display: inline; margin-left:10px">
+
+      <button type="submit" 
+              ng-click="add(slot)" 
+              class="btn btn-success">Add</button>
+
+    </div>
+    <div  class="btn-group" 
+          ng-show="original" 
+          style="display: inline; margin-left:10px">
+
+      <button type="submit" 
+              ng-click="change(original, slot)" 
+              class="btn btn-success">Change</button>
+
+      <button type="submit" 
+              ng-click="delete(slot.id)" 
+              class="btn btn-danger">Delete</button>
+
+    </div>
+    <!-- end slot actions -->
+
+  </form>
+</div>
+<!-- end slot controls -->
+
+
+
+
+
+
+
+<!-- timelines & statistics -->
+<div class="row-fluid">
+  <div class="tabbable tabs-left">
+    
+    <!-- tabs -->
+    <ul class="nav nav-tabs nav-tabs-app"
+        style="width: 100px;
+                margin-right: -1px;">
+      <li class="active">
+        <a href="#timelineTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('timelineTab')"><span class="entypo">&#128340;</span> Timeline</a>
+      </li>
+      <li>
+        <a href="#statisticsTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('statisticsTab')"><span class="entypo">&#128200;</span> Statistics</a>
+      </li>
+    </ul>
+    <!-- end tabs -->
+
+
+    <!-- tabs content -->
+    <div class="tab-content">
+      <!-- timelines -->
+      <div class="tab-pane active" id="timelineTab">
+        <!-- timeline -->
+        <div id="timeline">
+          <!-- timeline-toolbar -->
+          <div id="timeline-toolbar">
+
+
+            <!-- groups members controls -->
+            <div class="pull-left">
+
+
+              <!-- groups list -->
+              <!-- <span style="margin-left: 15px">Group</span> -->
+              <select ng-model="timeline.current.group" 
+                      ng-options="group.uuid as group.name for group in groups"
+                      ng-selected="timeline.current.group"
+                      ng-change="requestTimeline(timeline.current)">
+              </select>
+              <!-- end groups list -->
+
+
+              <!-- divisions list -->
+              <!-- <span style="margin-left: 15px">Division</span> -->
+              <select ng-model="timeline.current.division" 
+                      ng-options="division.id as division.label for division in divisions"
+                      ng-selected="timeline.current.division"
+                      ng-change="requestTimeline(timeline.current)">
+                      
+              </select>
+              <!-- end divisions list -->
+
+            </div>
+
+
+            <!-- groups members controls -->
+            <div class="pull-right">
+
+
+              <!-- timeline bar charts -->
+              <div  class="btn-group">
+
+                <button type="button" 
+                        ng-click="barCharts()" 
+                        class="btn {{(timeline.config.bar==true) && 'active'}}" 
+                        ng-model="timeline.config.bar">Bar charts</button>
+
+              </div>
+              <!-- end timeline bar charts -->
+
+
+              <!-- group wishes -->
+              <div  class="btn-group">
+
+                <button type="button" 
+                        ng-click="groupWishes()"
+                        class="btn {{(timeline.config.wishes==true) && 'active'}}" 
+                        ng-model="timeline.config.wishes">Wishes</button>
+
+              </div>
+              <!-- end group wishes -->
+
+
+              <!-- legenda -->
+              <div  class="btn-group">
+
+                <button type="button" 
+                        ng-click="showLegenda()"
+                        class="btn {{(timeline.config.legendarer==true) && 'active'}}" 
+                        ng-model="timeline.config.legendarer">Legenda</button>
+
+              </div>
+              <!-- end legenda -->
+
+
+              <!-- timeline layout manager -->
+              <div  class="btn-group">
+
+                <button type="button" 
+                        ng-model="timeline.current.layouts.group" 
+                        class="btn {{(timeline.current.layouts.group==true) && 'active'}}" 
+                        ng-click="requestTimeline(timeline.current, 'group')">Group</button>
+
+                <button type="button" 
+                        ng-model="timeline.current.layouts.members" 
+                        class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
+                        ng-click="requestTimeline(timeline.current, 'members')">Members</button>
+
+              </div>
+              <!-- end timeline layout manager -->
+
+            </div>
+            <!--end groups members controls -->
+
+
+          </div>
+          <!-- end timeline-toolbar -->
+          <hr>
+          <!-- timeline legenda content -->
+          <div class="legenda" ng-show="timeline.config.legendarer">
+
+            <div class="legenda-row">
+              <strong>Members</strong>
+              <ul>
+                <li class="legenda-Available">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda['com.ask-cs.State.Available']">
+                    Beschikbaar Beide
+                  </label>
+                </li>
+                <li class="legenda-BeschikbaarNoord">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox"
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarNoord']">
+                    Beschikbaar Noord
+                  </label>
+                </li>
+                <li class="legenda-BeschikbaarZuid">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarZuid']">
+                    Beschikbaar Zuid
+                  </label>
+                </li>
+                <li class="legenda-SchipperVanDienst">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox"   
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.SchipperVanDienst']">
+                    Schipper Van Dienst
+                  </label>
+                </li>
+                <li class="legenda-Unavailable">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda['com.ask-cs.State.Unavailable']">
+                    Niet Beschikbaar
+                  </label>
+                </li>
+                <li class="legenda-NotReached">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda['com.ask-cs.State.Unreached']">
+                    Niet Bereikt
+                  </label>
+                </li>
+              </ul>
+            </div>
+
+            <div class="legenda-row last-legenda-row">
+              <strong>Groups</strong>
+              <ul>
+                <li class="legenda-more">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda.groups.more">More people
+                  </label>
+                </li>
+                <li class="legenda-even">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda.groups.even">Just enough people
+                  </label>
+                </li>
+                <li class="legenda-less">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda.groups.less">Less people
+                  </label>
+                </li>
+              </ul>
+            </div>
+
+            <hr>
+          </div>
+          <!-- end timeline legenda content -->
+          <!-- user timeline -->
+          <div id="myTimeline"></div>
+          <!-- end user timeline -->
+        </div>
+        <!-- end timeline -->
+        <hr>
+        <!-- planbaord footer -->
+        <p>
+          <small class="pull-left">
+            <span class="text-warning">Last sync time: </span>
+            <span class="muted">{{data.synced | convertTimeStamp}}</span>
+          </small>
+          <small class="pull-right">
+            <span class="text-warning">Data range start: </span>
+            <span class="muted">{{data.periods.start}}</span>
+            &nbsp;
+            <span class="text-warning">Data range end: </span>
+            <span class="muted">{{data.periods.end}}</span>
+          </small>
+        </p>
+        <!-- end planbaord footer -->
+      </div>
+      <!-- end timelines -->
+
+
+      <!-- statistics -->
+      <div class="tab-pane" id="statisticsTab">
+        <!-- timeline toolbar -->
+        <div id="timeline-toolbar">
+
+          <!-- groups members controls -->
+          <div class="pull-left">
+
+            <!-- groups list -->
+            <select ng-model="timeline.current.group" 
+                    ng-options="group.uuid as group.name for group in groups"
+                    ng-selected="timeline.current.group"
+                    ng-change="requestTimeline(timeline.current)">
+            </select>
+            <!-- end groups list -->
+
+
+            <!-- divisions list -->
+            <select ng-model="timeline.current.division" 
+                    ng-options="division.id as division.label for division in divisions"
+                    ng-selected="timeline.current.division"
+                    ng-change="requestTimeline(timeline.current)">
+                    
+            </select>
+            <!-- end divisions list -->
+
+          </div>
+
+          <!-- groups members controls -->
+          <div class="pull-right">
+
+            <!-- timeline layout manager -->
+            <div  class="btn-group">
+
+              <button type="button" 
+                      ng-model="timeline.current.layouts.group" 
+                      class="btn {{(timeline.current.layouts.group==true) && 'active'}}" 
+                      ng-click="requestTimeline(timeline.current, 'group')">Group</button>
+
+              <button type="button" 
+                      ng-model="timeline.current.layouts.members" 
+                      class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
+                      ng-click="requestTimeline(timeline.current, 'members')">Members</button>
+
+            </div>
+            <!-- end timeline layout manager -->
+
+          </div>
+          <!--end groups members controls -->
+
+        </div>
+        <!-- end timeline toolbar -->
+        <hr>
+        <!-- timeline legenda content -->
+        <div class="legenda">
+
+          <div class="legenda-row">
+            <strong>Members</strong>
+            <ul>
+              <li class="legenda-Available">
+                <label>
+                  <div class="square"></div>
+                  Beschikbaar Beide
+                </label>
+              </li>
+              <li class="legenda-BeschikbaarNoord">
+                <label>
+                  <div class="square"></div>
+                  Beschikbaar Noord
+                </label>
+              </li>
+              <li class="legenda-BeschikbaarZuid">
+                <label>
+                  <div class="square"></div>
+                  Beschikbaar Zuid
+                </label>
+              </li>
+              <li class="legenda-SchipperVanDienst">
+                <label>
+                  <div class="square"></div>
+                  Schipper Van Dienst
+                </label>
+              </li>
+              <li class="legenda-Unavailable">
+                <label>
+                  <div class="square"></div>
+                  Niet Beschikbaar
+                </label>
+              </li>
+              <li class="legenda-NotReached">
+                <label>
+                  <div class="square"></div>
+                  Niet Bereikt
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <div class="legenda-row last-legenda-row">
+            <strong>Groups</strong>
+            <ul>
+              <li class="legenda-more">
+                <label>
+                  <div class="square"></div>
+                  More people
+                </label>
+              </li>
+              <li class="legenda-even">
+                <label>
+                  <div class="square"></div>
+                  Just enough people
+                </label>
+              </li>
+              <li class="legenda-less">
+                <label>
+                  <div class="square"></div>
+                  Less people
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <hr>
+        </div>
+        <!-- end timeline legenda content -->
+        <!-- statistics -->
+        <div id="stats">
+
+          <!-- group charts -->
+          <div id="groupStats">
+            <div id="groupPie"></div>
+            
+            <div class="groupStatInfo">
+              <h3>Total Durations In Period</h3>
+              <hr>
+              <ul>
+                <li>
+                  <h4>More people then expected</h4>
+                  <h5>{{data.aggs.durations.more|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.more|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.more|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+                <li>
+                  <h4>Just so many people as wished</h4>
+                  <h5>{{data.aggs.durations.even|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.even|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.even|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+                <li>
+                  <h4>Less people then expected</h4>
+                  <h5>{{data.aggs.durations.less|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.less|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.less|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+          <!-- end group charts -->
+
+          <!-- member bars -->
+          <div id="memberBars">
+            <ul>
+              <li ng-repeat="member in data.members">
+                <h4>{{member.id|convertUserIdToName}}</h4>
+                <div class="progress">
+                  <div  ng-repeat="stat in member.stats" 
+                        class="bar {{stat.state}}" 
+                        style="width: {{stat.ratio}}%;"></div>
+                </div>
+                <small class="muted">{{member.stats|convertRatios}}</small>
+              </li>
+            </ul>
+          </div>
+          <!-- end member bars -->
+
+        </div>
+        <!-- end statistics -->
+        <hr>
+        <!-- planbaord footer -->
+        <p>
+          <small class="pull-left">
+            <span class="text-warning">Last sync time: </span>
+            <span class="muted">{{data.synced | convertTimeStamp}}</span>
+          </small>
+          <small class="pull-right">
+            <span class="text-warning">Data range start: </span>
+            <span class="muted">{{data.periods.start}}</span>
+            &nbsp;
+            <span class="text-warning">Data range end: </span>
+            <span class="muted">{{data.periods.end}}</span>
+          </small>
+        </p>
+        <!-- end planbaord footer -->
+      </div>
+      <!-- end statistics -->
+
+
+    </div>
+    <!-- end tabs content -->
+
+  </div>
+</div>
+<!-- end timelines & statistics

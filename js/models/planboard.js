@@ -56,6 +56,52 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   );
 
 
+  /**
+   * Wishes resource
+   */
+  var Wishes = $resource(
+    $config.host + '/network/:id/wish',
+    {
+    },
+    {
+      query: {
+        method: 'GET',
+        params: {id: '', start:'', end:''},
+        isArray: true
+      }
+    }
+  );
+
+
+
+
+
+
+
+
+  /**
+   * Get group aggs
+   */
+  Slots.prototype.wishes = function (options) 
+  {
+    /**
+     * Default params
+     */
+    var deferred = $q.defer(),
+        params = {
+          id: options.id,
+          start: options.start,
+          end: options.end
+        };
+    /**
+     * Fetch wishes
+     */
+    Wishes.query(params, function (result) 
+    {
+      deferred.resolve(result);
+    });
+    return deferred.promise;
+  };
 
 
 
@@ -96,107 +142,100 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      */
     Aggs.query(params, function (result) 
     {
-      deferred.resolve({
-        id: options.id,
-        division: options.division,
-        data: result
+
+
+
+      /**
+       * TODO
+       * Clean it up a bit!
+       *
+       * Produce statistics for group
+       */
+      var stats = {},
+          durations = {
+            less: 0,
+            even: 0,
+            more: 0,
+            total: 0
+          },
+          total = 0;
+      angular.forEach(result, function(slot, index)
+      {
+        /**
+         * Count diffs
+         */
+        if (stats[slot.diff])
+        {
+          stats[slot.diff]++;
+        }
+        else
+        {
+          stats[slot.diff] = 1;
+        };
+        total++;
+        /**
+         * Calculate total absence
+         */
+        var slotDiff = slot.end - slot.start;
+        if (slot.diff < 0)
+        {
+          durations.less = durations.less + slotDiff;
+        }
+        else if (slot.diff == 0)
+        {
+          durations.even = durations.even + slotDiff;
+        }
+        else
+        {
+          durations.more = durations.more + slotDiff;
+        };
+        durations.total = durations.total + slotDiff;
+
       });
+      // console.warn('stats ->', stats, total);
+
+      var ratios = {};
+      angular.forEach(stats, function(stat, index)
+      {
+        //console.warn(stat, index);
+        ratios[index] = Math.round((stat / total) * 100);
+      });
+      // console.warn('ratios ->', ratios);
+
+      // var confirm = 0;
+      // angular.forEach(ratios, function(ratio, index)
+      // {
+      //   confirm = confirm + ratio;
+      // });
+      // console.warn('confirm ->', confirm);
+      // 
+    
+
+
+
+
+
+
+      /**
+       * Fetch the wishes
+       */
+      Slots.prototype.wishes(params)
+      .then(function(wishes)
+      {
+        deferred.resolve({
+          id: options.id,
+          division: options.division,
+          wishes: wishes,
+          data: result,
+          ratios: ratios,
+          durations: durations
+        });
+      });
+
+
     });
     return deferred.promise;
   };
-
-
-
-
-
-
-
-
-
-
-
-  // /**
-  //  * Get group aggs
-  //  */
-  // Slots.prototype.aggs___ = function (options) 
-  // {
-  //   /**
-  //    * Default params
-  //    */
-  //   var deferred = $q.defer(),
-  //       params = {
-  //         id: options.id,
-  //         start: options.start,
-  //         end: options.end
-  //       };
-  //       //,aggs = angular.fromJson(Storage.get('aggs')) || {};
-
-  //   /**
-  //    * Check if box exists otherwsie create it
-  //    */
-  //   if (aggs[params.id] && aggs[params.id][options.month])
-  //   {
-  //     deferred.resolve({
-  //         id: params.id,
-  //         division: options.division,
-  //         data: aggs[params.id][options.month]
-  //     });
-  //   }
-  //   else
-  //   {
-  //     /**
-  //      * If specific division is selected
-  //      */
-  //     if (options.division != undefined)
-  //     {
-  //       params.stateGroup = options.division;
-  //     };
-
-  //     /**
-  //      * Fetch aggs
-  //      */
-  //     Aggs.query(params, function (result) 
-  //     {
-  //       /**
-  //        * Check if box exists otherwsie create it
-  //        */
-  //       if (aggs[params.id])
-  //       {
-  //         aggs[params.id][options.month] = result;
-  //       }
-  //       else
-  //       {
-  //         aggs[params.id] = {};
-  //         aggs[params.id][options.month] = result;
-  //       };
-  //       /**
-  //        * Save data to localstorage
-  //        */
-  //       Storage.add('aggs', angular.toJson(aggs));
-          
-  //       deferred.resolve({
-  //         id: options.id,
-  //         division: options.division,
-  //         data: result
-  //       });
-  //     });
-      
-  //   };
-
-  //   return deferred.promise;
-  // };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -215,22 +254,25 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
            * TODO
            * This causes an issue of rendering someone else's timeline
            */
-          user:   angular.fromJson(Storage.get('resources')).uuid
+          user:   angular.fromJson(Storage.get('resources')).uuid,
+          start:  options.stamps.start / 1000,
+          end:    options.stamps.end / 1000
         },
         data = {};
-    /**
-     * Is it monthly view or custom range?
-     */
-    if (options.custom)
-    {
-      params.start = options.custom.start / 1000;
-      params.end = options.custom.end / 1000;
-    }
-    else
-    {
-      params.start = periods.months[options.month].first.timeStamp / 1000;
-      params.end = periods.months[options.month].last.timeStamp / 1000;
-    }
+
+    // /**
+    //  * Is it monthly view or custom range?
+    //  */
+    // if (options.custom)
+    // {
+    //   params.start = options.periods.start / 1000;
+    //   params.end = options.periods.end / 1000;
+    // }
+    // else
+    // {
+    //   params.start = periods.months[options.month].first.timeStamp / 1000;
+    //   params.end = periods.months[options.month].last.timeStamp / 1000;
+    // }
 
     /**
      * Fetch first user slots
@@ -289,8 +331,10 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
                */
               calls.push(Slots.prototype.user({
                 user: member.uuid,
-                start: periods.months[options.month].first.timeStamp / 1000,
-                end: periods.months[options.month].last.timeStamp / 1000,
+                //start: periods.months[options.month].first.timeStamp / 1000,
+                //end: periods.months[options.month].last.timeStamp / 1000,
+                start: params.start,
+                end: params.end,
                 type: 'both'
               }));
             });
@@ -308,7 +352,11 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
                 groupId: options.groupId,
                 aggs: aggs,
                 members: members,
-                synced: new Date().getTime()
+                synced: new Date().getTime(),
+                periods: {
+                  start: options.stamps.start,
+                  end: options.stamps.end
+                }
               });
 
             });
@@ -319,7 +367,11 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
               user: user,
               groupId: options.groupId,
               aggs: aggs,
-              synced: new Date().getTime()
+              synced: new Date().getTime(),
+              periods: {
+                start: options.stamps.start,
+                end: options.stamps.end
+              }
             });
           };
         });
@@ -329,7 +381,11 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       {
         deferred.resolve({
           user: user,
-          synced: new Date().getTime()
+          synced: new Date().getTime(),
+          periods: {
+            start: options.stamps.start,
+            end: options.stamps.end
+          }
         });
 
         // /**
@@ -384,9 +440,64 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     var deferred = $q.defer();
     Slots.query(params, function (result) 
     {
+      //console.log('result', result);
+
+
+
+
+
+
+      /**
+       * TODO
+       * Clean it up a bit!
+       *
+       * Produce statistics for member
+       */
+      var stats = {},
+          total = 0;
+      angular.forEach(result, function(slot, index)
+      {
+        if (stats[slot.text])
+        {
+          stats[slot.text]++;
+        }
+        else
+        {
+          stats[slot.text] = 1;
+        };
+        total++;
+      });
+      //console.warn('stats ->', stats, total);
+
+      var ratios = [];
+      angular.forEach(stats, function(stat, index)
+      {
+        ratios.push({
+          state: index,
+          ratio: (stat / total) * 100
+        });
+        //console.warn(stat, index);
+        //ratios[index] = (stat / total) * 100;
+      });
+      //console.warn('ratios ->', ratios);
+
+      // var confirm = 0;
+      // angular.forEach(ratios, function(ratio, index)
+      // {
+      //   confirm = confirm + ratio;
+      // });
+      // console.warn('confirm ->', confirm);
+
+
+
+
+
+
+
       deferred.resolve({
         id: params.user,
-        data: result
+        data: result,
+        stats: ratios
       });
     });
     return deferred.promise;
