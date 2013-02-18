@@ -334,6 +334,10 @@ dl dd {
   margin-bottom: 15px;
 }
 
+label {
+  font-weight: bold;
+}
+
 
 
 
