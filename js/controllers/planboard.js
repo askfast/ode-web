@@ -6,7 +6,7 @@
  *
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, $window, $route, data, Slots, Dater, Storage) 
+function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater, Storage) 
 {
 
   //$rootScope.fixTabHeight('timelineTab');
@@ -1559,7 +1559,7 @@ planboardCtrl.prototype = {
               timedata.push({
                 start: Math.round(slot.start * 1000),
                 end: Math.round(slot.end * 1000),
-                group: wrapper('d') + '<a href="#">' + members[member.id] + '</a>',
+                group: wrapper('d') + '<a href="#/profile/' + member.id + '/timeline">' + members[member.id] + '</a>',
                 content: angular.toJson({ 
                   id: slot.id, 
                   recursive: slot.recursive, 
@@ -1578,7 +1578,7 @@ planboardCtrl.prototype = {
         timedata.push({
           start: 0,
           end: 0,
-          group: wrapper('d') + '<a href="#">' + members[member.id] + '</a>',
+          group: wrapper('d') + '<a href="#/profile/' + member.id + '/timeline">' + members[member.id] + '</a>',
           content: null,
           className: null,
           editable: false
@@ -1587,7 +1587,7 @@ planboardCtrl.prototype = {
          * Add loading slots
          */
         timedata = addLoading(timedata, [
-          wrapper('d') + '<a href="#">' + members[member.id] + '</a>'
+          wrapper('d') + '<a href="#/profile/' + member.id + '/timeline">' + members[member.id] + '</a>'
         ]);
         /**
          * Produce member stats
@@ -1677,12 +1677,4 @@ planboardCtrl.prototype = {
 
 };
 
-planboardCtrl.$inject = ['$rootScope', 
-                          '$scope', 
-                          '$config',
-                          '$window',
-                          '$route',
-                          'data', 
-                          'Slots', 
-                          'Dater', 
-                          'Storage'];
+planboardCtrl.$inject = ['$rootScope', '$scope', '$config', '$window', 'data', 'Slots', 'Dater', 'Storage'];
