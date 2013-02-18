@@ -137,6 +137,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     };    
     // console.warn('location ->', $location.replace(), $location);
     // $location.$$rewriteAppUrl('/messages');
+    //$location.path('/messages');
   };
 
 

@@ -317,7 +317,9 @@ html,body {
 
 
 
-
+.control-group {
+  margin-bottom: 20px;
+}
 
 
 
