@@ -380,6 +380,20 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 
 
 
+
+
+  /**
+   * TODO
+   * Make button state change!
+   * Finish it!
+   * 
+   * Forgot password
+   */
+  $scope.forgot = function()
+  {
+    User.password($scope.remember.id);
+  };
+
 };
 
 
