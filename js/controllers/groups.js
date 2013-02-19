@@ -20,6 +20,37 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 
 
   /**
+   * Default view settings
+   */
+  $scope.views = {
+    add: false,
+    edit: false,
+    search: false
+  };
+
+  $scope.toggleForm = function ()
+  {
+    if ($scope.views.add)
+    {
+      $scope.views.add = false;
+    }
+    else
+    {
+      $scope.views.add = true;
+    };
+  };
+
+  $scope.closeForm = function ()
+  {
+    $scope.views = {
+      add: false,
+      edit: false,
+      search: $scope.views.search
+    };
+  };
+
+
+  /**
    * Reset selection
    */
   $scope.selection = {};
@@ -283,12 +314,27 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
    */
   function render(groups)
   {
+    /**
+     * Init empty members container
+     */
     $scope.members = {};
+    /**
+     * Loop through groups
+     */
     angular.forEach(angular.fromJson(Storage.get('groups')), function(group, gindex)
     {
+      /**
+       * Init containers
+       */
       $scope.members[group.uuid] = [];
+      /**
+       * Loop through members
+       */
       angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, mindex)
       {
+        /**
+         * Push in the pool
+         */
         $scope.members[group.uuid].push(member);
       });
     });
@@ -300,8 +346,17 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
    */
   $scope.toggleSelection = function(group, master)
   {
-    var flag = (master) ? true : false;    
+    /**
+     * Set the flag
+     */
+    var flag = (master) ? true : false;
+    /**
+     * Get members
+     */
     var members = angular.fromJson(Storage.get(group.uuid));
+    /**
+     * Loop through members and set flags
+     */
     angular.forEach(members, function(member, index)
     {
       $scope.selection[member.uuid] = flag;
@@ -320,6 +375,7 @@ groupsCtrl.resolve = {
   data: function ($rootScope, $config, Groups, $route) 
   {
     return Groups.query();
+    //return '';
   }
 };
 

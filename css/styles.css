@@ -288,7 +288,7 @@ html,body {
   float: right;
   position: absolute;
   top: 5px;
-  right: 220px;
+  right: 215px;
   width: 200px;
 }
 
@@ -317,6 +317,29 @@ html,body {
   top: -5px;
   position: relative;
 }
+
+
+
+
+
+
+
+
+
+#inline-form form {
+  margin-bottom: 0;
+}
+
+#inline-form form h5 {
+  display: inline;
+  margin-right: 5px;
+}
+
+#inline-form form input[type=text] {
+  margin-right: 5px;
+}
+
+
 
 
 

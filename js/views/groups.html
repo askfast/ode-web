@@ -3,7 +3,8 @@
 
   <div class="btn-group pull-right">
     <button type="submit" 
-            class="btn btn-success">New Group</button>
+            ng-click="toggleForm()"
+            class="btn btn-success {{(views.add==true) && 'active'}}">New Group</button>
     <button type="submit" 
             class="btn btn-success">New User</button>
   </div>
@@ -30,17 +31,29 @@
 
 
 
+<!-- group form -->
+<div id="inline-form" class="well" ng-show="(views.add || views.edit)">
 
+  <button ng-click="closeForm()" 
+          class="close">&times;</button>
 
-<!-- <div class="well">
-  <h3>Heading</h3>
-  <p>Tagline</p>
-  <p>
-    <a class="btn btn-primary btn-large">
-      Learn more
-    </a>
-  </p>
-</div> -->
+  <!-- inline form -->
+  <form class="form-inline" ng-submit="groupSubmit(groupForm)">
+
+    <h5>Group Form</h5>
+
+    <input type="text" 
+            class="span4" 
+            ng-model="groupForm.name">
+
+    <button type="submit" 
+            class="btn btn-success">Save Group</button>
+
+  </form>
+  <!-- end inline form -->
+
+</div>
+<!-- end group form -->
 
 
 
@@ -218,7 +231,7 @@
 
       <a href="#src" 
           data-toggle="tab">
-        Search results
+        <i class="icon-search"></i> Search results
       </a>
     </li>
   </ul>
@@ -270,7 +283,7 @@
 
                 <button style="margin-left: 5px;" 
                         ng-click="addMember(candidate)" 
-                        class="btn btn-success"><i class="icon-plus icon-white"></i> Add to group</button>
+                        class="btn btn-success btn-small">Add to group</button>
 
               </td>
             </tr>
@@ -280,10 +293,12 @@
 
         <button type="button" 
                 ng-click="addMembers()" 
-                class="btn btn-success pull-left">
-                <i class="icon-plus icon-white"></i> Add Selected Members To Groups</button>
+                class="btn btn-success btn-small pull-left">Add Selected Members To Groups</button>
 
-        <span class="muted pull-right"><i>There are {{candidates.length}} results in your query</i></span>
+        <span class="muted pull-right">
+          <small><i>There are {{candidates.length}} results in your query.</i></small>
+        </span>
+
       </div>
 
 
