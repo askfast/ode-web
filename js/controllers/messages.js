@@ -52,7 +52,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     email: false
   };
 
-
+  $rootScope.app.unreadMessages = Messages.unreadCount();
+  if($rootScope.app.unreadMessages == 0 ){
+  	$('#msgBubble').hide();
+  }else{
+  	$('#msgBubble').show();
+  }
   /**
    * Defaults for views
    */
@@ -78,6 +83,22 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Set message
      */
     $scope.message = Messages.find($route.current.params.messageId);
+    if($scope.message.state == "NEW"){
+    	// change the states to READ  for backend 
+    	angular.forEach($scope.messages.inbox, function(msg,index){
+    		if(msg.uuid == $scope.message.uuid){
+    			msg.state = "READ";
+    			Messages.changeState([msg.uuid],"READ");
+    			$rootScope.app.unreadMessages = $rootScope.app.unreadMessages-1;
+    			if($rootScope.app.unreadMessages == 0 ){
+				 	$('#msgBubble').hide();
+				}else{
+				  	$('#msgBubble').show();
+				}
+    		}
+    	});
+    }
+    
   }
   else
   {
@@ -525,13 +546,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 messagesCtrl.resolve = {
   data: function ($route, Messages, Storage) 
   {
-    if ($route.current.params.messageId)
-    {
-      return Messages.filter(Messages.local());
-    }
-    else{
+    //if ($route.current.params.messageId)
+    //{
+    //  return Messages.filter(Messages.local());
+    //}
+    //else{
       return Messages.query();
-    }
+    //}
   }
 };
 

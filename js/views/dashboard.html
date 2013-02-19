@@ -2,9 +2,7 @@
   <h2>Welcome, {{app.resources.name}}</h2>
 </div>
 
-<p class="muted" style="margin-bottom:30px">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ex ea commodo consequat.</p>
+<p class="muted" style="margin-bottom:30px"></p>
 
 
 <!-- row-fluid -->
@@ -30,8 +28,8 @@ quis nostrud exercitation ex ea commodo consequat.</p>
       <hr>
       <ul style="list-style: none">
       	<li ng-repeat="message in messages">
-          <a href="#/messages/{{message.uuid}}">{{message.subject}}</a><br>
-          <small class="muted">{{message.creationTime}}</small>
+          <a href="#/messages/{{message.uuid}}">{{message.subject | noTitle}}</a> van <a href="#/profile/{{message.requester|convertEve}}/view">{{message.requester|convertEve|convertUserIdToName}}</a>
+          <br><small class="muted">{{message.creationTime | nicelyDate}}</small>  
       	</li>
       </ul>
     </div>

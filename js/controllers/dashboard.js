@@ -7,6 +7,7 @@
 function dashboardCtrl($scope, $rootScope, data)
 {
 	$scope.messages = data;
+	
 };
 
 
@@ -16,7 +17,13 @@ function dashboardCtrl($scope, $rootScope, data)
 dashboardCtrl.resolve = {
   data: function ($rootScope, $config, Messages) 
   {
-  	return Messages.unread();
+      $rootScope.app.unreadMessages = Messages.unreadCount();
+      if($rootScope.app.unreadMessages == 0 ){
+          $('#msgBubble').hide();
+      }else{
+          $('#msgBubble').show();
+      }
+  	  return Messages.unread();
   }
 }
 
