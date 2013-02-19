@@ -426,7 +426,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         /**
          * Find sender's name in members list
          */
-        name = members[senderId].name;
+        name = (typeof members[senderId] == "undefined" )? senderId : members[senderId].name;
 
     /**
      * Set data in compose form
@@ -485,15 +485,35 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          * Set preloader
          */
         $rootScope.loading = false;
+        $scope.resetViews();
       });
     });
     
-    /**
-     * Still needed?
-     */
-  	// $("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");
+	
+
   };
 	
+	$scope.restoreSelectedMsg = function(selection){
+		var uuids = [];
+		angular.forEach(selection, function(checked, id){
+			angular.forEach($scope.messages , function(message,index){
+				if(id == message.uuid && checked == true){
+					message.state = "NEW";
+					uuids.push(message.uuid);
+				}
+			});
+		});
+			
+		if(uuids.length == 0 ){
+			return ; 
+		}
+		
+	    Messages.changeState(uuids, "NEW").then(function(){
+	      $scope.messages = Messages.query().then(function(){
+	        $scope.boxer('trash');
+	      });
+	    });
+	};
 
 };
 

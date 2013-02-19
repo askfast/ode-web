@@ -306,9 +306,13 @@ angular.module('WebPaige.filters', [])
  */
 .filter('convertEve', function()
 {
-  return function(url)
-  {
-    var eve = url.split("/");
+  return function(url){
+  	var eve = url;
+  	if(typeof url != "undefined"){
+  		eve = url.split("/");
+  	}else{
+  		eve = ["",url,""];
+  	}
     return eve[eve.length-2];
   }
 })
@@ -320,25 +324,27 @@ angular.module('WebPaige.filters', [])
 .filter('convertUserIdToName', ['Storage', function(Storage)
 {
 	var members = angular.fromJson(Storage.get('members'));
-	return function(id)
-	{
-		return members[id].name;
+	return function(id){	
+	    if(members == null || typeof members[id] == "undefined"){
+	        return id;
+	    }else{
+	        return members[id].name;   
+	    }
 	};
-}]);
+}])
 
 
 /**
  * Convert timeStamps to dates
  */
-// .filter('nicelyDate', ['Dater', function(Dater)
-// {
-// 	return function(date)
-// 	{
-// 	  var cov_date = Dater.readableDate(date);
-// 		if(cov_date == "Invalid Date"){
-// 		    // could be unix time stamp 
-// 		    date =  Math.round(date);
-// 		}
-// 		return new Date(date).toString('dddd MMMM d, yyyy');
-// 	}
-// }])
+.filter('nicelyDate', ['Dater', function(Dater){
+ 	return function(date)
+ 	{
+ 	  var cov_date = Dater.readableDate(date);
+ 		if(cov_date == "Invalid Date"){
+ 		    // could be unix time stamp
+ 		    date =  Math.round(date);
+ 		}
+ 		return new Date(date).toString('dddd MMMM d, yyyy');
+ 	}
+ }])
