@@ -109,6 +109,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <!-- GROUPS & MEMBERS -->
 <div class="tabbable tabs-left"
       ng-hide="searchView">
@@ -116,15 +126,21 @@
   <ul class="nav nav-tabs" 
       style="width: 170px;
               margin-right: -1px">
-    <li ng-repeat="group in groups" 
+
+
+
+    <li ng-repeat="group in data.groups" 
         class="{{($index == 0) && 'active'}}">
 
       <a href="#grp-{{group.uuid}}" 
           data-toggle="tab"
           ng-click="fixTabHeight(group.uuid)">
-        {{group.name}} ({{members[group.uuid].length}})
+        {{group.name}} ({{data.members[group.uuid].length}})
       </a>
     </li>
+
+
+
   </ul>
 
   <div class="tab-content"
@@ -132,7 +148,10 @@
                 border: 1px solid #ddd; 
                 padding: 20px;">
 
-    <div  ng-repeat="group in groups"
+
+
+
+    <div  ng-repeat="group in data.groups"
           class="{{($index == 0) && 'tab-pane active' || 'tab-pane'}}"
           id="grp-{{group.uuid}}">
 
@@ -156,9 +175,9 @@
 
       <hr>
 
-      <p ng-hide="members[group.uuid].length > 0">There are no members in this group. Please add some.</p>
+      <p ng-hide="data.members[group.uuid].length > 0">There are no members in this group. Please add some.</p>
 
-      <div ng-show="members[group.uuid].length > 0">
+      <div ng-show="data.members[group.uuid].length > 0">
         <table class="table table-striped">
           <thead>
             <tr>
@@ -175,7 +194,7 @@
           </thead>
           <tbody>
 
-            <tr ng-repeat="member in members[group.uuid]">
+            <tr ng-repeat="member in data.members[group.uuid]">
               <td>
                 <input type="checkbox"
                         ng-model="selection[member.uuid]"
@@ -212,10 +231,36 @@
 
     </div>
 
+
+
+
+
+
   </div>
 
 </div>
 <!-- END GROUPS & MEMBERS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

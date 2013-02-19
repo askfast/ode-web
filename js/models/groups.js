@@ -137,6 +137,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
         calls.push(Groups.prototype.removeMember(id, group.uuid));
       }
     });
+
     /**
      * Loop through and make calls
      */
@@ -180,14 +181,44 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
        * Loop through the members listing calls in pool
        */
       $q.all(calls)
-      .then(function(result)
+      .then(function(results)
       {
         /**
          * Make | Update unique members list
          */
         Groups.prototype.uniqueMembers();
 
-        deferred.resolve(groups);
+        /**
+         * Init containers
+         */
+        var data = {};
+        data.members = {};
+
+        /**
+         * Loop through groups
+         */
+        angular.forEach(groups, function(group, gindex)
+        {
+          data.groups = groups;
+
+          /**
+           * Init containers
+           */
+          data.members[group.uuid] = [];
+
+          /**
+           * Loop through members
+           */
+          angular.forEach(results, function (result, mindex)
+          {
+            if (result.id == group.uuid)
+            {
+              data.members[group.uuid] = result.data;
+            };
+          });
+        });
+
+        deferred.resolve(data);
       });
 
     });
@@ -211,7 +242,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       /**
        * Add members list to localStorage
        */
-      Storage.add(id, angular.toJson(result));
+      Storage.add(id, angular.toJson(result));      
 
       deferred.resolve({
         id: id,
@@ -259,13 +290,23 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
+    /**
+     * Success callback
+     */
     var successCb = function (result) 
     {
       deferred.resolve(result);
     };
 
+    /**
+     * Check if group id supplied
+     * if save submitted from add / edit form
+     */
     if (group.id)
     {
+      /**
+       * Edit group
+       */
       Groups.edit({
         id: group.id
       }, {
@@ -274,12 +315,12 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     }
     else
     {
-      // var resources = angular.fromJson(Storage.get('resources'));
-
+      /**
+       * Save group
+       */
       Groups.save({
         id: $rootScope.app.resources.uuid
       }, group, successCb); 
-
     };
 
     return deferred.promise;
@@ -318,14 +359,21 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     Groups.search(null, {key: query}, function (results) 
     {
       var processed = [];
+      /**
+       * Loop through results
+       */
       angular.forEach(results, function(result, index)
       {
+        /**
+         * Push in pool
+         */
         processed.push({
           id: result.id,
           name: result.name,
           groups: Groups.prototype.getMemberGroups(result.id)
         });
       });
+
       deferred.resolve(processed);
     });
 

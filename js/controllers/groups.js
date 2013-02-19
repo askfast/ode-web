@@ -11,12 +11,17 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 	var self = this;
 
 
+
+
   $scope.groupFormView = {
     add: false,
     edit: false
   };
 
   $scope.searchView = false;
+
+
+
 
 
   /**
@@ -80,13 +85,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Set groups
    */
-  $scope.groups = data;
-
-
-  /**
-   * Render groups
-   */
-  render(data);
+  $scope.data = data;
 
 
   /**
@@ -138,12 +137,12 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Query fresh data
        */
       Groups.query().
-      then(function(groups)
+      then(function(data)
       {
         /**
-         * Re-render
+         * Set returned data
          */
-        render(groups);
+        $scope.data = data;
         /**
          * Set preloader
          */
@@ -172,12 +171,12 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Query fresh data
        */
       Groups.query().
-      then(function(groups)
+      then(function(data)
       {
         /**
-         * Re-render
+         * Set returned data
          */
-        render(groups);
+        $scope.data = data;
         /**
          * Set preloader
          */
@@ -210,12 +209,12 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Query fresh data
        */
       Groups.query().
-      then(function(groups)
+      then(function(data)
       {
         /**
-         * Re-render
+         * Set returned data
          */
-        render(groups);
+        $scope.data = data;
         /**
          * Set preloader
          */
@@ -259,17 +258,20 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
         $scope.groupFormView.edit = false;
       };
 
-
       /**
        * Query fresh data
        */
       Groups.query().
-      then(function(groups)
+      then(function(data)
       {
         /**
-         * Re-render
+         * Close form if its still open
          */
-        render(groups);
+        $scope.closeForm();
+        /**
+         * Set returned data
+         */
+        $scope.data = data;
         /**
          * Set preloader
          */
@@ -326,51 +328,16 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Query fresh data
        */
       Groups.query().
-      then(function(groups)
+      then(function(data)
       {
         /**
-         * Re-render
+         * Set returned data
          */
-        render(groups);
+        $scope.data = data;
         /**
          * Set preloader
          */
         $rootScope.loading = false;
-      });
-    });
-  };
-
-
-  /**
-   * Render groups
-   */
-  function render(groups)
-  {
-    /**
-     * Init empty members container
-     */
-    $scope.members = {};
-    /**
-     * Loop through groups
-     */
-    //console.warn('groups from local ->', angular.fromJson(Storage.get('groups')));
-
-    angular.forEach(angular.fromJson(Storage.get('groups')), function(group, gindex)
-    // angular.forEach(groups, function(group, gindex)
-    {
-      /**
-       * Init containers
-       */
-      $scope.members[group.uuid] = [];
-      /**
-       * Loop through members
-       */
-      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, mindex)
-      {
-        /**
-         * Push in the pool
-         */
-        $scope.members[group.uuid].push(member);
       });
     });
   };
@@ -410,7 +377,6 @@ groupsCtrl.resolve = {
   data: function ($rootScope, $config, Groups, $route) 
   {
     return Groups.query();
-    //return '';
   }
 };
 
