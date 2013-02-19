@@ -15,8 +15,8 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
    * Default view settings
    */
   $scope.views = {
-    add: false,
-    edit: false,
+    addGroup: false,
+    editGroup: false,
     search: false
   };
 
@@ -32,17 +32,23 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Toggle new group button
    */
-  $scope.toggleForm = function ()
+  $scope.addGroupForm = function ()
   {
     /** 
      * Check on status
      */
-    if ($scope.views.add)
+    if ($scope.views.addGroup)
     {
       /**
        * Close group form
        */
-      $scope.closeForm();
+      //$scope.closeForm();
+      $scope.views = {
+        addGroup: false,
+        editGroup: false,
+        search: false
+      };
+      $scope.setFirstGroupTab();
     }
     else
     {
@@ -53,8 +59,49 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Reset inline form value
        */
       $scope.groupForm = {};
-      $scope.views.add = true;
+      $scope.views.addGroup = true;
+      $scope.resetTabs();
     };
+  };
+
+
+  /**
+   * Close add group form
+   */
+  $scope.closeAddGroupForm = function ()
+  {
+    $scope.views = {
+      addGroup: false,
+      editGroup: false,
+      search: false
+    };
+    $scope.setFirstGroupTab();
+  };
+
+
+  /**
+   * Reset tabs
+   */
+  $scope.resetTabs = function ()
+  {    
+    /**
+     * Remove active classes of group tabs
+     */
+    angular.forEach(data.groups, function (group, index)
+    {
+      $('#grpl-' + group.uuid).removeClass('active');
+      $('#grp-' + group.uuid).removeClass('active');
+    });
+  };
+
+
+  /**
+   * Set first group tab active
+   */
+  $scope.setFirstGroupTab = function ()
+  {
+    $('#grpl-' + data.groups[0].uuid).addClass('active');
+    $('#grp-' + data.groups[0].uuid).addClass('active');
   };
 
 
@@ -64,8 +111,8 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   $scope.closeForm = function ()
   {
     $scope.views = {
-      add: false,
-      edit: false,
+      addGroup: false,
+      editGroup: false,
       search: false
     };
   };
@@ -80,16 +127,14 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
      * Set views
      */
     $scope.views = {
-      add: $scope.views.add,
-      edit: $scope.views.edit,
+      addGroup: $scope.views.addGroup,
+      editGroup: $scope.views.editGroup,
       search: false
     };
     /**
-     * Clean search input field
+     * Set back first group tab active
      */
-    // $scope.search = {
-    //   query: ''
-    // };
+    $scope.setFirstGroupTab();
   };
 
 
@@ -103,6 +148,15 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
    * Set groups
    */
   $scope.data = data;
+
+
+  /**
+   * New member
+   */
+  $scope.newMember = function ()
+  {
+    //$location.path('/profile/' + $rootScope.app.resources.uuid + '/add');
+  };
 
 
   /**
@@ -139,6 +193,10 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Set preloader
        */
       $rootScope.loading = false;
+      /**
+       * Reset tabs
+       */
+      $scope.resetTabs();
     });
   };
 
@@ -385,6 +443,7 @@ groupsCtrl.resolve = {
   data: function ($rootScope, $config, Groups, $route) 
   {
     return Groups.query();
+    // return ''
   }
 };
 

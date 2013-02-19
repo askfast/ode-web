@@ -3,10 +3,11 @@
 
   <!-- groups buttons -->
   <div class="btn-group pull-right">
-    <button type="submit" 
-            ng-click="toggleForm()"
-            class="btn btn-success {{(views.add==true) && 'active'}}">New Group</button>
-    <button type="submit" 
+    <button type="button" 
+            ng-click="addGroupForm()"
+            class="btn btn-success {{(views.addGroup==true) && 'active'}}">New Group</button>
+    <button type="button" 
+            ng-click="newMember()" 
             class="btn btn-success">New User</button>
   </div>
   <!-- end groups buttons -->
@@ -33,11 +34,17 @@
           class="close">&times;</button>
   <!-- end close btn -->
   <!-- inline form -->
-  <form class="form-inline" ng-submit="groupSubmit(groupForm)">
-    <h5>Group Form</h5>
-    <input type="text" 
+  <form ng-submit="groupSubmit(groupForm)">
+    <h4>Group Form</h4>
+    <hr>
+    <div class="control-group">
+      <label class="control-label">Group Name</label>
+      <div class="controls">
+        <input type="text" 
             class="span4" 
             ng-model="groupForm.name">
+      </div>
+    </div>
     <button type="submit" 
             class="btn btn-success">Save Group</button>
   </form>
@@ -51,26 +58,40 @@
       ng-hide="searchView">
 
   <!-- tabs links -->
-  <ul class="nav nav-tabs nav-tabs-list">
+  <ul class="nav nav-tabs nav-tabs-app">
+    
+    <!-- add group tab link -->
+    <li class="{{(views.addGroup==true) && 'active'}}"
+        ng-show="views.addGroup">
+      <a href="#addGroupTab" 
+          data-toggle="tab">
+        <span class="entypo">&#9998;</span>
+        Add Group
+      </a>
+    </li>
+    <!-- end search tab link -->
     
     <!-- search tab link -->
     <li class="{{(views.search==true) && 'active'}}"
         ng-show="views.search">
       <a href="#searchTab" 
           data-toggle="tab">
-        <i class="icon-search"></i> Search results
+        <span class="entypo">&#128269;</span>
+        Search results
       </a>
     </li>
     <!-- end search tab link -->
 
     <!-- group tab links -->
     <li ng-repeat="group in data.groups" 
-        class="{{($index == 0) && 'active' }}"
-        ng-hide="views.search">
+        id="grpl-{{group.uuid}}" 
+        class="{{($index == 0) && 'active' }}">
+        <!-- ng-hide="views.search"> -->
       <a href="#grp-{{group.uuid}}" 
           data-toggle="tab"
-          ng-click="fixTabHeight(group.uuid)">
-        {{group.name}} ({{data.members[group.uuid].length}})
+          ng-click="fixTabHeight('grp-' + group.uuid)">
+          <span class="entypo">&#128101;</span> 
+        {{group.name}}
       </a>
     </li>
     <!-- end group tab links -->
@@ -79,14 +100,27 @@
   <!-- end tabs links -->
 
   <!-- tabs content -->
-  <div id="tab-content-fixed" class="tab-content">
+  <div class="tab-content">
+
+    <!-- add group tab -->
+    <div class="tab-pane {{(views.addGroup==true) && 'active'}}" id="addGroupTab" ng-show="views.addGroup">
+      <div class="tab-header">
+        <h3 class="pull-left">Add New Group</h3>
+        <button type="button" 
+                ng-click="closeAddGroupForm()" 
+                class="btn pull-right">Close</button>
+      </div>
+      <hr>
+
+    </div>
+    <!-- end add group tab -->
 
     <!-- search tab -->
     <div class="tab-pane {{(views.search==true) && 'active'}}" id="searchTab" ng-show="views.search">
       <div class="tab-header">
         <h3 class="pull-left">Search results for '{{search.queried}}'</h3>
         <button type="button" 
-                ng-click="views.search=false" 
+                ng-click="closeSearch()" 
                 class="btn pull-right">Close</button>
       </div>
       <hr>
@@ -132,8 +166,8 @@
     <!-- group tabs -->
     <div  ng-repeat="group in data.groups"
           class="tab-pane {{($index == 0) && 'active'}}"
-          id="grp-{{group.uuid}}"
-          ng-hide="views.search">
+          id="grp-{{group.uuid}}">
+          <!-- ng-hide="views.search"> -->
       <div class="tab-header">
         <h3 class="pull-left">{{group.name}}</h3>
         <div class="pull-right">
@@ -190,7 +224,7 @@
                 <i class="icon-trash icon-white"></i> Remove Selected Members</button>
 
         <span class="muted pull-right">
-          <small><i>There are {{members[group.uuid].length}} member(s)</i></small>
+          <small><i>There are {{data.members[group.uuid].length}} member(s)</i></small>
         </span>
       </div>
     </div>

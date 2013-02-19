@@ -327,16 +327,34 @@ html,body {
 
 
 #inline-form form {
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#inline-form form .control-group label {
+  margin: 0;
+  padding: 0; 
+  display: inline;
+  margin-right: 10px;
 }
 
 #inline-form form h5 {
+  /*display: inline;
+  margin-right: 5px;*/
+  margin-bottom: 10px;
+}
+
+#inline-form form .controls {
+  /*margin-right: 5px;*/
   display: inline;
-  margin-right: 5px;
 }
 
 #inline-form form input[type=text] {
-  margin-right: 5px;
+  margin-top: 5px;
+  /*margin-right: 5px;*/
+  /*display: inline;
+  margin: 0;
+  margin-right: 10px;*/
 }
 
 
