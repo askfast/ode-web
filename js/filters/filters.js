@@ -345,6 +345,17 @@ angular.module('WebPaige.filters', [])
  		    // could be unix time stamp
  		    date =  Math.round(date);
  		}
- 		return new Date(date).toString('dddd MMMM d, yyyy');
+ 		//return new Date(date).toString('dddd MMMM d, yyyy');
+ 		return new Date(date).toString('dd-MM-yyyy HH:mm');
  	}
  }])
+ 
+.filter('noTitle',function(){
+	return function(title){
+		if(title == ""){
+			return "no title";
+		}else{
+			return title;
+		}
+	}
+})
