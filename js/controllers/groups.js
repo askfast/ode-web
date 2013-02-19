@@ -3,7 +3,7 @@
 /**
  * Groups Controller
  */
-function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routeParams, Storage)
+function groupsCtrl($rootScope, $scope, $config, data, Groups, Profile, $route, $routeParams, Storage)
 {
   /**
    * Self this
@@ -29,6 +29,12 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
    * Set groups
    */
   $scope.data = data;
+
+
+  /**
+   * Grab and set roles for view
+   */
+  $scope.roles = $config.roles;
 
 
   /**
@@ -121,7 +127,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Edit a group
    */
-  $scope.editGroup = function(group)
+  $scope.editGroup = function (group)
   {
     /**
      * Set view on edit mode
@@ -178,6 +184,11 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   $scope.closeTabs = function ()
   {
     /**
+     * Clean forms
+     */
+    $scope.groupForm = {};
+    $scope.memberForm = {};
+    /**
      * Set views
      */
     $scope.views = {
@@ -193,17 +204,10 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   };
 
 
-
-
-
-
-
-
-
   /**
    * Search for members
    */
-  $scope.searchMembers = function(query)
+  $scope.searchMembers = function (query)
   {
     /**
      * Set preloader
@@ -254,7 +258,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Add member to a group
    */
-  $scope.addMember = function(candidate)
+  $scope.addMember = function (candidate)
   {
     /**
      * Set preloader
@@ -288,7 +292,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Remove member from a group
    */
-  $scope.removeMember = function(member, group)
+  $scope.removeMember = function (member, group)
   {
     /**
      * Set preloader
@@ -322,7 +326,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Remove members
    */
-  $scope.removeMembers = function(selection, group)
+  $scope.removeMembers = function (selection, group)
   {
     /**
      * Set preloader
@@ -366,7 +370,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Save a group
    */
-  $scope.groupSubmit = function(group)
+  $scope.groupSubmit = function (group)
   {
     /**
      * Set preloader
@@ -403,9 +407,43 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 
 
   /**
+   * Save a member
+   */
+  $scope.memberSubmit = function (member)
+  {
+    /**
+     * Set preloader
+     */
+    $rootScope.loading = true;
+    /**
+     * Register a new member
+     */
+    Profile.register(member).
+    then(function()
+    {
+      /**
+       * Query fresh data
+       */
+      Groups.query().
+      then(function(data)
+      {
+        /**
+         * Set returned data
+         */
+        $scope.data = data;
+        /**
+         * Set preloader
+         */
+        $rootScope.loading = false;
+      });
+    });
+  };
+
+
+  /**
    * Delete a group
    */
-  $scope.deleteGroup = function(id)
+  $scope.deleteGroup = function (id)
   {
     /**
      * Set preloader
@@ -439,7 +477,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Selection toggler
    */
-  $scope.toggleSelection = function(group, master)
+  $scope.toggleSelection = function (group, master)
   {
     /**
      * Set the flag
@@ -484,5 +522,5 @@ groupsCtrl.prototype = {
 
 
 
-groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Groups', 
+groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Groups', 'Profile', 
                       '$route', '$routeParams', 'Storage'];

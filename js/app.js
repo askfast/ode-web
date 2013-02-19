@@ -48,6 +48,23 @@ WebPaige.
       format: 'dd-M-yyyy HH:mm tt'
     },
     /**
+     * Roles
+     */
+    roles: [
+      {
+        id: 1,
+        label: 'Planner'
+      },
+      {
+        id: 2,
+        label: 'Schipper'
+      },
+      {
+        id: 3,
+        label: 'Opstapper'
+      }
+    ],
+    /**
      * Timeline options
      */
     timeline: {

@@ -166,6 +166,33 @@
           <fieldset>
 
             <div class="control-group">
+              <label class="control-label">Rol</label>
+              <div class="controls">
+                <select ng-model="memberForm.role"
+                        ng-options="role.label for role in roles">
+                  <option value="">Select a role</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Groups</label>
+              <div class="controls">
+                <select data-placeholder="Choose a Group" 
+                        multiple 
+                        class="chzn-select" 
+                        style="width:530px" 
+                        chosen
+                        ng-model="memberForm.groups" 
+                        ng-options="group.name for group in data.groups">
+                </select>
+                <!-- <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p> -->
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="control-group">
               <label class="control-label">Name</label>
               <div class="controls">
                 <input  type="text" 
@@ -216,6 +243,26 @@
                 <input  type="text" 
                         class="span3" 
                         ng-model="memberForm.PostCity">
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="control-group">
+              <label class="control-label">Username</label>
+              <div class="controls">
+                <input  type="text" 
+                        class="span3" 
+                        ng-model="memberForm.username">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Password</label>
+              <div class="controls">
+                <input  type="password" 
+                        class="span3" 
+                        ng-model="memberForm.password">
               </div>
             </div>
 

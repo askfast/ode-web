@@ -8,17 +8,39 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
    * Profile resource
    */
   var Profile = $resource(
-    $config.host + '/node/:id/resource',
+    $config.host + '/node/:id/:section',
     {
     },
     {
       get: {
         method: 'GET',
-        params: {id:''}
+        params: {id: '', section: 'resource'}
       },
       save: {
         method: 'PUT',
-        params: {}
+        params: {section: 'resource'}
+      },
+      role: {
+        method: 'PUT',
+        params: {section: 'role'}
+      }
+    }
+  );
+
+
+  /**
+   * Register resource
+   */
+  var Register = $resource(
+    $config.host + '/register',
+    {
+      direct: 'true',
+      module: 'default'
+    },
+    {
+      profile: {
+        method: 'GET',
+        params: {uuid: '', pass: '', name: '', phone: ''}
       }
     }
   );
@@ -47,6 +69,32 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       }
     }
   );
+
+
+  /**
+   * Change password for user
+   */
+  Profile.prototype.register = function (profile) 
+  {    
+    var deferred = $q.defer();
+
+    console.warn('register user ->', profile);
+
+    /**
+     * Register user
+     */
+    Register.profile({
+      uuid: profile.username,
+      pass: $md5.process(profile.password),
+      name: profile.name,
+      phone: profile.PhoneAddress
+    }, {}, function (result) 
+    {
+      deferred.resolve(result);
+    });
+
+    return deferred.promise;
+  };
 
 
   /**
