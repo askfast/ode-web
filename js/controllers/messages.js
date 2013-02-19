@@ -489,30 +489,9 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       });
     });
     
-	$("div[ng-show='composeView'] select.chzn-select").trigger("liszt:updated");    
 	
-  };
 
-	
-	$scope.restore = function(message){
-		var uuids = [];
-	    uuids.push(message.uuid);
-	    
-	    Messages.changeState(uuids, "NEW").then(function(){
-	      message.state = "NEW";
-	      $scope.messages = Messages.query().then(function(){
-	        $scope.boxer('trash');
-	      });
-	    });
-	}
-	
-	$scope.toggleSelection = function(master){
-	    var flag = (master) ? true : false;    
-	    var messages = $scope.messages;
-	    angular.forEach(messages, function(message, index){
-	      $scope.selection[message.uuid] = flag;
-	    });
-	};
+  };
 	
 	$scope.restoreSelectedMsg = function(selection){
 		var uuids = [];

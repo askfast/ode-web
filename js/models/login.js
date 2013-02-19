@@ -7,7 +7,7 @@
  * TimeSlots Service
  */
 WebPaige.
-factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+factory('User', function ($resource, $config, $q, $location, $timeout, Storage, $rootScope) 
 {
   var self = this;
 
@@ -50,6 +50,40 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
 
 
   /**
+   * Reset resource
+   */
+  var Reset = $resource(
+    $config.host + '/passwordReset',
+    {
+    },
+    {
+      password: {
+        method: 'GET',
+        params: {uuid: '', path:''}
+      }
+    }
+  );
+
+
+  /**
+   * User login
+   */
+  User.prototype.password = function (uuid) 
+  {    
+    var deferred = $q.defer();
+    Reset.password({
+      uuid: uuid.toLowerCase(), 
+      path: $location.absUrl() +
+            '/password.html'
+    }, function (result) 
+    {
+      deferred.resolve(result);
+    });
+    return deferred.promise;
+  };
+
+
+  /**
    * User login
    */
   User.prototype.login = function (uuid, pass) 
@@ -65,6 +99,10 @@ factory('User', function ($resource, $config, $q, $route, $timeout, Storage, $ro
       {
         deferred.resolve(result);
       }
+    },
+    function (error)
+    {
+      deferred.resolve(error);
     });
     return deferred.promise;
   };

@@ -34,9 +34,55 @@
 	</div>
 	<!-- end preloader -->
 
+
+
 	<!-- loginForm -->
-	<div id="login">
+	<div id="login" ng-show="views.login">
 		<form ng-submit="login()">
+		  <img src="img/login_knrm_logo.png" alt="KNRM" />
+			<!-- <h2>WebPaige</h2> -->
+		  <h4 class="form-signin-heading">Please sign in</h4>
+
+      <!-- alert login -->
+      <div class="alert {{alert.login.type}}" ng-show="alert.login.display">
+        <button class="close" type="button" ng-click="alert.login=false">×</button>
+        {{alert.login.message}}
+      </div>
+      <!-- end login password -->
+
+		  <input 
+		    class="" 
+		    type="text" 
+		    ng-model="logindata.username"
+		    placeholder="Username" 
+		    autofocus>
+
+		  <input 
+		      class="" 
+		      type="password" 
+		      ng-model="logindata.password"
+		      placeholder="Password">
+
+		  <label class="checkbox span3">
+		    <input 
+		      type="checkbox" 
+		      ng-model="logindata.remember">Remember me
+		  </label>
+
+		  <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+
+		  <p><small><a ng-click="views.forgot=true; views.login=false">forgot your password?</a></small></p>
+
+		  <span class="version">v2.0.0</span>
+		</form>
+	</div>
+	<!-- end loginForm -->
+
+
+
+	<!-- remember login -->
+	<div id="forgot" ng-show="views.forgot">
+		<form ng-submit="forgot()">
 		  <img src="img/login_knrm_logo.png" alt="KNRM" />
 			<!-- <h2>WebPaige</h2> -->
 		  <h4 class="form-signin-heading">Please sign in</h4>
@@ -49,26 +95,25 @@
 		  <input 
 		    class="" 
 		    type="text" 
-		    ng-model="logindata.username"
-		    placeholder="Username" 
-		    autofocus>
-		  <input 
-		      class="" 
-		      type="password" 
-		      ng-model="logindata.password"
-		      placeholder="Password">
-		  <label class="checkbox span3">
-		    <input 
-		      type="checkbox" 
-		      ng-model="logindata.remember">Remember me
-		  </label>
-		  <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+		    ng-model="remember.id"
+		    placeholder="username">
 
-		  <p><small><a href="">forgot your password?</a></small></p>
+		  <button class="btn btn-large btn-primary" type="submit">Reset Password</button>
+
+		  <p><small><a ng-click="views.login=true; views.forgot=false">return back to login</a></small></p>
 
 		  <span class="version">v2.0.0</span>
 		</form>
 	</div>
-	<!-- end loginForm -->
-
+	<!-- end remember login -->
+	
 </div>
+
+<!-- download mobile app -->
+<div id="download">
+	<button class="btn btn-large btn-success" type="submit">
+		<span class="entypo">&#128241;</span>
+		<span class="msg">Download Mobile App</span>
+	</button>
+</div>
+<!-- end download mobile app -->

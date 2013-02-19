@@ -61,6 +61,7 @@
         </div>
         <hr>
 
+        <!-- compose form -->
         <form>
           <fieldset>
         
@@ -127,6 +128,7 @@
 
           </fieldset>
         </form>
+        <!-- end compose form -->
 
       </div>
       <!-- end composeTab -->
@@ -151,6 +153,7 @@
         </div>
         <hr>
 
+        <!-- message view -->
         <dl>
           <dt>Sender</dt>
             <dd>{{message.requester|convertEve|convertUserIdToName}}</dd>
@@ -165,6 +168,7 @@
           <dt>Question Text</dt>
             <dd>{{message.question_text}}</dd>
         </dl>
+        <!-- end message view -->
 
 
       </div>
@@ -181,6 +185,7 @@
 
         <p ng-hide="messages.inbox.length > 0">There are no messages in inbox.</p>
 
+        <!-- inbox listing -->
         <div ng-show="messages.inbox.length > 0">
           <table class="table table-striped">
             <thead>
@@ -235,6 +240,7 @@
             <small><i>There are {{messages.inbox.length}} message(s)</i></small>
           </span>
         </div>
+        <!-- end inbox listing -->
 
       </div>
       <!-- end inboxTab -->
@@ -249,6 +255,7 @@
 
         <p ng-hide="messages.outbox.length > 0">There are no messages in outbox.</p>
 
+        <!-- outbox listing -->
         <div ng-show="messages.outbox.length > 0">
           <table class="table table-striped">
             <thead>
@@ -299,6 +306,7 @@
             <small><i>There are {{messages.outbox.length}} message(s)</i></small>
           </span>
         </div>
+        <!-- end outbox listing -->
 
       </div>
       <!-- end outboxTab -->
@@ -322,6 +330,7 @@
 
         <p ng-hide="messages.trash.length > 0">There are no messages in trash.</p>
 
+        <!-- trash listing -->
         <div ng-show="messages.trash.length > 0">
           <table class="table table-striped">
             <thead>
@@ -375,6 +384,7 @@
             <small><i>There are {{messages.trash.length}} message(s)</i></small>
           </span>
         </div>
+        <!-- end trash listing -->
 
       </div>
       <!-- end trashTab -->

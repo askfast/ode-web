@@ -23,43 +23,6 @@ html,body {
   height: 60px;
 }
 
-#footer {
-  /*margin-top: -80px;*/
-  background-color: #433c2d;
-}
-
-#footer .container-fluid {
-	padding-top: 10px;
-	height: 100%;
-	display: table;
-}
-
-#footer .container-fluid p {
-	display:  table-cell;
-	vertical-align: middle;
-}
-
-#wrap .container {
-	padding-top: 75px;
-}
-
-#footer p.muted {
-  margin: 0;
-}
-
-#footer p.muted img {
-  height: 20px;
-  margin-right: 5px;
-}
-
-#footer #copyrights {
-  position: absolute;
-  right: 20px;
-  margin-top: 5px;
-  text-align: right;
-  line-height: 16px;
-}
-
 
 .brand {
 	margin-top: 0px;
@@ -122,25 +85,38 @@ html,body {
   font-weight: normal;
 }
 
-#login {
+
+
+
+
+
+
+#login,
+#forgot {
   margin: 0;
 }
 
-#login form {
-}
-
 #login form input[type=text],
-#login form input[type=password] {
+#login form input[type=password],
+#forgot form input[type=text],
+#forgot form input[type=password] {
   margin-bottom: 15px;
   padding: 7px 9px;
   height: auto;
   width: 90%;
 }
 
-#login form input[type=submit] {
+#login form button {
   display: block;
   margin: 0 auto;
   margin-top: 15px;
+}
+
+#forgot form button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 #login form .checkbox {
@@ -150,7 +126,8 @@ html,body {
   padding-left: 35px;
 }
 
-#login span.version {
+#login span.version,
+#forgot span.version {
   display: block;
   margin-top: 10px;
   margin-bottom: -20px;
@@ -158,6 +135,27 @@ html,body {
   text-align: center;
   font-size: 11px;
 }
+
+
+#login .alert,
+#forgot .alert {
+  text-align: left;
+  width: 240px;
+  margin-left: 5px;
+}
+
+#login .alert button,
+#forgot .alert button {
+  margin-top: 0;
+}
+
+
+
+
+
+
+
+
 
 #alertDiv {
   display: none;
@@ -217,6 +215,129 @@ html,body {
 
 
 
+
+
+#download {
+  margin: 5px auto;
+  text-align: center;
+}
+
+#download button {
+  /*width: 360px;*/
+  /*padding-top: 15px;
+  padding-bottom: 15px;*/
+}
+
+#download button span.entypo {
+  font-size: 46px;
+  margin-right: 5px;
+  line-height: 40px;
+  /*text-shadow: 1px 1px 0 black;*/
+  /*text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);*/
+  text-shadow: none;
+}
+
+#download button span.msg {
+  font-size: 18px;
+  top: -5px;
+  position: relative;
+}
+
+
+
+
+
+#footer {
+  /*margin-top: -80px;*/
+  background-color: #433c2d;
+}
+
+#footer .container-fluid {
+  padding-top: 10px;
+  height: 100%;
+  display: table;
+}
+
+#footer .container-fluid p {
+  display:  table-cell;
+  vertical-align: middle;
+}
+
+#wrap .container {
+  padding-top: 75px;
+}
+
+#footer p.muted {
+  margin: 0;
+}
+
+#footer p.muted img {
+  height: 20px;
+  margin-right: 5px;
+}
+
+#footer #copyrights {
+  position: absolute;
+  right: 20px;
+  margin-top: 0;
+  text-align: right;
+  line-height: 16px;
+}
+
+#footer #copyrights span.muted {
+  float: right;
+  position: absolute;
+  top: 5px;
+  right: 215px;
+  width: 200px;
+}
+
+#download-footer {
+}
+
+#download-footer button {
+  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+}
+
+#download-footer button span.entypo {
+  font-size: 36px;
+  margin-right: 5px;
+  line-height: 30px;
+  /*text-shadow: 1px 1px 0 black;*/
+  /*text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);*/
+  text-shadow: none;
+}
+
+#download-footer button span.msg {
+  font-size: 14px;
+  top: -5px;
+  position: relative;
+}
+
+
+
+
+
+
+
+
+
+#inline-form form {
+  margin-bottom: 0;
+}
+
+#inline-form form h5 {
+  display: inline;
+  margin-right: 5px;
+}
+
+#inline-form form input[type=text] {
+  margin-right: 5px;
+}
 
 
 
