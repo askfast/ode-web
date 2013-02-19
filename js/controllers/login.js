@@ -241,6 +241,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
      * Presentations
      */
     $('#login').hide();
+    $('#download').hide();
     $('#preloader').show();
 
     /**

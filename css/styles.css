@@ -23,43 +23,6 @@ html,body {
   height: 60px;
 }
 
-#footer {
-  /*margin-top: -80px;*/
-  background-color: #433c2d;
-}
-
-#footer .container-fluid {
-	padding-top: 10px;
-	height: 100%;
-	display: table;
-}
-
-#footer .container-fluid p {
-	display:  table-cell;
-	vertical-align: middle;
-}
-
-#wrap .container {
-	padding-top: 75px;
-}
-
-#footer p.muted {
-  margin: 0;
-}
-
-#footer p.muted img {
-  height: 20px;
-  margin-right: 5px;
-}
-
-#footer #copyrights {
-  position: absolute;
-  right: 20px;
-  margin-top: 5px;
-  text-align: right;
-  line-height: 16px;
-}
-
 
 .brand {
 	margin-top: 0px;
@@ -282,6 +245,78 @@ html,body {
 
 
 
+
+
+#footer {
+  /*margin-top: -80px;*/
+  background-color: #433c2d;
+}
+
+#footer .container-fluid {
+  padding-top: 10px;
+  height: 100%;
+  display: table;
+}
+
+#footer .container-fluid p {
+  display:  table-cell;
+  vertical-align: middle;
+}
+
+#wrap .container {
+  padding-top: 75px;
+}
+
+#footer p.muted {
+  margin: 0;
+}
+
+#footer p.muted img {
+  height: 20px;
+  margin-right: 5px;
+}
+
+#footer #copyrights {
+  position: absolute;
+  right: 20px;
+  margin-top: 0;
+  text-align: right;
+  line-height: 16px;
+}
+
+#footer #copyrights span.muted {
+  float: right;
+  position: absolute;
+  top: 5px;
+  right: 220px;
+  width: 200px;
+}
+
+#download-footer {
+}
+
+#download-footer button {
+  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+}
+
+#download-footer button span.entypo {
+  font-size: 36px;
+  margin-right: 5px;
+  line-height: 30px;
+  /*text-shadow: 1px 1px 0 black;*/
+  /*text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);*/
+  text-shadow: none;
+}
+
+#download-footer button span.msg {
+  font-size: 14px;
+  top: -5px;
+  position: relative;
+}
 
 
 
