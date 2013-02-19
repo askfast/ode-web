@@ -11,17 +11,12 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 	var self = this;
 
 
+  // $scope.groupFormView = {
+  //   add: false,
+  //   edit: false
+  // };
 
-
-  $scope.groupFormView = {
-    add: false,
-    edit: false
-  };
-
-  $scope.searchView = false;
-
-
-
+  // $scope.searchView = false;
 
 
   /**
@@ -71,7 +66,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     $scope.views = {
       add: false,
       edit: false,
-      search: $scope.views.search
+      search: false
     };
   };
 
@@ -103,13 +98,14 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     Groups.search(q).
     then(function(results)
     {
-      // ????
-      $scope.searchView = true;
-
       /**
        * Show results
        */
       $scope.candidates = results;
+      /**
+       * Set search view on
+       */
+      $scope.views.search = true;
       /**
        * Set preloader
        */
@@ -288,7 +284,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   $scope.editGroup = function(group)
   {
     // ???
-    $scope.groupFormView.edit = true;
+    // $scope.groupFormView.edit = true;
 
     /**
      * Set view on edit mode
