@@ -139,8 +139,8 @@
 
     <!-- group tab links -->
     <li ng-repeat="group in data.groups" 
-        class="{{($index == 0 && views.search != true) && 'active' }}">
-        <!-- ng-hide="views.search"> -->
+        class="{{($index == 0 && views.search != true) && 'active' }}"
+        ng-hide="views.search">
       <a href="#grp-{{group.uuid}}" 
           data-toggle="tab"
           ng-click="fixTabHeight(group.uuid)">
@@ -228,9 +228,9 @@
 
     <!-- group tabs -->
     <div  ng-repeat="group in data.groups"
-          class="tab-pane {{($index == 0 && views.search != true) && 'active'}}"
-          id="grp-{{group.uuid}}">
-          <!-- ng-hide="views.search"> -->
+          class="tab-pane {{($index == 0) && 'active'}}"
+          id="grp-{{group.uuid}}"
+          ng-hide="views.search">
 
       <div class="tab-header">
         <h3 class="pull-left">{{group.name}}</h3>
