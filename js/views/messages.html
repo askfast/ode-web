@@ -153,12 +153,12 @@
 
         <dl>
           <dt>Sender</dt>
-            <dd><!-- {{message.requester|convertEve|convertUserIdToName}} --></dd>
+            <dd>{{message.requester|convertEve|convertUserIdToName}}</dd>
           <dt>Receiver(s)</dt>
             <dd>
-              <!-- <span ng-repeat="receiver in message.responder">
+              <span ng-repeat="receiver in message.responder">
                 {{receiver|convertEve|convertUserIdToName}}, 
-              </span> -->
+              </span>
             </dd>
           <dt>Date</dt>
             <dd>{{message.datetime|convertTimeStamp}}</dd>
@@ -208,12 +208,12 @@
                 <td><span class="label label-warning" ng-show="(message.state=='NEW')">New</span></td>
                 <td>{{message.requester|convertEve|convertUserIdToName}}</td>
                 <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
-                <td>{{message.creationTime|convertTimeStamp}}</td>
+                <td>{{message.creationTime|nicelyDate}}</td>
                 <td>
                   <div class="pull-right">
                   
                     <button class="btn btn-mini"
-                            ng-click=""><i class="icon-share-alt"></i></button>
+                            ng-click="reply(message)"><i class="icon-share-alt"></i></button>
 
                     <button type="submit" 
                             ng-click="removeMessage(message.uuid)" 
@@ -276,13 +276,9 @@
                   <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
                 </td>
                 <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
-                <td>{{message.creationTime|convertTimeStamp}}</td>
+                <td>{{message.creationTime|nicelyDate}}</td>
                 <td>
                   <div class="pull-right">
-                  
-                    <button class="btn btn-mini"
-                            ng-click=""><i class="icon-share-alt"></i></button>
-
                     <button type="submit" 
                             ng-click="removeMessage(message.uuid)" 
                             class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
