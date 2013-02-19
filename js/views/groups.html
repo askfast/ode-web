@@ -3,12 +3,15 @@
 
   <!-- groups buttons -->
   <div class="btn-group pull-right">
+
     <button type="button" 
-            ng-click="addGroupForm()"
+            ng-click="fixTabHeight('addEditGroupTab'); addGroupForm()"
             class="btn btn-success {{(views.addGroup==true) && 'active'}}">New Group</button>
+
     <button type="button" 
-            ng-click="newMember()" 
-            class="btn btn-success">New User</button>
+            ng-click="fixTabHeight('newMemberTab'); newMemberForm()" 
+            class="btn btn-success {{(views.newMember==true) && 'active'}}">New Member</button>
+
   </div>
   <!-- end groups buttons -->
 
@@ -27,49 +30,35 @@
 </div>
 
 
-<!-- group form -->
-<div id="inline-form" class="well" ng-show="(views.add || views.edit)">
-  <!-- close btn -->
-  <button ng-click="closeForm()" 
-          class="close">&times;</button>
-  <!-- end close btn -->
-  <!-- inline form -->
-  <form ng-submit="groupSubmit(groupForm)">
-    <h4>Group Form</h4>
-    <hr>
-    <div class="control-group">
-      <label class="control-label">Group Name</label>
-      <div class="controls">
-        <input type="text" 
-            class="span4" 
-            ng-model="groupForm.name">
-      </div>
-    </div>
-    <button type="submit" 
-            class="btn btn-success">Save Group</button>
-  </form>
-  <!-- end inline form -->
-</div>
-<!-- end group form -->
-
-
 <!-- groups and members -->
-<div class="tabbable tabs-left"
-      ng-hide="searchView">
+<div class="tabbable tabs-left">
+
 
   <!-- tabs links -->
   <ul class="nav nav-tabs nav-tabs-app">
     
     <!-- add group tab link -->
-    <li class="{{(views.addGroup==true) && 'active'}}"
-        ng-show="views.addGroup">
-      <a href="#addGroupTab" 
+    <li class="{{((views.addGroup==true) || (views.editGroup==true)) && 'active'}}"
+        ng-show="views.addGroup || views.editGroup">
+      <a href="#addEditGroupTab" 
           data-toggle="tab">
         <span class="entypo">&#9998;</span>
-        Add Group
+        <div ng-show="views.addGroup">Add New Group</div>
+        <div ng-show="views.editGroup">Edit Group</div>
       </a>
     </li>
     <!-- end search tab link -->
+    
+    <!-- new member tab link -->
+    <li class="{{(views.newMember==true) && 'active'}}"
+        ng-show="views.newMember">
+      <a href="#newMemberTab" 
+          data-toggle="tab">
+        <span class="entypo">&#59136;</span>
+        New Member
+      </a>
+    </li>
+    <!-- new member tab link -->
     
     <!-- search tab link -->
     <li class="{{(views.search==true) && 'active'}}"
@@ -86,7 +75,6 @@
     <li ng-repeat="group in data.groups" 
         id="grpl-{{group.uuid}}" 
         class="{{($index == 0) && 'active' }}">
-        <!-- ng-hide="views.search"> -->
       <a href="#grp-{{group.uuid}}" 
           data-toggle="tab"
           ng-click="fixTabHeight('grp-' + group.uuid)">
@@ -99,28 +87,161 @@
   </ul>
   <!-- end tabs links -->
 
+
+
+
+
   <!-- tabs content -->
   <div class="tab-content">
 
-    <!-- add group tab -->
-    <div class="tab-pane {{(views.addGroup==true) && 'active'}}" id="addGroupTab" ng-show="views.addGroup">
-      <div class="tab-header">
-        <h3 class="pull-left">Add New Group</h3>
-        <button type="button" 
-                ng-click="closeAddGroupForm()" 
-                class="btn pull-right">Close</button>
-      </div>
-      <hr>
+
+
+
+
+    <!-- add / edit group tab -->
+    <div class="tab-pane {{((views.addGroup==true) || (views.editGroup==true)) && 'active'}}" 
+          id="addEditGroupTab" 
+          ng-show="views.addGroup || views.editGroup">
+
+        <div class="tab-header">
+
+          <h3 class="pull-left">
+            <span ng-show="views.addGroup">Add New Group</span>
+            <span ng-show="views.editGroup">Edit Group</span>
+          </h3>
+
+          <button type="button" 
+                  ng-click="closeTabs()" 
+                  class="btn pull-right">Close</button>
+        </div>
+        <hr>
+
+        <!-- group form -->
+        <form>
+          <fieldset>
+            
+            <div class="control-group">
+              <label class="control-label">Group Name</label>
+              <div class="controls">
+                <input type="text" 
+                    class="span4" 
+                    ng-model="groupForm.name">
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" 
+                      ng-click="groupSubmit(groupForm)" 
+                      class="btn btn-success">Save Group</button>
+            </div>
+
+          </fieldset>
+        </form>
+        <!-- end group form -->
 
     </div>
-    <!-- end add group tab -->
+    <!-- end add / edit group tab -->
+
+
+
+
+
+    <!-- new member tab -->
+    <div class="tab-pane {{(views.newMember==true) && 'active'}}" 
+          id="newMemberTab" 
+          ng-show="views.newMember">
+
+        <div class="tab-header">
+
+          <h3 class="pull-left">New Member</h3>
+
+          <button type="button" 
+                  ng-click="closeTabs()" 
+                  class="btn pull-right">Close</button>
+        </div>
+        <hr>
+
+        <!-- member form -->
+        <form>
+          <fieldset>
+
+            <div class="control-group">
+              <label class="control-label">Name</label>
+              <div class="controls">
+                <input  type="text" 
+                        class="span4" 
+                        ng-model="memberForm.name">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Email</label>
+              <div class="controls">
+                <input  type="text" 
+                        class="span4" 
+                        ng-model="memberForm.EmailAddress">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Phone</label>
+              <div class="controls">
+                <input  type="text" 
+                        class="span3" 
+                        ng-model="memberForm.PhoneAddress">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Address</label>
+              <div class="controls">
+                <input  type="text" 
+                        class="span5" 
+                        ng-model="memberForm.PostAddress">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Postcode</label>
+              <div class="controls">
+                <input  type="text" 
+                        class="span2" 
+                        ng-model="memberForm.PostZip">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">City</label>
+              <div class="controls">
+                <input  type="text" 
+                        class="span3" 
+                        ng-model="memberForm.PostCity">
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" 
+                  ng-click="memberSubmit(memberForm)" 
+                  class="btn btn-success">Save Member</button>
+            </div>
+
+          </fieldset>
+        </form>
+        <!-- end member form -->
+
+    </div>
+    <!-- end new member tab -->
+
+
+
+
 
     <!-- search tab -->
     <div class="tab-pane {{(views.search==true) && 'active'}}" id="searchTab" ng-show="views.search">
       <div class="tab-header">
         <h3 class="pull-left">Search results for '{{search.queried}}'</h3>
         <button type="button" 
-                ng-click="closeSearch()" 
+                ng-click="closeTabs()" 
                 class="btn pull-right">Close</button>
       </div>
       <hr>
@@ -163,16 +284,22 @@
     </div>
     <!-- end search tab -->
 
+
+
+
+
+
     <!-- group tabs -->
     <div  ng-repeat="group in data.groups"
           class="tab-pane {{($index == 0) && 'active'}}"
           id="grp-{{group.uuid}}">
           <!-- ng-hide="views.search"> -->
+
       <div class="tab-header">
         <h3 class="pull-left">{{group.name}}</h3>
         <div class="pull-right">
           <button type="button" 
-                  ng-click="editGroup(group)" 
+                  ng-click="fixTabHeight('addEditGroupTab'); editGroup(group)" 
                   class="btn"><i class="icon-edit"></i> Edit Group</button>
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
@@ -180,7 +307,9 @@
         </div>
       </div>
       <hr>
-      <p ng-hide="data.members[group.uuid].length > 0">There are no members in this group. Please add some.</p>
+      <p ng-hide="data.members[group.uuid].length > 0">
+        There are no members in this group. Please add some.
+      </p>
       <div ng-show="data.members[group.uuid].length > 0">
         <table class="table table-striped">
           <thead>
@@ -229,6 +358,11 @@
       </div>
     </div>
     <!-- end group tabs -->
+
+
+
+
+
 
   </div>
   <!-- end tabs content -->

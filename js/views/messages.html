@@ -58,6 +58,9 @@
 
         <div class="tab-header">
           <h3 class="pull-left">Compose message</h3>
+          <button type="submit" 
+                  ng-click="resetViews()" 
+                  class="btn pull-right">Close</button>
         </div>
         <hr>
 
@@ -116,15 +119,11 @@
                         ng-model="message.body"></textarea>
             </div>
 
-            <hr>
-
-            <button type="submit" 
-                    ng-click="send(message, broadcast)" 
-                    class="btn btn-success">Send Message</button>
-
-            <button type="submit" 
-                    ng-click="resetViews()" 
-                    class="btn">Discard</button>
+            <div class="form-actions">
+              <button type="submit" 
+                      ng-click="send(message, broadcast)" 
+                      class="btn btn-success">Send Message</button>
+            </div>
 
           </fieldset>
         </form>

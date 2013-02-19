@@ -12,20 +12,33 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 
 
   /**
+   * Init search query
+   */
+  $scope.search = {
+    query: ''
+  };
+
+
+  /**
+   * Reset selection
+   */
+  $scope.selection = {};
+
+
+  /**
+   * Set groups
+   */
+  $scope.data = data;
+
+
+  /**
    * Default view settings
    */
   $scope.views = {
     addGroup: false,
     editGroup: false,
-    search: false
-  };
-
-
-  /**
-   * Init search query
-   */
-  $scope.search = {
-    query: ''
+    search: false,
+    newMember: false
   };
 
 
@@ -40,15 +53,9 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     if ($scope.views.addGroup)
     {
       /**
-       * Close group form
+       * Close all
        */
-      //$scope.closeForm();
-      $scope.views = {
-        addGroup: false,
-        editGroup: false,
-        search: false
-      };
-      $scope.setFirstGroupTab();
+      $scope.closeTabs();
     }
     else
     {
@@ -59,23 +66,83 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Reset inline form value
        */
       $scope.groupForm = {};
-      $scope.views.addGroup = true;
+      $scope.views = {
+        addGroup: true,
+        editGroup: false,
+        search: false,
+        newMember: false
+      };
+      /**
+       * Reset tabs
+       */
       $scope.resetTabs();
     };
   };
 
 
   /**
-   * Close add group form
+   * New member
    */
-  $scope.closeAddGroupForm = function ()
+  $scope.newMemberForm = function ()
   {
+    /** 
+     * Check on status
+     */
+    if ($scope.views.newMember)
+    {
+      /**
+       * Close all
+       */
+      $scope.closeTabs();
+    }
+    else
+    {
+      /**
+       * TODO
+       * Maybe outside of the if check?
+       * 
+       * Reset inline form value
+       */
+      $scope.memberForm = {};
+      $scope.views = {
+        addGroup: false,
+        editGroup: false,
+        search: false,
+        newMember: true
+      };
+      /**
+       * Reset tabs
+       */
+      $scope.resetTabs();
+    };
+  };
+
+
+  /**
+   * Edit a group
+   */
+  $scope.editGroup = function(group)
+  {
+    /**
+     * Set view on edit mode
+     */
     $scope.views = {
       addGroup: false,
-      editGroup: false,
-      search: false
+      editGroup: true,
+      search: false,
+      newMember: false
     };
-    $scope.setFirstGroupTab();
+    /**
+     * Set values for group edit form
+     */
+    $scope.groupForm = {
+      id: group.uuid,
+      name: group.name
+    }; 
+    /**
+     * Reset tabs
+     */
+    $scope.resetTabs(); 
   };
 
 
@@ -108,28 +175,16 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Close inline form
    */
-  $scope.closeForm = function ()
-  {
-    $scope.views = {
-      addGroup: false,
-      editGroup: false,
-      search: false
-    };
-  };
-
-
-  /**
-   * Close inline form
-   */
-  $scope.closeSearch = function ()
+  $scope.closeTabs = function ()
   {
     /**
      * Set views
      */
     $scope.views = {
-      addGroup: $scope.views.addGroup,
-      editGroup: $scope.views.editGroup,
-      search: false
+      addGroup: false,
+      editGroup: false,
+      search: false,
+      newMember: false
     };
     /**
      * Set back first group tab active
@@ -138,25 +193,11 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   };
 
 
-  /**
-   * Reset selection
-   */
-  $scope.selection = {};
 
 
-  /**
-   * Set groups
-   */
-  $scope.data = data;
 
 
-  /**
-   * New member
-   */
-  $scope.newMember = function ()
-  {
-    //$location.path('/profile/' + $rootScope.app.resources.uuid + '/add');
-  };
+
 
 
   /**
@@ -188,7 +229,12 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
       /**
        * Set search view on
        */
-      $scope.views.search = true;
+      $scope.views = {
+        addGroup: false,
+        editGroup: false,
+        search: true,
+        newMember: false
+      };
       /**
        * Set preloader
        */
@@ -197,6 +243,10 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
        * Reset tabs
        */
       $scope.resetTabs();
+      /**
+       * Fix height of the content tab
+       */
+      $rootScope.fixTabHeight('searchTab');
     });
   };
 
@@ -353,29 +403,6 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 
 
   /**
-   * Edit a group
-   */
-  $scope.editGroup = function(group)
-  {
-    /**
-     * Set view on edit mode
-     */
-    $scope.views = {
-      add: false,
-      edit: true,
-      search: $scope.views.search
-    };
-    /**
-     * Set values for group edit form
-     */
-    $scope.groupForm = {
-      id: group.uuid,
-      name: group.name
-    };  
-  };
-
-
-  /**
    * Delete a group
    */
   $scope.deleteGroup = function(id)
@@ -457,4 +484,5 @@ groupsCtrl.prototype = {
 
 
 
-groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Groups', '$route', '$routeParams', 'Storage'];
+groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Groups', 
+                      '$route', '$routeParams', 'Storage'];
