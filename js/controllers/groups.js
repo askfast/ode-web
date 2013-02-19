@@ -28,18 +28,39 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     search: false
   };
 
+
+  /**
+   * Toggle new group button
+   */
   $scope.toggleForm = function ()
   {
+    /**
+     * TODO
+     * If no other actions needed make this compact
+     * 
+     * Check on status
+     */
     if ($scope.views.add)
     {
       $scope.views.add = false;
     }
     else
     {
+      /**
+       * TODO
+       * Maybe outside of the if check?
+       * 
+       * Reset inline form value
+       */
+      $scope.groupForm = {};
       $scope.views.add = true;
     };
   };
 
+
+  /**
+   * Close inline form
+   */
   $scope.closeForm = function ()
   {
     $scope.views = {
@@ -267,7 +288,18 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     // ???
     $scope.groupFormView.edit = true;
 
+    /**
+     * Set view on edit mode
+     */
+    $scope.views = {
+      add: false,
+      edit: true,
+      search: $scope.views.search
+    };
 
+    /**
+     * Set values for group edit form
+     */
     $scope.groupForm = {
       id: group.uuid,
       name: group.name
@@ -321,7 +353,10 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     /**
      * Loop through groups
      */
+    //console.warn('groups from local ->', angular.fromJson(Storage.get('groups')));
+
     angular.forEach(angular.fromJson(Storage.get('groups')), function(group, gindex)
+    // angular.forEach(groups, function(group, gindex)
     {
       /**
        * Init containers
