@@ -1,6 +1,7 @@
 <div class="page-header">
   <h2>Groups</h2>
 
+  <!-- groups buttons -->
   <div class="btn-group pull-right">
     <button type="submit" 
             ng-click="toggleForm()"
@@ -8,124 +9,49 @@
     <button type="submit" 
             class="btn btn-success">New User</button>
   </div>
+  <!-- end groups buttons -->
 
   <!-- Search members -->
   <form class="form-search pull-right" 
-        style="display: inline;"
-        ng-submit="searchMembers(search.q)">
-
+        ng-submit="searchMembers(search.query)">
     <div class="input-append">
-
       <input type="text" 
-            class="span2 search-query" 
-              ng-model="search.q">
-
+              class="span2 search-query" 
+              ng-model="search.query">
       <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
-
     </div>
-
   </form>
   <!-- End Search -->
 
 </div>
 
 
-
 <!-- group form -->
 <div id="inline-form" class="well" ng-show="(views.add || views.edit)">
-
+  <!-- close btn -->
   <button ng-click="closeForm()" 
           class="close">&times;</button>
-
+  <!-- end close btn -->
   <!-- inline form -->
   <form class="form-inline" ng-submit="groupSubmit(groupForm)">
-
     <h5>Group Form</h5>
-
     <input type="text" 
             class="span4" 
             ng-model="groupForm.name">
-
     <button type="submit" 
             class="btn btn-success">Save Group</button>
-
   </form>
   <!-- end inline form -->
-
 </div>
 <!-- end group form -->
 
 
-
-
-<!-- Group Add / Edit
-<div style="overflow: hidden">
-
-  <!-- Add Group -->
-<!--   <div class="btn-group"
-        ng-hide="(groupFormView.add || groupFormView.edit)">
-
-    <button class="btn btn-success"
-            ng-click="groupFormView.add=true"><i class="icon-plus icon-white"></i> New group</button>
-  </div> -->
-  <!-- End Add Group -->
-
-  <!-- Group Add / Edit Form -->
-<!--   <form class="form-inline pull-left" 
-        style="display: inline;" 
-        ng-show="(groupFormView.add || groupFormView.edit)"
-        ng-submit="groupSubmit(groupForm)">
-
-    <h4 style="display: inline;">
-      <span ng-show="groupFormView.add">Add Group</span>
-      <span ng-show="groupFormView.edit">Edit Group</span>
-    </h4>
-
-    <input type="text" 
-            class="span2"
-            ng-model="groupForm.name">
-
-    <button type="submit" 
-            class="btn btn-success"
-            ng-show="groupFormView.add">
-      <i class="icon-plus icon-white"></i> Add group
-    </button>
-
-    <button type="submit" 
-            class="btn btn-warning"
-            ng-show="groupFormView.edit">
-      <i class="icon-edit icon-white"></i> Save group
-    </button>
-
-    <button type="button" 
-            class="btn"
-            ng-click="groupFormView=false">Cancel</button>
-
-  </form> -->
-  <!-- Group Add / Edit Form -->
-   
-<!-- </div> -->
-<!-- End Group Add / Edit -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- GROUPS & MEMBERS -->
+<!-- groups and members -->
 <div class="tabbable tabs-left"
       ng-hide="searchView">
 
-  <ul class="nav nav-tabs" 
-      style="width: 170px;
-              margin-right: -1px">
+  <!-- tabs links -->
+  <ul class="nav nav-tabs nav-tabs-list">
     
     <!-- search tab link -->
     <li class="{{(views.search==true) && 'active'}}"
@@ -139,7 +65,7 @@
 
     <!-- group tab links -->
     <li ng-repeat="group in data.groups" 
-        class="{{($index == 0 && views.search != true) && 'active' }}"
+        class="{{($index == 0) && 'active' }}"
         ng-hide="views.search">
       <a href="#grp-{{group.uuid}}" 
           data-toggle="tab"
@@ -149,33 +75,22 @@
     </li>
     <!-- end group tab links -->
 
-
   </ul>
+  <!-- end tabs links -->
 
-  <div class="tab-content"
-        style="background-color: white; 
-                border: 1px solid #ddd; 
-                padding: 20px;">
-
-
-    
+  <!-- tabs content -->
+  <div id="tab-content-fixed" class="tab-content">
 
     <!-- search tab -->
     <div class="tab-pane {{(views.search==true) && 'active'}}" id="searchTab" ng-show="views.search">
-
       <div class="tab-header">
-        <h3 class="pull-left">Search results</h3>
-
+        <h3 class="pull-left">Search results for '{{search.queried}}'</h3>
         <button type="button" 
                 ng-click="views.search=false" 
-                style="margin-right: 15px"
                 class="btn pull-right">Close</button>
       </div>
-
       <hr>
-
       <p ng-hide="candidates.length > 0">Sorry but we couldn't find what you are looking for.</p>
-
       <div ng-show="candidates.length > 0">
         <table class="table table-striped">
           <thead>
@@ -187,54 +102,40 @@
             </tr>
           </thead>
           <tbody>
-
             <tr ng-repeat="candidate in candidates">
               <td>{{$index + 1}}</td>
               <td>{{candidate.name}}</td>
               <td>{{candidate.groups}}</td>
               <td>
-              
                 <select style="margin:0" 
                         ng-model="candidate.group" 
                         ng-options="group.name for group in groups">
                   <option value="">-- select a group --</option>
                 </select>
-
                 <button style="margin-left: 5px;" 
                         ng-click="addMember(candidate)" 
                         class="btn btn-success btn-small">Add to group</button>
-
               </td>
             </tr>
-
           </tbody>
         </table>
-
         <button type="button" 
                 ng-click="addMembers()" 
                 class="btn btn-success btn-small pull-left">Add Selected Members To Groups</button>
-
         <span class="muted pull-right">
           <small><i>There are {{candidates.length}} results in your query.</i></small>
         </span>
-
       </div>
-
-
-
     </div>
     <!-- end search tab -->
-
 
     <!-- group tabs -->
     <div  ng-repeat="group in data.groups"
           class="tab-pane {{($index == 0) && 'active'}}"
           id="grp-{{group.uuid}}"
           ng-hide="views.search">
-
       <div class="tab-header">
         <h3 class="pull-left">{{group.name}}</h3>
-
         <div class="pull-right">
           <button type="button" 
                   ng-click="editGroup(group)" 
@@ -244,11 +145,8 @@
                   class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete Group</button>
         </div>
       </div>
-
       <hr>
-
       <p ng-hide="data.members[group.uuid].length > 0">There are no members in this group. Please add some.</p>
-
       <div ng-show="data.members[group.uuid].length > 0">
         <table class="table table-striped">
           <thead>
@@ -265,7 +163,6 @@
             </tr>
           </thead>
           <tbody>
-
             <tr ng-repeat="member in data.members[group.uuid]">
               <td>
                 <input type="checkbox"
@@ -285,10 +182,8 @@
                 </div>
               </td>
             </tr>
-
           </tbody>
         </table>
-
         <button type="button" 
                 ng-click="removeMembers(selection, group)" 
                 class="btn btn-small btn-danger pull-left">
@@ -298,132 +193,11 @@
           <small><i>There are {{members[group.uuid].length}} member(s)</i></small>
         </span>
       </div>
-
-
-
     </div>
     <!-- end group tabs -->
 
-
-
-
-
   </div>
+  <!-- end tabs content -->
 
 </div>
-<!-- END GROUPS & MEMBERS -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- SEARCH RESULTS -->
-<!-- <div class="tabbable tabs-left"
-      ng-show="searchView">
-
-  <ul class="nav nav-tabs" 
-      style="width: 210px;
-              margin-right: -1px">
-              
-    <li class="active">
-
-      <a href="#src" 
-          data-toggle="tab">
-        <i class="icon-search"></i> Search results
-      </a>
-    </li>
-  </ul>
-
-  <div class="tab-content"
-        style="background-color: white; 
-                border: 1px solid #ddd; 
-                padding: 20px;">
-
-    <div  class="tab-pane active"
-          id="src">
-
-      <div class="tab-header">
-        <h3 class="pull-left">Search results</h3>
-
-        <button type="button" 
-                ng-click="searchView=false" 
-                style="margin-right: 15px"
-                class="btn pull-right">Close</button>
-      </div>
-
-      <hr>
-
-      <p ng-hide="candidates.length > 0">Sorry but we couldn't find what you are looking for.</p>
-
-      <div ng-show="candidates.length > 0">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Groups</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <tr ng-repeat="candidate in candidates">
-              <td>{{$index + 1}}</td>
-              <td>{{candidate.name}}</td>
-              <td>{{candidate.groups}}</td>
-              <td>
-              
-                <select style="margin:0" 
-                        ng-model="candidate.group" 
-                        ng-options="group.name for group in groups">
-                  <option value="">-- select a group --</option>
-                </select>
-
-                <button style="margin-left: 5px;" 
-                        ng-click="addMember(candidate)" 
-                        class="btn btn-success btn-small">Add to group</button>
-
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <button type="button" 
-                ng-click="addMembers()" 
-                class="btn btn-success btn-small pull-left">Add Selected Members To Groups</button>
-
-        <span class="muted pull-right">
-          <small><i>There are {{candidates.length}} results in your query.</i></small>
-        </span>
-
-      </div>
-
-
-
-    </div>
-
-  </div>
-
-</div> -->
-<!-- END SEARCH RESULTS -->
-
+<!-- end groups and members -->

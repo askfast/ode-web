@@ -11,14 +11,6 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 	var self = this;
 
 
-  // $scope.groupFormView = {
-  //   add: false,
-  //   edit: false
-  // };
-
-  // $scope.searchView = false;
-
-
   /**
    * Default view settings
    */
@@ -30,19 +22,27 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 
 
   /**
+   * Init search query
+   */
+  $scope.search = {
+    query: ''
+  };
+
+
+  /**
    * Toggle new group button
    */
   $scope.toggleForm = function ()
   {
-    /**
-     * TODO
-     * If no other actions needed make this compact
-     * 
+    /** 
      * Check on status
      */
     if ($scope.views.add)
     {
-      $scope.views.add = false;
+      /**
+       * Close group form
+       */
+      $scope.closeForm();
     }
     else
     {
@@ -72,6 +72,28 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
 
 
   /**
+   * Close inline form
+   */
+  $scope.closeSearch = function ()
+  {
+    /**
+     * Set views
+     */
+    $scope.views = {
+      add: $scope.views.add,
+      edit: $scope.views.edit,
+      search: false
+    };
+    /**
+     * Clean search input field
+     */
+    // $scope.search = {
+    //   query: ''
+    // };
+  };
+
+
+  /**
    * Reset selection
    */
   $scope.selection = {};
@@ -86,7 +108,7 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
   /**
    * Search for members
    */
-  $scope.searchMembers = function(q)
+  $scope.searchMembers = function(query)
   {
     /**
      * Set preloader
@@ -95,9 +117,16 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     /**
      * Search
      */
-    Groups.search(q).
+    Groups.search(query).
     then(function(results)
     {
+      /**
+       * Set query string for view
+       */
+      $scope.search = {
+        query: '',
+        queried: query
+      };
       /**
        * Show results
        */
@@ -241,19 +270,6 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
     Groups.save(group).
     then(function()
     {
-      //$scope.groups = Groups.query();
-
-
-      // ???
-      if ($scope.groupFormView.add)
-      {
-        $scope.groupFormView.add = false;
-      }
-      else if ($scope.groupFormView.edit)
-      {
-        $scope.groupFormView.edit = false;
-      };
-
       /**
        * Query fresh data
        */
@@ -283,9 +299,6 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
    */
   $scope.editGroup = function(group)
   {
-    // ???
-    // $scope.groupFormView.edit = true;
-
     /**
      * Set view on edit mode
      */
@@ -294,7 +307,6 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, $route, $routePar
       edit: true,
       search: $scope.views.search
     };
-
     /**
      * Set values for group edit form
      */

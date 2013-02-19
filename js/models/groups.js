@@ -291,14 +291,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     var deferred = $q.defer();
 
     /**
-     * Success callback
-     */
-    var successCb = function (result) 
-    {
-      deferred.resolve(result);
-    };
-
-    /**
      * Check if group id supplied
      * if save submitted from add / edit form
      */
@@ -311,7 +303,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
         id: group.id
       }, {
         name: group.name
-      }, successCb);
+      }, function (result) 
+      {
+        deferred.resolve(result);
+      });
     }
     else
     {
@@ -320,7 +315,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
        */
       Groups.save({
         id: $rootScope.app.resources.uuid
-      }, group, successCb); 
+      }, group, function (result) 
+      {
+        deferred.resolve(result);
+      }); 
     };
 
     return deferred.promise;

@@ -488,32 +488,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         $scope.resetViews();
       });
     });
-    
-	
-
   };
-	
-	$scope.restoreSelectedMsg = function(selection){
-		var uuids = [];
-		angular.forEach(selection, function(checked, id){
-			angular.forEach($scope.messages , function(message,index){
-				if(id == message.uuid && checked == true){
-					message.state = "NEW";
-					uuids.push(message.uuid);
-				}
-			});
-		});
-			
-		if(uuids.length == 0 ){
-			return ; 
-		}
-		
-	    Messages.changeState(uuids, "NEW").then(function(){
-	      $scope.messages = Messages.query().then(function(){
-	        $scope.boxer('trash');
-	      });
-	    });
-	};
 
 };
 
