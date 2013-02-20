@@ -494,7 +494,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    * 
    * Slot changing process
    */
-  Slots.prototype.change = function (original, changed) 
+  Slots.prototype.change = function (original, changed, user) 
   {
     /**
      * TODO
@@ -503,39 +503,19 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      * slot is overlaping with other ones!
      */
 
+    var deferred = $q.defer();
+
     /**
-     * TODO
-     * Should the conversion done here or in controller?
+     * Add member to group
      */
-    var original = naturalize(original);
-    var changed = naturalize(changed);
-    var localSlots = [];
-    angular.forEach(angular.fromJson(Storage.get('slots')), 
-    function(slot, index)
+    Slots.change(angular.extend(naturalize(changed), {user: user}), 
+                  naturalize(original), 
+    function (result) 
     {
-      if (slot.id == changed.id)
-      {
-        var slot = {
-          start: changed.start,
-          end: changed.end,
-          recursive: changed.recursive,
-          text: changed.text,
-          id: changed.id
-        };
-      };
-      localSlots.push(slot);    
+      deferred.resolve(result);
     });
-    Storage.add('slots', angular.toJson(localSlots));
-    $rootScope.$broadcast('renderPlanboard', 'slot changed in localStorage');
-    $rootScope.notify( { message: 'Slot changed in localStorage.' } );
-    /**
-     * TODO
-     */
-    Slots.change(changed, original, function()
-    {
-      $rootScope.$broadcast('renderPlanboard', 'slot changed in back-end');
-      $rootScope.notify( { message: 'Slot changed in back-end.' } );
-    });
+
+    return deferred.promise;
   };
 
 

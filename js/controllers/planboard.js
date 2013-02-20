@@ -945,10 +945,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     .then(function (result)
     {
       /**
-       * Reset slot container
-       */
-      $scope.slot = {};
-      /**
        * Ask for fresh data
        */
       Slots.all({
@@ -963,6 +959,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       })
       .then(function(data)
       {
+        /**
+         * Reset slot container
+         */
+        $scope.slot = {};
         /**
          * Set scope
          */
@@ -1025,29 +1025,97 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   };
 
 
+
+
+
+
+
+
+
+
+
+
   /**
    * Change trigger start view
    */
   $scope.change = function(original, slot)
   {
     /**
-     * TODO
-     * Ugly fix! Define a common way converting obejcts
+     * Set preloader
      */
-    var slot = {
+    $rootScope.loading = true;
+    /**
+     * Add slot
+     */
+    Slots.change($scope.original, {
       start: Date.parse(slot.start.date + ' ' + slot.start.time),
       end: Date.parse(slot.end.date + ' ' + slot.end.time),
       recursive: (slot.recursive) ? true : false,
       text: slot.state,
+      /**
+       * REMOVE
+       * Lose id and content later on!
+       */
       id: (slot.id) ? slot.id : 0,
       content: angular.toJson({ 
         id: slot.id, 
         recursive: slot.recursive, 
         state: slot.state 
         })
-    };
-    Slots.change($scope.original, slot);
+    }, $rootScope.app.resources.uuid)
+    .then(function (result)
+    {
+      /**
+       * Ask for fresh data
+       */
+      Slots.all({
+        groupId:  $scope.timeline.current.group,
+        division: $scope.timeline.current.division,
+        layouts:  $scope.timeline.current.layouts,
+        month:    $scope.timeline.current.month,
+        stamps: {
+          start:  new Date($scope.timeline.range.start).getTime(),
+          end:    new Date($scope.timeline.range.end).getTime()
+        },
+      })
+      .then(function(data)
+      {
+        /**
+         * Reset slot container
+         */
+        $scope.slot = {};
+        /**
+         * Set scope
+         */
+        $scope.data = data;
+        /**
+         * Adjust timeline for new period
+         */
+        timeliner({
+          start:  $scope.timeline.range.start,
+          end:    $scope.timeline.range.end
+        });
+        /**
+         * Set preloader
+         */
+        $rootScope.loading = false;
+      });
+    });
+
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /**
