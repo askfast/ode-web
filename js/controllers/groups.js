@@ -3,7 +3,7 @@
 /**
  * Groups Controller
  */
-function groupsCtrl($rootScope, $scope, $config, data, Groups, Profile, $route, $routeParams, Storage)
+function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profile, $route, $routeParams, Storage)
 {
   /**
    * Self this
@@ -435,6 +435,10 @@ function groupsCtrl($rootScope, $scope, $config, data, Groups, Profile, $route, 
          * Set preloader
          */
         $rootScope.loading = false;
+        /**
+         * Redirect to profile of new user
+         */
+        $location.path('/profile/' + member.username + '/view');
       });
     });
   };
@@ -522,5 +526,5 @@ groupsCtrl.prototype = {
 
 
 
-groupsCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Groups', 'Profile', 
+groupsCtrl.$inject = ['$rootScope', '$scope', '$config', '$location', 'data', 'Groups', 'Profile', 
                       '$route', '$routeParams', 'Storage'];

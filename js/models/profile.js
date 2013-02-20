@@ -1,7 +1,7 @@
 'use strict';
 
 WebPaige.
-factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope) 
+factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope, Groups) 
 {
 
   /**
@@ -78,8 +78,6 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
   {    
     var deferred = $q.defer();
 
-    console.warn('register user ->', profile);
-
     /**
      * Register user
      */
@@ -88,7 +86,69 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       pass: $md5.process(profile.password),
       name: profile.name,
       phone: profile.PhoneAddress
-    }, {}, function (result) 
+    }, function (registered) 
+    {
+      /**
+       * Give user a role
+       */
+      Profile.prototype.role(profile.username, profile.role.id)
+      .then(function(roled)
+      {
+        /**
+         * Add missing resources to the account of user
+         */
+        Profile.prototype.save(profile.username, {
+          EmailAddress: profile.EmailAddress,
+          PostAddress: profile.PostAddress,
+          PostZip: profile.PostZip,
+          PostCity: profile.PostCity
+        }).then(function(resourced)
+        {
+          /**
+           * Add user to given groups
+           */
+          var calls = [];
+          /**
+           * Push selection into a calls pool
+           */
+          angular.forEach(profile.groups, function(group, index)
+          {
+            calls.push(Groups.addMember({
+              id: profile.username,
+              group: group
+            }));
+          });
+          /**
+           * Loop through and make calls
+           */
+          $q.all(calls)
+          .then(function(grouped)
+          {
+            deferred.resolve({
+              registered: registered,
+              roled: roled,
+              resourced: resourced,
+              grouped: grouped
+            });
+          });
+        });
+      });
+    });
+   
+    return deferred.promise;
+  };
+
+
+  /**
+   * Set role of given user
+   */
+  Profile.prototype.role = function (id, role) 
+  {    
+    var deferred = $q.defer();
+    /**
+     * Set role
+     */
+    Profile.role({id: id}, role, function (result) 
     {
       deferred.resolve(result);
     });

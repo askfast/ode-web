@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage)
+function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups)
 {
   /**
    * Self this
@@ -87,6 +87,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 
 
   /**
+   * Get groups of user
+   */
+  $scope.groups = Groups.getMemberGroups($route.current.params.userId);
+
+
+  /**
    * Set default alerts
    */
   $scope.alert = {
@@ -133,6 +139,8 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     Profile.save($route.current.params.userId, resources)
     .then(function(result)
     {
+      console.log('result of registration ->', result);
+
       /**
        * Determine if it is user
        */
@@ -289,4 +297,5 @@ profileCtrl.prototype = {
 
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', '$md5', 'data', 'Profile', '$route', 'Storage'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
+                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups'];
