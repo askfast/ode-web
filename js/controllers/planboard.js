@@ -913,6 +913,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function timelineOnAdd()
   {
+    console.log('adding with mouse');
+    
     // DEPRECIATED
     // $scope.$apply(function()
     // {

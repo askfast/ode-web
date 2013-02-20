@@ -391,7 +391,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
         /**
          * Close form if its still open
          */
-        $scope.closeForm();
+        $scope.closeTabs();
         /**
          * Set returned data
          */
