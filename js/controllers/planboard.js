@@ -910,6 +910,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   };
 
 
+
+
+
+
+
+
+
   /**
    * TODO
    * Finish it!
@@ -922,7 +929,45 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   function timelineOnAdd()
   {
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
+
+    //var start = new Date(values.start).toString('dd-MM-yyyy HH:mm tt');
+
     console.log('adding with mouse ->', values);
+
+    /**
+     * Let angular know that model changed
+     */
+    $scope.$apply(function()
+    {
+      /**
+       * Set the view
+       */
+      $scope.views = {
+        slot: true,
+        wish: false
+      };
+      /**
+       * Determine if it is recursive
+       */
+      if (/\/recursive\//.test(values.group))
+      {
+        console.log('recursive true');
+      }
+      /**
+       * Set info in slot model
+       */
+      $scope.slot = {
+        start: {
+          date: new Date(values.start).toString('dd-MM-yyyy'),
+          time: new Date(values.start).toString('HH:mm tt')
+        },
+        end: {
+          date: new Date(values.end).toString('dd-MM-yyyy'),
+          time: new Date(values.end).toString('HH:mm tt')
+        }
+      };
+    });
+
 
     // DEPRECIATED
     // $scope.$apply(function()
@@ -1046,7 +1091,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    * Timeline on change
    */
   function timelineOnChange()
-  { 
+  {
     /**
      * Set preloader
      */
@@ -1494,8 +1539,8 @@ planboardCtrl.prototype = {
             timedata.push({
               start: Math.round(slot.start * 1000),
               end: Math.round(slot.end * 1000),
-              group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' : 
-                                        wrapper('a') + 'Planning',
+              group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' + wrapper('recursive') : 
+                                        wrapper('a') + 'Planning' + wrapper('planning'),
               content: angular.toJson({ 
                 id: slot.id, 
                 recursive: slot.recursive, 
@@ -1511,8 +1556,8 @@ planboardCtrl.prototype = {
        * Add loading slots
        */
       timedata = addLoading(timedata, [
-        wrapper('b') + 'Wekelijkse planning',
-        wrapper('a') + 'Planning'
+        wrapper('b') + 'Wekelijkse planning' + wrapper('recursive'),
+        wrapper('a') + 'Planning' + wrapper('planning')
       ]);
     };
 
