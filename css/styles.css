@@ -511,7 +511,58 @@ label {
 }
 
 .form-toggled h4 {
-  margin: 0 auto 15px auto;
+  margin: 0;
+  padding: 0;
+}
+
+.form-toggled label {
+  font-size: 12px;
+}
+
+
+.form-elements-group {
+  display: inline;
+  margin-right: 20px;
+}
+
+.form-elements-group label,
+.form-elements-group .control-group {
+  display: inline;
+}
+
+.form-elements-group input[type=checkbox] {
+  margin: -2px 0 0 3px;
+}
+
+.form-elements-group select {
+  width: 160px;
+}
+
+.dater {
+  margin-right: 5px;
+}
+
+.dater input[type=text] {
+  width: 100px;
+}
+
+.timer {
+  margin-right: 5px;  
+}
+
+.timer input[type=text] {
+  width: 85px;
+}
+
+.dater .icon-calendar,
+.timer .icon-time {
+  position: relative;
+  margin: 2.5px 0 0 -24px;
+}
+
+
+.form-elements-actions {
+  display: inline;
 }
 
 

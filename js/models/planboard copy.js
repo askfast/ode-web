@@ -123,6 +123,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     Aggs.query(params, function (result) 
     {
 
+
+
       /**
        * TODO
        * Clean it up a bit!
@@ -187,6 +189,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       // });
       // console.warn('confirm ->', confirm);
       // 
+    
+
+
+
+
+
 
       /**
        * Fetch the wishes
@@ -401,6 +409,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     var deferred = $q.defer();
     Slots.query(params, function (result) 
     {
+      //console.log('result', result);
+
+
+
+
+
+
       /**
        * TODO
        * Clean it up a bit!
@@ -442,9 +457,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       // });
       // console.warn('confirm ->', confirm);
 
-      /**
-       * Return promised
-       */
+
+
+
+
+
+
       deferred.resolve({
         id: params.user,
         data: result,
@@ -465,21 +483,42 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
 
   /**
+   * TODO
+   * FInish it!
+   * 
    * Slot adding process
    */
-  Slots.prototype.add = function (slot, user) 
+  Slots.prototype.add = function (slot) 
   {
-    var deferred = $q.defer();
+    /**
+     * TODO
+     * IMPORTANT
+     * Always check before wheter changes or saved
+     * slot is overlaping with other ones!
+     */
+
+    var localSlots = angular.fromJson(Storage.get('slots'));
+
+    var slot = {
+      start: new Date(slot.start).getTime() / 1000,
+      end: new Date(slot.end).getTime() / 1000,
+      recursive: (slot.recursive) ? true : false,
+      text: slot.text,
+      id: slot.id
+    };
+
+    localSlots.push(slot);
+
+    Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.$broadcast('renderPlanboard', 'slot added to localStorage');
 
     /**
-     * Add member to group
+     * TODO
      */
-    Slots.save({user: user}, slot, function (result) 
+    Slots.save(null, slot, function()
     {
-      deferred.resolve(result);
+      $rootScope.$broadcast('renderPlanboard', 'slot added to back-end');
     });
-
-    return deferred.promise;
   };
 
 

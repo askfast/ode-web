@@ -3,11 +3,8 @@
 /**
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater, Storage) 
+function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Dater, Storage) 
 {
-
-  //$rootScope.fixTabHeight('timelineTab');
-
   /**
    * Set default currents
    */
@@ -47,7 +44,7 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
    * Default views
    */
   $scope.views = {
-    slot: true,
+    slot: false,
     wish: false
   };
 
@@ -57,10 +54,16 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
    */
   $scope.toggleSlotForm = function ()
   {
+    /**
+     * If inline slot manager open close it
+     */
     if ($scope.views.slot)
     {
       $scope.resetInlineForms();
     }
+    /**
+     * Open sesame open!
+     */
     else
     {
       $scope.views = {
@@ -76,30 +79,32 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
    */
   $scope.resetInlineForms = function ()
   {
+    /**
+     * Reset slot container
+     */
+    $scope.slot = {};
+    $scope.original = {};
+    /**
+     * Reset views
+     */
     $scope.views = {
       slot: false,
       wish: false
     };
   };
 
-  //$scope.slotForm = false;
-
-
 
   /**
-   * Reset slot container
-   * which is used for adding or changing
-   * slots
+   * Reset and init slot container which
+   * is used for adding or changing slots
    */
   $scope.slot = {};
-
 
 
   /**
    * Pass time slots data
    */
   $scope.data = data;
-
 
 
   /**
@@ -134,7 +139,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * Legenda defaults
    */
@@ -150,7 +154,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * TODO
    * Move date conversions to Dater
@@ -158,7 +161,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   $scope.daterange =  new Date($scope.timeline.range.start).toString('dd-MM-yyyy') + 
                       ' / ' + 
                       new Date($scope.timeline.range.end).toString('dd-MM-yyyy');
-
 
 
   /**
@@ -172,19 +174,20 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   $scope.states = states;
 
 
-
   /**
    * Groups for dropdown
    */
   $scope.groups = groups;
   
 
-
   /**
    * Group aggs barCharts toggler
    */
   $scope.barCharts = function()
   {
+    /**
+     * Set config to altered
+     */
     $scope.timeline.config.bar = !$scope.timeline.config.bar;
     timeliner({
       start:  $scope.timeline.range.start,
@@ -193,20 +196,24 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
   
 
-
   /**
    * Group wishes toggler
    */
   $scope.groupWishes = function()
   {
+    /**
+     * Set config to altered
+     */
     $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
+    /**
+     * Render timeline
+     */
     timeliner({
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
     });
   };
   
-
 
   /**
    * Timeline legenda toggler
@@ -222,8 +229,13 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
    */
   $scope.alterLegenda = function(legenda)
   {
-    //console.warn('changing legenda ->', legenda);
-    $scope.timeline.config.legenda = legenda; 
+    /**
+     * Set config to altered
+     */
+    $scope.timeline.config.legenda = legenda;
+    /**
+     * Render timeline again
+     */
     timeliner({
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
@@ -313,6 +325,9 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
 
 
   /**
+   * TODO
+   * Maybe not needed anymore?
+   * 
    * Renderer listener
    */
   $rootScope.$on('renderPlanboard', function () 
@@ -801,18 +816,37 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
 
 
   /**
-   * TODO
-   * Put that information in the scope!
-   *
    * Get information of the selected slot
    */
   function selectedSlot()
   {
+    /**
+     * TODO
+     * Check if slot is slot or wish
+     * 
+     * Set views for slot manager
+     */
+    $scope.views = {
+      slot: true,
+      wish: false
+    };
+    /**
+     * Init container
+     */
     var selection;
+    /**
+     * Get selection info from timeline
+     */
     if (selection = self.timeline.getSelection()[0])
     {
-      var values = $scope.original = self.timeline.getItem(selection.row);
-      var content = angular.fromJson(values.content);
+      /**
+       * Init values and content of slot
+       */
+      var values = $scope.original = self.timeline.getItem(selection.row),
+          content = angular.fromJson(values.content);
+      /**
+       * Set selected slot for view
+       */
       $scope.slot = {
         start: {
           date: Dater.readableDate(values.start, $config.date.format),
@@ -825,7 +859,10 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
         state: content.state,
         recursive: content.recursive,
         id: content.id
-      };   
+      };
+      /**
+       * Return values
+       */
       return values;
     }
   };
@@ -875,29 +912,93 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   /**
-   * TODO
-   * Redirect to add in Resource
-   *
    * Add slot trigger start view
    */
   $scope.add = function(slot)
   {
     /**
-     * TODO
-     * Build prototype conversion
-     * Date obejcts in return values of function
-     * not working properly..
-     */    
+     * Set preloader
+     */
+    $rootScope.loading = true;
+    /**
+     * Add slot
+     */
     Slots.add({
-      start: Date.parse(slot.start.date + ' ' + slot.start.time),
-      end: Date.parse(slot.end.date + ' ' + slot.end.time),
+      start: Date.parse(slot.start.date + ' ' + slot.start.time).getTime() / 1000,
+      end: Date.parse(slot.end.date + ' ' + slot.end.time).getTime() / 1000,
       recursive: (slot.recursive) ? true : false,
-      text: slot.state,
-      id: (slot.id) ? slot.id : 0
+      text: slot.state
+    }, $rootScope.app.resources.uuid)
+    .then(function (result)
+    {
+      /**
+       * Reset slot container
+       */
+      $scope.slot = {};
+      /**
+       * Ask for fresh data
+       */
+      Slots.all({
+        groupId:  $scope.timeline.current.group,
+        division: $scope.timeline.current.division,
+        layouts:  $scope.timeline.current.layouts,
+        month:    $scope.timeline.current.month,
+        stamps: {
+          start:  new Date($scope.timeline.range.start).getTime(),
+          end:    new Date($scope.timeline.range.end).getTime()
+        },
+      })
+      .then(function(data)
+      {
+        /**
+         * Set scope
+         */
+        $scope.data = data;
+        /**
+         * Adjust timeline for new period
+         */
+        timeliner({
+          start:  $scope.timeline.range.start,
+          end:    $scope.timeline.range.end
+        });
+        /**
+         * Set preloader
+         */
+        $rootScope.loading = false;
+      });
     });
-    $scope.slot = {};
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /**
@@ -925,9 +1026,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
 
 
   /**
-   * TODO
-   * Redirect to change in Resource
-   *
    * Change trigger start view
    */
   $scope.change = function(original, slot)
@@ -953,11 +1051,7 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
 
 
   /**
-   * TODO
-   * Find ways of combining with triggers start view
-   * 
    * Timeline on delete
-   * @return {[type]} [description]
    */
   function timelineOnDelete()
   {
@@ -966,9 +1060,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
 
 
   /**
-   * TODO
-   * Redirect to delete in Resource
-   *
    * Delete trigger start view
    */
   $scope.delete = function(id)
@@ -977,17 +1068,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1022,26 +1102,26 @@ planboardCtrl.resolve = {
     /**
      * Fetch the data start model
      */
-    // return Slots.all({
-    //   // Startup group
-    //   groupId: groups[0].uuid,
-    //   // Startup division
-    //   division: 'all',
-    //   // Startup periods
-    //   stamps: {
-    //     start:  initial.first.timeStamp,
-    //     end:    initial.last.timeStamp
-    //   },
-    //   // Startup month
-    //   month: new Date().toString('M'),
-    //   // Startup layouts
-    //   layouts: {
-    //     user: true,
-    //     group: true,
-    //     members: false
-    //   }
-    // });
-    return ''
+    return Slots.all({
+      // Startup group
+      groupId: groups[0].uuid,
+      // Startup division
+      division: 'all',
+      // Startup periods
+      stamps: {
+        start:  initial.first.timeStamp,
+        end:    initial.last.timeStamp
+      },
+      // Startup month
+      month: new Date().toString('M'),
+      // Startup layouts
+      layouts: {
+        user: true,
+        group: true,
+        members: false
+      }
+    });
+    // return ''
   }
 };
 
@@ -1671,4 +1751,5 @@ planboardCtrl.prototype = {
 
 };
 
-planboardCtrl.$inject = ['$rootScope', '$scope', '$config', '$window', 'data', 'Slots', 'Dater', 'Storage'];
+planboardCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
+                        '$window', 'data', 'Slots', 'Dater', 'Storage'];
