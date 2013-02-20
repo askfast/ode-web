@@ -472,7 +472,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     var deferred = $q.defer();
 
     /**
-     * Add member to group
+     * Save slot
      */
     Slots.save({user: user}, slot, function (result) 
     {
@@ -506,7 +506,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     var deferred = $q.defer();
 
     /**
-     * Add member to group
+     * Change slot
      */
     Slots.change(angular.extend(naturalize(changed), {user: user}), 
                   naturalize(original), 
@@ -520,34 +520,22 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
 
   /**
-   * TODO
-   * Add back-end
-   * 
    * Slot delete process
    */
-  Slots.prototype.delete = function (id, slot) 
+  Slots.prototype.delete = function (slot, user) 
   {
-    var slot = naturalize(slot);
-    var localSlots = [];
-    angular.forEach(angular.fromJson(Storage.get('slots')), 
-    function(slot, index)
-    {
-      if (slot.id != id)
-      {
-        localSlots.push(slot);
-      };  
-    });
-    Storage.add('slots', angular.toJson(localSlots));
-    $rootScope.$broadcast('renderPlanboard', 'slot deleted from localStorage');
-    $rootScope.notify( { message: 'Slot deleted from localStorage.' } );
+    var deferred = $q.defer();
+
     /**
-     * TODO
+     * Delete slot
      */
-    Slots.delete(slot, function()
+    Slots.delete(angular.extend(naturalize(slot), {user: user}), 
+    function (result) 
     {
-      $rootScope.$broadcast('renderPlanboard', 'slot deleted from back-end');
-      $rootScope.notify( { message: 'Slot deleted in back-end.' } );
+      deferred.resolve(result);
     });
+
+    return deferred.promise;
   };
 
 

@@ -1130,9 +1130,54 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Delete trigger start view
    */
-  $scope.delete = function(id)
+  $scope.delete = function()
   {
-    Slots.delete(id, selectedSlot());
+    /**
+     * Set preloader
+     */
+    $rootScope.loading = true;
+    /**
+     * Add slot
+     */
+    Slots.delete($scope.original, $rootScope.app.resources.uuid)
+    .then(function (result)
+    {
+      /**
+       * Ask for fresh data
+       */
+      Slots.all({
+        groupId:  $scope.timeline.current.group,
+        division: $scope.timeline.current.division,
+        layouts:  $scope.timeline.current.layouts,
+        month:    $scope.timeline.current.month,
+        stamps: {
+          start:  new Date($scope.timeline.range.start).getTime(),
+          end:    new Date($scope.timeline.range.end).getTime()
+        },
+      })
+      .then(function(data)
+      {
+        /**
+         * Reset slot container
+         */
+        $scope.slot = {};
+        /**
+         * Set scope
+         */
+        $scope.data = data;
+        /**
+         * Adjust timeline for new period
+         */
+        timeliner({
+          start:  $scope.timeline.range.start,
+          end:    $scope.timeline.range.end
+        });
+        /**
+         * Set preloader
+         */
+        $rootScope.loading = false;
+      });
+    });
   };
 
 };
