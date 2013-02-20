@@ -3,7 +3,7 @@
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage)
+var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage,$routeParams)
 {
   /**
    * Self this
@@ -14,10 +14,26 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Set default views
    */
-  $scope.views = {
-    login: true,
-    forgot: false
-  };
+  
+	console.log($routeParams);
+	
+	if($routeParams.uuid && $routeParams.key) {
+		$scope.views = {
+			changePass : true,
+		};
+		$scope.changepass = {
+			uuid : $routeParams.uuid,
+			key :  $routeParams.key,
+		}
+	} else {
+		$scope.views = {
+			login : true,
+			forgot : false
+		};
+	}
+
+  
+  
 
 
   /**
@@ -359,8 +375,116 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    */
   $scope.forgot = function()
   {
-    User.password($scope.remember.id);
+    User.password($scope.remember.id).then(function(result){
+    	console.log("res?? " , result);
+    	if(result == "ok"){
+    		$scope.alert = {
+				forget : {
+					display : true,
+					type : 'alert-success',
+					message : 'Please check your email to reset your password!'
+				}
+			};
+    	}else{
+    		$scope.alert = {
+				forget : {
+					display : true,
+					type : 'alert-error',
+					message : 'Error, we can not find this account !'
+				}
+			};
+    	}
+    });
   };
+
+	self.changePass =  function(uuid, newpass, key){
+		User.changePass(uuid, newpass, key).then(function(result){
+			if(result.status == 400 || result.status == 500){
+				$scope.alert = {
+					changePass : {
+						display : true,
+						type : 'alert-error',
+						message : 'Something wrong with password changing!'
+					}
+				};
+				
+				$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
+			}else { // successfully changed
+				$scope.alert = {
+					changePass : {
+						display : true,
+						type : 'alert-success',
+						message : 'Password changed!'
+					}
+				}; 
+				
+				// $location.path( "/login" );
+			}
+		})
+	}
+
+	$scope.changePass = function() {
+		/**
+		 * Reset alerts
+		 */
+		$('#alertDiv').hide();
+		/**
+		 * Checks
+		 */
+		if(!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass) {
+			/**
+			 * Inform user
+			 */
+			$scope.alert = {
+				changePass : {
+					display : true,
+					type : 'alert-error',
+					message : 'Please fill all fields!'
+				}
+			};
+			
+			/**
+			 * Put button state back to default
+			 */
+			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
+
+			return false;
+		}else if($scope.changeData.newPass != $scope.changeData.retypePass){
+			$scope.alert = {
+				changePass : {
+					display : true,
+					type : 'alert-error',
+					message : 'Please make the reType password is indentical !'
+				}
+			};
+			
+			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
+
+			return false;
+		};
+
+		/**
+		 * Change button state
+		 */
+		$('#changePass button[type=submit]').text('changing ...').attr('disabled', 'disabled');
+
+		/**
+		 * Save login to localStorage
+		 */
+		// Storage.add('logindata', angular.toJson({
+			// username : $scope.logindata.username,
+			// password : $scope.logindata.password,
+			// remember : $scope.logindata.remember
+		// }));
+
+		/**
+		 * Authorize
+		 */
+		self.changePass($scope.changepass.uuid, $md5.process($scope.changeData.newPass), $scope.changepass.key);
+		
+	};
+
+
 
 };
 
@@ -489,7 +613,8 @@ loginCtrl.$inject = [ '$rootScope',
                       '$md5', 
                       'Groups', 
                       'Messages',
-                      'Storage'];
+                      'Storage',
+                      '$routeParams'];
 
 
 

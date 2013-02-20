@@ -87,10 +87,10 @@
 			<!-- <h2>WebPaige</h2> -->
 		  <h4 class="form-signin-heading">Please sign in</h4>
 
-	    <!-- <div id="alertDiv" class="alert alert-error">
-	      <button id="alertClose" class="close" type="button" onclick="$('#alertDiv').hide()">×</button>
-	      <span id="alertMessage"></span>
-	    </div> -->
+	      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
+	        <button class="close" type="button" ng-click="alert.forget=false">×</button>
+	        {{alert.forget.message}}
+	      </div>
 
 		  <input 
 		    class="" 
@@ -107,6 +107,27 @@
 	</div>
 	<!-- end remember login -->
 	
+	<!-- change pass --> 
+	<div id="changePass" ng-show="views.changePass">
+		<form ng-submit="changePass()">
+			<img src="img/login_knrm_logo.png" alt="KNRM" /><br>
+			<h4 class="form-signin-heading">{{changepass.uuid}}</h4>
+			
+			<div class="alert {{alert.changePass.type}}" ng-show="alert.changePass.display">
+				<button class="close" type="button" ng-click="alert.changePass=false">×</button>
+				{{alert.changePass.message}}
+			</div>
+			
+			<input class="" type="password" ng-model="changeData.newPass" placeholder="new  password">
+			<input class="" type="password" ng-model="changeData.retypePass" placeholder="retype password">
+			
+			<button class="btn btn-large btn-primary" type="submit">change password</button>
+
+		    <br><span class="version">v2.0.0</span>
+		</form>
+	</div>
+	
+	<!-- end change pass -->
 </div>
 
 <!-- download mobile app -->

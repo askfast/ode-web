@@ -63,24 +63,29 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
       }
     }
   );
-
+  
+  
 
   /**
    * User login
    */
-  User.prototype.password = function (uuid) 
-  {    
-    var deferred = $q.defer();
-    Reset.password({
-      uuid: uuid.toLowerCase(), 
-      path: $location.absUrl() +
-            '/password.html'
-    }, function (result) 
-    {
-      deferred.resolve(result);
-    });
-    return deferred.promise;
-  };
+	User.prototype.password = function(uuid) {
+		var deferred = $q.defer();
+		Reset.password({
+			uuid : uuid.toLowerCase(),
+			path : $location.absUrl()
+		}, function(result) {
+		    console.log("success resolve ",result);
+		    if (angular.equals(result, [])){
+		        deferred.resolve("ok");
+		    }else{
+		        deferred.resolve(result);
+		    }
+		},function(error){
+		    deferred.resolve(error);
+		});
+		return deferred.promise;
+	};
 
 
   /**
@@ -106,8 +111,27 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
     });
     return deferred.promise;
   };
-
-
+  
+  /**
+   * change user password
+   */
+  User.prototype.changePass = function(uuid, newpass, key){
+  		var deferred = $q.defer();
+  		var changePassword = $resource($config.host+'/passwordReset', 
+  			{uuid: uuid,
+  			 pass: newpass,
+  			 key: key});
+  		
+  		changePassword.get(function(res){ // success
+  			console.log("change pass result : ", res);
+  			deferred.resolve(res);
+  		},function(error){ // error
+  			deferred.resolve(error);
+  		})
+		
+		return deferred.promise;
+  }
+  
   /**
    * Logout resource
    */
