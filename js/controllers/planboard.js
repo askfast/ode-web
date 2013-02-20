@@ -1,9 +1,6 @@
 'use strict';
 
 /**
- * TODO
- * Clear list of dependencies
- *
  * Planboard Controller
  */
 function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater, Storage) 
@@ -15,11 +12,17 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
    * Set default currents
    */
   var self = this,
-      // Set preiods
+      /**
+       * Set preiods
+       */
       periods = Dater.getPeriods(),
-      // Get groups
+      /**
+       * Get groups
+       */
       groups = angular.fromJson(Storage.get('groups')),
-      // Set current values
+      /**
+       * Set current values
+       */
       current = {
         layouts: {
           user: true,
@@ -29,14 +32,57 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
         day: Date.today().getDayOfYear() + 1,
         week: new Date().getWeek(),
         month: new Date().getMonth() + 1,
-        // Set first group as selected
+        /**
+         * Set first group as selected
+         */
         group: groups[0].uuid,
-        // DEfault division
+        /**
+         * Default division
+         */
         division: 'all'
       };
 
 
-  $scope.slotForm = false;
+  /**
+   * Default views
+   */
+  $scope.views = {
+    slot: true,
+    wish: false
+  };
+
+
+  /**
+   * Slot form toggler
+   */
+  $scope.toggleSlotForm = function ()
+  {
+    if ($scope.views.slot)
+    {
+      $scope.resetInlineForms();
+    }
+    else
+    {
+      $scope.views = {
+        slot: true,
+        wish: false
+      };
+    }
+  };
+
+
+  /**
+   * Reset inline forms
+   */
+  $scope.resetInlineForms = function ()
+  {
+    $scope.views = {
+      slot: false,
+      wish: false
+    };
+  };
+
+  //$scope.slotForm = false;
 
 
 
@@ -107,7 +153,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
 
   /**
    * TODO
-   * Look for ways to implement in scope.timeline!!
    * Move date conversions to Dater
    */
   $scope.daterange =  new Date($scope.timeline.range.start).toString('dd-MM-yyyy') + 
@@ -117,7 +162,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
 
 
   /**
-   * TODO
    * States for dropdown
    */
   var states = {};
@@ -147,12 +191,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
       end:    $scope.timeline.range.end
     });    
   };
-  /*
-  $scope.$watch('timeline.config.bar', function()
-  {
-    render();
-  });
-  */
   
 
 
@@ -178,6 +216,10 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
     $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
   };
 
+
+  /**
+   * Alter legenda settings
+   */
   $scope.alterLegenda = function(legenda)
   {
     //console.warn('changing legenda ->', legenda);
@@ -189,15 +231,11 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
-
   /**
-   * TODO
    * Groups for dropdown
    */
   $scope.divisions = $scope.timeline.config.divisions;
   
-
 
   /**
    * Watch for changes in timeline range
@@ -267,13 +305,11 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   });
  
 
-
   /**
    * TODO
    * Automatically initialize this function
    */
   render();
-
 
 
   /**
@@ -283,7 +319,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   {
     render();
   });
-
 
 
   /**
@@ -312,7 +347,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
      */
     timeliner($scope.timeline.options);
   };
-
 
 
   /**
@@ -354,7 +388,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
       $rootScope.loading = false;
     }); 
   });
-
 
 
   /**
@@ -409,7 +442,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * Timeline zoom in
    */
@@ -419,7 +451,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * Timeline zoom out
    */
@@ -427,7 +458,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   {
     self.timeline.zoom( -$config.timeline.settings.zoomValue );
   };
-
 
 
   /**
@@ -486,7 +516,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * Generic data loader and timeline renderer
    */
@@ -508,8 +537,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
     }
     else
     {
-
-
       $rootScope.loading = true;
       /**
        * Fetch new data
@@ -542,7 +569,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
       });
     };
   };
-
 
 
   /**
@@ -584,7 +610,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
       };
     };
   };
-
 
 
   /**
@@ -629,7 +654,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
       };
     };
   };
-
 
 
   /**
@@ -757,7 +781,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * Timeline get ranges
    */
@@ -777,10 +800,8 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * TODO
-   * Get slot information of selcted slot
    * Put that information in the scope!
    *
    * Get information of the selected slot
@@ -810,7 +831,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * Extract Slot ID of the selected slot
    */
@@ -818,7 +838,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   {
     return angular.fromJson(selectedSlot().content).id;
   };
-
 
 
   /**
@@ -835,7 +854,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
       $scope.selectedOriginal = selectedSlot();
     });
   };
-
 
 
   /**
@@ -855,7 +873,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
     //   $scope.newSlots.push(selectedSlot());
     // });
   };
-
 
 
   /**
@@ -883,7 +900,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * TODO
    * Finish it!
@@ -896,7 +912,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * TODO
    * Find ways of combining with triggers start view
@@ -907,7 +922,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   { 
     Slots.change($scope.original, selectedSlot());
   };
-
 
 
   /**
@@ -938,7 +952,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * TODO
    * Find ways of combining with triggers start view
@@ -952,7 +965,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   };
 
 
-
   /**
    * TODO
    * Redirect to delete in Resource
@@ -963,24 +975,6 @@ function planboardCtrl($rootScope, $scope, $config, $window, data, Slots, Dater,
   {
     Slots.delete(id, selectedSlot());
   };
-
-
-
-  // /**
-  //  * TODO
-  //  * Quick fix for tabs on the left!
-  //  * Make a permanent fix for this
-  //  */
-  // $scope.fixTabHeight = function(section)
-  // {
-  //   var tabHeight = $('.tabs-left .nav-tabs').height();
-  //   var contentHeight = $('.tabs-left .tab-content #' + section).height();
-  //   if (tabHeight > contentHeight)
-  //   {
-  //     $('.tabs-left .tab-content #' + section).css({ height: $('.tabs-left .nav-tabs').height() });
-  //   };
-  // };
-
 
 };
 
@@ -1028,26 +1022,26 @@ planboardCtrl.resolve = {
     /**
      * Fetch the data start model
      */
-    return Slots.all({
-      // Startup group
-      groupId: groups[0].uuid,
-      // Startup division
-      division: 'all',
-      // Startup periods
-      stamps: {
-        start:  initial.first.timeStamp,
-        end:    initial.last.timeStamp
-      },
-      // Startup month
-      month: new Date().toString('M'),
-      // Startup layouts
-      layouts: {
-        user: true,
-        group: true,
-        members: false
-      }
-    });
-    //return ''
+    // return Slots.all({
+    //   // Startup group
+    //   groupId: groups[0].uuid,
+    //   // Startup division
+    //   division: 'all',
+    //   // Startup periods
+    //   stamps: {
+    //     start:  initial.first.timeStamp,
+    //     end:    initial.last.timeStamp
+    //   },
+    //   // Startup month
+    //   month: new Date().toString('M'),
+    //   // Startup layouts
+    //   layouts: {
+    //     user: true,
+    //     group: true,
+    //     members: false
+    //   }
+    // });
+    return ''
   }
 };
 

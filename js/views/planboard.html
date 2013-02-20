@@ -3,16 +3,11 @@
   <h2>Planboard</h2>
   <div class="btn-group pull-right">
     <button type="submit" 
-            class="btn btn-success">Change Availability</button>
+            ng-click="toggleSlotForm()" 
+            class="btn btn-success {{(views.slot==true) && 'active'}}">Change Availability</button>
   </div>
 </div>
 <!-- end page header -->
-
-
-
-
-
-
 
 
 
@@ -32,7 +27,7 @@
             ng-model="daterange" 
             daterangepicker="">
 
-      <i class="icon-calendar" style="position: relative; margin: -2px 0 0 -24px;"></i>
+      <i class="icon-calendar" style="position: relative; margin: -3px 0 0 -24px;"></i>
 
     </div>
     <!-- end dateranger -->
@@ -110,15 +105,15 @@
 
 
 
-
-
-
 <!-- slot controls -->
-<div class="row-fluid" ng-show="slotForm">
-  <form class="form-inline well">
+<div class="row-fluid" ng-show="views.slot">
+
+  <form class="form-inline form-toggled well">
+  
+    <h4>Time Slot Manager</h4>
 
     <!-- slot start -->
-    <span>From</span>
+    <label>From</label>
 
     <!-- date -->
     <div class="control-group" style="display: inline;">
@@ -151,7 +146,7 @@
     <!-- end slot start -->
 
     <!-- slot end -->
-    <span style="margin-left: 15px">Till</span>
+    <label style="margin-left: 15px">Till</label>
 
     <!-- date -->
     <div class="control-group" style="display: inline;">
@@ -184,7 +179,7 @@
     <!-- end slot end -->
 
     <!-- slot state -->
-    <span style="margin-left: 15px">State</span>
+    <label style="margin-left: 15px">State</label>
     <select ng-model="slot.state" 
             ng-options="option as value for (option, value) in states">
       <option value="">-- selecteer state --</option>
@@ -230,10 +225,6 @@
 
 
 
-
-
-
-
 <!-- timelines & statistics -->
 <div class="row-fluid">
   <div class="tabbable tabs-left">
@@ -255,9 +246,9 @@
     </ul>
     <!-- end tabs -->
 
-
     <!-- tabs content -->
     <div class="tab-content">
+
       <!-- timelines -->
       <div class="tab-pane active" id="timelineTab">
         <!-- timeline -->
@@ -292,7 +283,6 @@
 
             </div>
 
-
             <!-- groups members controls -->
             <div class="pull-right">
 
@@ -308,7 +298,6 @@
               </div>
               <!-- end timeline bar charts -->
 
-
               <!-- group wishes -->
               <div  class="btn-group">
 
@@ -320,7 +309,6 @@
               </div>
               <!-- end group wishes -->
 
-
               <!-- legenda -->
               <div  class="btn-group">
 
@@ -331,7 +319,6 @@
 
               </div>
               <!-- end legenda -->
-
 
               <!-- timeline layout manager -->
               <div  class="btn-group">
@@ -351,7 +338,6 @@
 
             </div>
             <!--end groups members controls -->
-
 
           </div>
           <!-- end timeline-toolbar -->
@@ -475,7 +461,6 @@
         <!-- end planbaord footer -->
       </div>
       <!-- end timelines -->
-
 
       <!-- statistics -->
       <div class="tab-pane" id="statisticsTab">
@@ -682,7 +667,6 @@
         <!-- end planbaord footer -->
       </div>
       <!-- end statistics -->
-
 
     </div>
     <!-- end tabs content -->
