@@ -852,6 +852,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
        * Init values and content of slot
        */
       var values = $scope.original = self.timeline.getItem(selection.row),
+          /**
+           * TODO
+           * This is a bug
+           * If selected slot has not content (serialized json)
+           * parsing gives errors
+           *
+           * This happens particulary for group agg. and wish slots
+           */
           content = angular.fromJson(values.content);
       /**
        * Set selected slot for view
@@ -889,7 +897,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * TODO
    * Finish it!
-   * selectedOriginal is send needed?
+   * selectedOriginal is still needed?
    * 
    * Timeline on select
    */
@@ -913,8 +921,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function timelineOnAdd()
   {
-    console.log('adding with mouse');
-    
+    var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
+    console.log('adding with mouse ->', values);
+
     // DEPRECIATED
     // $scope.$apply(function()
     // {
@@ -1379,21 +1388,24 @@ planboardCtrl.prototype = {
   constructor: planboardCtrl,
 
   /**
+   * REMOVE
+   * Still being used?
+   * 
    * TODO
    * Compacter
    *
    * Make values back-end friendly
    */
-  backendFriendly: function(slot)
-  {
-    return {
-      start: Date.parse(slot.start.date + ' ' + slot.start.time),
-      end: Date.parse(slot.end.date + ' ' + slot.end.time),
-      recursive: (slot.recursive) ? true : false,
-      text: slot.state,
-      id: (slot.id) ? slot.id : 0
-    }
-  },
+  // backendFriendly: function(slot)
+  // {
+  //   return {
+  //     start: Date.parse(slot.start.date + ' ' + slot.start.time),
+  //     end: Date.parse(slot.end.date + ' ' + slot.end.time),
+  //     recursive: (slot.recursive) ? true : false,
+  //     text: slot.state,
+  //     id: (slot.id) ? slot.id : 0
+  //   }
+  // },
   
   /**
    * TODO
@@ -1809,7 +1821,7 @@ planboardCtrl.prototype = {
           group: wrapper('c') + name + ' (Wishes)',
           content: '<span class="badge badge-inverse">' + wish.count + '</span>',
           className: cn,
-          editable: true
+          editable: false
         });
         /**
          * Add loading slots
@@ -1854,14 +1866,19 @@ planboardCtrl.prototype = {
               timedata.push({
                 start: Math.round(slot.start * 1000),
                 end: Math.round(slot.end * 1000),
-                group: wrapper('d') + '<a href="#/profile/' + member.id + '/timeline">' + members[member.id] + '</a>',
+                group: wrapper('d') + 
+                        '<a href="#/profile/' + 
+                        member.id + 
+                        '/timeline">' + 
+                        members[member.id] + 
+                        '</a>',
                 content: angular.toJson({ 
                   id: slot.id, 
                   recursive: slot.recursive, 
                   state: slot.text 
                   }),
                 className: config.states[slot.text].className,
-                editable: true
+                editable: false
               });
             };
           });
@@ -1873,7 +1890,12 @@ planboardCtrl.prototype = {
         timedata.push({
           start: 0,
           end: 0,
-          group: wrapper('d') + '<a href="#/profile/' + member.id + '/timeline">' + members[member.id] + '</a>',
+          group: wrapper('d') + 
+                  '<a href="#/profile/' + 
+                  member.id + 
+                  '/timeline">' + 
+                  members[member.id] + 
+                  '</a>',
           content: null,
           className: null,
           editable: false
