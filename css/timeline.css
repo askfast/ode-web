@@ -441,24 +441,28 @@ div.timeline-navigation-move-right {
     background: url('../img/timeline/16/new.png') no-repeat center;
 }*/
 
-/*div.timeline-navigation-delete {
+div.timeline-navigation-delete {
     padding: 0px;
     padding-left: 5px;*/
     /*background: url('img/16/delete.png') no-repeat center;*/
-/*  display: inline-block;
+  display: inline-block;
   margin-top: 2px;
   margin-left: -16px;
   width: 14px;
   height: 14px;
   background-image: url("../img/glyphicons-halflings.png");
-  background-position: 14px 14px;
+  /*background-position: -10px 1px;*/
   background-repeat: no-repeat;
   vertical-align: text-top;
   line-height: 14px;
   *margin-right: .3em;
-  background-position: -48px -96px;
+  background-position: -48px -97px;
   z-index: 10000;
-}*/
+}
+
+div.timeline-navigation-delete:hover {
+  cursor: pointer
+}
 
 /*div.timeline-navigation-zoom-in {
     background: url('../img/timeline/16/zoomin.png') no-repeat center;
@@ -467,6 +471,7 @@ div.timeline-navigation-move-right {
 div.timeline-navigation-zoom-out {
     background: url('../img/timeline/16/zoomout.png') no-repeat center;
 }
+*/
 
 div.timeline-navigation-move-left {
     background: url('../img/timeline/16/moveleft.png') no-repeat center;
@@ -474,7 +479,7 @@ div.timeline-navigation-move-left {
 
 div.timeline-navigation-move-right {
     background: url('../img/timeline/16/moveright.png') no-repeat center;
-}*/
+}
 
 
 

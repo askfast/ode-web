@@ -443,14 +443,14 @@
         <p>
           <small class="pull-left">
             <span class="text-warning">Last sync time: </span>
-            <span class="muted">{{data.synced | convertTimeStamp}}</span>
+            <span class="muted">{{data.synced | nicelyDate}}</span>
           </small>
           <small class="pull-right">
             <span class="text-warning">Data range start: </span>
-            <span class="muted">{{data.periods.start}}</span>
+            <span class="muted">{{data.periods.start | nicelyDate}}</span>
             &nbsp;
             <span class="text-warning">Data range end: </span>
-            <span class="muted">{{data.periods.end}}</span>
+            <span class="muted">{{data.periods.end | nicelyDate}}</span>
           </small>
         </p>
         <!-- end planbaord footer -->
@@ -649,14 +649,14 @@
         <p>
           <small class="pull-left">
             <span class="text-warning">Last sync time: </span>
-            <span class="muted">{{data.synced | convertTimeStamp}}</span>
+            <span class="muted">{{data.synced | nicelyDate}}</span>
           </small>
           <small class="pull-right">
             <span class="text-warning">Data range start: </span>
-            <span class="muted">{{data.periods.start}}</span>
+            <span class="muted">{{data.periods.start | nicelyDate}}</span>
             &nbsp;
             <span class="text-warning">Data range end: </span>
-            <span class="muted">{{data.periods.end}}</span>
+            <span class="muted">{{data.periods.end | nicelyDate}}</span>
           </small>
         </p>
         <!-- end planbaord footer -->
