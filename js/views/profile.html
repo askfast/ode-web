@@ -53,6 +53,10 @@
 
         <!-- profile info -->
         <dl>
+          <dt>User Groups</dt>
+            <dd>{{groups}}</dd>
+          <dt>Role</dt>
+            <dd>{{resources.role|translateRole}}</dd>
           <dt>Email</dt>
             <dd>{{resources.EmailAddress}}</dd>
           <dt>Phone</dt>
@@ -151,14 +155,10 @@
             </div>
           </div>
 
-          <hr>
-
-          <div class="control-group">
-            <div class="controls">
-              <button   type="submit" 
-                        class="btn btn-success"
-                        ng-click="save(resources)">Save</button>
-            </div>
+          <div class="form-actions">
+            <button   type="submit" 
+                      class="btn btn-success"
+                      ng-click="save(resources)">Save Profile</button>
           </div>
 
         </form>
@@ -216,14 +216,10 @@
             </div>
           </div>
 
-          <hr>
-
-          <div class="control-group">
-            <div class="controls">
-              <button   type="submit" 
-                        class="btn btn-success"
-                        ng-click="change(passwords)">Change password</button>
-            </div>
+          <div class="form-actions">
+            <button   type="submit" 
+                      class="btn btn-success"
+                      ng-click="change(passwords)">Change password</button>
           </div>
 
         </form>

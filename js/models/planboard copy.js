@@ -123,6 +123,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     Aggs.query(params, function (result) 
     {
 
+
+
       /**
        * TODO
        * Clean it up a bit!
@@ -187,6 +189,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       // });
       // console.warn('confirm ->', confirm);
       // 
+    
+
+
+
+
+
 
       /**
        * Fetch the wishes
@@ -401,6 +409,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     var deferred = $q.defer();
     Slots.query(params, function (result) 
     {
+      //console.log('result', result);
+
+
+
+
+
+
       /**
        * TODO
        * Clean it up a bit!
@@ -442,9 +457,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       // });
       // console.warn('confirm ->', confirm);
 
-      /**
-       * Return promised
-       */
+
+
+
+
+
+
       deferred.resolve({
         id: params.user,
         data: result,
@@ -465,21 +483,42 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
 
   /**
+   * TODO
+   * FInish it!
+   * 
    * Slot adding process
    */
-  Slots.prototype.add = function (slot, user) 
+  Slots.prototype.add = function (slot) 
   {
-    var deferred = $q.defer();
+    /**
+     * TODO
+     * IMPORTANT
+     * Always check before wheter changes or saved
+     * slot is overlaping with other ones!
+     */
+
+    var localSlots = angular.fromJson(Storage.get('slots'));
+
+    var slot = {
+      start: new Date(slot.start).getTime() / 1000,
+      end: new Date(slot.end).getTime() / 1000,
+      recursive: (slot.recursive) ? true : false,
+      text: slot.text,
+      id: slot.id
+    };
+
+    localSlots.push(slot);
+
+    Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.$broadcast('renderPlanboard', 'slot added to localStorage');
 
     /**
-     * Save slot
+     * TODO
      */
-    Slots.save({user: user}, slot, function (result) 
+    Slots.save(null, slot, function()
     {
-      deferred.resolve(result);
+      $rootScope.$broadcast('renderPlanboard', 'slot added to back-end');
     });
-
-    return deferred.promise;
   };
 
 
@@ -494,7 +533,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    * 
    * Slot changing process
    */
-  Slots.prototype.change = function (original, changed, user) 
+  Slots.prototype.change = function (original, changed) 
   {
     /**
      * TODO
@@ -503,39 +542,71 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      * slot is overlaping with other ones!
      */
 
-    var deferred = $q.defer();
-
     /**
-     * Change slot
+     * TODO
+     * Should the conversion done here or in controller?
      */
-    Slots.change(angular.extend(naturalize(changed), {user: user}), 
-                  naturalize(original), 
-    function (result) 
+    var original = naturalize(original);
+    var changed = naturalize(changed);
+    var localSlots = [];
+    angular.forEach(angular.fromJson(Storage.get('slots')), 
+    function(slot, index)
     {
-      deferred.resolve(result);
+      if (slot.id == changed.id)
+      {
+        var slot = {
+          start: changed.start,
+          end: changed.end,
+          recursive: changed.recursive,
+          text: changed.text,
+          id: changed.id
+        };
+      };
+      localSlots.push(slot);    
     });
-
-    return deferred.promise;
+    Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.$broadcast('renderPlanboard', 'slot changed in localStorage');
+    $rootScope.notify( { message: 'Slot changed in localStorage.' } );
+    /**
+     * TODO
+     */
+    Slots.change(changed, original, function()
+    {
+      $rootScope.$broadcast('renderPlanboard', 'slot changed in back-end');
+      $rootScope.notify( { message: 'Slot changed in back-end.' } );
+    });
   };
 
 
   /**
+   * TODO
+   * Add back-end
+   * 
    * Slot delete process
    */
-  Slots.prototype.delete = function (slot, user) 
+  Slots.prototype.delete = function (id, slot) 
   {
-    var deferred = $q.defer();
-
-    /**
-     * Delete slot
-     */
-    Slots.delete(angular.extend(naturalize(slot), {user: user}), 
-    function (result) 
+    var slot = naturalize(slot);
+    var localSlots = [];
+    angular.forEach(angular.fromJson(Storage.get('slots')), 
+    function(slot, index)
     {
-      deferred.resolve(result);
+      if (slot.id != id)
+      {
+        localSlots.push(slot);
+      };  
     });
-
-    return deferred.promise;
+    Storage.add('slots', angular.toJson(localSlots));
+    $rootScope.$broadcast('renderPlanboard', 'slot deleted from localStorage');
+    $rootScope.notify( { message: 'Slot deleted from localStorage.' } );
+    /**
+     * TODO
+     */
+    Slots.delete(slot, function()
+    {
+      $rootScope.$broadcast('renderPlanboard', 'slot deleted from back-end');
+      $rootScope.notify( { message: 'Slot deleted in back-end.' } );
+    });
   };
 
 

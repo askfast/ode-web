@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage)
+function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups)
 {
   /**
    * Self this
@@ -73,20 +73,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 
 
   /**
-   * Get resources
-   */
-  //var resources = angular.fromJson(Storage.get('resources'));
-  /**
    * Check if it is user
    */
-  if ($rootScope.app.resources.uuid == $route.current.params.userId)
-  {
-    $scope.views.user = true;
-  }
-  else
-  {
-    $scope.views.user = false;
-  };
+  $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
 
 
   /**
@@ -95,6 +84,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   $scope.user = {
     id: $route.current.params.userId
   };
+
+
+  /**
+   * Get groups of user
+   */
+  $scope.groups = Groups.getMemberGroups($route.current.params.userId);
 
 
   /**
@@ -144,6 +139,8 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     Profile.save($route.current.params.userId, resources)
     .then(function(result)
     {
+      console.log('result of registration ->', result);
+
       /**
        * Determine if it is user
        */
@@ -300,4 +297,5 @@ profileCtrl.prototype = {
 
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', '$md5', 'data', 'Profile', '$route', 'Storage'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
+                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups'];

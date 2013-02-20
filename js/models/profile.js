@@ -1,24 +1,46 @@
 'use strict';
 
 WebPaige.
-factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope) 
+factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope, Groups) 
 {
 
   /**
    * Profile resource
    */
   var Profile = $resource(
-    $config.host + '/node/:id/resource',
+    $config.host + '/node/:id/:section',
     {
     },
     {
       get: {
         method: 'GET',
-        params: {id:''}
+        params: {id: '', section: 'resource'}
       },
       save: {
         method: 'PUT',
-        params: {}
+        params: {section: 'resource'}
+      },
+      role: {
+        method: 'PUT',
+        params: {section: 'role'}
+      }
+    }
+  );
+
+
+  /**
+   * Register resource
+   */
+  var Register = $resource(
+    $config.host + '/register',
+    {
+      direct: 'true',
+      module: 'default'
+    },
+    {
+      profile: {
+        method: 'GET',
+        params: {uuid: '', pass: '', name: '', phone: ''}
       }
     }
   );
@@ -47,6 +69,92 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       }
     }
   );
+
+
+  /**
+   * Change password for user
+   */
+  Profile.prototype.register = function (profile) 
+  {    
+    var deferred = $q.defer();
+
+    /**
+     * Register user
+     */
+    Register.profile({
+      uuid: profile.username,
+      pass: $md5.process(profile.password),
+      name: profile.name,
+      phone: profile.PhoneAddress
+    }, function (registered) 
+    {
+      /**
+       * Give user a role
+       */
+      Profile.prototype.role(profile.username, profile.role.id)
+      .then(function(roled)
+      {
+        /**
+         * Add missing resources to the account of user
+         */
+        Profile.prototype.save(profile.username, {
+          EmailAddress: profile.EmailAddress,
+          PostAddress: profile.PostAddress,
+          PostZip: profile.PostZip,
+          PostCity: profile.PostCity
+        }).then(function(resourced)
+        {
+          /**
+           * Add user to given groups
+           */
+          var calls = [];
+          /**
+           * Push selection into a calls pool
+           */
+          angular.forEach(profile.groups, function(group, index)
+          {
+            calls.push(Groups.addMember({
+              id: profile.username,
+              group: group
+            }));
+          });
+          /**
+           * Loop through and make calls
+           */
+          $q.all(calls)
+          .then(function(grouped)
+          {
+            deferred.resolve({
+              registered: registered,
+              roled: roled,
+              resourced: resourced,
+              grouped: grouped
+            });
+          });
+        });
+      });
+    });
+   
+    return deferred.promise;
+  };
+
+
+  /**
+   * Set role of given user
+   */
+  Profile.prototype.role = function (id, role) 
+  {    
+    var deferred = $q.defer();
+    /**
+     * Set role
+     */
+    Profile.role({id: id}, role, function (result) 
+    {
+      deferred.resolve(result);
+    });
+
+    return deferred.promise;
+  };
 
 
   /**

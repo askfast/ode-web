@@ -48,6 +48,23 @@ WebPaige.
       format: 'dd-M-yyyy HH:mm tt'
     },
     /**
+     * Roles
+     */
+    roles: [
+      {
+        id: 1,
+        label: 'Planner'
+      },
+      {
+        id: 2,
+        label: 'Schipper'
+      },
+      {
+        id: 3,
+        label: 'Opstapper'
+      }
+    ],
+    /**
      * Timeline options
      */
     timeline: {
@@ -180,7 +197,6 @@ WebPaige.
         /**
          * Density based colors for group aggs.
          */
-        // densities: ['#294929', '#4f824f', '#477547', '#436f43', '#3d673d', '#396039', '#335833', '#305330'] 
         densities: {
           less: '#a0a0a0',
           even: '#ba6a24',
@@ -236,14 +252,6 @@ WebPaige.
       /**
        * Planboard
        */
-      // .when('/planboard/:layouts/:groupId/:division/:month', {
-      //     templateUrl: 'js/views/planboard.html', 
-      //     controller: planboardCtrl,
-      //     resolve: planboardCtrl.resolve    
-      // })
-      /**
-       * Planboard
-       */
       .when('/planboard', {
           templateUrl: 'js/views/planboard.html', 
           controller: planboardCtrl,
@@ -274,14 +282,6 @@ WebPaige.
           resolve: groupsCtrl.resolve
       })
       /**
-       * Groups :: view
-       */
-      // .when('/groups/:groupId/:action', {
-      //     templateUrl: 'js/views/groups.html', 
-      //     controller: groupsCtrl,
-      //     resolve: groupsCtrl.resolve
-      // })
-      /**
        * Profile :: view
        */
       .when('/profile/:userId/:action', {
@@ -289,22 +289,6 @@ WebPaige.
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
-      // /**
-      //  * Profile :: edit [userId]
-      //  */
-      // .when('/profile/:userId/edit', {
-      //     templateUrl: 'js/views/profile-edit.html', 
-      //     controller: profileCtrl,
-      //     resolve: profileCtrl.resolve
-      // })
-      // /**
-      //  * Profile :: change password [userId]
-      //  */
-      // .when('/profile/:userId/password', {
-      //     templateUrl: 'js/views/profile-password.html', 
-      //     controller: profileCtrl,
-      //     resolve: profileCtrl.resolve
-      // })
       /**
        * Settings
        */
@@ -313,13 +297,6 @@ WebPaige.
           controller: settingsCtrl,
           resolve: settingsCtrl.resolve   
       })
-      /**
-       * Angular-Strap
-       */
-      // .when('/angular-strap', {
-      //     templateUrl: 'js/views/angular-strap.html', 
-      //     controller: StrapCtrl
-      // })
     /**
      * Redirect
      */
@@ -361,65 +338,12 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
 
 
   /**
+   * TODO
+   * Control session mechanism later on!
+   * 
    * Check for valid session
    */
   Session.check();
-
-
-  /**
-   * REMOVE
-   * This part is only needed for by-passing login
-   * only for testing and development
-   */
-  $rootScope.sessionID = localStorage.getItem('sessionID');
-
-
-  /**
-   * REMOVE
-   * Still needed?
-   */
-  $rootScope.saveSession = function(sessionID)
-  {
-    localStorage.setItem('sessionID', sessionID);
-    $rootScope.notify( { message: 'New sessionID is set.' } );
-  };
-
-
-  /**
-   * REMOVE
-   * Still needed?
-   */
-  $rootScope.clearLocalSlots = function()
-  {
-    var sessionID = localStorage.getItem('sessionID');    
-    for (var i in localStorage)
-    {
-      localStorage.removeItem(i);
-    };
-    localStorage.setItem('sessionID', sessionID);
-    $rootScope.notify(
-      {
-        message: 'Cache is deleted.' 
-      }
-    );
-    $rootScope.notify(
-      {
-        message: 'Please refresh to get fresh data from back-end.' 
-      }
-    );
-  };
-
-
-  /**
-   * TODO
-   * This values should be originating from
-   * resource call data just after login
-   */
-  $rootScope.user = {
-    name: 'AppTest KNRM',
-    uuid: 'apptestknrm'
-  };
-  //$rootScope.user = angular.fromJson((localStorage.getItem('resources') || {}));
 
 
   /**
@@ -451,11 +375,6 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
      */
     //if (!Session.check()) window.location = "#/login";
 
-
-    // $rootScope.alertType = "";
-    // $rootScope.alertMessage = "Loading...";
-    // $rootScope.active = "progress-striped active progress-warning";
-
     $rootScope.loadingBig = true;
     $rootScope.loading = true;
     $('div[ng-view]').hide();
@@ -467,12 +386,7 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
    */
   $rootScope.$on("$routeChangeSuccess", function (event, current, previous) 
   {
-    // $rootScope.alertType = "alert-success";
-    // $rootScope.alertMessage = "Successfully loaded :]";
-    // $rootScope.active = "progress-success";
-
     $rootScope.newLocation = $location.path();
-
     $rootScope.loadingBig = false;
     $rootScope.loading = false;
     $('div[ng-view]').show();
@@ -485,10 +399,6 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
   $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) 
   {
     alert("ROUTE CHANGE ERROR: " + rejection);
-
-    // $rootScope.alertType = "alert-error";
-    // $rootScope.alertMessage = "Failed to load data :[";
-    // $rootScope.active = "";
   });
 
 
@@ -508,39 +418,6 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
     //   //console.warn('content is bigger than tabs ->', contentHeight);
     //   $('.tabs-left .nav-tabs').css( { height: contentHeight } );
     // };
-  };
-
-
-
-
-  /**
-   * General status messages
-   */
-  // $rootScope.alertType = "alert-info";
-  // $rootScope.alertMessage = "Welcome to the resolve demo";
-
-
-  /**
-   * TODO
-   * Make a service out of this!
-   * @type {Object}
-   */
-  jQuery.fn.notify.defaults = {
-    type: config.notifier.type,
-    closable: config.notifier.closable,
-    transition: config.notifier.transition,
-    fadeOut: {
-      enabled: config.notifier.fadeOut.enabled,
-      delay: config.notifier.fadeOut.delay
-    },
-    message: config.notifier.message,
-    onClose: function () {},
-    onClosed: function () {}
-  };
-
-  $rootScope.notify = function(options)
-  {
-    //$('.notifications').notify(options).show();
   };
 
 

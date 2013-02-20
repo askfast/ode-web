@@ -327,16 +327,34 @@ html,body {
 
 
 #inline-form form {
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#inline-form form .control-group label {
+  margin: 0;
+  padding: 0; 
+  display: inline;
+  margin-right: 10px;
 }
 
 #inline-form form h5 {
+  /*display: inline;
+  margin-right: 5px;*/
+  margin-bottom: 10px;
+}
+
+#inline-form form .controls {
+  /*margin-right: 5px;*/
   display: inline;
-  margin-right: 5px;
 }
 
 #inline-form form input[type=text] {
-  margin-right: 5px;
+  margin-top: 5px;
+  /*margin-right: 5px;*/
+  /*display: inline;
+  margin: 0;
+  margin-right: 10px;*/
 }
 
 
@@ -480,6 +498,75 @@ label {
 #login p {
   margin-top:15px;
 }
+
+
+
+
+
+
+
+
+.form-toggled {
+  
+}
+
+.form-toggled h4 {
+  margin: 0;
+  padding: 0;
+}
+
+.form-toggled label {
+  font-size: 12px;
+}
+
+
+.form-elements-group {
+  display: inline;
+  margin-right: 20px;
+}
+
+.form-elements-group label,
+.form-elements-group .control-group {
+  display: inline;
+}
+
+.form-elements-group input[type=checkbox] {
+  margin: -2px 0 0 3px;
+}
+
+.form-elements-group select {
+  width: 160px;
+}
+
+.dater {
+  margin-right: 5px;
+}
+
+.dater input[type=text] {
+  width: 100px;
+}
+
+.timer {
+  margin-right: 5px;  
+}
+
+.timer input[type=text] {
+  width: 85px;
+}
+
+.dater .icon-calendar,
+.timer .icon-time {
+  position: relative;
+  margin: 2.5px 0 0 -24px;
+}
+
+
+.form-elements-actions {
+  display: inline;
+}
+
+
+
 
 
 
