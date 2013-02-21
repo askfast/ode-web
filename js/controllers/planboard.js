@@ -991,6 +991,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       {
         $scope.slot.wish = content.wish;
         $scope.slot.group = content.group;
+        $scope.slot.groupId = content.groupId;
       }
       else if (content.type == 'member')
       {
@@ -1250,6 +1251,66 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         state: slot.state 
         })
     }, $rootScope.app.resources.uuid)
+    .then(function (result)
+    {
+      /**
+       * Ask for fresh data
+       */
+      Slots.all({
+        groupId:  $scope.timeline.current.group,
+        division: $scope.timeline.current.division,
+        layouts:  $scope.timeline.current.layouts,
+        month:    $scope.timeline.current.month,
+        stamps: {
+          start:  new Date($scope.timeline.range.start).getTime(),
+          end:    new Date($scope.timeline.range.end).getTime()
+        },
+      })
+      .then(function(data)
+      {
+        /**
+         * Reset slot container
+         */
+        $scope.slot = {};
+        /**
+         * Set scope
+         */
+        $scope.data = data;
+        /**
+         * Adjust timeline for new period
+         */
+        timeliner({
+          start:  $scope.timeline.range.start,
+          end:    $scope.timeline.range.end
+        });
+        /**
+         * Set preloader
+         */
+        $rootScope.loading = false;
+      });
+    });
+
+  };
+
+
+  /**
+   * Set wish
+   */
+  $scope.setWish = function(slot)
+  {
+    /**
+     * Set preloader
+     */
+    $rootScope.loading = true;
+    /**
+     * Add slot
+     */
+    Slots.setWish({
+      id: slot.groupId,
+      start: new Date(Date.parse(slot.start.date + ' ' + slot.start.time)).getTime() / 1000,
+      end: new Date(Date.parse(slot.end.date + ' ' + slot.end.time)).getTime() / 1000,
+      wish: slot.wish
+    })
     .then(function (result)
     {
       /**
@@ -1898,7 +1959,8 @@ planboardCtrl.prototype = {
                     secret(angular.toJson({
                       type: 'wish',
                       wish: wish.count,
-                      group: name
+                      group: name,
+                      groupId: data.aggs.id
                     })),
           className: cn,
           editable: false
