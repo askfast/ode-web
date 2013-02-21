@@ -204,6 +204,9 @@ angular.module('WebPaige.filters', [])
 
 
 /**
+ * BUG!
+ * Maybe not replace bar- ?
+ * 
  * TODO
  * Implement state conversion from config later on!
  * 

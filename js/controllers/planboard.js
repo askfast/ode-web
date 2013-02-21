@@ -918,22 +918,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
 
 
   /**
-   * TODO
-   * Finish it!
-   * Find a way to dynamically present state menu
-   * after the creation of slot with mouse, or just use 'available'
-   * as default.
-   * 
    * Timeline on add
    */
   function timelineOnAdd()
   {
+    /**
+     * Get new slot and row information from timeline
+     */
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
-
-    //var start = new Date(values.start).toString('dd-MM-yyyy HH:mm tt');
-
-    console.log('adding with mouse ->', values);
-
     /**
      * Let angular know that model changed
      */
@@ -947,13 +939,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         wish: false
       };
       /**
-       * Determine if it is recursive
-       */
-      if (/\/recursive\//.test(values.group))
-      {
-        console.log('recursive true');
-      }
-      /**
        * Set info in slot model
        */
       $scope.slot = {
@@ -964,16 +949,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         end: {
           date: new Date(values.end).toString('dd-MM-yyyy'),
           time: new Date(values.end).toString('HH:mm tt')
-        }
+        },
+        /**
+         * Determine if it is recursive
+         */
+        recursive: (values.group.match(/recursive/)) ? true : false
       };
     });
-
-
-    // DEPRECIATED
-    // $scope.$apply(function()
-    // {
-    //   $scope.newSlots.push(selectedSlot());
-    // });
   };
 
 
