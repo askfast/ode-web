@@ -126,11 +126,11 @@ WebPaige.
         /**
          * Bar charts for group agg. data
          */
-        bar: false,
+        bar: true,
         /**
          * Group wishes setting
          */
-        wishes: false,
+        wishes: true,
         /**
          * Timeline legenda settings
          */

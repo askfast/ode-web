@@ -598,6 +598,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   function naturalize(slot)
   {
+    //var content = angular.fromJson(slot.content);
     var content = angular.fromJson(slot.content);
     return {
       start: new Date(slot.start).getTime() / 1000,
