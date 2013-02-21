@@ -496,6 +496,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.change = function (original, changed, user) 
   {
+    // console.warn('original ->', original);
+    // console.warn('changed ->',  changed);
+
+    //var ccon = angular.fromJson(changed.content);
+
+    //console.log('ccon ->', ccon);
+
     /**
      * TODO
      * IMPORTANT
@@ -594,11 +601,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
   /**
    * Naturalize Slot for back-end injection
-   * @slot  {object} slot [slot that should be naturalized]
    */
   function naturalize(slot)
   {
-    //var content = angular.fromJson(slot.content);
     var content = angular.fromJson(slot.content);
     return {
       start: new Date(slot.start).getTime() / 1000,

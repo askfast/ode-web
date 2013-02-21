@@ -4,17 +4,10 @@
   <div class="btn-group pull-right">
     <button type="submit" 
             ng-click="toggleSlotForm()" 
-            class="btn btn-success {{(views.slot.add==true) && 'active'}}">Change Availability</button>
+            class="btn btn-success {{(views.slot.add==true) && 'active'}}">New Availability</button>
   </div>
 </div>
 <!-- end page header -->
-
-
-
-
-
-
-
 
 
 
@@ -113,13 +106,6 @@
 
 
 
-
-
-
-
-
-
-
 <!-- slot controls -->
 <div class="row-fluid" ng-show="views.slot.add || views.slot.edit || views.group || views.wish || views.member">
 
@@ -130,10 +116,11 @@
             class="close">&times;</button>
     <!-- end close btn -->
   
-    <h4 ng-show="views.slot.add || views.slot.edit">Time Slot Manager</h4>
-    <h4 ng-show="views.group">Group Slot</h4>
-    <h4 ng-show="views.wish">Wish Manager</h4>
-    <h4 ng-show="views.member">Member Slot</h4>
+    <h4 ng-show="views.slot.add">New Availability</h4>
+    <h4 ng-show="views.slot.edit">Update Availability</h4>
+    <h4 ng-show="views.group">{{slot.group}}</h4>
+    <h4 ng-show="views.wish">{{slot.group}} (Wishes)</h4>
+    <h4 ng-show="views.member">{{slot.member|convertUserIdToName}}</h4>
 
     <hr>
 

@@ -362,3 +362,19 @@ angular.module('WebPaige.filters', [])
 		}
 	}
 })
+
+
+/**
+ * TODO
+ * Finish it!
+ * 
+ * Strip span tags
+ */
+.filter('stripSpan', function()
+{
+  return function(string)
+  {
+    return string.match(/<span class="label">(.*)<\/span>/);
+  }
+});
+

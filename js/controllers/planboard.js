@@ -71,6 +71,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     else
     {
+      /**
+       * Reset slot container
+       */
+      $scope.slot = {};
+      /**
+       * Set the view
+       */
       $scope.views = {
         slot: {
           add: true,
@@ -870,36 +877,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /**
    * Get information of the selected slot
    */
@@ -917,9 +894,22 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       /**
        * Init values and content of slot
        */
-      var values = $scope.original = self.timeline.getItem(selection.row),
+      var values = self.timeline.getItem(selection.row),
           content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]);
       
+      /**
+       * Set original slot value
+       */
+      $scope.original = {
+        start: values.start,
+        end: values.end,
+        content: {
+          recursive: content.recursive,
+          state: content.state,
+          id: content.id
+        }
+      };
+
       /**
        * Switch over type of slot
        */
@@ -995,29 +985,23 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if (content.type == 'group') 
       {
         $scope.slot.diff = content.diff;
+        $scope.slot.group = content.group;
       }
       else if (content.type == 'wish')
       {
         $scope.slot.wish = content.wish;
-      };
+        $scope.slot.group = content.group;
+      }
+      else if (content.type == 'member')
+      {
+        $scope.slot.member = content.mid;
+      }
       /**
        * Return values
        */
       return values;
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   /**
@@ -1172,10 +1156,31 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Set preloader
      */
     $rootScope.loading = true;
+
+    var changed = selectedSlot();
+
+    console.log('selectedSlot ->', changed);
+
+
+    var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
+
+    console.warn('original ->', $scope.original);
+    console.warn('slot sel ->', changed, 
+    angular.fromJson(changed.content.match(/<span class="secret">(.*)<\/span>/)[1]));
+
     /**
      * Add slot
      */
-    Slots.change($scope.original, selectedSlot(), $rootScope.app.resources.uuid)
+    Slots.change($scope.original, {
+
+      // start: changed.start,
+      // end: changed.end,
+
+      start: $scope.selectedOriginal.start,
+      end: $scope.selectedOriginal.end,
+      content: angular.fromJson(changed.content.match(/<span class="secret">(.*)<\/span>/)[1]), 
+
+    }, $rootScope.app.resources.uuid)
     .then(function (result)
     {
       /**
@@ -1218,7 +1223,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
 
 
   /**
-   * Change trigger start view
+   * Change slot
    */
   $scope.change = function(original, slot)
   {
@@ -1605,7 +1610,7 @@ planboardCtrl.prototype = {
          * Set division in the name
          */
         var name = groups[data.aggs.id] + 
-                    '<span class="label" style="margin-left:5px">' + 
+                    '<span class="label">' + 
                     label + 
                     '</span>';
       };
@@ -1751,7 +1756,8 @@ planboardCtrl.prototype = {
                         actual +
                         secret(angular.toJson({
                           type: 'group',
-                          diff: slot.diff
+                          diff: slot.diff,
+                          group: name
                         })),
               className: 'group-aggs',
               editable: false
@@ -1837,7 +1843,8 @@ planboardCtrl.prototype = {
               content: cn +
                         secret(angular.toJson({
                           type: 'group',
-                          diff: slot.diff
+                          diff: slot.diff,
+                          group: name
                         })),
               className: 'agg-' + cn,
               editable: false
@@ -1890,7 +1897,8 @@ planboardCtrl.prototype = {
           content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
                     secret(angular.toJson({
                       type: 'wish',
-                      wish: wish.count
+                      wish: wish.count,
+                      group: name
                     })),
           className: cn,
           editable: false
@@ -1947,6 +1955,7 @@ planboardCtrl.prototype = {
                 content: secret(angular.toJson({ 
                   type: 'member',
                   id: slot.id, 
+                  mid: member.id,
                   recursive: slot.recursive, 
                   state: slot.text 
                   })),
