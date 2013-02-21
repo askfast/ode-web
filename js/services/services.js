@@ -23,8 +23,6 @@ factory('Session', function ($rootScope, $http, Storage)
      */
     check: function()
     {
-      if (!$rootScope.session)
-      {
         var session = angular.fromJson(Storage.cookie.get('session'));
         if (session)
         {
@@ -35,11 +33,6 @@ factory('Session', function ($rootScope, $http, Storage)
         {
           return false;
         };
-      }
-      else
-      {
-        return true;
-      };
     },
 
 
@@ -1307,4 +1300,25 @@ function()
    
     return temp.toLowerCase();
   }
+});
+
+//register the interceptor as a service
+WebPaige.config(function ($httpProvider) {
+    $httpProvider.responseInterceptors.push('paigeHttpInterceptor');
+})
+//register the interceptor as a service, intercepts ALL angular ajax http calls
+.factory('paigeHttpInterceptor', function($q,$location) {
+    return function(promise) {
+      return promise.then(function(response) {
+        // do something on success
+          return response;
+      }, function(response) {
+        // do something on error
+          if(response.status == 403){
+              alert("Session timeout , please re-login");
+              $location.path("/login");
+          }
+          return $q.reject(response);
+      });
+    }
 });

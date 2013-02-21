@@ -31,8 +31,8 @@ WebPaige.
     /**
      * Data source host
      */
-    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
-    //host: 'http://10.200.200.201\\:8888/ns_knrmtest',
+//    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    host: 'http://10.200.200.201\\:8888/ns_knrmtest',
     //host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
     /**
      * TODO
@@ -343,7 +343,10 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
    * 
    * Check for valid session
    */
-  Session.check();
+   
+  if(!Session.check()){
+      $location.path("/login");
+  }
 
 
   /**
@@ -373,7 +376,7 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
      * Prevent Deep Linking
      * @type {String}
      */
-    //if (!Session.check()) window.location = "#/login";
+    if (!Session.check()) $location.path("/login"); 
 
     $rootScope.loadingBig = true;
     $rootScope.loading = true;
