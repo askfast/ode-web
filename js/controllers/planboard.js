@@ -1158,7 +1158,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = true;
 
-    var changed = selectedSlot();
+    var changed = $scope.selectedOriginal;
 
     console.log('selectedSlot ->', changed);
 
@@ -1166,8 +1166,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
 
     console.warn('original ->', $scope.original);
-    console.warn('slot sel ->', changed, 
-    angular.fromJson(changed.content.match(/<span class="secret">(.*)<\/span>/)[1]));
+
+    // console.warn('slot sel ->', changed, 
+    // angular.fromJson(changed.content.match(/<span class="secret">(.*)<\/span>/)[1]));
 
     /**
      * Add slot
@@ -1177,9 +1178,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       // start: changed.start,
       // end: changed.end,
 
-      start: $scope.selectedOriginal.start,
-      end: $scope.selectedOriginal.end,
-      content: angular.fromJson(changed.content.match(/<span class="secret">(.*)<\/span>/)[1]), 
+      start: values.start,
+      end: values.end,
+      content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]), 
 
     }, $rootScope.app.resources.uuid)
     .then(function (result)
