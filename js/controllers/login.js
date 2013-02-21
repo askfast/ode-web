@@ -373,33 +373,39 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    * 
    * Forgot password
    */
-  $scope.forgot = function()
-  {
-    User.password($scope.remember.id).then(function(result){
-    	console.log("res?? " , result);
-    	if(result == "ok"){
-    		$scope.alert = {
-				forget : {
-					display : true,
-					type : 'alert-success',
-					message : 'Please check your email to reset your password!'
-				}
-			};
-    	}else{
-    		$scope.alert = {
-				forget : {
-					display : true,
-					type : 'alert-error',
-					message : 'Error, we can not find this account !'
-				}
-			};
-    	}
-    });
-  };
+  
+	$scope.forgot = function() {
+		$('#forgot button[type=submit]').text('setting ...').attr('disabled', 'disabled');
+		User.password($scope.remember.id).then(function(result) {
+			console.log("res?? ", result);
+			
+			if(result == "ok") {
+				$scope.alert = {
+					forget : {
+						display : true,
+						type : 'alert-success',
+						message : 'Please check your email to reset your password!'
+					}
+				};
+			} else {
+				$scope.alert = {
+					forget : {
+						display : true,
+						type : 'alert-error',
+						message : 'Error, we can not find this account !'
+					}
+				};
+			}
+			
+			$('#forgot button[type=submit]').text('change password').removeAttr('disabled');
+		});
+	};
+
+
 
 	self.changePass =  function(uuid, newpass, key){
 		User.changePass(uuid, newpass, key).then(function(result){
-			if(result.status == 400 || result.status == 500){
+			if(result.status == 400 || result.status == 500 || result.status == 409){
 				$scope.alert = {
 					changePass : {
 						display : true,
@@ -408,7 +414,6 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 					}
 				};
 				
-				$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
 			}else { // successfully changed
 				$scope.alert = {
 					changePass : {
@@ -418,8 +423,9 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 					}
 				}; 
 				
-				// $location.path( "/login" );
+				$location.path( "/message" );
 			}
+			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
 		})
 	}
 
