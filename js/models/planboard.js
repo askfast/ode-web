@@ -66,13 +66,17 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         method: 'GET',
         params: {id: '', start:'', end:''},
         isArray: true
-      }
+      },
+      save: {
+        method: 'PUT',
+        params: {id: ''}
+      },
     }
   );
 
 
   /**
-   * Get group aggs
+   * Get group wishes
    */
   Slots.prototype.wishes = function (options) 
   {
@@ -89,6 +93,31 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
      * Fetch wishes
      */
     Wishes.query(params, function (result) 
+    {
+      deferred.resolve(result);
+    });
+    return deferred.promise;
+  };
+
+
+  /**
+   * Set group wish
+   */
+  Slots.prototype.setWish = function (options) 
+  {
+    /**
+     * Default params
+     */
+    var deferred = $q.defer(),
+        params = {
+          start: options.start,
+          end: options.end,
+          wish: options.wish
+        };
+    /**
+     * Fetch wishes
+     */
+    Wishes.save({id: options.id}, params, function (result) 
     {
       deferred.resolve(result);
     });
@@ -496,6 +525,13 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.change = function (original, changed, user) 
   {
+    // console.warn('original ->', original);
+    // console.warn('changed ->',  changed);
+
+    //var ccon = angular.fromJson(changed.content);
+
+    //console.log('ccon ->', ccon);
+
     /**
      * TODO
      * IMPORTANT
@@ -594,7 +630,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
   /**
    * Naturalize Slot for back-end injection
-   * @slot  {object} slot [slot that should be naturalized]
    */
   function naturalize(slot)
   {
