@@ -33,13 +33,13 @@
             ng-click="fixTabHeight('inboxTab'); resetViews()"><span class="entypo">&#128229;</span> Inbox</a>
       </li>
 
-      <li>
-        <a href="#outboxTab" 
+      <li class="{{(views.compose==true ) && 'inactive'}}">
+        <a href="#outboxTab"   
             data-toggle="tab"
             ng-click="fixTabHeight('outboxTab'); resetViews()"><span class="entypo">&#128228;</span> Outbox</a>
       </li>
 
-      <li>
+      <li class="{{(views.compose==true ) && 'inactive'}}">
         <a href="#trashTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('trashTab'); resetViews()"><span class="entypo">&#9749;</span> Trash</a>
@@ -173,7 +173,7 @@
 
 
       <!-- inboxTab -->
-      <div class="tab-pane {{(views.default==true) && 'active'}}" id="inboxTab">
+      <div class="tab-pane {{(views.default==true) && 'active'}}" id="inboxTab" ng-hide="views.compose">
 
         <div class="tab-header">
           <h3 class="pull-left">Inbox</h3>
@@ -243,7 +243,7 @@
       <!-- end inboxTab -->
 
       <!-- outboxTab -->
-      <div class="tab-pane" id="outboxTab">
+      <div class="tab-pane {{(views.compose==true) && 'inactive'}}" id="outboxTab" >
 
         <div class="tab-header">
           <h3 class="pull-left">Outbox</h3>
@@ -310,7 +310,7 @@
 
 
       <!-- trashTab -->
-      <div class="tab-pane" id="trashTab">
+      <div class="tab-pane {{(views.compose==true) && 'inactive'}}" id="trashTab" ng-hide="views.compose">
 
         <div class="tab-header">
           <h3 class="pull-left">Trash</h3>
