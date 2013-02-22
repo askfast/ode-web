@@ -351,18 +351,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
 
   /**
    * TODO
-   * Maybe not needed anymore?
-   * 
-   * Renderer listener
-   */
-  $rootScope.$on('renderPlanboard', function () 
-  {
-    render();
-  });
-
-
-  /**
-   * TODO
    * Define a better way with dealing localStorage and Resolver
    *
    * Controller render
@@ -1260,8 +1248,30 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   };
 
 
+  /**
+   * TODO
+   * Look for ways to combine with other timeline refreshers
+   *
+   * Refresh timeline
+   */
   function refreshTimeline ()
   {
+    /**
+     * Reset slot container
+     */
+    $scope.slot = {};
+    /**
+     * Set view to default slot add
+     */
+    $scope.views = {
+      slot: {
+        add: true,
+        edit: false
+      },
+      group: false,
+      wish: false,
+      member: false
+    };
     /**
      * Ask for fresh data
      */

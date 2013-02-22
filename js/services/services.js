@@ -1306,15 +1306,20 @@ function()
 WebPaige.config(function ($httpProvider) {
     $httpProvider.responseInterceptors.push('paigeHttpInterceptor');
 })
+
 //register the interceptor as a service, intercepts ALL angular ajax http calls
 .factory('paigeHttpInterceptor', function($q,$location) {
     return function(promise) {
-      return promise.then(function(response) {
+      return promise.then(function(response) 
+      {
+        // console.log('intercepted', arguments);
+
         // do something on success
           return response;
       }, function(response) {
         // do something on error
-          if(response.status == 403){
+          if(response.status == 403)
+          {
               alert("Session timeout , please re-login");
               $location.path("/login");
           }

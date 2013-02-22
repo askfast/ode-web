@@ -14,7 +14,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Back-end returned data
    */
-  $scope.resources = data;
+  console.warn('data ->', data);
+
+  $scope.resources = data.resources;
 
 
   /**
@@ -139,8 +141,6 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     Profile.save($route.current.params.userId, resources)
     .then(function(result)
     {
-      console.log('result of registration ->', result);
-
       /**
        * Determine if it is user
        */
@@ -272,18 +272,40 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   };
 
 
-
 };
-
 
 
 /**
  * Profile resolver
  */
 profileCtrl.resolve = {
-  data: function ($rootScope, $config, Profile, $route) 
+  data: function ($rootScope, $config, $q, Profile, $route, Dater, Slots) 
   {
-    return Profile.get($route.current.params.userId, false);
+    /**
+     * If it's user himself
+     */
+    if ($route.current.params.userId == $rootScope.app.resources.uuid)
+    {
+      return Profile.get($route.current.params.userId, false)
+    }
+    /**
+     * Another user
+     */
+    else
+    {
+      /**
+       * Get periods
+       */
+      var periods = Dater.getPeriods(),
+          initial = periods.months[new Date().toString('M')];
+      /**
+       * Return values
+       */
+      return Profile.getWithSlots($route.current.params.userId, false, {
+              start: initial.first.timeStamp / 1000,
+              end: initial.last.timeStamp / 1000
+            })
+    };
   }
 };
 

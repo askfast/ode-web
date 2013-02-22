@@ -1,7 +1,7 @@
 'use strict';
 
 WebPaige.
-factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope, Groups) 
+factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope, Groups, Slots) 
 {
 
   /**
@@ -195,7 +195,48 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       {
         Storage.add('resources', angular.toJson(result));
       };
-      deferred.resolve(result);
+      /**
+       * Return promised
+       */
+      deferred.resolve({
+        resources: result
+      });
+    });
+
+    return deferred.promise;
+  };
+
+
+  /**
+   * Get profile of given user with slots
+   */
+  Profile.prototype.getWithSlots = function (id, localize, params) 
+  {
+    var deferred = $q.defer();
+
+    /**
+     * Get profile data
+     */
+    Profile.prototype.get(id, localize)
+    .then(function (resources)
+    {
+      /**
+       * Get user slots
+       */
+      Slots.user({
+        user: id,
+        start: params.start,
+        end: params.end
+      }).then(function (slots)
+      {
+        /**
+         * Return promised baby!
+         * Extend resources with slots
+         */
+        deferred.resolve(angular.extend(resources, {
+          slots: slots
+        }));        
+      })
     });
 
     return deferred.promise;

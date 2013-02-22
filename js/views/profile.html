@@ -28,7 +28,7 @@
             ng-click="fixTabHeight('passwordTab')"><span class="entypo">&#128274;</span> Password</a>
       </li>
 
-      <li class="{{(views.timeline==true) && 'active'}}">
+      <li class="{{(views.timeline==true) && 'active'}}" ng-hide="views.user">
         <a href="#userTimelineTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('userTimelineTab')"><span class="entypo">&#128340;</span> Timeline</a>
@@ -231,7 +231,9 @@
 
 
       <!-- userTimelineTab -->
-      <div class="tab-pane {{(views.timeline==true) && 'active'}}" id="userTimelineTab">
+      <div class="tab-pane {{(views.timeline==true) && 'active'}}" 
+            id="userTimelineTab"
+            ng-hide="views.user">
 
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
@@ -241,6 +243,32 @@
         <hr>
 
         <!-- user timeline -->
+
+
+
+
+        <!-- timeline -->
+        <div id="timeline">
+
+          <!-- user timeline -->
+          <div id="myTimeline"></div>
+          <!-- end user timeline -->
+          
+        </div>
+        <!-- end timeline -->
+        <hr>
+        <!-- planbaord footer -->
+        <p>
+          <small class="pull-left">
+            <span class="text-warning">Last sync time: </span>
+            <span class="muted">{{data.synced | nicelyDate}}</span>
+          </small>
+        </p>
+        <!-- end planbaord footer -->
+
+
+
+
         <!-- end user timeline -->
 
       </div>

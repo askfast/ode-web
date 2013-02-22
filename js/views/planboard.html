@@ -124,11 +124,6 @@
 
     <hr>
 
-    <!-- original -> {{original}}<br><br>
-    selected original -> {{selectedOriginal}}
-
-    <hr> -->
-
     <!-- slot start -->
     <div class="form-elements-group">
       <label>From</label>
@@ -236,8 +231,11 @@
 
     <!-- group diff -->
     <div class="form-elements-group" ng-show="views.group">
-      <label>Difference</label>
-      {{slot.diff}}
+      <small>
+        <i ng-show="(slot.diff < 0)">There <strong>less people</strong> than needed!</i>
+        <i ng-show="(slot.diff == 0)">There are <strong>just as many people</strong> as needed.</i>
+        <i ng-show="(slot.diff > 0)">There are <strong>{{slot.diff}} more people</strong> than needed!</i>
+      </small>
     </div>
     <!-- group diff -->
 
@@ -291,6 +289,7 @@
 
 
   </form>
+  
 </div>
 <!-- end slot controls -->
 
