@@ -282,13 +282,18 @@ WebPaige.
           resolve: groupsCtrl.resolve
       })
       /**
-       * Profile :: view
+       * Profile
        */
-      .when('/profile/:userId/:action', {
+      .when('/profile/:userId', {
           templateUrl: 'js/views/profile.html', 
           controller: profileCtrl,
           resolve: profileCtrl.resolve
       })
+      // .when('/profile/:userId/:action', {
+      //     templateUrl: 'js/views/profile.html', 
+      //     controller: profileCtrl,
+      //     resolve: profileCtrl.resolve
+      // })
       /**
        * Settings
        */

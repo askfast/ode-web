@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2>{{resources.name}}</h2>
+  <h2>{{data.resources.name}}</h2>
 </div>
 
 
@@ -56,17 +56,17 @@
           <dt>User Groups</dt>
             <dd>{{groups}}</dd>
           <dt>Role</dt>
-            <dd>{{resources.role|translateRole}}</dd>
+            <dd>{{data.resources.role|translateRole}}</dd>
           <dt>Email</dt>
-            <dd>{{resources.EmailAddress}}</dd>
+            <dd>{{data.resources.EmailAddress}}</dd>
           <dt>Phone</dt>
-            <dd>{{resources.PhoneAddress}}</dd>
+            <dd>{{data.resources.PhoneAddress}}</dd>
           <dt>Address</dt>
-            <dd>{{resources.PostAddress}}</dd>
+            <dd>{{data.resources.PostAddress}}</dd>
           <dt>Postcode</dt>
-            <dd>{{resources.PostZip}}</dd>
+            <dd>{{data.resources.PostZip}}</dd>
           <dt>City</dt>
-            <dd>{{resources.PostCity}}</dd>
+            <dd>{{data.resources.PostCity}}</dd>
         </dl>
         <!-- end profile info -->
 
@@ -101,7 +101,7 @@
               <input  type="text" 
                       class="span4" 
                       ng-model="resources.name"
-                      value="{{resources.name}}">
+                      value="{{data.resources.name}}">
             </div>
           </div>
 
@@ -111,7 +111,7 @@
               <input  type="text" 
                       class="span4" 
                       ng-model="resources.EmailAddress"
-                      value="{{resources.EmailAddress}}">
+                      value="{{data.resources.EmailAddress}}">
             </div>
           </div>
 
@@ -121,7 +121,7 @@
               <input  type="text" 
                       class="span3" 
                       ng-model="resources.PhoneAddress"
-                      value="{{resources.PhoneAddress}}">
+                      value="{{data.resources.PhoneAddress}}">
             </div>
           </div>
 
@@ -131,7 +131,7 @@
               <input  type="text" 
                       class="span5" 
                       ng-model="resources.PostAddress"
-                      value="{{resources.PostAddress}}">
+                      value="{{data.resources.PostAddress}}">
             </div>
           </div>
 
@@ -141,7 +141,7 @@
               <input  type="text" 
                       class="span2" 
                       ng-model="resources.PostZip"
-                      value="{{resources.PostZip}}">
+                      value="{{data.resources.PostZip}}">
             </div>
           </div>
 
@@ -151,7 +151,7 @@
               <input  type="text" 
                       class="span3" 
                       ng-model="resources.PostCity"
-                      value="{{resources.PostCity}}">
+                      value="{{data.resources.PostCity}}">
             </div>
           </div>
 
@@ -248,10 +248,10 @@
 
 
         <!-- timeline -->
-        <div id="timeline">
+        <div id="timeline" style="height:auto">
 
           <!-- user timeline -->
-          <div id="myTimeline"></div>
+          <div id="userTimeline" style="height:auto"></div>
           <!-- end user timeline -->
           
         </div>

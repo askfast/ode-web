@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location)
+function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater)
 {
   /**
    * Self this
@@ -40,13 +40,6 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     }
   };
 
-  var path = '#/profile.html/' + $route.current.params.userId + '#newhashhash';
-  console.warn('path ->', path);
-
-  //$location.path(path);
-  $location.replace();
-
-  console.warn('hash ->', $location.hash());
 
   /**
    * Back-end returned data
@@ -59,9 +52,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Extract view action from url
    */
-  if ($location.hash())
+  if ($route.current.params.action)
   {
-    switch ($location.hash())
+    switch ($route.current.params.action)
     {
       case 'view':
         $scope.views = {
@@ -186,12 +179,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
        * Get fresh profile data
        */
       Profile.get($route.current.params.userId, flag)
-      .then(function(data)
+      .then(function(resources)
       {
         /**
          * Reload resources
          */
-        $scope.data = data;
+        $scope.resources = resources;
         /**
          * Set preloader
          */
@@ -267,12 +260,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
          * Get fresh profile data
          */
         Profile.get($rootScope.app.resources.uuid, true)
-        .then(function(data)
+        .then(function(resources)
         {
           /**
            * Reload resources
            */
-          $scope.data = data;
+          $scope.resources = resources;
           /**
            * Set preloader
            */
@@ -311,16 +304,6 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 
 
 
-
-
-
-
-
-
-
-
-
-
  
 
   /**
@@ -338,168 +321,96 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   function render()
   {
-    // /**
-    //  * Where is my timeline landlord?
-    //  */
-    // self.timeline = new links.Timeline(document.getElementById('userTimeline'));
-    // /**
-    //  * Init timeline listeners
-    //  */
-    // links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
-    // links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
-    // links.events.addListener(self.timeline, 'add',           timelineOnAdd);
-    // links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
-    // links.events.addListener(self.timeline, 'change',        timelineOnChange);
-    // links.events.addListener(self.timeline, 'select',        timelineOnSelect);
-    // /**
-    //  * Run timeline
-    //  */
-    // // timeliner($scope.timeline.options);
-    // /**
-    //  * Timeline options
-    //  */
-    // $scope.timeline = {
-    //   current:  $scope.timeline.current,
-    //   scope:    $scope.timeline.scope,
-    //   config:   $scope.timeline.config,
-    //   options: {
-    //     start:  new Date(periods.weeks[current.week].first.day),
-    //     end:    new Date(periods.weeks[current.week].last.day),
-    //     min:    new Date(periods.weeks[current.week].first.day),
-    //     max:    new Date(periods.weeks[current.week].last.day)
-    //   }
-    // };
-    // /**
-    //  * Merge options with defaults
-    //  */
-    // angular.extend($scope.timeline.options, $config.timeline.options);
-
-    // var tdata = self.process(
-    //     $scope.data.slots.data, 
-    //     $scope.timeline.config
-    //   );
-
-    // console.log('tdata ->', tdata);
-
-    // /**
-    //  * Draw timeline
-    //  */
-    // self.timeline.draw(
-    //   tdata,
-    //   $config.timeline.options
-    // );
-
-
-
-
-            data = [
-                {
-                    'start': new Date(2010,7,23),
-                    'content': 'Conversation<br><img src="img/comments-icon.png" style="width:32px; height:32px;">'
-                },
-                {
-                    'start': new Date(2010,7,23,23,0,0),
-                    'content': 'Mail from boss<br><img src="img/mail-icon.png" style="width:32px; height:32px;">'
-                },
-                {
-                    'start': new Date(2010,7,24,16,0,0),
-                    'content': 'Report'
-                },
-                {
-                    'start': new Date(2010,7,26),
-                    'end': new Date(2010,8,2),
-                    'content': 'Traject A'
-                },
-                {
-                    'start': new Date(2010,7,28),
-                    'content': 'Memo<br><img src="img/notes-edit-icon.png" style="width:48px; height:48px;">'
-                },
-                {
-                    'start': new Date(2010,7,29),
-                    'content': 'Phone call<br><img src="img/Hardware-Mobile-Phone-icon.png" style="width:32px; height:32px;">'
-                },
-                {
-                    'start': new Date(2010,7,31),
-                    'end': new Date(2010,8,3),
-                    'content': 'Traject B'
-                },
-                {
-                    'start': new Date(2010,8,4,12,0,0),
-                    'content': 'Report<br><img src="img/attachment-icon.png" style="width:32px; height:32px;">'
-                }
-            ];
-
-            // specify options
-            var options = {
-                'width':  '100%',
-                'height': '300px',
-                'editable': true,   // enable dragging and editing events
-                'style': 'box'
-            };
-
-            // Instantiate our timeline object.
-            self.timeline2 = new links.Timeline(document.getElementById('userTimeline'));
-
-
-            console.log('timeline -> ', self.timeline2);
-
-
-            // Draw our timeline with the created data and options
-            self.timeline2.draw(data, options);
-
-            self.timeline2.setData(data);
-
-            self.timeline2.redraw();
-
-
-
-
-
+    /**
+     * Where is my timeline landlord?
+     */
+    self.timeline = new links.Timeline(document.getElementById('userTimeline'));
+    /**
+     * Init timeline listeners
+     */
+    links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
+    links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
+    links.events.addListener(self.timeline, 'add',           timelineOnAdd);
+    links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
+    links.events.addListener(self.timeline, 'change',        timelineOnChange);
+    links.events.addListener(self.timeline, 'select',        timelineOnSelect);
+    /**
+     * Run timeline
+     */
+    //timeliner($scope.timeline.options);
+    /**
+     * Timeline options
+     */
+    $scope.timeline = {
+      current:  $scope.timeline.current,
+      scope:    $scope.timeline.scope,
+      config:   $scope.timeline.config,
+      options: {
+        start:  new Date($scope.timeline.options.start),
+        end:    new Date($scope.timeline.options.end),
+        min:    new Date($scope.timeline.options.start),
+        max:    new Date($scope.timeline.options.end)
+      }
+    };
+    /**
+     * Merge options with defaults
+     */
+    angular.extend($scope.timeline.options, $config.timeline.options);
+    /**
+     * Draw timeline
+     */
+    self.timeline.draw(
+      self.process(
+        $scope.data.slots.data, 
+        $scope.timeline.config
+      ), 
+      $scope.timeline.options
+    );
     /**
      * Set range dynamically
      */
-    //self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+    self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
   };
 
 
   /**
    * Draw and limit timeline
    */
-  // function timeliner(options)
-  // {
-  //   /**
-  //    * Timeline options
-  //    */
-  //   $scope.timeline = {
-  //     current:  $scope.timeline.current,
-  //     scope:    $scope.timeline.scope,
-  //     config:   $scope.timeline.config,
-  //     options: {
-  //       start:  new Date(options.start),
-  //       end:    new Date(options.end),
-  //       min:    new Date(options.start),
-  //       max:    new Date(options.end)
-  //     }
-  //   };
-  //   /**
-  //    * Merge options with defaults
-  //    */
-  //   angular.extend($scope.timeline.options, $config.timeline.options);
-  //   /**
-  //    * Draw timeline
-  //    */
-  //   self.timeline.draw(
-  //     self.process(
-  //       $scope.data.slots.data, 
-  //       $scope.timeline.config
-  //     ), 
-  //     $scope.timeline.options
-  //   );
-  //   /**
-  //    * Set range dynamically
-  //    */
-  //   self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-  // };
+  function timeliner(options)
+  {
+    /**
+     * Timeline options
+     */
+    $scope.timeline = {
+      current:  $scope.timeline.current,
+      scope:    $scope.timeline.scope,
+      config:   $scope.timeline.config,
+      options: {
+        start:  new Date(options.start),
+        end:    new Date(options.end),
+        min:    new Date(options.start),
+        max:    new Date(options.end)
+      }
+    };
+    /**
+     * Merge options with defaults
+     */
+    angular.extend($scope.timeline.options, $config.timeline.options);
+    /**
+     * Draw timeline
+     */
+    self.timeline.draw(
+      self.process(
+        $scope.data.slots.data, 
+        $scope.timeline.config
+      ), 
+      $scope.timeline.options
+    );
+    /**
+     * Set range dynamically
+     */
+    self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+  };
 
 
   /**
@@ -955,22 +866,11 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Profile resolver
  */
 profileCtrl.resolve = {
-  data: function ($rootScope, $config, Profile, $route, Dater, $location) 
+  data: function ($rootScope, $config, Profile, $route, Dater) 
   {
     /**
      * If it's user himself
@@ -999,24 +899,6 @@ profileCtrl.resolve = {
     };
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -1092,7 +974,7 @@ profileCtrl.prototype = {
       editable: false
     });
 
-    //console.warn('timedata ->', angular.toJson(timedata));
+    console.warn('timedata ->', timedata);
 
     return timedata;
   }
@@ -1101,6 +983,4 @@ profileCtrl.prototype = {
 
 
 profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
-                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups', 'Dater', '$location'];
-
-
+                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups', 'Dater'];

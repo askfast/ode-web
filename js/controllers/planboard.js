@@ -361,6 +361,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Where is my timeline landlord?
      */
     self.timeline = new links.Timeline(document.getElementById('myTimeline'));
+
+
+            console.log('timeline -> ', self.timeline);
     /**
      * Init timeline listeners
      */
@@ -989,7 +992,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
        * Return values
        */
       return values;
-    }
+    };
   };
 
 
@@ -1169,7 +1172,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
        */
       refreshTimeline();
     });
-
   };
 
 
@@ -1198,7 +1200,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
        */
       refreshTimeline();
     });
-
   };
 
 
@@ -1307,7 +1308,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
        */
       $rootScope.loading = false;
     });    
-  }
+  };
 
 };
 
@@ -1389,6 +1390,7 @@ planboardCtrl.prototype = {
      * Timedata container for all sort of slots
      */
     var timedata = [];
+    
     /**
      * Get groups
      */
@@ -1397,6 +1399,7 @@ planboardCtrl.prototype = {
     {
       groups[group.uuid] = group.name;
     });
+
     /**
      * Get members
      */
@@ -1405,6 +1408,7 @@ planboardCtrl.prototype = {
     {
       members[member.uuid] = member.name;
     });
+
     /**
      * Wrap hidden span for sorting workaround in timeline rows
      */
@@ -1412,6 +1416,7 @@ planboardCtrl.prototype = {
     {
       return '<span style="display:none;">' + rank + '</span>';
     };
+
     /**
      * Wrap secret content div for content of slot
      */
@@ -1419,6 +1424,7 @@ planboardCtrl.prototype = {
     {
       return '<span class="secret">' + content + '</span>';
     };
+
     /**
      * Add loading slots
      */
@@ -1445,6 +1451,7 @@ planboardCtrl.prototype = {
       });
       return timedata;
     };
+
     /**
      * Process user slots
      */
