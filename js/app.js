@@ -287,7 +287,8 @@ WebPaige.
       .when('/profile/:userId', {
           templateUrl: 'js/views/profile.html', 
           controller: profileCtrl,
-          resolve: profileCtrl.resolve
+          resolve: profileCtrl.resolve,
+          reloadOnSearch: false
       })
       // .when('/profile/:userId/:action', {
       //     templateUrl: 'js/views/profile.html', 
