@@ -305,7 +305,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
         name: group.name
       }, function (result) 
       {
-        deferred.resolve(group.id);
+        deferred.resolve(result);
       });
     }
     else
@@ -317,7 +317,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
         id: $rootScope.app.resources.uuid
       }, group, function (result) 
       {
-        deferred.resolve(angular.fromJson(result));
+        deferred.resolve(result);
       }); 
     };
 

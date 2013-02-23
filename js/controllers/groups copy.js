@@ -32,148 +32,25 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
 
 
   /**
+   * Groups for dropdown
+   */
+  $scope.groups = angular.fromJson(Storage.get('groups'));
+
+
+  /**
    * Grab and set roles for view
    */
   $scope.roles = $config.roles;
 
 
   /**
-   * Groups for dropdown
+   * Default view settings
    */
-  $scope.groups = data.groups;
-
-
-  /**
-   * Extract view action from url and set view
-   */
-  var params = $location.search();
-
-
-  /**
-   * Set group
-   */
-  setGroupView(params.uuid);
-
-
-  /**
-   * Set given group for view
-   */
-  function setGroupView (id)
-  {  
-    /**
-     * Loop through groups and set current group
-     */
-    angular.forEach(data.groups, function (group, index)
-    {
-      if (group.uuid == id)
-      {
-        $scope.group = group;
-      };
-    });
-    /**
-     * Set members
-     */
-    $scope.members = data.members[id];
-    /**
-     * Set current
-     */
-    $scope.current = id;
-  };
-
-
-  /**
-   * Request for a group
-   */
-  $scope.requestGroup = function (current)
-  {
-    /**
-     * Set selected group for view
-     */
-    setGroupView(current);
-    /**
-     * Let angular know things are changing
-     */
-    $scope.$watch($location.search(), function()
-    {
-      /**
-       * Set hash
-       */
-      $location.search({
-        uuid: current
-      });
-    });
-  };
-
-
-  /**
-   * Set view
-   */
-  setView($location.hash());
-
-
-  /**
-   * View setter
-   */
-  function setView (hash)
-  {
-    /**
-     * Default view settings
-     */
-    $scope.views = {
-      view:   false,
-      add:    false,
-      edit:   false,
-      search: false,
-      member: false
-    };
-    /**
-     * Set correct one true
-     */
-    $scope.views[hash] = true;
-  };
-
-
-  /**
-   * Switch between the views and set hash accordingly
-   */
-  $scope.setViewTo = function (hash)
-  {
-    /**
-     * Let angular know things are changing
-     */
-    $scope.$watch(hash, function()
-    {
-      /**
-       * Set hash
-       */
-      $location.hash(hash);
-      /**
-       * Set view intern
-       */
-      setView(hash);
-    });
-  };
-
-
-  /**
-   * Switch between the views and set hash accordingly
-   */
-  $scope.setViewTo = function (hash)
-  {
-    /**
-     * Let angular know things are changing
-     */
-    $scope.$watch($location.hash(), function()
-    {
-      /**
-       * Set hash
-       */
-      $location.hash(hash);
-      /**
-       * Set view intern
-       */
-      setView(hash);
-    });
+  $scope.views = {
+    addGroup: false,
+    editGroup: false,
+    search: false,
+    newMember: false
   };
 
 
@@ -185,7 +62,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /** 
      * Check on status
      */
-    if ($scope.views.add)
+    if ($scope.views.addGroup)
     {
       /**
        * Close all
@@ -195,13 +72,22 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     else
     {
       /**
+       * TODO
+       * Maybe outside of the if check?
+       * 
        * Reset inline form value
        */
       $scope.groupForm = {};
+      $scope.views = {
+        addGroup: true,
+        editGroup: false,
+        search: false,
+        newMember: false
+      };
       /**
-       * Set views
+       * Reset tabs
        */
-      $scope.setViewTo('add');
+      $scope.resetTabs();
     };
   };
 
@@ -214,7 +100,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /** 
      * Check on status
      */
-    if ($scope.views.member)
+    if ($scope.views.newMember)
     {
       /**
        * Close all
@@ -224,13 +110,22 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     else
     {
       /**
+       * TODO
+       * Maybe outside of the if check?
+       * 
        * Reset inline form value
        */
       $scope.memberForm = {};
+      $scope.views = {
+        addGroup: false,
+        editGroup: false,
+        search: false,
+        newMember: true
+      };
       /**
-       * Set views
+       * Reset tabs
        */
-      $scope.setViewTo('member');
+      $scope.resetTabs();
     };
   };
 
@@ -243,7 +138,12 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set view on edit mode
      */
-    $scope.setViewTo('edit');
+    $scope.views = {
+      addGroup: false,
+      editGroup: true,
+      search: false,
+      newMember: false
+    };
     /**
      * Set values for group edit form
      */
@@ -251,6 +151,36 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       id: group.uuid,
       name: group.name
     }; 
+    /**
+     * Reset tabs
+     */
+    $scope.resetTabs(); 
+  };
+
+
+  /**
+   * Reset tabs
+   */
+  $scope.resetTabs = function ()
+  {
+    /**
+     * Remove active classes of group tabs
+     */
+    angular.forEach(data.groups, function (group, index)
+    {
+      $('#grpl-' + group.uuid).removeClass('active');
+      $('#grp-' + group.uuid).removeClass('active');
+    });
+  };
+
+
+  /**
+   * Set first group tab active
+   */
+  $scope.setFirstGroupTab = function ()
+  {
+    $('#grpl-' + data.groups[0].uuid).addClass('active');
+    $('#grp-' + data.groups[0].uuid).addClass('active');
   };
 
 
@@ -267,7 +197,16 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set views
      */
-    $scope.setViewTo('view');
+    $scope.views = {
+      addGroup: false,
+      editGroup: false,
+      search: false,
+      newMember: false
+    };
+    /**
+     * Set back first group tab active
+     */
+    $scope.setFirstGroupTab();
   };
 
 
@@ -300,11 +239,20 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       /**
        * Set search view on
        */
-      $scope.setViewTo('search');
+      $scope.views = {
+        addGroup: false,
+        editGroup: false,
+        search: true,
+        newMember: false
+      };
       /**
        * Set preloader
        */
       $rootScope.loading = false;
+      /**
+       * Reset tabs
+       */
+      $scope.resetTabs();
       /**
        * Fix height of the content tab
        */
@@ -438,7 +386,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      * Save group
      */
     Groups.save(group).
-    then(function(returned)
+    then(function()
     {
       /**
        * Query fresh data
@@ -458,49 +406,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          * Set preloader
          */
         $rootScope.loading = false;
-        /**
-         * Redirect to group view
-         */
-        angular.forEach(data.groups, function (group, index)
-        {
-          if (group.uuid == returned)
-          {
-            /**
-             * Reset groups drop down
-             */
-            $scope.groups = data.groups;
-            /**
-             * Loop through groups and set current group
-             */
-            angular.forEach(data.groups, function (g, index)
-            {
-              if (g.uuid == group.uuid)
-              {
-                $scope.group = g;
-              };
-            });
-            /**
-             * Set members
-             */
-            $scope.members = data.members[group.uuid];
-            /**
-             * Set current
-             */
-            $scope.current = group.uuid;
-            /**
-             * Adjust params
-             */
-            $scope.$watch($location.search(), function()
-            {
-              /**
-               * Set hash
-               */
-              $location.search({
-                uuid: group.uuid
-              });
-            });
-          };
-        });
       });
 
     });

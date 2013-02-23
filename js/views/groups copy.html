@@ -1,22 +1,21 @@
 <div class="page-header">
-  <h2 ng-hide="views.add">{{group.name}}</h2>
-  <h2 ng-show="views.add">New Group</h2>
+  <h2>Groups</h2>
 
   <!-- groups buttons -->
   <div class="btn-group pull-right">
 
     <button type="button" 
-            ng-click="fixTabHeight('addGroupTab'); addGroupForm(); setViewTo('add')"
-            class="btn btn-success {{(views.add==true) && 'active'}}">New Group</button>
+            ng-click="fixTabHeight('addEditGroupTab'); addGroupForm()"
+            class="btn btn-success {{(views.addGroup==true) && 'active'}}">New Group</button>
 
     <button type="button" 
-            ng-click="fixTabHeight('newMemberTab'); newMemberForm(); setViewTo('member')" 
-            class="btn btn-success {{(views.member==true) && 'active'}}">New Member</button>
+            ng-click="fixTabHeight('newMemberTab'); newMemberForm()" 
+            class="btn btn-success {{(views.newMember==true) && 'active'}}">New Member</button>
 
   </div>
   <!-- end groups buttons -->
 
-  <!-- search members -->
+  <!-- Search members -->
   <form class="form-search pull-right" 
         ng-submit="searchMembers(search.query)">
     <div class="input-append">
@@ -26,7 +25,7 @@
       <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
     </div>
   </form>
-  <!-- end search members -->
+  <!-- End Search -->
 
 </div>
 
@@ -39,34 +38,21 @@
   <ul class="nav nav-tabs nav-tabs-app">
     
     <!-- add group tab link -->
-    <li class="{{(views.add==true) && 'active'}}"
-        ng-show="views.add">
-      <a href="#addGroupTab" 
-          ng-click="fixTabHeight('addGroupTab'); setViewTo('add')" 
+    <li class="{{((views.addGroup==true) || (views.editGroup==true)) && 'active'}}"
+        ng-show="views.addGroup || views.editGroup">
+      <a href="#addEditGroupTab" 
           data-toggle="tab">
         <span class="entypo">&#9998;</span>
-        Add New Group
+        <div ng-show="views.addGroup">Add New Group</div>
+        <div ng-show="views.editGroup">Edit Group</div>
       </a>
     </li>
-    <!-- end add group tab link -->
-    
-    <!-- edit group tab link -->
-    <li class="{{(views.edit==true) && 'active'}}"
-        ng-show="views.edit">
-      <a href="#editGroupTab" 
-          ng-click="fixTabHeight('editGroupTab'); setViewTo('edit')" 
-          data-toggle="tab">
-        <span class="entypo">&#9998;</span>
-        Edit Group
-      </a>
-    </li>
-    <!-- end edit group tab link -->
+    <!-- end search tab link -->
     
     <!-- new member tab link -->
-    <li class="{{(views.member==true) && 'active'}}"
-        ng-show="views.member">
+    <li class="{{(views.newMember==true) && 'active'}}"
+        ng-show="views.newMember">
       <a href="#newMemberTab" 
-          ng-click="fixTabHeight('newMemberTab'); setViewTo('member')" 
           data-toggle="tab">
         <span class="entypo">&#59136;</span>
         New Member
@@ -78,7 +64,6 @@
     <li class="{{(views.search==true) && 'active'}}"
         ng-show="views.search">
       <a href="#searchTab" 
-          ng-click="fixTabHeight('searchTab'); setViewTo('search')"
           data-toggle="tab">
         <span class="entypo">&#128269;</span>
         Search results
@@ -87,15 +72,14 @@
     <!-- end search tab link -->
 
     <!-- group tab links -->
-    <li id="groupTabLink" 
-        class="{{(views.view==true) && 'active'}}">
-
-
-      <a href="#groupTab" 
+    <li ng-repeat="group in data.groups" 
+        id="grpl-{{group.uuid}}" 
+        class="{{($index == 0) && 'active' }}">
+      <a href="#grp-{{group.uuid}}" 
           data-toggle="tab"
-          ng-click="fixTabHeight('groupTab'); setViewTo('view')">
+          ng-click="fixTabHeight('grp-' + group.uuid)">
           <span class="entypo">&#128101;</span> 
-        Group
+        {{group.name}}
       </a>
     </li>
     <!-- end group tab links -->
@@ -114,14 +98,17 @@
 
 
 
-    <!-- add group tab -->
-    <div class="tab-pane {{(views.add==true) && 'active'}}" 
-          id="addGroupTab" 
-          ng-show="views.add">
+    <!-- add / edit group tab -->
+    <div class="tab-pane {{((views.addGroup==true) || (views.editGroup==true)) && 'active'}}" 
+          id="addEditGroupTab" 
+          ng-show="views.addGroup || views.editGroup">
 
         <div class="tab-header">
 
-          <h3 class="pull-left">Add New Group</h3>
+          <h3 class="pull-left">
+            <span ng-show="views.addGroup">Add New Group</span>
+            <span ng-show="views.editGroup">Edit Group</span>
+          </h3>
 
           <button type="button" 
                   ng-click="closeTabs()" 
@@ -159,55 +146,10 @@
 
 
 
-    <!-- edit group tab -->
-    <div class="tab-pane {{(views.edit==true) && 'active'}}" 
-          id="editGroupTab" 
-          ng-show="views.edit">
-
-        <div class="tab-header">
-
-          <h3 class="pull-left">Edit Group</h3>
-
-          <button type="button" 
-                  ng-click="closeTabs()" 
-                  class="btn pull-right">Close</button>
-        </div>
-        <hr>
-
-        <!-- group form -->
-        <form>
-          <fieldset>
-            
-            <div class="control-group">
-              <label class="control-label">Group Name</label>
-              <div class="controls">
-                <input type="text" 
-                    class="span4" 
-                    ng-model="groupForm.name">
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="submit" 
-                      ng-click="groupSubmit(groupForm)" 
-                      class="btn btn-success">Save Group</button>
-            </div>
-
-          </fieldset>
-        </form>
-        <!-- end group form -->
-
-    </div>
-    <!-- edit group tab -->
-
-
-
-
-
     <!-- new member tab -->
-    <div class="tab-pane {{(views.member==true) && 'active'}}" 
+    <div class="tab-pane {{(views.newMember==true) && 'active'}}" 
           id="newMemberTab" 
-          ng-show="views.member">
+          ng-show="views.newMember">
 
         <div class="tab-header">
 
@@ -395,18 +337,22 @@
 
 
     <!-- group tabs -->
-    <div  class="tab-pane {{(views.view==true) && 'active'}}"
-          id="groupTab">
+    <div  ng-repeat="group in data.groups"
+          class="tab-pane {{($index == 0) && 'active'}}"
+          id="grp-{{group.uuid}}">
+          <!-- ng-hide="views.search"> -->
 
       <div class="tab-header">
+        <h3 class="pull-left">{{group.name}}</h3>
+
 
 
         <!-- groups list -->
         <div class="pull-left">
-          <select ng-model="current" 
+          <select ng-model="current.group" 
                   ng-options="group.uuid as group.name for group in groups"
-                  ng-selected="current"
-                  ng-change="requestGroup(current)">
+                  ng-selected="current.group"
+                  ng-change="requestMembers(current)">
           </select>
         </div>
         <!-- end groups list -->

@@ -8,14 +8,6 @@
     
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app">
-
-      <li class="{{(views.timeline==true) && 'active'}}" ng-hide="views.user">
-        <a href="#userTimelineTab" 
-            data-toggle="tab"
-            ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline')">
-          <span class="entypo">&#128340;</span> Timeline
-        </a>
-      </li>
       
       <li class="{{(views.profile==true) && 'active'}}">
         <a href="#profileTab" 
@@ -41,6 +33,14 @@
         </a>
       </li>
 
+      <li class="{{(views.timeline==true) && 'active'}}" ng-hide="views.user">
+        <a href="#userTimelineTab" 
+            data-toggle="tab"
+            ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline')">
+          <span class="entypo">&#128340;</span> Timeline
+        </a>
+      </li>
+
     </ul>
     <!-- end tabs -->
 
@@ -48,51 +48,7 @@
     <!-- tabs content -->
     <div class="tab-content">
 
-
-
-      <!-- userTimelineTab -->
-      <div class="tab-pane {{(views.timeline==true) && 'active'}}" 
-            id="userTimelineTab"
-            ng-hide="views.user">
-
-        <!-- tab header -->
-        <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">User Timeline</h3>
-        </div>
-        <!-- end tab header -->
-        <hr>
-
-        <!-- user timeline -->
-
-
-
-
-        <!-- timeline -->
-        <div id="timeline_">
-
-          <!-- user timeline -->
-          <div id="userTimeline"></div>
-          <!-- end user timeline -->
-          
-        </div>
-        <!-- end timeline -->
-        <hr>
-        <!-- planbaord footer -->
-        <p>
-          <small class="pull-left">
-            <span class="text-warning">Last sync time: </span>
-            <span class="muted">{{data.synced | nicelyDate}}</span>
-          </small>
-        </p>
-        <!-- end planbaord footer -->
-
-
-
-
-        <!-- end user timeline -->
-
-      </div>
-      <!-- end userTimelineTab -->
+      
 
       
       <!-- profileTab -->
@@ -281,6 +237,46 @@
 
       </div>
       <!-- end passwordTab -->
+
+
+
+      <!-- userTimelineTab -->
+      <div class="tab-pane {{(views.timeline==true) && 'active'}}" 
+            id="userTimelineTab"
+            ng-hide="views.user">
+
+        <!-- tab header -->
+        <div style="overflow: hidden; height: 35px">
+          <h3 style="margin-top: 0;" class="pull-left">User Timeline</h3>
+        </div>
+        <!-- end tab header -->
+        <hr>
+
+        <!-- user timeline -->
+
+        <!-- timeline -->
+        <div id="timeline">
+
+          <!-- user timeline -->
+          <div id="userTimeline"></div>
+          <!-- end user timeline -->
+          
+        </div>
+        <!-- end timeline -->
+        <hr>
+        <!-- planbaord footer -->
+        <!-- <p>
+          <small class="pull-left">
+            <span class="text-warning">Last sync time: </span>
+            <span class="muted">{{data.synced | nicelyDate}}</span>
+          </small>
+        </p> -->
+        <!-- end planbaord footer -->
+
+        <!-- end user timeline -->
+
+      </div>
+      <!-- end userTimelineTab -->
 
 
 

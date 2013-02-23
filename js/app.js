@@ -279,7 +279,8 @@ WebPaige.
       .when('/groups', {
           templateUrl: 'js/views/groups.html', 
           controller: groupsCtrl,
-          resolve: groupsCtrl.resolve
+          resolve: groupsCtrl.resolve,
+          reloadOnSearch: false
       })
       /**
        * Profile

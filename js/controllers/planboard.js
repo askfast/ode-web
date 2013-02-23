@@ -1867,7 +1867,7 @@ planboardCtrl.prototype = {
                 group: wrapper('d') + 
                         '<a href="#/profile/' + 
                         member.id + 
-                        '/timeline">' + 
+                        '#timeline">' + 
                         members[member.id] + 
                         '</a>',
                 content: secret(angular.toJson({ 
@@ -1893,7 +1893,7 @@ planboardCtrl.prototype = {
           group: wrapper('d') + 
                   '<a href="#/profile/' + 
                   member.id + 
-                  '/timeline">' + 
+                  '#timeline">' + 
                   members[member.id] + 
                   '</a>',
           content: null,
@@ -1904,7 +1904,12 @@ planboardCtrl.prototype = {
          * Add loading slots
          */
         timedata = addLoading(timedata, [
-          wrapper('d') + '<a href="#/profile/' + member.id + '/timeline">' + members[member.id] + '</a>'
+          wrapper('d') + 
+          '<a href="#/profile/' + 
+          member.id + 
+          '#timeline">' + 
+          members[member.id] + 
+          '</a>'
         ]);
         /**
          * Produce member stats
