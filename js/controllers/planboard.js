@@ -481,7 +481,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.timelineZoomIn = function()
   {
-    self.timeline.zoom( $config.timeline.settings.zoomValue );
+    self.timeline.zoom( $config.timeline.config.zoomValue );
   };
 
 
@@ -490,7 +490,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.timelineZoomOut = function()
   {
-    self.timeline.zoom( -$config.timeline.settings.zoomValue );
+    self.timeline.zoom( -$config.timeline.config.zoomValue );
   };
 
 

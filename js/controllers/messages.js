@@ -201,6 +201,51 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Find message
      */
     $scope.message = Messages.find(id);
+
+    /**
+     * Change to read if message not seen yet
+     * Check only in inbox because other box messages
+     * can have 'NEW' state as well but those states are not shown
+     *
+     * Maybe only for 'trash' box to show state in later stages
+     */
+    if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
+    {
+      /**
+       * Loop through in inbox
+       */
+      angular.forEach($scope.messages.inbox, function (message, index)
+      {
+        if (message.uuid == $scope.message.uuid)
+        {
+          /**
+           * Set read state
+           */
+          message.state = "READ";
+          /**
+           * Trigger change state call
+           */
+          Messages.changeState([message.uuid], 'READ');
+          
+          /**
+           * TODO
+           * Unread messages counter should be bind to a background-sync timer
+           * in later stages as well
+           */
+          $rootScope.app.unreadMessages = $rootScope.app.unreadMessages - 1;
+
+          // if($rootScope.app.unreadMessages == 0 )
+          // {
+          //   $('#msgBubble').hide();
+          // }
+          // else
+          // {
+          //   $('#msgBubble').show();
+          // };
+
+        }
+      });
+    };
   };
 
 
@@ -230,39 +275,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       });
     });
   };
-
-
-
-
-
-  // /**
-  //  * Change to read if message not seen yet
-  //  */
-  // if($scope.message.state == "NEW")
-  // { 
-  // 	angular.forEach($scope.messages.inbox, function(msg,index)
-  //   {
-  // 		if(msg.uuid == $scope.message.uuid)
-  //     {
-  // 			msg.state = "READ";
-  // 			Messages.changeState([msg.uuid],"READ");
-
-  // 			$rootScope.app.unreadMessages = $rootScope.app.unreadMessages-1;
-
-  // 			if($rootScope.app.unreadMessages == 0 )
-  //       {
-		// 		 	$('#msgBubble').hide();
-		// 		}
-  //       else
-  //       {
-		// 		  $('#msgBubble').show();
-		// 		};
-
-  // 		}
-  // 	});
-  // };
-
-
 
 
   /**

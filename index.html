@@ -51,8 +51,12 @@
                 <a href="#planboard">Planboard</a>
               </li>
               <li data-match-route="/messages">
-                <a href="#messages?uuid=009f0674-0eed-4282-8026-6046b28d6954#inbox">Messages 
-                  <span id="msgBubble" class="badge badge-success">{{app.unreadMessages}}</span>
+                <a href="#messages">Messages 
+                  <!-- unread messages -->
+                  <span ng-show="(app.unreadMessages.length > 0)" class="badge badge-success">
+                    {{app.unreadMessages}}
+                  </span>
+                  <!-- end unread messages -->
                 </a>
               </li>
               <li data-match-route="/groups">
@@ -67,7 +71,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#profile/{{app.resources.uuid}}#profile"><i class="icon-user"></i> Profile</a></li>
+                  <li><a href="#profile"><i class="icon-user"></i> Profile</a></li>
                   <li><a href="#settings"><i class="icon-cog"></i> Settings</a></li>
                   <li class="divider"></li>
                   <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
@@ -94,11 +98,13 @@
     
     <!-- wrap -->
     <div id="wrap">
+
       <!-- container-fluid -->
       <div class="container-fluid">
         <div ng-view></div>
       </div>
       <!-- end container-fluid -->
+
       <div id="push"></div>
     </div>
     <!-- end wrap -->
@@ -107,13 +113,18 @@
     <!-- footer -->
     <div id="footer">
       <div class="container-fluid">
-        <!-- <div class="progress span1" ng-class="active" ng-cloak>
-            <div class="bar" style="width: 100%;"></div>
-        </div>
-        <span class="muted" style="margin-left: 10px; font-size: 12px">{{alertMessage}}</span> -->
 
+        <!-- copyrights -->
         <div id="copyrights">
-          <span class="muted"><small>Ask Community Systems, 2013<br><i>WebPaige v2.0.0</i></small></span>
+
+          <!-- ask & version -->
+          <span class="muted">
+            <small>
+              Ask Community Systems, 2013<br>
+              <i>WebPaige v2.0.0</i>
+            </small>
+          </span>
+          <!-- end ask & version -->
 
           <!-- download mobile app -->
           <div id="download-footer">
@@ -125,10 +136,13 @@
           <!-- end download mobile app -->
 
         </div>
+        <!-- end copyrights -->
 
+        <!-- general preloader -->
         <p class="muted" ng-show="loading">
           <img src="img/ajax-loader.gif"><small>Loading..</small>
         </p>
+        <!-- end general preloader -->
 
       </div>
     </div>
@@ -141,21 +155,21 @@
     <script src="libs/angular/angular.min.js"></script>
     <script src="libs/angular/angular-resource.min.js"></script>
     <script src="libs/bootstrap/bootstrap.min.js"></script>
-    <script src="libs/chaps/timeline/2.4.1/timeline.js"></script>
 
+    <!-- Either integrate angular-underscore library or don't use underscore in login -->
     <script src="libs/underscore/1.4.3/underscore-min.js"></script>
 
+    <script src="libs/chaps/timeline/2.4.1/timeline.js"></script>
     <script src="libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
     <script src="libs/bootstrap-timepicker/bootstrap-timepicker.js"></script>
-
     <script src="libs/daterangepicker/1.0.1/daterangepicker.js"></script>
-    <script src="libs/daterangepicker/sugar.min.js"></script>
 
-    <script src="js/databank.js"></script>
-    <script src="js/config.js"></script>
+    <!-- Lose sugar dependencies in daterangepicker plugin and remove this -->
+    <script src="libs/daterangepicker/sugar.min.js"></script>
 
     <script src="js/app.js"></script>
 
+    <!-- Use grunt to pre-compile all libraries -->
     <script src="js/controllers/login.js"></script>
     <script src="js/models/login.js"></script>
 
@@ -181,6 +195,7 @@
     <script src="js/services/services.js"></script>
     <script src="js/filters/filters.js"></script>
 
+    <!-- Move angularstrap into directives maybe? -->
     <script src="libs/angular-strap/0.6.4/angular-strap.min.js"></script>
 
     <script src="libs/raphael/0.5.1/raphael-min.js"></script>

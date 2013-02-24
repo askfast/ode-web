@@ -32,10 +32,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         method: 'POST',
         params: {action: 'changeState'}
       },
-      // delete: {
-      //   method: 'POST',
-      //   params: {action : 'changeState'}
-      // },
       delete : {
       	method: 'POST',
         params: {action: 'deleteQuestions'}
@@ -57,15 +53,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        * Save to localStorage
        */
       Storage.add('messages', angular.toJson(result));
-
-      // /**
-      //  * Set sender and receiver
-      //  */
-      // angular.forEach(result, function(message, index)
-      // {
-      //   message.sender = message.requester.split('personalagent/')[1].split('/')[0];
-      //   console.log('sender ->', message.requester.split('personalagent/')[1].split('/')[0]);
-      // });
 
       deferred.resolve(Messages.prototype.filter(result));
     });
@@ -213,9 +200,16 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
     /**
      * Set types
+     * 'paige' is default type
      */
     types.push('paige');
+    /**
+     * Set 'sms' if it's selected
+     */
     if (broadcast.sms) types.push('sms');
+    /**
+     * Set 'email' if its selected
+     */
     if (broadcast.email) types.push('email');
 
     /**
