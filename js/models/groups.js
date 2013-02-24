@@ -243,7 +243,8 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
        * Check for 'null' return from back-end
        * if group is empty
        */
-      //console.warn('result ->', angular.toJson(result));
+      // console.warn('result ->', angular.toJson(result));
+      
       /**
        * Add members list to localStorage
        */

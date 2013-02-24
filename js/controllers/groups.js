@@ -74,7 +74,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     var uuid = params.uuid;
     var view = $location.hash();
   };
-  
+
 
   /**
    * Set group
@@ -143,8 +143,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   function setView (hash)
   {
-    console.log('setting view to ->', hash);
-
     /**
      * Default view settings
      */

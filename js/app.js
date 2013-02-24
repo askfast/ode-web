@@ -257,21 +257,23 @@ WebPaige.
           controller: planboardCtrl,
           resolve: planboardCtrl.resolve    
       })
-      /**
-       * Message
-       */
-      .when('/messages/:messageId', {
-          templateUrl: 'js/views/messages.html', 
-          controller: messagesCtrl,
-          resolve: messagesCtrl.resolve   
-      })
+      // /**
+      //  * Message
+      //  */
+      // .when('/messages/:messageId', {
+      //     templateUrl: 'js/views/messages.html', 
+      //     controller: messagesCtrl,
+      //     resolve: messagesCtrl.resolve,
+      //     reloadOnSearch: false
+      // })
       /**
        * Messages
        */
       .when('/messages', {
           templateUrl: 'js/views/messages.html', 
           controller: messagesCtrl,
-          resolve: messagesCtrl.resolve   
+          resolve: messagesCtrl.resolve,
+          reloadOnSearch: false
       })
       /**
        * Groups

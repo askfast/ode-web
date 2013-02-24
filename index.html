@@ -41,6 +41,7 @@
           <a class="brand" href="#dashboard">WebPaige</a>
           <!-- nav-collapse -->
           <div class="nav-collapse collapse">
+
             <!-- main nav -->
             <ul class="nav">
               <li data-match-route="/dashboard">
@@ -50,13 +51,16 @@
                 <a href="#planboard">Planboard</a>
               </li>
               <li data-match-route="/messages">
-                <a href="#messages">Messages <span id="msgBubble" class="badge badge-success">{{app.unreadMessages}}</span></a>
+                <a href="#messages?uuid=009f0674-0eed-4282-8026-6046b28d6954#inbox">Messages 
+                  <span id="msgBubble" class="badge badge-success">{{app.unreadMessages}}</span>
+                </a>
               </li>
               <li data-match-route="/groups">
                 <a href="#groups">Groups</a>
               </li>
             </ul>
             <!-- end main nav -->
+
             <!-- user menu -->
             <ul class="nav pull-right">
               <li class="dropdown">
@@ -71,6 +75,7 @@
               </li>
             </ul>
             <!-- end user menu -->
+
           </div>
           <!-- end nav-collapse -->
         </div>

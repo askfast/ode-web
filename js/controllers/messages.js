@@ -6,8 +6,7 @@
 function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, Messages, Storage)
 {
   /**
-   * REMOVE
-   * this if no prototypes used
+   * Self this
    */
   var self = this;
 
@@ -53,6 +52,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   };
 
 
+
+
+
+
+
+
   $rootScope.app.unreadMessages = Messages.unreadCount();
   if($rootScope.app.unreadMessages == 0 ){
   	$('#msgBubble').hide();
@@ -62,59 +67,202 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
 
 
+
+
+
+
+
+
   /**
-   * Defaults for views
+   * Set origin container for returning back to origin box
    */
-  if ($route.current.params.messageId)
+   $scope.origin = 'inbox';
+
+
+  /**
+   * View setter
+   */
+  function setView (hash)
   {
     /**
-     * TODO
-     * Remove jquery hook later on, use reg. expression
-     * for url in data-match-role for bs-navbar
-     *
-     * Ugly fix for making messages link active
-     */
-    $("ul.nav li:nth-child(3)").addClass('active');
-    /**
-     * Set views
-     */
-    $scope.views = {
-      compose: false,
-      message: true,
-      default: false
-    };
-    /**
-     * Set message
-     */
-    $scope.message = Messages.find($route.current.params.messageId);
-    if($scope.message.state == "NEW"){
-    	// change the states to READ  for backend 
-    	angular.forEach($scope.messages.inbox, function(msg,index){
-    		if(msg.uuid == $scope.message.uuid){
-    			msg.state = "READ";
-    			Messages.changeState([msg.uuid],"READ");
-    			$rootScope.app.unreadMessages = $rootScope.app.unreadMessages-1;
-    			if($rootScope.app.unreadMessages == 0 ){
-				 	$('#msgBubble').hide();
-				}else{
-				  	$('#msgBubble').show();
-				}
-    		}
-    	});
-    }
-    
-  }
-  else
-  {
-    /**
-     * Set views
+     * Default view settings
      */
     $scope.views = {
       compose: false,
       message: false,
-      default: true
+      inbox:   false,
+      outbox:  false,
+      trash:   false
     };
+    /**
+     * Set correct one true
+     */
+    $scope.views[hash] = true;
   };
+
+
+  /**
+   * Switch between the views and set hash accordingly
+   */
+  $scope.setViewTo = function (hash)
+  {
+    /**
+     * Let angular know things are changing
+     */
+    $scope.$watch(hash, function()
+    {
+      /**
+       * Set hash
+       */
+      $location.hash(hash);
+      /**
+       * Set view intern
+       */
+      setView(hash);
+    });
+  };
+
+
+  /**
+   * Switch between the views and set hash accordingly
+   */
+  $scope.setViewTo = function (hash)
+  {
+    /**
+     * Let angular know things are changing
+     */
+    $scope.$watch($location.hash(), function()
+    {
+      /**
+       * Set hash
+       */
+      $location.hash(hash);
+      /**
+       * Set view intern
+       */
+      setView(hash);
+    });
+  };
+
+
+
+  /**
+   * If no params or hashes given in url
+   */
+  if (!$location.hash())
+  {
+    /**
+     * Set view
+     */
+    var view = 'inbox';
+    /**
+     * Adjust url
+     */
+    $location.hash('inbox');
+  }
+  else
+  {
+    /**
+     * If given use what's supplied
+     */
+    var view = $location.hash();
+  };
+
+
+  /**
+   * Set view
+   */
+  setView(view);
+
+    
+  /**
+   * Extract view action from url and set message view
+   */
+  if ($location.search().uuid)
+  {
+    setMessageView($location.search().uuid);
+  };
+
+
+  /**
+   * Set given group for view
+   */
+  function setMessageView (id)
+  {
+    /**
+     * Set view
+     */
+    setView('message');
+    /**
+     * Set hash
+     */
+    $scope.setViewTo('message');
+    /**
+     * Find message
+     */
+    $scope.message = Messages.find(id);
+  };
+
+
+  /**
+   * Request for a message
+   */
+  $scope.requestMessage = function (current, origin)
+  {
+    /**
+     * Set origin
+     */
+    $scope.origin = origin;
+    /**
+     * Set selected group for view
+     */
+    setMessageView(current);
+    /**
+     * Let angular know things are changing
+     */
+    $scope.$watch($location.search(), function()
+    {
+      /**
+       * Set hash
+       */
+      $location.search({
+        uuid: current
+      });
+    });
+  };
+
+
+
+
+
+  // /**
+  //  * Change to read if message not seen yet
+  //  */
+  // if($scope.message.state == "NEW")
+  // { 
+  // 	angular.forEach($scope.messages.inbox, function(msg,index)
+  //   {
+  // 		if(msg.uuid == $scope.message.uuid)
+  //     {
+  // 			msg.state = "READ";
+  // 			Messages.changeState([msg.uuid],"READ");
+
+  // 			$rootScope.app.unreadMessages = $rootScope.app.unreadMessages-1;
+
+  // 			if($rootScope.app.unreadMessages == 0 )
+  //       {
+		// 		 	$('#msgBubble').hide();
+		// 		}
+  //       else
+  //       {
+		// 		  $('#msgBubble').show();
+		// 		};
+
+  // 		}
+  // 	});
+  // };
+
+
 
 
   /**
@@ -122,25 +270,28 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.composeMessage = function()
   {
-    /**
-     * Set views
+    /** 
+     * Check on status
      */
     if ($scope.views.compose)
     {
-      $scope.views = {
-        compose: false,
-        message: false,
-        default: true
-      }; 
+      /**
+       * Close all
+       */
+      $scope.closeTabs();
     }
     else
     {
-      $scope.views = {
-        compose: true,
-        message: false,
-        default: false
-      };      
+      /**
+       * Reset inline form value
+       */
+      $scope.message = {};
+      /**
+       * Set views
+       */
+      $scope.setViewTo('inbox');
     };
+
   };
 
 
@@ -150,19 +301,24 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    * 
    * Reset views
    */
-  $scope.resetViews = function()
+  $scope.closeTabs = function()
   {
     /**
-     * Set views
+     * Reset message container
      */
-    $scope.views = {
-      compose: false,
-      message: false,
-      default: true
-    };    
-    // console.warn('location ->', $location.replace(), $location);
-    // $location.$$rewriteAppUrl('/messages');
-    $location.path('/messages');
+    $scope.message = {};
+    /**
+     * Remove uuid from url
+     */
+    $location.search({});
+    /**
+     * Set view to inbox
+     */
+    setView($scope.origin);
+    /**
+     * Set hash
+     */
+    $scope.setViewTo($scope.origin);
   };
 
 
@@ -510,7 +666,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          * Set preloader
          */
         $rootScope.loading = false;
-        $scope.resetViews();
+        $scope.closeTabs();
       });
     });
   };
@@ -525,17 +681,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 messagesCtrl.resolve = {
   data: function ($route, Messages, Storage) 
   {
-    //if ($route.current.params.messageId)
-    //{
-    //  return Messages.filter(Messages.local());
-    //}
-    //else{
-      return Messages.query();
-    //}
+    return Messages.query();
   }
 };
 
 
 
 
-messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', '$route', 'data', 'Messages', 'Storage'];
+messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', 
+                        '$route', 'data', 'Messages', 'Storage'];

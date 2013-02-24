@@ -2,10 +2,13 @@
   <h2>Messages</h2>
   <div class="btn-group pull-right">
     <button type="submit" 
-            ng-click="composeMessage()" 
+            ng-click="composeMessage(); setViewTo('compose')" 
             class="btn btn-success {{(views.compose==true) && 'active'}}">Compose a message</button>
   </div>
 </div>
+
+
+<!-- {{views}} -->
 
 
 <!-- inboxes -->
@@ -18,31 +21,41 @@
       <li class="{{(views.compose==true) && 'active'}}" ng-show="views.compose">
         <a href="#composeTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('composeTab')"><span class="entypo">&#9998;</span> Compose</a>
+            ng-click="fixTabHeight('composeTab'); setViewTo('compose')">
+          <span class="entypo">&#9998;</span> Compose
+        </a>
       </li>
 
       <li class="{{(views.message==true) && 'active'}}"  ng-show="views.message">
         <a href="#viewTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('viewTab')"><span class="entypo">&#128196;</span> Message</a>
+            ng-click="fixTabHeight('viewTab'); setViewTo('view')">
+          <span class="entypo">&#128196;</span> Message
+        </a>
       </li>
 
-      <li class="{{(views.default==true) && 'active'}}">
+      <li class="{{(views.inbox==true) && 'active'}}">
         <a href="#inboxTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('inboxTab'); resetViews()"><span class="entypo">&#128229;</span> Inbox</a>
+            ng-click="fixTabHeight('inboxTab'); resetViews(); setViewTo('inbox')">
+          <span class="entypo">&#128229;</span> Inbox
+        </a>
       </li>
 
-      <li class="{{(views.compose==true ) && 'inactive'}}">
+      <li class="{{(views.outbox==true ) && 'active'}}">
         <a href="#outboxTab"   
             data-toggle="tab"
-            ng-click="fixTabHeight('outboxTab'); resetViews()"><span class="entypo">&#128228;</span> Outbox</a>
+            ng-click="fixTabHeight('outboxTab'); resetViews(); setViewTo('outbox')">
+          <span class="entypo">&#128228;</span> Outbox
+        </a>
       </li>
 
-      <li class="{{(views.compose==true ) && 'inactive'}}">
+      <li class="{{(views.trash==true ) && 'active'}}">
         <a href="#trashTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('trashTab'); resetViews()"><span class="entypo">&#9749;</span> Trash</a>
+            ng-click="fixTabHeight('trashTab'); resetViews(); setViewTo('trash')">
+          <span class="entypo">&#9749;</span> Trash
+        </a>
       </li>
 
     </ul>
@@ -52,6 +65,10 @@
     <!-- tabs content -->
     <div class="tab-content">
 
+
+
+
+
       
       <!-- composeTab -->
       <div class="tab-pane {{(views.compose==true) && 'active'}}" id="composeTab" ng-show="views.compose">
@@ -59,7 +76,7 @@
         <div class="tab-header">
           <h3 class="pull-left">Compose message</h3>
           <button type="submit" 
-                  ng-click="resetViews()" 
+                  ng-click="(origin=='inbox'); closeTabs()" 
                   class="btn pull-right">Close</button>
         </div>
         <hr>
@@ -130,6 +147,11 @@
       </div>
       <!-- end composeTab -->
 
+
+
+
+
+
       
       <!-- viewTab -->
       <div class="tab-pane {{(views.message==true) && 'active'}}" id="viewTab" ng-show="views.message">
@@ -139,13 +161,8 @@
 
           <div class="pull-right">
             <button type="button" 
-                    ng-click="resetViews()" 
-                    class="btn">Discard</button>
-            <button type="button" 
-                    ng-click="reply(message)"
-                    class="btn btn-success"><i class="icon-share-alt icon-white"></i> Reply Message</button>
-            <button type="button" 
-                    class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete Message</button>
+                    ng-click="closeTabs()" 
+                    class="btn">Close</button>
           </div>
         </div>
         <hr>
@@ -167,13 +184,29 @@
         </dl>
         <!-- end message view -->
 
+        <form>
+          <fieldset>
+            <div class="form-actions">
+              <button type="button" 
+                      ng-click="reply(message)"
+                      class="btn btn-success">Reply</button>
+              <button type="button" 
+                      ng-click="removeMessage(message.uuid)"
+                      class="btn btn-danger">Delete</button>
+            </div>
+
+          </fieldset>
+        </form>
 
       </div>
-      <!-- end composeTab -->
+      <!-- end viewTab -->
+
+
+
 
 
       <!-- inboxTab -->
-      <div class="tab-pane {{(views.default==true) && 'active'}}" id="inboxTab" ng-hide="views.compose">
+      <div class="tab-pane {{(views.inbox==true) && 'active'}}" id="inboxTab">
 
         <div class="tab-header">
           <h3 class="pull-left">Inbox</h3>
@@ -209,7 +242,7 @@
                 </td>
                 <td><span class="label label-warning" ng-show="(message.state=='NEW')">New</span></td>
                 <td>{{message.requester|convertEve|convertUserIdToName}}</td>
-                <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
+                <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime|nicelyDate}}</td>
                 <td>
                   <div class="pull-right">
@@ -242,8 +275,13 @@
       </div>
       <!-- end inboxTab -->
 
+
+
+
+
+
       <!-- outboxTab -->
-      <div class="tab-pane {{(views.compose==true) && 'inactive'}}" id="outboxTab" >
+      <div class="tab-pane {{(views.outbox==true) && 'active'}}" id="outboxTab">
 
         <div class="tab-header">
           <h3 class="pull-left">Outbox</h3>
@@ -279,7 +317,7 @@
                 <td>
                   <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
                 </td>
-                <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
+                <td><a ng-click="requestMessage(message.uuid,'outbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime|nicelyDate}}</td>
                 <td>
                   <div class="pull-right">
@@ -309,8 +347,11 @@
       <!-- end outboxTab -->
 
 
+
+
+
       <!-- trashTab -->
-      <div class="tab-pane {{(views.compose==true) && 'inactive'}}" id="trashTab" ng-hide="views.compose">
+      <div class="tab-pane {{(views.trash==true) && 'active'}}" id="trashTab">
 
         <div class="tab-header">
           <h3 class="pull-left">Trash</h3>
@@ -356,7 +397,7 @@
                 <td>
                   <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
                 </td>
-                <td><a href="#/messages/{{message.uuid}}">{{message.subject}}</a></td>
+                <td><a ng-click="requestMessage(message.uuid, 'trash')">{{message.subject}}</a></td>
                 <td>{{message.creationTime|nicelyDate}}</td>
                 <td>
                   <div class="pull-right">
@@ -385,6 +426,9 @@
 
       </div>
       <!-- end trashTab -->
+
+
+
 
     </div>
     <!-- end tabs content -->
