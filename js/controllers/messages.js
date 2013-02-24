@@ -180,6 +180,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Find message
      */
     $scope.message = Messages.find(id);
+
     /**
      * Change to read if message not seen yet
      * Check only in inbox because other box messages
@@ -196,13 +197,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       {
         if (message.uuid == $scope.message.uuid)
         {
-          /**
-           * TODO
-           * Still needed?
-           * 
-           * Set read state
-           */
-          // message.state = "READ";
           /**
            * Trigger change state call
            */

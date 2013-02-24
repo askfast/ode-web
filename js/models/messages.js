@@ -82,7 +82,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       outbox: [],
       trash: []
     };
-    
+
     /**
      * Loop through messages
      */
@@ -334,48 +334,49 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
     }, function (result) 
     {
       /**
-       * Change message state locally as well
-       * if it is READ
-       */
-      if (state == 'READ')
-      {
-        /**
-         * Get messages
-         */
-        var messages = angular.fromJson(Storage.get('messages'));
-        /**
-         * Loop through messages
-         */
-        angular.forEach(messages, function (message, index)
-        {
-          /**
-           * Loop through given array of ids
-           */
-          angular.forEach(ids, function (id, i)
-          {
-            /**
-             * Catches
-             */
-            if (message.uuid == id)
-            {
-              message.state = 'READ';
-            }
-          });
-        });
-        /**
-         * Store back in localStorage
-         */
-        Storage.add(angular.toJson('messages', messages));
-        /**
-         * Update unread message counter
-         */
-        Messages.prototype.unreadCount();
-      };
-      /**
        * Return promised
        */
       deferred.resolve(result);
     });
+
+    /**
+     * Change message state locally as well
+     * if it is READ
+     */
+    if (state == 'READ')
+    {
+      /**
+       * Get messages
+       */
+      var messages = angular.fromJson(Storage.get('messages'));
+      /**
+       * Loop through messages
+       */
+      angular.forEach(messages, function (message, index)
+      {
+        /**
+         * Loop through given array of ids
+         */
+        angular.forEach(ids, function (id, i)
+        {
+          /**
+           * Catches
+           */
+          if (message.uuid == id)
+          {
+            message.state = 'READ';
+          }
+        });
+      });
+      /**
+       * Store back in localStorage
+       */
+      Storage.add(angular.toJson('messages', messages));
+      /**
+       * Update unread message counter
+       */
+      Messages.prototype.unreadCount();
+    };
 
   	return deferred.promise;
   };
