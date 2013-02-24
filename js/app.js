@@ -303,10 +303,14 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
    * Set important info back if refreshed
    */
   $rootScope.app = $rootScope.app || {};
+  
+
   /**
    * Set up resources
    */
   $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+
+
   /**
    * Count unread messages
    */
@@ -396,7 +400,36 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
   };
 
 
+  // /**
+  //  * TODO
+  //  * Find better ways of doing this!
+  //  *
+  //  * Position footer always at the bottom
+  //  */
+  // $(window).scroll(function()
+  // {
+  //   $('#footer').css({
+  //     position: 'absolute',
+  //     bottom: 0
+  //   });
+  // });
+
+
 }]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
