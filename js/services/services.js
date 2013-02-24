@@ -190,9 +190,6 @@ factory('Dater', function ($rootScope, Storage)
      * TODO
      * Fix it later..
      * Not beautiful but works!!
-     * 
-     * @param  {[type]} dates [description]
-     * @return {[type]}       [description]
      */
     convertRangeDates: function(dates)
     {
@@ -213,8 +210,6 @@ factory('Dater', function ($rootScope, Storage)
      * place in DATE service
      * 
      * Make time readable for user
-     * @param  {[type]} time [description]
-     * @return {[type]}      [description]
      */
     readableTime: function(time, format)
     {
@@ -227,8 +222,6 @@ factory('Dater', function ($rootScope, Storage)
      * place in DATE service
      * 
      * Make date readable for user
-     * @param  {[type]} date [description]
-     * @return {[type]}      [description]
      */
     readableDate: function(date, format)
     {
@@ -237,7 +230,6 @@ factory('Dater', function ($rootScope, Storage)
 
     /**
      * Get the current month
-     * @return {[type]} [description]
      */
     getThisMonth: function()
     {
@@ -246,7 +238,6 @@ factory('Dater', function ($rootScope, Storage)
 
     /**
      * Get the current year
-     * @return {[type]} [description]
      */
     getThisYear: function()
     {
@@ -256,7 +247,6 @@ factory('Dater', function ($rootScope, Storage)
     /**
      * Get begin and end timestamps of months
      * in the current year
-     * @return {[type]} [description]
      */
     getMonthTimeStamps: function()
     {
@@ -290,7 +280,6 @@ factory('Dater', function ($rootScope, Storage)
      * Finish it!
      * 
      * Get begin and end timestamps of weeks
-     * @return {[type]} [description]
      */
     getWeekTimeStamps: function()
     {
@@ -346,9 +335,6 @@ factory('Dater', function ($rootScope, Storage)
     /**
      * TODO
      * Finish it!
-     * 
-     * Get begin and end timestamps of weeks
-     * @return {[type]} [description]
      */
     getDayTimeStamps: function()
     {

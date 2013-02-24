@@ -4,88 +4,60 @@
 /**
  * Dashboard Controller
  */
-function dashboardCtrl($scope, $rootScope, data)
+function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
 {
+  /**
+   * Get unread messages
+   */
 	$scope.messages = data;
 
-
-
+  $scope.loadingPies = true;
+  /**
+   * Produce pie charts for groups
+   * for current week
+   */
+  Dashboard.pies()
+  .then(function (pies)
+  {
+    $scope.loadingPies = false;
+    /**
+     * Set pies data
+     */
+    $scope.pies = pies;
+  })
+  .then( function (result)
+  {
+    /**
+     * TODO 
+     * Look for a better way to handle with it
+     * Wait a bit for angular to produce dom
+     */
+    setTimeout( function() 
+    {
       /**
-       * Clean group pie chart holder
+       * Loop through pie statistics data
        */
-      document.getElementById("weeklyPie1").innerHTML = '';
-      /**
-       * Init vars
-       */
-      var ratios = [30, 40, 30];
-      /**
-       * Pie chart it baby!
-       */
-      var r = Raphael("weeklyPie1"),
-          pie = r.piechart(40, 40, 40, ratios);
-
-
-      /**
-       * Clean group pie chart holder
-       */
-      document.getElementById("weeklyPie2").innerHTML = '';
-      /**
-       * Init vars
-       */
-      var ratios = [30, 40, 30];
-      /**
-       * Pie chart it baby!
-       */
-      var r = Raphael("weeklyPie2"),
-          pie = r.piechart(40, 40, 40, ratios);
-
-
-      /**
-       * Clean group pie chart holder
-       */
-      document.getElementById("weeklyPie3").innerHTML = '';
-      /**
-       * Init vars
-       */
-      var ratios = [30, 40, 30];
-      /**
-       * Pie chart it baby!
-       */
-      var r = Raphael("weeklyPie3"),
-          pie = r.piechart(40, 40, 40, ratios);
-
-
-      /**
-       * Clean group pie chart holder
-       */
-      document.getElementById("weeklyPie4").innerHTML = '';
-      /**
-       * Init vars
-       */
-      var ratios = [30, 40, 30];
-      /**
-       * Pie chart it baby!
-       */
-      var r = Raphael("weeklyPie4"),
-          pie = r.piechart(40, 40, 40, ratios);
-
-
-      /**
-       * Clean group pie chart holder
-       */
-      document.getElementById("weeklyPie5").innerHTML = '';
-      /**
-       * Init vars
-       */
-      var ratios = [30, 40, 30];
-      /**
-       * Pie chart it baby!
-       */
-      var r = Raphael("weeklyPie5"),
-          pie = r.piechart(40, 40, 40, ratios);
-
-
-
+      angular.forEach($scope.pies, function (pie, index)
+      {
+        /**
+         * Clean group pie chart holder
+         */
+        document.getElementById('weeklyPie-' + pie.id).innerHTML = '';
+        /**
+         * Quick fix. If ratio is 0 than pie chart is not displayed at all
+         */
+        var ratios = [];
+        if (pie.ratios.more != 0) ratios.push(pie.ratios.more);
+        if (pie.ratios.even != 0) ratios.push(pie.ratios.even);
+        if (pie.ratios.less != 0) ratios.push(pie.ratios.less);
+        /**
+         * Pie chart it baby!
+         */
+        var r = Raphael('weeklyPie-' + pie.id),
+            pie = r.piechart(40, 40, 40, ratios);
+      });
+    }, 100);
+  });
 	
 };
 
@@ -96,15 +68,27 @@ function dashboardCtrl($scope, $rootScope, data)
 dashboardCtrl.resolve = {
   data: function ($rootScope, $config, Messages) 
   {
-      $rootScope.app.unreadMessages = Messages.unreadCount();
-      if($rootScope.app.unreadMessages == 0 ){
-          $('#msgBubble').hide();
-      }else{
-          $('#msgBubble').show();
-      }
-  	  return Messages.unread();
+    /**
+     * Updating unread messages counter can be better made in
+     * unreadCount function in Messages model, after counting
+     * it can update rootScope value for it
+     */
+    $rootScope.app.unreadMessages = Messages.unreadCount();
+    /**
+     * [unreadMessages description]
+     * @type {[type]}
+     */
+    if($rootScope.app.unreadMessages == 0)
+    {
+      $('#msgBubble').hide();
+    }
+    else
+    {
+      $('#msgBubble').show();
+    };
+    return Messages.unread();
   }
 }
 
 
-dashboardCtrl.$inject = ['$scope', '$rootScope', 'data'];
+dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'data', 'Dashboard', 'Slots'];

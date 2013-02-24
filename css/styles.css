@@ -688,6 +688,10 @@ label {
   font-size: 13px;
 }
 
+#new-messages ul li small.muted {
+  font-size: 11px;
+}
+
 
 #news {
   

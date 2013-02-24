@@ -15,74 +15,20 @@
       <h4>This Week</h4>
       <hr>
 
-      <ul class="weekly">
+      <p ng-show="loadingPies">Loading pie charts..</p>
 
-        <li>
-          <div id="weeklyPie1" class="weekly-pie"></div>
-          <div class="weekly-pie-info">
-            <h3>Schippers</h3>
-            <hr>
-            <h5>30%</h5> 
-            <small class="muted">more</small>, 
-            <h5>40%</h5> 
-            <small class="muted">even</small>, 
-            <h5>30%</h5> 
-            <small class="muted">less</small>
-          </div>
-        </li>
+      <ul class="weekly" ng-hide="loadingPies">
 
-        <li>
-          <div id="weeklyPie2" class="weekly-pie"></div>
+        <li ng-repeat="pie in pies">
+          <div id="weeklyPie-{{pie.id}}" class="weekly-pie"></div>
           <div class="weekly-pie-info">
-            <h3>Schippers</h3>
+            <h3>{{pie.name}}</h3>
             <hr>
-            <h5>30%</h5> 
+            <h5>{{pie.ratios.more}}%</h5> 
             <small class="muted">more</small>, 
-            <h5>40%</h5> 
+            <h5>{{pie.ratios.even}}%</h5> 
             <small class="muted">even</small>, 
-            <h5>30%</h5> 
-            <small class="muted">less</small>
-          </div>
-        </li>
-
-        <li>
-          <div id="weeklyPie3" class="weekly-pie"></div>
-          <div class="weekly-pie-info">
-            <h3>Schippers</h3>
-            <hr>
-            <h5>30%</h5> 
-            <small class="muted">more</small>, 
-            <h5>40%</h5> 
-            <small class="muted">even</small>, 
-            <h5>30%</h5> 
-            <small class="muted">less</small>
-          </div>
-        </li>
-
-        <li>
-          <div id="weeklyPie4" class="weekly-pie"></div>
-          <div class="weekly-pie-info">
-            <h3>Schippers</h3>
-            <hr>
-            <h5>30%</h5> 
-            <small class="muted">more</small>, 
-            <h5>40%</h5> 
-            <small class="muted">even</small>, 
-            <h5>30%</h5> 
-            <small class="muted">less</small>
-          </div>
-        </li>
-
-        <li>
-          <div id="weeklyPie5" class="weekly-pie"></div>
-          <div class="weekly-pie-info">
-            <h3>Schippers</h3>
-            <hr>
-            <h5>30%</h5> 
-            <small class="muted">more</small>, 
-            <h5>40%</h5> 
-            <small class="muted">even</small>, 
-            <h5>30%</h5> 
+            <h5>{{pie.ratios.less}}%</h5> 
             <small class="muted">less</small>
           </div>
         </li>
@@ -121,12 +67,12 @@
             <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo 
                 sit amet risus.</p>
           </li>
-          <li>
+          <!-- <li>
             <h5>Donec id elit non mi porta</h5>
             <span class="muted"><i>24-02-2013 15:23</i></span>
             <p>Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed 
                 odio dui.</p>
-          </li>
+          </li> -->
         </ul>
       </div>
 

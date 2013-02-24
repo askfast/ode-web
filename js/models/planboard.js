@@ -239,6 +239,81 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   };
 
 
+
+
+  /**
+   * Get group aggs for pie charts
+   */
+  Slots.prototype.pie = function (options) 
+  {
+    /**
+     * Default params
+     */
+    var deferred = $q.defer();    
+
+    /**
+     * Get group aggs for ratios
+     */
+    Aggs.query({
+      id: options.id,
+      start: options.start,
+      end: options.end
+    }, function (result)
+    {
+      /**
+       * Produce pie statistics for group
+       */
+      var stats = {
+            less: 0,
+            even: 0,
+            more: 0        
+          },
+          total = result.length;
+      /**
+       * Loop through results
+       */
+      angular.forEach(result, function(slot, index)
+      {
+        /**
+         * Calculate total absence
+         */
+        if (slot.diff < 0)
+        {
+          stats.less++;
+        }
+        else if (slot.diff == 0)
+        {
+          stats.even++;
+        }
+        else
+        {
+          stats.more++;
+        };
+      });
+      /**
+       * Calculate ratios
+       */
+      var ratios = {
+        less: Math.round((stats.less / total) * 100),
+        even: Math.round((stats.even / total) * 100),
+        more: Math.round((stats.more / total) * 100)
+      };
+      /**
+       * Return promised agg
+       */
+      deferred.resolve({
+        id: options.id,
+        name: options.name,
+        ratios: ratios
+      });      
+    });
+
+    return deferred.promise;
+  };
+
+
+
+
   /**
    * Get slot bundels; user, group aggs and members
    */
