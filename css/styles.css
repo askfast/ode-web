@@ -574,6 +574,152 @@ label {
 
 
 
+
+
+
+
+
+
+
+
+
+.greetings {
+  margin: 25px 0;
+}
+
+
+#weekly-pies {
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+
+#weekly-pies ul.weekly {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+
+#weekly-pies ul.weekly li {
+  height: auto;
+  width: 28%;
+  margin: 0 2% 20px 2%;
+  display: inline;
+  float: left;
+  min-width: 270px;
+}
+
+.weekly-pie {
+  height: 100px;
+  width: 80px;
+  float: left;
+  display: inline;
+  margin-right: 20px;
+}
+
+.weekly-pie-info {
+  display: block;
+  overflow: hidden;
+  float: left;
+}
+
+.weekly-pie-info hr {
+  margin: 0 0 10px 0;
+}
+
+.weekly-pie-info h3 {
+  margin: 0;
+  margin-top: -10px;
+  display: inline;
+  font-size: 14px;
+  padding: 0;
+}
+
+.weekly-pie-info {
+  margin-bottom: 10px;
+}
+
+.weekly-pie-info h4 {
+  margin: 0;
+  font-size: 12px;
+}
+
+.weekly-pie-info h5 {
+  font-size: 11px;
+  display: inline;
+}
+
+
+
+
+#announcements {
+  overflow: hidden;
+}
+
+#announcements .announcement {
+  display: block;
+  margin-bottom: 30px;
+}
+
+
+#new-messages {
+  overflow: hidden;
+}
+
+#new-messages ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#new-messages ul li {
+  margin-bottom: 15px;
+}
+
+#new-messages ul li h5 {
+  font-weight: normal;
+  margin-bottom: 2px;
+}
+
+#new-messages ul li span.sender {
+  display: block;
+  font-size: 13px;
+}
+
+
+#news {
+  
+}
+
+#news ul {
+ list-style-type: none; 
+ margin: 0;
+ padding: 0;
+}
+
+#news ul li {
+  margin-bottom: 20px;
+}
+
+#news ul li h5 {
+  margin: 0;
+}
+
+#news ul li span {
+  font-size: 11px;
+}
+
+#news ul li p {
+  font-size: 12px;
+}
+
+
+
+
+
+
 /*.meny {
   display: none;
   padding: 20px;

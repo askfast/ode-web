@@ -7,6 +7,85 @@
 function dashboardCtrl($scope, $rootScope, data)
 {
 	$scope.messages = data;
+
+
+
+      /**
+       * Clean group pie chart holder
+       */
+      document.getElementById("weeklyPie1").innerHTML = '';
+      /**
+       * Init vars
+       */
+      var ratios = [30, 40, 30];
+      /**
+       * Pie chart it baby!
+       */
+      var r = Raphael("weeklyPie1"),
+          pie = r.piechart(40, 40, 40, ratios);
+
+
+      /**
+       * Clean group pie chart holder
+       */
+      document.getElementById("weeklyPie2").innerHTML = '';
+      /**
+       * Init vars
+       */
+      var ratios = [30, 40, 30];
+      /**
+       * Pie chart it baby!
+       */
+      var r = Raphael("weeklyPie2"),
+          pie = r.piechart(40, 40, 40, ratios);
+
+
+      /**
+       * Clean group pie chart holder
+       */
+      document.getElementById("weeklyPie3").innerHTML = '';
+      /**
+       * Init vars
+       */
+      var ratios = [30, 40, 30];
+      /**
+       * Pie chart it baby!
+       */
+      var r = Raphael("weeklyPie3"),
+          pie = r.piechart(40, 40, 40, ratios);
+
+
+      /**
+       * Clean group pie chart holder
+       */
+      document.getElementById("weeklyPie4").innerHTML = '';
+      /**
+       * Init vars
+       */
+      var ratios = [30, 40, 30];
+      /**
+       * Pie chart it baby!
+       */
+      var r = Raphael("weeklyPie4"),
+          pie = r.piechart(40, 40, 40, ratios);
+
+
+      /**
+       * Clean group pie chart holder
+       */
+      document.getElementById("weeklyPie5").innerHTML = '';
+      /**
+       * Init vars
+       */
+      var ratios = [30, 40, 30];
+      /**
+       * Pie chart it baby!
+       */
+      var r = Raphael("weeklyPie5"),
+          pie = r.piechart(40, 40, 40, ratios);
+
+
+
 	
 };
 

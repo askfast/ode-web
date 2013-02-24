@@ -1,44 +1,140 @@
-<div class="page-header">
+<div class="well well-large greetings">
   <h2>Welcome, {{app.resources.name}}</h2>
 </div>
-
-<p class="muted" style="margin-bottom:30px"></p>
 
 
 <!-- row-fluid -->
 <div class="row-fluid">
+
 	<!-- span12 -->
   <div class="span12">
 
+    
+    <div id="weekly-pies" class="span8">
 
-    <div class="span4">
-      <h4>Unread Messages</h4>
+      <h4>This Week</h4>
       <hr>
 
-      <p ng-hide="(messages.length > 0)">There are no messages unread.</p>
+      <ul class="weekly">
 
-      <ul style="list-style: none">
-      	<li ng-repeat="message in messages">
-          <a href="#/messages?uuid={{message.uuid}}#message">{{message.subject | noTitle}}</a> 
-          van <a href="#/profile/{{message.requester|convertEve}}/view">{{message.requester|convertEve|convertUserIdToName}}</a>
-          <br><small class="muted">{{message.creationTime | nicelyDate}}</small>  
-      	</li>
+        <li>
+          <div id="weeklyPie1" class="weekly-pie"></div>
+          <div class="weekly-pie-info">
+            <h3>Schippers</h3>
+            <hr>
+            <h5>30%</h5> 
+            <small class="muted">more</small>, 
+            <h5>40%</h5> 
+            <small class="muted">even</small>, 
+            <h5>30%</h5> 
+            <small class="muted">less</small>
+          </div>
+        </li>
+
+        <li>
+          <div id="weeklyPie2" class="weekly-pie"></div>
+          <div class="weekly-pie-info">
+            <h3>Schippers</h3>
+            <hr>
+            <h5>30%</h5> 
+            <small class="muted">more</small>, 
+            <h5>40%</h5> 
+            <small class="muted">even</small>, 
+            <h5>30%</h5> 
+            <small class="muted">less</small>
+          </div>
+        </li>
+
+        <li>
+          <div id="weeklyPie3" class="weekly-pie"></div>
+          <div class="weekly-pie-info">
+            <h3>Schippers</h3>
+            <hr>
+            <h5>30%</h5> 
+            <small class="muted">more</small>, 
+            <h5>40%</h5> 
+            <small class="muted">even</small>, 
+            <h5>30%</h5> 
+            <small class="muted">less</small>
+          </div>
+        </li>
+
+        <li>
+          <div id="weeklyPie4" class="weekly-pie"></div>
+          <div class="weekly-pie-info">
+            <h3>Schippers</h3>
+            <hr>
+            <h5>30%</h5> 
+            <small class="muted">more</small>, 
+            <h5>40%</h5> 
+            <small class="muted">even</small>, 
+            <h5>30%</h5> 
+            <small class="muted">less</small>
+          </div>
+        </li>
+
+        <li>
+          <div id="weeklyPie5" class="weekly-pie"></div>
+          <div class="weekly-pie-info">
+            <h3>Schippers</h3>
+            <hr>
+            <h5>30%</h5> 
+            <small class="muted">more</small>, 
+            <h5>40%</h5> 
+            <small class="muted">even</small>, 
+            <h5>30%</h5> 
+            <small class="muted">less</small>
+          </div>
+        </li>
       </ul>
-      
+
     </div>
+    
+    <div id="announcements" class="span4">
+
+      <div id="new-messages" class="announcement">
+        <h4>New Messages</h4>
+        <hr>
+
+        <p ng-hide="(messages.length > 0)">There are no messages unread.</p>
+
+        <ul>
+          <li ng-repeat="message in messages">
+            <h5><a href="#/messages?uuid={{message.uuid}}#message">{{message.subject | noTitle}}</a></h5>
+            <span class="sender">{{message.requester|convertEve|convertUserIdToName}}</span>
+            <small class="muted"><i>{{message.creationTime | nicelyDate}}</i></small>  
+          </li>
+        </ul>
+
+        <a href="#/messages/#inbox" class="btn btn-small pull-right">Go to inbox</a>
+      </div>
 
 
-    <div class="span4">
-      <h4>News</h4>
-      <hr>
-      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus 
-      ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo 
-      sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed 
-      odio dui.</p>
+      <div id="news" class="announcement">
+        <h4>Announcements</h4>
+        <hr>
+
+        <ul>
+          <li>
+            <h5>Fusce dapibus</h5>
+            <span class="muted"><i>24-02-2013 15:23</i></span>
+            <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo 
+                sit amet risus.</p>
+          </li>
+          <li>
+            <h5>Donec id elit non mi porta</h5>
+            <span class="muted"><i>24-02-2013 15:23</i></span>
+            <p>Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed 
+                odio dui.</p>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
 
   </div>
   <!-- end span12 -->
+
 </div>
 <!-- end row-fluid -->
