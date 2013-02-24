@@ -240,10 +240,17 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     Members.query({id: id}, function (result) 
     {
       /**
+       * Check for 'null' return from back-end
+       * if group is empty
+       */
+      //console.warn('result ->', angular.toJson(result));
+      /**
        * Add members list to localStorage
        */
-      Storage.add(id, angular.toJson(result));      
-
+      Storage.add(id, angular.toJson(result));
+      /**
+       * Return it baby!
+       */
       deferred.resolve({
         id: id,
         data: result
@@ -317,7 +324,16 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
         id: $rootScope.app.resources.uuid
       }, group, function (result) 
       {
-        deferred.resolve(angular.fromJson(result));
+        /**
+         * Group save call returns only uuid and that is parsed as json
+         * by angular, this is a fix for converting returned object to plain string
+         */
+        var returned = '';
+        angular.forEach(result, function (chr, i)
+        {
+          returned += chr;
+        });
+        deferred.resolve(returned);
       }); 
     };
 
@@ -409,7 +425,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
          */
         if (member.uuid === id)
         {
-          memberGroups.push(group.name);
+          memberGroups.push({
+            uuid: group.uuid,
+            name: group.name
+          });
         }
       });
     });

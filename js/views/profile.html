@@ -48,7 +48,7 @@
     <!-- tabs content -->
     <div class="tab-content">
 
-      
+
 
       
       <!-- profileTab -->
@@ -64,7 +64,11 @@
         <!-- profile info -->
         <dl>
           <dt>User Groups</dt>
-            <dd>{{groups}}</dd>
+            <dd>
+              <span ng-repeat="group in groups">
+                <a href="#/groups?uuid={{group.uuid}}#view">{{group.name}}</a>,
+              </span>
+          </dd>
           <dt>Role</dt>
             <dd>{{data.resources.role|translateRole}}</dd>
           <dt>Email</dt>

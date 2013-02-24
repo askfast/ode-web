@@ -1508,7 +1508,11 @@ planboardCtrl.prototype = {
        */
       if (data.aggs.division == 'all' || data.aggs.division == undefined)
       {
-        var name = groups[data.aggs.id];
+        var name = '<a href="#/groups?uuid=' + 
+                    data.aggs.id + 
+                    '#view">' +
+                    groups[data.aggs.id] +
+                    '</a>';
       }
       else
       {
@@ -1526,7 +1530,11 @@ planboardCtrl.prototype = {
         /**
          * Set division in the name
          */
-        var name = groups[data.aggs.id] + 
+        var name =  '<a href="#/groups?uuid=' + 
+                    data.aggs.id + 
+                    '#view">' +
+                    groups[data.aggs.id] +
+                    '</a>' + 
                     '<span class="label">' + 
                     label + 
                     '</span>';

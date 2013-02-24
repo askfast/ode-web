@@ -52,12 +52,16 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     email: false
   };
 
+
   $rootScope.app.unreadMessages = Messages.unreadCount();
   if($rootScope.app.unreadMessages == 0 ){
   	$('#msgBubble').hide();
   }else{
   	$('#msgBubble').show();
   }
+
+
+
   /**
    * Defaults for views
    */

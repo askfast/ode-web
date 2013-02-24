@@ -1,6 +1,7 @@
 <div class="page-header">
-  <h2 ng-hide="views.add">{{group.name}}</h2>
+  <h2 ng-hide="views.add || views.member">{{group.name}}</h2>
   <h2 ng-show="views.add">New Group</h2>
+  <h2 ng-show="views.member">New Member</h2>
 
   <!-- groups buttons -->
   <div class="btn-group pull-right">
@@ -134,7 +135,7 @@
           <fieldset>
             
             <div class="control-group">
-              <label class="control-label">Group Name</label>
+              <label class="control-label">Name</label>
               <div class="controls">
                 <input type="text" 
                     class="span4" 
@@ -153,7 +154,7 @@
         <!-- end group form -->
 
     </div>
-    <!-- end add / edit group tab -->
+    <!-- end add group tab -->
 
 
 
@@ -179,7 +180,7 @@
           <fieldset>
             
             <div class="control-group">
-              <label class="control-label">Group Name</label>
+              <label class="control-label">Name</label>
               <div class="controls">
                 <input type="text" 
                     class="span4" 
@@ -211,7 +212,7 @@
 
         <div class="tab-header">
 
-          <h3 class="pull-left">New Member</h3>
+          <h3 class="pull-left">Register Member</h3>
 
           <button type="button" 
                   ng-click="closeTabs()" 
@@ -394,7 +395,7 @@
 
 
 
-    <!-- group tabs -->
+    <!-- group tab -->
     <div  class="tab-pane {{(views.view==true) && 'active'}}"
           id="groupTab">
 
@@ -415,7 +416,7 @@
 
         <div class="pull-right">
           <button type="button" 
-                  ng-click="fixTabHeight('addEditGroupTab'); editGroup(group)" 
+                  ng-click="fixTabHeight('editGroupTab'); editGroup(group)" 
                   class="btn"><i class="icon-edit"></i> Edit Group</button>
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
@@ -473,9 +474,7 @@
         </span>
       </div>
     </div>
-    <!-- end group tabs -->
-
-
+    <!-- end group tab -->
 
 
 

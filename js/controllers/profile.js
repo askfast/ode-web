@@ -21,9 +21,6 @@ $route, Storage, Groups, Dater, $location)
       };
 
 
-  console.log($location.hash());
-  
-
   /**
    * Extract view action from url and set view
    */

@@ -50,9 +50,42 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
 
 
   /**
+   * If no params or hashes given in url
+   */
+  if (!params.uuid && !$location.hash())
+  {
+    /**
+     * Set param and hash
+     */
+    var uuid = data.groups[0].uuid;
+    var view = 'view';
+    /**
+     * Adjust url
+     */
+    $location.search({
+      uuid: data.groups[0].uuid
+    }).hash('view');
+  }
+  else
+  {
+    /**
+     * If given use what's supplied
+     */
+    var uuid = params.uuid;
+    var view = $location.hash();
+  };
+  
+
+  /**
    * Set group
    */
-  setGroupView(params.uuid);
+  setGroupView(uuid);
+
+
+  /**
+   * Set view
+   */
+  setView(view);
 
 
   /**
@@ -106,16 +139,12 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
 
 
   /**
-   * Set view
-   */
-  setView($location.hash());
-
-
-  /**
    * View setter
    */
   function setView (hash)
   {
+    console.log('setting view to ->', hash);
+
     /**
      * Default view settings
      */
@@ -499,8 +528,11 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
                 uuid: group.uuid
               });
             });
+            // end of watch
           };
+          // end of if
         });
+        // end of foreach
       });
 
     });
@@ -574,6 +606,43 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          * Set preloader
          */
         $rootScope.loading = false;
+        /**
+         * Redirect to group view
+         */
+        angular.forEach(data.groups, function (group, index)
+        {
+          /**
+           * Reset groups drop down
+           */
+          $scope.groups = data.groups;
+          /**
+           * Set first group to be displayed
+           * @type {[type]}
+           */
+          $scope.group = data.groups[0];
+          /**
+           * Set members
+           */
+          $scope.members = data.members[data.groups[0].uuid];
+          /**
+           * Set current
+           */
+          $scope.current = data.groups[0].uuid;
+          /**
+           * Adjust params
+           */
+          $scope.$watch($location.search(), function()
+          {
+            /**
+             * Set hash
+             */
+            $location.search({
+              uuid: data.groups[0].uuid
+            });
+          });
+          // end of watch
+        });
+        // end of foreach
       });
     });
   };
