@@ -197,9 +197,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         if (message.uuid == $scope.message.uuid)
         {
           /**
+           * TODO
+           * Still needed?
+           * 
            * Set read state
            */
-          //message.state = "READ";
+          // message.state = "READ";
           /**
            * Trigger change state call
            */
@@ -269,9 +272,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
 
   /**
-   * TODO
-   * Find a way to clear url if there is message uuid in url!
-   * 
    * Reset views
    */
   $scope.closeTabs = function()
@@ -542,13 +542,28 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   $("div#composeTab select.chzn-select").chosen()
   .change(function(item)
   {
+    /**
+     * Loop through list items of chosen
+     */
   	$.each($(this).next().find("ul li.result-selected"), function (i,li)
     {
+      /**
+       * Set name
+       */
   		var name = $(li).html();
+      /**
+       * Loop though options
+       */
   		$.each($("div#composeTab select.chzn-select option"), function (j,opt)
       {
+        /**
+         * If found
+         */
 	      if(opt.innerHTML == name)
         {
+          /**
+           * Set option to selected
+           */
           opt.selected = true;
 	      };
 	    });
@@ -562,13 +577,15 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   $scope.reply = function(message)
   {
     /**
-     * Switch in views
+     * Switch view to compose
      */
-    $scope.views = {
-      compose: true,
-      message: false,
-      default: false
-    };
+    setView('compose');
+
+    /**
+     * Set hash to compose
+     */
+    $scope.setViewTo('compose');
+
     /**
      * Get members from localStorage
      */
@@ -580,16 +597,19 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         /**
          * Find sender's name in members list
          */
-        name = (typeof members[senderId] == "undefined" )? senderId : members[senderId].name;
+        name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
 
     /**
      * Set data in compose form
      */
     $scope.message = {
       subject: 'RE: ' + message.subject,
-      receivers: [ {group: "Users" , id: senderId , name: name} ]
+      receivers: [{
+        group: 'Users', 
+        id: senderId , 
+        name: name
+      }]
     };
-
 
     /**
      * Trigger chosen
@@ -625,6 +645,15 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     .then(function(result)
     {
       /**
+       * IMPORTANT
+       * 
+       * If back-end can be configured to give the uuid of
+       * newly send message after sending message view can be
+       * redirected to view message of that message
+       */
+      // console.log('send message result ->', result);
+      
+      /**
        * Query messages
        */
       Messages.query()
@@ -638,6 +667,9 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          * Set preloader
          */
         $rootScope.loading = false;
+        /**
+         * Close tabs
+         */
         $scope.closeTabs();
       });
     });

@@ -1,6 +1,5 @@
 'use strict';
 
-
 /**
  * Dashboard Controller
  */
@@ -11,7 +10,13 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
    */
 	$scope.messages = data;
 
+
+  /**
+   * Set loader for pies
+   */
   $scope.loadingPies = true;
+
+
   /**
    * Produce pie charts for groups
    * for current week
@@ -19,14 +24,23 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
   Dashboard.pies()
   .then(function (pies)
   {
+    /**
+     * Turn off loader
+     */
     $scope.loadingPies = false;
+
     /**
      * Set pies data
      */
     $scope.pies = pies;
   })
+
+  /**
+   * Second then for making sure that first process is done
+   */
   .then( function (result)
   {
+
     /**
      * TODO 
      * Look for a better way to handle with it
@@ -34,15 +48,18 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
      */
     setTimeout( function() 
     {
+
       /**
        * Loop through pie statistics data
        */
       angular.forEach($scope.pies, function (pie, index)
       {
+
         /**
          * Clean group pie chart holder
          */
         document.getElementById('weeklyPie-' + pie.id).innerHTML = '';
+
         /**
          * Quick fix. If ratio is 0 than pie chart is not displayed at all
          */
@@ -50,11 +67,13 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
         if (pie.ratios.more != 0) ratios.push(pie.ratios.more);
         if (pie.ratios.even != 0) ratios.push(pie.ratios.even);
         if (pie.ratios.less != 0) ratios.push(pie.ratios.less);
+
         /**
          * Pie chart it baby!
          */
         var r = Raphael('weeklyPie-' + pie.id),
             pie = r.piechart(40, 40, 40, ratios);
+
       });
     }, 100);
   });
@@ -68,24 +87,6 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
 dashboardCtrl.resolve = {
   data: function ($rootScope, $config, Messages) 
   {
-    /**
-     * Updating unread messages counter can be better made in
-     * unreadCount function in Messages model, after counting
-     * it can update rootScope value for it
-     */
-    $rootScope.app.unreadMessages = Messages.unreadCount();
-    /**
-     * [unreadMessages description]
-     * @type {[type]}
-     */
-    if($rootScope.app.unreadMessages == 0)
-    {
-      $('#msgBubble').hide();
-    }
-    else
-    {
-      $('#msgBubble').show();
-    };
     return Messages.unread();
   }
 }

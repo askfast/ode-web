@@ -82,6 +82,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       outbox: [],
       trash: []
     };
+    
     /**
      * Loop through messages
      */
@@ -91,6 +92,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        * If message has no subject
        */
       if (message.subject == '') message.subject = '-No Subject-';
+
       /**
        * Inbox
        */
@@ -99,6 +101,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       {
         filtered.inbox.push(message);
       }
+
       /**
        * Outbox
        */
@@ -107,6 +110,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       {
         filtered.outbox.push(message);
       }
+
       /**
        * Trash
        */
@@ -116,6 +120,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         filtered.trash.push(message);
       };
     });
+
     return filtered;
   };
 
@@ -135,13 +140,20 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.find = function (id)
   {
     var gem;
+    /**
+     * Loop through local messages
+     */
     angular.forEach(Messages.prototype.local(), function(message, index)
     {
+      /**
+       * Catched you
+       */
       if (message.uuid == id)
       {
         gem = message;
       }
     });
+
     return gem;
   };
 
@@ -395,6 +407,9 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   {
     var deferred = $q.defer();
 
+    /**
+     * Make seen message call
+     */
     Messages.prototype.changeState(id, 'SEEN')
     .then(function (result) 
     {
@@ -426,6 +441,9 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       };
     });
 
+    /**
+     * Make delete call(s)
+     */
     Messages.delete(null, { 
       members: bulk 
     }, function (result) 

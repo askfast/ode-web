@@ -30,6 +30,7 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
      * Reset calls
      */
     var calls = [];
+
     /**
      * Loop through the groups
      */
@@ -45,6 +46,7 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
         end: week.end
       }));
     });
+
     /**
      * Run pool of calls
      */
@@ -55,13 +57,10 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
        * Return promised values
        */
       deferred.resolve(results);
-
     });
 
     return deferred.promise;
   };
-
-
 
   return new Dashboard;
 });

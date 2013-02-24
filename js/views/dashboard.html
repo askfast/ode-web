@@ -2,23 +2,19 @@
   <h2>Welcome, {{app.resources.name}}</h2>
 </div>
 
-
 <!-- row-fluid -->
 <div class="row-fluid">
 
 	<!-- span12 -->
   <div class="span12">
 
-    
+    <!-- pie charts for groups -->
     <div id="weekly-pies" class="span8">
-
       <h4>This Week</h4>
       <hr>
-
       <p ng-show="loadingPies">Loading pie charts..</p>
-
+      <!-- pie loop -->
       <ul class="weekly" ng-hide="loadingPies">
-
         <li ng-repeat="pie in pies">
           <div id="weeklyPie-{{pie.id}}" class="weekly-pie"></div>
           <div class="weekly-pie-info">
@@ -33,16 +29,19 @@
           </div>
         </li>
       </ul>
-
+      <!-- end pie loop -->
     </div>
+    <!-- end pie charts for groups -->
     
+    <!-- announcements sidebar -->
     <div id="announcements" class="span4">
 
-      <div id="new-messages" class="announcement">
+      <!-- new messages -->
+      <div id="new-messages" 
+            class="announcement"
+            ng-show="(messages.length > 0)">
         <h4>New Messages</h4>
         <hr>
-
-        <p ng-hide="(messages.length > 0)">There are no messages unread.</p>
 
         <ul>
           <li ng-repeat="message in messages">
@@ -54,12 +53,13 @@
 
         <a href="#/messages/#inbox" class="btn btn-small pull-right">Go to inbox</a>
       </div>
+      <!-- end new messages -->
 
-
+      <!-- news -->
       <div id="news" class="announcement">
         <h4>Announcements</h4>
         <hr>
-
+        <!-- news loop -->
         <ul>
           <li>
             <h5>Fusce dapibus</h5>
@@ -74,10 +74,12 @@
                 odio dui.</p>
           </li> -->
         </ul>
+        <!-- end news loop -->
       </div>
+      <!-- end news -->
 
     </div>
-
+    <!-- end announcements sidebar -->
 
   </div>
   <!-- end span12 -->
