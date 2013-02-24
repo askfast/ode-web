@@ -833,36 +833,36 @@ $route, Storage, Groups, Dater, $location)
 
 
 /**
+ * If no userId is supplied
+ */
+profileCtrl.setAccount = {
+  data: function ($rootScope, $route, $location) 
+  {
+    /**
+     * If no hashes or userId given given in url
+     */
+    if (!$route.current.params.userId || !$location.hash())
+    {
+      /**
+       * Set user and hash and adjust url
+       */
+      $location.path('/profile/' + $rootScope.app.resources.uuid)
+      .hash('profile');
+    };
+  }
+};
+
+
+
+
+
+/**
  * Profile resolver
  */
 profileCtrl.resolve = {
-  data: function ($rootScope, $config, Profile, $route, Dater, $location) 
+  data: function (Profile, $route) 
   {
-    // /**
-    //  * If it's user himself
-    //  */
-    // if ($route.current.params.userId == $rootScope.app.resources.uuid)
-    // {
-      return Profile.get($route.current.params.userId, false)
-    // }
-    // /**
-    //  * Another user
-    //  */
-    // else
-    // {
-    //   /**
-    //    * Get periods
-    //    */
-    //   var periods = Dater.getPeriods(),
-    //       initial = periods.months[new Date().toString('M')];
-    //   /**
-    //    * Return values
-    //    */
-    //   return Profile.getWithSlots($route.current.params.userId, false, {
-    //           start: initial.first.timeStamp / 1000,
-    //           end: initial.last.timeStamp / 1000
-    //         })
-    // };
+    return Profile.get($route.current.params.userId, false);
   }
 };
 
