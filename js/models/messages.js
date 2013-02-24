@@ -54,6 +54,14 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        */
       Storage.add('messages', angular.toJson(result));
 
+      /**
+       * Update message counter
+       */
+      Messages.prototype.unreadCount();
+
+      /**
+       * Return promised
+       */
       deferred.resolve(Messages.prototype.filter(result));
     });
 
@@ -290,7 +298,11 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       };
     });
 
-    return counter;
+    /**
+     * No need to return but set rootScope directly
+     */
+    // return counter;
+    $rootScope.app.unreadMessages = counter;
   };
 
 
@@ -301,11 +313,55 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   {
   	var deferred = $q.defer();
 
+    /**
+     * Make change state call
+     */
   	Messages.changeState(null, {
       ids: ids, 
       state: state 
     }, function (result) 
     {
+      /**
+       * Change message state locally as well
+       * if it is READ
+       */
+      if (state == 'READ')
+      {
+        /**
+         * Get messages
+         */
+        var messages = angular.fromJson(Storage.get('messages'));
+        /**
+         * Loop through messages
+         */
+        angular.forEach(messages, function (message, index)
+        {
+          /**
+           * Loop through given array of ids
+           */
+          angular.forEach(ids, function (id, i)
+          {
+            /**
+             * Catches
+             */
+            if (message.uuid == id)
+            {
+              message.state = 'READ';
+            }
+          });
+        });
+        /**
+         * Store back in localStorage
+         */
+        Storage.add(angular.toJson('messages', messages));
+        /**
+         * Update unread message counter
+         */
+        Messages.prototype.unreadCount();
+      };
+      /**
+       * Return promised
+       */
       deferred.resolve(result);
     });
 

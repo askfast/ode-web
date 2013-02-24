@@ -52,27 +52,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   };
 
 
-
-
-
-
-
-
-  $rootScope.app.unreadMessages = Messages.unreadCount();
-  if($rootScope.app.unreadMessages == 0 ){
-  	$('#msgBubble').hide();
-  }else{
-  	$('#msgBubble').show();
-  }
-
-
-
-
-
-
-
-
-
   /**
    * Set origin container for returning back to origin box
    */
@@ -201,7 +180,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Find message
      */
     $scope.message = Messages.find(id);
-
     /**
      * Change to read if message not seen yet
      * Check only in inbox because other box messages
@@ -221,28 +199,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
           /**
            * Set read state
            */
-          message.state = "READ";
+          //message.state = "READ";
           /**
            * Trigger change state call
            */
           Messages.changeState([message.uuid], 'READ');
-          
-          /**
-           * TODO
-           * Unread messages counter should be bind to a background-sync timer
-           * in later stages as well
-           */
-          $rootScope.app.unreadMessages = $rootScope.app.unreadMessages - 1;
-
-          // if($rootScope.app.unreadMessages == 0 )
-          // {
-          //   $('#msgBubble').hide();
-          // }
-          // else
-          // {
-          //   $('#msgBubble').show();
-          // };
-
         }
       });
     };
@@ -581,10 +542,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   $("div#composeTab select.chzn-select").chosen()
   .change(function(item)
   {
-  	$.each($(this).next().find("ul li.result-selected"),function(i,li)
+  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
     {
   		var name = $(li).html();
-  		$.each($("div#composeTab select.chzn-select option"),function(j,opt)
+  		$.each($("div#composeTab select.chzn-select option"), function (j,opt)
       {
 	      if(opt.innerHTML == name)
         {
@@ -643,7 +604,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
     /**
      * Let chosen know list is updated
-     * @type {[type]}
      */
     $("div#composeTab select.chzn-select").trigger("liszt:updated");
   };
