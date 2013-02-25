@@ -112,15 +112,15 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Real KNRM users for testing
    */
-  $scope.knrms = knrm_users;
-  $scope.loginAsKNRM = function(uuid, pass)
-  {
-    $('#login button[type=submit]')
-      .text('Login..')
-      .attr('disabled', 'disabled');
-
-    self.auth(uuid, pass);
-  };
+//  $scope.knrms = knrm_users;
+//  $scope.loginAsKNRM = function(uuid, pass)
+//  {
+//    $('#login button[type=submit]')
+//      .text('Login..')
+//      .attr('disabled', 'disabled');
+//
+//    self.auth(uuid, pass);
+//  };
 
 
   /**

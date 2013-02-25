@@ -170,6 +170,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       /**
        * Loop through in inbox
        */
+      var newInboxMsg = [];
       angular.forEach($scope.messages.inbox, function (message, index)
       {
         if (message.uuid == $scope.message.uuid)
@@ -181,20 +182,16 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
           .then( function (result)
           {
             console.log('state changed');
-            
-            Messages.query(function (messages)
-            {
-              $scope.messages = messages;
-            });
-
-            // $scope.messages = Messages.filter(Messages.local());
-            console.warn('messages after filter ->', $scope.messages);
-            
-            // Messages.unreadCount();
           })
+          
+          message.state = "READ";
         }
+        
+        newInboxMsg.push(message);
       });
-
+		
+	  $scope.messages.inbox = newInboxMsg;
+	  console.log($scope.messages.inbox); 
     };
   };
 
