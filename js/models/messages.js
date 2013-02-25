@@ -392,6 +392,8 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       Messages.prototype.unreadCount();
     };
 
+    
+
   	return deferred.promise;
   };
 

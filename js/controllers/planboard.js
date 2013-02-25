@@ -1334,7 +1334,14 @@ planboardCtrl.resolve = {
         /**
          * Set initial period for starting timeline
          */
-        initial = periods.months[new Date().toString('M')],
+        /**
+         * Get current week data at first
+         *
+         * Depreciated!
+         * initial = periods.months[new Date().toString('M')],
+         */
+        current = new Date().getWeek(),
+        initial = periods.weeks[current],
         /**
          * Set first group and current month for the planboard link
          */
