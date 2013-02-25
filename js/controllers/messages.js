@@ -177,9 +177,24 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
           /**
            * Trigger change state call
            */
-          Messages.changeState([message.uuid], 'READ');
+          Messages.changeState([message.uuid], 'READ')
+          .then( function (result)
+          {
+            console.log('state changed');
+            
+            Messages.query(function (messages)
+            {
+              $scope.messages = messages;
+            });
+
+            // $scope.messages = Messages.filter(Messages.local());
+            console.warn('messages after filter ->', $scope.messages);
+            
+            // Messages.unreadCount();
+          })
         }
       });
+
     };
   };
 

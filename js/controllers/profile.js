@@ -78,6 +78,7 @@ $route, Storage, Groups, Dater, $location)
    * Set data for view
    */
   $scope.data = data;
+  // console.warn('data ->', data);
 
 
   /**
@@ -273,111 +274,64 @@ $route, Storage, Groups, Dater, $location)
 
 
 
- 
-
-  // /**
-  //  * TODO
-  //  * Automatically initialize this function
-  //  */
-  // // if ($location.hash() == 'timeline')
-  // // {
-  // //   render();
-  // // }
-
-
-  // /**
-  //  * TODO
-  //  * Define a better way with dealing localStorage and Resolver
-  //  *
-  //  * Controller render
-  //  */
-  // // function render()
-  // // {
-
-  //   /**
-  //    * Set defaults for timeline
-  //    */
-  //   $scope.timeline = {
-  //     current: current,
-  //     options: {
-  //       start:  new Date(periods.weeks[current.week].first.day),
-  //       end:    new Date(periods.weeks[current.week].last.day),
-  //       min:    new Date(periods.weeks[current.week].first.day),
-  //       max:    new Date(periods.weeks[current.week].last.day)
-  //     },
-  //     range: {
-  //       start: periods.weeks[current.week].first.day,
-  //       end: periods.weeks[current.week].last.day
-  //     },
-  //     config: {
-  //       states: $config.timeline.config.states
-  //     }
-  //   };
-
-  //   /**
-  //    * Where is my timeline landlord?
-  //    */
-  //   $('#timeline_').html('');
-  //   $('#timeline_').append('<div id="userTimeline"></div>');
-
-  //   var timeline2 = new links.Timeline(document.getElementById('userTimeline'));
-  //   /**
-  //    * Init timeline listeners
-  //    */
-  //   links.events.addListener(timeline2, 'rangechanged',  timelineGetRange);
-  //   links.events.addListener(timeline2, 'edit',          timelineOnEdit);
-  //   links.events.addListener(timeline2, 'add',           timelineOnAdd);
-  //   links.events.addListener(timeline2, 'delete',        timelineOnDelete);
-  //   links.events.addListener(timeline2, 'change',        timelineOnChange);
-  //   links.events.addListener(timeline2, 'select',        timelineOnSelect);
-  //   /**
-  //    * Run timeline
-  //    */
-  //   /**
-  //    * Merge options with defaults
-  //    */
-  //   angular.extend($scope.timeline.options, $config.timeline.options);
-  //   /**
-  //    * Draw timeline
-  //    */
-  //   // console.log(
-  //   //   self.process(
-  //   //     $scope.data.slots.data, 
-  //   //     $scope.timeline.config
-  //   //   ), 
-  //   //   $scope.timeline.options
-  //   // );
+  /**
+   * Render timeline
+   */
+  if ($location.hash() == 'timeline')
+  {
+    /**
+     * Set defaults for timeline
+     */
+    $scope.timeline = {
+      current: current,
+      options: {
+        start:  new Date(periods.weeks[current.week].first.day),
+        end:    new Date(periods.weeks[current.week].last.day),
+        min:    new Date(periods.weeks[current.week].first.day),
+        max:    new Date(periods.weeks[current.week].last.day)
+      },
+      range: {
+        start: periods.weeks[current.week].first.day,
+        end: periods.weeks[current.week].last.day
+      },
+      config: {
+        states: $config.timeline.config.states
+      }
+    };
+    /**
+     * Where is my timeline landlord?
+     */
     
-  //   //console.warn('self 1 ->', self);
+    $('#timeline').html('');
+    $('#timeline').append('<div id="userTimeline"></div>');
 
-  //   var tdata = 
-  //     self.process(
-  //       $scope.data.slots.data, 
-  //       $scope.timeline.config
-  //     );
-  //   var opts = $scope.timeline.options;
-
-  //   // timeline2.draw([], opts);
-
-  //   // timeline2.setData(tdata);
-
-  //   //timeline2.draw(tdata, opts);
-
-  //  // console.warn('db from timeline ->', timeline2.getData());
-
-  //   timeline2.draw(tdata, opts);
-  //   //timeline2.deleteAllItems();
-  //   timeline2.setData(tdata);
-  //   timeline2.redraw();
-  //   console.warn('timeline ->', timeline2);
-    
-  //   //console.warn('self 2 ->', self);
-
-  //   /**
-  //    * Set range dynamically
-  //    */
-  //   //timeline2.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-  // // };
+    var timeline = new links.Timeline(document.getElementById('userTimeline'));
+    /**
+     * Init timeline listeners
+     */
+    links.events.addListener(timeline, 'rangechanged',  timelineGetRange);
+    links.events.addListener(timeline, 'edit',          timelineOnEdit);
+    links.events.addListener(timeline, 'add',           timelineOnAdd);
+    links.events.addListener(timeline, 'delete',        timelineOnDelete);
+    links.events.addListener(timeline, 'change',        timelineOnChange);
+    links.events.addListener(timeline, 'select',        timelineOnSelect);
+    /**
+     * Run timeline
+     * Merge options with defaults
+     */
+    angular.extend($scope.timeline.options, $config.timeline.options);
+    /**
+     * Draw timeline
+     */
+    timeline.draw(self.process(
+        $scope.data.slots.data, 
+        $scope.timeline.config
+      ), $scope.timeline.options);
+    /**
+     * Set range dynamically
+     */
+    timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+  };
 
 
   /**
@@ -860,9 +814,22 @@ profileCtrl.setAccount = {
  * Profile resolver
  */
 profileCtrl.resolve = {
-  data: function (Profile, $route) 
+  data: function (Profile, $route, $location, Dater) 
   {
-    return Profile.get($route.current.params.userId, false);
+    if ($location.hash() == 'timeline')
+    {
+      var periods = Dater.getPeriods(),
+          current = new Date().getWeek(),
+          ranges = {
+            start: periods.weeks[current].first.timeStamp / 1000,
+            end: periods.weeks[current].last.timeStamp / 1000,
+          };
+      return Profile.getWithSlots($route.current.params.userId, false, ranges);
+    }
+    else
+    {
+      return Profile.get($route.current.params.userId, false);
+    }
   }
 };
 

@@ -325,6 +325,8 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   {
   	var deferred = $q.defer();
 
+
+
     /**
      * Make change state call
      */
@@ -339,6 +341,8 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       deferred.resolve(result);
     });
 
+
+
     /**
      * Change message state locally as well
      * if it is READ
@@ -348,7 +352,8 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       /**
        * Get messages
        */
-      var messages = angular.fromJson(Storage.get('messages'));
+      var messages = angular.fromJson(Storage.get('messages')),
+          converted = [];
       /**
        * Loop through messages
        */
@@ -365,13 +370,22 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
           if (message.uuid == id)
           {
             message.state = 'READ';
-          }
+            console.log('message ->', message);
+          };
         });
+        /**
+         * Push in converted array
+         */
+        converted.push(message);
       });
+      /**
+       * Remove local messgaes container
+       */
+      Storage.remove('messages');
       /**
        * Store back in localStorage
        */
-      Storage.add(angular.toJson('messages', messages));
+      Storage.add(angular.toJson('messages', converted));
       /**
        * Update unread message counter
        */

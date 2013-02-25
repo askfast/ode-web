@@ -36,7 +36,7 @@ WebPaige.
      */
     host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
     //host: 'http://10.200.200.201\\:8888/ns_knrmtest',
-    //host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    // host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
     /**
      * TODO
      * All date time related values into one place!
