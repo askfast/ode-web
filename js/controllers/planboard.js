@@ -362,8 +362,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     self.timeline = new links.Timeline(document.getElementById('myTimeline'));
 
-
-            console.log('timeline -> ', self.timeline);
+    console.log('timeline -> ', self.timeline);
+    
     /**
      * Init timeline listeners
      */

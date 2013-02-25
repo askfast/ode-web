@@ -240,21 +240,33 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     Members.query({id: id}, function (result) 
     {
       /**
+       * DIRTY CHECK!
+       * 
        * Check for 'null' return from back-end
        * if group is empty
        */
-      // console.warn('result ->', angular.toJson(result));
+      var returned;
+      if (result.length == 4 && 
+          result[0][0] == 'n' && 
+          result[1][0] == 'u')
+      {
+        returned = [];
+      }
+      else
+      {
+        returned = result;
+      };
       
       /**
        * Add members list to localStorage
        */
-      Storage.add(id, angular.toJson(result));
+      Storage.add(id, angular.toJson(returned));
       /**
        * Return it baby!
        */
       deferred.resolve({
         id: id,
-        data: result
+        data: returned
       });
     });
 

@@ -298,13 +298,16 @@ $route, Storage, Groups, Dater, $location)
         states: $config.timeline.config.states
       }
     };
+  
     /**
-     * Where is my timeline landlord?
+     * Create DOM for timeline
      */
-    
     $('#timeline').html('');
     $('#timeline').append('<div id="userTimeline"></div>');
 
+    /**
+     * Where is my timeline landlord?
+     */
     var timeline = new links.Timeline(document.getElementById('userTimeline'));
     /**
      * Init timeline listeners
@@ -319,18 +322,33 @@ $route, Storage, Groups, Dater, $location)
      * Run timeline
      * Merge options with defaults
      */
+    //console.warn($scope.timeline.options, $config.timeline.options);
     angular.extend($scope.timeline.options, $config.timeline.options);
     /**
      * Draw timeline
      */
+    
+    // console.log('timedata ->', 
+    // self.process(
+    //     $scope.data.slots.data, 
+    //     $scope.timeline.config
+    //   )
+    // );
+
+    setTimeout( function() 
+    {
     timeline.draw(self.process(
         $scope.data.slots.data, 
         $scope.timeline.config
       ), $scope.timeline.options);
+    }, 100);
+
     /**
      * Set range dynamically
      */
     timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+
+    console.warn('TIMELINE ====>', timeline);
   };
 
 
@@ -815,7 +833,7 @@ profileCtrl.setAccount = {
  */
 profileCtrl.resolve = {
   data: function (Profile, $route, $location, Dater) 
-  {
+  {    
     if ($location.hash() == 'timeline')
     {
       var periods = Dater.getPeriods(),
@@ -892,7 +910,23 @@ profileCtrl.prototype = {
           })),
         className: config.states[slot.text].className,
         editable: true
-      });    
+      });
+
+      console.log('slot ->', {
+        start: Math.round(slot.start * 1000),
+        end: Math.round(slot.end * 1000),
+        group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' + wrapper('recursive') : 
+                                  wrapper('a') + 'Planning' + wrapper('planning'),
+        content: secret(angular.toJson({
+          type: 'slot',
+          id: slot.id, 
+          recursive: slot.recursive, 
+          state: slot.text 
+          })),
+        className: config.states[slot.text].className,
+        editable: true
+      });
+          
     });
 
     timedata.push({

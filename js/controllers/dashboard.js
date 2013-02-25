@@ -72,7 +72,7 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
          * Pie chart it baby!
          */
         var r = Raphael('weeklyPie-' + pie.id),
-            pie = r.piechart(40, 40, 40, ratios);
+            pie = r.piechart(40, 40, 40, ratios, {colors: ['#415e6b', '#ba6a24', '#a0a0a0']});
 
       });
     }, 100);
