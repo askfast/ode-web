@@ -360,10 +360,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Where is my timeline landlord?
      */
-    self.timeline = new links.Timeline(document.getElementById('myTimeline'));
-
-    console.log('timeline -> ', self.timeline);
-    
+    self.timeline = new links.Timeline(document.getElementById('mainTimeline'));    
     /**
      * Init timeline listeners
      */
@@ -450,16 +447,19 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Draw timeline
      */
-    self.timeline.draw(
-      self.process(
-        $scope.data, 
-        $scope.timeline.config,
-        angular.fromJson(Storage.get('groups')),
-        angular.fromJson(Storage.get('members')),
-        $scope.divisions
-      ), 
-      $scope.timeline.options
-    );
+    setTimeout( function ()
+    {
+      self.timeline.draw(
+        self.process(
+          $scope.data, 
+          $scope.timeline.config,
+          angular.fromJson(Storage.get('groups')),
+          angular.fromJson(Storage.get('members')),
+          $scope.divisions
+        ), 
+        $scope.timeline.options
+      );
+    }, 100);
     /**
      * Set range dynamically
      */
@@ -1959,40 +1959,50 @@ planboardCtrl.prototype = {
       angular.forEach(data.aggs.ratios, function(ratio, index)
       {
         /**
-         * Ratios
+         * Quick fix against 0 ratios
+         * Dont display them at all
          */
-        ratios.push(ratio);
-        /**
-         * Legends
-         */
-        legends.push('[ ' + index + ' people ] - ' + ratio + '%');
+        if (ratio != 0)
+        {
+          /**
+           * Ratios
+           */
+          ratios.push(ratio);
+          /**
+           * Legends
+           */
+          legends.push(ratio + '% ' + index);
+        };
       });
       /**
        * Pie chart it baby!
        */
       var r = Raphael("groupPie"),
-          pie = r.piechart(140, 120, 100, ratios, 
+          pie = r.piechart(120, 120, 100, ratios, 
           { 
-            legend: legends
+            legend: legends,
+            colors: ['#415e6b', '#ba6a24', '#a0a0a0']
           });
       /**
        * Pie chart title
        */
-      r.text(140, 240, name).attr({
-        font: "20px sans-serif"
-      });
+      // r.text(140, 240, name).attr({
+      //   font: "20px sans-serif"
+      // });
       /**
        * Decorate it with mouse effects
        */
       pie.hover(
       function()
       {
+        //console.log('this ->', this);
         this.sector.stop();
         this.sector.scale(1.1, 1.1, this.cx, this.cy);
-        if (this.label) {
-            this.label[0].stop();
-            this.label[0].attr({ r: 7.5 });
-            this.label[1].attr({ "font-weight": 800 });
+        if (this.label)
+        {
+          this.label[0].stop();
+          this.label[0].attr({ r: 7.5 });
+          this.label[1].attr({ "font-weight": 800 });
         }
       },
       function()
@@ -2000,9 +2010,10 @@ planboardCtrl.prototype = {
         this.sector.animate({
           transform: 's1 1 ' + this.cx + ' ' + this.cy
         }, 500, "bounce");
-        if (this.label) {
-            this.label[0].animate({ r: 5 }, 500, "bounce");
-            this.label[1].attr({ "font-weight": 400 });
+        if (this.label)
+        {
+          this.label[0].animate({ r: 5 }, 500, "bounce");
+          this.label[1].attr({ "font-weight": 400 });
         }
       });
 

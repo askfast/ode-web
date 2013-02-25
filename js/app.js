@@ -187,6 +187,9 @@ WebPaige.
           more: '#486877'
         }   
       }
+    },
+    pie: {
+      colors: ['#415e6b', '#ba6a24', '#a0a0a0']
     }
   }
 )

@@ -411,5 +411,24 @@ angular.module('WebPaige.filters', [])
     	return string.split('>')[1].split('<')[0];
   	};
   }
-});
+})
+
+
+/**
+ * Convert group id to name
+ */
+.filter('groupIdToName', ['Storage', function(Storage)
+{
+  return function(id)
+  {
+  	var groups = angular.fromJson(Storage.get('groups'));
+  	for (var i in groups)
+  	{
+  		if (groups[i].uuid == id)
+  		{
+  			return groups[i].name;
+  		};	
+  	};
+  }
+}]);
 

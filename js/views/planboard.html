@@ -524,9 +524,11 @@
             <hr>
           </div>
           <!-- end timeline legenda content -->
+          
           <!-- user timeline -->
-          <div id="myTimeline"></div>
+          <div id="mainTimeline"></div>
           <!-- end user timeline -->
+
         </div>
         <!-- end timeline -->
         <hr>
@@ -691,7 +693,8 @@
             <div id="groupPie"></div>
             
             <div class="groupStatInfo">
-              <h3>Total Durations In Period</h3>
+              <h3>{{data.aggs.id|groupIdToName}}</h3>
+              <!-- <h3>Total Durations In Period</h3> -->
               <hr>
               <ul>
                 <li>

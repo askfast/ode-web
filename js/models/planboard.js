@@ -152,34 +152,105 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     Aggs.query(params, function (result) 
     {
 
+      // /**
+      //  * TODO
+      //  * Clean it up a bit!
+      //  *
+      //  * Produce statistics for group
+      //  */
+      // var stats = {},
+      //     durations = {
+      //       less: 0,
+      //       even: 0,
+      //       more: 0,
+      //       total: 0
+      //     },
+      //     total = 0;
+      // angular.forEach(result, function(slot, index)
+      // {
+      //   /**
+      //    * Count diffs
+      //    */
+      //   if (stats[slot.diff])
+      //   {
+      //     stats[slot.diff]++;
+      //   }
+      //   else
+      //   {
+      //     stats[slot.diff] = 1;
+      //   };
+      //   total++;
+      //   /**
+      //    * Calculate total absence
+      //    */
+      //   var slotDiff = slot.end - slot.start;
+      //   if (slot.diff < 0)
+      //   {
+      //     durations.less = durations.less + slotDiff;
+      //   }
+      //   else if (slot.diff == 0)
+      //   {
+      //     durations.even = durations.even + slotDiff;
+      //   }
+      //   else
+      //   {
+      //     durations.more = durations.more + slotDiff;
+      //   };
+      //   durations.total = durations.total + slotDiff;
+
+      // });
+      // // console.warn('stats ->', stats, total);
+
+      // var ratios = {};
+      // angular.forEach(stats, function(stat, index)
+      // {
+      //   //console.warn(stat, index);
+      //   ratios[index] = Math.round((stat / total) * 100);
+      // });
+      // // console.warn('ratios ->', ratios);
+
+      // // var confirm = 0;
+      // // angular.forEach(ratios, function(ratio, index)
+      // // {
+      // //   confirm = confirm + ratio;
+      // // });
+      // // console.warn('confirm ->', confirm);
+      // // 
       /**
-       * TODO
-       * Clean it up a bit!
-       *
-       * Produce statistics for group
+       * Produce pie statistics for group
        */
-      var stats = {},
+      var stats = {
+            less: 0,
+            even: 0,
+            more: 0        
+          },
           durations = {
             less: 0,
             even: 0,
             more: 0,
             total: 0
           },
-          total = 0;
+          total = result.length;
+      /**
+       * Loop through results
+       */
       angular.forEach(result, function(slot, index)
       {
         /**
-         * Count diffs
+         * Calculate total absence
          */
-        if (stats[slot.diff])
+        if (slot.diff < 0)
         {
-          stats[slot.diff]++;
+          stats.less++;
+        }
+        else if (slot.diff == 0)
+        {
+          stats.even++;
         }
         else
         {
-          stats[slot.diff] = 1;
+          stats.more++;
         };
-        total++;
         /**
          * Calculate total absence
          */
@@ -197,25 +268,15 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           durations.more = durations.more + slotDiff;
         };
         durations.total = durations.total + slotDiff;
-
       });
-      // console.warn('stats ->', stats, total);
-
-      var ratios = {};
-      angular.forEach(stats, function(stat, index)
-      {
-        //console.warn(stat, index);
-        ratios[index] = Math.round((stat / total) * 100);
-      });
-      // console.warn('ratios ->', ratios);
-
-      // var confirm = 0;
-      // angular.forEach(ratios, function(ratio, index)
-      // {
-      //   confirm = confirm + ratio;
-      // });
-      // console.warn('confirm ->', confirm);
-      // 
+      /**
+       * Calculate ratios
+       */
+      var ratios = {
+        less: Math.round((stats.less / total) * 100),
+        even: Math.round((stats.even / total) * 100),
+        more: Math.round((stats.more / total) * 100)
+      };
 
       /**
        * Fetch the wishes

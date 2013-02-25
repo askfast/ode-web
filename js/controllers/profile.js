@@ -302,8 +302,8 @@ $route, Storage, Groups, Dater, $location)
     /**
      * Create DOM for timeline
      */
-    $('#timeline').html('');
-    $('#timeline').append('<div id="userTimeline"></div>');
+    // $('#timeline').html('');
+    // $('#timeline').append('<div id="userTimeline"></div>');
 
     /**
      * Where is my timeline landlord?
@@ -322,33 +322,24 @@ $route, Storage, Groups, Dater, $location)
      * Run timeline
      * Merge options with defaults
      */
-    //console.warn($scope.timeline.options, $config.timeline.options);
     angular.extend($scope.timeline.options, $config.timeline.options);
     /**
      * Draw timeline
+     *
+     * Use setTimeout to prevent rendering issue
+     * of DOM not ready while drawing data in timeline..
      */
-    
-    // console.log('timedata ->', 
-    // self.process(
-    //     $scope.data.slots.data, 
-    //     $scope.timeline.config
-    //   )
-    // );
-
     setTimeout( function() 
     {
-    timeline.draw(self.process(
-        $scope.data.slots.data, 
-        $scope.timeline.config
-      ), $scope.timeline.options);
+      timeline.draw(self.process(
+          $scope.data.slots.data, 
+          $scope.timeline.config
+        ), $scope.timeline.options);
     }, 100);
-
     /**
      * Set range dynamically
      */
     timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-
-    console.warn('TIMELINE ====>', timeline);
   };
 
 
@@ -910,23 +901,7 @@ profileCtrl.prototype = {
           })),
         className: config.states[slot.text].className,
         editable: true
-      });
-
-      console.log('slot ->', {
-        start: Math.round(slot.start * 1000),
-        end: Math.round(slot.end * 1000),
-        group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' + wrapper('recursive') : 
-                                  wrapper('a') + 'Planning' + wrapper('planning'),
-        content: secret(angular.toJson({
-          type: 'slot',
-          id: slot.id, 
-          recursive: slot.recursive, 
-          state: slot.text 
-          })),
-        className: config.states[slot.text].className,
-        editable: true
-      });
-          
+      });          
     });
 
     timedata.push({
@@ -945,8 +920,6 @@ profileCtrl.prototype = {
       className: null,
       editable: false
     });
-
-    //console.warn('timedata ->', angular.toJson(timedata));
 
     return timedata;
   }

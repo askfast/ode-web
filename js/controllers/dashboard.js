@@ -3,7 +3,7 @@
 /**
  * Dashboard Controller
  */
-function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
+function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
 {
   /**
    * Get unread messages
@@ -72,7 +72,9 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
          * Pie chart it baby!
          */
         var r = Raphael('weeklyPie-' + pie.id),
-            pie = r.piechart(40, 40, 40, ratios, {colors: ['#415e6b', '#ba6a24', '#a0a0a0']});
+            pie = r.piechart(40, 40, 40, ratios, {
+              colors: $config.pie.colors
+            });
 
       });
     }, 100);
@@ -92,4 +94,4 @@ dashboardCtrl.resolve = {
 }
 
 
-dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'data', 'Dashboard', 'Slots'];
+dashboardCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', 'data', 'Dashboard', 'Slots'];

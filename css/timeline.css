@@ -47,6 +47,8 @@
 
 #groupStats #groupPie {
   float:left;
+  width: 380px;
+  height: 270px;
 }
 
 #groupStats .groupStatInfo {
@@ -71,6 +73,10 @@
 
 #groupStats .groupStatInfo ul li small {
 }
+
+
+
+
 
 #memberBars {
 }
