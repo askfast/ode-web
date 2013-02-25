@@ -118,8 +118,8 @@
   
     <h4 ng-show="views.slot.add">New Availability</h4>
     <h4 ng-show="views.slot.edit">Update Availability</h4>
-    <h4 ng-show="views.group">{{slot.group}}</h4>
-    <h4 ng-show="views.wish">{{slot.group}} (Wishes)</h4>
+    <h4 ng-show="views.group">{{slot.group|stripHtml}}</h4>
+    <h4 ng-show="views.wish">{{slot.group|stripHtml}} (Wishes)</h4>
     <h4 ng-show="views.member">{{slot.member|convertUserIdToName}}</h4>
 
     <hr>
