@@ -103,29 +103,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
 
   /**
-   * Switch between the views and set hash accordingly
-   */
-  $scope.setViewTo = function (hash)
-  {
-    /**
-     * Let angular know things are changing
-     */
-    $scope.$watch($location.hash(), function()
-    {
-      /**
-       * Set hash
-       */
-      $location.hash(hash);
-      /**
-       * Set view intern
-       */
-      setView(hash);
-    });
-  };
-
-
-
-  /**
    * If no params or hashes given in url
    */
   if (!$location.hash())
@@ -345,6 +322,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          * Set preloader
          */
         $rootScope.loading = false;
+        /**
+         * Return to origin
+         */
+        $scope.closeTabs();
       });
     });
   };
