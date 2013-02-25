@@ -376,5 +376,20 @@ angular.module('WebPaige.filters', [])
   {
     return string.match(/<span class="label">(.*)<\/span>/);
   }
+})
+
+
+/**
+ * Strip html tags
+ */
+.filter('stripHtml', function()
+{
+  return function(string)
+  {
+  	if (string)
+  	{
+    	return string.split('>')[1].split('<')[0];
+  	};
+  }
 });
 
