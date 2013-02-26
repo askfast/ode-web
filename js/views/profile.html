@@ -243,31 +243,6 @@
       <!-- end passwordTab -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <!-- userTimelineTab -->
       <div class="tab-pane {{(views.timeline==true) && 'active'}}" 
             id="userTimelineTab"
@@ -288,255 +263,187 @@
         <hr>
 
 
-
-
-
-
-
-<!-- timeline controls -->
-<div class="row-fluid" id="timeline-controls">
-
-  <!-- core timeline controls -->
-  <div class="pull-left" style="margin-top: 10px">
-
-    <!-- timeline navigation -->
-    <div class="btn-group pull-left" 
-          style="margin-right: 5px">
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>  
-
-    </div>
-    <!-- end timeline navigation -->
-
-    <!-- timeline zooms -->
-    <div class="btn-group pull-left"
-          style="margin-right: 5px">
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
-
-      <button type="button" 
-              class="btn"
-              ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
-
-    </div>
-    <!-- end timeline zooms -->
-
-  </div>
-  <!-- end core timeline controls -->
-
-
-
-  <!-- range indicator -->
-  <div class="pull-right" style="text-align: right">
-    <h4 style="font-weight: normal">
-      {{timeline.range|rangeMainWeekFilter}}<br>
-      <!-- timeline scope info -->
-      <div style="font-size: 15px; font-weight: lighter">
-      <span>{{timeline|rangeInfoWeekFilter}}</span>
-      </div>
-      <!-- end timeline scope info -->
-    </h4>
-  </div>
-  <!-- end range indicator -->
-
-
-
-
-</div>
-<!-- end timeline controls -->
-
-
-
-
-
-
-
-<!-- slot controls -->
-<div id="form-open" class="row-fluid" ng-show="forms.add || forms.edit">
-
-  <form class="form-inline form-toggled">
-
-    <!-- close btn -->
-    <button ng-click="resetInlineForms()" 
-            class="close">&times;</button>
-    <!-- end close btn -->
-  
-    <h4 ng-show="forms.add">New Availability</h4>
-    <h4 ng-show="forms.edit">Update Availability</h4>
-
-    <hr>
-
-    <!-- slot start -->
-    <div class="form-elements-group">
-      <label>From</label>
-      <!-- date -->
-      <div class="control-group dater">
-        <input  name="date-start" 
-                type="text" 
-                ng-model="slot.start.date" 
-                data-date-format="dd-mm-yyyy" 
-                bs-datepicker="">
-        <i class="icon-calendar"></i>
-      </div>
-      <!-- end date -->
-      <!-- time -->
-      <div class="control-group timer">
-        <input  name="time-start" 
-                type="text" 
-                ng-model="slot.start.time" 
-                bs-timepicker>
-        <i class="icon-time"></i>
-      </div>
-      <!-- end time -->
-    </div>
-    <!-- end slot start -->
-
-
-    <!-- slot end -->
-    <div class="form-elements-group">
-      <label>Till</label>
-      <!-- date -->
-      <div class="control-group dater">
-        <input  name="date-end" 
-                type="text" 
-                ng-model="slot.end.date" 
-                data-date-format="dd-mm-yyyy" 
-                bs-datepicker="">
-        <i class="icon-calendar"></i>
-      </div>
-      <!-- end date -->
-      <!-- time -->
-      <div class="control-group timer">
-        <input  name="time-end" 
-                type="text" 
-                ng-model="slot.end.time" 
-                bs-timepicker>
-        <i class="icon-time"></i>
-      </div>
-      <!-- end time -->
-    </div>
-    <!-- end slot end -->
-
-
-    <!-- slot state -->
-    <div class="form-elements-group">
-      <label>State</label>
-      <select ng-model="slot.state" 
-              ng-options="option as value for (option, value) in states" 
-              ng-show="views.slot.add || views.slot.edit">
-        <option value="">select a state</option>
-      </select>
-    </div>
-    <!-- end slot state -->
-
-
-    <!-- slot recursive -->
-    <div class="form-elements-group">
-      <label>Re-occuring</label>
-      <input type="checkbox" ng-model="slot.recursive">
-    </div>
-    <!-- end slot recursive -->
-
-
-    <!-- slot actions -->
-    <div class="form-elements-actions pull-right">
-      
-      <div ng-show="forms.add">
-        <button type="button" 
-                ng-click="slotAdd(slot)" 
-                class="btn btn-success">Add</button>
-      </div>
-
-      <div ng-show="forms.edit">
-        <button type="button" 
-                ng-click="slotChange(original, slot)" 
-                class="btn btn-success">Change</button>
-        <button type="button" 
-                ng-click="slotRemove()" 
-                class="btn btn-danger">Delete</button>
-      </div>
-
-    </div>
-    <!-- end slot actions -->
-
-
-  </form>
-  
-</div>
-<!-- end slot controls -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <!-- timeline controls -->
+        <div class="row-fluid" id="timeline-controls">
+
+          <!-- core timeline controls -->
+          <div class="pull-left" style="margin-top: 10px">
+
+            <!-- this week -->
+            <div class="btn-group pull-left" 
+                  style="margin-right: 5px">
+
+              <button type="button" 
+                      class="btn"
+                      ng-click="timelineThisWeek()">This Week</button>
+
+            </div>
+            <!-- end this week -->
+
+            <!-- timeline navigation -->
+            <div class="btn-group pull-left" 
+                  style="margin-right: 5px">
+
+              <button type="button" 
+                      class="btn"
+                      ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
+
+              <button type="button" 
+                      class="btn"
+                      ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>  
+
+            </div>
+            <!-- end timeline navigation -->
+
+            <!-- timeline zooms -->
+            <div class="btn-group pull-left"
+                  style="margin-right: 5px">
+
+              <button type="button" 
+                      class="btn"
+                      ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
+
+              <button type="button" 
+                      class="btn"
+                      ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
+
+            </div>
+            <!-- end timeline zooms -->
+
+          </div>
+          <!-- end core timeline controls -->
+
+          <!-- range indicator -->
+          <div class="pull-right" style="text-align: right">
+            <h4 style="font-weight: normal">
+              {{timeline.range|rangeMainWeekFilter}}<br>
+              <!-- timeline scope info -->
+              <div style="font-size: 15px; font-weight: lighter">
+              <span>{{timeline|rangeInfoWeekFilter}}</span>
+              </div>
+              <!-- end timeline scope info -->
+            </h4>
+          </div>
+          <!-- end range indicator -->
+
+        </div>
+        <!-- end timeline controls -->
+
+
+
+        <!-- slot controls -->
+        <div id="form-open" class="row-fluid" ng-show="forms.add || forms.edit">
+
+          <form class="form-inline form-toggled">
+
+            <!-- close btn -->
+            <button ng-click="resetInlineForms()" 
+                    class="close">&times;</button>
+            <!-- end close btn -->
+          
+            <h4 ng-show="forms.add">New Availability</h4>
+            <h4 ng-show="forms.edit">Update Availability</h4>
+
+            <hr>
+
+            <!-- slot start -->
+            <div class="form-elements-group">
+              <label>From</label>
+              <!-- date -->
+              <div class="control-group dater">
+                <input  name="date-start" 
+                        type="text" 
+                        ng-model="slot.start.date" 
+                        data-date-format="dd-mm-yyyy" 
+                        bs-datepicker="">
+                <i class="icon-calendar"></i>
+              </div>
+              <!-- end date -->
+              <!-- time -->
+              <div class="control-group timer">
+                <input  name="time-start" 
+                        type="text" 
+                        ng-model="slot.start.time" 
+                        bs-timepicker>
+                <i class="icon-time"></i>
+              </div>
+              <!-- end time -->
+            </div>
+            <!-- end slot start -->
+
+
+            <!-- slot end -->
+            <div class="form-elements-group">
+              <label>Till</label>
+              <!-- date -->
+              <div class="control-group dater">
+                <input  name="date-end" 
+                        type="text" 
+                        ng-model="slot.end.date" 
+                        data-date-format="dd-mm-yyyy" 
+                        bs-datepicker="">
+                <i class="icon-calendar"></i>
+              </div>
+              <!-- end date -->
+              <!-- time -->
+              <div class="control-group timer">
+                <input  name="time-end" 
+                        type="text" 
+                        ng-model="slot.end.time" 
+                        bs-timepicker>
+                <i class="icon-time"></i>
+              </div>
+              <!-- end time -->
+            </div>
+            <!-- end slot end -->
+
+
+            <!-- slot state -->
+            <div class="form-elements-group">
+              <label>State</label>
+              <select ng-model="slot.state" 
+                      ng-options="option as value for (option, value) in states" 
+                      ng-show="views.slot.add || views.slot.edit">
+                <option value="">select a state</option>
+              </select>
+            </div>
+            <!-- end slot state -->
+
+
+            <!-- slot recursive -->
+            <div class="form-elements-group">
+              <label>Re-occuring</label>
+              <input type="checkbox" ng-model="slot.recursive">
+            </div>
+            <!-- end slot recursive -->
+
+
+            <!-- slot actions -->
+            <div class="form-elements-actions pull-right">
+              
+              <div ng-show="forms.add">
+                <button type="button" 
+                        ng-click="slotAdd(slot)" 
+                        class="btn btn-success">Add</button>
+              </div>
+
+              <div ng-show="forms.edit">
+                <button type="button" 
+                        ng-click="slotChange(original, slot)" 
+                        class="btn btn-success">Change</button>
+                <button type="button" 
+                        ng-click="slotRemove()" 
+                        class="btn btn-danger">Delete</button>
+              </div>
+
+            </div>
+            <!-- end slot actions -->
+
+
+          </form>
+          
+        </div>
+        <!-- end slot controls -->
 
 
         <!-- user timeline -->
@@ -556,7 +463,7 @@
         <p>
           <small class="pull-left">
             <span class="text-warning">Last sync time: </span>
-            <span class="muted">{{data.synced | nicelyDate}}</span>
+            <span class="muted">{{synced | nicelyDate}}</span>
           </small>
         </p>
         <!-- end planbaord footer -->

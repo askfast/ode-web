@@ -234,7 +234,8 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
          * Extend resources with slots
          */
         deferred.resolve(angular.extend(resources, {
-          slots: slots
+          slots: slots,
+          synced: new Date().getTime()
         }));        
       });
     });
@@ -263,7 +264,10 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
        * Return promised baby!
        * Extend resources with slots
        */
-      deferred.resolve(slots);        
+      deferred.resolve({
+        slots: slots,
+        synced: new Date().getTime()
+      });        
     });
 
     return deferred.promise;

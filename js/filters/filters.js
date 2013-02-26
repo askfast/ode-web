@@ -22,7 +22,7 @@ angular.module('WebPaige.filters', [])
 			case '3':
 				return 'Opstapper';
 			break;
-		}
+		};
 	}
 })
 
@@ -128,20 +128,28 @@ angular.module('WebPaige.filters', [])
 	return function(dates)
 	{
 		/**
-		 * Process the variables
+		 * This is needed because view is loaded even there
+		 * is an another tab active, if no checks made, console
+		 * will throw errors
 		 */
-		var dates = {
-			start: new Date(dates.start).toString('dddd, MMMM d'),
-			end: new Date(dates.end).toString('dddd, MMMM d')
+		if (dates)
+		{
+			/**
+			 * Process the variables
+			 */
+			var dates = {
+				start: new Date(dates.start).toString('dddd, MMMM d'),
+				end: new Date(dates.end).toString('dddd, MMMM d')
+			};
+			/**
+			 * Return values
+			 */
+			return 	dates.start + 
+							' / ' + 
+							dates.end + 
+							', ' + 
+							Dater.getThisYear();
 		};
-		/**
-		 * Return values
-		 */
-		return 	dates.start + 
-						' / ' + 
-						dates.end + 
-						', ' + 
-						Dater.getThisYear();
 	}
 }])
 
@@ -238,7 +246,15 @@ angular.module('WebPaige.filters', [])
 	 */
 	return function(timeline)
 	{
-		return 'Week number: ' + timeline.current.week;
+		/**
+		 * This is needed because view is loaded even there
+		 * is an another tab active, if no checks made, console
+		 * will throw errors
+		 */
+		if (timeline)
+		{
+			return 'Week number: ' + timeline.current.week;
+		};
 	};
 }])
 
