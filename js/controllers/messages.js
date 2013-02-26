@@ -284,7 +284,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     /**
      * Clear session cache for escalation data
      */
-    Storage.session.clear('escalation');
+    Storage.session.remove('escalation');
   };
 
 

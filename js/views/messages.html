@@ -207,6 +207,16 @@
 
         <div class="tab-header">
           <h3 class="pull-left">Inbox</h3>
+
+          <!-- search members -->
+          <form class="pull-right">
+            <input type="text" 
+                    class="span12 search-query" 
+                    placeholder="Filter messages.." 
+                    ng-model="query">
+          </form>
+          <!-- end search members -->
+
         </div>
         <hr>
 
@@ -231,7 +241,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.inbox">
+              <tr ng-repeat="message in messages.inbox | filter:query">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.inbox[message.uuid]"
