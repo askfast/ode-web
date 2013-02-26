@@ -170,7 +170,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       /**
        * Loop through in inbox
        */
-      var newInboxMsg = [];
+      var _inbox = [];
       angular.forEach($scope.messages.inbox, function (message, index)
       {
         if (message.uuid == $scope.message.uuid)
@@ -181,17 +181,23 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
           Messages.changeState([message.uuid], 'READ')
           .then( function (result)
           {
-            console.log('state changed');
+            // console.log('state changed');
           })
-          
+          /**
+           * Change state for view
+           */
           message.state = "READ";
-        }
-        
-        newInboxMsg.push(message);
+        };
+        /**
+         * Push changes message to inbox
+         */
+        _inbox.push(message);
       });
-		
-	  $scope.messages.inbox = newInboxMsg;
-	  console.log($scope.messages.inbox); 
+		/**
+     * Update inbox container in view
+     */
+	  $scope.messages.inbox = _inbox;
+	  // console.log($scope.messages.inbox); 
     };
   };
 
@@ -275,6 +281,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Set hash
      */
     $scope.setViewTo($scope.origin);
+    /**
+     * Clear session cache for escalation data
+     */
+    Storage.session.clear('escalation');
   };
 
 
@@ -662,7 +672,72 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     });
   };
 
-};
+    
+  /**
+   * Extract escalation information
+   */
+  if ($location.search().escalate)
+  {
+    var escalation = angular.fromJson(Storage.session.get('escalation'));
+    /**
+     * Grab group uuid
+     */
+    var name = escalation.group.split('>')[1].split('<')[0];
+    var uuid = escalation.group.split('uuid=')[1].split('#view')[0];
+    /**
+     * Wait a bit till DOM is ready
+     */
+    setTimeout (function ()
+    {
+      /**
+       * Trigger chosen
+       */
+      angular.forEach($("div#composeTab select.chzn-select option") , function (option, index)
+      {
+        /**
+         * Find the correct option
+         */
+        if (option.innerHTML == name)
+        {
+          /**
+           * Set selected
+           */
+          option.selected = true;
+        };
+      });
+      /**
+       * Let chosen know list is updated
+       */
+      $("div#composeTab select.chzn-select").trigger("liszt:updated");
+    }, 100);
+    /**
+     * Set data in compose form
+     */
+    $scope.message = {
+      subject: 'Escalation message',
+      receivers: [{
+        group: 'Groups', 
+        id: uuid, 
+        name: name
+      }],
+      body: 'We have ' +
+            escalation.diff +
+            ' shortage in between ' +
+            escalation.start.date + ' ' +
+            escalation.start.time + ' and ' +
+            escalation.end.date + ' ' +
+            escalation.end.time + '. ' + 
+            'Would you please make yourself available if you are available for that period?'
+    };
+    /**
+     * Set broadcasting options
+     */
+    $scope.broadcast = {
+      sms: true
+    };
+  };
+  
+}
 
 
 

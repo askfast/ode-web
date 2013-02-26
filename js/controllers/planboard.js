@@ -3,7 +3,7 @@
 /**
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Dater, Storage) 
+function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Dater, Storage, $location) 
 {
   /**
    * Set default currents
@@ -1313,6 +1313,35 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     });    
   };
 
+
+  /**
+   * Send shortage message
+   */
+  $scope.sendShortageMessage = function (slot)
+  {
+    /**
+     * Set info about slot in sessionStorage
+     */
+    Storage.session.add('escalation', angular.toJson({
+      group: slot.group,
+      start: {
+        date: slot.start.date,
+        time: slot.start.time
+      },
+      end: {
+        date: slot.end.date,
+        time: slot.end.time
+      },
+      diff: slot.diff
+    }));
+    /**
+     * Redirect location to messages compose
+     */
+    $location.path('/messages').search({
+      escalate: true
+    }).hash('compose');
+  };
+
 };
 
 
@@ -2029,4 +2058,4 @@ planboardCtrl.prototype = {
 };
 
 planboardCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
-                        '$window', 'data', 'Slots', 'Dater', 'Storage'];
+                        '$window', 'data', 'Slots', 'Dater', 'Storage', '$location'];

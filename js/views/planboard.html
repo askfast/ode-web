@@ -232,7 +232,7 @@
     <!-- group diff -->
     <div class="form-elements-group" ng-show="views.group">
       <small>
-        <i ng-show="(slot.diff < 0)">There <strong>less people</strong> than needed!</i>
+        <i ng-show="(slot.diff < 0)">There <strong>{{slot.diff}} less people</strong> than needed!</i>
         <i ng-show="(slot.diff == 0)">There are <strong>just as many people</strong> as needed.</i>
         <i ng-show="(slot.diff > 0)">There are <strong>{{slot.diff}} more people</strong> than needed!</i>
       </small>
@@ -263,6 +263,12 @@
     <!-- slot actions -->
     <div class="form-elements-actions pull-right">
       
+      <div ng-show="(slot.diff < 0)">
+        <button type="button" 
+                ng-click="sendShortageMessage(slot)" 
+                class="btn btn-success">Send Message To Members</button>
+      </div>
+      
       <div ng-show="views.slot.add">
         <button type="button" 
                 ng-click="add(slot)" 
@@ -271,11 +277,11 @@
 
       <div ng-show="views.slot.edit">
         <button type="button" 
-                ng-click="change(original, slot)" 
-                class="btn btn-success">Change</button>
-        <button type="button" 
                 ng-click="delete()" 
                 class="btn btn-danger">Delete</button>
+        <button type="button" 
+                ng-click="change(original, slot)" 
+                class="btn btn-success">Change</button>
       </div>
 
       <div ng-show="views.wish">
