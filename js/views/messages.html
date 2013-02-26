@@ -208,14 +208,14 @@
         <div class="tab-header">
           <h3 class="pull-left">Inbox</h3>
 
-          <!-- search members -->
+          <!-- filter messages -->
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
                     placeholder="Filter messages.." 
-                    ng-model="query">
+                    ng-model="query.inbox">
           </form>
-          <!-- end search members -->
+          <!-- end filter messages -->
 
         </div>
         <hr>
@@ -241,7 +241,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.inbox | filter:query">
+              <tr ng-repeat="message in messages.inbox | filter:query.inbox | orderBy:creationTime:reverse">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.inbox[message.uuid]"
@@ -292,6 +292,15 @@
 
         <div class="tab-header">
           <h3 class="pull-left">Outbox</h3>
+
+          <!-- filter messages -->
+          <form class="pull-right">
+            <input type="text" 
+                    class="span12 search-query" 
+                    placeholder="Filter messages.." 
+                    ng-model="query.outbox">
+          </form>
+          <!-- end filter messages -->
         </div>
         <hr>
 
@@ -315,7 +324,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.outbox">
+              <tr ng-repeat="message in messages.outbox | filter:query.outbox">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.outbox[message.uuid]"
@@ -363,12 +372,23 @@
         <div class="tab-header">
           <h3 class="pull-left">Trash</h3>
 
-          <div class="pull-right">
+          <!-- empty trash button -->
+          <div class="pull-right" style="margin-left: 10px;">
             <button type="button" 
                   ng-click="emptyTrash()" 
                   class="btn btn-danger pull-left">
                   <i class="icon-trash icon-white"></i> Empty Trash</button>
           </div>
+          <!-- end empty trash button -->
+
+          <!-- filter messages -->
+          <form class="pull-right">
+            <input type="text" 
+                    class="span12 search-query" 
+                    placeholder="Filter messages.." 
+                    ng-model="query.trash">
+          </form>
+          <!-- end filter messages -->
 
         </div>
         <hr>
@@ -394,7 +414,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.trash">
+              <tr ng-repeat="message in messages.trash | filter:query.trash">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.trash[message.uuid]"
