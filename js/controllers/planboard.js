@@ -172,6 +172,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     $scope.timeline.config.legenda[index] = true;
   });
 
+
+  /**
+   * Timeline group legenda default configuration
+   */
   $scope.timeline.config.legenda.groups = {
     more: true,
     even: true,

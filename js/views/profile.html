@@ -402,8 +402,7 @@
             <div class="form-elements-group">
               <label>State</label>
               <select ng-model="slot.state" 
-                      ng-options="option as value for (option, value) in states" 
-                      ng-show="views.slot.add || views.slot.edit">
+                      ng-options="option as value for (option, value) in states">
                 <option value="">select a state</option>
               </select>
             </div>

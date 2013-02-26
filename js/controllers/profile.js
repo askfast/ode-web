@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location, $window)
+function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location, $window, Slots)
 {
   /**
    * Self this
@@ -353,6 +353,25 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   {
     initTimeline();
   };
+  
+
+  /**
+   * Watch for changes in timeline range
+   */
+  $scope.$watch(function()
+  {
+    /**
+     * Get timeline range
+     */
+    var range = self.timeline.getVisibleChartRange();
+    /**
+     * Set ranges
+     */
+    $scope.timeline.range = {
+      start: new Date(range.start).toString($config.date.stringFormat),
+      end: new Date(range.end).toString($config.date.stringFormat)
+    };
+  });
 
 
   /**
@@ -486,14 +505,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       /**
        * Set the view
        */
-      $scope.views = {
-        slot: {
-          add: true,
-          edit: false
-        },
-        group: false,
-        wish: false,
-        member: false
+      $scope.forms = {
+        add: true,
+        edit: false
       };
       /**
        * Set info in slot model
@@ -533,7 +547,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       end: Date.parse(slot.end.date + ' ' + slot.end.time).getTime() / 1000,
       recursive: (slot.recursive) ? true : false,
       text: slot.state
-    }, $rootScope.app.resources.uuid)
+    }, $scope.user.id)
     .then(function (result)
     {
       /**
@@ -577,7 +591,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       start: values.start,
       end: values.end,
       content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]), 
-    }, $rootScope.app.resources.uuid)
+    }, $scope.user.id)
     .then(function (result)
     {
       /**
@@ -615,7 +629,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
         recursive: slot.recursive, 
         state: slot.state 
         })
-    }, $rootScope.app.resources.uuid)
+    }, $scope.user.id)
     .then(function (result)
     {
       /**
@@ -638,7 +652,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Add slot
      */
-    Slots.delete($scope.original, $rootScope.app.resources.uuid)
+    Slots.delete($scope.original, $scope.user.id)
     .then(function (result)
     {
       /**
@@ -661,7 +675,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Add slot
      */
-    Slots.delete($scope.original, $rootScope.app.resources.uuid)
+    Slots.delete($scope.original, $scope.user.id)
     .then(function (result)
     {
       /**
@@ -863,6 +877,15 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
         states: $config.timeline.config.states
       }
     };
+    /**
+     * States for dropdown
+     */
+    var states = {};
+    angular.forEach($scope.timeline.config.states, function(state, key)
+    {
+      states[key] = state.label;
+    });
+    $scope.states = states;
     /**
      * TODO
      * Still needed?
@@ -1170,6 +1193,6 @@ profileCtrl.prototype = {
 
 
 profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
-                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups', 'Dater', '$location', '$window'];
+                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups', 'Dater', '$location', '$window', 'Slots'];
 
 
