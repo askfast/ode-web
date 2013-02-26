@@ -236,7 +236,34 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
         deferred.resolve(angular.extend(resources, {
           slots: slots
         }));        
-      })
+      });
+    });
+
+    return deferred.promise;
+  };
+
+
+  /**
+   * Get user slots
+   */
+  Profile.prototype.getSlots = function (id, params) 
+  {
+    var deferred = $q.defer();
+
+    /**
+     * Get user slots
+     */
+    Slots.user({
+      user: id,
+      start: params.start / 1000,
+      end: params.end / 1000
+    }).then(function (slots)
+    {
+      /**
+       * Return promised baby!
+       * Extend resources with slots
+       */
+      deferred.resolve(slots);        
     });
 
     return deferred.promise;

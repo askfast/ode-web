@@ -566,7 +566,20 @@ label {
 
 
 
+#form-open {
+  border-top: 1px solid #c6c3b6;
+}
 
+#form-open .form-toggled {
+  background-color: #f5f4ee;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #c6c3b6;
+  margin-bottom: 30px;
+  padding: 20px;
+}
+
+#form-open .form-toggled h4 {
+}
 
 
 

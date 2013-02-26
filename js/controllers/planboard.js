@@ -900,7 +900,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           id: content.id
         }
       };
-
       /**
        * Switch over type of slot
        */

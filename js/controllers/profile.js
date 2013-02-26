@@ -3,8 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, 
-$route, Storage, Groups, Dater, $location)
+function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location, $window)
 {
   /**
    * Self this
@@ -22,63 +21,10 @@ $route, Storage, Groups, Dater, $location)
 
 
   /**
-   * Extract view action from url and set view
-   */
-  setView($location.hash());
-
-
-  /**
-   * View setter
-   */
-  function setView (hash)
-  {
-    /**
-     * Kind of reset views
-     */
-    $scope.views = {
-      profile:  false,
-      edit:     false,
-      password: false,
-      timeline: false
-    };
-    /**
-     * Set correct one true
-     */
-    $scope.views[hash] = true;
-    /**
-     * Check if it is user
-     */
-    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
-  };
-
-
-  /**
-   * Switch between the views and set hash ccordingly
-   */
-  $scope.setViewTo = function (hash)
-  {
-    /**
-     * Let angulr know things are chnaging
-     */
-    $scope.$watch($location.hash(), function()
-    {
-      /**
-       * Set hash
-       */
-      $location.hash(hash);
-      /**
-       * Set view intern
-       */
-      setView(hash);
-    });
-  };
-
-
-  /**
    * Set data for view
    */
   $scope.data = data;
-  // console.warn('data ->', data);
+  //console.warn('data ->', angular.toJson(data));
 
 
   /**
@@ -124,6 +70,134 @@ $route, Storage, Groups, Dater, $location)
     current: '',
     new1: '',
     new2: ''
+  };
+
+
+  /**
+   * Default form views
+   */
+  $scope.forms = {
+    add: false,
+    edit: false
+  };
+
+
+  /**
+   * Slot form toggler
+   */
+  $scope.toggleSlotForm = function ()
+  {
+    /**
+     * If inline slot manager open close it
+     */
+    if ($scope.forms.add)
+    {
+      $scope.resetInlineForms();
+    }
+    /**
+     * Open sesame open!
+     */
+    else
+    {
+      /**
+       * Reset slot container
+       */
+      $scope.slot = {};
+      /**
+       * Set the view
+       */
+      $scope.forms = {
+        add: true,
+        edit: false
+      };
+    }
+  };
+
+
+  /**
+   * Reset inline forms
+   */
+  $scope.resetInlineForms = function ()
+  {
+    /**
+     * Reset slot container
+     */
+    $scope.slot = {};
+    /**
+     * Reset original container
+     */
+    $scope.original = {};
+    /**
+     * Reset views
+     */
+    $scope.forms = {
+      add: false,
+      edit: false
+    };
+  };
+  
+    
+  /**
+   * 
+   * Render timeline if hash is timeline
+   * 
+   */
+  if ($location.hash() == 'timeline')
+  {
+    initTimeline();
+  };
+
+
+  /**
+   * Extract view action from url and set view
+   */
+  setView($location.hash());
+
+
+  /**
+   * View setter
+   */
+  function setView (hash)
+  {
+    /**
+     * Kind of reset views
+     */
+    $scope.views = {
+      profile:  false,
+      edit:     false,
+      password: false,
+      timeline: false
+    };
+    /**
+     * Set correct one true
+     */
+    $scope.views[hash] = true;
+    /**
+     * Check if it is user
+     */
+    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
+  };
+
+
+  /**
+   * Switch between the views and set hash ccordingly
+   */
+  $scope.setViewTo = function (hash)
+  {
+    /**
+     * Let angular know things are chnaging
+     */
+    $scope.$watch($location.hash(), function()
+    {
+      /**
+       * Set hash
+       */
+      $location.hash(hash);
+      /**
+       * Set view intern
+       */
+      setView(hash);
+    });
   };
 
 
@@ -273,73 +347,12 @@ $route, Storage, Groups, Dater, $location)
   };
 
 
-
   /**
-   * Render timeline
+   * Redraw timeline
    */
-  if ($location.hash() == 'timeline')
+  $scope.redraw = function ()
   {
-    /**
-     * Set defaults for timeline
-     */
-    $scope.timeline = {
-      current: current,
-      options: {
-        start:  new Date(periods.weeks[current.week].first.day),
-        end:    new Date(periods.weeks[current.week].last.day),
-        min:    new Date(periods.weeks[current.week].first.day),
-        max:    new Date(periods.weeks[current.week].last.day)
-      },
-      range: {
-        start: periods.weeks[current.week].first.day,
-        end: periods.weeks[current.week].last.day
-      },
-      config: {
-        states: $config.timeline.config.states
-      }
-    };
-  
-    /**
-     * Create DOM for timeline
-     */
-    // $('#timeline').html('');
-    // $('#timeline').append('<div id="userTimeline"></div>');
-
-    /**
-     * Where is my timeline landlord?
-     */
-    var timeline = new links.Timeline(document.getElementById('userTimeline'));
-    /**
-     * Init timeline listeners
-     */
-    links.events.addListener(timeline, 'rangechanged',  timelineGetRange);
-    links.events.addListener(timeline, 'edit',          timelineOnEdit);
-    links.events.addListener(timeline, 'add',           timelineOnAdd);
-    links.events.addListener(timeline, 'delete',        timelineOnDelete);
-    links.events.addListener(timeline, 'change',        timelineOnChange);
-    links.events.addListener(timeline, 'select',        timelineOnSelect);
-    /**
-     * Run timeline
-     * Merge options with defaults
-     */
-    angular.extend($scope.timeline.options, $config.timeline.options);
-    /**
-     * Draw timeline
-     *
-     * Use setTimeout to prevent rendering issue
-     * of DOM not ready while drawing data in timeline..
-     */
-    setTimeout( function() 
-    {
-      timeline.draw(self.process(
-          $scope.data.slots.data, 
-          $scope.timeline.config
-        ), $scope.timeline.options);
-    }, 100);
-    /**
-     * Set range dynamically
-     */
-    timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+    initTimeline();
   };
 
 
@@ -408,54 +421,11 @@ $route, Storage, Groups, Dater, $location)
       };
 
       /**
-       * Switch over type of slot
+       * Switch to edit form view
        */
-      switch (content.type)
-      {
-        case 'slot':
-          $scope.views = {
-            slot: {
-              add: false,
-              edit: true
-            },
-            group: false,
-            wish: false,
-            member: false
-          };
-        break;
-        case 'group':
-          $scope.views = {
-            slot: {
-              add: false,
-              edit: false
-            },
-            group: true,
-            wish: false,
-            member: false
-          };
-        break;
-        case 'wish':
-          $scope.views = {
-            slot: {
-              add: false,
-              edit: false
-            },
-            group: false,
-            wish: true,
-            member: false
-          };
-        break;
-        case 'member':
-          $scope.views = {
-            slot: {
-              add: false,
-              edit: false
-            },
-            group: false,
-            wish: false,
-            member: true
-          };
-        break;
+      $scope.forms = {
+        add: false,
+        edit: true
       };
       /**
        * Set selected slot for view
@@ -473,27 +443,6 @@ $route, Storage, Groups, Dater, $location)
         recursive: content.recursive,
         id: content.id
       };
-      /**
-       * TODO
-       * Check if this can be combined with switch later on!
-       *
-       * Set extra data based slot type for inline form
-       */
-      if (content.type == 'group') 
-      {
-        $scope.slot.diff = content.diff;
-        $scope.slot.group = content.group;
-      }
-      else if (content.type == 'wish')
-      {
-        $scope.slot.wish = content.wish;
-        $scope.slot.group = content.group;
-        $scope.slot.groupId = content.groupId;
-      }
-      else if (content.type == 'member')
-      {
-        $scope.slot.member = content.mid;
-      }
       /**
        * Return values
        */
@@ -576,7 +525,7 @@ $route, Storage, Groups, Dater, $location)
   /**
    * Add slot trigger start view
    */
-  $scope.add = function(slot)
+  $scope.slotAdd = function(slot)
   {
     /**
      * Set preloader
@@ -646,7 +595,7 @@ $route, Storage, Groups, Dater, $location)
   /**
    * Change slot
    */
-  $scope.change = function(original, slot)
+  $scope.slotChange = function(original, slot)
   {
     /**
      * Set preloader
@@ -707,7 +656,7 @@ $route, Storage, Groups, Dater, $location)
   /**
    * Delete trigger start view
    */
-  $scope.delete = function()
+  $scope.slotRemove = function()
   {
     /**
      * Set preloader
@@ -727,69 +676,312 @@ $route, Storage, Groups, Dater, $location)
   };
 
 
+  // /**
+  //  * TODO
+  //  * Look for ways to combine with other timeline refreshers
+  //  *
+  //  * Refresh timeline
+  //  */
+  // function refreshTimeline ()
+  // {
+  //   /**
+  //    * Reset slot container
+  //    */
+  //   $scope.slot = {};
+  //   /**
+  //    * Set view to default slot add
+  //    */
+  //   $scope.views = {
+  //     slot: {
+  //       add: true,
+  //       edit: false
+  //     },
+  //     group: false,
+  //     wish: false,
+  //     member: false
+  //   };
+  //   /**
+  //    * Ask for fresh data
+  //    */
+  //   Slots.all({
+  //     groupId:  $scope.timeline.current.group,
+  //     division: $scope.timeline.current.division,
+  //     layouts:  $scope.timeline.current.layouts,
+  //     month:    $scope.timeline.current.month,
+  //     stamps: {
+  //       start:  new Date($scope.timeline.range.start).getTime(),
+  //       end:    new Date($scope.timeline.range.end).getTime()
+  //     },
+  //   })
+  //   .then(function(data)
+  //   {
+  //     /**
+  //      * Reset slot container
+  //      */
+  //     $scope.slot = {};
+  //     /**
+  //      * Set scope
+  //      */
+  //     $scope.data = data;
+  //     /**
+  //      * Adjust timeline for new period
+  //      */
+  //     timeliner({
+  //       start:  $scope.timeline.range.start,
+  //       end:    $scope.timeline.range.end
+  //     });
+  //     /**
+  //      * Set preloader
+  //      */
+  //     $rootScope.loading = false;
+  //   });    
+  // };
+
+
   /**
-   * TODO
-   * Look for ways to combine with other timeline refreshers
-   *
-   * Refresh timeline
+   * Go one week in past
    */
-  function refreshTimeline ()
+  $scope.timelineBefore = function(timelineScope)
+  {
+    if ($scope.timeline.current.week != 1)
+    {
+      $scope.timeline.current.week--;
+      loadTimeline(periods.weeks[$scope.timeline.current.week]);
+    };
+  };
+
+
+  /**
+   * Go one week in future
+   */
+  $scope.timelineAfter = function(timelineScope)
+  {
+    if ($scope.timeline.current.week != 53)
+    {
+      $scope.timeline.current.week++;
+      loadTimeline(periods.weeks[$scope.timeline.current.week]);
+    };
+  };
+
+
+  /**
+   * Generic data loader and timeline renderer
+   */
+  function loadTimeline(options)
   {
     /**
-     * Reset slot container
+     * Set preloader
      */
-    $scope.slot = {};
+    $rootScope.loading = true;
     /**
-     * Set view to default slot add
+     * Fetch new data
      */
-    $scope.views = {
-      slot: {
-        add: true,
-        edit: false
-      },
-      group: false,
-      wish: false,
-      member: false
-    };
-    /**
-     * Ask for fresh data
-     */
-    Slots.all({
-      groupId:  $scope.timeline.current.group,
-      division: $scope.timeline.current.division,
-      layouts:  $scope.timeline.current.layouts,
-      month:    $scope.timeline.current.month,
-      stamps: {
-        start:  new Date($scope.timeline.range.start).getTime(),
-        end:    new Date($scope.timeline.range.end).getTime()
-      },
+    Profile.getSlots($scope.user.id, {
+      start:  options.first.timeStamp,
+      end:    options.last.timeStamp
     })
-    .then(function(data)
+    .then(function(slots)
     {
-      /**
-       * Reset slot container
-       */
-      $scope.slot = {};
       /**
        * Set scope
        */
-      $scope.data = data;
+      $scope.data.slots = slots;
       /**
        * Adjust timeline for new period
        */
       timeliner({
-        start:  $scope.timeline.range.start,
-        end:    $scope.timeline.range.end
+        start:  options.first.day,
+        end:    options.last.day
       });
       /**
-       * Set preloader
+       * Turn off preloader
        */
       $rootScope.loading = false;
-    });    
+    });
+  };
+
+
+  /**
+   * Render timeline
+   */
+  function initTimeline ()
+  {
+    /**
+     * Set defaults for timeline
+     */
+    $scope.timeline = {
+      current: current,
+      options: {
+        start:  new Date(periods.weeks[current.week].first.day),
+        end:    new Date(periods.weeks[current.week].last.day),
+        min:    new Date(periods.weeks[current.week].first.day),
+        max:    new Date(periods.weeks[current.week].last.day)
+      },
+      range: {
+        start: periods.weeks[current.week].first.day,
+        end: periods.weeks[current.week].last.day
+      },
+      config: {
+        states: $config.timeline.config.states
+      }
+    };
+  
+    /**
+     * TODO
+     * Still needed?
+     * 
+     * Create DOM for timeline
+     */
+    $('#timeline').html('');
+    $('#timeline').append('<div id="userTimeline"></div>');
+    /**
+     * Where is my timeline landlord?
+     */
+    self.timeline = new links.Timeline(document.getElementById('userTimeline'));
+    /**
+     * Init timeline listeners
+     */
+    links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
+    links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
+    links.events.addListener(self.timeline, 'add',           timelineOnAdd);
+    links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
+    links.events.addListener(self.timeline, 'change',        timelineOnChange);
+    links.events.addListener(self.timeline, 'select',        timelineOnSelect);
+    /**
+     * Run timeline
+     * Merge options with defaults
+     */
+    angular.extend($scope.timeline.options, $config.timeline.options);
+    /**
+     * Draw timeline
+     *
+     * Use setTimeout to prevent rendering issue
+     * of DOM not ready while drawing data in timeline..
+     */
+    setTimeout( function() 
+    {
+      self.timeline.draw(self.process(
+          $scope.data.slots.data, 
+          $scope.timeline.config
+        ), $scope.timeline.options);
+    }, 100);
+    /**
+     * Set range dynamically
+     */
+    self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+  };
+
+
+  /**
+   * Watch for changes in timeline range
+   */
+  $scope.$watch(function()
+  {
+    /**
+     * Get timeline range
+     */
+    var range = self.timeline.getVisibleChartRange();
+    /**
+     * Set ranges
+     */
+    $scope.timeline.range = {
+      start: new Date(range.start).toString($config.date.stringFormat),
+      end: new Date(range.end).toString($config.date.stringFormat)
+    };
+    /**
+     * Pass range to dateranger
+     */
+    $scope.daterange =  new Date($scope.timeline.range.start).toString('dd-MM-yyyy') + 
+                        ' / ' + 
+                        new Date($scope.timeline.range.end).toString('dd-MM-yyyy');
+  });
+
+
+  /**
+   * Draw and limit timeline
+   */
+  function timeliner(options)
+  {
+    /**
+     * Timeline options
+     */
+    $scope.timeline = {
+      current:  $scope.timeline.current,
+      options: {
+        start:  new Date(options.start),
+        end:    new Date(options.end),
+        min:    new Date(options.start),
+        max:    new Date(options.end)
+      },
+      config: {
+        states: $config.timeline.config.states
+      }
+    };
+    /**
+     * Merge options with defaults
+     */
+    angular.extend($scope.timeline.options, $config.timeline.options);
+    /**
+     * Draw timeline
+     */
+    setTimeout( function ()
+    {
+      self.timeline.draw(
+        self.process(
+          $scope.data.slots.data, 
+          $scope.timeline.config
+        ), 
+        $scope.timeline.options
+      );
+    }, 100);
+    /**
+     * Set range dynamically
+     */
+    self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+  };
+
+
+  /**
+   * Redraw timeline on window resize
+   */
+  $window.onresize = function ()
+  {
+    self.timeline.redraw();
+  };
+
+
+  /**
+   * Timeline zoom in
+   */
+  $scope.timelineZoomIn = function()
+  {
+    self.timeline.zoom( $config.timeline.config.zoomValue );
+  };
+
+
+  /**
+   * Timeline zoom out
+   */
+  $scope.timelineZoomOut = function()
+  {
+    self.timeline.zoom( -$config.timeline.config.zoomValue );
   };
 
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -819,21 +1011,36 @@ profileCtrl.setAccount = {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Profile resolver
  */
 profileCtrl.resolve = {
-  data: function (Profile, $route, $location, Dater) 
-  {    
-    if ($location.hash() == 'timeline')
+  data: function ($rootScope, Profile, $route, $location, Dater) 
+  {
+    if ($route.current.params.userId != $rootScope.app.resources.uuid)
     {
-      var periods = Dater.getPeriods(),
-          current = new Date().getWeek(),
-          ranges = {
-            start: periods.weeks[current].first.timeStamp / 1000,
-            end: periods.weeks[current].last.timeStamp / 1000,
-          };
-      return Profile.getWithSlots($route.current.params.userId, false, ranges);
+      // var periods = Dater.getPeriods(),
+      //     current = new Date().getWeek(),
+      //     ranges = {
+      //       start: periods.weeks[current].first.timeStamp / 1000,
+      //       end: periods.weeks[current].last.timeStamp / 1000,
+      //     };
+      // return Profile.getWithSlots($route.current.params.userId, false, ranges);
+      return {"resources":{"askatar":null,"askPass":"b48406b7c7d88252468b62a54ccfa3ad","PostZip":null,"PhoneAddress":"+31620300692","lastAvailCall":"1357393800","Identification Data":"4171schouwenaar","C2DMKey":"APA91bE78lS1xWPEZRm9Wve8Suqv00BtKn-9pJlYWnS-KlDJDkaFhPGlCXtIX9HyKeMHjK68wpKBfa8LkmrI1nyMSpfpoIzOXn0oEvKzT7NEFPYd6-hRk0Gtt-5r1713x5jc5ikC-y62Kq0DPcKo0eikpuFPk_lgDQ","PostAddress":null,"PostCity":null,"name":"1 Johan Schouwenaar","EmailAddress":"schouwenaar@upcmail.nl","role":"1","uuid":"4171schouwenaar"},"slots":{"id":"4171schouwenaar","data":[{"count":0,"end":1361829600,"recursive":true,"start":1361660460,"text":"com.ask-cs.State.Unavailable","type":"availability","wish":0},{"count":0,"end":1361858400,"recursive":true,"start":1361829600,"text":"com.ask-cs.State.Available","type":"availability","wish":0},{"count":0,"end":1361908800,"recursive":true,"start":1361858400,"text":"com.ask-cs.State.Unavailable","type":"availability","wish":0},{"count":0,"end":1361944800,"recursive":true,"start":1361908800,"text":"com.ask-cs.State.Available","type":"availability","wish":0},{"count":0,"end":1361984400,"recursive":true,"start":1361944800,"text":"com.ask-cs.State.Unavailable","type":"availability","wish":0},{"count":0,"end":1362031200,"recursive":true,"start":1361984400,"text":"com.ask-cs.State.Available","type":"availability","wish":0},{"count":0,"end":1362081600,"recursive":true,"start":1362031200,"text":"com.ask-cs.State.Unavailable","type":"availability","wish":0},{"count":0,"end":1362117600,"recursive":true,"start":1362081600,"text":"com.ask-cs.State.Available","type":"availability","wish":0},{"count":0,"end":1362168000,"recursive":true,"start":1362117600,"text":"com.ask-cs.State.Unavailable","type":"availability","wish":0},{"count":0,"end":1362207600,"recursive":true,"start":1362168000,"text":"com.ask-cs.State.Available","type":"availability","wish":0},{"count":0,"end":1362265140,"recursive":true,"start":1362207600,"text":"com.ask-cs.State.Unavailable","type":"availability","wish":0}],"stats":[{"state":"com.ask-cs.State.Unavailable","ratio":54.54545454545454},{"state":"com.ask-cs.State.Available","ratio":45.45454545454545}]}}
     }
     else
     {
@@ -841,6 +1048,22 @@ profileCtrl.resolve = {
     }
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -859,6 +1082,8 @@ profileCtrl.prototype = {
    */
   process: function (data, config)
   {
+    console.warn('passed config ->', config);
+    
     /**
      * Timedata container for all sort of slots
      */
@@ -928,6 +1153,6 @@ profileCtrl.prototype = {
 
 
 profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
-                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups', 'Dater', '$location'];
+                      '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups', 'Dater', '$location', '$window'];
 
 

@@ -30,7 +30,7 @@ angular.module('WebPaige.filters', [])
 /**
  * Main range filter
  */
-.filter('rangeMainFilter', ['Dater', 'Storage', function(Dater, Storage)
+.filter('rangeMainFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	/**
 	 * Get periods
@@ -114,9 +114,42 @@ angular.module('WebPaige.filters', [])
 
 
 /**
+ * Main range week filter
+ */
+.filter('rangeMainWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
+{
+	/**
+	 * Get periods
+	 */
+	var periods = Dater.getPeriods();
+	/**
+	 * Return constructor
+	 */
+	return function(dates)
+	{
+		/**
+		 * Process the variables
+		 */
+		var dates = {
+			start: new Date(dates.start).toString('dddd, MMMM d'),
+			end: new Date(dates.end).toString('dddd, MMMM d')
+		};
+		/**
+		 * Return values
+		 */
+		return 	dates.start + 
+						' / ' + 
+						dates.end + 
+						', ' + 
+						Dater.getThisYear();
+	}
+}])
+
+
+/**
  * Range info filter
  */
-.filter('rangeInfoFilter', ['Dater', 'Storage', function(Dater, Storage)
+.filter('rangeInfoFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	/**
 	 * Get periods
@@ -187,6 +220,25 @@ angular.module('WebPaige.filters', [])
 								periods.months[timeline.current.month].totalDays;
 			};
 		};
+	};
+}])
+
+
+/**
+ * Range info week filter
+ */
+.filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
+{
+	/**
+	 * Get periods
+	 */
+	var periods = Dater.getPeriods();
+	/**
+	 * Return values
+	 */
+	return function(timeline)
+	{
+		return 'Week number: ' + timeline.current.week;
 	};
 }])
 
