@@ -1,6 +1,5 @@
 html,body {
-  height: 100%;
-/* The html and body elements cannot have any padding or margin. */
+  margin:0;
 }
 
 
@@ -247,7 +246,22 @@ html,body {
 #footer {
   /*margin-top: -80px;*/
   background-color: #433c2d;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 #footer .container-fluid {
   padding-top: 10px;
@@ -263,6 +277,17 @@ html,body {
 #wrap .container {
   padding-top: 75px;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 #footer p.muted {
   margin: 0;
