@@ -445,14 +445,14 @@
                         ng-model="selectionMaster"
                         ng-click="toggleSelection(group, selectionMaster)">
               </th>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Tel</th>
+              <th><a ng-click="sorter='name'">Name</a></th>
+              <th><a ng-click="sorter='resources.role'">Role</a></th>
+              <th><a ng-click="sorter='resources.phoneAddress'">Tel</a></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="member in data.members[group.uuid] | filter:filtered">
+            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:true">
               <td>
                 <input type="checkbox"
                         ng-model="selection[member.uuid]"

@@ -241,7 +241,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.inbox | filter:query.inbox | orderBy:creationTime:reverse">
+              <tr ng-repeat="message in messages.inbox | filter:query.inbox | orderBy:'creationTime':true">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.inbox[message.uuid]"
@@ -324,7 +324,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.outbox | filter:query.outbox">
+              <tr ng-repeat="message in messages.outbox | filter:query.outbox | orderBy:'creationTime':true">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.outbox[message.uuid]"
@@ -414,7 +414,7 @@
             </thead>
             <tbody>
 
-              <tr ng-repeat="message in messages.trash | filter:query.trash">
+              <tr ng-repeat="message in messages.trash | filter:query.trash | orderBy:'creationTime':true">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.trash[message.uuid]"

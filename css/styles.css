@@ -734,6 +734,41 @@ label {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+.table thead th a {
+  color: #fff;
+}
+
+.table thead th a:hover {
+  color:#fff;
+  text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*.meny {
   display: none;
   padding: 20px;
