@@ -639,17 +639,8 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Empty trash
      */
     Messages.send(message, broadcast)
-    .then(function(result)
+    .then(function(uuid)
     {
-      /**
-       * IMPORTANT
-       * 
-       * If back-end can be configured to give the uuid of
-       * newly send message after sending message view can be
-       * redirected to view message of that message
-       */
-      // console.log('send message result ->', result);
-      
       /**
        * Query messages
        */
@@ -668,6 +659,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          * Close tabs
          */
         $scope.closeTabs();
+        /**
+         * Redirect to messge view
+         */
+        $scope.requestMessage(uuid, $scope.origin);
       });
     });
   };

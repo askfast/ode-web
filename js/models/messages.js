@@ -247,7 +247,17 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
      */
     Messages.send(null, message, function (result) 
     {
-      deferred.resolve(result);
+      /**
+       * Message send call returns only uuid and that is parsed as json
+       * by angular, this is a fix for converting returned object to plain string
+       */
+      var returned = '';
+      angular.forEach(result, function (chr, i)
+      {
+        returned += chr;
+      });
+
+      deferred.resolve(returned);
     });
 
     return deferred.promise;
