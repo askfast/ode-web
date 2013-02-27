@@ -220,10 +220,10 @@
         </div>
         <hr>
 
-        <p ng-hide="messages.inbox.length > 0">There are no messages in inbox.</p>
+        <p ng-hide="(messages.inbox|filter:query.inbox).length > 0">There are no messages.</p>
 
         <!-- inbox listing -->
-        <div ng-show="messages.inbox.length > 0">
+        <div ng-show="(messages.inbox|filter:query.inbox).length > 0">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -274,7 +274,7 @@
                   <i class="icon-trash icon-white"></i> Delete Selected Messages</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{messages.inbox.length}} message(s)</i></small>
+            <small><i>There are {{(messages.inbox|filter:query.inbox).length}} message(s)</i></small>
           </span>
         </div>
         <!-- end inbox listing -->
@@ -304,10 +304,10 @@
         </div>
         <hr>
 
-        <p ng-hide="messages.outbox.length > 0">There are no messages in outbox.</p>
+        <p ng-hide="(messages.outbox|filter:query.outbox).length > 0">There are no messages in outbox.</p>
 
         <!-- outbox listing -->
-        <div ng-show="messages.outbox.length > 0">
+        <div ng-show="(messages.outbox|filter:query.outbox).length > 0">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -354,7 +354,7 @@
                   <i class="icon-trash icon-white"></i> Delete Selected Messages</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{messages.outbox.length}} message(s)</i></small>
+            <small><i>There are {{(messages.outbox|filter:query.outbox).length}} message(s)</i></small>
           </span>
         </div>
         <!-- end outbox listing -->
@@ -393,10 +393,10 @@
         </div>
         <hr>
 
-        <p ng-hide="messages.trash.length > 0">There are no messages in trash.</p>
+        <p ng-hide="(messages.trash|filter:query.trash).length > 0">There are no messages in trash.</p>
 
         <!-- trash listing -->
-        <div ng-show="messages.trash.length > 0">
+        <div ng-show="(messages.trash|filter:query.trash).length > 0">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -446,7 +446,7 @@
                   <i class="icon-thumbs-up icon-white"></i> Restore Selected Messages</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{messages.trash.length}} message(s)</i></small>
+            <small><i>There are {{(messages.trash|filter:query.trash).length}} message(s)</i></small>
           </span>
         </div>
         <!-- end trash listing -->
