@@ -304,7 +304,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
      */
     var messages = Messages.prototype.local(),
         counter = 0;
-    
     /**
      * Loop through local messages
      */
@@ -319,11 +318,9 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         counter++;
       };
     });
-
     /**
      * No need to return but set rootScope directly
      */
-    // return counter;
     $rootScope.app.unreadMessages = counter;
   };
 
@@ -334,9 +331,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.changeState = function (ids, state)
   {
   	var deferred = $q.defer();
-
-
-
     /**
      * Make change state call
      */
@@ -350,9 +344,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        */
       deferred.resolve(result);
     });
-
-
-
     /**
      * Change message state locally as well
      * if it is READ
@@ -380,7 +371,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
           if (message.uuid == id)
           {
             message.state = 'READ';
-            console.log('message ->', message);
           };
         });
         /**
@@ -401,8 +391,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
        */
       Messages.prototype.unreadCount();
     };
-
-    
 
   	return deferred.promise;
   };

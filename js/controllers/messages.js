@@ -141,6 +141,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
 
   /**
+   * TODO
+   * Possible bug..
+   * Still issues with changing state of the message
+   * 
    * Set given group for view
    */
   function setMessageView (id)
@@ -168,6 +172,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
     {
       /**
+       * Trigger change state call
+       */
+      Messages.changeState([id], 'READ')
+      .then( function (result)
+      {
+        console.log('state changed');
+      });
+      /**
        * Loop through in inbox
        */
       var _inbox = [];
@@ -175,14 +187,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       {
         if (message.uuid == $scope.message.uuid)
         {
-          /**
-           * Trigger change state call
-           */
-          Messages.changeState([message.uuid], 'READ')
-          .then( function (result)
-          {
-            // console.log('state changed');
-          })
           /**
            * Change state for view
            */
@@ -193,11 +197,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          */
         _inbox.push(message);
       });
-		/**
-     * Update inbox container in view
-     */
-	  $scope.messages.inbox = _inbox;
-	  // console.log($scope.messages.inbox); 
+  		/**
+       * Update inbox container in view
+       */
+  	  $scope.messages.inbox = _inbox;
+  	  // console.log($scope.messages.inbox);
+      Messages.unreadCount(); 
     };
   };
 

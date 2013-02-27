@@ -28,19 +28,16 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
      * Turn off loader
      */
     $scope.loadingPies = false;
-
     /**
      * Set pies data
      */
     $scope.pies = pies;
   })
-
   /**
    * Second then for making sure that first process is done
    */
   .then( function (result)
   {
-
     /**
      * TODO 
      * Look for a better way to handle with it
@@ -48,18 +45,15 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
      */
     setTimeout( function() 
     {
-
       /**
        * Loop through pie statistics data
        */
       angular.forEach($scope.pies, function (pie, index)
       {
-
         /**
          * Clean group pie chart holder
          */
         document.getElementById('weeklyPie-' + pie.id).innerHTML = '';
-
         /**
          * Quick fix. If ratio is 0 than pie chart is not displayed at all
          */
@@ -67,7 +61,6 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
         if (pie.ratios.more != 0) ratios.push(pie.ratios.more);
         if (pie.ratios.even != 0) ratios.push(pie.ratios.even);
         if (pie.ratios.less != 0) ratios.push(pie.ratios.less);
-
         /**
          * Pie chart it baby!
          */
@@ -75,7 +68,6 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
             pie = r.piechart(40, 40, 40, ratios, {
               colors: $config.pie.colors
             });
-
       });
     }, 100);
   });
