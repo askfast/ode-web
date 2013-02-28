@@ -14,8 +14,6 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Set default views
    */
-  
-	// console.log($routeParams);
 	
 	if($routeParams.uuid && $routeParams.key) {
 		$scope.views = {

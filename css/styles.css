@@ -163,20 +163,23 @@ html,body {
 
 
 
-#loading {
+#loading,
+#loggin-out {
   position: absolute;
   top: 30%;
   width: 100%;
   text-align: center;
 }
 
-#loading p {
+#loading p,
+#loggin-out p {
   font-size: 18px;
   color: #a19781;
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);  
 }
 
-#loading span.entypo {
+#loading span.entypo,
+#loggin-out span.entypo {
   font-size: 20em;
   display: block;
   color: #a19781;
@@ -186,7 +189,7 @@ html,body {
 
 
 
-#loggin-out {
+/*#loggin-out {
   position: absolute;
   top: 180px;
   width: 100%;
@@ -206,7 +209,7 @@ html,body {
   color: #a19781;
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);  
 }
-
+*/
 /* @end */
 
 
