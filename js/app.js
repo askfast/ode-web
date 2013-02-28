@@ -35,13 +35,15 @@ WebPaige.
      * Data source host
      */
     // Development
-    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    // host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
     // Erik
     // host: 'http://10.200.200.100\\:8888/ns_knrmtest',
     // Micheal
     // host: 'http://10.200.200.201\\:8888/ns_knrmtest',
     // // Production
-    // host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    // // Test
+    // host: 'http://knrm.ask-static.appspot.com/ns_knrm',
     /**
      * TODO
      * All date time related values into one place!
@@ -298,6 +300,17 @@ WebPaige.
 ['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', 
 function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
 {
+  /**
+   * Check for os
+   */
+  if (navigator.appVersion.indexOf("Mac") != -1 || 
+      navigator.appVersion.indexOf("X11") != -1 || 
+      navigator.appVersion.indexOf("Linux") != -1)
+  {
+    console.log('not windows');
+  };
+
+
   /**
    * If periods are not present calculate them
    */
