@@ -300,15 +300,30 @@ WebPaige.
 ['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', 
 function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
 {
+
+    
+  $rootScope.loading = {
+    status: false,
+    message: 'Loading..'
+  }
+
+
   /**
-   * Check for os
+   * TODO
+   * There should be some custom css styling based on OS
+   * Finish this when app reaches mature state for cross
+   * browser testing
+   * 
    */
-  if (navigator.appVersion.indexOf("Mac") != -1 || 
-      navigator.appVersion.indexOf("X11") != -1 || 
-      navigator.appVersion.indexOf("Linux") != -1)
-  {
-    console.log('not windows');
-  };
+  // /**
+  //  * Check for os
+  //  */
+  // if (navigator.appVersion.indexOf("Mac") != -1 || 
+  //     navigator.appVersion.indexOf("X11") != -1 || 
+  //     navigator.appVersion.indexOf("Linux") != -1)
+  // {
+  //   console.log('not windows');
+  // };
 
 
   /**
@@ -419,21 +434,6 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
     //   $('.tabs-left .nav-tabs').css( { height: contentHeight } );
     // };
   };
-
-
-  // /**
-  //  * TODO
-  //  * Find better ways of doing this!
-  //  *
-  //  * Position footer always at the bottom
-  //  */
-  // $(window).scroll(function()
-  // {
-  //   $('#footer').css({
-  //     position: 'absolute',
-  //     bottom: 0
-  //   });
-  // });
 
 
 }]);

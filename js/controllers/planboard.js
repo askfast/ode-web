@@ -396,7 +396,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Loading timeline..'
+    };
     /**
      * Fetch new data
      */
@@ -420,7 +423,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       /**
        * Turn off preloader
        */
-      $rootScope.loading = false;
+      $rootScope.loading = {
+        status: false
+      }
     }); 
   });
 
@@ -540,7 +545,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Loading timeline..'
+    };
     /**
      * Fetch new data
      */
@@ -567,7 +575,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       /**
        * Turn off preloader
        */
-      $rootScope.loading = false;
+      $rootScope.loading = {
+        status: false
+      };
     });
   };
 
@@ -596,7 +606,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       /**
        * Set preloader
        */
-      $rootScope.loading = true;
+      $rootScope.loading = {
+        status: true,
+        message: 'Loading timeline..'
+      };
       /**
        * Fetch new data
        */
@@ -626,7 +639,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         /**
          * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     };
   };
@@ -1078,7 +1093,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Adding a timeslot..'
+    };
     /**
      * Add slot
      */
@@ -1119,7 +1137,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Changing a timeslot..'
+    };
 
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
     /**
@@ -1148,7 +1169,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Changing timeslot..'
+    };
     /**
      * Add slot
      */
@@ -1186,7 +1210,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Changing wish value..'
+    };
     /**
      * Add slot
      */
@@ -1214,7 +1241,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Deleting a timeslot..'
+    };
     /**
      * Add slot
      */
@@ -1237,7 +1267,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Deleting a timeslot..'
+    };
     /**
      * Add slot
      */
@@ -1277,6 +1310,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       member: false
     };
     /**
+     * Set preloader message
+     */
+    $rootScope.loading = {
+      status: true,
+      message: 'Refreshing timeline..'
+    };
+    /**
      * Ask for fresh data
      */
     Slots.all({
@@ -1309,7 +1349,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       /**
        * Set preloader
        */
-      $rootScope.loading = false;
+      $rootScope.loading = {
+        status: false
+      };
     });    
   };
 
@@ -1319,6 +1361,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.sendShortageMessage = function (slot)
   {
+    /**
+     * Set preloader
+     */
+    $rootScope.loading = {
+      status: true,
+      message: 'Pre-compiling shortage message'
+    };
     /**
      * Set info about slot in sessionStorage
      */
@@ -1400,7 +1449,6 @@ planboardCtrl.resolve = {
         members: false
       }
     });
-    // return ''
   }
 };
 

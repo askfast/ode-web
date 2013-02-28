@@ -306,7 +306,10 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Searching messages..'
+    };
     /**
      * Search
      */
@@ -329,13 +332,15 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
        */
       $scope.setViewTo('search');
       /**
-       * Set preloader
-       */
-      $rootScope.loading = false;
-      /**
        * Fix height of the content tab
        */
       $rootScope.fixTabHeight('searchTab');
+      /**
+       * Turn off preloader
+       */
+      $rootScope.loading = {
+        status: true
+      };
     });
   };
 
@@ -348,13 +353,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Adding a new member..'
+    };
     /**
      * Add a member
      */
     Groups.addMember(candidate).
     then(function(result)
     {
+      /**
+       * Refresh groups list message
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing groups and members list..'
+      };
       /**
        * Query fresh data
        */
@@ -366,9 +381,11 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          */
         $scope.data = data;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };
@@ -382,13 +399,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Removing member from group..'
+    };
     /**
      * Remove from group
      */
     Groups.removeMember(member, group).
     then(function(result)
     {
+      /**
+       * Refresh groups list message
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing groups and members list..'
+      };
       /**
        * Query fresh data
        */
@@ -400,9 +427,11 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          */
         $scope.data = data;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };
@@ -416,13 +445,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Removing selected members..'
+    };
     /**
      * Remove members
      */
     Groups.removeMembers(selection, group).
     then(function(result)
     {
+      /**
+       * Refresh groups list message
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing groups and members list..'
+      };
       /**
        * Reset selection
        */
@@ -438,9 +477,11 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          */
         $scope.data = data;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
 
@@ -460,13 +501,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Saving group..'
+    };
     /**
      * Save group
      */
     Groups.save(group).
     then(function(returned)
     {
+      /**
+       * Refresh groups list message
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing groups and members list..'
+      };
       /**
        * Query fresh data
        */
@@ -481,10 +532,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          * Set returned data
          */
         $scope.data = data;
-        /**
-         * Set preloader
-         */
-        $rootScope.loading = false;
         /**
          * Redirect to group view
          */
@@ -531,6 +578,12 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
           // end of if
         });
         // end of foreach
+        /**
+         * Turn off loading
+         */
+        $rootScope.loading = {
+          status: false
+        };
       });
 
     });
@@ -545,13 +598,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Registering a new member..'
+    };
     /**
      * Register a new member
      */
     Profile.register(member).
     then(function()
     {
+      /**
+       * Refresh groups list message
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing groups and members list..'
+      };
       /**
        * Query fresh data
        */
@@ -563,13 +626,15 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          */
         $scope.data = data;
         /**
-         * Set preloader
-         */
-        $rootScope.loading = false;
-        /**
          * Redirect to profile of new user
          */
         $location.path('/profile/' + member.username + '#profile');
+        /**
+         * Turn off preloader
+         */
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };
@@ -583,13 +648,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Deleting group..'
+    };
     /**
      * Delete group
      */
     Groups.delete(id).
     then(function()
     {
+      /**
+       * Refresh groups list message
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing groups and members list..'
+      };
       /**
        * Query fresh data
        */
@@ -600,10 +675,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
          * Set returned data
          */
         $scope.data = data;
-        /**
-         * Set preloader
-         */
-        $rootScope.loading = false;
         /**
          * Redirect to group view
          */
@@ -641,6 +712,12 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
           // end of watch
         });
         // end of foreach
+        /**
+         * Turn off loading
+         */
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };

@@ -208,13 +208,23 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Saving profile information..'
+    };
     /**
      * Save profile
      */
     Profile.save($route.current.params.userId, resources)
     .then(function(result)
     {
+      /**
+       * Set preloader for refresh loading
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing profile information..'
+      };
       /**
        * Determine if it is user
        */
@@ -230,9 +240,11 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
          */
         $scope.data = data;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
         /**
          * Inform user
          */
@@ -293,13 +305,23 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       /**
        * Set preloader
        */
-      $rootScope.loading = true;
+      $rootScope.loading = {
+        status: true,
+        message: 'Changing password..'
+      };
       /**
        * Save profile
        */
       Profile.changePassword(passwords)
       .then(function(result)
       {
+        /**
+         * Set preloader for refresh loading
+         */
+        $rootScope.loading = {
+          status: true,
+          message: 'Refreshing profile information..'
+        };
         /**
          * Get fresh profile data
          */
@@ -313,7 +335,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
           /**
            * Set preloader
            */
-          $rootScope.loading = false;
+          $rootScope.loading = {
+            status: false
+          };
           /**
            * Inform user
            */
@@ -538,7 +562,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Adding a new timeslot..'
+    };
     /**
      * Add slot
      */
@@ -579,7 +606,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Changing a timeslot..'
+    };
     /**
      * Get timeline item values
      */
@@ -610,7 +640,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Changing a timeslot..'
+    };
     /**
      * Add slot
      */
@@ -648,7 +681,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Deleting the timeslot..'
+    };
     /**
      * Add slot
      */
@@ -671,7 +707,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Deleting the timeslot..'
+    };
     /**
      * Add slot
      */
@@ -694,6 +733,13 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   function refreshTimeline ()
   {
+    /**
+     * Set loading to refresh
+     */
+    $rootScope.loading = {
+      status: true,
+      message: 'Refreshing timeline..'
+    };
     /**
      * Reset slot container
      */
@@ -736,7 +782,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       /**
        * Turn off preloader
        */
-      $rootScope.loading = false;
+      $rootScope.loading = {
+        status: false
+      };
     });
   };
 
@@ -820,7 +868,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Loading timeline..'
+    };
     /**
      * Fetch new data
      */
@@ -848,7 +899,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       /**
        * Turn off preloader
        */
-      $rootScope.loading = false;
+      $rootScope.loading = {
+        status: false
+      };
     });
   };
 

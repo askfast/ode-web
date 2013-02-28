@@ -14,8 +14,10 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
   /**
    * Set loader for pies
    */
-  $scope.loadingPies = true;
-
+  $rootScope.loading = {
+    message: 'Loading pie charts..',
+    status: true,
+  };
 
   /**
    * Produce pie charts for groups
@@ -27,7 +29,9 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
     /**
      * Turn off loader
      */
-    $scope.loadingPies = false;
+    $rootScope.loading = {
+      status: false,
+    };
     /**
      * Set pies data
      */

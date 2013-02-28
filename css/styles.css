@@ -297,7 +297,8 @@ html,body {
 
 
 #footer p.muted {
-  margin: 0;
+  margin-top: 12px;
+  float:left;
 }
 
 #footer p.muted img {

@@ -12,7 +12,9 @@
     <div id="weekly-pies" class="span8">
       <h4>This Week</h4>
       <hr>
-      <p ng-show="loadingPies">Loading pie charts..</p>
+
+      <p class="muted" ng-show="loading.status">{{loading.message}}</p>
+
       <!-- pie loop -->
       <ul class="weekly" ng-hide="loadingPies">
         <li ng-repeat="pie in pies">

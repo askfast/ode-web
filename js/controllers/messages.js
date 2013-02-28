@@ -55,7 +55,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   /**
    * Set origin container for returning back to origin box
    */
-   $scope.origin = 'inbox';
+  $scope.origin = 'inbox';
 
 
   /**
@@ -150,6 +150,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   function setMessageView (id)
   {
     /**
+     * Set loading
+     */
+    $rootScope.loading = {
+      status: true,
+      message: 'Loading message..'
+    };
+    /**
      * Set view
      */
     setView('message');
@@ -203,6 +210,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   	  $scope.messages.inbox = _inbox;
   	  // console.log($scope.messages.inbox);
       Messages.unreadCount(); 
+    };
+    /**
+     * Turn off loading
+     */
+    $rootScope.loading = {
+      status: false
     };
   };
 
@@ -320,7 +333,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Removing the message..'
+    };
     /**
      * Init bulk
      */
@@ -335,6 +351,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     Messages.remove(bulk)
     .then(function(result)
     {
+      /**
+       * Set loading to refreshing
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing messages..'
+      };
       /**
        * Query messages
        */
@@ -353,6 +376,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          * Return to origin
          */
         $scope.closeTabs();
+        /**
+         * Turn off loading
+         */
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };
@@ -363,6 +392,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.removeMessages = function (selection)
   {
+    /**
+     * Set loading
+     */
+    $rootScope.loading = {
+      status: true,
+      message: 'Removing selected messages..'
+    };
     /**
      * Init vars
      */
@@ -381,15 +417,18 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       }
     });
     /**
-     * Set preloader
-     */
-    $rootScope.loading = true;
-    /**
      * Remove messages
      */
     Messages.remove(ids)
     .then(function(result)
     {
+      /**
+       * Set loading to refreshing
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing messages..'
+      };
       /**
        * Query messages
        */
@@ -401,9 +440,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          */
         $scope.messages = messages;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };
@@ -417,7 +458,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Restoring the message back..'
+    };
     /**
      * Init var
      */
@@ -433,6 +477,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     .then(function(result)
     {
       /**
+       * Set loading to refreshing
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing messages..'
+      };
+      /**
        * Query messages
        */
       Messages.query()
@@ -443,9 +494,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          */
         $scope.messages = messages;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };
@@ -456,6 +509,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.restoreMessages = function (selection)
   {
+    /**
+     * Set loading
+     */
+    $rootScope.loading = {
+      status: true,
+      message: 'Restoring selected messages..'
+    };
     /**
      * Init vars
      */
@@ -474,15 +534,18 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       }
     });
     /**
-     * Set preloader
-     */
-    $rootScope.loading = true;
-    /**
      * Restore message
      */
     Messages.restore(ids)
     .then(function(result)
     {
+      /**
+       * Set loading to refreshing
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing messages..'
+      };
       /**
        * Query messages
        */
@@ -494,9 +557,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          */
         $scope.messages = messages;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };
@@ -510,13 +575,23 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     /**
      * Set preloader
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Emptying trash..'
+    };
     /**
      * Empty trash
      */
     Messages.emptyTrash()
     .then(function(result)
     {
+      /**
+       * Set loading to refreshing
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing messages..'
+      };
       /**
        * Query messages
        */
@@ -528,9 +603,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          */
         $scope.messages = messages;
         /**
-         * Set preloader
+         * Turn off preloader
          */
-        $rootScope.loading = false;
+        $rootScope.loading = {
+          status: false
+        };
       });
     });    
   };
@@ -637,15 +714,25 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   $scope.send = function (message, broadcast)
   {
     /**
-     * Set preloader
+     * Set loading
      */
-    $rootScope.loading = true;
+    $rootScope.loading = {
+      status: true,
+      message: 'Sending the message..'
+    };
     /**
      * Empty trash
      */
     Messages.send(message, broadcast)
     .then(function(uuid)
     {
+      /**
+       * Set loading
+       */
+      $rootScope.loading = {
+        status: true,
+        message: 'Refreshing messages..'
+      };
       /**
        * Query messages
        */
@@ -657,10 +744,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          */
         $scope.messages = messages;
         /**
-         * Set preloader
-         */
-        $rootScope.loading = false;
-        /**
          * Close tabs
          */
         $scope.closeTabs();
@@ -668,6 +751,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
          * Redirect to messge view
          */
         $scope.requestMessage(uuid, $scope.origin);
+        /**
+         * Turn off preloader
+         */
+        $rootScope.loading = {
+          status: false
+        };
       });
     });
   };

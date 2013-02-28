@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="css/timeline.css">
     <link rel="stylesheet" href="css/chosen.css">
     
-    <!-- <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script> -->
+    <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script>
     
   </head>
   <body>
@@ -149,8 +149,8 @@
         <!-- end copyrights -->
 
         <!-- general preloader -->
-        <p class="muted" ng-show="loading">
-          <img src="img/ajax-loader.gif"><small>Loading..</small>
+        <p class="muted" ng-show="loading.status">
+          <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
         </p>
         <!-- end general preloader -->
 
