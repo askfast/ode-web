@@ -35,13 +35,13 @@ WebPaige.
      * Data source host
      */
     // Development
-    // host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
     // Erik
     // host: 'http://10.200.200.100\\:8888/ns_knrmtest',
     // Micheal
     // host: 'http://10.200.200.201\\:8888/ns_knrmtest',
     // // Production
-    host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    // host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
     // // Test
     // host: 'http://knrm.ask-static.appspot.com/ns_knrm',
     /**
