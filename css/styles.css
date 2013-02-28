@@ -210,6 +210,19 @@ html,body {
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);  
 }
 */
+
+
+
+#notification {
+  position: absolute;
+  top: 110px;
+  left: 50%;
+  width: 300px;
+  margin-left: -175px;
+}
+
+
+
 /* @end */
 
 

@@ -183,28 +183,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
 
 
   /**
-   * Switch between the views and set hash accordingly
-   */
-  $scope.setViewTo = function (hash)
-  {
-    /**
-     * Let angular know things are changing
-     */
-    $scope.$watch($location.hash(), function()
-    {
-      /**
-       * Set hash
-       */
-      $location.hash(hash);
-      /**
-       * Set view intern
-       */
-      setView(hash);
-    });
-  };
-
-
-  /**
    * Toggle new group button
    */
   $scope.addGroupForm = function ()
@@ -308,7 +286,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Searching messages..'
+      message: 'Searching members..'
     };
     /**
      * Search
@@ -364,6 +342,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     then(function(result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Member added to group successfully.'
+      });
+      /**
        * Refresh groups list message
        */
       $rootScope.loading = {
@@ -410,6 +396,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     then(function(result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Member removed from group successfully.'
+      });
+      /**
        * Refresh groups list message
        */
       $rootScope.loading = {
@@ -455,6 +449,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     Groups.removeMembers(selection, group).
     then(function(result)
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Members removed group successfully.'
+      });
       /**
        * Refresh groups list message
        */
@@ -511,6 +513,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     Groups.save(group).
     then(function(returned)
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Group saved successfully.'
+      });
       /**
        * Refresh groups list message
        */
@@ -609,6 +619,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     then(function()
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Member registered successfully.'
+      });
+      /**
        * Refresh groups list message
        */
       $rootScope.loading = {
@@ -628,7 +646,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
         /**
          * Redirect to profile of new user
          */
-        $location.path('/profile/' + member.username + '#profile');
+        $location.path('/profile/' + member.username).hash('profile');
         /**
          * Turn off preloader
          */
@@ -658,6 +676,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     Groups.delete(id).
     then(function()
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Group deleted successfully.'
+      });
       /**
        * Refresh groups list message
        */

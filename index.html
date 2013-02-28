@@ -98,10 +98,10 @@
 
 
     <!-- notifications -->
-     <!-- <div class="alert alert-success" style="position: absolute; top: 110px; left: 50%; width: 300px; margin-left: -175px;">
+     <div id="notification" class="alert {{notification.type}}" ng-show="notification.status">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-      Best check yo self, you.
-    </div> -->
+      {{notification.message}}
+    </div>
     <!-- end notifications -->
 
     

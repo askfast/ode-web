@@ -88,6 +88,8 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       phone: profile.PhoneAddress
     }, function (registered) 
     {
+      console.log('registered ->', registered);
+      
       /**
        * Give user a role
        */

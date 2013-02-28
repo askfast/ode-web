@@ -352,6 +352,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     .then(function(result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Message removed successfully.'
+      });
+      /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
@@ -423,6 +431,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     .then(function(result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Messages removed successfully.'
+      });
+      /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
@@ -476,6 +492,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     Messages.restore(bulk)
     .then(function(result)
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Message restored successfully.'
+      });
       /**
        * Set loading to refreshing
        */
@@ -540,6 +564,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     .then(function(result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Messages removed successfully.'
+      });
+      /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
@@ -585,6 +617,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     Messages.emptyTrash()
     .then(function(result)
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Trash bin emptied successfully.'
+      });
       /**
        * Set loading to refreshing
        */
@@ -726,6 +766,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
     Messages.send(message, broadcast)
     .then(function(uuid)
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Message sent.'
+      });
       /**
        * Set loading
        */

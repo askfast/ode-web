@@ -218,6 +218,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Set config to altered
      */
     $scope.timeline.config.bar = !$scope.timeline.config.bar;
+    /**
+     * Render timeline
+     */
     timeliner({
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
@@ -1109,6 +1112,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'New timeslot added successfully.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -1154,6 +1165,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot changed successfully.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -1195,6 +1214,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot changed successfully.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -1226,6 +1253,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Wish value changed successfully.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -1252,6 +1287,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot deleted successfully.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -1277,6 +1320,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     Slots.delete($scope.original, $rootScope.app.resources.uuid)
     .then(function (result)
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot deleted successfully.'
+      });
       /**
        * Refresh timeline
        */

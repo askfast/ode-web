@@ -41,28 +41,6 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 
 
   /**
-   * Set default alerts
-   */
-  $scope.alert = {
-    edit: {
-      display: false,
-      type: '',
-      message: ''
-    },
-    password: {
-      display: false,
-      type: '',
-      message: ''
-    },
-    timeline: {
-      display: false,
-      type: '',
-      message: ''
-    }
-  };
-
-
-  /**
    * Default values for passwords
    */
   $scope.passwords = {
@@ -137,9 +115,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   
     
   /**
-   * 
    * Render timeline if hash is timeline
-   * 
    */
   if ($location.hash() == 'timeline')
   {
@@ -248,13 +224,11 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
         /**
          * Inform user
          */
-        $scope.alert = {
-          edit: {
-            display: true,
-            type: 'alert-success',
-            message: 'Profile data is succesfully changed.'
-          }
-        };
+        $rootScope.notify({
+          status: true,
+          type: 'alert-success',
+          message: 'Profile data is succesfully changed.'
+        });
       });
     });
   };
@@ -265,6 +239,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   $scope.change = function(passwords)
   {
+    console.log('coming to change');
     /**
      * Checks on given passwords
      */
@@ -274,13 +249,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       /**
        * Inform user for providing empty inputs
        */
-      $scope.alert = {
-        password: {
-          display: true,
-          type: 'alert-error',
-          message: 'Please fill all fields!'
-        }
-      };
+      $rootScope.notify({
+        status: true,
+        type: 'alert-error',
+        message: 'Please fill all fields!',
+        permanent: true
+      });
       return false;
     }
     if (passwords.new1 != passwords.new2)
@@ -288,13 +262,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       /**
        * Inform user for providing empty inputs
        */
-      $scope.alert = {
-        password: {
-          display: true,
-          type: 'alert-error',
-          message: 'Provided passwords do not match! Please try it again.'
-        }
-      };
+      $rootScope.notify({
+        status: true,
+        type: 'alert-error',
+        message: 'Provided passwords do not match! Please try it again.',
+        permanent: true
+      });
       return false;
     }
     /**
@@ -341,13 +314,11 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
           /**
            * Inform user
            */
-          $scope.alert = {
-            password: {
-              display: true,
-              type: 'alert-success',
-              message: 'Password is succesfully changed.'
-            }
-          };
+          $rootScope.notify({
+            status: true,
+            type: 'alert-success',
+            message: 'Password is succesfully changed.'
+          });
         });
       });
     }
@@ -359,13 +330,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       /**
        * Inform user
        */
-      $scope.alert = {
-        password: {
-          display: true,
-          type: 'alert-error',
-          message: 'Given current password is wrong! Please try it again.'
-        }
-      };
+      $rootScope.notify({
+        status: true,
+        type: 'alert-error',
+        message: 'Given current password is wrong! Please try it again.',
+        permanent: true
+      });
     };
   };
 
@@ -385,15 +355,21 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   $scope.$watch(function()
   {
     /**
-     * Get timeline range
+     * Do set range only if timeline is visible
      */
-    var range = self.timeline.getVisibleChartRange();
-    /**
-     * Set ranges
-     */
-    $scope.timeline.range = {
-      start: new Date(range.start).toString($config.date.stringFormat),
-      end: new Date(range.end).toString($config.date.stringFormat)
+    if ($location.hash() == 'timeline')
+    {
+      /**
+       * Get timeline range
+       */
+      var range = self.timeline.getVisibleChartRange();
+      /**
+       * Set ranges
+       */
+      $scope.timeline.range = {
+        start: new Date(range.start).toString($config.date.stringFormat),
+        end: new Date(range.end).toString($config.date.stringFormat)
+      };
     };
   });
 
@@ -578,6 +554,14 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'New timeslot added successfully.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -625,6 +609,14 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot is succesfully changed.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -666,6 +658,14 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot is succesfully changed.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -692,6 +692,14 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     .then(function (result)
     {
       /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot is succesfully deleted.'
+      });
+      /**
        * Refresh timeline
        */
       refreshTimeline();
@@ -717,6 +725,14 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     Slots.delete($scope.original, $scope.user.id)
     .then(function (result)
     {
+      /**
+       * Inform user
+       */
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        message: 'Timeslot is succesfully deleted.'
+      });
       /**
        * Refresh timeline
        */

@@ -305,7 +305,46 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
   $rootScope.loading = {
     status: false,
     message: 'Loading..'
-  }
+  };
+
+  $rootScope.notification = {
+    status: false,
+    type: '',
+    message: ''
+  };
+
+
+  /**
+   * Show notifications
+   */
+  $rootScope.notify = function (options)
+  {
+    /**
+     * Set notification data
+     */
+    $rootScope.notification = {
+      status: options.status,
+      type: options.type,
+      message: options.message
+    };
+    /**
+     * Check if is a permanent notification
+     */
+    if (!options.permanent)
+    {
+      /**
+       * Run timer for fade out
+       * on 5 seconds
+       */
+      setTimeout(function ()
+      {
+        /**
+         * Fade-out with 1 second transition
+         */
+        $('#notification').fadeOut(1000);
+      }, 5000);
+    };
+  };
 
 
   /**
