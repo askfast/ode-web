@@ -1,6 +1,15 @@
 'use strict';
 
 /**
+ * TODO
+ *
+ *  1. Add url routing for accessing timeline from outside with different scopes
+ *  2. Add hash tags for tabs
+ *  3. Fix timeline rendering bug when an another group selected in statistics
+ *  4. Fix timeline scope with loaded data bug
+ *  5. Fix members performance bug in statistics
+ *  6. Lose legenda of pie chart and integrate ratios next to durations and hook it up with interactive pies
+ *  
  * Planboard Controller
  */
 function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Dater, Storage, $location) 
@@ -289,7 +298,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Get timeline range
      */
+    
     var range = self.timeline.getVisibleChartRange();
+
+    // console.warn('range ->', range);
+
     /**
      * Calculate difference
      */
@@ -334,6 +347,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set ranges
      */
+    //console.warn('start ->',  new Date(range.start).toString($config.date.stringFormat));
+    //console.warn('end ->',    new Date(range.end).toString($config.date.stringFormat));
+
     $scope.timeline.range = {
       start: new Date(range.start).toString($config.date.stringFormat),
       end: new Date(range.end).toString($config.date.stringFormat)
@@ -459,8 +475,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Draw timeline
      */
-    setTimeout( function ()
-    {
+    // setTimeout( function ()
+    // {
       self.timeline.draw(
         self.process(
           $scope.data, 
@@ -471,7 +487,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         ), 
         $scope.timeline.options
       );
-    }, 100);
+    // }, 1000);
     /**
      * Set range dynamically
      */
@@ -590,22 +606,23 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function loadTimeline(options)
   {
-    /**
-     * Check whether if the selected timeline period falls in downloaded range
-     */
-    if (options.first.timeStamp > data.periods.start &&
-        options.last.timeStamp < data.periods.end)
-    {
-      /**
-       * Adjust timeline for new period
-       */
-      timeliner({
-        start:  options.first.day,
-        end:    options.last.day
-      }); 
-    }
-    else
-    {
+
+    // /**
+    //  * Check whether if the selected timeline period falls in downloaded range
+    //  */
+    // if (options.first.timeStamp > data.periods.start &&
+    //     options.last.timeStamp < data.periods.end)
+    // {
+    //   /**
+    //    * Adjust timeline for new period
+    //    */
+    //   timeliner({
+    //     start:  options.first.day,
+    //     end:    options.last.day
+    //   }); 
+    // }
+    // else
+    // {
       /**
        * Set preloader
        */
@@ -628,6 +645,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       })
       .then(function(data)
       {
+        // $scope.$watch(function()
+        // {
         /**
          * Set scope
          */
@@ -645,8 +664,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         $rootScope.loading = {
           status: false
         };
+        // });
       });
-    };
+    // };
   };
 
 
@@ -760,38 +780,39 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           week: false,
           month: false
         };
-        /**
-         * If we are not in the current month
-         */
-        if ($scope.timeline.current.month != new Date().toString('M'))
-        {
-          for (var i in periods.days)
-          {
-            if (periods.months[$scope.timeline.current.month].first.timeStamp <= 
-                periods.days[i].first.timeStamp)
-            {
-              $scope.timeline.current.day = i;
-              /**
-               * Adjust timeline
-               */
-              timeliner({
-                start:  periods.days[i].first.day,
-                end:    periods.days[i].last.day
-              });
-              break;
-            };
-          };
-        }
-        else
-        {
+        // /**
+        //  * If we are not in the current week
+        //  */
+        // if ($scope.timeline.current.week != new Date().getWeek())
+        // {
+        //   for (var i in periods.days)
+        //   {
+        //     if (periods.weeks[$scope.timeline.current.week].first.timeStamp <= 
+        //         periods.days[i].first.timeStamp)
+        //     {
+        //       $scope.timeline.current.day = i;
+        //       /**
+        //        * Adjust timeline
+        //        */
+        //       loadTimeline({
+        //         start:  periods.days[i].first.day,
+        //         end:    periods.days[i].last.day
+        //       });
+        //       break;
+        //     };
+        //   };
+        // }
+        // else
+        // {
           /**
            * Adjust timeline
            */
-          timeliner({
-            start:  periods.days[$scope.timeline.current.day].first.day,
-            end:    periods.days[$scope.timeline.current.day].last.day
-          });
-        };
+          loadTimeline(periods.days[$scope.timeline.current.day]);
+        //   timeliner({
+        //     start:  periods.days[$scope.timeline.current.day].first.day,
+        //     end:    periods.days[$scope.timeline.current.day].last.day
+        //   });
+        // };
 
         break;
       /**
@@ -803,39 +824,39 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           week: true,
           month: false
         };
-        /**
-         * If we are not in the current month
-         */
-        if ($scope.timeline.current.month != new Date().toString('M'))
-        {
-          for (var i in periods.weeks)
-          {
-            if (periods.months[$scope.timeline.current.month].first.timeStamp <= 
-                periods.weeks[i].first.timeStamp)
-            { 
-              $scope.timeline.current.week = i;
-
-              /**
-               * Adjust timeline
-               */
-              timeliner({
-                start:  periods.weeks[i].first.day,
-                end:    periods.weeks[i].last.day
-              });
-              break;
-            };
-          };
-        }
-        else
-        {
+        // /**
+        //  * If we are not in the current week
+        //  */
+        // if ($scope.timeline.current.week != new Date().getWeek())
+        // {
+        //   for (var i in periods.weeks)
+        //   {
+        //     if (periods.weeks[$scope.timeline.current.week].first.timeStamp <= 
+        //         periods.weeks[i].first.timeStamp)
+        //     { 
+        //       $scope.timeline.current.week = i;
+        //       /**
+        //        * Adjust timeline
+        //        */
+        //       loadTimeline({
+        //         start:  periods.weeks[i].first.day,
+        //         end:    periods.weeks[i].last.day
+        //       });
+        //       break;
+        //     };
+        //   };
+        // }
+        // else
+        // {
           /**
            * Adjust timeline
            */
-          timeliner({
-            start:  periods.weeks[$scope.timeline.current.week].first.day,
-            end:    periods.weeks[$scope.timeline.current.week].last.day
-          });
-        };
+          loadTimeline(periods.weeks[$scope.timeline.current.week]);
+          // timeliner({
+          //   start:  periods.weeks[$scope.timeline.current.week].first.day,
+          //   end:    periods.weeks[$scope.timeline.current.week].last.day
+          // });
+        // };
 
         break;
       /**
@@ -850,10 +871,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         /**
          * Adjust timeline
          */
-        timeliner({
-          start:  periods.months[$scope.timeline.current.month].first.day,
-          end:    periods.months[$scope.timeline.current.month].last.day
-        });
+        loadTimeline(periods.months[$scope.timeline.current.month]);
         break;
     };
   };

@@ -28,6 +28,10 @@ WebPaige.
      */
     version: '2.0.0',
     /**
+     * Real users
+     */
+    demo_users: true,
+    /**
      * Blacklisted browsers
      */
     blacklisted: ['msie'],
@@ -300,13 +304,18 @@ WebPaige.
 ['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', 
 function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
 {
-
-    
+  /**
+   * Defaults for loading
+   */
   $rootScope.loading = {
     status: false,
     message: 'Loading..'
   };
 
+
+  /**
+   * Defaults for notifications
+   */
   $rootScope.notification = {
     status: false,
     type: '',
@@ -319,6 +328,8 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages)
    */
   $rootScope.notify = function (options)
   {
+    console.warn('notification inited');
+    
     /**
      * Set notification data
      */
@@ -651,7 +662,7 @@ var ui = {
 
 
 
-  var knrm_users = [
+  var demo_users = [
     {
         "config": {},
         "name": "Chris  2Aldewereld",

@@ -112,7 +112,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         params = {
           start: options.start,
           end: options.end,
-          wish: options.wish
+          wish: options.wish,
+          recurring: true
         };
     /**
      * Fetch wishes
