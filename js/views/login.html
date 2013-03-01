@@ -6,6 +6,7 @@
 		<img src="img/login_knrm_logo.png" alt="KNRM" />
 		<!-- <h2>WebPaige</h2> -->
 	  <h4>Setting up the application</h4>
+
 	  <div class="progress progress-striped active" class="span3">
 	    <div class="bar"></div>
 	  </div>
@@ -20,7 +21,7 @@
 		<form ng-submit="login()">
 		  <img src="img/login_knrm_logo.png" alt="KNRM" />
 			<!-- <h2>WebPaige</h2> -->
-		  <h4 class="form-signin-heading">Please sign in</h4>
+		  <h4 class="form-signin-heading">{{ui.login.header}}</h4>
 
       <!-- alert login -->
       <div class="alert {{alert.login.type}}" ng-show="alert.login.display">
@@ -33,26 +34,34 @@
 		    class="" 
 		    type="text" 
 		    ng-model="logindata.username"
-		    placeholder="Username" 
+		    placeholder="{{ui.login.placeholder_username}}" 
 		    autofocus>
 
 		  <input 
 		      class="" 
 		      type="password" 
 		      ng-model="logindata.password"
-		      placeholder="Password">
+		      placeholder="{{ui.login.placeholder_password}}">
 
 		  <label class="checkbox span3">
 		    <input 
 		      type="checkbox" 
-		      ng-model="logindata.remember">Remember me
+		      ng-model="logindata.remember">{{ui.login.label_rememberMe}}
 		  </label>
 
-		  <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.button_login}}</button>
 
-		  <p><small><a ng-click="views.forgot=true; views.login=false">forgot your password?</a></small></p>
+		  <p><small><a ng-click="views.forgot=true; views.login=false">{{ui.login.forgot_password}}</a></small></p>
+
+		  <p>
+		  	<small>
+			  	<a ng-click="changeLanguage('en')">English</a> |  
+			  	<a ng-click="changeLanguage('nl')">Nederlands</a>
+		  	</small>
+		  </p>
 
 		  <span class="version">v2.0.0</span>
+
 		</form>
 	</div>
 	<!-- end loginForm -->
