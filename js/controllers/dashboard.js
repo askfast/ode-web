@@ -15,7 +15,7 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
    * Set loader for pies
    */
   $rootScope.loading = {
-    message: 'Loading pie charts..',
+    message: $rootScope.ui.dashboard.loadingPie,
     status: true,
   };
 

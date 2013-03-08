@@ -72,7 +72,7 @@
 		<form ng-submit="forgot()">
 		  <img src="img/login_knrm_logo.png" alt="KNRM" />
 			<!-- <h2>WebPaige</h2> -->
-		  <h4 class="form-signin-heading">Forgot password</h4>
+		  <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>
 
 	      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
 	        <button class="close" type="button" ng-click="alert.forget=false">×</button>
@@ -83,11 +83,11 @@
 		    class="" 
 		    type="text" 
 		    ng-model="remember.id"
-		    placeholder="username">
+		    placeholder="{{ui.login.ph_username}}">
 
-		  <button class="btn btn-large btn-primary" type="submit">Reset Password</button>
+		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
 
-		  <p><small><a ng-click="views.login=true; views.forgot=false">return back to login</a></small></p>
+		  <p><small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small></p>
 
 		  <span class="version">v2.0.0</span>
 		</form>
@@ -105,10 +105,10 @@
 				{{alert.changePass.message}}
 			</div>
 			
-			<input class="" type="password" ng-model="changeData.newPass" placeholder="new  password">
-			<input class="" type="password" ng-model="changeData.retypePass" placeholder="retype password">
+			<input class="" type="password" ng-model="changeData.newPass" placeholder="{{ui.login.ph_newPass}}new  password">
+			<input class="" type="password" ng-model="changeData.retypePass" placeholder="{{ui.login.ph_retypePass}}retype password">
 			
-			<button class="btn btn-large btn-primary" type="submit">change password</button>
+			<button class="btn btn-large btn-primary" type="submit">{{ui.login.changePassword}}</button>
 
 		    <br><span class="version">v2.0.0</span>
 		</form>
@@ -122,7 +122,7 @@
 	<button class="btn btn-success btn-large" type="button">
 		<!-- <span class="entypo">&#128241;</span> -->
 		<!-- <i class="icon-download icon-white"></i> -->
-		Download Mobile App
+		{{ui.login.downloadApp}}
 	</button>
 </div>
 <!-- end download mobile app -->

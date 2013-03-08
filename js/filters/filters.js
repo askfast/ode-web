@@ -498,5 +498,16 @@ angular.module('WebPaige.filters', [])
   		};	
   	};
   }
+}])
+
+.filter('i18n_spec',['$rootScope',function($rootScope){
+	return function(string,type){
+		
+		var types = type.split(".");
+		var ret = $rootScope.ui[types[0]][types[1]];
+		ret = ret.replace('$v',string);
+		
+		return ret;
+	}
 }]);
 
