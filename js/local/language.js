@@ -92,8 +92,63 @@ var ui = {
           minNumber : 'Minimum number benodigden'
       },
       message : {
-          
+          composeAMessage : 'Compose a message',
+          compose : 'Compose',
+          message : 'Message',
+          inbox : 'Inbox',
+          outbox : 'Outbox',
+          trash : 'Trash',
+          composeMessage : 'Compose message',
+          close : 'Close',
+          broadcast : 'Broadcast',
+          sms : 'SMS',
+          email : 'Email',
+          receviers : 'Recevier(s)',
+          chooseRecept : 'Choose a Recipient',
+          subject : 'Subject',
+          message : 'Message',
+          sendMessage : 'Send Message',
+          sender : 'Sender',
+          date : 'Date',
+          questionText : 'Question Text',
+          reply : 'Reply',
+          del: 'Delete',
+          noMessage : 'There are no messages.',
+          from: 'From',
+          newMsg : 'New',
+          deleteSelected : 'Delete Selected Messages',
+          someMessage : 'There are $v message(s)',
+          noMessage : 'There are no messages in outbox.',
+          emptyTrash : 'Empty Trash',
+          noMsgInTrash : 'There are no messages in trash.',
+          box : 'Box',
+          persons : 'Person(s)',
+          restoreSelected : 'Restore Selected Messages',
+          loadingMessage : 'Loading message..',
+          escalation : 'Escalation message',
+          escalationBody : function(diff,startDate,startTime,endDate,endTime){
+              return 'We have ' +
+              diff +
+              ' shortage in between ' +
+              startDate + ' ' +
+              startTime + ' and ' +
+              endDate + ' ' +
+              endTime + '. ' + 
+              'Would you please make yourself available if you are available for that period?';
+          },
+          removed : 'Message removed successfully.',
+          removing : 'Removing the message..',
+          refreshing : 'Refreshing messages..',
+          removingSelected : 'Removing selected messages..',
+          restoring : 'Restoring the message back..',
+          restored : 'Message restored successfully.',
+          restoringSelected : 'Restoring selected messages..',
+          emptying : 'Emptying trash..',
+          emptied : 'Trash bin emptied successfully.',
+          sending : 'Sending the message..',
+          sent : 'Message sent.'
       },
+             
       gropus : {
           
       }
@@ -186,7 +241,61 @@ var ui = {
           minNumber : 'Minimum aantal benodigden'
       },
       message : {
-          
+          composeAMessage : 'Stel een bericht',
+          compose : 'Compose',
+          message : 'Message',
+          inbox : 'Inbox',
+          outbox : 'Outbox',
+          trash : 'Trash',
+          composeMessage : 'Compose message',
+          close : 'Close',
+          broadcast : 'Broadcast',
+          sms : 'SMS',
+          email : 'Email',
+          receviers : 'Recevier(s)',
+          chooseRecept : 'Choose a Recipient',
+          subject : 'Subject',
+          message : 'Message',
+          sendMessage : 'Send Message',
+          sender : 'Sender',
+          date : 'Date',
+          questionText : 'Question Text',
+          reply : 'Reply',
+          del: 'Delete',
+          noMessage : 'There are no messages.',
+          from: 'From',
+          newMsg : 'New',
+          deleteSelected : 'Delete Selected Messages',
+          someMessage : 'There are $v message(s)',
+          noMessage : 'There are no messages in outbox.',
+          emptyTrash : 'Empty Trash',
+          noMsgInTrash : 'There are no messages in trash.',
+          box : 'Box',
+          persons : 'Person(s)',
+          restoreSelected : 'Restore Selected Messages',
+          loadingMessage : 'Loading message..',
+          escalation : 'Escalation message',
+          escalationBody : function(diff,startDate,startTime,endDate,endTime){
+              return 'We have ' +
+              diff +
+              ' shortage in between ' +
+              startDate + ' ' +
+              startTime + ' and ' +
+              endDate + ' ' +
+              endTime + '. ' + 
+              'Would you please make yourself available if you are available for that period?';
+          },
+          removed : 'Message removed successfully.',
+          removing : 'Removing the message..',
+          refreshing : 'Refreshing messages..',
+          removingSelected : 'Removing selected messages..',
+          restoring : 'Restoring the message back..',
+          restored : 'Message restored successfully.',
+          restoringSelected : 'Restoring selected messages..',
+          emptying : 'Emptying trash..',
+          emptied : 'Trash bin emptied successfully.',
+          sending : 'Sending the message..',
+          sent : 'Message sent.'
       },
       gropus : {
           

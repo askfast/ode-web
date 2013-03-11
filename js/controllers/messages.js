@@ -154,7 +154,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     $rootScope.loading = {
       status: true,
-      message: 'Loading message..'
+      message: $rootScope.ui.message.loadingMessage
     };
     /**
      * Set view
@@ -335,7 +335,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     $rootScope.loading = {
       status: true,
-      message: 'Removing the message..'
+      message: $rootScope.ui.message.removing
     };
     /**
      * Init bulk
@@ -357,14 +357,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Message removed successfully.'
+        message: $rootScope.ui.message.removed
       });
       /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing messages..'
+        message: $rootScope.ui.message.refreshing
       };
       /**
        * Query messages
@@ -405,7 +405,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     $rootScope.loading = {
       status: true,
-      message: 'Removing selected messages..'
+      message: $rootScope.ui.message.removingSelected
     };
     /**
      * Init vars
@@ -436,14 +436,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Messages removed successfully.'
+        message: $rootScope.ui.message.removed
       });
       /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing messages..'
+        message: $rootScope.ui.message.refreshing
       };
       /**
        * Query messages
@@ -476,7 +476,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     $rootScope.loading = {
       status: true,
-      message: 'Restoring the message back..'
+      message: $rootScope.ui.message.restoring
     };
     /**
      * Init var
@@ -498,14 +498,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Message restored successfully.'
+        message: $rootScope.ui.message.restored
       });
       /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing messages..'
+        message: $rootScope.ui.message.refreshing
       };
       /**
        * Query messages
@@ -538,7 +538,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     $rootScope.loading = {
       status: true,
-      message: 'Restoring selected messages..'
+      message: $rootScope.ui.message.restoringSelected
     };
     /**
      * Init vars
@@ -569,14 +569,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Messages removed successfully.'
+        message: $rootScope.ui.message.removed
       });
       /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing messages..'
+        message: $rootScope.ui.message.refreshing
       };
       /**
        * Query messages
@@ -609,7 +609,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     $rootScope.loading = {
       status: true,
-      message: 'Emptying trash..'
+      message: $rootScope.ui.message.emptying
     };
     /**
      * Empty trash
@@ -623,14 +623,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Trash bin emptied successfully.'
+        message: $rootScope.ui.message.empited
       });
       /**
        * Set loading to refreshing
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing messages..'
+        message: $rootScope.ui.message.refreshing
       };
       /**
        * Query messages
@@ -758,7 +758,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     $rootScope.loading = {
       status: true,
-      message: 'Sending the message..'
+      message: $rootScope.ui.message.sending
     };
     /**
      * Empty trash
@@ -772,14 +772,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Message sent.'
+        message: $rootScope.ui.message.sent
       });
       /**
        * Set loading
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing messages..'
+        message: $rootScope.ui.message.refreshing
       };
       /**
        * Query messages
@@ -851,20 +851,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      * Set data in compose form
      */
     $scope.message = {
-      subject: 'Escalation message',
+      subject: $rootScope.ui.message.escalation,
       receivers: [{
         group: 'Groups', 
         id: uuid, 
         name: name
       }],
-      body: 'We have ' +
-            escalation.diff +
-            ' shortage in between ' +
-            escalation.start.date + ' ' +
-            escalation.start.time + ' and ' +
-            escalation.end.date + ' ' +
-            escalation.end.time + '. ' + 
-            'Would you please make yourself available if you are available for that period?'
+      body: $rootScope.ui.message.escalationBody(escalation.diff, escalation.start.date , escalation.start.time ,escalation.end.date ,escalation.end.time)
     };
     /**
      * Set broadcasting options
