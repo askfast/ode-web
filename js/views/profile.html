@@ -13,7 +13,7 @@
         <a href="#profileTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('profileTab'); setViewTo('profile')">
-          <span class="entypo">&#128100;</span> Profile
+          <span class="entypo">&#128100;</span> {{ui.profile.profile}}
         </a>
       </li>
 
@@ -21,7 +21,7 @@
         <a href="#editTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('editTab'); setViewTo('edit')">
-          <span class="entypo">&#9998;</span> Edit
+          <span class="entypo">&#9998;</span> {{ui.profile.edit}}
         </a>
       </li>
 
@@ -29,7 +29,7 @@
         <a href="#passwordTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('passwordTab'); setViewTo('password')">
-          <span class="entypo">&#128274;</span> Password
+          <span class="entypo">&#128274;</span> {{ui.profile.password}}
         </a>
       </li>
 
@@ -37,7 +37,7 @@
         <a href="#userTimelineTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline'); redraw()">
-          <span class="entypo">&#128340;</span> Timeline
+          <span class="entypo">&#128340;</span> {{ui.profile.timeline}}
         </a>
       </li>
 
@@ -56,30 +56,30 @@
 
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">Profile View</h3>
+          <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.profileView}}</h3>
         </div>
         <!-- end tab header -->
         <hr>
 
         <!-- profile info -->
         <dl>
-          <dt>User Groups</dt>
+          <dt>{{ui.profile.userGroups}}</dt>
             <dd>
               <span ng-repeat="group in groups">
                 <a href="#/groups?uuid={{group.uuid}}#view">{{group.name}}</a>,
               </span>
           </dd>
-          <dt>Role</dt>
+          <dt>{{ui.profile.role}}</dt>
             <dd>{{data.resources.role|translateRole}}</dd>
-          <dt>Email</dt>
+          <dt>{{ui.profile.email}}</dt>
             <dd>{{data.resources.EmailAddress}}</dd>
-          <dt>Phone</dt>
+          <dt>{{ui.profile.phone}}</dt>
             <dd>{{data.resources.PhoneAddress}}</dd>
-          <dt>Address</dt>
+          <dt>{{ui.profile.address}}</dt>
             <dd>{{data.resources.PostAddress}}</dd>
-          <dt>Postcode</dt>
+          <dt>{{ui.profile.postcode}}</dt>
             <dd>{{data.resources.PostZip}}</dd>
-          <dt>City</dt>
+          <dt>{{ui.profile.city}}</dt>
             <dd>{{data.resources.PostCity}}</dd>
         </dl>
         <!-- end profile info -->
@@ -94,7 +94,7 @@
 
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">Edit Profile</h3>
+          <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.editProfile}}</h3>
         </div>
         <!-- end tab header -->
         <hr>
@@ -103,7 +103,7 @@
         <form class="form-vertical">
 
           <div class="control-group">
-            <label class="control-label">Name</label>
+            <label class="control-label">{{ui.profile.name}}</label>
             <div class="controls">
               <input  type="text" 
                       class="span4" 
@@ -113,7 +113,7 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">Email</label>
+            <label class="control-label">{{ui.profile.email}}</label>
             <div class="controls">
               <input  type="text" 
                       class="span4" 
@@ -123,7 +123,7 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">Phone</label>
+            <label class="control-label">{{ui.profile.phone}}</label>
             <div class="controls">
               <input  type="text" 
                       class="span3" 
@@ -133,7 +133,7 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">Address</label>
+            <label class="control-label">{{ui.profile.address}}</label>
             <div class="controls">
               <input  type="text" 
                       class="span5" 
@@ -143,7 +143,7 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">Postcode</label>
+            <label class="control-label">{{ui.profile.postcode}}</label>
             <div class="controls">
               <input  type="text" 
                       class="span2" 
@@ -153,7 +153,7 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">City</label>
+            <label class="control-label">{{ui.profile.city}}</label>
             <div class="controls">
               <input  type="text" 
                       class="span3" 
@@ -165,7 +165,7 @@
           <div class="form-actions">
             <button   type="submit" 
                       class="btn btn-success"
-                      ng-click="save(resources)">Save Profile</button>
+                      ng-click="save(resources)">{{ui.profile.saveProfile}}</button>
           </div>
 
         </form>
@@ -181,7 +181,7 @@
 
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">Password Change</h3>
+          <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.passChange}}</h3>
         </div>
         <!-- end tab header -->
         <hr>
@@ -190,7 +190,7 @@
         <form class="form-vertical">
 
           <div class="control-group">
-            <label class="control-label">Current password</label>
+            <label class="control-label">{{ui.profile.currentPass}}</label>
             <div class="controls">
               <input  type="password" 
                       class="span3" 
@@ -199,7 +199,7 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">New password</label>
+            <label class="control-label">{{ui.profile.newPass}}</label>
             <div class="controls">
               <input  type="password" 
                       class="span3" 
@@ -208,7 +208,7 @@
           </div>
 
           <div class="control-group">
-            <label class="control-label">New password (Repeat)</label>
+            <label class="control-label">{{ui.profile.newPassRepeat}}</label>
             <div class="controls">
               <input  type="password" 
                       class="span3" 
@@ -219,7 +219,7 @@
           <div class="form-actions">
             <button   type="submit" 
                       class="btn btn-success"
-                      ng-click="change(passwords)">Change password</button>
+                      ng-click="change(passwords)">{{ui.profile.changePass}}</button>
           </div>
 
         </form>
@@ -236,12 +236,12 @@
 
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">Timeline</h3>
+          <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.timeline}}</h3>
 
           <div class="btn-group pull-right">
             <button type="submit" 
                     ng-click="toggleSlotForm()" 
-                    class="btn btn-success {{(forms.add==true) && 'active'}}">New Availability</button>
+                    class="btn btn-success {{(forms.add==true) && 'active'}}">{{ui.profile.newAvail}}</button>
           </div>
 
         </div>
@@ -261,7 +261,7 @@
 
               <button type="button" 
                       class="btn"
-                      ng-click="timelineThisWeek()">This Week</button>
+                      ng-click="timelineThisWeek()">{{ui.dashboard.thisWeek}}</button>
 
             </div>
             <!-- end this week -->
@@ -327,14 +327,14 @@
                     class="close">&times;</button>
             <!-- end close btn -->
           
-            <h4 ng-show="forms.add">New Availability</h4>
-            <h4 ng-show="forms.edit">Update Availability</h4>
+            <h4 ng-show="forms.add">{{ui.profile.newAvail}}</h4>
+            <h4 ng-show="forms.edit">{{ui.planboard.updateAvail}}</h4>
 
             <hr>
 
             <!-- slot start -->
             <div class="form-elements-group">
-              <label>From</label>
+              <label>{{ui.planboard.from}}</label>
               <!-- date -->
               <div class="control-group dater">
                 <input  name="date-start" 
@@ -360,7 +360,7 @@
 
             <!-- slot end -->
             <div class="form-elements-group">
-              <label>Till</label>
+              <label>{{ui.planboard.till}}</label>
               <!-- date -->
               <div class="control-group dater">
                 <input  name="date-end" 
@@ -386,10 +386,10 @@
 
             <!-- slot state -->
             <div class="form-elements-group">
-              <label>State</label>
+              <label>{{ui.planboard.state}}</label>
               <select ng-model="slot.state" 
                       ng-options="option as value for (option, value) in states">
-                <option value="">select a state</option>
+                <option value="">{{ui.planboard.selectAState}}</option>
               </select>
             </div>
             <!-- end slot state -->
@@ -397,7 +397,7 @@
 
             <!-- slot recursive -->
             <div class="form-elements-group">
-              <label>Re-occuring</label>
+              <label>{{ui.planboard.reoccuring}}</label>
               <input type="checkbox" ng-model="slot.recursive">
             </div>
             <!-- end slot recursive -->
@@ -409,16 +409,16 @@
               <div ng-show="forms.add">
                 <button type="button" 
                         ng-click="slotAdd(slot)" 
-                        class="btn btn-success">Add</button>
+                        class="btn btn-success">{{ui.planboard.add}}</button>
               </div>
 
               <div ng-show="forms.edit">
                 <button type="button" 
                         ng-click="slotRemove()" 
-                        class="btn btn-danger">Delete</button>
+                        class="btn btn-danger">{{ui.planboard.del}}</button>
                 <button type="button" 
                         ng-click="slotChange(original, slot)" 
-                        class="btn btn-success">Change</button>
+                        class="btn btn-success">{{ui.planboard.change}}</button>
               </div>
 
             </div>
@@ -447,7 +447,7 @@
         <!-- planbaord footer -->
         <p>
           <small class="pull-left">
-            <span class="text-warning">Last sync time: </span>
+            <span class="text-warning">{{ui.planbaord.lastSyncTime}}</span>
             <span class="muted">{{synced | nicelyDate}}</span>
           </small>
         </p>

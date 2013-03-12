@@ -286,7 +286,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Searching members..'
+      message: $rootScope.ui.groups.searchingMembers
     };
     /**
      * Search
@@ -333,7 +333,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Adding a new member..'
+      message: $rootScope.ui.groups.addingNewMember
     };
     /**
      * Add a member
@@ -347,14 +347,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Member added to group successfully.'
+        message: $rootScope.ui.groups.memberAdded
       });
       /**
        * Refresh groups list message
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing groups and members list..'
+        message: $rootScope.ui.groups.refreshingGroupMember
       };
       /**
        * Query fresh data
@@ -387,7 +387,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Removing member from group..'
+      message: $rootScope.ui.groups.removingMember
     };
     /**
      * Remove from group
@@ -401,14 +401,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Member removed from group successfully.'
+        message: $rootScope.ui.groups.memberRemoved
       });
       /**
        * Refresh groups list message
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing groups and members list..'
+        message: $rootScope.ui.groups.refreshingGroupMember
       };
       /**
        * Query fresh data
@@ -441,7 +441,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Removing selected members..'
+      message: $rootScope.ui.groups.removingSelected
     };
     /**
      * Remove members
@@ -455,14 +455,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Members removed group successfully.'
+        message: $rootScope.ui.groups.removed
       });
       /**
        * Refresh groups list message
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing groups and members list..'
+        message: $rootScope.ui.groups.refreshingGroupMember
       };
       /**
        * Reset selection
@@ -505,7 +505,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Saving group..'
+      message: $rootScope.ui.groups.saving
     };
     /**
      * Save group
@@ -519,14 +519,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Group saved successfully.'
+        message: $rootScope.ui.groups.groupSaved
       });
       /**
        * Refresh groups list message
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing groups and members list..'
+        message: $rootScope.ui.groups.refreshingGroupMember
       };
       /**
        * Query fresh data
@@ -610,7 +610,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Registering a new member..'
+      message: $rootScope.ui.groups.registerNew
     };
     /**
      * Register a new member
@@ -624,14 +624,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Member registered successfully.'
+        message: $rootScope.ui.groups.memberRegstered
       });
       /**
        * Refresh groups list message
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing groups and members list..'
+        message: $rootScope.ui.groups.refreshingGroupMember
       };
       /**
        * Query fresh data
@@ -668,7 +668,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
      */
     $rootScope.loading = {
       status: true,
-      message: 'Deleting group..'
+      message: $rootScope.ui.groups.deleting
     };
     /**
      * Delete group
@@ -682,14 +682,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Group deleted successfully.'
+        message: $rootScope.ui.groups.deleted
       });
       /**
        * Refresh groups list message
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing groups and members list..'
+        message: $rootScope.ui.groups.refreshingGroupMember
       };
       /**
        * Query fresh data

@@ -186,7 +186,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Saving profile information..'
+      message: $rootScope.ui.profile.saveProfile
     };
     /**
      * Save profile
@@ -199,7 +199,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
        */
       $rootScope.loading = {
         status: true,
-        message: 'Refreshing profile information..'
+        message: $rootScope.ui.profile.refreshing
       };
       /**
        * Determine if it is user
@@ -227,7 +227,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
         $rootScope.notify({
           status: true,
           type: 'alert-success',
-          message: 'Profile data is succesfully changed.'
+          message: $rootScope.ui.profile.dataChanged
         });
       });
     });
@@ -252,7 +252,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-error',
-        message: 'Please fill all fields!',
+        message: $rootScope.ui.profile.pleaseFill,
         permanent: true
       });
       return false;
@@ -265,7 +265,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-error',
-        message: 'Provided passwords do not match! Please try it again.',
+        message: $rootScope.ui.profile.passNotMatch,
         permanent: true
       });
       return false;
@@ -280,7 +280,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
        */
       $rootScope.loading = {
         status: true,
-        message: 'Changing password..'
+        message: $rootScope.ui.profile.changingPass
       };
       /**
        * Save profile
@@ -293,7 +293,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
          */
         $rootScope.loading = {
           status: true,
-          message: 'Refreshing profile information..'
+          message: $rootScope.ui.profile.refreshing
         };
         /**
          * Get fresh profile data
@@ -317,7 +317,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
           $rootScope.notify({
             status: true,
             type: 'alert-success',
-            message: 'Password is succesfully changed.'
+            message: $rootScope.ui.profile.passChanged
           });
         });
       });
@@ -333,7 +333,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-error',
-        message: 'Given current password is wrong! Please try it again.',
+        message: $rootScope.ui.profile.passwrong,
         permanent: true
       });
     };
@@ -540,7 +540,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Adding a new timeslot..'
+      message: $rootScope.ui.planning.addTimeSlot
     };
     /**
      * Add slot
@@ -559,7 +559,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'New timeslot added successfully.'
+        message: $rootScope.ui.planboard.slotAdded
       });
       /**
        * Refresh timeline
@@ -592,7 +592,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Changing a timeslot..'
+      message: $rootScope.ui.planboard.changingSlot
     };
     /**
      * Get timeline item values
@@ -614,7 +614,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot is succesfully changed.'
+        message: $rootScope.ui.planboard.slotChanged
       });
       /**
        * Refresh timeline
@@ -634,7 +634,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Changing a timeslot..'
+      message: $rootScope.ui.profile.changingTimeslot
     };
     /**
      * Add slot
@@ -663,7 +663,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot is succesfully changed.'
+        message: $rootScope.ui.planboard.slotChanged
       });
       /**
        * Refresh timeline
@@ -683,7 +683,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Deleting the timeslot..'
+      message: $rootScope.ui.planboard.deletingTimeslot
     };
     /**
      * Add slot
@@ -697,7 +697,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot is succesfully deleted.'
+        message: $rootScope.ui.planboard.timeslotDeleted
       });
       /**
        * Refresh timeline
@@ -717,7 +717,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Deleting the timeslot..'
+      message: $rootScope.ui.planboard.deletingTimeslot
     };
     /**
      * Add slot
@@ -731,7 +731,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot is succesfully deleted.'
+        message: $rootScope.ui.planboard.timeslotDeleted
       });
       /**
        * Refresh timeline
@@ -754,7 +754,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Refreshing timeline..'
+      message: $rootScope.ui.planboard.refreshTimeline
     };
     /**
      * Reset slot container
@@ -886,7 +886,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
      */
     $rootScope.loading = {
       status: true,
-      message: 'Loading timeline..'
+      message: $rootScope.ui.planboard.loadingTimeline
     };
     /**
      * Fetch new data

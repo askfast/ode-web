@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2>Settings</h2>
+  <h2>{{ui.settings.settings}}Settings</h2>
 </div>
 
 
@@ -13,12 +13,12 @@
       <li class="active">
         <a href="#userSettingsTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('userSettingsTab')"><span class="entypo">&#128100;</span> User</a>
+            ng-click="fixTabHeight('userSettingsTab')"><span class="entypo">&#128100;</span> {{ui.settings.user}}</a>
       </li>
       <li>
         <a href="#appSettingsTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('appSettingsTab')"><span class="entypo">&#9881;</span> Application</a>
+            ng-click="fixTabHeight('appSettingsTab')"><span class="entypo">&#9881;</span> {{ui.settings.application}}</a>
       </li>
     </ul>
     <!-- end tabs -->
@@ -32,12 +32,12 @@
 
 
         <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">User Settings</h3>
+          <h3 style="margin-top: 0;" class="pull-left">{{ui.settings.userSettings}}</h3>
         </div>
 
         <hr>
 
-        <p>User settings.</p>
+        <p>{{ui.settings.userSettings}}</p>
 
       </div>
       <!-- end userSettingsTab -->
@@ -47,12 +47,12 @@
 
 
         <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">Application Settings</h3>
+          <h3 style="margin-top: 0;" class="pull-left">{{ui.settings.appSettings}}</h3>
         </div>
 
         <hr>
 
-        <p>Application settings.</p>
+        <p>{{ui.settings.appSettings}}</p>
 
       </div>
       <!-- end appSettingsTab -->

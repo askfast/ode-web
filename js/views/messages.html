@@ -104,7 +104,7 @@
 
             <div class="control-group">
               <label class="control-label">{{ui.message.receviers}}</label>
-              <select data-placeholder="{{ui.message.chooseRecept}}" 
+              <select placeholder="{{ui.message.chooseRecept}}" 
                       multiple 
                       class="chzn-select" 
                       style="width:530px" 
@@ -120,7 +120,7 @@
               <input type="text" 
                       class="span5"
                       ng-model="message.subject"
-                      placeholder="{{ui.message. }}Type a subject…">
+                      placeholder="{{ui.message.typeSubject}}">
             </div>
 
 
@@ -212,7 +212,7 @@
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Filter messages.." 
+                    placeholder="{{ui.message.ph_filterMessage}}" 
                     ng-model="query.inbox">
           </form>
           <!-- end filter messages -->

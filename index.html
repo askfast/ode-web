@@ -50,7 +50,7 @@
                 <a href="#planboard">Planboard</a>
               </li>
               <li data-match-route="/messages">
-                <a href="#messages">Messages 
+                <a href="#messages">{{ui.message.messages}}
                   <!-- unread messages -->
                   <span ng-show="(app.unreadMessages > 0)" class="badge badge-success">
                     {{app.unreadMessages}}
@@ -59,7 +59,7 @@
                 </a>
               </li>
               <li data-match-route="/groups">
-                <a href="#groups">Groups</a>
+                <a href="#groups">{{ui.groups.groups}}</a>
               </li>
             </ul>
             <!-- end main nav -->
@@ -70,10 +70,10 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#profile"><i class="icon-user"></i> Profile</a></li>
-                  <li><a href="#settings"><i class="icon-cog"></i> Settings</a></li>
+                  <li><a href="#profile"><i class="icon-user"></i>{{ui.profile.profile}}</a></li>
+                  <li><a href="#settings"><i class="icon-cog"></i>{{ui.settings.settings}}</a></li>
                   <li class="divider"></li>
-                  <li><a href="#logout"><i class="icon-off"></i> Logout</a></li>
+                  <li><a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a></li>
                 </ul>
               </li>
             </ul>
@@ -90,7 +90,7 @@
     <!-- loading -->
     <div id="loading" ng-show="loadingBig">
       <span class="entypo">&#9203;</span>
-      <p>Loading..</p>
+      <p>{{ui.login.loading}}</p>
     </div>
     <!-- end loading -->
 
@@ -139,7 +139,7 @@
             <button class="btn btn-success btn-large" type="button">
               <!-- <span class="entypo">&#128241;</span> -->
               <!-- <i class="icon-download icon-white"></i> -->
-              Download Mobile App
+              {{ui.login.downloadApp}}
             </button>
           </div>
           <!-- end download mobile app -->
