@@ -153,7 +153,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
         login: {
           display: true,
           type: 'alert-error',
-          message: 'Please fill all fields!'
+          message: $rootScope.ui.login.alert_fillfiled
         }
       };
 
@@ -213,7 +213,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
           login: {
             display: true,
             type: 'alert-error',
-            message: 'Wrong username or password!'
+            message: $rootScope.ui.login.alert_wrongUserPass
           }
         };
 
@@ -263,7 +263,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
     /**
      * Preloader
      */
-    self.progress(20, 'Loading user information..');
+    self.progress(20, $rootScope.ui.login.loading_User);
 
     /**
      * Get user resources
@@ -279,7 +279,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
       /**
        * Preloader
        */
-      self.progress(40, 'Loading messages..');
+      self.progress(40, $rootScope.ui.login.loading_Message);
 
       /**
        * Get messages
@@ -296,7 +296,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
         /**
          * Preloader
          */
-        self.progress(60, 'Loading groups..');
+        self.progress(60, $rootScope.ui.login.loading_Group);
 
         /**
          * Get groups
@@ -308,7 +308,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
           /**
            * Preloader
            */
-          self.progress(80, 'Loading members..');
+          self.progress(80, $rootScope.ui.login.loading_Members);
 
           /**
            * Compile member calls into one pool
@@ -329,7 +329,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
             /**
              * Preloader
              */
-            self.progress(100, 'Everything loaded!');
+            self.progress(100, $rootScope.ui.login.loading_everything);
 
             /**
              * Make unique list of members

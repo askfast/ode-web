@@ -3,7 +3,7 @@
   <div class="btn-group pull-right">
     <button type="submit" 
             ng-click="composeMessage(); setViewTo('compose')" 
-            class="btn btn-success {{(views.compose==true) && 'active'}}">Compose a message</button>
+            class="btn btn-success {{(views.compose==true) && 'active'}}">{{ui.message.composeAMessage}}</button>
   </div>
 </div>
 
@@ -19,7 +19,7 @@
         <a href="#composeTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('composeTab'); setViewTo('compose')">
-          <span class="entypo">&#9998;</span> Compose
+          <span class="entypo">&#9998;</span> {{ui.message.compose}}
         </a>
       </li>
 
@@ -27,7 +27,7 @@
         <a href="#viewTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('viewTab'); setViewTo('view')">
-          <span class="entypo">&#128196;</span> Message
+          <span class="entypo">&#128196;</span> {{ui.message.message}}
         </a>
       </li>
 
@@ -35,7 +35,7 @@
         <a href="#inboxTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('inboxTab'); resetViews(); setViewTo('inbox')">
-          <span class="entypo">&#128229;</span> Inbox
+          <span class="entypo">&#128229;</span> {{ui.message.inbox}}
         </a>
       </li>
 
@@ -43,7 +43,7 @@
         <a href="#outboxTab"   
             data-toggle="tab"
             ng-click="fixTabHeight('outboxTab'); resetViews(); setViewTo('outbox')">
-          <span class="entypo">&#128228;</span> Outbox
+          <span class="entypo">&#128228;</span> {{ui.message.outbox}}
         </a>
       </li>
 
@@ -51,7 +51,7 @@
         <a href="#trashTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('trashTab'); resetViews(); setViewTo('trash')">
-          <span class="entypo">&#9749;</span> Trash
+          <span class="entypo">&#9749;</span> {{ui.message.trash}}
         </a>
       </li>
 
@@ -71,10 +71,10 @@
       <div class="tab-pane {{(views.compose==true) && 'active'}}" id="composeTab" ng-show="views.compose">
 
         <div class="tab-header">
-          <h3 class="pull-left">Compose message</h3>
+          <h3 class="pull-left">{{ui.message.composeMessage}}</h3>
           <button type="submit" 
                   ng-click="(origin=='inbox'); closeTabs()" 
-                  class="btn pull-right">Close</button>
+                  class="btn pull-right">{{ui.message.close}}</button>
         </div>
         <hr>
 
@@ -83,7 +83,7 @@
           <fieldset>
         
             <div class="control-group">
-              <label class="control-label">Broadcast</label>
+              <label class="control-label">{{ui.message.broadcast}}</label>
               <div  class="btn-group"  
                     bs-buttons-checkbox="" 
                     data-toggle="buttons-checkbox">
@@ -92,19 +92,19 @@
                         class="btn btn-small" 
                         ng-model="broadcast.sms" 
                         ng-click=""
-                        bs-button="">SMS</button>
+                        bs-button="">{{ui.message.sms}}</button>
 
                 <button type="button" 
                         class="btn btn-small" 
                         ng-model="broadcast.email" 
                         ng-click=""
-                        bs-button="">Email</button>
+                        bs-button="">{{ui.message.email}}</button>
               </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label">Receviers</label>
-              <select data-placeholder="Choose a Recipient" 
+              <label class="control-label">{{ui.message.receviers}}</label>
+              <select placeholder="{{ui.message.chooseRecept}}" 
                       multiple 
                       class="chzn-select" 
                       style="width:530px" 
@@ -116,16 +116,16 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">Subject</label>
+              <label class="control-label">{{ui.message.subject}}</label>
               <input type="text" 
                       class="span5"
                       ng-model="message.subject"
-                      placeholder="Type a subject…">
+                      placeholder="{{ui.message.typeSubject}}">
             </div>
 
 
             <div class="control-group">
-              <label class="control-label">Message</label>
+              <label class="control-label">{{ui.message.message}}</label>
               <textarea rows="7" 
                         class="span7"
                         ng-model="message.body"></textarea>
@@ -134,7 +134,7 @@
             <div class="form-actions">
               <button type="submit" 
                       ng-click="send(message, broadcast)" 
-                      class="btn btn-success">Send Message</button>
+                      class="btn btn-success">{{ui.message.sendMessage}}</button>
             </div>
 
           </fieldset>
@@ -159,24 +159,24 @@
           <div class="pull-right">
             <button type="button" 
                     ng-click="closeTabs()" 
-                    class="btn">Close</button>
+                    class="btn">{{ui.message.close}}</button>
           </div>
         </div>
         <hr>
 
         <!-- message view -->
         <dl>
-          <dt>Sender</dt>
+          <dt>{{ui.message.sender}}</dt>
             <dd>{{message.requester|convertEve|convertUserIdToName}} </dd>
-          <dt>Receiver(s)</dt>
+          <dt>{{ui.message.receviers}}</dt>
             <dd>
               <span ng-repeat="receiver in message.responder">
                 {{receiver|convertEve|convertUserIdToName}}, 
               </span>
             </dd>
-          <dt>Date</dt>
+          <dt>{{ui.message.date}}</dt>
             <dd>{{message.creationTime|nicelyDate}}</dd>
-          <dt>Question Text</dt>
+          <dt>{{ui.message.questionText}}</dt>
             <dd>{{message.question_text}}</dd>
         </dl>
         <!-- end message view -->
@@ -186,10 +186,10 @@
             <div class="form-actions">
               <button type="button" 
                       ng-click="reply(message)"
-                      class="btn btn-success">Reply</button>
+                      class="btn btn-success">{{ui.message.reply}}</button>
               <button type="button" 
                       ng-click="removeMessage(message.uuid)"
-                      class="btn btn-danger">Delete</button>
+                      class="btn btn-danger">{{ui.message.del}}</button>
             </div>
 
           </fieldset>
@@ -206,13 +206,13 @@
       <div class="tab-pane {{(views.inbox==true) && 'active'}}" id="inboxTab">
 
         <div class="tab-header">
-          <h3 class="pull-left">Inbox</h3>
+          <h3 class="pull-left">{{ui.message.inbox}}</h3>
 
           <!-- filter messages -->
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Filter messages.." 
+                    placeholder="{{ui.message.ph_filterMessage}}" 
                     ng-model="query.inbox">
           </form>
           <!-- end filter messages -->
@@ -220,7 +220,7 @@
         </div>
         <hr>
 
-        <p ng-hide="(messages.inbox|filter:query.inbox).length > 0">There are no messages.</p>
+        <p ng-hide="(messages.inbox|filter:query.inbox).length > 0">{{ui.message.noMessage}}</p>
 
         <!-- inbox listing -->
         <div ng-show="(messages.inbox|filter:query.inbox).length > 0">
@@ -233,9 +233,9 @@
                           ng-click="toggleSelection(messages.inbox, 'inbox', selectionMaster.inbox)">
                 </th>
                 <th></th>
-                <th>From</th>
-                <th>Subject</th>
-                <th>Date</th>
+                <th>{{ui.message.from}}</th>
+                <th>{{ui.message.subject}}</th>
+                <th>{{ui.message.date}}</th>
                 <th></th>
               </tr>
             </thead>
@@ -247,7 +247,7 @@
                           ng-model="selection.inbox[message.uuid]"
                           ng-checked="selectionMaster.inbox">
                 </td>
-                <td><span class="label label-warning" ng-show="(message.state=='NEW')">New</span></td>
+                <td><span class="label label-warning" ng-show="(message.state=='NEW')">{{ui.message.newMsg}}</span></td>
                 <td>{{message.requester|convertEve|convertUserIdToName}}</td>
                 <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime|nicelyDate}}</td>
@@ -271,10 +271,10 @@
           <button type="button" 
                   ng-click="removeMessages(selection.inbox)" 
                   class="btn btn-small btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i> Delete Selected Messages</button>
+                  <i class="icon-trash icon-white"></i> {{ui.message.deleteSelected}}</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{(messages.inbox|filter:query.inbox).length}} message(s)</i></small>
+            <small><i>{{(messages.inbox|filter:query.inbox).length | i18n_spec:'message.someMessage'}} </i></small>
           </span>
         </div>
         <!-- end inbox listing -->
@@ -291,7 +291,7 @@
       <div class="tab-pane {{(views.outbox==true) && 'active'}}" id="outboxTab">
 
         <div class="tab-header">
-          <h3 class="pull-left">Outbox</h3>
+          <h3 class="pull-left">{{ui.message.outbox}}</h3>
 
           <!-- filter messages -->
           <form class="pull-right">
@@ -304,7 +304,7 @@
         </div>
         <hr>
 
-        <p ng-hide="(messages.outbox|filter:query.outbox).length > 0">There are no messages in outbox.</p>
+        <p ng-hide="(messages.outbox|filter:query.outbox).length > 0">{{ui.message.noMessage}}</p>
 
         <!-- outbox listing -->
         <div ng-show="(messages.outbox|filter:query.outbox).length > 0">
@@ -316,9 +316,9 @@
                           ng-model="selectionMaster.outbox"
                           ng-click="toggleSelection(messages.outbox, 'outbox', selectionMaster.outbox)">
                 </th>
-                <th style="max-width: 400px;">Receiver(s)</th>
-                <th>Subject</th>
-                <th>Date</th>
+                <th style="max-width: 400px;">{{ui.message.receviers}}</th>
+                <th>{{ui.message.subject}}</th>
+                <th>{{ui.message.date}}</th>
                 <th></th>
               </tr>
             </thead>
@@ -351,10 +351,10 @@
           <button type="button" 
                   ng-click="removeMessages(selection.outbox)" 
                   class="btn btn-small btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i> Delete Selected Messages</button>
+                  <i class="icon-trash icon-white"></i>{{ui.message.deleteSelected}}</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{(messages.outbox|filter:query.outbox).length}} message(s)</i></small>
+            <small><i>{{(messages.outbox|filter:query.outbox).length | i18n_spec:'message.someMessage'}}</i></small>
           </span>
         </div>
         <!-- end outbox listing -->
@@ -370,14 +370,14 @@
       <div class="tab-pane {{(views.trash==true) && 'active'}}" id="trashTab">
 
         <div class="tab-header">
-          <h3 class="pull-left">Trash</h3>
+          <h3 class="pull-left">{{ui.message.trash}}</h3>
 
           <!-- empty trash button -->
           <div class="pull-right" style="margin-left: 10px;">
             <button type="button" 
                   ng-click="emptyTrash()" 
                   class="btn btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i> Empty Trash</button>
+                  <i class="icon-trash icon-white"></i>{{ui.message.emptyTrash}}</button>
           </div>
           <!-- end empty trash button -->
 
@@ -393,7 +393,7 @@
         </div>
         <hr>
 
-        <p ng-hide="(messages.trash|filter:query.trash).length > 0">There are no messages in trash.</p>
+        <p ng-hide="(messages.trash|filter:query.trash).length > 0">{{ui.message.noMsgInTrash}}</p>
 
         <!-- trash listing -->
         <div ng-show="(messages.trash|filter:query.trash).length > 0">
@@ -405,10 +405,10 @@
                           ng-model="selectionMaster.trash"
                           ng-click="toggleSelection(messages.trash, 'trash', selectionMaster.trash)">
                 </th>
-                <th>Box</th>
-                <th>Person(s)</th>
-                <th>Subject</th>
-                <th>Date</th>
+                <th>{{ui.message.box}}</th>
+                <th>{{ui.message.persons}}</th>
+                <th>{{ui.message.subject}}</th>
+                <th>{{ui.message.date}}</th>
                 <th></th>
               </tr>
             </thead>
@@ -443,10 +443,10 @@
           <button type="button" 
                   ng-click="restoreMessages(selection.trash)" 
                   class="btn btn-small btn-success pull-left">
-                  <i class="icon-thumbs-up icon-white"></i> Restore Selected Messages</button>
+                  <i class="icon-thumbs-up icon-white"></i>{{ui.message.restoreSelected}}</button>
 
           <span class="muted pull-right">
-            <small><i>There are {{(messages.trash|filter:query.trash).length}} message(s)</i></small>
+            <small><i>{{(messages.trash|filter:query.trash).length | i18n_spec:'message.someMessage'}}</i></small>
           </span>
         </div>
         <!-- end trash listing -->

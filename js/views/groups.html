@@ -1,18 +1,18 @@
 <div class="page-header">
   <h2 ng-hide="views.add || views.member">{{group.name}}</h2>
-  <h2 ng-show="views.add">New Group</h2>
-  <h2 ng-show="views.member">New Member</h2>
+  <h2 ng-show="views.add">{{ui.groups.newGroup}}</h2>
+  <h2 ng-show="views.member">{{ui.groups.newMember}}</h2>
 
   <!-- groups buttons -->
   <div class="btn-group pull-right">
 
     <button type="button" 
             ng-click="fixTabHeight('addGroupTab'); addGroupForm(); setViewTo('add')"
-            class="btn btn-success {{(views.add==true) && 'active'}}">New Group</button>
+            class="btn btn-success {{(views.add==true) && 'active'}}">{{ui.groups.newGroup}}</button>
 
     <button type="button" 
             ng-click="fixTabHeight('newMemberTab'); newMemberForm(); setViewTo('member')" 
-            class="btn btn-success {{(views.member==true) && 'active'}}">New Member</button>
+            class="btn btn-success {{(views.member==true) && 'active'}}">{{ui.groups.newMember}}</button>
 
   </div>
   <!-- end groups buttons -->
@@ -24,7 +24,7 @@
       <input type="text" 
               class="span2 search-query" 
               ng-model="search.query">
-      <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
+      <button type="submit" class="btn"><i class="icon-search"></i> {{ui.groups.serach}}</button>
     </div>
   </form>
   <!-- end search members -->
@@ -46,7 +46,7 @@
           ng-click="fixTabHeight('addGroupTab'); setViewTo('add')" 
           data-toggle="tab">
         <span class="entypo">&#9998;</span>
-        Add New Group
+        {{ui.groups.addNewGroup}}
       </a>
     </li>
     <!-- end add group tab link -->
@@ -58,7 +58,7 @@
           ng-click="fixTabHeight('editGroupTab'); setViewTo('edit')" 
           data-toggle="tab">
         <span class="entypo">&#9998;</span>
-        Edit Group
+        {{ui.groups.editGroup}}
       </a>
     </li>
     <!-- end edit group tab link -->
@@ -70,7 +70,7 @@
           ng-click="fixTabHeight('newMemberTab'); setViewTo('member')" 
           data-toggle="tab">
         <span class="entypo">&#59136;</span>
-        New Member
+        {{ui.groups.newMember}}
       </a>
     </li>
     <!-- new member tab link -->
@@ -82,7 +82,7 @@
           ng-click="fixTabHeight('searchTab'); setViewTo('search')"
           data-toggle="tab">
         <span class="entypo">&#128269;</span>
-        Search results
+        {{ui.groups.searchResults}}
       </a>
     </li>
     <!-- end search tab link -->
@@ -96,7 +96,7 @@
           data-toggle="tab"
           ng-click="fixTabHeight('groupTab'); setViewTo('view')">
           <span class="entypo">&#128101;</span> 
-        Group
+        {{ui.groups.group}}
       </a>
     </li>
     <!-- end group tab links -->
@@ -122,11 +122,11 @@
 
         <div class="tab-header">
 
-          <h3 class="pull-left">Add New Group</h3>
+          <h3 class="pull-left">{{ui.groups.addNewGroup}}</h3>
 
           <button type="button" 
                   ng-click="closeTabs()" 
-                  class="btn pull-right">Close</button>
+                  class="btn pull-right">{{ui.groups.close}}</button>
         </div>
         <hr>
 
@@ -135,7 +135,7 @@
           <fieldset>
             
             <div class="control-group">
-              <label class="control-label">Name</label>
+              <label class="control-label">{{ui.groups.name}}</label>
               <div class="controls">
                 <input type="text" 
                     class="span4" 
@@ -146,7 +146,7 @@
             <div class="form-actions">
               <button type="submit" 
                       ng-click="groupSubmit(groupForm)" 
-                      class="btn btn-success">Save Group</button>
+                      class="btn btn-success">{{ui.groups.saveGroup}}</button>
             </div>
 
           </fieldset>
@@ -167,11 +167,11 @@
 
         <div class="tab-header">
 
-          <h3 class="pull-left">Edit Group</h3>
+          <h3 class="pull-left">{{ui.groups.editGroup}}</h3>
 
           <button type="button" 
                   ng-click="closeTabs()" 
-                  class="btn pull-right">Close</button>
+                  class="btn pull-right">{{ui.groups.close}}</button>
         </div>
         <hr>
 
@@ -180,7 +180,7 @@
           <fieldset>
             
             <div class="control-group">
-              <label class="control-label">Name</label>
+              <label class="control-label">{{ui.groups.name}}</label>
               <div class="controls">
                 <input type="text" 
                     class="span4" 
@@ -191,7 +191,7 @@
             <div class="form-actions">
               <button type="submit" 
                       ng-click="groupSubmit(groupForm)" 
-                      class="btn btn-success">Save Group</button>
+                      class="btn btn-success">{{ui.groups.saveGroup}}</button>
             </div>
 
           </fieldset>
@@ -212,11 +212,11 @@
 
         <div class="tab-header">
 
-          <h3 class="pull-left">Register Member</h3>
+          <h3 class="pull-left">{{ui.groups.registerMember}}</h3>
 
           <button type="button" 
                   ng-click="closeTabs()" 
-                  class="btn pull-right">Close</button>
+                  class="btn pull-right">{{ui.groups.close}}</button>
         </div>
         <hr>
 
@@ -225,19 +225,19 @@
           <fieldset>
 
             <div class="control-group">
-              <label class="control-label">Rol</label>
+              <label class="control-label">{{ui.groups.role}}</label>
               <div class="controls">
                 <select ng-model="memberForm.role"
                         ng-options="role.label for role in roles">
-                  <option value="">Select a role</option>
+                  <option value="">{{ui.groups.selectRole}}</option>
                 </select>
               </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label">Groups</label>
+              <label class="control-label">{{ui.groups.groups}}</label>
               <div class="controls">
-                <select data-placeholder="Choose a Group" 
+                <select data-placeholder="{{ui.groups.}}Choose a Group" 
                         multiple 
                         class="chzn-select" 
                         style="width:530px" 
@@ -252,7 +252,7 @@
             <hr>
 
             <div class="control-group">
-              <label class="control-label">Name</label>
+              <label class="control-label">{{ui.groups.name}}</label>
               <div class="controls">
                 <input  type="text" 
                         class="span4" 
@@ -261,7 +261,7 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">Email</label>
+              <label class="control-label">{{ui.groups.email}}</label>
               <div class="controls">
                 <input  type="text" 
                         class="span4" 
@@ -270,7 +270,7 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">Phone</label>
+              <label class="control-label">{{ui.groups.phone}}</label>
               <div class="controls">
                 <input  type="text" 
                         class="span3" 
@@ -279,7 +279,7 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">Address</label>
+              <label class="control-label">{{ui.groups.address}}</label>
               <div class="controls">
                 <input  type="text" 
                         class="span5" 
@@ -288,7 +288,7 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">Postcode</label>
+              <label class="control-label">{{ui.groups.postCode}}</label>
               <div class="controls">
                 <input  type="text" 
                         class="span2" 
@@ -297,7 +297,7 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">City</label>
+              <label class="control-label">{{ui.groups.city}}</label>
               <div class="controls">
                 <input  type="text" 
                         class="span3" 
@@ -308,7 +308,7 @@
             <hr>
 
             <div class="control-group">
-              <label class="control-label">Username</label>
+              <label class="control-label">{{ui.groups.userName}}</label>
               <div class="controls">
                 <input  type="text" 
                         class="span3" 
@@ -317,7 +317,7 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">Password</label>
+              <label class="control-label">{{ui.groups.password}}</label>
               <div class="controls">
                 <input  type="password" 
                         class="span3" 
@@ -328,7 +328,7 @@
             <div class="form-actions">
               <button type="submit" 
                   ng-click="memberSubmit(memberForm)" 
-                  class="btn btn-success">Save Member</button>
+                  class="btn btn-success">{{ui.groups.saveMember}}</button>
             </div>
 
           </fieldset>
@@ -345,20 +345,20 @@
     <!-- search tab -->
     <div class="tab-pane {{(views.search==true) && 'active'}}" id="searchTab" ng-show="views.search">
       <div class="tab-header">
-        <h3 class="pull-left">Search results for '{{search.queried}}'</h3>
+        <h3 class="pull-left">{{ui.groups.serachFor}} '{{search.queried}}'</h3>
         <button type="button" 
                 ng-click="closeTabs()" 
-                class="btn pull-right">Close</button>
+                class="btn pull-right">{{ui.groups.close}}</button>
       </div>
       <hr>
-      <p ng-hide="candidates.length > 0">Sorry but we couldn't find what you are looking for.</p>
+      <p ng-hide="candidates.length > 0">{{ui.groups.sorryCanNotFind}}</p>
       <div ng-show="candidates.length > 0">
         <table class="table table-striped">
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
-              <th>Groups</th>
+              <th>{{ui.groups.name}}</th>
+              <th>{{ui.groups.groups}}</th>
               <th></th>
             </tr>
           </thead>
@@ -371,20 +371,20 @@
                 <select style="margin:0" 
                         ng-model="candidate.group" 
                         ng-options="group.name for group in data.groups">
-                  <option value="">-- select a group --</option>
+                  <option value="">{{ui.groups.selectGroup}}</option>
                 </select>
                 <button style="margin-left: 5px;" 
                         ng-click="addMember(candidate)" 
-                        class="btn btn-success btn-small">Add to group</button>
+                        class="btn btn-success btn-small">{{ui.groups.addToGroup}}</button>
               </td>
             </tr>
           </tbody>
         </table>
         <button type="button" 
                 ng-click="addMembers()" 
-                class="btn btn-success btn-small pull-left">Add Selected Members To Groups</button>
+                class="btn btn-success btn-small pull-left">{{ui.groups.addMemberToGroup}}</button>
         <span class="muted pull-right">
-          <small><i>There are {{candidates.length}} results in your query.</i></small>
+          <small><i>{{candidates.length | i18n_spec:'groups.resultCount'}}</i></small>
         </span>
       </div>
     </div>
@@ -417,24 +417,24 @@
 
           <input type="text" 
                   class="span2 search-query" 
-                  placeholder="Filter members.." 
+                  placeholder="{{ui.groups.filterMembers}}" 
                   style="margin-right:5px"
                   ng-model="filtered">
 
           <button type="button" 
                   ng-click="fixTabHeight('editGroupTab'); editGroup(group)" 
                   style="margin-right:5px"
-                  class="btn"><i class="icon-edit"></i> Edit Group</button>
+                  class="btn"><i class="icon-edit"></i> {{ui.groups.editGroup}}</button>
 
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
-                  class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete Group</button>
+                  class="btn btn-danger"><i class="icon-trash icon-white"></i>{{ui.groups.deleteGroup}}</button>
         </div>
 
       </div>
       <hr>
       <p ng-hide="(data.members[group.uuid]|filter:filtered).length > 0">
-        There are no members.
+        {{ui.groups.noMembers}}
       </p>
       <div ng-show="(data.members[group.uuid]|filter:filtered).length > 0">
         <table class="table table-striped">
@@ -445,9 +445,9 @@
                         ng-model="selectionMaster"
                         ng-click="toggleSelection(group, selectionMaster)">
               </th>
-              <th><a ng-click="sorter='name'">Name</a></th>
-              <th><a ng-click="sorter='resources.role'">Role</a></th>
-              <th><a ng-click="sorter='resources.phoneAddress'">Tel</a></th>
+              <th><a ng-click="sorter='name'">{{ui.groups.name}}</a></th>
+              <th><a ng-click="sorter='resources.role'">{{ui.groups.role}}</a></th>
+              <th><a ng-click="sorter='resources.phoneAddress'">{{ui.groups.tel}}</a></th>
               <th></th>
             </tr>
           </thead>
@@ -476,10 +476,10 @@
         <button type="button" 
                 ng-click="removeMembers(selection, group)" 
                 class="btn btn-small btn-danger pull-left">
-                <i class="icon-trash icon-white"></i> Remove Selected Members</button>
+                <i class="icon-trash icon-white"></i>{{ui.groups.removeSelectedMembers}}</button>
 
         <span class="muted pull-right">
-          <small><i>There are {{(data.members[group.uuid]|filter:filtered).length}} member(s)</i></small>
+          <small><i>{{(data.members[group.uuid]|filter:filtered).length | i18n_spec:'groups.memberCount'}}</i></small>
         </span>
       </div>
     </div>

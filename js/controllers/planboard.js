@@ -417,7 +417,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Loading timeline..'
+      message: $rootScope.ui.planboard.loadingTimeline
     };
     /**
      * Fetch new data
@@ -566,7 +566,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Loading timeline..'
+      message: $rootScope.ui.planboard.loadingTimeline
     };
     /**
      * Fetch new data
@@ -628,7 +628,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
        */
       $rootScope.loading = {
         status: true,
-        message: 'Loading timeline..'
+        message: $rootScope.ui.planboard.loadingTimeline
       };
       /**
        * Fetch new data
@@ -1116,7 +1116,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Adding a timeslot..'
+      message: $rootScope.ui.planboard.addTimeSlot
     };
     /**
      * Add slot
@@ -1135,7 +1135,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'New timeslot added successfully.'
+        message: $rootScope.ui.planboard.slotAdded
       });
       /**
        * Refresh timeline
@@ -1168,7 +1168,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Changing a timeslot..'
+      message: $rootScope.ui.planboard.changingSlot
     };
 
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
@@ -1188,7 +1188,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot changed successfully.'
+        message: $rootScope.ui.planboard.slotChanged
       });
       /**
        * Refresh timeline
@@ -1208,7 +1208,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Changing timeslot..'
+      message: $rootScope.ui.planboard.changingSlot
     };
     /**
      * Add slot
@@ -1237,7 +1237,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot changed successfully.'
+        message: $rootScope.ui.planboard.slotChanged
       });
       /**
        * Refresh timeline
@@ -1257,7 +1257,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Changing wish value..'
+      message: $rootScope.ui.planboard.changingWish
     };
     /**
      * Add slot
@@ -1276,7 +1276,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Wish value changed successfully.'
+        message: $rootScope.ui.planboard.wishChanged
       });
       /**
        * Refresh timeline
@@ -1296,7 +1296,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Deleting a timeslot..'
+      message: $rootScope.ui.planboard.deletingTimeslot
     };
     /**
      * Add slot
@@ -1310,7 +1310,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot deleted successfully.'
+        message: $rootScope.ui.planboard.timeslotDeleted
       });
       /**
        * Refresh timeline
@@ -1330,7 +1330,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Deleting a timeslot..'
+      message: $rootScope.ui.planboard.deletingTimeslot
     };
     /**
      * Add slot
@@ -1344,7 +1344,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        message: 'Timeslot deleted successfully.'
+        message: $rootScope.ui.planboard.timeslotDeleted
       });
       /**
        * Refresh timeline
@@ -1383,7 +1383,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Refreshing timeline..'
+      message: $rootScope.ui.planboard.refreshTimeline
     };
     /**
      * Ask for fresh data
@@ -1435,7 +1435,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     $rootScope.loading = {
       status: true,
-      message: 'Pre-compiling shortage message'
+      message: $rootScope.ui.planboard.preCompilingStortageMessage
     };
     /**
      * Set info about slot in sessionStorage
@@ -1631,7 +1631,7 @@ planboardCtrl.prototype = {
             timedata.push({
               start: Math.round(slot.start * 1000),
               end: Math.round(slot.end * 1000),
-              group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' + wrapper('recursive') : 
+              group: (slot.recursive) ? wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + wrapper('recursive') : 
                                         wrapper('a') + 'Planning' + wrapper('planning'),
               content: secret(angular.toJson({
                 type: 'slot',
@@ -1737,7 +1737,7 @@ planboardCtrl.prototype = {
               requirement = '<div class="requirement" style="' + 
                             style + 
                             '" ' + 
-                            'title="Minimum aantal benodigden: ' + 
+                            'title="'+'Minimum aantal benodigden'+': ' + 
                             num + 
                             ' personen"></div>';
           /**

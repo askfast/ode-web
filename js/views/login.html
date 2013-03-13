@@ -58,7 +58,12 @@
 		<form ng-submit="forgot()">
 		  <img src="img/login_knrm_logo.png" alt="KNRM" />
 			<!-- <h2>WebPaige</h2> -->
+<<<<<<< HEAD
 		  <h4 class="form-signin-heading">Forgot password</h4>
+=======
+		  <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>
+
+>>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
 	      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
 	        <button class="close" type="button" ng-click="alert.forget=false">×</button>
 	        {{alert.forget.message}}
@@ -67,9 +72,18 @@
 		    class="" 
 		    type="text" 
 		    ng-model="remember.id"
+<<<<<<< HEAD
 		    placeholder="username">
 		  <button class="btn btn-large btn-primary" type="submit">Reset Password</button>
 		  <p><small><a ng-click="views.login=true; views.forgot=false">return back to login</a></small></p>
+=======
+		    placeholder="{{ui.login.ph_username}}">
+
+		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
+
+		  <p><small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small></p>
+
+>>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
 		  <span class="version">v2.0.0</span>
 		</form>
 	</div>
@@ -84,10 +98,20 @@
 				<button class="close" type="button" ng-click="alert.changePass=false">×</button>
 				{{alert.changePass.message}}
 			</div>
+<<<<<<< HEAD
 			<input class="" type="password" ng-model="changeData.newPass" placeholder="new  password">
 			<input class="" type="password" ng-model="changeData.retypePass" placeholder="retype password">
 			<button class="btn btn-large btn-primary" type="submit">change password</button>
 		  <br><span class="version">v2.0.0</span>
+=======
+			
+			<input class="" type="password" ng-model="changeData.newPass" placeholder="{{ui.login.ph_newPass}}new  password">
+			<input class="" type="password" ng-model="changeData.retypePass" placeholder="{{ui.login.ph_retypePass}}retype password">
+			
+			<button class="btn btn-large btn-primary" type="submit">{{ui.login.changePassword}}</button>
+
+		    <br><span class="version">v2.0.0</span>
+>>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
 		</form>
 	</div>
 	
@@ -99,7 +123,11 @@
 	<button class="btn btn-success btn-large" type="button">
 		<!-- <span class="entypo">&#128241;</span> -->
 		<!-- <i class="icon-download icon-white"></i> -->
+<<<<<<< HEAD
 		{{ui.login.download_mobile_app}}
+=======
+		{{ui.login.downloadApp}}
+>>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
 	</button>
 </div>
 <!-- end download mobile app -->
