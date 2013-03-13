@@ -9,11 +9,11 @@ var ui = {
         placeholder_password: "Your password",
         label_rememberMe: "Remember Me",
         button_login: "Login",
-<<<<<<< HEAD
-        button_loggingIn: "Logging..",
-        forgot_password: "forgot your password?",
-        download_mobile_app: 'Download Mobile App'
-=======
+// <<<<<<< HEAD
+//         button_loggingIn: "Logging..",
+//         forgot_password: "forgot your password?",
+//         download_mobile_app: 'Download Mobile App'
+// =======
         button_loggingIn: "Logging...",
         forgot_password: "forgot your password?",
         forgetPassword: "Forgot password",
@@ -244,7 +244,7 @@ var ui = {
           application : 'Application',
           userSettings : 'User Settings',
           appSettings : 'Application Settings',
->>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
+//>>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
       }
       
     },
@@ -255,12 +255,12 @@ var ui = {
         placeholder_password: "Vul uw wachtwoord in",
         label_rememberMe: "Onthoud mij",
         button_login: "Login",
-<<<<<<< HEAD
-        button_loggingIn: "Inloggen..",
-        forgot_password: "wachtwoord vergeten?",
-        download_mobile_app: 'Download Mobiele App'
-      }     
-=======
+// <<<<<<< HEAD
+//         button_loggingIn: "Inloggen..",
+//         forgot_password: "wachtwoord vergeten?",
+//         download_mobile_app: 'Download Mobiele App'
+//       }     
+// =======
         button_loggingIn: "Inloggen...",
         forgot_password: "Wachtwoord vergeten?",
         forgetPassword: "Wachtwoord vergeten",
@@ -492,7 +492,7 @@ var ui = {
           userSettings : 'Gebruikersinstellingen',
           appSettings : 'Applicatie-instellingen',
       }
->>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
+//>>>>>>> f05e6df83d4dbc2cc6b369e537693c598a257a6c
     }
 }
 

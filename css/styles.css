@@ -145,7 +145,11 @@ html,body {
   margin-top: 0;
 }
 
-
+#login button[type=submit],
+#forgot button[type=submit] {
+  margin 0 auto;
+  display: inline;
+}
 
 
 
@@ -331,7 +335,7 @@ html,body {
   float: right;
   position: absolute;
   top: 5px;
-  right: 195px;
+  right: 205px;
   width: 200px;
 }
 
@@ -343,7 +347,7 @@ html,body {
   position: absolute;
   top: 0;
   right: 0;
-  width: 180px;
+  width: 190px;
   /*padding-top: 10px;
   padding-bottom: 8px;*/
 }

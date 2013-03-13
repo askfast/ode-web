@@ -483,7 +483,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           $scope.timeline.config,
           angular.fromJson(Storage.get('groups')),
           angular.fromJson(Storage.get('members')),
-          $scope.divisions
+          $scope.divisions,
+          $rootScope.ui
         ), 
         $scope.timeline.options
       );
@@ -1540,7 +1541,7 @@ planboardCtrl.prototype = {
   /**
    * Timeline data processing
    */
-  process: function (data, config, ngroups, nmembers, divisions)
+  process: function (data, config, ngroups, nmembers, divisions, ui)
   {
     /**
      * Timedata container for all sort of slots
@@ -1631,7 +1632,7 @@ planboardCtrl.prototype = {
             timedata.push({
               start: Math.round(slot.start * 1000),
               end: Math.round(slot.end * 1000),
-              group: (slot.recursive) ? wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + wrapper('recursive') : 
+              group: (slot.recursive) ? wrapper('b') + ui.planboard.weeklyPlanning + wrapper('recursive') : 
                                         wrapper('a') + 'Planning' + wrapper('planning'),
               content: secret(angular.toJson({
                 type: 'slot',
