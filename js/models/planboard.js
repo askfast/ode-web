@@ -105,6 +105,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.setWish = function (options) 
   {
+    console.log('wish slot ->', options);
+    
     /**
      * Default params
      */

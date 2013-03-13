@@ -1265,8 +1265,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      */
     Slots.setWish({
       id: slot.groupId,
-      start: new Date(Date.parse(slot.start.date + ' ' + slot.start.time)).getTime() / 1000,
-      end: new Date(Date.parse(slot.end.date + ' ' + slot.end.time)).getTime() / 1000,
+      start: Dater.absoluteDates(slot.start.date, slot.start.time),
+      end: Dater.absoluteDates(slot.end.date, slot.end.time),
       wish: slot.wish
     })
     .then(function (result)

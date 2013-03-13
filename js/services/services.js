@@ -400,6 +400,18 @@ factory('Dater', function ($rootScope, Storage)
     getPeriods: function()
     {
       return angular.fromJson(Storage.get('periods'));
+    },
+
+    absoluteDates: function(date, time)
+    {
+      var dates = date.split('-');
+      return new Date(Date.parse(dates[2] + 
+                                  '-' + 
+                                  dates[1] + 
+                                  '-' + 
+                                  dates[0] + 
+                                  ' ' + 
+                                  time)).getTime() / 1000
     }
 
 
