@@ -1,4 +1,3 @@
-
 <div id="welcome">
 
 	<!-- preloader -->
@@ -6,7 +5,6 @@
 		<img src="img/login_knrm_logo.png" alt="KNRM" />
 		<!-- <h2>WebPaige</h2> -->
 	  <h4>Setting up the application</h4>
-
 	  <div class="progress progress-striped active" class="span3">
 	    <div class="bar"></div>
 	  </div>
@@ -14,58 +12,46 @@
 	</div>
 	<!-- end preloader -->
 
-
-
 	<!-- loginForm -->
 	<div id="login" ng-show="views.login">
 		<form ng-submit="login()">
 		  <img src="img/login_knrm_logo.png" alt="KNRM" />
 			<!-- <h2>WebPaige</h2> -->
 		  <h4 class="form-signin-heading">{{ui.login.header}}</h4>
-
       <!-- alert login -->
       <div class="alert {{alert.login.type}}" ng-show="alert.login.display">
         <button class="close" type="button" ng-click="alert.login=false">×</button>
         {{alert.login.message}}
       </div>
       <!-- end login password -->
-
 		  <input 
 		    class="" 
 		    type="text" 
 		    ng-model="logindata.username"
 		    placeholder="{{ui.login.placeholder_username}}" 
 		    autofocus>
-
 		  <input 
 		      class="" 
 		      type="password" 
 		      ng-model="logindata.password"
 		      placeholder="{{ui.login.placeholder_password}}">
-
 		  <label class="checkbox span3">
 		    <input 
 		      type="checkbox" 
 		      ng-model="logindata.remember">{{ui.login.label_rememberMe}}
 		  </label>
-
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.button_login}}</button>
-
 		  <p><small><a ng-click="views.forgot=true; views.login=false">{{ui.login.forgot_password}}</a></small></p>
-
 		  <p>
 		  	<small>
 			  	<a ng-click="changeLanguage('en')">English</a> |  
 			  	<a ng-click="changeLanguage('nl')">Nederlands</a>
 		  	</small>
 		  </p>
-
 		  <span class="version">v2.0.0</span>
-
 		</form>
 	</div>
 	<!-- end loginForm -->
-
 
 	<!-- remember login -->
 	<div id="forgot" ng-show="views.forgot">
@@ -73,22 +59,17 @@
 		  <img src="img/login_knrm_logo.png" alt="KNRM" />
 			<!-- <h2>WebPaige</h2> -->
 		  <h4 class="form-signin-heading">Forgot password</h4>
-
 	      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
 	        <button class="close" type="button" ng-click="alert.forget=false">×</button>
 	        {{alert.forget.message}}
 	      </div>
-
 		  <input 
 		    class="" 
 		    type="text" 
 		    ng-model="remember.id"
 		    placeholder="username">
-
 		  <button class="btn btn-large btn-primary" type="submit">Reset Password</button>
-
 		  <p><small><a ng-click="views.login=true; views.forgot=false">return back to login</a></small></p>
-
 		  <span class="version">v2.0.0</span>
 		</form>
 	</div>
@@ -99,18 +80,14 @@
 		<form ng-submit="changePass()">
 			<img src="img/login_knrm_logo.png" alt="KNRM" /><br>
 			<h4 class="form-signin-heading">{{changepass.uuid}}</h4>
-			
 			<div class="alert {{alert.changePass.type}}" ng-show="alert.changePass.display">
 				<button class="close" type="button" ng-click="alert.changePass=false">×</button>
 				{{alert.changePass.message}}
 			</div>
-			
 			<input class="" type="password" ng-model="changeData.newPass" placeholder="new  password">
 			<input class="" type="password" ng-model="changeData.retypePass" placeholder="retype password">
-			
 			<button class="btn btn-large btn-primary" type="submit">change password</button>
-
-		    <br><span class="version">v2.0.0</span>
+		  <br><span class="version">v2.0.0</span>
 		</form>
 	</div>
 	
@@ -122,11 +99,10 @@
 	<button class="btn btn-success btn-large" type="button">
 		<!-- <span class="entypo">&#128241;</span> -->
 		<!-- <i class="icon-download icon-white"></i> -->
-		Download Mobile App
+		{{ui.login.download_mobile_app}}
 	</button>
 </div>
 <!-- end download mobile app -->
-
 
 <!-- knrm users -->
 <div id="demo_users" class="well" ng-show="demo_users">

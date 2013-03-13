@@ -12,7 +12,8 @@ var ui = {
         label_rememberMe: "Remember Me",
         button_login: "Login",
         button_loggingIn: "Logging..",
-        forgot_password: "forgot your password?"
+        forgot_password: "forgot your password?",
+        download_mobile_app: 'Download Mobile App'
       }
     },
     nl: {
@@ -23,7 +24,8 @@ var ui = {
         label_rememberMe: "Onthoud mij",
         button_login: "Login",
         button_loggingIn: "Inloggen..",
-        forgot_password: "wachtwoord vergeten?"
+        forgot_password: "wachtwoord vergeten?",
+        download_mobile_app: 'Download Mobiele App'
       }     
     }
 }

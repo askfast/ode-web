@@ -34,7 +34,7 @@ WebPaige.
     /**
      * Real users
      */
-    demo_users: true,
+    demo_users: false,
     /**
      * Blacklisted browsers
      */
