@@ -1,0 +1,2165 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"auto",
+				"-ms-text-autospace:   (property)"
+			],
+			[
+				"n",
+				"ng-show=  (attribute)"
+			],
+			[
+				"ma",
+				"margin-top:   (property)"
+			],
+			[
+				"cl",
+				"class=  (attribute)"
+			],
+			[
+				"ab",
+				"absolute  (value)"
+			],
+			[
+				"lis",
+				"list-style-type:   (property)"
+			],
+			[
+				"li",
+				"list: list-style-image: url"
+			],
+			[
+				"id",
+				"id=  (attribute)"
+			],
+			[
+				"status",
+				"status  (variable)"
+			],
+			[
+				"s",
+				"scope  (namespace)"
+			],
+			[
+				"position",
+				"position:   (property)"
+			],
+			[
+				"width",
+				"border-width:   (property)"
+			],
+			[
+				"fadeOut",
+				"fadeOut  (function)"
+			],
+			[
+				"ng",
+				"ng-show=  (attribute)"
+			],
+			[
+				"pa",
+				"padding:   (property)"
+			],
+			[
+				"top",
+				"border-top:   (property)"
+			],
+			[
+				"vertical",
+				"vertical: vertical-align: type"
+			],
+			[
+				"background",
+				"background-color:   (property)"
+			],
+			[
+				"rela",
+				"relative  (value)"
+			],
+			[
+				"padding",
+				"padding-top:   (property)"
+			],
+			[
+				"z",
+				"z-index:   (property)"
+			],
+			[
+				"pos",
+				"position:   (property)"
+			],
+			[
+				"scope",
+				"$scope  (argument)"
+			],
+			[
+				"console",
+				"console: console.warn()"
+			],
+			[
+				"u",
+				"underline  (value)"
+			],
+			[
+				"te",
+				"text-decoration:   (property)"
+			],
+			[
+				"a",
+				"abbr  (element)"
+			],
+			[
+				"th",
+				"thead  (element)"
+			],
+			[
+				"thead",
+				"thead  (element)"
+			],
+			[
+				"margin",
+				"margin-right:   (property)"
+			],
+			[
+				"setTimeout",
+				"setTimeout  (function)"
+			],
+			[
+				"end",
+				"end  (variable)"
+			],
+			[
+				"week",
+				"week  (variable)"
+			],
+			[
+				"current",
+				"current  (variable)"
+			],
+			[
+				"range",
+				"range  (namespace)"
+			],
+			[
+				"so",
+				"solid  (value)"
+			],
+			[
+				"border",
+				"border: border-left-style: style"
+			],
+			[
+				"style",
+				"style=  (attribute)"
+			],
+			[
+				"back",
+				"background-color:   (property)"
+			],
+			[
+				"var",
+				"var  (keyword)"
+			],
+			[
+				"Storage",
+				"Storage  (argument)"
+			],
+			[
+				"left",
+				"left:   (property)"
+			],
+			[
+				"display",
+				"display:   (property)"
+			],
+			[
+				"inline",
+				"inline  (value)"
+			],
+			[
+				"absolute",
+				"absolute  (value)"
+			],
+			[
+				"result",
+				"result  (argument)"
+			],
+			[
+				"messages",
+				"messages  (argument)"
+			],
+			[
+				"inde",
+				"z-index:   (property)"
+			],
+			[
+				"po",
+				"position:   (property)"
+			],
+			[
+				"bo",
+				"bottom:   (property)"
+			],
+			[
+				"hei",
+				"height:   (property)"
+			],
+			[
+				"pro",
+				"emptyTrash  (function)"
+			],
+			[
+				"angular",
+				"angular  (variable)"
+			],
+			[
+				"pie",
+				"pie  (argument)"
+			],
+			[
+				"even",
+				"even  (variable)"
+			],
+			[
+				"less",
+				"less  (variable)"
+			],
+			[
+				"font",
+				"font-stretch:   (property)"
+			],
+			[
+				"fon",
+				"font-size:   (property)"
+			],
+			[
+				"ul",
+				"ul  (element)"
+			],
+			[
+				"class",
+				"class=  (attribute)"
+			],
+			[
+				"i",
+				"id=  (attribute)"
+			],
+			[
+				"m",
+				"margin-bottom:   (property)"
+			],
+			[
+				"fo",
+				"font-size:   (property)"
+			],
+			[
+				"no",
+				"normal  (value)"
+			],
+			[
+				"he",
+				"height:   (property)"
+			],
+			[
+				"col",
+				"background-color:   (property)"
+			],
+			[
+				"paddin",
+				"padding:   (property)"
+			],
+			[
+				"bac",
+				"background-color:   (property)"
+			],
+			[
+				"f",
+				"font-size:   (property)"
+			],
+			[
+				"hr",
+				"hr  (element)"
+			],
+			[
+				"dis",
+				"display:   (property)"
+			],
+			[
+				"color",
+				"background-color:   (property)"
+			],
+			[
+				"p",
+				"padding:   (property)"
+			],
+			[
+				"ba",
+				"background-color:   (property)"
+			],
+			[
+				"flo",
+				"float:   (property)"
+			],
+			[
+				"di",
+				"display:   (property)"
+			],
+			[
+				"bttom",
+				"bottom:   (property)"
+			],
+			[
+				"over",
+				"overflow:   (property)"
+			],
+			[
+				"h",
+				"hidden  (value)"
+			],
+			[
+				"ov",
+				"overflow:   (property)"
+			],
+			[
+				"box",
+				"box  (variable)"
+			],
+			[
+				"chr",
+				"chr  (argument)"
+			],
+			[
+				"href",
+				"href=  (attribute)"
+			],
+			[
+				"hash",
+				"hash  (argument)"
+			],
+			[
+				"profile",
+				"profile  (variable)"
+			],
+			[
+				"opts",
+				"options  (variable)"
+			],
+			[
+				"slot",
+				"slot  (variable)"
+			],
+			[
+				"tex",
+				"text-indent:   (property)"
+			],
+			[
+				"div",
+				"div  (element)"
+			],
+			[
+				"cur",
+				"cursor:   (property)"
+			],
+			[
+				"hover",
+				"hover  (pseudo-class)"
+			],
+			[
+				"input",
+				"input  (element)"
+			],
+			[
+				"label",
+				"label  (element)"
+			],
+			[
+				"type",
+				"type=  (attribute)"
+			],
+			[
+				"h5",
+				"h5  (element)"
+			],
+			[
+				"form",
+				"form  (element)"
+			],
+			[
+				"md5",
+				"$md5  (argument)"
+			],
+			[
+				"value",
+				"value=  (attribute)"
+			],
+			[
+				"removeClass",
+				"removeClass  (function)"
+			],
+			[
+				"margi",
+				"margin-right:   (property)"
+			],
+			[
+				"query",
+				"query  (variable)"
+			],
+			[
+				"members",
+				"members  (variable)"
+			],
+			[
+				"group",
+				"group  (argument)"
+			],
+			[
+				"name",
+				"name  (variable)"
+			],
+			[
+				"add",
+				"add  (variable)"
+			],
+			[
+				"bottom",
+				"bottom:   (property)"
+			],
+			[
+				"disp",
+				"display:   (property)"
+			],
+			[
+				"sha",
+				"text-shadow:   (property)"
+			],
+			[
+				"text",
+				"text: text-shadow: none"
+			],
+			[
+				"lin",
+				"line-height:   (property)"
+			],
+			[
+				"mar",
+				"margin-left:   (property)"
+			],
+			[
+				"wi",
+				"width:   (property)"
+			],
+			[
+				"rootScope",
+				"$rootScope  (argument)"
+			],
+			[
+				"wei",
+				"font-weight:   (property)"
+			],
+			[
+				"user",
+				"user  (variable)"
+			],
+			[
+				"passwords",
+				"passwords  (argument)"
+			],
+			[
+				"dd",
+				"address  (element)"
+			],
+			[
+				"dt",
+				"del  (element)"
+			],
+			[
+				"dl",
+				"display: display: block"
+			],
+			[
+				"right",
+				"right:   (property)"
+			],
+			[
+				"message",
+				"message  (argument)"
+			],
+			[
+				"small",
+				"small>  (element)"
+			],
+			[
+				"unread",
+				"unread  (function)"
+			],
+			[
+				"span",
+				"span>  (element)"
+			],
+			[
+				"app",
+				"app  (variable)"
+			],
+			[
+				"Messages",
+				"Messages  (argument)"
+			],
+			[
+				"body",
+				"tbody  (element)"
+			],
+			[
+				"min",
+				"min-height:   (property)"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/local/language.js",
+			"settings":
+			{
+				"buffer_size": 24608,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/planboard.html",
+			"settings":
+			{
+				"buffer_size": 26693,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/planboard.js",
+			"settings":
+			{
+				"buffer_size": 49810,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/planboard.js",
+			"settings":
+			{
+				"buffer_size": 16515,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/services/services.js",
+			"settings":
+			{
+				"buffer_size": 31821,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/css/styles.css",
+			"settings":
+			{
+				"buffer_size": 11173,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/settings.html",
+			"settings":
+			{
+				"buffer_size": 1517,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/login.html",
+			"settings":
+			{
+				"buffer_size": 4079,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 254.0,
+		"selected_items":
+		[
+			[
+				"linter",
+				"SublimeLinter: Extract Annotations"
+			],
+			[
+				"ti",
+				"Tidy HTML"
+			],
+			[
+				"set ",
+				"Set Syntax: HTML"
+			],
+			[
+				"tidy ",
+				"Tidy HTML"
+			],
+			[
+				"set html",
+				"Set Syntax: HTML"
+			],
+			[
+				"tid",
+				"Tidy HTML"
+			],
+			[
+				"set htm",
+				"Set Syntax: HTML"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"set java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"set css",
+				"Set Syntax: CSS"
+			],
+			[
+				"tasks",
+				"Tasks: New document"
+			],
+			[
+				"for",
+				"Format: Javascript"
+			],
+			[
+				"set syn java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"lint",
+				"SublimeLinter: Disable Linting"
+			],
+			[
+				"git status",
+				"Git: Status"
+			],
+			[
+				"task",
+				"Tasks: New document"
+			],
+			[
+				"lin",
+				"DocBlockr: Decorate line comment"
+			],
+			[
+				"git stat",
+				"Git: Status"
+			],
+			[
+				"err li",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"priva",
+				"Gist: Create Private Gist"
+			],
+			[
+				"todo",
+				"Todo: List All"
+			],
+			[
+				"packa disab",
+				"Package Control: Disable Package"
+			],
+			[
+				"paca",
+				"Package Control: Disable Package"
+			],
+			[
+				"git grap",
+				"Git: Graph All"
+			],
+			[
+				"git his",
+				"Git: Commit history"
+			],
+			[
+				"git log",
+				"Git: Log All"
+			],
+			[
+				"git sta",
+				"Git: Status"
+			],
+			[
+				"",
+				"About"
+			],
+			[
+				"git commit",
+				"Git: Commit"
+			],
+			[
+				"git add .",
+				"Git: Add..."
+			],
+			[
+				"git gra",
+				"Git: Graph All"
+			],
+			[
+				"todo l",
+				"Todo: List All"
+			],
+			[
+				"todo ",
+				"Todo: Add"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"set syntax: ja",
+				"Set Syntax: JavaScript"
+			]
+		],
+		"width": 602.0
+	},
+	"console":
+	{
+		"height": 122.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/profile.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/login.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/local/language.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/app.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/login.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/filters/filters.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/index.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/css/styles.css",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/dashboard.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/planboard.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/planboard.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/groups.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/profile.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/messages.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/planboard.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/directives/directives.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/services/services.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/server.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/profile.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/dashboard.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/groups.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/messages.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/css/bootstrap.css",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/messages.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/css/timeline.css",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/logout.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/logout.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/groups.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/dashboard.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/login.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/settings.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/config.js",
+		"/Users/cengizulusoy/Desktop/h2.html",
+		"/Users/cengizulusoy/Desktop/h1.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/libs/underscore/1.4.3/underscore-min.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/extras/inline-well-form.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/view/extras/inline-well-form.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/profile-password.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/profile-edit.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/settings.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/settings.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/libs/angular-strap/0.6.4/angular-strap.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/.gitignore",
+		"/Users/cengizulusoy/Workspace/webpaigebase/sass/_timeline.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/_public/index.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/css/chosen.css",
+		"/Users/cengizulusoy/Workspace/webpaigebase/_public/partials/login.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/login.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/views/login.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/partials/planboard.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/partials/login.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/sass/_timeline.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/libs/date/1.0/date.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/libs/chaps/timeline/2.4.0/timeline.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/.sass-cache/3393a3b7e22296f84d5431d52ac14b8062e65ba5/_timeline.scssc",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/partials/messages.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/libs/angular-strap/0.5.10/angular-strap.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/libs/daterangepicker/1.0.1/daterangepicker.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/sass/custom.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/sass/_daterangepicker.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/sass/_custom.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/partials/groups.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/controllers.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/index.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/planboard.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/services/services.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/app.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/settings.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/profile.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/groups.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/planboard.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/dashboard.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/login.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/messages.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/filters/filters.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/messages.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/login.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/groups.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/logout.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/logout.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/sass/custom.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/sass/_custom.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/sass/_browse-happy.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/services/services_tryout_eventbus1.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/profile-edit.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/profile-password.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/profile.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/partials/angular-strap.html",
+		"/Users/cengizulusoy/Workspace/webpaigebase/project/tasks.TODO",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/config.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/libs/notifier/notifier.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/sass/_notifier.scss",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/libs/notifier/notifier.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/README.md",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/server.js",
+		"/Users/cengizulusoy/Workspace/webpaigebase/node/public/js/controllers/controllers.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/dashboard.html",
+		"/Users/cengizulusoy/Workspace/webpaige/war/login.html",
+		"/Users/cengizulusoy/Workspace/webpaige/war/groups.html",
+		"/Users/cengizulusoy/Workspace/webpaige/war/messages.html",
+		"/Users/cengizulusoy/Workspace/webpaige/war/profile.html",
+		"/Users/cengizulusoy/Workspace/webpaige/war/settings.html",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/views/dashboard.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/views/groups.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/views/messages.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/views/profile.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/views/settings.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/init.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/views/login.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/controllers/dashboard.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/controllers/_dashboard.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/lib/timeline/timeline.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/config.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/timeline/timeline.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/timeline/timeline.css",
+		"/Users/cengizulusoy/Workspace/webpaige/.gitignore",
+		"/Users/cengizulusoy/Workspace/webpaige/project/tasks.TODO",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/services.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/app.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/controllers/login.js",
+		"/Users/cengizulusoy/Workspace/webpaige/war/index.html",
+		"/Users/cengizulusoy/Workspace/webpaige/war/js/directives.js",
+		"/Users/cengizulusoy/Workspace/webpaige/_snippets/app.run.js",
+		"/Users/cengizulusoy/Library/Application Support/Sublime Text 2/Packages/SublimeLinter/SublimeLinter.sublime-settings",
+		"/Users/cengizulusoy/Library/Application Support/Sublime Text 2/Packages/User/SublimeLinter.sublime-settings",
+		"/Users/cengizulusoy/Workspace/webpaige/project/webpaige.sublime-project",
+		"/Users/cengizulusoy/Workspace/webpaige/war/README.md",
+		"/Users/cengizulusoy/Workspace/webpaige/README.md"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"include_history":
+		[
+		],
+		"location_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"e",
+			"Storage",
+			"Process",
+			"render",
+			"Render",
+			"render",
+			"creationTime",
+			"escalation",
+			"Escalation",
+			"escalation",
+			"timelineGetRange",
+			"setTimelineRange",
+			"drawTimeline",
+			"groupPie",
+			"unreadCount",
+			"content",
+			"(50, 50, 50, ratios)",
+			"zoomValue",
+			"resetViews",
+			"setGroupView",
+			"setFirstGroupTab",
+			"renderPlanboard",
+			"backendFriendly",
+			"restoreSelectedMsg",
+			"resources",
+			"filterMessages",
+			"compose",
+			"availableS",
+			"partials/",
+			"startJson",
+			"from",
+			"till",
+			"from",
+			"fetchTimelineData",
+			"changeLocation",
+			"uniqueMembers",
+			"axisOnTop",
+			"session",
+			"swapDay",
+			"query",
+			"range",
+			"Range",
+			"range",
+			"daterange",
+			"backendFriendly",
+			"addSlot",
+			"updateSlotModal",
+			"renderMemberSlots",
+			"getMemberSlots",
+			"ctrlKey",
+			"ctrlKey\nctrlKey",
+			"event.ctrlKey",
+			"dashboardCtrl",
+			"ruler",
+			"label",
+			"fill this",
+			"Please",
+			"Please fill"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"initTimeline",
+			"(40, 40, 40, ratios)",
+			"closeTabs",
+			"setGroupTabActive",
+			"filter",
+			"js/views/",
+			"fromJson",
+			"start",
+			"end",
+			"start",
+			"requestTimelineData",
+			"fetchTimelineData"
+		],
+		"reverse": true,
+		"show_context": true,
+		"use_buffer": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/local/language.js",
+					"settings":
+					{
+						"buffer_size": 24608,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20209,
+								20209
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2.0,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4324.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/planboard.html",
+					"settings":
+					{
+						"buffer_size": 26693,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15983,
+								15983
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2.0,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6933.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/controllers/planboard.js",
+					"settings":
+					{
+						"buffer_size": 49810,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								28142,
+								28142
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2.0,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 18538.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/models/planboard.js",
+					"settings":
+					{
+						"buffer_size": 16515,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1973,
+								1973
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2.0,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4592.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/services/services.js",
+					"settings":
+					{
+						"buffer_size": 31821,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8814,
+								8814
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2.0,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5639.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/css/styles.css",
+					"settings":
+					{
+						"buffer_size": 11173,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2167,
+								2167
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2.0,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1502.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/settings.html",
+					"settings":
+					{
+						"buffer_size": 1517,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								56,
+								56
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2.0,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/Users/cengizulusoy/Workspace/webpaigebase/public/js/views/login.html",
+					"settings":
+					{
+						"buffer_size": 4079,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3715,
+								3715
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110.0
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": false,
+							"sublimelinter_delay": 2.0,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 62.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 28.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"service",
+				"public/js/services/services.js"
+			],
+			[
+				"plan",
+				"public/js/models/planboard.js"
+			],
+			[
+				"dire",
+				"public/js/directives/directives.js"
+			],
+			[
+				"ser",
+				"public/js/services/services.js"
+			],
+			[
+				"logi",
+				"public/js/views/login.html"
+			],
+			[
+				"filt",
+				"public/js/filters/filters.js"
+			],
+			[
+				"planboa",
+				"public/js/views/planboard.html"
+			],
+			[
+				"profi",
+				"public/js/models/profile.js"
+			],
+			[
+				"profil",
+				"public/js/views/profile.html"
+			],
+			[
+				"sty",
+				"public/css/styles.css"
+			],
+			[
+				"pro",
+				"public/js/controllers/profile.js"
+			],
+			[
+				"group",
+				"public/js/controllers/groups.js"
+			],
+			[
+				"dash",
+				"public/js/views/dashboard.html"
+			],
+			[
+				"mess",
+				"public/js/controllers/messages.js"
+			],
+			[
+				"app",
+				"public/js/app.js"
+			],
+			[
+				"inde",
+				"public/index.html"
+			],
+			[
+				"login",
+				"public/js/controllers/login.js"
+			],
+			[
+				"log",
+				"public/logout.html"
+			],
+			[
+				"boo",
+				"public/css/bootstrap.css"
+			],
+			[
+				"sev",
+				"server.js"
+			],
+			[
+				"messag",
+				"public/js/models/messages.js"
+			],
+			[
+				"dashboard",
+				"public/js/controllers/dashboard.js"
+			],
+			[
+				"grou",
+				"public/js/models/groups.js"
+			],
+			[
+				"messa",
+				"public/js/models/messages.js"
+			],
+			[
+				"fil",
+				"public/js/filters/filters.js"
+			],
+			[
+				"filter",
+				"public/js/filters/filters.js"
+			],
+			[
+				"time",
+				"public/css/timeline.css"
+			],
+			[
+				"serv",
+				"server.js"
+			],
+			[
+				"pr",
+				"public/js/models/profile.js"
+			],
+			[
+				"pl",
+				"public/js/models/planboard.js"
+			],
+			[
+				"prof",
+				"public/js/views/profile.html"
+			],
+			[
+				"message",
+				"public/js/controllers/messages.js"
+			],
+			[
+				"pla",
+				"public/js/controllers/planboard.js"
+			],
+			[
+				"planb",
+				"public/js/controllers/planboard.js"
+			],
+			[
+				"se",
+				"public/js/models/settings.js"
+			],
+			[
+				"confi",
+				"public/js/config.js"
+			],
+			[
+				"config",
+				"public/js/config.js"
+			],
+			[
+				"mes",
+				"public/js/models/messages.js"
+			],
+			[
+				"plab",
+				"public/js/controllers/planboard.js"
+			],
+			[
+				"timeli",
+				"public/sass/_timeline.scss"
+			],
+			[
+				"date.js",
+				"public/libs/date/1.0/date.js"
+			],
+			[
+				"timeline",
+				"public/libs/chaps/timeline/2.4.0/timeline.js"
+			],
+			[
+				"con",
+				"node/public/js/config.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"we",
+				"/Users/cengizulusoy/Projects/Demos/weather-app/project/weather-app.sublime-project"
+			],
+			[
+				"",
+				"/Users/cengizulusoy/Sites/git/angular-seed/project/angular-seed.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 167.0,
+	"status_bar_visible": true
+}
