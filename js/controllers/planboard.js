@@ -194,6 +194,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
 
   /**
    * TODO
+   * 
    * Move date conversions to Dater
    */
   $scope.daterange =  new Date($scope.timeline.range.start).toString('dd-MM-yyyy') + 
@@ -510,7 +511,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.timelineZoomIn = function()
   {
-    self.timeline.zoom( $config.timeline.config.zoomValue );
+    self.timeline.zoom($config.timeline.config.zoomValue);
   };
 
 
@@ -519,7 +520,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.timelineZoomOut = function()
   {
-    self.timeline.zoom( -$config.timeline.config.zoomValue );
+    self.timeline.zoom(-$config.timeline.config.zoomValue);
   };
 
 
@@ -1123,8 +1124,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Add slot
      */
     Slots.add({
-      start: Date.parse(slot.start.date + ' ' + slot.start.time).getTime() / 1000,
-      end: Date.parse(slot.end.date + ' ' + slot.end.time).getTime() / 1000,
+      // start: Date.parse(slot.start.date + ' ' + slot.start.time).getTime() / 1000,
+      // end: Date.parse(slot.end.date + ' ' + slot.end.time).getTime() / 1000,
+      start: Dater.absoluteDates(slot.start.date, slot.start.time),
+      end: Dater.absoluteDates(slot.end.date, slot.end.time),
       recursive: (slot.recursive) ? true : false,
       text: slot.state
     }, $rootScope.app.resources.uuid)
@@ -1267,6 +1270,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       id: slot.groupId,
       start: Dater.absoluteDates(slot.start.date, slot.start.time),
       end: Dater.absoluteDates(slot.end.date, slot.end.time),
+      recursive: slot.recursive,
       wish: slot.wish
     })
     .then(function (result)

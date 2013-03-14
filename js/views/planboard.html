@@ -226,7 +226,7 @@
 
 
     <!-- slot recursive -->
-    <div class="form-elements-group" ng-show="views.slot.add || views.slot.edit">
+    <div class="form-elements-group" ng-show="views.slot.add || views.slot.edit || views.wish">
       <label>{{ui.planboard.reoccuring}}</label>
       <input type="checkbox" ng-model="slot.recursive">
     </div>
@@ -501,7 +501,7 @@
             </div>
 
             <div class="legenda-row last-legenda-row">
-              <strong>{{ui.planboard.Groups}}</strong>
+              <strong>{{ui.planboard.groups}}</strong>
               <ul>
                 <li class="legenda-more">
                   <label>
