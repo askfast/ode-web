@@ -42,8 +42,10 @@ WebPaige.
     /**
      * Data source host
      */
+    // Development IE Proxy
+    host: '/proxy/ns_knrmtest',
     // Development
-    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    // host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
     // Erik
     // host: 'http://10.200.200.100\\:8888/ns_knrmtest',
     // Micheal

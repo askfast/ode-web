@@ -6,7 +6,7 @@
 	
 <servlet>
 	<servlet-name>forward</servlet-name>
-	<servlet-class>pipe</servlet-class>
+	<servlet-class>com.askcs.webpaigebase.servlet.Pipe</servlet-class>
 </servlet>
 <servlet-mapping>
 	<servlet-name>forward</servlet-name>

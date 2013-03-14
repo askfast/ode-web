@@ -8,12 +8,12 @@ app.configure(function(){
 	console.log("["+process.pid+"] request on: "+req.url);
 	next();
   });*/
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(__dirname + '/war'));
   app.use(express.logger('dev'));
 });
 
 app.get('/', function(req, res){
-  	res.sendfile(__dirname + '/public/index.html');
+  	res.sendfile(__dirname + '/war/index.html');
 });
 
 
