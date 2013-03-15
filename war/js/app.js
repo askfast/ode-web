@@ -108,36 +108,7 @@ WebPaige.
     /**
      * Data source host
      */
-    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
-    // host: function ()
-    // {
-    //   return {
-    //     /**
-    //      * TODO
-    //      * Block ie 6 and 7
-    //      *
-    //      * Check on msie
-    //      */
-    //     if ($.browser.msie)
-    //     {
-    //       // IE proxy url
-    //       return '/proxy/ns_knrmtest';
-    //     }
-    //     else
-    //     {
-    //       // Development
-    //       return 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
-    //       // Erik
-    //       // return 'http://10.200.200.100\\:8888/ns_knrmtest',
-    //       // Micheal
-    //       // return 'http://10.200.200.201\\:8888/ns_knrmtest',
-    //       // Production
-    //       // return 'http://3rc2.ask-services.appspot.com/ns_knrm',
-    //       // Test
-    //       // return 'http://knrm.ask-static.appspot.com/ns_knrm',
-    //     };
-    //   };
-    // },
+    host: host,
     /**
      * TODO
      * All date time related values into one place!
