@@ -1,6 +1,8 @@
 'use strict';
 
-// Avoid `console` errors in browsers that lack a console.
+/**
+ * Avoid `console` errors in browsers that lack a console
+ */
 (function() {
     var method;
     var noop = function () {};
@@ -23,20 +25,13 @@
     }
 }());
 
-console.log('webkit ->',  $.browser.webkit, ' | ',
-            'safari ->',  $.browser.safari, ' | ',
-            'msie ->',    $.browser.msie,   ' | ',
-            'mozilla ->', $.browser.mozilla,' | ',
-            'version ->', $.browser.version);
 
-
-
-
-
-
-
-
-
+/**
+ * TODO
+ * Look for ways to implement this into config itself.
+ * 
+ * Change host based on browser
+ */
 if ($.browser.msie)
 {
   // IE proxy url
@@ -55,15 +50,6 @@ else
   // Test
   // return 'http://knrm.ask-static.appspot.com/ns_knrm',
 };
-
-
-console.warn('host ->', host);
-
-
-
-
-
-
 
 
 /**
