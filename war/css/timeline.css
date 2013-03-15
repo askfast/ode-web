@@ -593,31 +593,37 @@ div.timeline-navigation-move-right {
 
 
 div.timeline-event.state-available {
+    margin:0;
     background-color: #4f824f;
     text-indent: -9999px;
 }
 
 div.timeline-event.state-available-south {
+    margin:0;
     background-color: #e08a0c;
     text-indent: -9999px;
 }
 
 div.timeline-event.state-available-north {
+    margin:0;
     background-color: black;
     text-indent: -9999px;
 }
 
 div.timeline-event.state-schipper-service {
+    margin:0;
     background-color: #e0c100;
     text-indent: -9999px;
 }
 
 div.timeline-event.state-unreached {
+    margin:0;
     background-color: #65619b;
     text-indent: -9999px;
 }
 
 div.timeline-event.state-unavailable {
+    margin:0;
     background-color: #a93232;
     text-indent: -9999px;
 }
