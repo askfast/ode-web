@@ -80,16 +80,19 @@ public class Pipe extends javax.servlet.http.HttpServlet
 
 	System.out.println(" IN| path:"+path + " body:"+body.length() );
 	System.out.println("OUT| "+ responseCode +" "+ connection.getResponseMessage() + "  body:"+ body.length() );
+	
+	System.out.println("data:" + body.toString() );
 
 			//return it 
 			javax.servlet.ServletOutputStream out = res.getOutputStream();
 			out.print( body.toString() );
+			out.flush();
 			res.setContentType( connection.getContentType() );
 			res.setStatus( responseCode );
 		}
 		catch( java.io.IOException ioe)
 		{
-			System.out.println("# connection to "+ destination_host +" failed");
+			System.out.println("# connection to "+ destination_host + path +" failed");
 			res.setStatus( 503 );
 			return;
 		}

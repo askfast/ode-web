@@ -1,5 +1,71 @@
 'use strict';
 
+// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
+
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+}());
+
+console.log('webkit ->',  $.browser.webkit, ' | ',
+            'safari ->',  $.browser.safari, ' | ',
+            'msie ->',    $.browser.msie,   ' | ',
+            'mozilla ->', $.browser.mozilla,' | ',
+            'version ->', $.browser.version);
+
+
+
+
+
+
+
+
+
+if ($.browser.msie)
+{
+  // IE proxy url
+  var host = '/proxy/ns_knrmtest';
+}
+else
+{
+  // Development
+  var host = 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
+  // Erik
+  // return 'http://10.200.200.100\\:8888/ns_knrmtest',
+  // Micheal
+  // return 'http://10.200.200.201\\:8888/ns_knrmtest',
+  // Production
+  // return 'http://3rc2.ask-services.appspot.com/ns_knrm',
+  // Test
+  // return 'http://knrm.ask-static.appspot.com/ns_knrm',
+};
+
+
+console.warn('host ->', host);
+
+
+
+
+
+
+
+
 /**
  * TODO
  * Are all dependencies are still needed?
@@ -42,18 +108,36 @@ WebPaige.
     /**
      * Data source host
      */
-    // Development IE Proxy
-    host: '/proxy/ns_knrmtest',
-    // Development
-    // host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
-    // Erik
-    // host: 'http://10.200.200.100\\:8888/ns_knrmtest',
-    // Micheal
-    // host: 'http://10.200.200.201\\:8888/ns_knrmtest',
-    // // Production
-    // host: 'http://3rc2.ask-services.appspot.com/ns_knrm',
-    // // Test
-    // host: 'http://knrm.ask-static.appspot.com/ns_knrm',
+    host: 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    // host: function ()
+    // {
+    //   return {
+    //     /**
+    //      * TODO
+    //      * Block ie 6 and 7
+    //      *
+    //      * Check on msie
+    //      */
+    //     if ($.browser.msie)
+    //     {
+    //       // IE proxy url
+    //       return '/proxy/ns_knrmtest';
+    //     }
+    //     else
+    //     {
+    //       // Development
+    //       return 'http://3rc2.ask-services.appspot.com/ns_knrmtest',
+    //       // Erik
+    //       // return 'http://10.200.200.100\\:8888/ns_knrmtest',
+    //       // Micheal
+    //       // return 'http://10.200.200.201\\:8888/ns_knrmtest',
+    //       // Production
+    //       // return 'http://3rc2.ask-services.appspot.com/ns_knrm',
+    //       // Test
+    //       // return 'http://knrm.ask-static.appspot.com/ns_knrm',
+    //     };
+    //   };
+    // },
     /**
      * TODO
      * All date time related values into one place!
@@ -127,6 +211,9 @@ WebPaige.
         legenda: {},
         legendarer: false,
         /**
+         * TODO
+         * Take out KNRM stuff out of app config
+         * 
          * Availability states
          */
         states: {
@@ -168,6 +255,9 @@ WebPaige.
           }
         },
         /**
+         * TODO
+         * Take out KNRM stuff out of app config
+         * 
          * Any given divisions
          */
         divisions: [

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="WebPaige">
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-app="WebPaige"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -23,10 +26,22 @@
     <link rel="stylesheet" href="css/timeline.css">
     <link rel="stylesheet" href="css/chosen.css">
     
+    <script src="libs/modernizr/2.6.2/modernizr-2.6.2.min.js"></script>
     <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+    <!--[if lte IE 8]>
+      <script>
+      // window.myCustomTags = [ 'yourCustomDirective', 'somebodyElsesDirective' ]; // optional
+      </script>
+      <script src="libs/angular-ui/0.4.0/angular-ui-ieshiv.min.js"></script>
+    <![endif]-->
     
   </head>
   <body>
+
+    <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
 
     <!-- navbar -->
     <div class="navbar navbar-fixed-top" bs-navbar>
@@ -165,7 +180,7 @@
     <script src="libs/date/1.0/date.js"></script>
     <script src="libs/angular/angular.min.js"></script>
     <script src="libs/angular/angular-resource.min.js"></script>
-    <script src="libs/bootstrap/bootstrap.min.js"></script>
+    <script src="libs/bootstrap/bootstrap.js"></script>
 
     <!-- Either integrate angular-underscore library or don't use underscore in login -->
     <script src="libs/underscore/1.4.3/underscore-min.js"></script>

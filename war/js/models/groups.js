@@ -30,7 +30,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
         method: 'PUT',
         params: {id:''}
       },
-      delete: {
+      remove: {
         method: 'DELETE',
         params: {id:''}
       },
@@ -52,7 +52,8 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     {
       query: {
         method: 'GET',
-        params: {id:'', fields: '[role]'},
+        params: {id:'', fields: '[role, latlong, latlong_final]'},
+        //params: {id:'', fields: '[role]'},
         isArray: true
       },
       get: {
@@ -357,14 +358,14 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * Delete group
    */
-  Groups.prototype.delete = function (id) 
+  Groups.prototype.remove = function (id) 
   {
     var deferred = $q.defer();
 
     /**
      * Delete group
      */
-    Groups.delete({id: id}, function (result) 
+    Groups.remove({id: id}, function (result) 
     {
       deferred.resolve(result);
     });

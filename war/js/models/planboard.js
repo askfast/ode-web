@@ -29,7 +29,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         method: 'POST',
         params: {}
       },
-      delete: {
+      remove: {
         method: 'DELETE',
         params: {}
       }
@@ -311,8 +311,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
     /**
      * Default params
      */
-    var deferred = $q.defer();    
-
+    var deferred = $q.defer();
     /**
      * Get group aggs for ratios
      */
@@ -695,14 +694,14 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   /**
    * Slot delete process
    */
-  Slots.prototype.delete = function (slot, user) 
+  Slots.prototype.remove = function (slot, user) 
   {
     var deferred = $q.defer();
 
     /**
      * Delete slot
      */
-    Slots.delete(angular.extend(naturalize(slot), {user: user}), 
+    Slots.remove(angular.extend(naturalize(slot), {user: user}), 
     function (result) 
     {
       deferred.resolve(result);

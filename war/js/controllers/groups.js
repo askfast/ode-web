@@ -673,7 +673,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     /**
      * Delete group
      */
-    Groups.delete(id).
+    Groups.remove(id).
     then(function()
     {
       /**

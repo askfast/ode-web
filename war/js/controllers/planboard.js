@@ -391,7 +391,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
     links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
     links.events.addListener(self.timeline, 'add',           timelineOnAdd);
-    links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
+    links.events.addListener(self.timeline, 'delete',        timelineOnRemove);
     links.events.addListener(self.timeline, 'change',        timelineOnChange);
     links.events.addListener(self.timeline, 'select',        timelineOnSelect);
     /**
@@ -1016,13 +1016,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
        */
       if (content.type == 'group') 
       {
-        $scope.slot.diff = content.diff;
+        $scope.slot.diff  = content.diff;
         $scope.slot.group = content.group;
       }
       else if (content.type == 'wish')
       {
-        $scope.slot.wish = content.wish;
-        $scope.slot.group = content.group;
+        $scope.slot.wish    = content.wish;
+        $scope.slot.group   = content.group;
         $scope.slot.groupId = content.groupId;
       }
       else if (content.type == 'member')
@@ -1294,7 +1294,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Timeline on delete
    */
-  function timelineOnDelete()
+  function timelineOnRemove()
   {
     /**
      * Set preloader
@@ -1305,8 +1305,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     };
     /**
      * Add slot
+     * delete -> remove
      */
-    Slots.delete($scope.original, $rootScope.app.resources.uuid)
+    Slots.remove($scope.original, $rootScope.app.resources.uuid)
     .then(function (result)
     {
       /**
@@ -1328,7 +1329,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Delete trigger start view
    */
-  $scope.delete = function()
+  $scope.remove = function()
   {
     /**
      * Set preloader
@@ -1340,7 +1341,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Add slot
      */
-    Slots.delete($scope.original, $rootScope.app.resources.uuid)
+    Slots.remove($scope.original, $rootScope.app.resources.uuid)
     .then(function (result)
     {
       /**

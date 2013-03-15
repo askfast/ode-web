@@ -32,7 +32,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         method: 'POST',
         params: {action: 'changeState'}
       },
-      delete : {
+      remove : {
       	method: 'POST',
         params: {action: 'deleteQuestions'}
       }
@@ -151,7 +151,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       if (message.uuid == id)
       {
         gem = message;
-      }
+      };
     });
 
     return gem;
@@ -459,7 +459,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
     /**
      * Make delete call(s)
      */
-    Messages.delete(null, { 
+    Messages.remove(null, { 
       members: bulk 
     }, function (result) 
     {

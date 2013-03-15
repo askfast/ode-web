@@ -829,7 +829,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       /**
        * Trigger chosen
        */
-      angular.forEach($("div#composeTab select.chzn-select option") , function (option, index)
+      angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
       {
         /**
          * Find the correct option

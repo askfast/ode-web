@@ -688,7 +688,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Add slot
      */
-    Slots.delete($scope.original, $scope.user.id)
+    Slots.remove($scope.original, $scope.user.id)
     .then(function (result)
     {
       /**
@@ -722,7 +722,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     /**
      * Add slot
      */
-    Slots.delete($scope.original, $scope.user.id)
+    Slots.remove($scope.original, $scope.user.id)
     .then(function (result)
     {
       /**
