@@ -9,7 +9,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('translateRole', function()
 {
-	return function(role)
+	return function (role)
 	{
 		switch (role)
 		{
@@ -39,7 +39,7 @@ angular.module('WebPaige.filters', [])
 	/**
 	 * Return constructor
 	 */
-	return function(dates)
+	return function (dates)
 	{
 		/**
 		 * Does this work always?
@@ -125,7 +125,7 @@ angular.module('WebPaige.filters', [])
 	/**
 	 * Return constructor
 	 */
-	return function(dates)
+	return function (dates)
 	{
 		/**
 		 * This is needed because view is loaded even there
@@ -166,7 +166,7 @@ angular.module('WebPaige.filters', [])
 	/**
 	 * Return values
 	 */
-	return function(timeline)
+	return function (timeline)
 	{
 		/**
 		 * Calculate difference
@@ -244,7 +244,7 @@ angular.module('WebPaige.filters', [])
 	/**
 	 * Return values
 	 */
-	return function(timeline)
+	return function (timeline)
 	{
 		/**
 		 * This is needed because view is loaded even there
@@ -264,7 +264,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('convertTimeStamp', function()
 {
-	return function(stamp)
+	return function (stamp)
 	{
 		return Date(stamp).toString('dd-M-yyyy HH:mm');
 	};
@@ -282,7 +282,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('convertRatios', ['$config', function($config)
 {
-	return function(stats)
+	return function (stats)
 	{
 		var ratios = '';
 		angular.forEach(stats, function(stat, index)
@@ -299,7 +299,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('calculateTimeInDays', function()
 {
-	return function(stamp)
+	return function (stamp)
 	{
 		var day 		= 1000 * 60 * 60 * 24,
 				hour		=	1000 * 60 * 60,
@@ -324,7 +324,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('calculateTimeInHours', function()
 {
-	return function(stamp)
+	return function (stamp)
 	{
 		var day 		= 1000 * 60 * 60 * 24,
 				hour		=	1000 * 60 * 60,
@@ -349,7 +349,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('calculateTimeInMinutes', function()
 {
-	return function(stamp)
+	return function (stamp)
 	{
 		var day 		= 1000 * 60 * 60 * 24,
 				hour		=	1000 * 60 * 60,
@@ -377,7 +377,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('convertEve', function()
 {
-  return function(url)
+  return function (url)
   {
   	var eve = url;
   	if (typeof url != "undefined")
@@ -399,7 +399,7 @@ angular.module('WebPaige.filters', [])
 .filter('convertUserIdToName', ['Storage', function(Storage)
 {
 	var members = angular.fromJson(Storage.get('members'));
-	return function(id)
+	return function (id)
 	{	
     if (members == null || typeof members[id] == "undefined")
     {
@@ -418,7 +418,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('nicelyDate', ['Dater', function(Dater)
 {
- 	return function(date)
+ 	return function (date)
  	{
  	  var cov_date = Dater.readableDate(date);
  		if (cov_date == "Invalid Date")
@@ -438,7 +438,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('noTitle',function()
 {
-	return function(title)
+	return function (title)
 	{
 		if (title == "")
 		{
@@ -460,7 +460,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('stripSpan', function()
 {
-  return function(string)
+  return function (string)
   {
     return string.match(/<span class="label">(.*)<\/span>/);
   }
@@ -472,7 +472,7 @@ angular.module('WebPaige.filters', [])
  */
 .filter('stripHtml', function()
 {
-  return function(string)
+  return function (string)
   {
   	if (string)
   	{
@@ -485,7 +485,7 @@ angular.module('WebPaige.filters', [])
 /**
  * Convert group id to name
  */
-.filter('groupIdToName', ['Storage', function(Storage)
+.filter('groupIdToName', ['Storage', function (Storage)
 {
   return function(id)
   {
@@ -500,8 +500,10 @@ angular.module('WebPaige.filters', [])
   }
 }])
 
-.filter('i18n_spec',['$rootScope',function($rootScope){
-	return function(string,type){
+.filter('i18n_spec',['$rootScope', function ($rootScope)
+{
+	return function (string, type)
+	{
 		
 		var types = type.split(".");
 		var ret = $rootScope.ui[types[0]][types[1]];
@@ -509,5 +511,22 @@ angular.module('WebPaige.filters', [])
 		
 		return ret;
 	}
+}])
+
+
+/**
+ * Truncate group titles for dashboard pie widget
+ */
+.filter('truncateGroupTitle', ['Strings', function (Strings) 
+{
+	return function (title)
+	{
+     return Strings.truncate(title, 20, true);
+  }
 }]);
 
+
+
+
+
+ 
