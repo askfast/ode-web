@@ -20,7 +20,7 @@
         <li ng-repeat="pie in pies">
           <div id="weeklyPie-{{pie.id}}" class="weekly-pie"></div>
           <div class="weekly-pie-info">
-            <h3>{{pie.name}}</h3>
+            <h3>{{pie.name | truncateGroupTitle}}</h3>
             <hr>
             <h5>{{pie.ratios.more}}%</h5> 
             <small class="muted">more</small>, 

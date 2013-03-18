@@ -493,7 +493,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     /**
      * Set range dynamically
      */
-    self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+      self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
   };
 
 
