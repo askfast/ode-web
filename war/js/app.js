@@ -465,6 +465,20 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   });
 
 
+
+  $rootScope.fixCss = function ()
+  {
+    /**
+     * Correct icon-font-library icons for mac and linux
+     */
+    if ($.os.mac || $.os.linux)
+    {
+      $('.nav-tabs-app li a span').css({paddingTop: '10px', marginBottom: '0px'});
+    }
+  };
+
+
+
   /**
    * TODO
    * Should be finished!

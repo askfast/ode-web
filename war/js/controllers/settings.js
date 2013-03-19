@@ -11,6 +11,8 @@ function settingsCtrl($rootScope, $scope, $config)
 	 */
 	$rootScope.fixTabHeight('userSettingsTab');
 
+	$rootScope.fixCss();
+
 
 };
 
