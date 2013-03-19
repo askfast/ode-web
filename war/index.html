@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-app="WebPaige"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8 ng-app" ng-app="WebPaige"> <![endif]-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8 ng-app"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9" ng-app="WebPaige"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" ng-app="WebPaige"> <!--<![endif]-->
   <head>
@@ -29,7 +29,7 @@
     <script src="libs/modernizr/2.6.2/modernizr-2.6.2.min.js"></script>
     <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 
-    <!--[if lte IE 8]>
+    <!--[if gt IE 7]>
       <script>
       // window.myCustomTags = [ 'yourCustomDirective', 'somebodyElsesDirective' ]; // optional
       </script>
@@ -39,149 +39,165 @@
   </head>
   <body>
 
-    <!--[if lt IE 7]>
-        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-    <![endif]-->
+    <!-- ie6 & ie7 -->
+    <div id="browser-not-compatible">
+      <span class="entypo">&#128712;</span>
+      <h2>Helaas!</h2>
+      <h4>Deze browser wordt niet ondersteund. Waroom niet?</h4>
+      <p>Deze web applicatie is gebaseerd op de nieuwste technologie. Daardoor werkt deze web applicatie nog niet op alle browsers optimaal. Namelijk in oude browsers.</p><br>
+      <p><a href="http://www.browsehappy.com/" class="btn btn-success btn-large">Installeer Een Betere Browser</a></p>
+    </div>
 
-    <!-- navbar -->
-    <div class="navbar navbar-fixed-top" bs-navbar>
-      <div class="navbar-inner">
+    <!-- all browsers except ie6 and ie7 -->
+    <div id="browser-safe">
+      <!-- navbar -->
+      <div class="navbar navbar-fixed-top" bs-navbar>
+        <div class="navbar-inner">
+          <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#dashboard">WebPaige</a>
+            <!-- nav-collapse -->
+            <div class="nav-collapse collapse">
+
+              <!-- main nav -->
+              <ul class="nav">
+                <li data-match-route="/dashboard">
+                  <a href="#dashboard">Dashboard</a>
+                </li>
+                <li data-match-route="/planboard">
+                  <a href="#planboard">Planboard</a>
+                </li>
+                <li data-match-route="/messages">
+                  <a href="#messages">{{ui.message.messages}}
+                    <!-- unread messages -->
+                    <span ng-show="(app.unreadMessages > 0)" class="badge badge-success">
+                      {{app.unreadMessages}}
+                    </span>
+                    <!-- end unread messages -->
+                  </a>
+                </li>
+                <li data-match-route="/groups">
+                  <a href="#groups">{{ui.groups.groups}}</a>
+                </li>
+              </ul>
+              <!-- end main nav -->
+
+              <!-- user menu -->
+              <ul class="nav pull-right">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#profile"><i class="icon-user"></i>{{ui.profile.profile}}</a></li>
+                    <li><a href="#settings"><i class="icon-cog"></i>{{ui.settings.settings}}</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a></li>
+                  </ul>
+                </li>
+              </ul>
+              <!-- end user menu -->
+
+            </div>
+            <!-- end nav-collapse -->
+          </div>
+        </div>
+      </div>
+      <!-- end navbar -->
+
+
+      <!-- loading -->
+      <div id="loading" ng-show="loadingBig">
+        <span class="entypo">&#9203;</span>
+        <p>{{ui.login.loading}}</p>
+      </div>
+      <!-- end loading -->
+
+
+
+      <!-- notifications -->
+       <div id="notification" class="alert {{notification.type}}" ng-show="notification.status">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{notification.message}}
+      </div>
+      <!-- end notifications -->
+
+      
+      <!-- wrap -->
+      <div id="wrap">
+
+        <!-- container-fluid -->
         <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#dashboard">WebPaige</a>
-          <!-- nav-collapse -->
-          <div class="nav-collapse collapse">
+          <div ng-view></div>
+        </div>
+        <!-- end container-fluid -->
 
-            <!-- main nav -->
-            <ul class="nav">
-              <li data-match-route="/dashboard">
-                <a href="#dashboard">Dashboard</a>
-              </li>
-              <li data-match-route="/planboard">
-                <a href="#planboard">Planboard</a>
-              </li>
-              <li data-match-route="/messages">
-                <a href="#messages">{{ui.message.messages}}
-                  <!-- unread messages -->
-                  <span ng-show="(app.unreadMessages > 0)" class="badge badge-success">
-                    {{app.unreadMessages}}
-                  </span>
-                  <!-- end unread messages -->
-                </a>
-              </li>
-              <li data-match-route="/groups">
-                <a href="#groups">{{ui.groups.groups}}</a>
-              </li>
-            </ul>
-            <!-- end main nav -->
+        <div id="push"></div>
+      </div>
+      <!-- end wrap -->
 
-            <!-- user menu -->
-            <ul class="nav pull-right">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#profile"><i class="icon-user"></i>{{ui.profile.profile}}</a></li>
-                  <li><a href="#settings"><i class="icon-cog"></i>{{ui.settings.settings}}</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a></li>
-                </ul>
-              </li>
-            </ul>
-            <!-- end user menu -->
+
+      <!-- footer -->
+      <div id="footer">
+        <div class="container-fluid">
+
+          <!-- copyrights -->
+          <div id="copyrights">
+
+            <!-- ask & version -->
+            <span class="muted">
+              <small>
+                Ask Community Systems, 2013<br>
+                <i>WebPaige v2.0.0</i>
+              </small>
+            </span>
+            <!-- end ask & version -->
+
+            <!-- download mobile app -->
+            <div id="download-footer">
+              <button class="btn btn-success btn-large" type="button">
+                <!-- <span class="entypo">&#128241;</span> -->
+                <!-- <i class="icon-download icon-white"></i> -->
+                {{ui.login.downloadApp}}
+              </button>
+            </div>
+            <!-- end download mobile app -->
 
           </div>
-          <!-- end nav-collapse -->
-        </div>
-      </div>
-    </div>
-    <!-- end navbar -->
+          <!-- end copyrights -->
 
-
-    <!-- loading -->
-    <div id="loading" ng-show="loadingBig">
-      <span class="entypo">&#9203;</span>
-      <p>{{ui.login.loading}}</p>
-    </div>
-    <!-- end loading -->
-
-
-
-    <!-- notifications -->
-     <div id="notification" class="alert {{notification.type}}" ng-show="notification.status">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      {{notification.message}}
-    </div>
-    <!-- end notifications -->
-
-    
-    <!-- wrap -->
-    <div id="wrap">
-
-      <!-- container-fluid -->
-      <div class="container-fluid">
-        <div ng-view></div>
-      </div>
-      <!-- end container-fluid -->
-
-      <div id="push"></div>
-    </div>
-    <!-- end wrap -->
-
-
-    <!-- footer -->
-    <div id="footer">
-      <div class="container-fluid">
-
-        <!-- copyrights -->
-        <div id="copyrights">
-
-          <!-- ask & version -->
-          <span class="muted">
-            <small>
-              Ask Community Systems, 2013<br>
-              <i>WebPaige v2.0.0</i>
-            </small>
-          </span>
-          <!-- end ask & version -->
-
-          <!-- download mobile app -->
-          <div id="download-footer">
-            <button class="btn btn-success btn-large" type="button">
-              <!-- <span class="entypo">&#128241;</span> -->
-              <!-- <i class="icon-download icon-white"></i> -->
-              {{ui.login.downloadApp}}
-            </button>
-          </div>
-          <!-- end download mobile app -->
+          <!-- general preloader -->
+          <p class="muted" ng-show="loading.status">
+            <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
+          </p>
+          <!-- end general preloader -->
 
         </div>
-        <!-- end copyrights -->
-
-        <!-- general preloader -->
-        <p class="muted" ng-show="loading.status">
-          <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
-        </p>
-        <!-- end general preloader -->
-
       </div>
+      <!-- end footer -->
     </div>
-    <!-- end footer -->
 
     <script src="js/local/language.js"></script>
 
     <script src="libs/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+    <!-- browser detection -->
+    <script src="libs/jquery/1.9.1/jquery-browser.js"></script>
+
+    <!--[if gt IE 7]><!-->
     <script src="libs/chosen/chosen.jquery.min.js"></script>
     <script src="libs/date/1.0/date.js"></script>
-    <script src="libs/angular/angular.min.js"></script>
-    <script src="libs/angular/angular-resource.js"></script>
+
+    <!-- angular -->
+    <script src="libs/angular/1.0.5/angular.min.js"></script>
+    <script src="libs/angular/1.0.5/angular-resource.js"></script>
+
+    <!-- bootstrap -->
     <script src="libs/bootstrap/bootstrap.js"></script>
 
-    <!-- Either integrate angular-underscore library or don't use underscore in login -->
+    <!-- Either integrate angular-underscore library or dont use underscore in login -->
     <script src="libs/underscore/1.4.3/underscore-min.js"></script>
 
     <script src="libs/chaps/timeline/2.4.0/timeline.js"></script>
@@ -226,6 +242,8 @@
     <script src="libs/raphael/0.5.1/raphael-min.js"></script>
     <script src="libs/raphael/0.5.1/g.raphael-min.js"></script>
     <script src="libs/raphael/0.5.1/g.pie-min.js"></script>
-      
+    
+    <!--<![endif]-->
+
   </body>
 </html>
