@@ -6,6 +6,12 @@
 function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, Messages, Storage)
 {
   /**
+   * Fix styles
+   */
+  $rootScope.fixStyles();
+
+  
+  /**
    * Self this
    */
   var self = this;

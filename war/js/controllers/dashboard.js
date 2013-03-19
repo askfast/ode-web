@@ -6,6 +6,12 @@
 function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
 {
   /**
+   * Fix styles
+   */
+  $rootScope.fixStyles();
+
+  
+  /**
    * Get unread messages
    */
 	$scope.messages = data;

@@ -6,6 +6,12 @@
 function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profile, $route, $routeParams, Storage)
 {
   /**
+   * Fix styles
+   */
+  $rootScope.fixStyles();
+
+  
+  /**
    * Self this
    */
 	var self = this;

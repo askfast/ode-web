@@ -208,7 +208,7 @@ html,body {
 #loading span.entypo,
 #loggin-out span.entypo {
   display: block;
-  height: 160px;
+  /*height: 160px;*/
   color: #a19781;
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);
   font-size: 20em;

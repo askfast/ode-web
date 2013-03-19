@@ -6,6 +6,12 @@
 function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location, $window, Slots)
 {
   /**
+   * Fix styles
+   */
+  $rootScope.fixStyles();
+
+  
+  /**
    * Self this
    */
 	var self = this,

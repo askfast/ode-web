@@ -465,40 +465,66 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   });
 
 
-
-  $rootScope.fixCss = function ()
+  /**
+   * Fix styles
+   */
+  $rootScope.fixStyles = function () 
   {
+    /**
+     * Fix tab heights
+     *
+     * Get hieght of the current nav-tabs
+     */
+    var tabHeight = $('.tabs-left .nav-tabs').height();
+    /**
+     * Loop through tab-contents
+     */
+    $.each($('.tab-content').children(), function () 
+    {
+      // console.log($(this).attr('id'))
+      /**
+       * Extract id
+       */
+      var $this = $(this).attr('id'),
+          contentHeight = $('.tabs-left .tab-content #' + $this).height();
+      /**
+       * Check if one is bigger than another
+       */
+      if (tabHeight > contentHeight)
+      {
+        $('.tabs-left .tab-content #' + $this).css({
+          height: $('.tabs-left .nav-tabs').height() - 41
+        });
+      }
+      // else if (contentHeight > tabHeight)
+      // {
+      //   //console.warn('content is bigger than tabs ->', contentHeight);
+      //   $('.tabs-left .nav-tabs').css( { height: contentHeight } );
+      // };
+    
+    });
+    
     /**
      * Correct icon-font-library icons for mac and linux
      */
     if ($.os.mac || $.os.linux)
     {
-      $('.nav-tabs-app li a span').css({paddingTop: '10px', marginBottom: '0px'});
-    }
-  };
-
-
-
-  /**
-   * TODO
-   * Should be finished!
-   * Fix left border issue as well!
-   *
-   * Manually fix the height of content tab
-   */
-  $rootScope.fixTabHeight = function(uuid) {
-    var tabHeight = $('.tabs-left .nav-tabs').height();
-    var contentHeight = $('.tabs-left .tab-content #' + uuid).height();
-    if (tabHeight > contentHeight) {
-      $('.tabs-left .tab-content #' + uuid).css({
-        height: $('.tabs-left .nav-tabs').height() - 41
+      /**
+       * Nav tans icons
+       */
+      $('.nav-tabs-app li a span').css({
+        paddingTop: '10px', 
+        marginBottom: '0px'
       });
+      /**
+       * Loading big
+       */
+      $('#loading').css({
+        //marginTop: '-160px'
+        display: 'none'
+      });
+      
     }
-    // else if (contentHeight > tabHeight)
-    // {
-    //   //console.warn('content is bigger than tabs ->', contentHeight);
-    //   $('.tabs-left .nav-tabs').css( { height: contentHeight } );
-    // };
   };
 
 

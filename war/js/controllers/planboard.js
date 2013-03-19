@@ -15,6 +15,12 @@
 function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Dater, Storage, $location) 
 {
   /**
+   * Fix styles
+   */
+  $rootScope.fixStyles();
+
+  
+  /**
    * Set default currents
    */
   var self = this,

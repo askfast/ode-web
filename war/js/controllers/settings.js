@@ -7,12 +7,9 @@
 function settingsCtrl($rootScope, $scope, $config)
 {
 	/**
-	 * Attempt to fix tab height for user settings tab
+	 * Fix styles
 	 */
-	$rootScope.fixTabHeight('userSettingsTab');
-
-	$rootScope.fixCss();
-
+	$rootScope.fixStyles();
 
 };
 
