@@ -122,7 +122,6 @@
         "state": "com.ask-cs.State.NoPlanning",
         "uuid": "4640kuiphof"
     },
-    /*
     {
         "config": {},
         "name": "Schippers  GSM",
@@ -137,7 +136,6 @@
         "state": "com.ask-cs.State.NoPlanning",
         "uuid": ""
     },
-    */
     {
         "config": {},
         "name": "Gerben  1Hop",

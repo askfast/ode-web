@@ -36,27 +36,16 @@
         <hr>
 
         <!-- user settings form -->
-        <!-- <form>
+        <form>
           <fieldset>
         
             <div class="control-group">
               <label class="control-label">{{ui.settings.langSetting}}</label>
-              <div  class="btn-group"  
-                    bs-buttons-checkbox="" 
-                    data-toggle="buttons-checkbox">
 
-                <button type="button" 
-                        class="btn btn-small" 
-                        ng-model="broadcast.sms" 
-                        ng-click=""
-                        bs-button="">{{ui.message.sms}}</button>
+              <select ng-model="settings.user.language" 
+                      ng-options="option as value for (option, value) in languages">
+              </select>
 
-                <button type="button" 
-                        class="btn btn-small" 
-                        ng-model="broadcast.email" 
-                        ng-click=""
-                        bs-button="">{{ui.message.email}}</button>
-              </div>
             </div>
 
             <div class="form-actions">
@@ -66,7 +55,7 @@
             </div>
 
           </fieldset>
-        </form> -->
+        </form>
         <!-- end user settings form -->
 
       </div>
