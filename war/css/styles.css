@@ -61,6 +61,10 @@ html,body {
   display: none;
 }
 
+#browser-not-compatible span {
+  /*margin-bottom: 60px;*/
+}
+
 #welcome,
 #browser-not-compatible {
   margin: 30px auto 20px auto;
