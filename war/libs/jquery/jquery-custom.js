@@ -38,4 +38,22 @@ if ($.browser.msie)
       'background': 'none'
     });
   }
-}
+};
+
+
+/**
+* TODO
+* There should be some custom css styling based on OS
+* Finish this when app reaches mature state for cross
+* browser testing
+*
+*/
+// /**
+//  * Check for os
+//  */
+// if (navigator.appVersion.indexOf("Mac") != -1 || 
+//     navigator.appVersion.indexOf("X11") != -1 || 
+//     navigator.appVersion.indexOf("Linux") != -1)
+// {
+//   console.log('not windows');
+// };

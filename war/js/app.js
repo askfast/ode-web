@@ -29,11 +29,13 @@ if ($.browser.msie) {
  *
  * Declare app level module which depends on filters, and services
  */
-var WebPaige = angular.module('WebPaige', ['WebPaige.filters',
+var WebPaige = angular.module('WebPaige', [
+  'WebPaige.filters',
   'StorageModule',
   'timerModule',
   '$strap.directives',
-  'ngResource']);
+  'ngResource'
+]);
 
 
 /**
@@ -44,7 +46,8 @@ var WebPaige = angular.module('WebPaige', ['WebPaige.filters',
  * App configuration
  */
 WebPaige.
-value('$config', {
+value('$config', 
+{
   /**
    * App version
    */
@@ -220,9 +223,12 @@ value('$config', {
  * There is also configuration tree defined in services
  * for default values
  */
-.config(function($locationProvider, $routeProvider) {
+.config(function ($locationProvider, $routeProvider) 
+{
+  /**
+   * Failed attempt to init html5 mode for routes
+   */
   //$locationProvider.html5Mode(true);
-
   /**
    * Routes
    */
@@ -315,8 +321,8 @@ value('$config', {
  */
 .run(
 ['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config',
-
-function($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) {
+function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) 
+{
 
   /**
    * Default language and change language
@@ -376,24 +382,6 @@ function($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $co
       }, 5000);
     };
   };
-
-
-  /**
-   * TODO
-   * There should be some custom css styling based on OS
-   * Finish this when app reaches mature state for cross
-   * browser testing
-   *
-   */
-  // /**
-  //  * Check for os
-  //  */
-  // if (navigator.appVersion.indexOf("Mac") != -1 || 
-  //     navigator.appVersion.indexOf("X11") != -1 || 
-  //     navigator.appVersion.indexOf("Linux") != -1)
-  // {
-  //   console.log('not windows');
-  // };
 
 
   /**

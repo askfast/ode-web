@@ -3,6 +3,10 @@
 // $rootScope.ui.XXX.XXX
 var ui = {
     en: {
+      meta: {
+        name: 'en',
+        label: 'English'
+      },
       login: {
         header: "Please sign in",
         placeholder_username: "Please enter your username",
@@ -244,9 +248,15 @@ var ui = {
           application: 'Application',
           userSettings: 'User Settings',
           appSettings: 'Application Settings',
+          saveSettings: 'Save Settings',
+          langSetting: 'Language'
       }
     },
     nl: {
+      meta: {
+        name: 'nl',
+        label: 'Nederlands'
+      },
       login: {
         header: "Inloggen",
         placeholder_username: "Vul uw gebruikersnaam in",
@@ -487,6 +497,8 @@ var ui = {
           application: 'Applicatie',
           userSettings: 'Gebruikersinstellingen',
           appSettings: 'Applicatie-instellingen',
+          saveSettings: 'Instellingen Opslaan',
+          langSetting: 'Taal'
       }
     }
 }

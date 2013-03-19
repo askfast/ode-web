@@ -30,14 +30,44 @@
       <!-- userSettingsTab -->
       <div class="tab-pane active" id="userSettingsTab">
 
-
-        <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">{{ui.settings.userSettings}}</h3>
+        <div class="tab-header">
+          <h3 class="pull-left">{{ui.settings.userSettings}}</h3>
         </div>
-
         <hr>
 
-        <p>{{ui.settings.userSettings}}</p>
+        <!-- user settings form -->
+        <form>
+          <fieldset>
+        
+            <div class="control-group">
+              <label class="control-label">{{ui.settings.langSetting}}</label>
+              <div  class="btn-group"  
+                    bs-buttons-checkbox="" 
+                    data-toggle="buttons-checkbox">
+
+                <button type="button" 
+                        class="btn btn-small" 
+                        ng-model="broadcast.sms" 
+                        ng-click=""
+                        bs-button="">{{ui.message.sms}}</button>
+
+                <button type="button" 
+                        class="btn btn-small" 
+                        ng-model="broadcast.email" 
+                        ng-click=""
+                        bs-button="">{{ui.message.email}}</button>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" 
+                      ng-click="send(message, broadcast)" 
+                      class="btn btn-success">{{ui.settings.saveSettings}}</button>
+            </div>
+
+          </fieldset>
+        </form>
+        <!-- end user settings form -->
 
       </div>
       <!-- end userSettingsTab -->
@@ -45,14 +75,10 @@
       <!-- appSettingsTab -->
       <div class="tab-pane" id="appSettingsTab">
 
-
-        <div style="overflow: hidden; height: 35px">
-          <h3 style="margin-top: 0;" class="pull-left">{{ui.settings.appSettings}}</h3>
+        <div class="tab-header">
+          <h3 class="pull-left">{{ui.settings.appSettings}}</h3>
         </div>
-
         <hr>
-
-        <p>{{ui.settings.appSettings}}</p>
 
       </div>
       <!-- end appSettingsTab -->
