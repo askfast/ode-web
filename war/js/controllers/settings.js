@@ -76,15 +76,15 @@ function settingsCtrl($rootScope, $scope, $config, data, Settings, Profile)
       /**
        * Inform user
        */
-      // $rootScope.notify({
-      //   status: true,
-      //   type: 'alert-success',
-      //   /**
-      //    * TODO
-      //    * Move to local
-      //    */
-      //   message: 'Settings saved!'
-      // });
+      $rootScope.notify({
+        status: true,
+        type: 'alert-success',
+        /**
+         * TODO
+         * Move to local
+         */
+        message: 'Settings saved!'
+      });
 
       /**
        * Set preloader

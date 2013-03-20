@@ -44,137 +44,131 @@
     
   </head>
   <body>
-
-    <!-- ie6 & ie7 -->
-    <div id="browser-not-compatible">
-      <span class="entypo">&#128712;</span>
-      <br><br><br><br>
-      <h2>Helaas!</h2>
-      <h4>Deze browser wordt niet ondersteund. Waroom niet?</h4>
-      <p>Deze web applicatie is gebaseerd op de nieuwste technologie. Daardoor werkt deze web applicatie nog niet op alle browsers optimaal. Namelijk in oude browsers.</p><br>
-      <p><a href="http://www.browsehappy.com/" class="btn btn-success btn-large">Installeer Een Betere Browser</a></p>
+  
+    <!-- navbar -->
+    <div class="navbar navbar-fixed-top" bs-navbar>
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#dashboard">WebPaige</a>
+          <!-- nav-collapse -->
+          <div class="nav-collapse collapse">
+            <!-- main nav -->
+            <ul class="nav">
+              <li data-match-route="/dashboard">
+                <a href="#dashboard">Dashboard</a>
+              </li>
+              <li data-match-route="/planboard">
+                <a href="#planboard">Planboard</a>
+              </li>
+              <li data-match-route="/messages">
+                <a href="#messages">{{ui.message.messages}}
+                  <!-- unread messages -->
+                  <span ng-show="(app.unreadMessages > 0)" class="badge badge-success">
+                    {{app.unreadMessages}}
+                  </span>
+                  <!-- end unread messages -->
+                </a>
+              </li>
+              <li data-match-route="/groups">
+                <a href="#groups">{{ui.groups.groups}}</a>
+              </li>
+            </ul>
+            <!-- end main nav -->
+            <!-- user menu -->
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a></li>
+                  <li><a href="#settings"><i class="icon-cog"></i> {{ui.settings.settings}}</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a></li>
+                </ul>
+              </li>
+            </ul>
+            <!-- end user menu -->
+          </div>
+          <!-- end nav-collapse -->
+        </div>
+      </div>
     </div>
+    <!-- end navbar -->
 
-    <!-- all browsers except ie6 and ie7 -->
-    <div id="browser-safe">
-      <!-- navbar -->
-      <div class="navbar navbar-fixed-top" bs-navbar>
-        <div class="navbar-inner">
-          <div class="container-fluid">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="#dashboard">WebPaige</a>
-            <!-- nav-collapse -->
-            <div class="nav-collapse collapse">
-              <!-- main nav -->
-              <ul class="nav">
-                <li data-match-route="/dashboard">
-                  <a href="#dashboard">Dashboard</a>
-                </li>
-                <li data-match-route="/planboard">
-                  <a href="#planboard">Planboard</a>
-                </li>
-                <li data-match-route="/messages">
-                  <a href="#messages">{{ui.message.messages}}
-                    <!-- unread messages -->
-                    <span ng-show="(app.unreadMessages > 0)" class="badge badge-success">
-                      {{app.unreadMessages}}
-                    </span>
-                    <!-- end unread messages -->
-                  </a>
-                </li>
-                <li data-match-route="/groups">
-                  <a href="#groups">{{ui.groups.groups}}</a>
-                </li>
-              </ul>
-              <!-- end main nav -->
-              <!-- user menu -->
-              <ul class="nav pull-right">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a></li>
-                    <li><a href="#settings"><i class="icon-cog"></i> {{ui.settings.settings}}</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a></li>
-                  </ul>
-                </li>
-              </ul>
-              <!-- end user menu -->
-            </div>
-            <!-- end nav-collapse -->
+
+    <!-- loading -->
+    <div id="loading" ng-show="loadingBig">
+      <span class="entypo">&#9203;</span>
+      <!-- <p>{{ui.login.loading}}</p> -->
+    </div>
+    <!-- end loading -->
+
+
+    <!-- notifications -->
+     <!-- <div id="notification__" class="alert {{notification.type}}" ng-show="notification.status">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{notification.message}}
+    </div> -->
+    <!-- end notifications -->
+
+    <!-- notifications -->
+     <div id="notification" class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+    </div>
+    <!-- end notifications -->
+
+    
+    <!-- wrap -->
+    <div id="wrap">
+      <!-- container-fluid -->
+      <div class="container-fluid">
+        <div ng-view></div>
+      </div>
+      <!-- end container-fluid -->
+      <div id="push"></div>
+    </div>
+    <!-- end wrap -->
+
+
+    <!-- footer -->
+    <div id="footer">
+      <div class="container-fluid">
+        <!-- copyrights -->
+        <div id="copyrights">
+          <!-- ask & version -->
+          <span class="muted">
+            <small>
+              Ask Community Systems, 2013<br>
+              <i>WebPaige v2.0.0</i>
+            </small>
+          </span>
+          <!-- end ask & version -->
+          <!-- download mobile app -->
+          <div id="download-footer">
+            <button class="btn btn-success btn-large" type="button">
+              <!-- <span class="entypo">&#128241;</span> -->
+              <!-- <i class="icon-download icon-white"></i> -->
+              {{ui.login.downloadApp}}
+            </button>
           </div>
+          <!-- end download mobile app -->
         </div>
+        <!-- end copyrights -->
+        <!-- general preloader -->
+        <p class="muted" ng-show="loading.status">
+          <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
+        </p>
+        <!-- end general preloader -->
       </div>
-      <!-- end navbar -->
-
-
-      <!-- loading -->
-      <div id="loading" ng-show="loadingBig">
-        <span class="entypo">&#9203;</span>
-        <!-- <p>{{ui.login.loading}}</p> -->
-      </div>
-      <!-- end loading -->
-
-
-      <!-- notifications -->
-       <div id="notification" class="alert {{notification.type}}" ng-show="notification.status">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{notification.message}}
-      </div>
-      <!-- end notifications -->
-
-      
-      <!-- wrap -->
-      <div id="wrap">
-        <!-- container-fluid -->
-        <div class="container-fluid">
-          <div ng-view></div>
-        </div>
-        <!-- end container-fluid -->
-        <div id="push"></div>
-      </div>
-      <!-- end wrap -->
-
-
-      <!-- footer -->
-      <div id="footer">
-        <div class="container-fluid">
-          <!-- copyrights -->
-          <div id="copyrights">
-            <!-- ask & version -->
-            <span class="muted">
-              <small>
-                Ask Community Systems, 2013<br>
-                <i>WebPaige v2.0.0</i>
-              </small>
-            </span>
-            <!-- end ask & version -->
-            <!-- download mobile app -->
-            <div id="download-footer">
-              <button class="btn btn-success btn-large" type="button">
-                <!-- <span class="entypo">&#128241;</span> -->
-                <!-- <i class="icon-download icon-white"></i> -->
-                {{ui.login.downloadApp}}
-              </button>
-            </div>
-            <!-- end download mobile app -->
-          </div>
-          <!-- end copyrights -->
-          <!-- general preloader -->
-          <p class="muted" ng-show="loading.status">
-            <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
-          </p>
-          <!-- end general preloader -->
-        </div>
-      </div>
-      <!-- end footer -->
-
-    </div> <!-- end browser-safe -->
+    </div>
+    <!-- end footer -->
 
     <!-- REMOVE -->
     <script src="js/data/testers.js"></script>
@@ -183,7 +177,8 @@
     <!-- jquery -->
     <script src="libs/jquery/1.9.1/jquery-1.9.1.min.js"></script>
     <script src="libs/jquery/jquery-browser.js"></script>
-    <script src="libs/jquery/jquery-custom.js"></script>
+    <!-- custom jquery and other stuff -->
+    <script src="js/app-custom.js"></script>
     <!--[if gt IE 7]><!-->
       <!-- third parties -->
       <script src="libs/chosen/chosen.jquery.min.js"></script>

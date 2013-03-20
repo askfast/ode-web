@@ -1,7 +1,8 @@
 /**
  * Avoid `console` errors in browsers that lack a console
  */
-(function() {
+(function()
+{
   var method;
   var noop = function() {};
   var methods = [
@@ -12,11 +13,13 @@
   var length = methods.length;
   var console = (window.console = window.console || {});
 
-  while (length--) {
+  while (length--)
+  {
     method = methods[length];
 
     // Only stub undefined methods.
-    if (!console[method]) {
+    if (!console[method])
+    {
       console[method] = noop;
     }
   }
@@ -26,13 +29,20 @@
 /**
  * Detect IE version for blocking IE6 and IE7
  */
-if ($.browser.msie) {
+if ($.browser.msie)
+{
   var ver = $.browser.version || $.browser.version[0];
-  if (ver == '6.0' || ver == '7.0') {
-    $('#browser-safe').hide();
-    $('#browser-not-compatible').show();
-    $('body').css({
-      'background': 'none'
-    });
+  if (ver == '6.0' || ver == '7.0')
+  {
+    /**
+     * DEPRECIATED
+     * Since we just redirect to an another page
+     */
+    // $('#browser-safe').hide();
+    // $('#browser-not-compatible').show();
+    // $('body').css({
+    //   'background': 'none'
+    // });
+    window.location = 'browse-happy.html';
   }
 };

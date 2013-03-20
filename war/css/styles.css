@@ -58,7 +58,7 @@ html,body {
 /* @group login */
 
 #browser-not-compatible {
-  display: none;
+  /*display: none;*/
 }
 
 #browser-not-compatible span {
@@ -193,7 +193,7 @@ html,body {
 #loading,
 #loggin-out {
   position: absolute;
-  top: 30%;
+  top: 50%;
   width: 100%;
   text-align: center;
 }
