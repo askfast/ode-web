@@ -32,6 +32,13 @@
 
         <div class="tab-header">
           <h3 class="pull-left">{{ui.settings.userSettings}}</h3>
+
+          <!-- REMOVE -->
+          <!-- build settings resource for users -->
+          <button type="submit" 
+                  ng-click="buildSettingsForUsers()" 
+                  class="btn btn-warning pull-right">Build Settings</button>
+
         </div>
         <hr>
 
@@ -50,7 +57,7 @@
 
             <div class="form-actions">
               <button type="submit" 
-                      ng-click="send(message, broadcast)" 
+                      ng-click="save(settings)" 
                       class="btn btn-success">{{ui.settings.saveSettings}}</button>
             </div>
 

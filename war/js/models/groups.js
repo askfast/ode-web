@@ -52,7 +52,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     {
       query: {
         method: 'GET',
-        params: {id:'', fields: '[role, latlong, latlong_final]'},
+        params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
         //params: {id:'', fields: '[role]'},
         isArray: true
       },

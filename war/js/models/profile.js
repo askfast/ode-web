@@ -291,6 +291,7 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
   Profile.prototype.save = function (id, resources) 
   {
     var deferred = $q.defer();
+
     /**
      * Save profile data
      */
@@ -304,6 +305,67 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
     /**
      * Return promise
      */
+    return deferred.promise;
+  };
+
+
+
+
+
+  /**
+   * Create settings resources for user if it is missing
+   */
+  Profile.prototype.createSettings_ = function (id) 
+  {    
+    var deferred = $q.defer();
+        // /**
+        //  * WebPaige settings defaults
+        //  */
+        // defaults = {
+        //   settingsWebPaige: {
+        //     lang: 'nl'
+        //   }
+        // };
+
+    /**
+     * Get profile data
+     */
+    Profile.prototype.get(id, false)
+    .then(function (result) 
+    {
+      console.log('result ->', result.resources.uuid, 'settings ->', $config.defaults.settingsWebPaige);
+
+      /**
+       * If user has no default settings give settings
+       */
+      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
+      {
+        Profile.save({id: result.resources.uuid}, angular.toJson({
+          settingsWebPaige: $config.defaults.settingsWebPaige
+        }), function(result)
+        {
+          /**
+           * Return promised
+           */
+          deferred.resolve({
+            status: 'modified',
+            resources: result
+          });
+        })
+      }
+      else
+      {
+        /**
+         * Return promised
+         */
+        deferred.resolve({
+          status: 'full',
+          resources: result
+        });
+      }
+
+    });
+
     return deferred.promise;
   };
 

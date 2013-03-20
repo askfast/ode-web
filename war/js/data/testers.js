@@ -122,20 +122,20 @@
         "state": "com.ask-cs.State.NoPlanning",
         "uuid": "4640kuiphof"
     },
-    {
-        "config": {},
-        "name": "Schippers  GSM",
-        "personalAgentUrl": "http://sven.ask-services.appspot.com/eveagents/personalagent//",
-        "rate": 1,
-        "resources": {
-            "id": "",
-            "name": "Schippers  GSM",
-            "PhoneAddress": "+31646140402",
-            "role": "3"
-        },
-        "state": "com.ask-cs.State.NoPlanning",
-        "uuid": ""
-    },
+    // {
+    //     "config": {},
+    //     "name": "Schippers  GSM",
+    //     "personalAgentUrl": "http://sven.ask-services.appspot.com/eveagents/personalagent//",
+    //     "rate": 1,
+    //     "resources": {
+    //         "id": "",
+    //         "name": "Schippers  GSM",
+    //         "PhoneAddress": "+31646140402",
+    //         "role": "3"
+    //     },
+    //     "state": "com.ask-cs.State.NoPlanning",
+    //     "uuid": ""
+    // },
     {
         "config": {},
         "name": "Gerben  1Hop",

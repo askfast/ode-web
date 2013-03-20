@@ -6,10 +6,13 @@
  *
  * Change host based on browser
  */
-if ($.browser.msie) {
+if ($.browser.msie)
+{
   // IE proxy url
   var host = '/proxy/ns_knrmtest';
-} else {
+}
+else
+{
   // Development
   var host = 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
   // Erik
@@ -211,9 +214,17 @@ value('$config',
         more: '#486877'
       }
     }
-  },
+  }, // end timeline options
   pie: {
     colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+  },
+  defaults: {
+    settingsWebPaige: {
+      user: {
+        language: 'nl'
+      },
+      app: {}
+    }
   }
 })
 
@@ -327,7 +338,8 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Default language and change language
    */
-  $rootScope.changeLanguage = function(lang) {
+  $rootScope.changeLanguage = function (lang)
+  {
     $rootScope.ui = ui[lang];
   };
   $rootScope.ui = ui[$config.lang];
@@ -355,9 +367,8 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Show notifications
    */
-  $rootScope.notify = function(options) {
-    console.warn('notification inited');
-
+  $rootScope.notify = function (options)
+  {
     /**
      * Set notification data
      */
@@ -369,7 +380,8 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
     /**
      * Check if is a permanent notification
      */
-    if (!options.permanent) {
+    if (!options.permanent)
+    {
       /**
        * Run timer for fade out
        * on 5 seconds
@@ -418,8 +430,8 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    *
    * Check for valid session
    */
-
-  if (!Session.check()) {
+  if (!Session.check())
+  {
     $location.path("/login");
   };
 
@@ -427,19 +439,19 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Detect route change start
    */
-  $rootScope.$on("$routeChangeStart", function(event, next, current) {
+  $rootScope.$on("$routeChangeStart", function (event, next, current)
+  {
     /**
      * TODO
-     *
      * !!!!!!!!!!!!!!!!!!!!!!!!!!!
      * A BIG TODO FINISH THIS !!!!
      * !!!!!!!!!!!!!!!!!!!!!!!!!!!
-     *
      * Prevent Deep Linking
-     * @type {String}
      */
     if (!Session.check()) $location.path("/login");
-
+    /**
+     * Default routing
+     */
     $rootScope.loadingBig = true;
     $rootScope.loading = true;
     $('div[ng-view]').hide();
@@ -449,7 +461,8 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Route change successfull
    */
-  $rootScope.$on("$routeChangeSuccess", function(event, current, previous) {
+  $rootScope.$on("$routeChangeSuccess", function (event, current, previous)
+  {
     $rootScope.newLocation = $location.path();
     $rootScope.loadingBig = false;
     $rootScope.loading = false;
@@ -458,9 +471,13 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
 
 
   /**
+   * TODO
+   * A better way of dealing with this error!
+   * 
    * Route change is failed!
    */
-  $rootScope.$on("$routeChangeError", function(event, current, previous, rejection) {
+  $rootScope.$on("$routeChangeError", function (event, current, previous, rejection)
+  {
     alert("ROUTE CHANGE ERROR: " + rejection);
   });
 
@@ -496,14 +513,12 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
           height: $('.tabs-left .nav-tabs').height() - 41
         });
       }
-      // else if (contentHeight > tabHeight)
-      // {
-      //   //console.warn('content is bigger than tabs ->', contentHeight);
-      //   $('.tabs-left .nav-tabs').css( { height: contentHeight } );
-      // };
-    
+      else if (contentHeight > tabHeight)
+      {
+        console.warn('fixStyles -> content is bigger than tabs ->', 'tabheight: ', tabHeight, 'contentHeight: ', contentHeight);
+        // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
+      };
     });
-    
     /**
      * Correct icon-font-library icons for mac and linux
      */
@@ -517,14 +532,16 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
         marginBottom: '0px'
       });
       /**
+       * TODO
+       * Maybe not needed since we dont display text under the icon
+       * 
        * Loading big
        */
       $('#loading').css({
         //marginTop: '-160px'
         display: 'none'
       });
-      
-    }
+    };
   };
 
 
