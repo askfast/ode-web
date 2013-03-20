@@ -1121,7 +1121,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         /**
          * Determine if it is recursive
          */
-        recursive: (values.group.match(/recursive/)) ? true : false
+        recursive: (values.group.match(/recursive/)) ? true : false,
+        /**
+         * INFO
+         * First state is hard-coded
+         * Maybe use the first one from array later on?
+         */
+        state: 'com.ask-cs.State.Available'
       };
     });
   };
