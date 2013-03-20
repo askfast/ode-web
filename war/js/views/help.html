@@ -3,7 +3,7 @@
   <div class="btn-group pull-right">
     <button type="submit" 
             ng-click="downloadManual()" 
-            class="btn btn-success">Download Manual</button>
+            class="btn btn-success">{{ui.downloads.manual}}</button>
   </div>
 </div>
 
@@ -15,25 +15,25 @@
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app">
       <li class="active">
-        <a href="#planboardTab" data-toggle="tab"><span class="entypo">&#128340;</span> Planboard</a>
+        <a href="#planboardTab" data-toggle="tab"><span class="entypo">&#128340;</span> {{ui.planboard.planboard}}</a>
       </li>
       <li>
-        <a href="#statisticsTab" data-toggle="tab"><span class="entypo">&#128200;</span> Statistics</a>
+        <a href="#statisticsTab" data-toggle="tab"><span class="entypo">&#128200;</span> {{ui.planboard.statistics}}</a>
       </li>
       <li>
-        <a href="#messagesTab" data-toggle="tab"><span class="entypo">&#9993;</span> Messages</a>
+        <a href="#messagesTab" data-toggle="tab"><span class="entypo">&#9993;</span> {{ui.message.messages}}</a>
       </li>
       <li>
-        <a href="#groupsTab" data-toggle="tab"><span class="entypo">&#128101;</span> Groups</a>
+        <a href="#groupsTab" data-toggle="tab"><span class="entypo">&#128101;</span> {{ui.groups.groups}}</a>
       </li>
       <li>
-        <a href="#profileTab" data-toggle="tab"><span class="entypo">&#128100;</span> Profile</a>
+        <a href="#profileTab" data-toggle="tab"><span class="entypo">&#128100;</span> {{ui.profile.profile}}</a>
       </li>
       <li>
-        <a href="#settingsTab" data-toggle="tab"><span class="entypo">&#9881;</span> Settings</a>
+        <a href="#settingsTab" data-toggle="tab"><span class="entypo">&#9881;</span> {{ui.settings.settings}}</a>
       </li>
       <li>
-        <a href="#supportTab" data-toggle="tab"><span class="entypo">&#59272;</span> Support</a>
+        <a href="#supportTab" data-toggle="tab"><span class="entypo">&#59272;</span> {{ui.help.support}}</a>
       </li>
     </ul>
     <!-- end tabs -->
@@ -44,7 +44,7 @@
       <!-- planboardTab -->
       <div class="tab-pane active" id="planboardTab">
         <div class="tab-header">
-          <h3 class="pull-left">Planboard</h3>
+          <h3 class="pull-left">{{ui.planboard.planboard}}</h3>
         </div>
         <hr>
       </div>
@@ -53,7 +53,7 @@
       <!-- statisticsTab -->
       <div class="tab-pane" id="statisticsTab">
         <div class="tab-header">
-          <h3 class="pull-left">Statistics</h3>
+          <h3 class="pull-left">{{ui.planboard.statistics}}</h3>
         </div>
         <hr>
       </div>
@@ -62,7 +62,7 @@
       <!-- messagesTab -->
       <div class="tab-pane" id="messagesTab">
         <div class="tab-header">
-          <h3 class="pull-left">Messages</h3>
+          <h3 class="pull-left">{{ui.message.messages}}</h3>
         </div>
         <hr>
       </div>
@@ -71,7 +71,7 @@
       <!-- groupsTab -->
       <div class="tab-pane" id="groupsTab">
         <div class="tab-header">
-          <h3 class="pull-left">Groups</h3>
+          <h3 class="pull-left">{{ui.groups.groups}}</h3>
         </div>
         <hr>
       </div>
@@ -80,7 +80,7 @@
       <!-- profileTab -->
       <div class="tab-pane" id="profileTab">
         <div class="tab-header">
-          <h3 class="pull-left">Profile</h3>
+          <h3 class="pull-left">{{ui.profile.profile}}</h3>
         </div>
         <hr>
       </div>
@@ -89,7 +89,7 @@
       <!-- settingsTab -->
       <div class="tab-pane" id="settingsTab">
         <div class="tab-header">
-          <h3 class="pull-left">Settings</h3>
+          <h3 class="pull-left">{{ui.settings.settings}}</h3>
         </div>
         <hr>
       </div>
@@ -98,7 +98,7 @@
       <!-- supportTab -->
       <div class="tab-pane" id="supportTab">
         <div class="tab-header">
-          <h3 class="pull-left">Support</h3>
+          <h3 class="pull-left">{{ui.help.support}}</h3>
         </div>
         <hr>
       </div>
