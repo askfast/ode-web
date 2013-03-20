@@ -253,6 +253,9 @@ var ui = {
           saving: 'Saving settings...',
           refreshing: 'Refreshing settings...',
           saved: 'Settings successfully saved.'
+      },
+      downloads: {
+        app: 'Soon it will be downloadable.<br>'
       }
     },
     nl: {
@@ -505,6 +508,9 @@ var ui = {
           saving: 'Instellingen wijzigen...',
           refreshing: 'Instellingen vernieuwen...',
           saved: 'Instellingen succesvol gewijzigd.'
+      },
+      downloads: {
+        app: 'Binnenkort is te downloaden.'
       }
     }
 }

@@ -334,7 +334,6 @@ value('$config',
 ['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config',
 function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) 
 {
-
   /**
    * Default language and change language
    */
