@@ -4,7 +4,7 @@
 /**
  * Settings Controller
  */
-function settingsCtrl($rootScope, $scope, $config, data, Settings, Profile)
+function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
 {
 	/**
 	 * Fix styles
@@ -13,7 +13,8 @@ function settingsCtrl($rootScope, $scope, $config, data, Settings, Profile)
 
 
 	/**
-	 * Check whether settings has been defined for the user otherwise display a message
+	 * Check whether settings has been defined 
+   * for the user otherwise display a message
 	 */
   if (!angular.equals({}, data))
   {
@@ -22,11 +23,6 @@ function settingsCtrl($rootScope, $scope, $config, data, Settings, Profile)
   else
   {
     /**
-     * TODO
-     * Give user the ability to select a language in login window
-     * after getting resources look for language settings and change
-     * it accordingly
-     * 
      * Set selected user language
      */
     $scope.settings = {
@@ -59,11 +55,7 @@ function settingsCtrl($rootScope, $scope, $config, data, Settings, Profile)
      */
     $rootScope.loading = {
       status: true,
-      /**
-       * TODO
-       * Move to local
-       */
-      message: 'Saving settings!'
+      message: $rootScope.ui.settings.saving
     };
     /**
      * Save settings
@@ -71,55 +63,41 @@ function settingsCtrl($rootScope, $scope, $config, data, Settings, Profile)
     Settings.save($rootScope.app.resources.uuid, settings)
     .then(function(saved)
     {
-      console.log('result save ->', saved);
-
       /**
        * Inform user
        */
       $rootScope.notify({
         status: true,
         type: 'alert-success',
-        /**
-         * TODO
-         * Move to local
-         */
-        message: 'Settings saved!'
+        message: $rootScope.ui.settings.saved
       });
-
       /**
        * Set preloader
        */
       $rootScope.loading = {
         status: true,
-        /**
-         * TODO
-         * Move to local
-         */
-        message: 'Refreshing profile data!'
+        message: $rootScope.ui.settings.refreshing
       };
-        
+      /**
+       * Refresh profile data
+       */
       Profile.get($rootScope.app.resources.uuid, true)
       .then(function(result)
       {
-        console.warn('returned resources ->', result.resources);
-
         /**
          * Set view
          */
         $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
-
         /**
          * Change language
          */
         $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
-
         /**
          * Turn off preloader
          */
         $rootScope.loading = {
           status: false
         };
-
       })
     });
   };

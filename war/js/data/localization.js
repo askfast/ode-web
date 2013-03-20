@@ -131,7 +131,7 @@ var ui = {
           restoreSelected: 'Restore Selected Messages',
           loadingMessage: 'Loading message...',
           escalation: 'Escalation message',
-          escalationBody: function(diff,startDate,startTime,endDate,endTime){
+          escalationBody: function (diff,startDate,startTime,endDate,endTime){
               return 'We have ' +
               diff +
               ' shortage in between ' +
@@ -249,7 +249,10 @@ var ui = {
           userSettings: 'User Settings',
           appSettings: 'Application Settings',
           saveSettings: 'Save Settings',
-          langSetting: 'Language'
+          langSetting: 'Language',
+          saving: 'Saving settings...',
+          refreshing: 'Refreshing settings...',
+          saved: 'Settings successfully saved.'
       }
     },
     nl: {
@@ -498,7 +501,10 @@ var ui = {
           userSettings: 'Gebruikersinstellingen',
           appSettings: 'Applicatie-instellingen',
           saveSettings: 'Instellingen Opslaan',
-          langSetting: 'Taal'
+          langSetting: 'Taal',
+          saving: 'Instellingen wijzigen...',
+          refreshing: 'Instellingen vernieuwen...',
+          saved: 'Instellingen succesvol gewijzigd.'
       }
     }
 }
