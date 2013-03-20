@@ -193,7 +193,7 @@ html,body {
 #loading,
 #loggin-out {
   position: absolute;
-  top: 50%;
+  top: 40%;
   width: 100%;
   text-align: center;
 }
@@ -213,61 +213,6 @@ html,body {
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);
   font-size: 20em;
 }
-
-
-
-/* #loggin-out {
-  position: absolute; */
-
-
-
-/* top: 180px; */
-
-
-
-/* width: 100%; */
-
-
-
-/* text-align: center; */
-
-
-
-/* }
-
-#loggin-out p {
-
-
-
-/* color: #a19781; */ */
-
-
-
-/* text-shadow: 1px 1px 1px rgba(255, 255, 255, 1); */
-  font-size: 18px;
-
-
-
-/* }
-
-#loggin-out span.entypo {
-  font-size: 360px; */
-
-
-
-/* display: block; */
-
-
-
-/* line-height: 210px; */
-
-
-
-/* color: #a19781; */
-
-
-
-/* text-shadow: 1px 1px 1px rgba(255, 255, 255, 1); */
 
 
 
