@@ -23,6 +23,7 @@
     <div class="input-append">
       <input type="text" 
               class="span2 search-query" 
+              placeholder="{{ui.groups.searchfor}}" 
               ng-model="search.query">
       <button type="submit" class="btn"><i class="icon-search"></i> {{ui.groups.serach}}</button>
     </div>
@@ -429,7 +430,7 @@
 
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
-                  class="btn btn-danger"><i class="icon-trash icon-white"></i>{{ui.groups.deleteGroup}}</button>
+                  class="btn btn-danger"><i class="icon-trash icon-white"></i> {{ui.groups.deleteGroup}}</button>
         </div>
 
       </div>

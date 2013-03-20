@@ -206,7 +206,8 @@ var ui = {
           memberRegstered: 'Member registered successfully.',
           deleting: 'Deleting group..',
           deleted: 'Group deleted successfully.',
-          filterMembers: 'Filter members..'
+          filterMembers: 'Filter members..',
+          searchfor: 'firstname, lastname..'
       }, 
       profile: {
           profile: 'Profile',
@@ -253,6 +254,9 @@ var ui = {
           saving: 'Saving settings...',
           refreshing: 'Refreshing settings...',
           saved: 'Settings successfully saved.'
+      },
+      help: {
+        header: 'Help & Support'
       },
       downloads: {
         app: 'Soon it will be downloadable.<br>'
@@ -462,7 +466,8 @@ var ui = {
           memberRegstered: 'Lid succesvol geregistreerd.',
           deleting: 'Groep verwijderen...',
           deleted: 'Groep succesvol verwijderd.',
-          filterMembers: 'Leden filteren...'
+          filterMembers: 'Leden filteren...',
+          searchfor: 'voornaam, achternaam..'
       }, 
       profile: {
           profile: 'Profiel',
@@ -509,6 +514,9 @@ var ui = {
           saving: 'Instellingen wijzigen...',
           refreshing: 'Instellingen vernieuwen...',
           saved: 'Instellingen succesvol gewijzigd.'
+      },
+      help: {
+        header: 'Hulp & Ondersteuning'
       },
       downloads: {
         app: 'Binnenkort is te downloaden.'

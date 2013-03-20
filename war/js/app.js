@@ -122,6 +122,13 @@ value('$config', config)
     resolve: settingsCtrl.resolve
   })
   /**
+   * Help
+   */
+  .when('/help', {
+    templateUrl: 'js/views/help.html',
+    controller: helpCtrl
+  })
+  /**
    * Redirect
    */
   .otherwise({
