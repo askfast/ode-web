@@ -734,27 +734,32 @@ label {
   overflow: hidden;
 }
 
-#new-messages ul {
+#new-messages table {
   margin: 0;
+  margin-top: -20px;
   padding: 0;
   list-style-type: none;
 }
 
-#new-messages ul li {
+#new-messages table tr {
   margin-bottom: 15px;
 }
 
-#new-messages ul li h5 {
+#new-messages table tr:first-child td {
+  border-top: none;
+}
+
+#new-messages table tr td h5 {
   margin-bottom: 2px;
   font-weight: normal;
 }
 
-#new-messages ul li span.sender {
+#new-messages table tr td span.sender {
   display: block;
   font-size: 13px;
 }
 
-#new-messages ul li small.muted {
+#new-messages table tr td small.muted {
   font-size: 11px;
 }
 

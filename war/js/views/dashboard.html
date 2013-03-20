@@ -45,13 +45,15 @@
         <h4>{{ui.dashboard.newMessage}}</h4>
         <hr>
 
-        <ul>
-          <li ng-repeat="message in messages">
-            <h5><a href="#/messages?uuid={{message.uuid}}#message">{{message.subject | noTitle}}</a></h5>
-            <span class="sender">{{message.requester|convertEve|convertUserIdToName}}</span>
-            <small class="muted"><i>{{message.creationTime | nicelyDate}}</i></small>  
-          </li>
-        </ul>
+        <table class="table table-striped">
+          <tr ng-repeat="message in messages">
+            <td>
+              <h5><a href="#/messages?uuid={{message.uuid}}#message">{{message.subject | noTitle}}</a></h5>
+              <span class="sender">{{message.requester|convertEve|convertUserIdToName}}</span>
+              <small class="muted"><i>{{message.creationTime | nicelyDate}}</i></small>
+            </td>
+          </tr>
+        </table>
 
         <a href="#/messages/#inbox" class="btn btn-small pull-right">{{ui.dashboard.goToInbox}}</a>
       </div>
