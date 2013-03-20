@@ -1073,6 +1073,19 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   function timelineOnAdd()
   {
     /**
+     * Remove old new slots
+     */
+    var news = $('.timeline-event-content')
+      .contents()
+      .filter(function()
+      { 
+        return this.nodeValue == 'New' 
+      });
+    if (news.length > 1)
+    {
+      self.timeline.cancelAdd(); 
+    };
+    /**
      * Get new slot and row information from timeline
      */
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
