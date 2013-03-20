@@ -131,7 +131,8 @@ var ui = {
           restoreSelected: 'Restore Selected Messages',
           loadingMessage: 'Loading message...',
           escalation: 'Escalation message',
-          escalationBody: function (diff,startDate,startTime,endDate,endTime){
+          escalationBody: function (diff,startDate,startTime,endDate,endTime)
+          {
               return 'We have ' +
               diff +
               ' shortage in between ' +
@@ -387,7 +388,8 @@ var ui = {
           restoreSelected: 'Geselecteerde berichten terugplaatsen',
           loadingMessage: 'Bericht laden...',
           escalation: 'Escalatiebericht',
-          escalationBody: function(diff,startDate,startTime,endDate,endTime){
+          escalationBody: function(diff,startDate,startTime,endDate,endTime)
+          {
               return 'Er is een tekort van ' +
               diff +
               ' mensen tussen ' +

@@ -2,36 +2,15 @@
  * Installation profile
  */
 var profile = {
-	
+	/**
+	 * Host for app
+	 */
+	namespace: 'ns_knrmtest',
+	host: function ()
+	{
+		return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
+	}	
 }
-
-
-
-
-/**
- * TODO
- * Look for ways to implement this into config itself.
- *
- * Change host based on browser
- */
-if ($.browser.msie)
-{
-  // IE proxy url
-  var host = '/proxy/ns_knrmtest';
-}
-else
-{
-  // Development
-  var host = 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
-  // Erik
-  // return 'http://10.200.200.100\\:8888/ns_knrmtest',
-  // Micheal
-  // return 'http://10.200.200.201\\:8888/ns_knrmtest',
-  // Production
-  // return 'http://3rc2.ask-services.appspot.com/ns_knrm',
-  // Test
-  // return 'http://knrm.ask-static.appspot.com/ns_knrm',
-};
 
 
 /**
@@ -57,7 +36,7 @@ var config = {
   /**
    * Data source host
    */
-  host: host,
+  host: profile.host(),
   /**
    * TODO
    * All date time related values into one place!

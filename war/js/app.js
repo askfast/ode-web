@@ -9,8 +9,13 @@
  */
 var WebPaige = angular.module('WebPaige', [
   'WebPaige.filters',
+  
+  // Still needed?
   'StorageModule',
+
+  // Still needed?
   'timerModule',
+
   '$strap.directives',
   'ngResource'
 ]);
@@ -37,7 +42,8 @@ value('$config', config)
   /**
    * Failed attempt to init html5 mode for routes
    */
-  //$locationProvider.html5Mode(true);
+  // $locationProvider.html5Mode(true);
+  // 
   /**
    * Routes
    */
