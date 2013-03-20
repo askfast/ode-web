@@ -28,6 +28,7 @@ html,body {
   margin-bottom: 0;
   margin-left: 20px;
   padding-bottom: 0;
+  color: white;
   /* width: 50px; */
   /* height: 10px; */
   /* background: url(../img/knrm-logo.png) no-repeat; */
@@ -35,6 +36,13 @@ html,body {
   /* text-indent: -9999px; */
 }
 
+.navbar .brand {
+  color: #f5f4ee;
+  /*text-shadow: 0 -1px 0 #000;*/
+  text-shadow: none;
+  font-weight: normal;
+  font-size: 20px;
+}
 
 
 .header {
