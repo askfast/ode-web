@@ -1,6 +1,5 @@
 // TODO
 // Language settings
-// $rootScope.ui.XXX.XXX
 var ui = {
     en: {
       meta: {
