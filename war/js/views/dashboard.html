@@ -39,7 +39,7 @@
     <div id="announcements" class="span4">
 
       <!-- new messages -->
-      <div id="new-messages" 
+      <!-- <div id="new-messages" 
             class="announcement"
             ng-show="(messages.length > 0)">
         <h4>{{ui.dashboard.newMessage}}</h4>
@@ -56,7 +56,7 @@
         </table>
 
         <a href="#/messages/#inbox" class="btn btn-small pull-right">{{ui.dashboard.goToInbox}}</a>
-      </div>
+      </div> -->
       <!-- end new messages -->
 
       <!-- news -->
@@ -67,8 +67,13 @@
         <table class="table table-striped">
           <tr ng-repeat="alarm in alarms">
             <td>
-              <h5>{{alarm.body}}</h5>
-              <span class="label label-warning pull-right">{{alarm.msgCode}}</span>
+              <h5>
+              <span class="label label-important" ng-show="alarm.prio.1">PRIO 1</span>
+              <span class="label label-warning" ng-show="alarm.prio.2">PRIO 2</span>
+              <span class="label label-info" ng-show="alarm.prio.3">PRIO 3</span>
+              {{alarm.body}}
+              </h5>
+              <span class="badge pull-right">{{alarm.msgCode}}</span>
               <small class="muted"><i>{{alarm.day}} {{alarm.time}}</i></small>
             </td>
           </tr>

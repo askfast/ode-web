@@ -89,7 +89,37 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
   Dashboard.p2000().
   then(function(results)
   {
-    $scope.alarms = results;
+    var alarms = [];
+    angular.forEach(results, function (alarm, index)
+    {
+      if (alarm.body)
+      {
+        if (alarm.body.match(/Prio 1/))
+        {
+          alarm.body = alarm.body.replace('Prio 1 ', '');
+          alarm.prio = {
+            1: true
+          }
+        }
+        if (alarm.body.match(/Prio 2/))
+        {
+          alarm.body = alarm.body.replace('Prio 2 ', '');
+          alarm.prio = {
+            2: true
+          }
+        }
+        if (alarm.body.match(/Prio 3/))
+        {
+          alarm.body = alarm.body.replace('Prio 3 ', '');
+          alarm.prio = {
+            3: true
+          }
+        }
+        alarms.push(alarm);
+      }
+    })
+    console.log('-->', alarms);
+    $scope.alarms = alarms;
   })
 	
 };
