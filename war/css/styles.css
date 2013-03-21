@@ -462,6 +462,17 @@ html,body {
 
 
 
+.left-border-fix {
+  width: 1px; 
+  border-left: 1px solid red; 
+  z-index: 10000; 
+/*  position: absolute;*/
+  top: 0;
+  left: 0;
+  float: left;
+  display: block;
+  margin-left: -1px;
+}
 
 
 
@@ -517,6 +528,9 @@ html,body {
 }
 
 
+/*.nav-tabs {
+  border-right: none;
+}*/
 
 
 
@@ -734,27 +748,32 @@ label {
   overflow: hidden;
 }
 
-#new-messages table {
+#new-messages table,
+#announcements table {
   margin: 0;
   margin-top: -20px;
   padding: 0;
   list-style-type: none;
 }
 
-#new-messages table tr {
+#new-messages table tr,
+#announcements table tr {
   margin-bottom: 15px;
 }
 
-#new-messages table tr:first-child td {
+#new-messages table tr:first-child td,
+#announcements table tr:first-child td {
   border-top: none;
 }
 
-#new-messages table tr td h5 {
+#new-messages table tr td h5,
+#announcements table tr td h5 {
   margin-bottom: 2px;
   font-weight: normal;
 }
 
-#new-messages table tr td span.sender {
+#new-messages table tr td span.sender,
+#announcements table tr td span.sender {
   display: block;
   font-size: 13px;
 }

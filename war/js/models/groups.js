@@ -43,6 +43,21 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   );
 
   /**
+   * Parent resource
+   */
+  var Parents = $resource(
+    $config.host + '/node/:id/container',
+    {
+    },
+    {
+      get: {
+        method: 'GET',
+        params: {id:''}
+      }
+    }
+  );
+
+  /**
    * Members resource
    */
   var Members = $resource(
@@ -271,6 +286,31 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       });
     });
 
+    return deferred.promise;
+  };
+
+
+  /**
+   * TODO
+   * Extract only the groups which are in the local list
+   * 
+   * Get parent group data
+   */
+  Groups.prototype.parents = function (id) 
+  {   
+    var deferred = $q.defer();
+    /**
+     * Query members list
+     */
+    Parents.get({id: id}, function (result) 
+    {
+      /**
+       * Return it baby!
+       */
+      deferred.resolve({
+        data: returned
+      });
+    });
     return deferred.promise;
   };
 

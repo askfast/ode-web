@@ -11,16 +11,6 @@ factory('Settings', function ($resource, $config, $q, $route, $timeout, Storage,
 
 
   /**
-   * Get local settings data
-   */
-  Settings.prototype.local = function ()
-  {
-    return angular.fromJson(Storage.get('resources')).settingsWebPaige || {};
-    // return angular.fromJson(Storage.get('resources'));
-  };
-
-
-  /**
    * Get settings from localStorage
    */
   Settings.prototype.get = function ()

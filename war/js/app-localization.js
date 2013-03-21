@@ -526,7 +526,7 @@ var ui = {
         support: 'Ondersteuning'
       },
       downloads: {
-        app: 'Binnenkort is te downloaden.',
+        app: 'Binnenkort te downloaden.',
         manual: 'Download Handleiding'
       }
     }

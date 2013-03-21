@@ -81,6 +81,16 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
       });
     }, 100);
   });
+
+
+  /**
+   * P2000 annnouncements
+   */
+  Dashboard.p2000().
+  then(function(results)
+  {
+    $scope.alarms = results;
+  })
 	
 };
 

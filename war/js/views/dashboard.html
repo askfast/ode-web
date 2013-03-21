@@ -63,22 +63,17 @@
       <div id="news" class="announcement">
         <h4>Announcements</h4>
         <hr>
-        <!-- news loop -->
-        <ul>
-          <li>
-            <h5>Fusce dapibus</h5>
-            <span class="muted"><i>24-02-2013 15:23</i></span>
-            <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo 
-                sit amet risus.</p>
-          </li>
-          <!-- <li>
-            <h5>Donec id elit non mi porta</h5>
-            <span class="muted"><i>24-02-2013 15:23</i></span>
-            <p>Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed 
-                odio dui.</p>
-          </li> -->
-        </ul>
-        <!-- end news loop -->
+        <!-- p2000 loop -->
+        <table class="table table-striped">
+          <tr ng-repeat="alarm in alarms">
+            <td>
+              <h5>{{alarm.body}}</h5>
+              <span class="label label-warning pull-right">{{alarm.msgCode}}</span>
+              <small class="muted"><i>{{alarm.day}} {{alarm.time}}</i></small>
+            </td>
+          </tr>
+        </table>
+        <!-- end p2000 loop -->
       </div>
       <!-- end news -->
 

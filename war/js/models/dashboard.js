@@ -7,7 +7,17 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
   /**
    * Define an empty resource for dashboard
    */
-  var Dashboard = $resource();
+  var Dashboard = $resource(
+    'http://knrm.myask.me/rpc/client/p2000.php',
+    {
+    },
+    {
+      p2000: {
+        method: 'GET',
+        params: {}
+      }
+    }
+  );
 
   /**
    * Get group aggs for pie charts
@@ -57,6 +67,32 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
        * Return promised values
        */
       deferred.resolve(results);
+    });
+
+    return deferred.promise;
+  };
+
+  /**
+   * Get p2000 announcements
+   */
+  Dashboard.prototype.p2000 = function () 
+  {
+    var deferred = $q.defer();
+
+    /**
+     * Grab p2000 feed
+     */
+    $.ajax({
+       url:"http://knrm.myask.me/rpc/client/p2000.php",
+       dataType: 'jsonp',
+       success: function(results)
+       {
+         deferred.resolve(results);
+       },
+       error: function()
+       {
+         deferred.reject('Something bad happened with fetching p2000 messages');
+       },
     });
 
     return deferred.promise;

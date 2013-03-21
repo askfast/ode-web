@@ -14,4 +14,4 @@ function helpCtrl ($rootScope, $scope, $config)
 };
 
 
-settingsCtrl.$inject = ['$rootScope', '$scope', '$config'];
+helpCtrl.$inject = ['$rootScope', '$scope', '$config'];

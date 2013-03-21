@@ -9,13 +9,10 @@
  */
 var WebPaige = angular.module('WebPaige', [
   'WebPaige.filters',
-  
   // Still needed?
   'StorageModule',
-
   // Still needed?
   'timerModule',
-
   '$strap.directives',
   'ngResource'
 ]);
@@ -308,24 +305,38 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
      */
     $.each($('.tab-content').children(), function () 
     {
-      // console.log($(this).attr('id'))
       /**
        * Extract id
        */
-      var $this = $(this).attr('id'),
+      var $parent = $(this),
+          $this = $(this).attr('id'),
           contentHeight = $('.tabs-left .tab-content #' + $this).height();
+
+      /**
+       * TODO
+       * 
+       * Append left border fix
+       */
+      // $parent.append('<div class="left-border-fix"></div>');
+      // console.log('parent ->', $parent);
+      // $('#' + $this + ' .left-border-fix').css({
+      //   height: contentHeight
+      // });
+
       /**
        * Check if one is bigger than another
        */
       if (tabHeight > contentHeight)
       {
+        console.log('tab is taller than content ->', $this);
+
         $('.tabs-left .tab-content #' + $this).css({
           height: $('.tabs-left .nav-tabs').height() - 41
         });
       }
       else if (contentHeight > tabHeight)
       {
-        console.warn('fixStyles -> content is bigger than tabs ->', 'tabheight: ', tabHeight, 'contentHeight: ', contentHeight);
+        // console.log('content is taller than tabs ->', $this);
         // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
       };
     });

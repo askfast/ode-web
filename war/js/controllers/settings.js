@@ -125,19 +125,13 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
 };
 
 
-/**
- * TODO
- * Is it really needed because settings is already
- * fetched in the beginning with resources?
- *
- * Maybe only grabbing from localhost??
- * 
+/** 
  * Settings resolver
  */
 settingsCtrl.resolve = {
   data: function ($rootScope, $config, Settings) 
   {
-  	return Settings.get();
+  	return angular.fromJson(Settings.get());
   }
 };
 

@@ -779,6 +779,20 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
 
 
 
+
+  $scope.fetchParents = function (id)
+  {
+    return "fetching user groups";
+
+    // Groups.parents(id)
+    // .then(function(result)
+    // {
+    //   return 'groups -> ' + result;
+    // })
+  };
+
+
+
 };
 
 
