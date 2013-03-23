@@ -1,13 +1,14 @@
 'use strict';
 
 /* Filters */
-angular.module('WebPaige.filters', [])
+// angular.module('WebPaige.filters', [])
 
 
 /**
  * Translate roles
  */
-.filter('translateRole', function()
+WebPaige.
+filter('translateRole', function()
 {
 	return function (role)
 	{
@@ -24,13 +25,14 @@ angular.module('WebPaige.filters', [])
 			break;
 		};
 	}
-})
+});
 
 
 /**
  * Main range filter
  */
-.filter('rangeMainFilter', ['Dater', 'Storage', function (Dater, Storage)
+WebPaige.
+filter('rangeMainFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	/**
 	 * Get periods
@@ -110,13 +112,14 @@ angular.module('WebPaige.filters', [])
 		};
 
 	}
-}])
+}]);
 
 
 /**
  * Main range week filter
  */
-.filter('rangeMainWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
+WebPaige.
+filter('rangeMainWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	/**
 	 * Get periods
@@ -151,13 +154,14 @@ angular.module('WebPaige.filters', [])
 							Dater.getThisYear();
 		};
 	}
-}])
+}]);
 
 
 /**
  * Range info filter
  */
-.filter('rangeInfoFilter', ['Dater', 'Storage', function (Dater, Storage)
+WebPaige.
+filter('rangeInfoFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	/**
 	 * Get periods
@@ -229,13 +233,14 @@ angular.module('WebPaige.filters', [])
 			};
 		};
 	};
-}])
+}]);
 
 
 /**
  * Range info week filter
  */
-.filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
+WebPaige.
+filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	/**
 	 * Get periods
@@ -256,19 +261,20 @@ angular.module('WebPaige.filters', [])
 			return 'Week number: ' + timeline.current.week;
 		};
 	};
-}])
+}]);
 
 
 /**
  * Convert timeStamp to readable date and time
  */
-.filter('convertTimeStamp', function()
+WebPaige.
+filter('convertTimeStamp', function()
 {
 	return function (stamp)
 	{
 		return Date(stamp).toString('dd-M-yyyy HH:mm');
 	};
-})
+});
 
 
 /**
@@ -280,7 +286,8 @@ angular.module('WebPaige.filters', [])
  * 
  * Convert ratios to readable formats
  */
-.filter('convertRatios', ['$config', function($config)
+WebPaige.
+filter('convertRatios', ['$config', function($config)
 {
 	return function (stats)
 	{
@@ -291,13 +298,14 @@ angular.module('WebPaige.filters', [])
 		})
 		return ratios.substring(0, ratios.length - 2);
 	};
-}])
+}]);
 
 
 /** 
  * Calculate time in days
  */
-.filter('calculateTimeInDays', function()
+WebPaige.
+filter('calculateTimeInDays', function()
 {
 	return function (stamp)
 	{
@@ -316,13 +324,14 @@ angular.module('WebPaige.filters', [])
 		 */
 		return 	Math.floor(days / day);
 	};
-})
+});
 
 
 /**
  * Calculate time in hours
  */
-.filter('calculateTimeInHours', function()
+WebPaige.
+filter('calculateTimeInHours', function()
 {
 	return function (stamp)
 	{
@@ -341,13 +350,14 @@ angular.module('WebPaige.filters', [])
 		 */
 		return 	Math.floor(hours / hour);
 	};
-})
+});
 
 
 /**
  * Calculate time in minutes
  */
-.filter('calculateTimeInMinutes', function()
+WebPaige.
+filter('calculateTimeInMinutes', function()
 {
 	return function (stamp)
 	{
@@ -369,13 +379,14 @@ angular.module('WebPaige.filters', [])
 		 */
 		return 	Math.floor(minutes / minute);
 	};
-})
+});
 
 
 /**
  * Convert eve urls to ids
  */
-.filter('convertEve', function()
+WebPaige.
+filter('convertEve', function()
 {
   return function (url)
   {
@@ -390,13 +401,14 @@ angular.module('WebPaige.filters', [])
   	}
     return eve[eve.length-2];
   };
-})
+});
 
 
 /** 
  * Convert user uuid to name
  */
-.filter('convertUserIdToName', ['Storage', function(Storage)
+WebPaige.
+filter('convertUserIdToName', ['Storage', function(Storage)
 {
 	var members = angular.fromJson(Storage.get('members'));
 	return function (id)
@@ -410,13 +422,14 @@ angular.module('WebPaige.filters', [])
       return members[id].name;
     };
 	};
-}])
+}]);
 
 
 /**
  * Convert timeStamps to dates
  */
-.filter('nicelyDate', ['Dater', function(Dater)
+WebPaige.
+filter('nicelyDate', ['Dater', function(Dater)
 {
  	return function (date)
  	{
@@ -430,13 +443,14 @@ angular.module('WebPaige.filters', [])
  		};
  		return new Date(date).toString('dd-MM-yyyy HH:mm');
  	};
-}])
+}]);
  
 
 /**
  * No title filter
  */
-.filter('noTitle',function()
+WebPaige.
+filter('noTitle',function()
 {
 	return function (title)
 	{
@@ -449,7 +463,7 @@ angular.module('WebPaige.filters', [])
 			return title;
 		}
 	}
-})
+});
 
 
 /**
@@ -458,19 +472,21 @@ angular.module('WebPaige.filters', [])
  * 
  * Strip span tags
  */
-.filter('stripSpan', function()
+WebPaige.
+filter('stripSpan', function()
 {
   return function (string)
   {
     return string.match(/<span class="label">(.*)<\/span>/);
   }
-})
+});
 
 
 /**
  * Strip html tags
  */
-.filter('stripHtml', function()
+WebPaige.
+filter('stripHtml', function()
 {
   return function (string)
   {
@@ -479,13 +495,14 @@ angular.module('WebPaige.filters', [])
     	return string.split('>')[1].split('<')[0];
   	};
   }
-})
+});
 
 
 /**
  * Convert group id to name
  */
-.filter('groupIdToName', ['Storage', function (Storage)
+WebPaige.
+filter('groupIdToName', ['Storage', function (Storage)
 {
   return function(id)
   {
@@ -498,9 +515,11 @@ angular.module('WebPaige.filters', [])
   		};	
   	};
   }
-}])
+}]);
 
-.filter('i18n_spec',['$rootScope', function ($rootScope)
+
+WebPaige.
+filter('i18n_spec',['$rootScope', function ($rootScope)
 {
 	return function (string, type)
 	{
@@ -511,13 +530,14 @@ angular.module('WebPaige.filters', [])
 		
 		return ret;
 	}
-}])
+}]);
 
 
 /**
  * Truncate group titles for dashboard pie widget
  */
-.filter('truncateGroupTitle', ['Strings', function (Strings) 
+WebPaige.
+filter('truncateGroupTitle', ['Strings', function (Strings) 
 {
 	return function (title)
 	{

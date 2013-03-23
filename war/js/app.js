@@ -2,139 +2,40 @@
 
 
 /**
- * TODO
- * Are all dependencies are still needed?
- *
  * Declare app level module which depends on filters, and services
  */
 var WebPaige = angular.module('WebPaige', [
-  'WebPaige.filters',
-  // Still needed?
   'StorageModule',
-  // Still needed?
-  'timerModule',
   '$strap.directives',
   'ngResource'
 ]);
 
 
 /**
- * TODO
- * Finish all the config items and move from other config file
- * Dynamically creating config items??
- *
  * App configuration
  */
-WebPaige.
-value('$config', config)
-
-
-/**
- * Configure app
- * There is also configuration tree defined in services
- * for default values
- */
+WebPaige
+.value('$config', config)
 .config(function ($locationProvider, $routeProvider) 
 {
-  /**
-   * Failed attempt to init html5 mode for routes
-   */
-  // $locationProvider.html5Mode(true);
-  // 
   /**
    * Routes
    */
   $routeProvider
-  /**
-   * Login
-   */
-  .when('/login', {
-    templateUrl: 'js/views/login.html',
-    controller: loginCtrl
-  })
-  /**
-   * Logout
-   */
-  .when('/logout', {
-    templateUrl: 'js/views/logout.html',
-    controller: loginCtrl.logout
-  })
-  /**
-   * Dashboard
-   */
-  .when('/dashboard', {
-    templateUrl: 'js/views/dashboard.html',
-    controller: dashboardCtrl,
-    resolve: dashboardCtrl.resolve
-  })
-  /**
-   * Planboard
-   */
-  .when('/planboard', {
-    templateUrl: 'js/views/planboard.html',
-    controller: planboardCtrl,
-    resolve: planboardCtrl.resolve
-  })
-  /**
-   * Messages
-   */
-  .when('/messages', {
-    templateUrl: 'js/views/messages.html',
-    controller: messagesCtrl,
-    resolve: messagesCtrl.resolve,
-    reloadOnSearch: false
-  })
-  /**
-   * Groups
-   */
-  .when('/groups', {
-    templateUrl: 'js/views/groups.html',
-    controller: groupsCtrl,
-    resolve: groupsCtrl.resolve,
-    reloadOnSearch: false
-  })
-  /**
-   * Profile
-   */
-  .when('/profile/:userId', {
-    templateUrl: 'js/views/profile.html',
-    controller: profileCtrl,
-    resolve: profileCtrl.resolve,
-    reloadOnSearch: false
-  })
-  /**
-   * If no user is given
-   */
-  .when('/profile', {
-    templateUrl: 'js/views/profile.html',
-    controller: profileCtrl,
-    resolve: profileCtrl.setAccount
-  })
-  /**
-   * Settings
-   */
-  .when('/settings', {
-    templateUrl: 'js/views/settings.html',
-    controller: settingsCtrl,
-    resolve: settingsCtrl.resolve
-  })
-  /**
-   * Help
-   */
-  .when('/help', {
-    templateUrl: 'js/views/help.html',
-    controller: helpCtrl
-  })
-  /**
-   * Redirect
-   */
+  .when('/login',     { templateUrl: 'js/views/login.html',       controller: loginCtrl })
+  .when('/logout',    { templateUrl: 'js/views/logout.html',      controller: loginCtrl.logout })
+  .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl,  resolve: dashboardCtrl.resolve })
+  .when('/planboard', { templateUrl: 'js/views/planboard.html',   controller: planboardCtrl,  resolve: planboardCtrl.resolve })
+  .when('/messages',  { templateUrl: 'js/views/messages.html',    controller: messagesCtrl,   resolve: messagesCtrl.resolve,  reloadOnSearch: false })
+  .when('/groups',    { templateUrl: 'js/views/groups.html',      controller: groupsCtrl,     resolve: groupsCtrl.resolve,    reloadOnSearch: false })
+  .when('/profile/:userId', { templateUrl: 'js/views/profile.html', controller: profileCtrl,  resolve: profileCtrl.resolve,   reloadOnSearch: false })
+  .when('/profile',   { templateUrl: 'js/views/profile.html',     controller: profileCtrl,    resolve: profileCtrl.setAccount })
+  .when('/settings',  { templateUrl: 'js/views/settings.html',    controller: settingsCtrl,   resolve: settingsCtrl.resolve })
+  .when('/help',      { templateUrl: 'js/views/help.html',        controller: helpCtrl })
   .otherwise({
     redirectTo: '/login'
   });
-
 })
-
-
 /**
  * Initial run functions
  */
@@ -297,7 +198,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
     /**
      * Fix tab heights
      *
-     * Get hieght of the current nav-tabs
+     * Get height of the current nav-tabs
      */
     var tabHeight = $('.tabs-left .nav-tabs').height();
     /**
@@ -311,7 +212,6 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
       var $parent = $(this),
           $this = $(this).attr('id'),
           contentHeight = $('.tabs-left .tab-content #' + $this).height();
-
       /**
        * TODO
        * 
@@ -322,7 +222,6 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
       // $('#' + $this + ' .left-border-fix').css({
       //   height: contentHeight
       // });
-
       /**
        * Check if one is bigger than another
        */

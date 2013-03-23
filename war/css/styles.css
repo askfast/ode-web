@@ -281,6 +281,7 @@ html,body {
   /* margin-top: -80px; */
   width: 100%;
   background-color: #433c2d;
+  z-index: 10000;
 }
 
 
