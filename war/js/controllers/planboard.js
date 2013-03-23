@@ -41,9 +41,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           group:    true,
           members:  false
         },
-        day: Date.today().getDayOfYear() + 1,
-        week: new Date().getWeek(),
-        month: new Date().getMonth() + 1,
+        day:    Date.today().getDayOfYear() + 1,
+        week:   new Date().getWeek(),
+        month:  new Date().getMonth() + 1,
         /**
          * Set first group as selected
          */
@@ -74,25 +74,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.toggleSlotForm = function ()
   {
-    /**
-     * If inline slot manager open close it
-     */
     if ($scope.views.slot.add)
     {
       $scope.resetInlineForms();
     }
-    /**
-     * Open sesame open!
-     */
     else
     {
-      /**
-       * Reset slot container
-       */
       $scope.slot = {};
-      /**
-       * Set the view
-       */
+
       $scope.views = {
         slot: {
           add:  true,
@@ -111,17 +100,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.resetInlineForms = function ()
   {
-    /**
-     * Reset slot container
-     */
     $scope.slot = {};
-    /**
-     * Reset original container
-     */
+
     $scope.original = {};
-    /**
-     * Reset views
-     */
+
     $scope.views = {
       slot: {
         add:  false,
@@ -159,8 +141,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       max:    new Date(periods.weeks[current.week].last.day)
     },
     range: {
-      start: periods.weeks[current.week].first.day,
-      end: periods.weeks[current.week].last.day
+      start:  periods.weeks[current.week].first.day,
+      end:    periods.weeks[current.week].last.day
     },
     scope: {
       day:    false,
@@ -198,6 +180,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   };
 
 
+
+
+
   /**
    * TODO
    * 
@@ -206,6 +191,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   $scope.daterange =  new Date($scope.timeline.range.start).toString('dd-MM-yyyy') + 
                       ' / ' + 
                       new Date($scope.timeline.range.end).toString('dd-MM-yyyy');
+
+
+
+
 
 
   /**
@@ -236,14 +225,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.$watch(function()
   {
-    /**
-     * Get timeline range
-     */
-    var range = self.timeline.getVisibleChartRange();
-    /**
-     * Calculate difference
-     */
-    var diff = new Date(range.end).getTime() - new Date(range.start).getTime();
+    var range = self.timeline.getVisibleChartRange(),
+        diff  = new Date(range.end).getTime() - new Date(range.start).getTime();
+
     /**
      * Scope is a day
      */
@@ -280,19 +264,27 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         month:  true
       };
     };
-    /**
-     * Set ranges
-     */
+
+
+
+
+
+
     $scope.timeline.range = {
       start:  new Date(range.start).toString($config.date.stringFormat),
       end:    new Date(range.end).toString($config.date.stringFormat)
     };
-    /**
-     * Pass range to dateranger
-     */
+
+
+
+
+
     $scope.daterange =  new Date($scope.timeline.range.start).toString('dd-MM-yyyy') + 
                         ' / ' + 
                         new Date($scope.timeline.range.end).toString('dd-MM-yyyy');
+
+
+
   });
 
 
@@ -300,37 +292,23 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    * Timeline (The big boy)
    */
   var timeliner = {
-    /**
-     * Init timeline
-     */
+
     init: function ()
     {
-      /**
-       * Where is my timeline landlord?
-       */
-      self.timeline = new links.Timeline(document.getElementById('mainTimeline'));    
-      /**
-       * Init timeline listeners
-       */
+      self.timeline = new links.Timeline(document.getElementById('mainTimeline'));
+
       links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
       links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
       links.events.addListener(self.timeline, 'add',           timelineOnAdd);
       links.events.addListener(self.timeline, 'delete',        timelineOnRemove);
       links.events.addListener(self.timeline, 'change',        timelineOnChange);
       links.events.addListener(self.timeline, 'select',        timelineOnSelect);
-      /**
-       * Run timeline
-       */
+
       this.render($scope.timeline.options);      
     },
-    /**
-     * Render timeline
-     */
+
     render: function (options)
     {
-      /**
-       * Timeline options
-       */
       $scope.timeline = {
         current:  $scope.timeline.current,
         scope:    $scope.timeline.scope,
@@ -342,13 +320,9 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           max:    new Date(options.end)
         }
       };
-      /**
-       * Merge options with defaults
-       */
+
       angular.extend($scope.timeline.options, $config.timeline.options);
-      /**
-       * Draw timeline
-       */
+
       self.timeline.draw(
         Sloter.process(
           $scope.data,
@@ -357,30 +331,16 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         ), 
         $scope.timeline.options
       );
-      /**
-       * Set range dynamically
-       */
+
       self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
     },
-    /**
-     * Load timeline
-     */
+
     load: function (stamps)
     {
-      /**
-       * Pass this
-       */
       var _this = this;
-      /**
-       * Set preloader message
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.planboard.refreshTimeline
-      };
-      /**
-       * Ask for fresh data
-       */
+
+      $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
+
       Slots.all({
         groupId:  $scope.timeline.current.group,
         division: $scope.timeline.current.division,
@@ -390,32 +350,18 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       })
       .then(function(data)
       {
-        /**
-         * Set scope
-         */
         $scope.data = data;
-        /**
-         * Render timeline
-         */
+
         _this.render(stamps);
-        /**
-         * Set preloader
-         */
-        $rootScope.loading.status = false;
+
+        $rootScope.statusBar.off();
       });
     },
-    /**
-     * Refresh timeline
-     */
+
     refresh: function ()
     {
-      /**
-       * Reset slot container
-       */
       $scope.slot = {};
-      /**
-       * Set view to default slot add
-       */
+
       $scope.views = {
         slot: {
           add:  true,
@@ -425,9 +371,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         wish:   false,
         member: false
       };
-      /**
-       * Load timeline
-       */
+
       this.load({
         start:  data.periods.start,
         end:    data.periods.end
@@ -437,8 +381,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
  
 
   /**
-   * TODO
-   * Automatically initialize this function
+   * Init timeline
    */
   timeliner.init();
 
@@ -448,16 +391,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $rootScope.$on('timeliner', function() 
   {
-    /**
-     * Convert arguments
-     */
     var options = {
       start:  arguments[1].start,
       end:    arguments[1].end
     };
-    /**
-     * Load timeline
-     */
+
     timeliner.load({
       start:  new Date(options.start).getTime(),
       end:    new Date(options.end).getTime()
@@ -470,33 +408,21 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.requestTimeline = function (section)
   {
-    /**
-     * Switch on section
-     */
     switch (section)
     {
-      /**
-       * Section groups
-       */
       case 'group':
           $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
-          /**
-           * Check if when group is deselected when members is deselected as well
-           */
+
           if ($scope.timeline.current.layouts.members && 
               !$scope.timeline.current.layouts.group)
           {
             $scope.timeline.current.layouts.members = false;
           };
         break;
-      /**
-       * Section members
-       */
+
       case 'members':
           $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
-          /**
-           * Check if group is selected when members is selected
-           */
+
           if ($scope.timeline.current.layouts.members && 
               !$scope.timeline.current.layouts.group)
           {
@@ -504,9 +430,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           };
         break;
     };
-    /**
-     * Load timeline
-     */
+
     timeliner.load({
       start:  data.periods.start,
       end:    data.periods.end
@@ -519,63 +443,45 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.timelineScoper = function(period)
   {
-    /**
-     * Reset currents
-     */
     $scope.timeline.current.day   = current.day;
     $scope.timeline.current.week  = current.week;
     $scope.timeline.current.month = current.month;
-    /**
-     * Switch on periods
-     */
+
     switch (period)
     {
-      /**
-       * Scope day
-       */
       case 'day':
         $scope.timeline.scope = {
           day:    true,
           week:   false,
           month:  false
         };
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.days[$scope.timeline.current.day].first.timeStamp,
           end:    periods.days[$scope.timeline.current.day].last.timeStamp,
         });
       break;
-      /**
-       * Scope week
-       */
+
       case 'week':
         $scope.timeline.scope = {
           day:    false,
           week:   true,
           month:  false
         };
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.weeks[$scope.timeline.current.week].first.timeStamp,
           end:    periods.weeks[$scope.timeline.current.week].last.timeStamp,
         });
       break;
-      /**
-       * Scope month
-       */
+
       case 'month':
         $scope.timeline.scope = {
           day:    false,
           week:   false,
           month:  true
         };
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.months[$scope.timeline.current.month].first.timeStamp,
           end:    periods.months[$scope.timeline.current.month].last.timeStamp,
@@ -590,51 +496,36 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.timelineBefore = function(timelineScope)
   {
-    /**
-     * Scope day
-     */
     if ($scope.timeline.scope.day)
     {
       if ($scope.timeline.current.day != 1)
       {
         $scope.timeline.current.day--;
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.days[$scope.timeline.current.day].first.timeStamp,
           end:    periods.days[$scope.timeline.current.day].last.timeStamp,
         });
       };
     }
-    /**
-     * Scope week
-     */
     else if ($scope.timeline.scope.week)
     {
       if ($scope.timeline.current.week != 1)
       {
         $scope.timeline.current.week--;
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.weeks[$scope.timeline.current.week].first.timeStamp,
           end:    periods.weeks[$scope.timeline.current.week].last.timeStamp,
         });
       };
     }
-    /**
-     * Scope month
-     */
     else if ($scope.timeline.scope.month)
     {
       if ($scope.timeline.current.month != 1)
       {
         $scope.timeline.current.month--;
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.months[$scope.timeline.current.month].first.timeStamp,
           end:    periods.months[$scope.timeline.current.month].last.timeStamp,
@@ -649,9 +540,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.timelineAfter = function(timelineScope)
   {
-    /**
-     * Scope day
-     */
     if ($scope.timeline.scope.day)
     {
       /**
@@ -660,43 +548,31 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if ($scope.timeline.current.day != periods.days.total)
       {
         $scope.timeline.current.day++;
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.days[$scope.timeline.current.day].first.timeStamp,
           end:    periods.days[$scope.timeline.current.day].last.timeStamp,
         });
       };
     }
-    /**
-     * Scope week
-     */
     else if ($scope.timeline.scope.week)
     {
       if ($scope.timeline.current.week != 53)
       {
         $scope.timeline.current.week++;
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.weeks[$scope.timeline.current.week].first.timeStamp,
           end:    periods.weeks[$scope.timeline.current.week].last.timeStamp,
         });
       };
     }
-    /**
-     * Scope month
-     */
     else if ($scope.timeline.scope.month)
     {
       if ($scope.timeline.current.month != 12)
       {
         $scope.timeline.current.month++;
-        /**
-         * Load timeline
-         */
+
         timeliner.load({
           start:  periods.months[$scope.timeline.current.month].first.timeStamp,
           end:    periods.months[$scope.timeline.current.month].last.timeStamp,
@@ -729,28 +605,28 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function timelineGetRange ()
   {
-    /**
-     * Get range from timeline
-     */
     var range = self.timeline.getVisibleChartRange();
-    /**
-     * Let angular know about changes
-     */
+
     $scope.$apply(function()
     {
-      /**
-       * Apply changes
-       */
       $scope.timeline.range = {
         start:  new Date(range.from).toString($config.date.stringFormat),
         end:    new Date(range.till).toString($config.date.stringFormat)
       };
-      /**
-       * Daterange
-       */
+
+
+
+
+
+
       $scope.daterange =  new Date(new Date(range.start).getTime()).toString('dd-MM-yyyy') + 
                           ' / ' + 
                           new Date(new Date(range.end).getTime()).toString('dd-MM-yyyy');
+
+
+
+
+
     });
   };
 
@@ -760,23 +636,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function selectedSlot ()
   {
-    /**
-     * Init container
-     */
     var selection;
-    /**
-     * Get selection info from timeline
-     */
+
     if (selection = self.timeline.getSelection()[0])
     {
-      /**
-       * Init values and content of slot
-       */
       var values  = self.timeline.getItem(selection.row),
           content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]);
-      /**
-       * Set original slot value
-       */
+
       $scope.original = {
         start: values.start,
         end: values.end,
@@ -786,9 +652,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           id: content.id
         }
       };
-      /**
-       * Switch over type of slot
-       */
+
       switch (content.type)
       {
         case 'slot':
@@ -836,9 +700,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           };
         break;
       };
-      /**
-       * Set selected slot for view
-       */
+
       $scope.slot = {
         start: {
           date: Dater.readableDate(values.start, $config.date.format),
@@ -852,6 +714,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         recursive: content.recursive,
         id: content.id
       };
+
       /**
        * TODO
        * Check if this can be combined with switch later on!
@@ -873,9 +736,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       {
         $scope.slot.member = content.mid;
       }
-      /**
-       * Return values
-       */
+
       return values;
     };
   };
@@ -900,9 +761,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function timelineOnSelect ()
   {
-    /**
-     * Let angular knows about it
-     */
     $scope.$apply(function()
     {
       $scope.selectedOriginal = selectedSlot();
@@ -915,9 +773,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function timelineOnAdd ()
   {
-    /**
-     * Remove old-new slots
-     */
     var news = $('.timeline-event-content')
       .contents()
       .filter(function()
@@ -928,18 +783,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     {
       self.timeline.cancelAdd(); 
     };
-    /**
-     * Get new slot and row information from timeline
-     */
+
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
-    /**
-     * Let angular know that model changed
-     */
+
     $scope.$apply(function()
     {
-      /**
-       * Set the view
-       */
       $scope.views = {
         slot: {
           add:  true,
@@ -949,9 +797,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         wish:   false,
         member: false
       };
-      /**
-       * Set info in slot model
-       */
+
       $scope.slot = {
         start: {
           date: new Date(values.start).toString('dd-MM-yyyy'),
@@ -961,9 +807,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           date: new Date(values.end).toString('dd-MM-yyyy'),
           time: new Date(values.end).toString('HH:mm tt')
         },
-        /**
-         * Determine if it is recursive
-         */
         recursive: (values.group.match(/recursive/)) ? true : false,
         /**
          * INFO
@@ -981,16 +824,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.add = function (slot)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.addTimeSlot
-    };
-    /**
-     * Add slot
-     */
+    $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+
     Slots.add({
       // start: Date.parse(slot.start.date + ' ' + slot.start.time).getTime() / 1000,
       // end: Date.parse(slot.end.date + ' ' + slot.end.time).getTime() / 1000,
@@ -1001,17 +836,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     }, $rootScope.app.resources.uuid)
     .then(function (result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.slotAdded
-      });
-      /**
-       * Refresh timeline
-       */
+      $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+
       timeliner.refresh();
     });
   };
@@ -1036,21 +862,10 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function timelineOnChange ()
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.changingSlot
-    };
-    /**
-     * Get the values
-     */
+    $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
 
-    /**
-     * Add slot
-     */
     Slots.change($scope.original, {
       start: values.start,
       end: values.end,
@@ -1058,17 +873,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     }, $rootScope.app.resources.uuid)
     .then(function (result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.slotChanged
-      });
-      /**
-       * Refresh timeline
-       */
+      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+
       timeliner.refresh();
     });
   };
@@ -1079,17 +885,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.change = function (original, slot)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.changingSlot
-    };
-    /**
-     * Add slot
-     */
+    $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
     Slots.change($scope.original, {
+      /**
+       * TODO
+       * 
+       * Absolute dater !!
+       */
       start: Date.parse(slot.start.date + ' ' + slot.start.time),
       end: Date.parse(slot.end.date + ' ' + slot.end.time),
       recursive: (slot.recursive) ? true : false,
@@ -1107,17 +910,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     }, $rootScope.app.resources.uuid)
     .then(function (result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.slotChanged
-      });
-      /**
-       * Refresh timeline
-       */
+      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+
       timeliner.refresh();
     });
   };
@@ -1128,16 +922,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.setWish = function (slot)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.changingWish
-    };
-    /**
-     * Add slot
-     */
+    $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
+
     Slots.setWish({
       id: slot.groupId,
       start: Dater.absoluteDates(slot.start.date, slot.start.time),
@@ -1147,17 +933,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     })
     .then(function (result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.wishChanged
-      });
-      /**
-       * Refresh timeline
-       */
+      $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+
       timeliner.refresh();
     });
   };
@@ -1168,30 +945,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   function timelineOnRemove ()
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.deletingTimeslot
-    };
-    /**
-     * Remove slot
-     */
+    $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+
     Slots.remove($scope.original, $rootScope.app.resources.uuid)
     .then(function (result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.timeslotDeleted
-      });
-      /**
-       * Refresh timeline
-       */
+      $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+
       timeliner.refresh();
     });
   };
@@ -1202,30 +962,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.remove = function ()
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.deletingTimeslot
-    };
-    /**
-     * Add slot
-     */
+    $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+
     Slots.remove($scope.original, $rootScope.app.resources.uuid)
     .then(function (result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.timeslotDeleted
-      });
-      /**
-       * Refresh timeline
-       */
+      $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+
       timeliner.refresh();
     });
   };
@@ -1245,13 +988,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.barCharts = function()
   {
-    /**
-     * Set config to altered
-     */
     $scope.timeline.config.bar = !$scope.timeline.config.bar;
-    /**
-     * Render timeline
-     */
+
     timeliner.render({
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
@@ -1264,13 +1002,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.groupWishes = function()
   {
-    /**
-     * Set config to altered
-     */
     $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
-    /**
-     * Render timeline
-     */
+
     timeliner.render({
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
@@ -1292,13 +1025,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    */
   $scope.alterLegenda = function(legenda)
   {
-    /**
-     * Set config to altered
-     */
     $scope.timeline.config.legenda = legenda;
-    /**
-     * Render timeline again
-     */
+
     timeliner.render({
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end

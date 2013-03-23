@@ -105,6 +105,59 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
 
 
   /**
+   * Show notifications
+   */
+  $rootScope.notifier = 
+  {
+    success: function (message, permanent)
+    {
+      /**
+       * Set notification data
+       */
+      $rootScope.notification = {
+        status: true,
+        type: 'alert-success',
+        message: message
+      };
+      /**
+       * Check if is a permanent notification
+       */
+      if (!permanent)
+      {
+        /**
+         * Run timer for fade out
+         * on 5 seconds
+         */
+        setTimeout(function() {
+          /**
+           * Fade-out with 1 second transition
+           */
+          $('#notification').fadeOut(1000);
+        }, 5000);
+      };
+    }
+  };
+
+
+
+  $rootScope.statusBar = 
+  {
+    display: function (message)
+    {
+      $rootScope.loading = {
+        status:   true,
+        message:  message
+      };
+    },
+
+    off: function ()
+    {
+      $rootScope.loading.status = false;
+    }
+  }
+
+
+  /**
    * If periods are not present calculate them
    */
   if (!Storage.get('periods')) {
