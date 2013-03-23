@@ -1,0 +1,8 @@
+
+ ☐ statistics removed from process and from view
+ ☐ sendShortageMessage removed
+
+ ✔ timeline data process made as a service @done (13-03-22 10:03)
+ ✔ prototype process functions moved to services as a service => Sloter @done (13-03-22 10:03)
+
+ ☐ loadingTimeline vs refreshTimeline localization

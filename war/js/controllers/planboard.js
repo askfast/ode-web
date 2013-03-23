@@ -12,7 +12,7 @@
  *  
  * Planboard Controller
  */
-function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Dater, Storage, $location) 
+function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Dater, Storage, $location, Sloter) 
 {
   /**
    * Fix styles
@@ -234,6 +234,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Set config to altered
      */
     $scope.timeline.config.bar = !$scope.timeline.config.bar;
+
+
     /**
      * Render timeline
      */
@@ -241,6 +243,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
     });    
+
+
   };
   
 
@@ -253,6 +257,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Set config to altered
      */
     $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
+
+
     /**
      * Render timeline
      */
@@ -260,6 +266,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
     });
+
+
   };
   
 
@@ -281,6 +289,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Set config to altered
      */
     $scope.timeline.config.legenda = legenda;
+
+
     /**
      * Render timeline again
      */
@@ -288,6 +298,8 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       start:  $scope.timeline.range.start,
       end:    $scope.timeline.range.end
     });
+
+
   };
 
 
@@ -295,7 +307,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
    * Groups for dropdown
    */
   $scope.divisions = $scope.timeline.config.divisions;
-  
+
 
   /**
    * Watch for changes in timeline range
@@ -380,305 +392,6 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
 
 
   /**
-   * TODO
-   * Define a better way with dealing localStorage and Resolver
-   *
-   * Controller render
-   */
-  function render()
-  {
-    /**
-     * Where is my timeline landlord?
-     */
-    self.timeline = new links.Timeline(document.getElementById('mainTimeline'));    
-    /**
-     * Init timeline listeners
-     */
-    links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
-    links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
-    links.events.addListener(self.timeline, 'add',           timelineOnAdd);
-    links.events.addListener(self.timeline, 'delete',        timelineOnRemove);
-    links.events.addListener(self.timeline, 'change',        timelineOnChange);
-    links.events.addListener(self.timeline, 'select',        timelineOnSelect);
-    /**
-     * Run timeline
-     */
-    timeliner($scope.timeline.options);
-  };
-
-
-  /**
-   * Timeliner listener
-   */
-  $rootScope.$on('timeliner', function() 
-  {
-    /**
-     * Convert arguments
-     */
-    var options = {
-      start: arguments[1].start,
-      end: arguments[1].end
-    };
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.loadingTimeline
-    };
-    /**
-     * Fetch new data
-     */
-    Slots.all({
-      groupId:  $scope.timeline.current.group,
-      division: $scope.timeline.current.division,
-      layouts:  $scope.timeline.current.layouts,
-      month: $scope.timeline.current.month,
-      stamps: {
-        start:  new Date($scope.timeline.range.start).getTime(),
-        end:    new Date($scope.timeline.range.end).getTime()
-      },
-    })
-    .then(function(data)
-    {
-      $scope.data = data;
-      /**
-       * Adjust timeline for new period
-       */
-      timeliner(options);
-      /**
-       * Turn off preloader
-       */
-      $rootScope.loading = {
-        status: false
-      }
-    }); 
-  });
-
-
-  /**
-   * Draw and limit timeline
-   */
-  function timeliner(options)
-  {
-    /**
-     * Timeline options
-     */
-    $scope.timeline = {
-      current:  $scope.timeline.current,
-      scope:    $scope.timeline.scope,
-      config:   $scope.timeline.config,
-      options: {
-        start:  new Date(options.start),
-        end:    new Date(options.end),
-        min:    new Date(options.start),
-        max:    new Date(options.end)
-      }
-    };
-    /**
-     * Merge options with defaults
-     */
-    angular.extend($scope.timeline.options, $config.timeline.options);
-    /**
-     * Draw timeline
-     */
-    // setTimeout( function ()
-    // {
-      self.timeline.draw(
-        self.process(
-          $scope.data, 
-          $scope.timeline.config,
-          angular.fromJson(Storage.get('groups')),
-          angular.fromJson(Storage.get('members')),
-          $scope.divisions,
-          $rootScope.ui
-        ), 
-        $scope.timeline.options
-      );
-    // }, 1000);
-    /**
-     * Set range dynamically
-     */
-      self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-  };
-
-
-  /**
-   * Redraw timeline on window resize
-   */
-  $window.onresize = function ()
-  {
-    self.timeline.redraw();
-  };
-
-
-  /**
-   * Timeline zoom in
-   */
-  $scope.timelineZoomIn = function()
-  {
-    self.timeline.zoom($config.timeline.config.zoomValue);
-  };
-
-
-  /**
-   * Timeline zoom out
-   */
-  $scope.timelineZoomOut = function()
-  {
-    self.timeline.zoom(-$config.timeline.config.zoomValue);
-  };
-
-
-  /**
-   * Handle new requests for timeline
-   */
-  $scope.requestTimeline = function(current, section)
-  {
-    /**
-     * Switch on section
-     */
-    switch (section)
-    {
-      /**
-       * Section groups
-       */
-      case 'group':
-          $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
-          /**
-           * Check if when group is deselected when members is deselected as well
-           */
-          if ($scope.timeline.current.layouts.members && 
-              !$scope.timeline.current.layouts.group)
-          {
-            $scope.timeline.current.layouts.members = false;
-          };
-        break;
-      /**
-       * Section members
-       */
-      case 'members':
-          $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
-          /**
-           * Check if group is selected when members is selected
-           */
-          if ($scope.timeline.current.layouts.members && 
-              !$scope.timeline.current.layouts.group)
-          {
-            $scope.timeline.current.layouts.group = true;
-          };
-        break;
-    };
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.loadingTimeline
-    };
-    /**
-     * Fetch new data
-     */
-    Slots.all({
-      groupId: $scope.timeline.current.group,
-      division: $scope.timeline.current.division,
-      month: $scope.timeline.current.month,
-      stamps: {
-        start:  new Date($scope.timeline.range.start).getTime(),
-        end:    new Date($scope.timeline.range.end).getTime()
-      },
-      layouts: $scope.timeline.current.layouts
-    })
-    .then(function(data)
-    {
-      /**
-       * Set data
-       */
-      $scope.data = data;
-      /**
-       * Render timeline
-       */
-      render();
-      /**
-       * Turn off preloader
-       */
-      $rootScope.loading = {
-        status: false
-      };
-    });
-  };
-
-
-  /**
-   * Generic data loader and timeline renderer
-   */
-  function loadTimeline(options)
-  {
-
-    // /**
-    //  * Check whether if the selected timeline period falls in downloaded range
-    //  */
-    // if (options.first.timeStamp > data.periods.start &&
-    //     options.last.timeStamp < data.periods.end)
-    // {
-    //   /**
-    //    * Adjust timeline for new period
-    //    */
-    //   timeliner({
-    //     start:  options.first.day,
-    //     end:    options.last.day
-    //   }); 
-    // }
-    // else
-    // {
-      /**
-       * Set preloader
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.planboard.loadingTimeline
-      };
-      /**
-       * Fetch new data
-       */
-      Slots.all({
-        groupId:  $scope.timeline.current.group,
-        division: $scope.timeline.current.division,
-        layouts:  $scope.timeline.current.layouts,
-        month:    $scope.timeline.current.month,
-        stamps: {
-          start:  options.first.timeStamp,
-          end:    options.last.timeStamp
-        },
-      })
-      .then(function(data)
-      {
-        // $scope.$watch(function()
-        // {
-        /**
-         * Set scope
-         */
-        $scope.data = data;
-        /**
-         * Adjust timeline for new period
-         */
-        timeliner({
-          start:  options.first.day,
-          end:    options.last.day
-        });
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
-        // });
-      });
-    // };
-  };
-
-
-  /**
    * Go one period in past
    */
   $scope.timelineBefore = function(timelineScope)
@@ -691,7 +404,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if ($scope.timeline.current.day != 1)
       {
         $scope.timeline.current.day--;
+
+
         loadTimeline(periods.days[$scope.timeline.current.day]);
+
+
       };
     }
     /**
@@ -702,7 +419,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if ($scope.timeline.current.week != 1)
       {
         $scope.timeline.current.week--;
+
+
         loadTimeline(periods.weeks[$scope.timeline.current.week]);
+
+
       };
     }
     /**
@@ -713,7 +434,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if ($scope.timeline.current.month != 1)
       {
         $scope.timeline.current.month--;
+
+
         loadTimeline(periods.months[$scope.timeline.current.month]);
+
+
       };
     };
   };
@@ -735,7 +460,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if ($scope.timeline.current.day != periods.days.total)
       {
         $scope.timeline.current.day++;
+
+
         loadTimeline(periods.days[$scope.timeline.current.day]);
+
+
       };
     }
     /**
@@ -746,7 +475,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if ($scope.timeline.current.week != 53)
       {
         $scope.timeline.current.week++;
+
+
         loadTimeline(periods.weeks[$scope.timeline.current.week]);
+
+
       };
     }
     /**
@@ -757,7 +490,11 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       if ($scope.timeline.current.month != 12)
       {
         $scope.timeline.current.month++;
+
+
         loadTimeline(periods.months[$scope.timeline.current.month]);
+
+
       };
     };
   };
@@ -788,39 +525,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           week: false,
           month: false
         };
-        // /**
-        //  * If we are not in the current week
-        //  */
-        // if ($scope.timeline.current.week != new Date().getWeek())
-        // {
-        //   for (var i in periods.days)
-        //   {
-        //     if (periods.weeks[$scope.timeline.current.week].first.timeStamp <= 
-        //         periods.days[i].first.timeStamp)
-        //     {
-        //       $scope.timeline.current.day = i;
-        //       /**
-        //        * Adjust timeline
-        //        */
-        //       loadTimeline({
-        //         start:  periods.days[i].first.day,
-        //         end:    periods.days[i].last.day
-        //       });
-        //       break;
-        //     };
-        //   };
-        // }
-        // else
-        // {
-          /**
-           * Adjust timeline
-           */
-          loadTimeline(periods.days[$scope.timeline.current.day]);
-        //   timeliner({
-        //     start:  periods.days[$scope.timeline.current.day].first.day,
-        //     end:    periods.days[$scope.timeline.current.day].last.day
-        //   });
-        // };
+
+
+        /**
+         * Adjust timeline
+         */
+        loadTimeline(periods.days[$scope.timeline.current.day]);
+
 
         break;
       /**
@@ -832,39 +543,13 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           week: true,
           month: false
         };
-        // /**
-        //  * If we are not in the current week
-        //  */
-        // if ($scope.timeline.current.week != new Date().getWeek())
-        // {
-        //   for (var i in periods.weeks)
-        //   {
-        //     if (periods.weeks[$scope.timeline.current.week].first.timeStamp <= 
-        //         periods.weeks[i].first.timeStamp)
-        //     { 
-        //       $scope.timeline.current.week = i;
-        //       /**
-        //        * Adjust timeline
-        //        */
-        //       loadTimeline({
-        //         start:  periods.weeks[i].first.day,
-        //         end:    periods.weeks[i].last.day
-        //       });
-        //       break;
-        //     };
-        //   };
-        // }
-        // else
-        // {
-          /**
-           * Adjust timeline
-           */
-          loadTimeline(periods.weeks[$scope.timeline.current.week]);
-          // timeliner({
-          //   start:  periods.weeks[$scope.timeline.current.week].first.day,
-          //   end:    periods.weeks[$scope.timeline.current.week].last.day
-          // });
-        // };
+
+
+        /**
+         * Adjust timeline
+         */
+        loadTimeline(periods.weeks[$scope.timeline.current.week]);
+
 
         break;
       /**
@@ -876,10 +561,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
           week: false,
           month: true
         };
+
+
         /**
          * Adjust timeline
          */
         loadTimeline(periods.months[$scope.timeline.current.month]);
+
+
         break;
     };
   };
@@ -888,7 +577,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Timeline get ranges
    */
-  function timelineGetRange()
+  function timelineGetRange ()
   {
     /**
      * Get range from timeline
@@ -919,7 +608,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Get information of the selected slot
    */
-  function selectedSlot()
+  function selectedSlot ()
   {
     /**
      * Init container
@@ -1046,7 +735,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Extract Slot ID of the selected slot
    */
-  function selectedSlotID()
+  function selectedSlotID ()
   {
     return angular.fromJson(selectedSlot().content).id;
   };
@@ -1055,7 +744,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Timeline on select
    */
-  function timelineOnSelect()
+  function timelineOnSelect ()
   {
     /**
      * Let angular knows about it
@@ -1070,7 +759,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Timeline on add
    */
-  function timelineOnAdd()
+  function timelineOnAdd ()
   {
     /**
      * Remove old new slots
@@ -1136,7 +825,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Add slot trigger start view
    */
-  $scope.add = function(slot)
+  $scope.add = function (slot)
   {
     /**
      * Set preloader
@@ -1166,22 +855,27 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         type: 'alert-success',
         message: $rootScope.ui.planboard.slotAdded
       });
+
+
       /**
        * Refresh timeline
        */
       refreshTimeline();
+
+
     });
   };
 
 
   /**
    * TODO
+   * REMOVE ?
    * Finish it! No interaction needed actualty..
    * This can be redirected to edit slot form
    * 
    * Timeline on edit
    */
-  function timelineOnEdit()
+  function timelineOnEdit ()
   {
     console.log('double click edit mode!');
   };
@@ -1190,7 +884,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Timeline on change
    */
-  function timelineOnChange()
+  function timelineOnChange ()
   {
     /**
      * Set preloader
@@ -1201,6 +895,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
     };
 
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
+
     /**
      * Add slot
      */
@@ -1219,10 +914,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         type: 'alert-success',
         message: $rootScope.ui.planboard.slotChanged
       });
+
+
       /**
        * Refresh timeline
        */
       refreshTimeline();
+
+
     });
   };
 
@@ -1230,7 +929,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Change slot
    */
-  $scope.change = function(original, slot)
+  $scope.change = function (original, slot)
   {
     /**
      * Set preloader
@@ -1268,10 +967,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         type: 'alert-success',
         message: $rootScope.ui.planboard.slotChanged
       });
+
+
       /**
        * Refresh timeline
        */
       refreshTimeline();
+
+
     });
   };
 
@@ -1279,7 +982,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Set wish
    */
-  $scope.setWish = function(slot)
+  $scope.setWish = function (slot)
   {
     /**
      * Set preloader
@@ -1308,10 +1011,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         type: 'alert-success',
         message: $rootScope.ui.planboard.wishChanged
       });
+
+
       /**
        * Refresh timeline
        */
       refreshTimeline();
+
+
     });
   };
 
@@ -1319,7 +1026,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Timeline on delete
    */
-  function timelineOnRemove()
+  function timelineOnRemove ()
   {
     /**
      * Set preloader
@@ -1343,10 +1050,14 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         type: 'alert-success',
         message: $rootScope.ui.planboard.timeslotDeleted
       });
+
+
       /**
        * Refresh timeline
        */
       refreshTimeline();
+
+
     });
   };
 
@@ -1354,7 +1065,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
   /**
    * Delete trigger start view
    */
-  $scope.remove = function()
+  $scope.remove = function ()
   {
     /**
      * Set preloader
@@ -1377,18 +1088,161 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
         type: 'alert-success',
         message: $rootScope.ui.planboard.timeslotDeleted
       });
+
+
       /**
        * Refresh timeline
        */
       refreshTimeline();
+
+
     });
   };
 
 
   /**
-   * TODO
-   * Look for ways to combine with other timeline refreshers
-   *
+   * Timeline renderer
+   */
+  function render()
+  {
+    /**
+     * Where is my timeline landlord?
+     */
+    self.timeline = new links.Timeline(document.getElementById('mainTimeline'));    
+    /**
+     * Init timeline listeners
+     */
+    links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
+    links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
+    links.events.addListener(self.timeline, 'add',           timelineOnAdd);
+    links.events.addListener(self.timeline, 'delete',        timelineOnRemove);
+    links.events.addListener(self.timeline, 'change',        timelineOnChange);
+    links.events.addListener(self.timeline, 'select',        timelineOnSelect);
+    
+
+    /**
+     * Run timeline
+     */
+    timeliner($scope.timeline.options);
+
+
+  };
+
+
+  /**
+   * Timeliner listener
+   */
+  $rootScope.$on('timeliner', function() 
+  {
+    /**
+     * Convert arguments
+     */
+    var options = {
+      start: arguments[1].start,
+      end: arguments[1].end
+    };
+
+
+    // loadTimeline({
+    //   start:  new Date(options.start).getTime(),
+    //   end:    new Date(options.end).getTime()
+    // });
+
+    timelinerBefore ({
+      // start:  new Date($scope.timeline.range.start).getTime(),
+      // end:    new Date($scope.timeline.range.end).getTime()
+      start:  new Date(options.start).getTime(),
+      end:    new Date(options.end).getTime()
+    },
+    function ()
+    {
+      /**
+       * Adjust timeline for new period
+       */
+      timeliner({
+        // start: options.start,
+        // end: options.end
+        start:  new Date(options.start).getTime(),
+        end:    new Date(options.end).getTime()
+      });
+    });
+
+
+  });
+
+
+  /**
+   * Handle new requests for timeline
+   */
+  $scope.requestTimeline = function (section)
+  {
+    /**
+     * Switch on section
+     */
+    switch (section)
+    {
+      /**
+       * Section groups
+       */
+      case 'group':
+          $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
+          /**
+           * Check if when group is deselected when members is deselected as well
+           */
+          if ($scope.timeline.current.layouts.members && 
+              !$scope.timeline.current.layouts.group)
+          {
+            $scope.timeline.current.layouts.members = false;
+          };
+        break;
+      /**
+       * Section members
+       */
+      case 'members':
+          $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
+          /**
+           * Check if group is selected when members is selected
+           */
+          if ($scope.timeline.current.layouts.members && 
+              !$scope.timeline.current.layouts.group)
+          {
+            $scope.timeline.current.layouts.group = true;
+          };
+        break;
+    };
+
+
+
+    // loadTimeline({
+    //   start:  data.periods.start,
+    //   end:    data.periods.end
+    // });
+
+    
+    timelinerBefore ({
+      // start:  new Date($scope.timeline.range.start).getTime(),
+      // end:    new Date($scope.timeline.range.end).getTime()
+      start:  data.periods.start,
+      end:    data.periods.end
+    },
+    function ()
+    {
+      /**
+       * Adjust timeline for new period
+       */
+      timeliner({
+        // start:  $scope.timeline.range.start,
+        // end:    $scope.timeline.range.end
+        start:  data.periods.start,
+        end:    data.periods.end
+      });
+    });
+
+
+  };
+
+
+  /**
    * Refresh timeline
    */
   function refreshTimeline ()
@@ -1397,6 +1251,7 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
      * Reset slot container
      */
     $scope.slot = {};
+
     /**
      * Set view to default slot add
      */
@@ -1409,6 +1264,66 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       wish: false,
       member: false
     };
+
+
+    // loadTimeline({
+    //   start:  data.periods.start,
+    //   end:    data.periods.end
+    // });
+
+    timelinerBefore ({
+      // start:  new Date($scope.timeline.range.start).getTime(),
+      // end:    new Date($scope.timeline.range.end).getTime()
+      start:  data.periods.start,
+      end:    data.periods.end
+    },
+    function ()
+    {
+      /**
+       * Adjust timeline for new period
+       */
+      timeliner({
+        // start:  $scope.timeline.range.start,
+        // end:    $scope.timeline.range.end
+        start:  data.periods.start,
+        end:    data.periods.end
+      });
+    });
+
+
+  };
+
+
+  /**
+   * Generic data loader and timeline renderer
+   */
+  function loadTimeline (options)
+  {
+
+
+    timelinerBefore ({
+      start:  options.first.timeStamp,
+      end:    options.last.timeStamp
+    },
+    function ()
+    {
+      /**
+       * Adjust timeline for new period
+       */
+      timeliner({
+        // start:  options.first.day,
+        // end:    options.last.day
+        start:  options.first.timeStamp,
+        end:    options.last.timeStamp
+      });
+    });
+
+
+  };
+
+
+  function timelinerBefore (stamps, callback)
+  {
     /**
      * Set preloader message
      */
@@ -1424,85 +1339,104 @@ function planboardCtrl($rootScope, $scope, $config, $q, $window, data, Slots, Da
       division: $scope.timeline.current.division,
       layouts:  $scope.timeline.current.layouts,
       month:    $scope.timeline.current.month,
-      stamps: {
-        start:  new Date($scope.timeline.range.start).getTime(),
-        end:    new Date($scope.timeline.range.end).getTime()
-      },
+      stamps:   stamps
     })
     .then(function(data)
     {
-      /**
-       * Reset slot container
-       */
-      $scope.slot = {};
       /**
        * Set scope
        */
       $scope.data = data;
       /**
-       * Adjust timeline for new period
+       * Init callback
        */
-      timeliner({
-        start:  $scope.timeline.range.start,
-        end:    $scope.timeline.range.end
-      });
+      callback();
       /**
        * Set preloader
        */
-      $rootScope.loading = {
-        status: false
-      };
-    });    
+      $rootScope.loading.status = false;
+    });
   };
 
 
   /**
-   * Send shortage message
+   * Draw and limit timeline
    */
-  $scope.sendShortageMessage = function (slot)
+  function timeliner (options)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.preCompilingStortageMessage
-    };
-    /**
-     * Set info about slot in sessionStorage
-     */
-    Storage.session.add('escalation', angular.toJson({
-      group: slot.group,
-      start: {
-        date: slot.start.date,
-        time: slot.start.time
-      },
-      end: {
-        date: slot.end.date,
-        time: slot.end.time
-      },
-      diff: slot.diff
-    }));
-    /**
-     * Redirect location to messages compose
-     */
-    $location.path('/messages').search({
-      escalate: true
-    }).hash('compose');
+    renderTimeline(options, self);
+
+    function renderTimeline (options ,self)
+    {
+      /**
+       * Timeline options
+       */
+      $scope.timeline = {
+        current:  $scope.timeline.current,
+        scope:    $scope.timeline.scope,
+        config:   $scope.timeline.config,
+        options: {
+          start:  new Date(options.start),
+          end:    new Date(options.end),
+          min:    new Date(options.start),
+          max:    new Date(options.end)
+        }
+      };
+      /**
+       * Merge options with defaults
+       */
+      angular.extend($scope.timeline.options, $config.timeline.options);
+      /**
+       * Draw timeline
+       */
+      self.timeline.draw(
+        Sloter.process(
+          $scope.data,
+          $scope.timeline.config,
+          $scope.divisions
+        ), 
+        $scope.timeline.options
+      );
+      /**
+       * Set range dynamically
+       */
+      self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+    }
   };
+
+
+  /**
+   * Redraw timeline on window resize
+   */
+  $window.onresize = function ()
+  {
+    self.timeline.redraw();
+  };
+
+
+  /**
+   * Timeline zoom in
+   */
+  $scope.timelineZoomIn = function()
+  {
+    self.timeline.zoom($config.timeline.config.zoomValue);
+  };
+
+
+  /**
+   * Timeline zoom out
+   */
+  $scope.timelineZoomOut = function()
+  {
+    self.timeline.zoom(-$config.timeline.config.zoomValue);
+  };
+
 
 };
 
 
 
-
-
-
-
 /**
- * TODO
- * Implement eventBus!
- * 
  * Resolve planboard
  */
 planboardCtrl.resolve = {
@@ -1553,657 +1487,5 @@ planboardCtrl.resolve = {
 };
 
 
-
-
-
-
-
-/**
- * Planboard prototypes
- */
-planboardCtrl.prototype = {
-  
-  /**
-   * Initialize the constructor
-   */
-  constructor: planboardCtrl,
-  
-  /**
-   * Timeline data processing
-   */
-  process: function (data, config, ngroups, nmembers, divisions, ui)
-  {
-    /**
-     * Timedata container for all sort of slots
-     */
-    var timedata = [];
-    
-    /**
-     * Get groups
-     */
-    var groups = {};
-    angular.forEach(ngroups, function(group, index)
-    {
-      groups[group.uuid] = group.name;
-    });
-
-    /**
-     * Get members
-     */
-    var members = {};
-    angular.forEach(nmembers, function(member, index)
-    {
-      members[member.uuid] = member.name;
-    });
-
-    /**
-     * Wrap hidden span for sorting workaround in timeline rows
-     */
-    function wrapper(rank)
-    {
-      return '<span style="display:none;">' + rank + '</span>';
-    };
-
-    /**
-     * Wrap secret content div for content of slot
-     */
-    function secret(content)
-    {
-      return '<span class="secret">' + content + '</span>';
-    };
-
-    /**
-     * Add loading slots
-     */
-    function addLoading(timedata, rows)
-    {
-      angular.forEach(rows, function(row, index)
-      {
-        timedata.push({
-          start: data.periods.end,
-          end: 1577836800000,
-          group: row,
-          content: 'loading',
-          className: 'state-loading-right',
-          editable: false
-        });
-        timedata.push({
-          start: 0,
-          end: data.periods.start,
-          group: row,
-          content: 'loading',
-          className: 'state-loading-left',
-          editable: false
-        });
-      });
-      return timedata;
-    };
-
-    /**
-     * Process user slots
-     */
-    if (data.user)
-    {
-      angular.forEach(data.user, function(slot, index)
-      {
-        /**
-         * Loop through legenda items
-         */
-        angular.forEach(config.legenda, function(value, legenda)
-        {
-          /**
-           * Check whether legenda item is selected
-           */
-          if (slot.text == legenda && value)
-          {
-            /**
-             * Push slot in the pool
-             */
-            timedata.push({
-              start: Math.round(slot.start * 1000),
-              end: Math.round(slot.end * 1000),
-              group: (slot.recursive) ? wrapper('b') + ui.planboard.weeklyPlanning + wrapper('recursive') : 
-                                        wrapper('a') + 'Planning' + wrapper('planning'),
-              content: secret(angular.toJson({
-                type: 'slot',
-                id: slot.id, 
-                recursive: slot.recursive, 
-                state: slot.text 
-                })),
-              className: config.states[slot.text].className,
-              editable: true
-            });
-          };
-        });       
-      });
-      /**
-       * Add loading slots
-       */
-      timedata = addLoading(timedata, [
-        wrapper('b') + 'Wekelijkse planning' + wrapper('recursive'),
-        wrapper('a') + 'Planning' + wrapper('planning')
-      ]);
-    };
-
-    /**
-     * Process group slots
-     */
-    if (data.aggs)
-    {
-      /**
-       * Check whether a division is selected
-       */
-      if (data.aggs.division == 'all' || data.aggs.division == undefined)
-      {
-        var name = '<a href="#/groups?uuid=' + 
-                    data.aggs.id + 
-                    '#view">' +
-                    groups[data.aggs.id] +
-                    '</a>';
-      }
-      else
-      {
-        var label;
-        /**
-         * Loop over the divisions
-         */
-        angular.forEach(divisions, function(division, index)
-        {
-          if (division.id == data.aggs.division)
-          {
-            label = division.label;
-          }
-        });
-        /**
-         * Set division in the name
-         */
-        var name =  '<a href="#/groups?uuid=' + 
-                    data.aggs.id + 
-                    '#view">' +
-                    groups[data.aggs.id] +
-                    '</a>' + 
-                    '<span class="label">' + 
-                    label + 
-                    '</span>';
-      };
-
-      /**
-       * Group bar charts
-       */
-      if (config.bar)
-      {
-        /**
-         * TODO
-         * Optimize code below
-         */
-        var maxh = 0;
-        /**
-         * TODO
-         * Send needed? Since the top range is fixed already?
-         *
-         * Calculate the max
-         */
-        angular.forEach(data.aggs.data, function(slot, index)
-        {
-          if (slot.wish > maxh)
-          {
-            maxh = slot.wish;
-          };
-        });
-        /**
-         * Loop through the slots
-         */
-        angular.forEach(data.aggs.data, function(slot, index)
-        {
-          /**
-           * Calculate initial values
-           */
-          var maxNum = maxh,
-              num = slot.wish,
-              xwish = num,
-              // a percentage, with a lower bound on 20%
-              height = Math.round(num / maxNum * 80 + 20),
-              minHeight = height,
-              style = 'height:' + height + 'px;',
-              requirement = '<div class="requirement" style="' + 
-                            style + 
-                            '" ' + 
-                            'title="'+'Minimum aantal benodigden'+': ' + 
-                            num + 
-                            ' personen"></div>';
-          /**
-           * ?
-           */
-          num = slot.wish + slot.diff;
-          /**
-           * ?
-           */
-          var xcurrent = num;
-          /**
-           * A percentage, with a lower bound on 20%
-           */
-          height = Math.round(num / maxNum * 80 + 20);
-          /**
-           * Base color based on density
-           */
-          if (slot.diff >= 0 && slot.diff < 7)
-          {
-            switch(slot.diff)
-            {
-              case 0:
-                var color = config.densities.even;
-                break
-              case 1:
-                var color = config.densities.one;
-                break;
-              case 2:
-                var color = config.densities.two;
-                break;
-              case 3:
-                var color = config.densities.three;
-                break;
-              case 4:
-                var color = config.densities.four;
-                break;
-              case 5:
-                var color = config.densities.five;
-                break;
-              case 6:
-                var color = config.densities.six;
-                break;
-            }
-          }
-          else if (slot.diff >= 7)
-          {
-            var color = config.densities.more;
-          }
-          else
-          {
-            var color = config.densities.less;
-          };
-          /**
-           * Show diff value in badge
-           */
-          var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
-          /**
-           * ?
-           */
-          if (xcurrent > xwish)
-          {
-            height = minHeight;
-          };
-          /**
-           * Set the style for bar
-           */
-          style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
-          /**
-           * TODO
-           * Strip hard-coded local texts
-           *
-           * Style for actual
-           */
-          var actual = '<div class="bar" style="' + 
-                        style + 
-                        '" ' + 
-                        ' title="Huidig aantal beschikbaar: ' + 
-                        num + 
-                        ' personen">' + 
-                        span + 
-                        '</div>';
-          /**
-           * Filter aggs based on selection
-           */
-          if (  (slot.diff > 0 && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0 && config.legenda.groups.less) )
-          {
-            /**
-             * Push in pool
-             */
-            timedata.push({
-              start: Math.round(slot.start * 1000),
-              end: Math.round(slot.end * 1000),
-              group: wrapper('c') + name,
-              content: requirement + 
-                        actual +
-                        secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className: 'group-aggs',
-              editable: false
-            });
-          };
-          /**
-           * Add loading slots
-           */
-          timedata = addLoading(timedata, [
-            wrapper('c') + name
-          ]);
-        });
-      }
-      /**
-       * Normal view for group slots
-       */
-      else
-      {
-        /**
-         * Loop throught the slots
-         */
-        angular.forEach(data.aggs.data, function(slot, index)
-        {
-          /**
-           * Class indicator
-           */
-          var cn;
-          /**
-           * TODO
-           * Some calculations can be left off!
-           * 
-           * Base color based on density
-           */
-          if (slot.diff >= 0 && slot.diff < 7)
-          {
-            switch(slot.diff)
-            {
-              case 0:
-                cn = 'even';
-                break
-              case 1:
-                cn = 1;
-                break
-              case 2:
-                cn = 2;
-                break
-              case 3:
-                cn = 3;
-                break
-              case 4:
-                cn = 4;
-                break
-              case 5:
-                cn = 5;
-                break
-              case 6:
-                cn = 6;
-                break
-            }
-          }
-          else if (slot.diff >= 7)
-          {
-            cn = 'more';
-          }
-          else
-          {
-            cn = 'less'
-          };
-          /**
-           * Filter aggs based on selection
-           */
-          if (  (slot.diff > 0 && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0 && config.legenda.groups.less) )
-          {
-            /**
-             * Push in pool
-             */
-            timedata.push({
-              start: Math.round(slot.start * 1000),
-              end: Math.round(slot.end * 1000),
-              group: wrapper('c') + name,
-              content: cn +
-                        secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className: 'agg-' + cn,
-              editable: false
-            });
-          };
-          /**
-           * Add loading slots
-           */
-          timedata = addLoading(timedata, [
-            wrapper('c') + name
-          ]);
-        });
-      };
-    
-    };
-
-    /**
-     * If wishes are on
-     */
-    if (config.wishes)
-    {
-      /**
-       * Loop through wishes
-       */
-      angular.forEach(data.aggs.wishes, function(wish, index)
-      {
-        /**
-         * Base color based on density
-         */
-        if (wish.count >= 7)
-        {
-          var cn = 'wishes-more';
-        }
-        else if (wish.count == 0)
-        {
-          var cn = 'wishes-even';
-        }
-        else
-        {
-          var cn = 'wishes-' + wish.count;
-        };
-
-        /**
-         * Push in pool
-         */
-        timedata.push({
-          start: Math.round(wish.start * 1000),
-          end: Math.round(wish.end * 1000),
-          group: wrapper('c') + name + ' (Wishes)',
-          content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
-                    secret(angular.toJson({
-                      type: 'wish',
-                      wish: wish.count,
-                      group: name,
-                      groupId: data.aggs.id
-                    })),
-          className: cn,
-          editable: false
-        });
-        /**
-         * Add loading slots
-         */
-        timedata = addLoading(timedata, [
-          wrapper('c') + name + ' (Wishes)'
-        ]);
-      });
-
-    };
-
-
-    /**
-     * Process members slots
-     */
-    if (data.members)
-    {
-      /**
-       * Get members
-       */
-      //var members = angular.fromJson(Storage.get('members'));
-      /**
-       * Loop through members
-       */
-      angular.forEach(data.members, function(member, index)
-      {
-        /**
-         * Loop through slots of member
-         */
-        angular.forEach(member.data, function(slot, i)
-        {
-          /**
-           * Loop through legenda items
-           */
-          angular.forEach(config.legenda, function(value, legenda)
-          {
-            /**
-             * Check whether legenda item is selected
-             */
-            if (slot.text == legenda && value)
-            {
-              timedata.push({
-                start: Math.round(slot.start * 1000),
-                end: Math.round(slot.end * 1000),
-                group: wrapper('d') + 
-                        '<a href="#/profile/' + 
-                        member.id + 
-                        '#timeline">' + 
-                        members[member.id] + 
-                        '</a>',
-                content: secret(angular.toJson({ 
-                  type: 'member',
-                  id: slot.id, 
-                  mid: member.id,
-                  recursive: slot.recursive, 
-                  state: slot.text 
-                  })),
-                className: config.states[slot.text].className,
-                editable: false
-              });
-            };
-          });
-        });
-        /**
-         * Add empty slots for forcing timeline to display the row
-         * even if there is no data of the user
-         */
-        timedata.push({
-          start: 0,
-          end: 0,
-          group: wrapper('d') + 
-                  '<a href="#/profile/' + 
-                  member.id + 
-                  '#timeline">' + 
-                  members[member.id] + 
-                  '</a>',
-          content: null,
-          className: null,
-          editable: false
-        });
-        /**
-         * Add loading slots
-         */
-        timedata = addLoading(timedata, [
-          wrapper('d') + 
-          '<a href="#/profile/' + 
-          member.id + 
-          '#timeline">' + 
-          members[member.id] + 
-          '</a>'
-        ]);
-        /**
-         * Produce member stats
-         */
-        angular.forEach(member.stats, function(stat, index)
-        {
-          var state = stat.state.split('.');
-          state.reverse();
-          stat.state = 'bar-' + state[0];
-        });
-      });
-    };
-   
-
-    /**
-     * Group availabity ratios pie chart
-     */
-    if (data.aggs && data.aggs.ratios)
-    {
-      /**
-       * Clean group pie chart holder
-       */
-      document.getElementById("groupPie").innerHTML = '';
-      /**
-       * Init vars
-       */
-      var ratios = [];
-      var legends = [];
-      /**
-       * Loop through group agg. ratios
-       */
-      angular.forEach(data.aggs.ratios, function(ratio, index)
-      {
-        /**
-         * Quick fix against 0 ratios
-         * Dont display them at all
-         */
-        if (ratio != 0)
-        {
-          /**
-           * Ratios
-           */
-          ratios.push(ratio);
-          /**
-           * Legends
-           */
-          legends.push(ratio + '% ' + index);
-        };
-      });
-      /**
-       * Pie chart it baby!
-       */
-      var r = Raphael("groupPie"),
-          pie = r.piechart(120, 120, 100, ratios, 
-          { 
-            legend: legends,
-            colors: ['#415e6b', '#ba6a24', '#a0a0a0']
-          });
-      /**
-       * Pie chart title
-       */
-      // r.text(140, 240, name).attr({
-      //   font: "20px sans-serif"
-      // });
-      /**
-       * Decorate it with mouse effects
-       */
-      pie.hover(
-      function()
-      {
-        //console.log('this ->', this);
-        this.sector.stop();
-        this.sector.scale(1.1, 1.1, this.cx, this.cy);
-        if (this.label)
-        {
-          this.label[0].stop();
-          this.label[0].attr({ r: 7.5 });
-          this.label[1].attr({ "font-weight": 800 });
-        }
-      },
-      function()
-      {
-        this.sector.animate({
-          transform: 's1 1 ' + this.cx + ' ' + this.cy
-        }, 500, "bounce");
-        if (this.label)
-        {
-          this.label[0].animate({ r: 5 }, 500, "bounce");
-          this.label[1].attr({ "font-weight": 400 });
-        }
-      });
-
-    };
-
-
-    return timedata;
-  }
-
-};
-
 planboardCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', 
-                        '$window', 'data', 'Slots', 'Dater', 'Storage', '$location'];
+                        '$window', 'data', 'Slots', 'Dater', 'Storage', '$location', 'Sloter'];

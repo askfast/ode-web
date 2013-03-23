@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h2>Messages</h2>
+  <h2>{{ui.message.messages}}</h2>
   <div class="btn-group pull-right">
     <button type="submit" 
             ng-click="composeMessage(); setViewTo('compose')" 
@@ -18,7 +18,7 @@
       <li class="{{(views.compose==true) && 'active'}}" ng-show="views.compose">
         <a href="#composeTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('composeTab'); setViewTo('compose')">
+            ng-click="setViewTo('compose')">
           <span class="entypo">&#9998;</span> {{ui.message.compose}}
         </a>
       </li>
@@ -26,7 +26,7 @@
       <li class="{{(views.message==true) && 'active'}}"  ng-show="views.message">
         <a href="#viewTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('viewTab'); setViewTo('view')">
+            ng-click="setViewTo('view')">
           <span class="entypo">&#128196;</span> {{ui.message.message}}
         </a>
       </li>
@@ -34,7 +34,7 @@
       <li class="{{(views.inbox==true) && 'active'}}">
         <a href="#inboxTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('inboxTab'); resetViews(); setViewTo('inbox')">
+            ng-click="resetViews(); setViewTo('inbox')">
           <span class="entypo">&#128229;</span> {{ui.message.inbox}}
         </a>
       </li>
@@ -42,7 +42,7 @@
       <li class="{{(views.outbox==true ) && 'active'}}">
         <a href="#outboxTab"   
             data-toggle="tab"
-            ng-click="fixTabHeight('outboxTab'); resetViews(); setViewTo('outbox')">
+            ng-click="resetViews(); setViewTo('outbox')">
           <span class="entypo">&#128228;</span> {{ui.message.outbox}}
         </a>
       </li>
@@ -50,7 +50,7 @@
       <li class="{{(views.trash==true ) && 'active'}}">
         <a href="#trashTab" 
             data-toggle="tab"
-            ng-click="fixTabHeight('trashTab'); resetViews(); setViewTo('trash')">
+            ng-click="resetViews(); setViewTo('trash')">
           <span class="entypo">&#9749;</span> {{ui.message.trash}}
         </a>
       </li>
@@ -189,7 +189,6 @@
                       ng-click="removeMessage(message.uuid)"
                       class="btn btn-danger">{{ui.message.del}}</button>
             </div>
-
           </fieldset>
         </form>
 
