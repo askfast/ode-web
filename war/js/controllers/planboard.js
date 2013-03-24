@@ -232,7 +232,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
     $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + 
                         ' / ' + 
                         Dater.readable.date($scope.timeline.range.end);
-
   });
 
 
@@ -249,7 +248,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       self.timeline = new links.Timeline(document.getElementById('mainTimeline'));
 
       links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
-      links.events.addListener(self.timeline, 'edit',          timelineOnEdit);
       links.events.addListener(self.timeline, 'add',           timelineOnAdd);
       links.events.addListener(self.timeline, 'delete',        timelineOnRemove);
       links.events.addListener(self.timeline, 'change',        timelineOnChange);
@@ -345,14 +343,9 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   $rootScope.$on('timeliner', function () 
   {
-    var options = {
-      start:  arguments[1].start,
-      end:    arguments[1].end
-    };
-
     timeliner.load({
-      start:  new Date(options.start).getTime(),
-      end:    new Date(options.end).getTime()
+      start:  new Date(arguments[1].start).getTime(),
+      end:    new Date(arguments[1].end).getTime()
     });
   });
 
@@ -668,20 +661,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
 
   /**
-   * TODO
-   * DEPRECIATED
-   * 
-   * Still needed?
-   * 
-   * Extract Slot ID of the selected slot
-   */
-  function selectedSlotID ()
-  {
-    return angular.fromJson(selectedSlot().content).id;
-  };
-
-
-  /**
    * Timeline on select
    */
   function timelineOnSelect ()
@@ -704,6 +683,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       { 
         return this.nodeValue == 'New' 
       });
+      
     if (news.length > 1)
     {
       self.timeline.cancelAdd(); 
@@ -745,14 +725,14 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
 
-    Slots.add({
-      // start: Date.parse(slot.start.date + ' ' + slot.start.time).getTime() / 1000,
-      // end: Date.parse(slot.end.date + ' ' + slot.end.time).getTime() / 1000,
-      start:      Dater.absoluteDates(slot.start.date, slot.start.time),
-      end:        Dater.absoluteDates(slot.end.date, slot.end.time),
+    Slots.add(
+    {
+      start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
+      end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
       recursive:  (slot.recursive) ? true : false,
       text:       slot.state
-    }, $rootScope.app.resources.uuid)
+    }, 
+    $rootScope.app.resources.uuid)
     .then(function (result)
     {
       $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
@@ -763,33 +743,23 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
 
   /**
-   * TODO
-   * REMOVE ?
-   * Finish it! No interaction needed actualty..
-   * This can be redirected to edit slot form
-   * 
-   * Timeline on edit
-   */
-  function timelineOnEdit ()
-  {
-    console.log('double click edit mode!');
-  };
-
-
-  /**
    * Timeline on change
    */
-  function timelineOnChange ()
+  function timelineOnChange (direct, original, slot, options)
   {
+    if (!direct)
+    {
+      var values  = self.timeline.getItem(self.timeline.getSelection()[0].row),
+          options = {
+            start:    values.start,
+            end:      values.end,
+            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+          }
+    };
+
     $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
-    var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
-
-    Slots.change($scope.original, {
-      start:    values.start,
-      end:      values.end,
-      content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]), 
-    }, $rootScope.app.resources.uuid)
+    Slots.change($scope.original, options, $rootScope.app.resources.uuid)
     .then(function (result)
     {
       $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
@@ -804,37 +774,14 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   $scope.change = function (original, slot)
   {
-    $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
-
-    Slots.change($scope.original, {
-      /**
-       * TODO
-       * 
-       * Absolute dater !!
-       */
-      // start:      Dater.absoluteDates(slot.start.date, slot.start.time),
-      // end:        Dater.absoluteDates(slot.end.date, slot.end.time),
-      start:      Date.parse(slot.start.date + ' ' + slot.start.time),
-      end:        Date.parse(slot.end.date + ' ' + slot.end.time),
-      
-      recursive:  (slot.recursive) ? true : false,
-      text:       slot.state,
-      /**
-       * REMOVE
-       * Lose id and content later on!
-       */
-      id:           (slot.id) ? slot.id : 0,
-      content:      angular.toJson({ 
-        id:         slot.id, 
+    timelineOnChange(true, original, slot, 
+    {
+      start:  Dater.convert.absolute(slot.start.date, slot.start.time, false),
+      end:    Dater.convert.absolute(slot.end.date, slot.end.time, false),
+      content: angular.toJson({
         recursive:  slot.recursive, 
         state:      slot.state 
-        })
-    }, $rootScope.app.resources.uuid)
-    .then(function (result)
-    {
-      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-
-      timeliner.refresh();
+      })
     });
   };
 
@@ -846,10 +793,11 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
 
-    Slots.setWish({
-      id:         slot.groupId,
-      start:      Dater.absoluteDates(slot.start.date, slot.start.time),
-      end:        Dater.absoluteDates(slot.end.date, slot.end.time),
+    Slots.setWish(
+    {
+      id:     slot.groupId,
+      start:  Dater.convert.absolute(slot.start.date, slot.start.time, true),
+      end:    Dater.convert.absolute(slot.end.date, slot.end.time, true),
       recursive:  slot.recursive,
       wish:       slot.wish
     })
@@ -972,7 +920,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   };
 
 };
-
 
 
 /**

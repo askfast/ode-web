@@ -16,7 +16,7 @@ var WebPaige = angular.module('WebPaige', [
  */
 WebPaige
 .value('$config', config)
-.config(function ($locationProvider, $routeProvider) 
+.config(function ($locationProvider, $routeProvider, $httpProvider) 
 {
   /**
    * Routes
@@ -35,6 +35,8 @@ WebPaige
   .otherwise({
     redirectTo: '/login'
   });
+
+  $httpProvider.responseInterceptors.push('Interceptor');
 })
 /**
  * Initial run functions
@@ -45,7 +47,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
 {
 
   $rootScope.config = $config;
-  
+
   /**
    * Default language and change language
    */

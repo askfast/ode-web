@@ -117,8 +117,8 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
         }
         alarms.push(alarm);
       }
-    })
-    console.log('-->', alarms);
+    });
+
     $scope.alarms = alarms;
   })
 	

@@ -1,85 +1,33 @@
 'use strict';
 
+
 /**
- * TODO
- * Integrate localStorage service into this
- * for cookie reading or setting
- *
- * Needs optimizing!!
- * 
- * Organize it more!
- * 
  * Session Service
  */
 WebPaige.
 factory('Session', function ($rootScope, $http, Storage) 
 {
   return {
-
     /**
      * Check session
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
      */
     check: function()
     {
-        var session = angular.fromJson(Storage.cookie.get('session'));
-        if (session)
-        {
-          this.set(session.id);
-          return true;
-        }
-        else
-        {
-          return false;
-        };
-    },
+      var session = angular.fromJson(Storage.cookie.get('session'));
 
-
-    /**
-     * TODO
-     * Take the useful parts to real one 
-     * 
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
-     */
-    check__: function(session)
-    {
-      console.log('-> asked session value', session);
-
-      if(!session)
+      if (session)
       {
-        console.log('there was no session given by check so reading from cookie.');
-        session = this.cookie();
-        console.log('--> cookie read session value:', session); 
-        
-        if(session != null)
-        {
-          if(session.id == null)
-            return false;
-
-          var time  = new Date();
-          var now   = time.getTime();
-
-          if((now - session.time) > (60 * 60 * 1000))
-          {   
-            return false;
-          };
-          return true;
-        }
-             
+        this.set(session.id);
+        return true;
+      }
+      else
+      {
+        return false;
       };
-      //return false;
     },
 
-
     /**
-     * TODO
-     * Use cookie optionality of Storage!
-     * 
      * Read cookie value
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
      */
     cookie: function(session)
     {
@@ -102,9 +50,6 @@ factory('Session', function ($rootScope, $http, Storage)
     /**
      * Get session
      * Prolong session time by every check
-     * 
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
      */
     get: function(session)
     {
@@ -113,30 +58,11 @@ factory('Session', function ($rootScope, $http, Storage)
       return session.id;
     },
 
-
     /**
      * Set session
-     * @param {[type]} sessionId [description]
      */
     set: function(sessionId)
     {
-      // var session     = new Object();
-      // var time        = new Date();
-      // session.id      = sessionId;
-      // session.time    = time;
-      // document.cookie = "ask=" + angular.toJson(session);
-
-      // $rootScope.session = session;
-      // $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
-      // /**
-      //  * REMOVE
-      //  */
-      // console.log('http headers ->', $http.defaults.headers.common);
-
-      // return session;
-
-
-
       var session = {
         id: sessionId,
         time: new Date()
@@ -144,47 +70,32 @@ factory('Session', function ($rootScope, $http, Storage)
 
       Storage.cookie.add('session', angular.toJson(session));
 
-      //document.cookie = "ask=" + angular.toJson(session);
-
       $rootScope.session = session;
       $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
-      /**
-       * REMOVE
-       */
-      //console.log('http headers ->', $http.defaults.headers.common);
 
       return session;
     },
 
-
     /**
      * Clear session
-     * @param {[type]} sessionId [description]
      */
     clear: function()
     {
       $rootScope.session = null;
       $http.defaults.headers.common['X-SESSION_ID'] = null;
     }
-
   }
-
 });
 
 
 /**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
+ * Dater service (Wrapper on Date)
  */
-
-
-
 WebPaige.
 factory('Dater', function ($rootScope, Storage) 
 {
   return {
+
     current:
     {
       today: function ()
@@ -209,27 +120,40 @@ factory('Dater', function ($rootScope, Storage)
       }
     },
 
-    // convert:
-    // {
-    //   range: function (range)
-    //   {
-    //     var range = {
-    //       start:  new Date(range.start).toString($rootScope.config.formats.date),
-    //       end:    new Date(range.end).toString($rootScope.config.formats.date)
-    //     };
+    convert:
+    {
+      absolute: function(date, time, flag)
+      {
+        var dates   = date.split('-'),
+            result  = new Date(Date.parse(dates[2] + 
+                                    '-' + 
+                                    dates[1] + 
+                                    '-' + 
+                                    dates[0] + 
+                                    ' ' + 
+                                    time)).getTime();
+        
+        return (flag) ? result / 1000 : result;
+      }
+      // range: function (range)
+      // {
+      //   var range = {
+      //     start:  new Date(range.start).toString($rootScope.config.formats.date),
+      //     end:    new Date(range.end).toString($rootScope.config.formats.date)
+      //   };
 
-    //     return range;
-    //   },
+      //   return range;
+      // },
 
-    //   /**
-    //    * Not working either       
-    //    *
-    //    */
-    //   stamp: function (date)
-    //   {
-    //     return Date(date).getTime();
-    //   }
-    // },
+      // /**
+      //  * Not working either       
+      //  *
+      //  */
+      // stamp: function (date)
+      // {
+      //   return Date(date).getTime();
+      // }
+    },
 
     // stringify:
     // {
@@ -246,44 +170,6 @@ factory('Dater', function ($rootScope, Storage)
         return new Date(range.end).getTime() - new Date(range.start).getTime()
       }
     },
-
-    // /**
-    //  * TODO
-    //  * REMOVE
-    //  * Not used in planboard controller
-    //  * 
-    //  * Fix it later..
-    //  * Not beautiful but works!!
-    //  */
-    // convertRangeDates: function(dates)
-    // {
-    //   var dates   = dates.split(' / '),
-    //       starts  = dates[0].split('-'),
-    //       start   = starts[1] + '-' + starts[0] + '-' + starts[2],
-    //       ends    = dates[1].split('-'),
-    //       end     = ends[1] + '-' + ends[0] + '-' + ends[2];
-
-    //   return {
-    //     start:  Date.parse(start + ' 00:00:00 AM'),
-    //     end:    Date.parse(end + ' 00:00:00 AM')
-    //   }
-    // },
-
-    // /**
-    //  * Make time readable for user
-    //  */
-    // readableTime: function(time, format)
-    // {
-    //   return new Date(time).toString(format); 
-    // },
-
-    // /** 
-    //  * Make date readable for user
-    //  */
-    // readableDate: function(date, format)
-    // {
-    //   return new Date(date).toString(format);
-    // },
 
     /**
      * Get the current month
@@ -450,54 +336,27 @@ factory('Dater', function ($rootScope, Storage)
     getPeriods: function()
     {
       return angular.fromJson(Storage.get('periods'));
-    },
-
-    absoluteDates: function(date, time)
-    {
-      var dates = date.split('-');
-      return new Date(Date.parse(dates[2] + 
-                                  '-' + 
-                                  dates[1] + 
-                                  '-' + 
-                                  dates[0] + 
-                                  ' ' + 
-                                  time)).getTime() / 1000
     }
-
-
-
 
   }
 });
 
 
-
 /**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- */
-
-
-
-/**
- * TODO
- * Make history of events
- * 
  * EventBus Service
  */
 WebPaige.
 service('$eventBus', 
 function($rootScope) 
 {
-  var self = this;
-  var listeners = {};
-  var history = {};
+  var self = this,
+      listeners = {},
+      history = {};
  
   self.emit = function(eventName) 
   {
     var args = Array.prototype.slice.call(arguments, 1);
+
     angular.forEach(listeners, function(fns, eventName) 
     {
       angular.forEach(fns, function(fn, key)
@@ -520,7 +379,9 @@ function($rootScope)
     {
       listeners[eventName] = [];
     }
+
     listeners[eventName].push(fn);
+
     $rootScope.$on(listeners[eventName], fn);
   };
  
@@ -550,19 +411,6 @@ function($rootScope)
 
 
 /**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- */
-
-
-
-/**
- * TODO
- * More capabilities for time services
- * Use same structure as other ones!
- * 
  * Timer Service
  */
 var timerService = angular.module('timerModule', []);
@@ -608,65 +456,31 @@ timerService.service('timerService', [
 ]);
 
 
-
 /**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- */
-
-
-
-/**
- * TODO
- * Rewrite it based on current pattern of defining services
- *
  * angularLocalStorage
- * @type {[type]}
  */
 var angularLocalStorage = angular.module('StorageModule', []);
 
-
-
-
-// You should set a prefix to avoid overwriting any local storage variables 
-// from the rest of your app
-// e.g. angularLocalStorage.constant('prefix', 'youAppName');
 angularLocalStorage.constant('prefix', 'WebPaige');
-
-
-
 
 // Cookie options (usually in case of fallback)
 // expiry = Number of days before cookies expire // 0 = Does not expire
 // path = The web path the cookie represents
 angularLocalStorage.constant('cookie', { expiry:30, path: '/'});
 
-
-
-
 angularLocalStorage.service('Storage', [
   '$rootScope', 
   'prefix', 
   'cookie',
-  function($rootScope, prefix, cookie)
-  {
-
-
+function($rootScope, prefix, cookie)
+{
   // If there is a prefix set in the config lets use that with an appended 
   // period for readability
-  //var prefix = angularLocalStorage.constant;
+  // var prefix = angularLocalStorage.constant;
   if (prefix.substr(-1)!=='.')
   {
     prefix = !!prefix ? prefix + '.' : '';
   };
-
-
-
-
-
-
 
   // Checks the browser to see if local storage is supported
   var browserSupportsLocalStorage = function ()
@@ -677,21 +491,17 @@ angularLocalStorage.service('Storage', [
     }
     catch (e)
     {
-      //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
       return false;
     }
   };
-
 
   // Directly adds a value to local storage
   // If local storage is not available in the browser use cookies
   // Example use: Storage.add('library','angular');
   var addToLocalStorage = function (key, value)
   {
-    // If this browser does not support local storage use cookies
     if (!browserSupportsLocalStorage())
     {
-      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -704,12 +514,10 @@ angularLocalStorage.service('Storage', [
     }
     catch (e)
     {
-      //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
       return false;
     }
     return true;
   };
-
 
   // Directly get a value from local storage
   // Example use: Storage.get('library'); // returns 'angular'
@@ -717,7 +525,6 @@ angularLocalStorage.service('Storage', [
   {
     if (!browserSupportsLocalStorage()) 
     {
-      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -726,14 +533,12 @@ angularLocalStorage.service('Storage', [
     return item;
   };
 
-
   // Remove an item from local storage
   // Example use: Storage.remove('library'); // removes the key/value pair of library='angular'
   var removeFromLocalStorage = function (key) 
   {
     if (!browserSupportsLocalStorage()) 
     {
-      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -743,22 +548,18 @@ angularLocalStorage.service('Storage', [
     } 
     catch (e) 
     {
-      //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
       return false;
     }
     return true;
   };
-
 
   // Remove all data for this app from local storage
   // Example use: Storage.clearAll();
   // Should be used mostly for development purposes
   var clearAllFromLocalStorage = function () 
   {
-
     if (!browserSupportsLocalStorage()) 
     {
-      //$rootScope.$broadcast('StorageModule.notification.warning','LOCAL_STORAGE_NOT_SUPPORTED');
       return false;
     }
 
@@ -775,21 +576,12 @@ angularLocalStorage.service('Storage', [
         } 
         catch (e) 
         {
-          //$rootScope.$broadcast('StorageModule.notification.error',e.Description);
           return false;
         }
       }
     }
     return true;
   };
-
-
-
-
-
-
-
-
 
   /**
    * Checks the browser to see if session storage is supported
@@ -805,8 +597,6 @@ angularLocalStorage.service('Storage', [
       return false;
     }
   };
-
-
 
   /**
    * Directly adds a value to session storage
@@ -832,8 +622,6 @@ angularLocalStorage.service('Storage', [
     return true;
   };
 
-
-
   /**
    * Get value from session storage
    */
@@ -849,8 +637,6 @@ angularLocalStorage.service('Storage', [
 
     return item;
   };
-
-
 
   /**
    * Remove item from session storage
@@ -874,14 +660,11 @@ angularLocalStorage.service('Storage', [
     return true;
   };
 
-
-
   /**
    * Remove all data from session storage
    */
   var clearAllFromSessionStorage = function () 
   {
-
     if (!browserSupportsSessionStorage()) 
     {
       return false;
@@ -904,16 +687,9 @@ angularLocalStorage.service('Storage', [
         }
       }
     }
+
     return true;
   };
-
-
-
-
-
-
-
-
 
   // Checks the browser to see if cookies are supported
   var browserSupportsCookies = function() 
@@ -926,23 +702,19 @@ angularLocalStorage.service('Storage', [
     } 
     catch (e) 
     {
-      $rootScope.$broadcast('StorageModule.notification.error',e.Description);
       return false;
     }
   }
-
 
   // Directly adds a value to cookies
   // Typically used as a fallback is local storage is not available in the browser
   // Example use: Storage.cookie.add('library','angular');
   var addToCookies = function (key, value) 
   {
-
     if (typeof value == "undefined") return false;
 
     if (!browserSupportsCookies()) 
     {
-      $rootScope.$broadcast('StorageModule.notification.error','COOKIES_NOT_SUPPORTED');
       return false;
     }
 
@@ -961,7 +733,6 @@ angularLocalStorage.service('Storage', [
         expiry = "; expires="+expiryDate.toGMTString();
       };
 
-
       document.cookie = prefix + 
                         key + 
                         "=" + 
@@ -979,49 +750,6 @@ angularLocalStorage.service('Storage', [
 
     return true;
   };
-  // var addToCookies = function (key, value) 
-  // {
-
-  //   if (typeof value == "undefined") return false;
-
-  //   if (!browserSupportsCookies()) 
-  //   {
-  //     $rootScope.$broadcast('StorageModule.notification.error','COOKIES_NOT_SUPPORTED');
-  //     return false;
-  //   }
-
-  //   try 
-  //   {
-  //     var expiry = '', expiryDate = new Date();
-  //     if (value === null) 
-  //     {
-  //       cookie.expiry = -1;
-  //       value = '';
-  //     };
-
-  //     if (cookie.expiry !== 0) 
-  //     {
-  //       expiryDate.setTime(expiryDate.getTime() + (cookie.expiry*24*60*60*1000));
-  //       expiry = "; expires="+expiryDate.toGMTString();
-  //     }
-
-  //     document.cookie = prefix + 
-  //                       key + 
-  //                       "=" + 
-  //                       encodeURIComponent(value) + 
-  //                       expiry + 
-  //                       "; path=" + 
-  //                       cookie.path;
-  //   } 
-  //   catch (e) 
-  //   {
-  //     $rootScope.$broadcast('StorageModule.notification.error',e.Description);
-  //     return false;
-  //   }
-
-  //   return true;
-  // };
-
 
   // Directly get a value from a cookie
   // Example use: Storage.cookie.get('library'); // returns 'angular'
@@ -1052,12 +780,10 @@ angularLocalStorage.service('Storage', [
     return null;
   };
 
-
   var removeFromCookies = function (key) 
   {
     addToCookies(key,null);
   }
-
 
   var clearAllFromCookies = function () 
   {
@@ -1079,7 +805,6 @@ angularLocalStorage.service('Storage', [
     }
   }
 
-
   var getPeriods = function ()
   {
     return angular.fromJson(getFromLocalStorage('periods'));
@@ -1088,8 +813,12 @@ angularLocalStorage.service('Storage', [
   var getGroups = function ()
   {
     return angular.fromJson(getFromLocalStorage('groups'));
-  }
+  };
 
+  var getMembers = function ()
+  {
+    return angular.fromJson(getFromLocalStorage('members'));
+  };
 
   return {
     isSupported: browserSupportsLocalStorage,
@@ -1111,21 +840,586 @@ angularLocalStorage.service('Storage', [
     },
     local: {
       periods:  getPeriods,
-      groups:   getGroups
+      groups:   getGroups,
+      members:  getMembers
     }
   };
 
 }]);
 
 
+/**
+ * Register the interceptor as a service,
+ * intercepts ALL angular ajax http calls
+ */
+WebPaige.
+factory('Interceptor', function ($q, $location)
+{
+  return function (promise)
+  {
+    return promise.then(
+    /**
+     * Succeded
+     */
+    function(response) 
+    {
+      // console.log('call ->', arguments[0].config.url, 'method ->', arguments[0].config.method);
+      return response;
+    },
+    /**
+     * Failed
+     */
+    function(response) 
+    {
+      if(response.status == 403)
+      {
+        alert("Session timeout , please re-login");
+        $location.path("/login");
+      }
+
+      return $q.reject(response);
+    });
+  }
+});
+
 
 /**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
+ * String manupulators
  */
+WebPaige.
+factory('Strings', function () 
+{
+  return {
+    /**
+     * Truncate string from words with ..
+     */
+    truncate: function(txt, n, useWordBoundary)
+    {
+       var toLong = txt.length > n,
+           s_ = toLong ? txt.substr(0, n-1) : txt,
+           s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
 
+       return toLong ? s_ + '..' : s_;
+    }
+  }
+});
+
+
+/**
+ * Planboard data processors
+ */
+WebPaige.
+factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage) 
+{
+  return {
+    
+    /**
+     * Timeline data processing
+     */
+    process: function (data, config, divisions)
+    {
+      var timedata = [];
+
+      var groups = {};
+      angular.forEach(Storage.local.groups(), function (group, index)
+      {
+        groups[group.uuid] = group.name;
+      });
+
+      var members = {};
+      angular.forEach(Storage.local.members(), function (member, index)
+      {
+        members[member.uuid] = member.name;
+      });
+
+      function wrapper(rank)
+      {
+        return '<span style="display:none;">' + rank + '</span>';
+      };
+
+      function secret(content)
+      {
+        return '<span class="secret">' + content + '</span>';
+      };
+
+      function addLoading(timedata, rows)
+      {
+        angular.forEach(rows, function(row, index)
+        {
+          timedata.push({
+            start: data.periods.end,
+            end: 1577836800000,
+            group: row,
+            content: 'loading',
+            className: 'state-loading-right',
+            editable: false
+          });
+          timedata.push({
+            start: 0,
+            end: data.periods.start,
+            group: row,
+            content: 'loading',
+            className: 'state-loading-left',
+            editable: false
+          });
+        });
+
+        return timedata;
+      };
+
+      if (data.user)
+      {
+        angular.forEach(data.user, function(slot, index)
+        {
+          /**
+           * Loop through legenda items
+           */
+          angular.forEach(config.legenda, function(value, legenda)
+          {
+            /**
+             * Check whether legenda item is selected
+             */
+            if (slot.text == legenda && value)
+            {
+              timedata.push({
+                start: Math.round(slot.start * 1000),
+                end: Math.round(slot.end * 1000),
+                group: (slot.recursive) ? wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + wrapper('recursive') : 
+                                          wrapper('a') + 'Planning' + wrapper('planning'),
+                content: secret(angular.toJson({
+                  type: 'slot',
+                  id: slot.id, 
+                  recursive: slot.recursive, 
+                  state: slot.text 
+                  })),
+                className: config.states[slot.text].className,
+                editable: true
+              });
+            };
+          });       
+        });
+        /**
+         * Add loading slots
+         */
+        timedata = addLoading(timedata, [
+          wrapper('b') + 'Wekelijkse planning' + wrapper('recursive'),
+          wrapper('a') + 'Planning' + wrapper('planning')
+        ]);
+      };
+
+      /**
+       * Process group slots
+       */
+      if (data.aggs)
+      {
+        /**
+         * Check whether a division is selected
+         */
+        if (data.aggs.division == 'all' || data.aggs.division == undefined)
+        {
+          var name = '<a href="#/groups?uuid=' + 
+                      data.aggs.id + 
+                      '#view">' +
+                      groups[data.aggs.id] +
+                      '</a>';
+        }
+        else
+        {
+          var label;
+
+          angular.forEach(divisions, function(division, index)
+          {
+            if (division.id == data.aggs.division)
+            {
+              label = division.label;
+            }
+          });
+
+          var name =  '<a href="#/groups?uuid=' + 
+                      data.aggs.id + 
+                      '#view">' +
+                      groups[data.aggs.id] +
+                      '</a>' + 
+                      '<span class="label">' + 
+                      label + 
+                      '</span>';
+        };
+
+        /**
+         * Group bar charts
+         */
+        if (config.bar)
+        {
+          var maxh = 0;
+
+          angular.forEach(data.aggs.data, function(slot, index)
+          {
+            if (slot.wish > maxh)
+            {
+              maxh = slot.wish;
+            };
+          });
+
+          angular.forEach(data.aggs.data, function(slot, index)
+          {
+            var maxNum = maxh,
+                num = slot.wish,
+                xwish = num,
+                // a percentage, with a lower bound on 20%
+                height = Math.round(num / maxNum * 80 + 20),
+                minHeight = height,
+                style = 'height:' + height + 'px;',
+                requirement = '<div class="requirement" style="' + 
+                              style + 
+                              '" ' + 
+                              'title="'+'Minimum aantal benodigden'+': ' + 
+                              num + 
+                              ' personen"></div>';
+
+            num = slot.wish + slot.diff;
+
+            var xcurrent = num;
+
+            height = Math.round(num / maxNum * 80 + 20);
+
+            if (slot.diff >= 0 && slot.diff < 7)
+            {
+              switch(slot.diff)
+              {
+                case 0:
+                  var color = config.densities.even;
+                  break
+                case 1:
+                  var color = config.densities.one;
+                  break;
+                case 2:
+                  var color = config.densities.two;
+                  break;
+                case 3:
+                  var color = config.densities.three;
+                  break;
+                case 4:
+                  var color = config.densities.four;
+                  break;
+                case 5:
+                  var color = config.densities.five;
+                  break;
+                case 6:
+                  var color = config.densities.six;
+                  break;
+              }
+            }
+            else if (slot.diff >= 7)
+            {
+              var color = config.densities.more;
+            }
+            else
+            {
+              var color = config.densities.less;
+            };
+
+            var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+
+            if (xcurrent > xwish)
+            {
+              height = minHeight;
+            };
+
+            style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+
+            var actual = '<div class="bar" style="' + 
+                          style + 
+                          '" ' + 
+                          ' title="Huidig aantal beschikbaar: ' + 
+                          num + 
+                          ' personen">' + 
+                          span + 
+                          '</div>';
+
+            if (  (slot.diff > 0 && config.legenda.groups.more) ||
+                  (slot.diff == 0 && config.legenda.groups.even) || 
+                  (slot.diff < 0 && config.legenda.groups.less) )
+            {
+              timedata.push({
+                start: Math.round(slot.start * 1000),
+                end: Math.round(slot.end * 1000),
+                group: wrapper('c') + name,
+                content: requirement + 
+                          actual +
+                          secret(angular.toJson({
+                            type: 'group',
+                            diff: slot.diff,
+                            group: name
+                          })),
+                className: 'group-aggs',
+                editable: false
+              });
+            };
+
+            timedata = addLoading(timedata, [
+              wrapper('c') + name
+            ]);
+          });
+        }
+        /**
+         * Normal view for group slots
+         */
+        else
+        {
+          angular.forEach(data.aggs.data, function(slot, index)
+          {
+            var cn;
+
+            if (slot.diff >= 0 && slot.diff < 7)
+            {
+              switch(slot.diff)
+              {
+                case 0:
+                  cn = 'even';
+                  break
+                case 1:
+                  cn = 1;
+                  break
+                case 2:
+                  cn = 2;
+                  break
+                case 3:
+                  cn = 3;
+                  break
+                case 4:
+                  cn = 4;
+                  break
+                case 5:
+                  cn = 5;
+                  break
+                case 6:
+                  cn = 6;
+                  break
+              }
+            }
+            else if (slot.diff >= 7)
+            {
+              cn = 'more';
+            }
+            else
+            {
+              cn = 'less'
+            };
+
+            if (  (slot.diff > 0 && config.legenda.groups.more) ||
+                  (slot.diff == 0 && config.legenda.groups.even) || 
+                  (slot.diff < 0 && config.legenda.groups.less) )
+            {
+              timedata.push({
+                start: Math.round(slot.start * 1000),
+                end: Math.round(slot.end * 1000),
+                group: wrapper('c') + name,
+                content: cn +
+                          secret(angular.toJson({
+                            type: 'group',
+                            diff: slot.diff,
+                            group: name
+                          })),
+                className: 'agg-' + cn,
+                editable: false
+              });
+            };
+
+            timedata = addLoading(timedata, [
+              wrapper('c') + name
+            ]);
+          });
+        };
+      
+      };
+
+      /**
+       * If wishes are on
+       */
+      if (config.wishes)
+      {
+        angular.forEach(data.aggs.wishes, function(wish, index)
+        {
+          if (wish.count >= 7)
+          {
+            var cn = 'wishes-more';
+          }
+          else if (wish.count == 0)
+          {
+            var cn = 'wishes-even';
+          }
+          else
+          {
+            var cn = 'wishes-' + wish.count;
+          };
+
+          timedata.push({
+            start: Math.round(wish.start * 1000),
+            end: Math.round(wish.end * 1000),
+            group: wrapper('c') + name + ' (Wishes)',
+            content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
+                      secret(angular.toJson({
+                        type: 'wish',
+                        wish: wish.count,
+                        group: name,
+                        groupId: data.aggs.id
+                      })),
+            className: cn,
+            editable: false
+          });
+
+          timedata = addLoading(timedata, [
+            wrapper('c') + name + ' (Wishes)'
+          ]);
+        });
+
+      };
+
+      /**
+       * Process members slots
+       */
+      if (data.members)
+      {
+        angular.forEach(data.members, function(member, index)
+        {
+          /**
+           * Loop through slots of member
+           */
+          angular.forEach(member.data, function(slot, i)
+          {
+            /**
+             * Loop through legenda items
+             */
+            angular.forEach(config.legenda, function(value, legenda)
+            {
+              /**
+               * Check whether legenda item is selected
+               */
+              if (slot.text == legenda && value)
+              {
+                timedata.push({
+                  start: Math.round(slot.start * 1000),
+                  end: Math.round(slot.end * 1000),
+                  group: wrapper('d') + 
+                          '<a href="#/profile/' + 
+                          member.id + 
+                          '#timeline">' + 
+                          members[member.id] + 
+                          '</a>',
+                  content: secret(angular.toJson({ 
+                    type: 'member',
+                    id: slot.id, 
+                    mid: member.id,
+                    recursive: slot.recursive, 
+                    state: slot.text 
+                    })),
+                  className: config.states[slot.text].className,
+                  editable: false
+                });
+              };
+            });
+          });
+
+          timedata.push({
+            start: 0,
+            end: 0,
+            group: wrapper('d') + 
+                    '<a href="#/profile/' + 
+                    member.id + 
+                    '#timeline">' + 
+                    members[member.id] + 
+                    '</a>',
+            content: null,
+            className: null,
+            editable: false
+          });
+
+          timedata = addLoading(timedata, [
+            wrapper('d') + 
+            '<a href="#/profile/' + 
+            member.id + 
+            '#timeline">' + 
+            members[member.id] + 
+            '</a>'
+          ]);
+
+          angular.forEach(member.stats, function(stat, index)
+          {
+            var state = stat.state.split('.');
+            state.reverse();
+            stat.state = 'bar-' + state[0];
+          });
+        });
+      };
+   
+      /**
+       * Group availabity ratios pie chart
+       */
+      if (data.aggs && data.aggs.ratios)
+      {
+        document.getElementById("groupPie").innerHTML = '';
+
+        var ratios = [],
+            legends = [];
+
+        angular.forEach(data.aggs.ratios, function(ratio, index)
+        {
+          /**
+           * Quick fix against 0 ratios
+           * Dont display them at all
+           */
+          if (ratio != 0)
+          {
+            ratios.push(ratio);
+
+            legends.push(ratio + '% ' + index);
+          };
+        });
+
+        var r = Raphael("groupPie"),
+            pie = r.piechart(120, 120, 100, ratios, 
+            { 
+              legend: legends,
+              colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+            });
+        /**
+         * Pie chart title
+         */
+        // r.text(140, 240, name).attr({
+        //   font: "20px sans-serif"
+        // });
+        
+        pie.hover(
+        function()
+        {
+          this.sector.stop();
+          this.sector.scale(1.1, 1.1, this.cx, this.cy);
+          if (this.label)
+          {
+            this.label[0].stop();
+            this.label[0].attr({ r: 7.5 });
+            this.label[1].attr({ "font-weight": 800 });
+          }
+        },
+        function()
+        {
+          this.sector.animate({
+            transform: 's1 1 ' + this.cx + ' ' + this.cy
+          }, 500, "bounce");
+          if (this.label)
+          {
+            this.label[0].animate({ r: 5 }, 500, "bounce");
+            this.label[1].attr({ "font-weight": 400 });
+          }
+        });
+
+      };
+
+      return timedata;
+    }
+
+  }
+}]);
 
 /** 
  * MD5 Service
@@ -1364,718 +1658,3 @@ function()
     return temp.toLowerCase();
   }
 });
-
-//register the interceptor as a service
-WebPaige.config(function ($httpProvider) {
-    $httpProvider.responseInterceptors.push('paigeHttpInterceptor');
-})
-
-//register the interceptor as a service, intercepts ALL angular ajax http calls
-.factory('paigeHttpInterceptor', function($q,$location) {
-    return function(promise) {
-      return promise.then(function(response) 
-      {
-        // console.log('intercepted', arguments);
-
-        // do something on success
-          return response;
-      }, function(response) {
-        // do something on error
-          if(response.status == 403)
-          {
-              alert("Session timeout , please re-login");
-              $location.path("/login");
-          }
-          return $q.reject(response);
-      });
-    }
-});
-
-
-/**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- */
-
-
-
-WebPaige.
-factory('Strings', function () 
-{
-  return {
-
-    /**
-     * Truncate string from words with ..
-     */
-    truncate: function(txt, n, useWordBoundary)
-    {
-       var toLong = txt.length > n,
-           s_ = toLong ? txt.substr(0, n-1) : txt;
-
-       s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
-
-       return toLong ? s_ + '..' : s_;
-    }
-
-  }
-});
-
-
-
-
-
-
-
-
-/**
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- * ************************************************************************************************
- */
-
-
-
-WebPaige.
-factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage) 
-{
-  return {
-    
-    /**
-     * Timeline data processing
-     */
-    process: function (data, config, divisions)
-    {
-      /**
-       * Timedata container for all sort of slots
-       */
-      var timedata = [];
-      
-      /**
-       * Get groups
-       */
-      var groups = {};
-      angular.forEach(angular.fromJson(Storage.get('groups')), function (group, index)
-      {
-        groups[group.uuid] = group.name;
-      });
-
-      /**
-       * Get members
-       */
-      var members = {};
-      angular.forEach(angular.fromJson(Storage.get('members')), function (member, index)
-      {
-        members[member.uuid] = member.name;
-      });
-
-      /**
-       * Wrap hidden span for sorting workaround in timeline rows
-       */
-      function wrapper(rank)
-      {
-        return '<span style="display:none;">' + rank + '</span>';
-      };
-
-      /**
-       * Wrap secret content div for content of slot
-       */
-      function secret(content)
-      {
-        return '<span class="secret">' + content + '</span>';
-      };
-
-      /**
-       * Add loading slots
-       */
-      function addLoading(timedata, rows)
-      {
-        angular.forEach(rows, function(row, index)
-        {
-          timedata.push({
-            start: data.periods.end,
-            end: 1577836800000,
-            group: row,
-            content: 'loading',
-            className: 'state-loading-right',
-            editable: false
-          });
-          timedata.push({
-            start: 0,
-            end: data.periods.start,
-            group: row,
-            content: 'loading',
-            className: 'state-loading-left',
-            editable: false
-          });
-        });
-        return timedata;
-      };
-
-      /**
-       * Process user slots
-       */
-      if (data.user)
-      {
-        angular.forEach(data.user, function(slot, index)
-        {
-          /**
-           * Loop through legenda items
-           */
-          angular.forEach(config.legenda, function(value, legenda)
-          {
-            /**
-             * Check whether legenda item is selected
-             */
-            if (slot.text == legenda && value)
-            {
-              /**
-               * Push slot in the pool
-               */
-              timedata.push({
-                start: Math.round(slot.start * 1000),
-                end: Math.round(slot.end * 1000),
-                group: (slot.recursive) ? wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + wrapper('recursive') : 
-                                          wrapper('a') + 'Planning' + wrapper('planning'),
-                content: secret(angular.toJson({
-                  type: 'slot',
-                  id: slot.id, 
-                  recursive: slot.recursive, 
-                  state: slot.text 
-                  })),
-                className: config.states[slot.text].className,
-                editable: true
-              });
-            };
-          });       
-        });
-        /**
-         * Add loading slots
-         */
-        timedata = addLoading(timedata, [
-          wrapper('b') + 'Wekelijkse planning' + wrapper('recursive'),
-          wrapper('a') + 'Planning' + wrapper('planning')
-        ]);
-      };
-
-      /**
-       * Process group slots
-       */
-      if (data.aggs)
-      {
-        /**
-         * Check whether a division is selected
-         */
-        if (data.aggs.division == 'all' || data.aggs.division == undefined)
-        {
-          var name = '<a href="#/groups?uuid=' + 
-                      data.aggs.id + 
-                      '#view">' +
-                      groups[data.aggs.id] +
-                      '</a>';
-        }
-        else
-        {
-          var label;
-          /**
-           * Loop over the divisions
-           */
-          angular.forEach(divisions, function(division, index)
-          {
-            if (division.id == data.aggs.division)
-            {
-              label = division.label;
-            }
-          });
-          /**
-           * Set division in the name
-           */
-          var name =  '<a href="#/groups?uuid=' + 
-                      data.aggs.id + 
-                      '#view">' +
-                      groups[data.aggs.id] +
-                      '</a>' + 
-                      '<span class="label">' + 
-                      label + 
-                      '</span>';
-        };
-
-        /**
-         * Group bar charts
-         */
-        if (config.bar)
-        {
-          /**
-           * TODO
-           * Optimize code below
-           */
-          var maxh = 0;
-          /**
-           * TODO
-           * Send needed? Since the top range is fixed already?
-           *
-           * Calculate the max
-           */
-          angular.forEach(data.aggs.data, function(slot, index)
-          {
-            if (slot.wish > maxh)
-            {
-              maxh = slot.wish;
-            };
-          });
-          /**
-           * Loop through the slots
-           */
-          angular.forEach(data.aggs.data, function(slot, index)
-          {
-            /**
-             * Calculate initial values
-             */
-            var maxNum = maxh,
-                num = slot.wish,
-                xwish = num,
-                // a percentage, with a lower bound on 20%
-                height = Math.round(num / maxNum * 80 + 20),
-                minHeight = height,
-                style = 'height:' + height + 'px;',
-                requirement = '<div class="requirement" style="' + 
-                              style + 
-                              '" ' + 
-                              'title="'+'Minimum aantal benodigden'+': ' + 
-                              num + 
-                              ' personen"></div>';
-            /**
-             * ?
-             */
-            num = slot.wish + slot.diff;
-            /**
-             * ?
-             */
-            var xcurrent = num;
-            /**
-             * A percentage, with a lower bound on 20%
-             */
-            height = Math.round(num / maxNum * 80 + 20);
-            /**
-             * Base color based on density
-             */
-            if (slot.diff >= 0 && slot.diff < 7)
-            {
-              switch(slot.diff)
-              {
-                case 0:
-                  var color = config.densities.even;
-                  break
-                case 1:
-                  var color = config.densities.one;
-                  break;
-                case 2:
-                  var color = config.densities.two;
-                  break;
-                case 3:
-                  var color = config.densities.three;
-                  break;
-                case 4:
-                  var color = config.densities.four;
-                  break;
-                case 5:
-                  var color = config.densities.five;
-                  break;
-                case 6:
-                  var color = config.densities.six;
-                  break;
-              }
-            }
-            else if (slot.diff >= 7)
-            {
-              var color = config.densities.more;
-            }
-            else
-            {
-              var color = config.densities.less;
-            };
-            /**
-             * Show diff value in badge
-             */
-            var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
-            /**
-             * ?
-             */
-            if (xcurrent > xwish)
-            {
-              height = minHeight;
-            };
-            /**
-             * Set the style for bar
-             */
-            style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
-            /**
-             * TODO
-             * Strip hard-coded local texts
-             *
-             * Style for actual
-             */
-            var actual = '<div class="bar" style="' + 
-                          style + 
-                          '" ' + 
-                          ' title="Huidig aantal beschikbaar: ' + 
-                          num + 
-                          ' personen">' + 
-                          span + 
-                          '</div>';
-            /**
-             * Filter aggs based on selection
-             */
-            if (  (slot.diff > 0 && config.legenda.groups.more) ||
-                  (slot.diff == 0 && config.legenda.groups.even) || 
-                  (slot.diff < 0 && config.legenda.groups.less) )
-            {
-              /**
-               * Push in pool
-               */
-              timedata.push({
-                start: Math.round(slot.start * 1000),
-                end: Math.round(slot.end * 1000),
-                group: wrapper('c') + name,
-                content: requirement + 
-                          actual +
-                          secret(angular.toJson({
-                            type: 'group',
-                            diff: slot.diff,
-                            group: name
-                          })),
-                className: 'group-aggs',
-                editable: false
-              });
-            };
-            /**
-             * Add loading slots
-             */
-            timedata = addLoading(timedata, [
-              wrapper('c') + name
-            ]);
-          });
-        }
-        /**
-         * Normal view for group slots
-         */
-        else
-        {
-          /**
-           * Loop throught the slots
-           */
-          angular.forEach(data.aggs.data, function(slot, index)
-          {
-            /**
-             * Class indicator
-             */
-            var cn;
-            /**
-             * TODO
-             * Some calculations can be left off!
-             * 
-             * Base color based on density
-             */
-            if (slot.diff >= 0 && slot.diff < 7)
-            {
-              switch(slot.diff)
-              {
-                case 0:
-                  cn = 'even';
-                  break
-                case 1:
-                  cn = 1;
-                  break
-                case 2:
-                  cn = 2;
-                  break
-                case 3:
-                  cn = 3;
-                  break
-                case 4:
-                  cn = 4;
-                  break
-                case 5:
-                  cn = 5;
-                  break
-                case 6:
-                  cn = 6;
-                  break
-              }
-            }
-            else if (slot.diff >= 7)
-            {
-              cn = 'more';
-            }
-            else
-            {
-              cn = 'less'
-            };
-            /**
-             * Filter aggs based on selection
-             */
-            if (  (slot.diff > 0 && config.legenda.groups.more) ||
-                  (slot.diff == 0 && config.legenda.groups.even) || 
-                  (slot.diff < 0 && config.legenda.groups.less) )
-            {
-              /**
-               * Push in pool
-               */
-              timedata.push({
-                start: Math.round(slot.start * 1000),
-                end: Math.round(slot.end * 1000),
-                group: wrapper('c') + name,
-                content: cn +
-                          secret(angular.toJson({
-                            type: 'group',
-                            diff: slot.diff,
-                            group: name
-                          })),
-                className: 'agg-' + cn,
-                editable: false
-              });
-            };
-            /**
-             * Add loading slots
-             */
-            timedata = addLoading(timedata, [
-              wrapper('c') + name
-            ]);
-          });
-        };
-      
-      };
-
-      /**
-       * If wishes are on
-       */
-      if (config.wishes)
-      {
-        /**
-         * Loop through wishes
-         */
-        angular.forEach(data.aggs.wishes, function(wish, index)
-        {
-          /**
-           * Base color based on density
-           */
-          if (wish.count >= 7)
-          {
-            var cn = 'wishes-more';
-          }
-          else if (wish.count == 0)
-          {
-            var cn = 'wishes-even';
-          }
-          else
-          {
-            var cn = 'wishes-' + wish.count;
-          };
-
-          /**
-           * Push in pool
-           */
-          timedata.push({
-            start: Math.round(wish.start * 1000),
-            end: Math.round(wish.end * 1000),
-            group: wrapper('c') + name + ' (Wishes)',
-            content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
-                      secret(angular.toJson({
-                        type: 'wish',
-                        wish: wish.count,
-                        group: name,
-                        groupId: data.aggs.id
-                      })),
-            className: cn,
-            editable: false
-          });
-          /**
-           * Add loading slots
-           */
-          timedata = addLoading(timedata, [
-            wrapper('c') + name + ' (Wishes)'
-          ]);
-        });
-
-      };
-
-      /**
-       * Process members slots
-       */
-      if (data.members)
-      {
-        /**
-         * Get members
-         */
-        //var members = angular.fromJson(Storage.get('members'));
-        /**
-         * Loop through members
-         */
-        angular.forEach(data.members, function(member, index)
-        {
-          /**
-           * Loop through slots of member
-           */
-          angular.forEach(member.data, function(slot, i)
-          {
-            /**
-             * Loop through legenda items
-             */
-            angular.forEach(config.legenda, function(value, legenda)
-            {
-              /**
-               * Check whether legenda item is selected
-               */
-              if (slot.text == legenda && value)
-              {
-                timedata.push({
-                  start: Math.round(slot.start * 1000),
-                  end: Math.round(slot.end * 1000),
-                  group: wrapper('d') + 
-                          '<a href="#/profile/' + 
-                          member.id + 
-                          '#timeline">' + 
-                          members[member.id] + 
-                          '</a>',
-                  content: secret(angular.toJson({ 
-                    type: 'member',
-                    id: slot.id, 
-                    mid: member.id,
-                    recursive: slot.recursive, 
-                    state: slot.text 
-                    })),
-                  className: config.states[slot.text].className,
-                  editable: false
-                });
-              };
-            });
-          });
-          /**
-           * Add empty slots for forcing timeline to display the row
-           * even if there is no data of the user
-           */
-          timedata.push({
-            start: 0,
-            end: 0,
-            group: wrapper('d') + 
-                    '<a href="#/profile/' + 
-                    member.id + 
-                    '#timeline">' + 
-                    members[member.id] + 
-                    '</a>',
-            content: null,
-            className: null,
-            editable: false
-          });
-          /**
-           * Add loading slots
-           */
-          timedata = addLoading(timedata, [
-            wrapper('d') + 
-            '<a href="#/profile/' + 
-            member.id + 
-            '#timeline">' + 
-            members[member.id] + 
-            '</a>'
-          ]);
-          /**
-           * Produce member stats
-           */
-          angular.forEach(member.stats, function(stat, index)
-          {
-            var state = stat.state.split('.');
-            state.reverse();
-            stat.state = 'bar-' + state[0];
-          });
-        });
-      };
-   
-
-      /**
-       * Group availabity ratios pie chart
-       */
-      if (data.aggs && data.aggs.ratios)
-      {
-        /**
-         * Clean group pie chart holder
-         */
-        document.getElementById("groupPie").innerHTML = '';
-        /**
-         * Init vars
-         */
-        var ratios = [];
-        var legends = [];
-        /**
-         * Loop through group agg. ratios
-         */
-        angular.forEach(data.aggs.ratios, function(ratio, index)
-        {
-          /**
-           * Quick fix against 0 ratios
-           * Dont display them at all
-           */
-          if (ratio != 0)
-          {
-            /**
-             * Ratios
-             */
-            ratios.push(ratio);
-            /**
-             * Legends
-             */
-            legends.push(ratio + '% ' + index);
-          };
-        });
-        /**
-         * Pie chart it baby!
-         */
-        var r = Raphael("groupPie"),
-            pie = r.piechart(120, 120, 100, ratios, 
-            { 
-              legend: legends,
-              colors: ['#415e6b', '#ba6a24', '#a0a0a0']
-            });
-        /**
-         * Pie chart title
-         */
-        // r.text(140, 240, name).attr({
-        //   font: "20px sans-serif"
-        // });
-        /**
-         * Decorate it with mouse effects
-         */
-        pie.hover(
-        function()
-        {
-          //console.log('this ->', this);
-          this.sector.stop();
-          this.sector.scale(1.1, 1.1, this.cx, this.cy);
-          if (this.label)
-          {
-            this.label[0].stop();
-            this.label[0].attr({ r: 7.5 });
-            this.label[1].attr({ "font-weight": 800 });
-          }
-        },
-        function()
-        {
-          this.sector.animate({
-            transform: 's1 1 ' + this.cx + ' ' + this.cy
-          }, 500, "bounce");
-          if (this.label)
-          {
-            this.label[0].animate({ r: 5 }, 500, "bounce");
-            this.label[1].attr({ "font-weight": 400 });
-          }
-        });
-
-      };
-
-
-      return timedata;
-    }
-
-  }
-}]);

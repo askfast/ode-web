@@ -306,12 +306,14 @@
         style="width: 100px;
                 margin-right: -1px;">
       <li class="active">
-        <a href="#timelineTab" 
-            data-toggle="tab"><span class="entypo">&#128340;</span> {{ui.planboard.timeline}}</a>
+        <a  href="#timelineTab" 
+            data-toggle="tab"
+            ng-click="destroy.statistics();"><span class="entypo">&#128340;</span> {{ui.planboard.timeline}}</a>
       </li>
       <li>
-        <a href="#statisticsTab" 
-            data-toggle="tab"><span class="entypo">&#128200;</span> {{ui.planboard.statistics}}</a>
+        <a  href="#statisticsTab" 
+            data-toggle="tab"
+            ng-click="destroy.timeline();"><span class="entypo">&#128200;</span> {{ui.planboard.statistics}}</a>
       </li>
     </ul>
     <!-- end tabs -->
@@ -337,7 +339,7 @@
               <select ng-model="timeline.current.group" 
                       ng-options="group.uuid as group.name for group in groups"
                       ng-selected="timeline.current.group"
-                      ng-change="requestTimeline(timeline.current)">
+                      ng-change="requestTimeline()">
               </select>
               <!-- end groups list -->
 
@@ -347,7 +349,7 @@
               <select ng-model="timeline.current.division" 
                       ng-options="division.id as division.label for division in divisions"
                       ng-selected="timeline.current.division"
-                      ng-change="requestTimeline(timeline.current)">
+                      ng-change="requestTimeline()">
                       
               </select>
               <!-- end divisions list -->
@@ -397,12 +399,12 @@
                 <button type="button" 
                         ng-model="timeline.current.layouts.group" 
                         class="btn {{(timeline.current.layouts.group==true) && 'active'}}" 
-                        ng-click="requestTimeline(timeline.current, 'group')">{{ui.planboard.group}}</button>
+                        ng-click="requestTimeline('group')">{{ui.planboard.group}}</button>
 
                 <button type="button" 
                         ng-model="timeline.current.layouts.members" 
                         class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                        ng-click="requestTimeline(timeline.current, 'members')">{{ui.planboard.members}}</button>
+                        ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
 
               </div>
               <!-- end timeline layout manager -->
@@ -549,7 +551,7 @@
             <select ng-model="timeline.current.group" 
                     ng-options="group.uuid as group.name for group in groups"
                     ng-selected="timeline.current.group"
-                    ng-change="requestTimeline(timeline.current)">
+                    ng-change="requestTimeline()">
             </select>
             <!-- end groups list -->
 
@@ -557,7 +559,7 @@
             <select ng-model="timeline.current.division" 
                     ng-options="division.id as division.label for division in divisions"
                     ng-selected="timeline.current.division"
-                    ng-change="requestTimeline(timeline.current)">
+                    ng-change="requestTimeline()">
             </select>
             <!-- end divisions list -->
 
@@ -570,11 +572,11 @@
               <button type="button" 
                       ng-model="timeline.current.layouts.group" 
                       class="btn {{(timeline.current.layouts.group==true) && 'active'}}" 
-                      ng-click="requestTimeline(timeline.current, 'group')">{{ui.planboard.group}}</button>
+                      ng-click="requestTimeline('group')">{{ui.planboard.group}}</button>
               <button type="button" 
                       ng-model="timeline.current.layouts.members" 
                       class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                      ng-click="requestTimeline(timeline.current, 'members')">{{ui.planboard.members}}</button>
+                      ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
             </div>
             <!-- end timeline layout manager -->
           </div>
@@ -667,29 +669,29 @@
               <ul>
                 <li>
                   <h4>More people then expected</h4>
-                  <h5>{{data.aggs.durations.more|calculateTimeInDays}}</h5> 
+                  <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5> 
                   <small class="muted">days</small>, 
-                  <h5>{{data.aggs.durations.more|calculateTimeInHours}}</h5> 
+                  <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5> 
                   <small class="muted">hours</small>, 
-                  <h5>{{data.aggs.durations.more|calculateTimeInMinutes}}</h5> 
+                  <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5> 
                   <small class="muted">minutes</small>
                 </li>
                 <li>
                   <h4>Just so many people as wished</h4>
-                  <h5>{{data.aggs.durations.even|calculateTimeInDays}}</h5> 
+                  <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5> 
                   <small class="muted">days</small>, 
-                  <h5>{{data.aggs.durations.even|calculateTimeInHours}}</h5> 
+                  <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5> 
                   <small class="muted">hours</small>, 
-                  <h5>{{data.aggs.durations.even|calculateTimeInMinutes}}</h5> 
+                  <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5> 
                   <small class="muted">minutes</small>
                 </li>
                 <li>
                   <h4>Less people then expected</h4>
-                  <h5>{{data.aggs.durations.less|calculateTimeInDays}}</h5> 
+                  <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5> 
                   <small class="muted">days</small>, 
-                  <h5>{{data.aggs.durations.less|calculateTimeInHours}}</h5> 
+                  <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5> 
                   <small class="muted">hours</small>, 
-                  <h5>{{data.aggs.durations.less|calculateTimeInMinutes}}</h5> 
+                  <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5> 
                   <small class="muted">minutes</small>
                 </li>
               </ul>
@@ -702,13 +704,13 @@
           <div id="memberBars">
             <ul>
               <li ng-repeat="member in data.members">
-                <h4>{{member.id|convertUserIdToName}}</h4>
+                <h4>{{member.id | convertUserIdToName}}</h4>
                 <div class="progress">
                   <div  ng-repeat="stat in member.stats" 
                         class="bar {{stat.state}}" 
                         style="width: {{stat.ratio}}%;"></div>
                 </div>
-                <small class="muted">{{member.stats|convertRatios}}</small>
+                <small class="muted">{{member.stats | convertRatios}}</small>
               </li>
             </ul>
           </div>

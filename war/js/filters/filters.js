@@ -1,10 +1,10 @@
 'use strict';
 
-/* Filters */
-// angular.module('WebPaige.filters', [])
-
 
 /**
+ * TODO
+ * Lose hard-coded stuff!
+ * 
  * Translate roles
  */
 WebPaige.
@@ -34,9 +34,6 @@ filter('translateRole', function()
 WebPaige.
 filter('rangeMainFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
-	/**
-	 * Get periods
-	 */
 	var periods = Dater.getPeriods();
 	/**
 	 * Return constructor
