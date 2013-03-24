@@ -433,7 +433,7 @@ filter('nicelyDate', ['Dater', function(Dater)
 {
  	return function (date)
  	{
- 	  var cov_date = Dater.readableDate(date);
+ 	  var cov_date = Dater.readable.date(date);
  		if (cov_date == "Invalid Date")
  		{
 	    /**

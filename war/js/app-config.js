@@ -109,19 +109,30 @@ var config = {
    * Data source host
    */
   host: profile.host(),
-  /**
-   * TODO
-   * All date time related values into one place!
-   */
-  date: {
-    format: 'dd-M-yyyy'
+
+
+  // /**
+  //  * TODO
+  //  * All date time related values into one place!
+  //  */
+  // date: {
+  //   format: 'dd-M-yyyy'
+  // },
+  // time: {
+  //   format: 'HH:mm tt'
+  // },
+  // datetime: {
+  //   format: 'dd-M-yyyy HH:mm tt'
+  // },
+
+
+  formats: {
+    date:     'dd-M-yyyy',
+    time:     'hh:mm tt',
+    datetime: 'dd-M-yyyy HH:mm tt'
   },
-  time: {
-    format: 'HH:mm tt'
-  },
-  datetime: {
-    format: 'dd-M-yyyy HH:mm tt'
-  },
+
+
   /**
    * Roles
    */
@@ -154,7 +165,7 @@ var config = {
       /**
        * Zoom value
        */
-      zoomValue: '0.4',
+      zoom: '0.4',
       /**
        * Bar charts for group agg. data
        */

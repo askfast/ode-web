@@ -43,6 +43,9 @@ WebPaige
 ['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config',
 function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) 
 {
+
+  $rootScope.config = $config;
+  
   /**
    * Default language and change language
    */

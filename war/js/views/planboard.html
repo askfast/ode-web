@@ -274,7 +274,7 @@
 
       <div ng-show="views.slot.edit">
         <button type="button" 
-                ng-click="delete()" 
+                ng-click="remove()" 
                 class="btn btn-danger">{{ui.planboard.del}}</button>
         <button type="button" 
                 ng-click="change(original, slot)" 
@@ -309,6 +309,10 @@
         <a href="#timelineTab" 
             data-toggle="tab"><span class="entypo">&#128340;</span> {{ui.planboard.timeline}}</a>
       </li>
+      <li>
+        <a href="#statisticsTab" 
+            data-toggle="tab"><span class="entypo">&#128200;</span> {{ui.planboard.statistics}}</a>
+      </li>
     </ul>
     <!-- end tabs -->
 
@@ -333,7 +337,7 @@
               <select ng-model="timeline.current.group" 
                       ng-options="group.uuid as group.name for group in groups"
                       ng-selected="timeline.current.group"
-                      ng-change="requestTimeline()">
+                      ng-change="requestTimeline(timeline.current)">
               </select>
               <!-- end groups list -->
 
@@ -343,7 +347,7 @@
               <select ng-model="timeline.current.division" 
                       ng-options="division.id as division.label for division in divisions"
                       ng-selected="timeline.current.division"
-                      ng-change="requestTimeline()">
+                      ng-change="requestTimeline(timeline.current)">
                       
               </select>
               <!-- end divisions list -->
@@ -393,12 +397,12 @@
                 <button type="button" 
                         ng-model="timeline.current.layouts.group" 
                         class="btn {{(timeline.current.layouts.group==true) && 'active'}}" 
-                        ng-click="requestTimeline('group')">{{ui.planboard.group}}</button>
+                        ng-click="requestTimeline(timeline.current, 'group')">{{ui.planboard.group}}</button>
 
                 <button type="button" 
                         ng-model="timeline.current.layouts.members" 
                         class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                        ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
+                        ng-click="requestTimeline(timeline.current, 'members')">{{ui.planboard.members}}</button>
 
               </div>
               <!-- end timeline layout manager -->
@@ -530,6 +534,206 @@
         <!-- end planbaord footer -->
       </div>
       <!-- end timelines -->
+
+
+      <!-- statistics -->
+      <div class="tab-pane" id="statisticsTab">
+
+        <!-- timeline toolbar -->
+        <div id="timeline-toolbar">
+
+          <!-- groups members controls -->
+          <div class="pull-left">
+
+            <!-- groups list -->
+            <select ng-model="timeline.current.group" 
+                    ng-options="group.uuid as group.name for group in groups"
+                    ng-selected="timeline.current.group"
+                    ng-change="requestTimeline(timeline.current)">
+            </select>
+            <!-- end groups list -->
+
+            <!-- divisions list -->
+            <select ng-model="timeline.current.division" 
+                    ng-options="division.id as division.label for division in divisions"
+                    ng-selected="timeline.current.division"
+                    ng-change="requestTimeline(timeline.current)">
+            </select>
+            <!-- end divisions list -->
+
+          </div>
+
+          <!-- groups members controls -->
+          <div class="pull-right">
+            <!-- timeline layout manager -->
+            <div  class="btn-group">
+              <button type="button" 
+                      ng-model="timeline.current.layouts.group" 
+                      class="btn {{(timeline.current.layouts.group==true) && 'active'}}" 
+                      ng-click="requestTimeline(timeline.current, 'group')">{{ui.planboard.group}}</button>
+              <button type="button" 
+                      ng-model="timeline.current.layouts.members" 
+                      class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
+                      ng-click="requestTimeline(timeline.current, 'members')">{{ui.planboard.members}}</button>
+            </div>
+            <!-- end timeline layout manager -->
+          </div>
+          <!--end groups members controls -->
+
+        </div>
+        <!-- end timeline toolbar -->
+        <hr>
+        <!-- timeline legenda content -->
+        <div class="legenda">
+          <div class="legenda-row">
+            <strong>{{ui.planboard.members}}</strong>
+            <ul>
+              <li class="legenda-Available">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.bothAvailable}}
+                </label>
+              </li>
+              <li class="legenda-BeschikbaarNoord">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.northAavailable}}
+                </label>
+              </li>
+              <li class="legenda-BeschikbaarZuid">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.southAvailable}}
+                </label>
+              </li>
+              <li class="legenda-SchipperVanDienst">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.skipperOutService}}
+                </label>
+              </li>
+              <li class="legenda-Unavailable">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.notAvailable}}
+                </label>
+              </li>
+              <li class="legenda-NotReached">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.notachieve}}
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="legenda-row last-legenda-row">
+            <strong>{{ui.planboard.groups}}</strong>
+            <ul>
+              <li class="legenda-more">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.morePeople}}
+                </label>
+              </li>
+              <li class="legenda-even">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.enoughPeople}}
+                </label>
+              </li>
+              <li class="legenda-less">
+                <label>
+                  <div class="square"></div>
+                  {{ui.planboard.lessPeople}}
+                </label>
+              </li>
+            </ul>
+          </div>
+          <hr>
+        </div>
+        <!-- end timeline legenda content -->
+
+        <!-- statistics -->
+        <div id="stats">
+
+          <!-- group charts -->
+          <div id="groupStats">
+            <div id="groupPie"></div>
+            
+            <div class="groupStatInfo">
+              <h3>{{data.aggs.id|groupIdToName}}</h3>
+              <!-- <h3>Total Durations In Period</h3> -->
+              <hr>
+              <ul>
+                <li>
+                  <h4>More people then expected</h4>
+                  <h5>{{data.aggs.durations.more|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.more|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.more|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+                <li>
+                  <h4>Just so many people as wished</h4>
+                  <h5>{{data.aggs.durations.even|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.even|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.even|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+                <li>
+                  <h4>Less people then expected</h4>
+                  <h5>{{data.aggs.durations.less|calculateTimeInDays}}</h5> 
+                  <small class="muted">days</small>, 
+                  <h5>{{data.aggs.durations.less|calculateTimeInHours}}</h5> 
+                  <small class="muted">hours</small>, 
+                  <h5>{{data.aggs.durations.less|calculateTimeInMinutes}}</h5> 
+                  <small class="muted">minutes</small>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+          <!-- end group charts -->
+
+          <!-- member bars -->
+          <div id="memberBars">
+            <ul>
+              <li ng-repeat="member in data.members">
+                <h4>{{member.id|convertUserIdToName}}</h4>
+                <div class="progress">
+                  <div  ng-repeat="stat in member.stats" 
+                        class="bar {{stat.state}}" 
+                        style="width: {{stat.ratio}}%;"></div>
+                </div>
+                <small class="muted">{{member.stats|convertRatios}}</small>
+              </li>
+            </ul>
+          </div>
+          <!-- end member bars -->
+
+        </div>
+        <!-- end statistics -->
+        <hr>
+        <!-- planbaord footer -->
+        <p>
+          <small class="pull-left">
+            <span class="text-warning">{{ui.planboard.lastSyncTime}} </span>
+            <span class="muted">{{data.synced | nicelyDate}}</span>
+          </small>
+          <small class="pull-right">
+            <span class="text-warning">{{ui.planboard.dataRangeStart}} </span>
+            <span class="muted">{{data.periods.start | nicelyDate}}</span>
+            &nbsp;
+            <span class="text-warning">{{ui.planboard.dataRangeEnd}} </span>
+            <span class="muted">{{data.periods.end | nicelyDate}}</span>
+          </small>
+        </p>
+        <!-- end planbaord footer -->
+      </div>
+      <!-- end statistics -->
 
 
     </div>

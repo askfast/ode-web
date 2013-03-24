@@ -185,43 +185,105 @@ WebPaige.
 factory('Dater', function ($rootScope, Storage) 
 {
   return {
-
-    /**
-     * TODO
-     * REMOVE
-     * Not used in planboard controller
-     * 
-     * Fix it later..
-     * Not beautiful but works!!
-     */
-    convertRangeDates: function(dates)
+    current:
     {
-      var dates = dates.split(' / ');
-      var starts = dates[0].split('-');
-      var start = starts[1] + '-' + starts[0] + '-' + starts[2];
-      var ends = dates[1].split('-');
-      var end = ends[1] + '-' + ends[0] + '-' + ends[2];
-      return {
-        start: Date.parse(start + ' 00:00:00 AM'),
-        end: Date.parse(end + ' 00:00:00 AM')
+      today: function ()
+      {
+        return Date.today().getDayOfYear() + 1;
+      },
+      week: function ()
+      {
+        return new Date().getWeek();
+      },
+      month: function ()
+      {
+        return new Date().getMonth() + 1;
       }
     },
 
-    /**
-     * Make time readable for user
-     */
-    readableTime: function(time, format)
+    readable: 
     {
-      return new Date(time).toString(format); 
+      date: function (date)
+      {
+        return  new Date(date).toString($rootScope.config.formats.date);
+      }
     },
 
-    /** 
-     * Make date readable for user
-     */
-    readableDate: function(date, format)
+    // convert:
+    // {
+    //   range: function (range)
+    //   {
+    //     var range = {
+    //       start:  new Date(range.start).toString($rootScope.config.formats.date),
+    //       end:    new Date(range.end).toString($rootScope.config.formats.date)
+    //     };
+
+    //     return range;
+    //   },
+
+    //   /**
+    //    * Not working either       
+    //    *
+    //    */
+    //   stamp: function (date)
+    //   {
+    //     return Date(date).getTime();
+    //   }
+    // },
+
+    // stringify:
+    // {
+    //   date: function (date)
+    //   {
+    //     return new Date(date).toString($rootScope.config.formats.date);
+    //   }
+    // },
+
+    calculate:
     {
-      return new Date(date).toString(format);
+      diff: function (range)
+      {
+        return new Date(range.end).getTime() - new Date(range.start).getTime()
+      }
     },
+
+    // /**
+    //  * TODO
+    //  * REMOVE
+    //  * Not used in planboard controller
+    //  * 
+    //  * Fix it later..
+    //  * Not beautiful but works!!
+    //  */
+    // convertRangeDates: function(dates)
+    // {
+    //   var dates   = dates.split(' / '),
+    //       starts  = dates[0].split('-'),
+    //       start   = starts[1] + '-' + starts[0] + '-' + starts[2],
+    //       ends    = dates[1].split('-'),
+    //       end     = ends[1] + '-' + ends[0] + '-' + ends[2];
+
+    //   return {
+    //     start:  Date.parse(start + ' 00:00:00 AM'),
+    //     end:    Date.parse(end + ' 00:00:00 AM')
+    //   }
+    // },
+
+    // /**
+    //  * Make time readable for user
+    //  */
+    // readableTime: function(time, format)
+    // {
+    //   return new Date(time).toString(format); 
+    // },
+
+    // /** 
+    //  * Make date readable for user
+    //  */
+    // readableDate: function(date, format)
+    // {
+    //   return new Date(date).toString(format);
+    // },
 
     /**
      * Get the current month
@@ -1018,23 +1080,38 @@ angularLocalStorage.service('Storage', [
   }
 
 
+  var getPeriods = function ()
+  {
+    return angular.fromJson(getFromLocalStorage('periods'));
+  };
+
+  var getGroups = function ()
+  {
+    return angular.fromJson(getFromLocalStorage('groups'));
+  }
+
+
   return {
     isSupported: browserSupportsLocalStorage,
-    add: addToLocalStorage,
-    get: getFromLocalStorage,
-    remove: removeFromLocalStorage,
-    clearAll: clearAllFromLocalStorage,
+    add:        addToLocalStorage,
+    get:        getFromLocalStorage,
+    remove:     removeFromLocalStorage,
+    clearAll:   clearAllFromLocalStorage,
     session: {
-      add: addToSessionStorage,
-      get: getFromSessionStorage,
-      remove: removeFromSessionStorage,
+      add:      addToSessionStorage,
+      get:      getFromSessionStorage,
+      remove:   removeFromSessionStorage,
       clearAll: clearAllFromSessionStorage
     },
     cookie: {
-      add: addToCookies,
-      get: getFromCookies,
-      remove: removeFromCookies,
+      add:      addToCookies,
+      get:      getFromCookies,
+      remove:   removeFromCookies,
       clearAll: clearAllFromCookies
+    },
+    local: {
+      periods:  getPeriods,
+      groups:   getGroups
     }
   };
 
@@ -1913,6 +1990,87 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
             stat.state = 'bar-' + state[0];
           });
         });
+      };
+   
+
+      /**
+       * Group availabity ratios pie chart
+       */
+      if (data.aggs && data.aggs.ratios)
+      {
+        /**
+         * Clean group pie chart holder
+         */
+        document.getElementById("groupPie").innerHTML = '';
+        /**
+         * Init vars
+         */
+        var ratios = [];
+        var legends = [];
+        /**
+         * Loop through group agg. ratios
+         */
+        angular.forEach(data.aggs.ratios, function(ratio, index)
+        {
+          /**
+           * Quick fix against 0 ratios
+           * Dont display them at all
+           */
+          if (ratio != 0)
+          {
+            /**
+             * Ratios
+             */
+            ratios.push(ratio);
+            /**
+             * Legends
+             */
+            legends.push(ratio + '% ' + index);
+          };
+        });
+        /**
+         * Pie chart it baby!
+         */
+        var r = Raphael("groupPie"),
+            pie = r.piechart(120, 120, 100, ratios, 
+            { 
+              legend: legends,
+              colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+            });
+        /**
+         * Pie chart title
+         */
+        // r.text(140, 240, name).attr({
+        //   font: "20px sans-serif"
+        // });
+        /**
+         * Decorate it with mouse effects
+         */
+        pie.hover(
+        function()
+        {
+          //console.log('this ->', this);
+          this.sector.stop();
+          this.sector.scale(1.1, 1.1, this.cx, this.cy);
+          if (this.label)
+          {
+            this.label[0].stop();
+            this.label[0].attr({ r: 7.5 });
+            this.label[1].attr({ "font-weight": 800 });
+          }
+        },
+        function()
+        {
+          this.sector.animate({
+            transform: 's1 1 ' + this.cx + ' ' + this.cy
+          }, 500, "bounce");
+          if (this.label)
+          {
+            this.label[0].animate({ r: 5 }, 500, "bounce");
+            this.label[1].attr({ "font-weight": 400 });
+          }
+        });
+
       };
 
 
