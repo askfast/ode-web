@@ -6,6 +6,9 @@ project/
 .project
 .settings/
 
+src/META-INF/
+src/log4j.properties
+
 war/WEB-INF/appengine-web.xml
 war/WEB-INF/logging.properties
 war/WEB-INF/web.xml
