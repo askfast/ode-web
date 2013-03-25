@@ -75,7 +75,6 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Init rootScope app info container
    */
-  // $rootScope.app = {};
   if (!Storage.session.get('app'))
   {
     Storage.session.add('app', '{}');
@@ -101,6 +100,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    * use native JSON functions of angular and Store service
    */
   var logindata = angular.fromJson(Storage.get('logindata'));
+
   if (logindata)
   {
     /**
@@ -122,20 +122,12 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    */
   $scope.login = function()
   {
-    /**
-     * Reset alerts
-     */
     $('#alertDiv').hide();
-    /**
-     * Checks
-     */
+
     if (!$scope.logindata ||
         !$scope.logindata.username || 
         !$scope.logindata.password)
     {
-      /**
-       * Inform user
-       */
       $scope.alert = {
         login: {
           display: true,
@@ -143,31 +135,23 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
           message: $rootScope.ui.login.alert_fillfiled
         }
       };
-      /**
-       * Put button state back to default
-       */
+
       $('#login button[type=submit]')
         .text('Login')
         .removeAttr('disabled');
       return false;     
     };
-    /**
-     * Change button state
-     */
+
     $('#login button[type=submit]')
       .text('Login..')
       .attr('disabled', 'disabled');
-    /**
-     * Save login to localStorage
-     */
+
     Storage.add('logindata', angular.toJson({
       username: $scope.logindata.username,
       password: $scope.logindata.password,
       remember: $scope.logindata.remember
     }));
-    /**
-     * Authorize
-     */
+
     self.auth( $scope.logindata.username, $md5.process($scope.logindata.password ));
   };
 
@@ -177,20 +161,11 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    */
   self.auth = function(uuid, pass)
   {
-    /**
-     * Backend login
-     */
     User.login(uuid, pass)
     .then(function(result)
 	  {
-      /**
-       * Check if bad credentials
-       */
       if (result.status == 400)
-      {      
-        /**
-         * Inform user
-         */
+      {
         $scope.alert = {
           login: {
             display: true,
@@ -198,26 +173,16 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
             message: $rootScope.ui.login.alert_wrongUserPass
           }
         };
-        /**
-         * Put button state back to default
-         */
+
         $('#login button[type=submit]')
           .text('Login')
           .removeAttr('disabled');
         return false;
       }
-      /**
-       * Successful login
-       */
       else
       {
-        /**
-         * Set session
-         */
         Session.set(result["X-SESSION_ID"]);
-        /**
-         * Init preloader
-         */
+
         self.preloader();
       };
 	  });
@@ -235,29 +200,17 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    */
   self.preloader = function()
   {
-    /**
-     * Presentations
-     */
     $('#login').hide();
     $('#download').hide();
     $('#preloader').show();
-    /**
-     * Preloader
-     */
+
     self.progress(20, $rootScope.ui.login.loading_User);
-    /**
-     * Get user resources
-     */
+
     User.resources()
     .then(function(resources)
     {
-      /**
-       * Fill app info container
-       */
       $rootScope.app.resources = resources;
-      /**
-       * Set user language settings
-       */
+
       if (resources.settingsWebPaige != null || 
           resources.settingsWebPaige != undefined)
       {
@@ -266,69 +219,44 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
       else
       {
         $rootScope.changeLanguage($config.defaults.settingsWebPaige.user.language);
-      }
-      /**
-       * Preloader
-       */
+      };
+
       self.progress(40, $rootScope.ui.login.loading_Message);
-      /**
-       * Get messages
-       */
+
       Messages.query()
       .then(function(messages)
       {
-        /**
-         * Fill app info container for unread messages
-         */
         $rootScope.app.unreadMessages = Messages.unreadCount();
+
         Storage.session.unreadMessages = Messages.unreadCount();
-        /**
-         * Preloader
-         */
+
         self.progress(60, $rootScope.ui.login.loading_Group);
-        /**
-         * Get groups
-         */
+
         Groups.query()
         .then(function(groups)
         {
-          /**
-           * Preloader
-           */
           self.progress(80, $rootScope.ui.login.loading_Members);
-          /**
-           * Compile member calls into one pool
-           */
+
           var calls = [];
+
           angular.forEach(groups, function(group, index)
           {
             calls.push(Groups.get(group.uuid));
           });
-          /**
-           * Loop through member calls pool
-           */
+
           $q.all(calls)
           .then(function(result)
           {
-            /**
-             * Preloader
-             */
             self.progress(100, $rootScope.ui.login.loading_everything);
-            /**
-             * Make unique list of members
-             */
+
             Groups.uniqueMembers();
-            /**
-             * Presentations
-             */
+
             $('.navbar').show();
             $('#footer').show();
             $('body').css({
               'background': 'url(../img/bg.jpg) repeat'
             });
-            /**
-             * Redirect to dashboard
-             */
+
             $location.path('/dashboard');
           });
         });
@@ -490,57 +418,27 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
  */
 loginCtrl.logout = function($rootScope, $config, $scope, $window, Session, User, Storage)
 {
-  /**
-   * Presentation
-   */
   $('.navbar').hide();
   $('#footer').hide();
-  /**
-   * Get logindata
-   */
+
   var logindata = angular.fromJson(Storage.get('logindata'));
-  /**
-   * Log user out
-   */
+
 	User.logout()
 	.then(function()
 	{
-		//Session.clear();
-    /**
-     * Clear localStorage
-     */
 		Storage.clearAll();
-    /**
-     * Clear sessionStorage
-     */
+
     Storage.session.clearAll();
-    /**
-     * Set logindata back
-     */
+
     Storage.add('logindata', angular.toJson(logindata));
-    /**
-     * Rediret back to login
-     */
+
     $window.location.href = 'logout.html';
 	});
 };
 
 
-loginCtrl.$inject = [ '$rootScope', 
-                      '$config', 
-                      '$location',
-                      '$q', 
-                      '$scope', 
-                      'Session', 
-                      'User', 
-                      '$md5', 
-                      'Groups', 
-                      'Messages',
-                      'Storage',
-                      '$routeParams'];
+loginCtrl.$inject = ['$rootScope', '$config', '$location', '$q', '$scope', 'Session', 'User', '$md5', 'Groups', 'Messages', 'Storage', '$routeParams'];
 
-
-                      'use strict';
 
 /**
  * TODO
@@ -559,9 +457,6 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   var User = $resource();
 
 
-  /**
-   * Login resource
-   */
   var Login = $resource(
     $config.host + '/login',
     {
@@ -575,9 +470,19 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   );
 
 
-  /**
-   * Resources resource
-   */
+  var Logout = $resource(
+    $config.host + '/logout',
+    {
+    },
+    {
+      process: {
+        method: 'GET',
+        params: {}
+      }
+    }
+  );
+
+
   var Resources = $resource(
     $config.host + '/resources',
     {
@@ -591,9 +496,6 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   );
 
 
-  /**
-   * Reset resource
-   */
   var Reset = $resource(
     $config.host + '/passwordReset',
     {
@@ -609,6 +511,9 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   
 
   /**
+   * TODO
+   * RE-FACTORY
+   * 
    * User login
    */
   User.prototype.password = function(uuid) {
@@ -636,6 +541,7 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   User.prototype.login = function (uuid, pass) 
   {    
     var deferred = $q.defer();
+
     Login.process({uuid: uuid, pass: pass}, function (result) 
     {
       if (angular.equals(result, [])) 
@@ -651,10 +557,14 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
     {
       deferred.resolve(error);
     });
+
     return deferred.promise;
   };
   
+
   /**
+   * RE-FACTORY
+   * 
    * change user password
    */
   User.prototype.changePass = function(uuid, newpass, key){
@@ -673,21 +583,6 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
     
     return deferred.promise;
   }
-  
-  /**
-   * Logout resource
-   */
-  var Logout = $resource(
-    $config.host + '/logout',
-    {
-    },
-    {
-      process: {
-        method: 'GET',
-        params: {}
-      }
-    }
-  );
 
 
   /**
@@ -696,10 +591,12 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   User.prototype.logout = function () 
   {    
     var deferred = $q.defer();
+
     Logout.process(null, function (result) 
     {
       deferred.resolve(result);
     });
+
     return deferred.promise;
   };
 
@@ -710,6 +607,7 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   User.prototype.resources = function () 
   {    
     var deferred = $q.defer();
+
     Resources.get(null, function (result) 
     {
       if (angular.equals(result, [])) 
@@ -719,13 +617,14 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
       else 
       {
         Storage.add('resources', angular.toJson(result));
+
         deferred.resolve(result);
       }
     });
+
     return deferred.promise;
   };
 
 
   return new User;
-
 });

@@ -2,18 +2,15 @@
  * Installation profile
  */
 var profile = {
-	/**
-	 * Host for app
-	 */
+
 	namespace: 'ns_knrmtest',
+
 	host: function ()
 	{
 		return ($.browser.msie) ? '/proxy/ns_knrmtest' : 
 															'http://3rc2.ask-services.appspot.com/ns_knrmtest';
 	},
-  /**
-   * States for availabilities
-   */
+
   states: {
     'com.ask-cs.State.Available': {
       'className': 'state-available',
@@ -52,9 +49,7 @@ var profile = {
       'type': 'Niet Beschikbaar'
     }
   },
-  /**
-   * Divisions
-   */
+
   divisions: [
     {
       id: 'all',
@@ -69,9 +64,7 @@ var profile = {
       label: 'Zuid'
     }
   ],
-  /**
-   * Roles
-   */
+
   roles: [
     {
       id: 1,
@@ -93,38 +86,14 @@ var profile = {
  * App config
  */
 var config = {
-  /**
-   * App version
-   */
+
   version: '2.0.0',
-  /**
-   * Default language
-   */
+
   lang: 'nl',
-  /**
-   * Real users
-   */
+
   demo_users: true,
-  /**
-   * Data source host
-   */
+
   host: profile.host(),
-
-
-  // /**
-  //  * TODO
-  //  * All date time related values into one place!
-  //  */
-  // date: {
-  //   format: 'dd-M-yyyy'
-  // },
-  // time: {
-  //   format: 'HH:mm tt'
-  // },
-  // datetime: {
-  //   format: 'dd-M-yyyy HH:mm tt'
-  // },
-
 
   formats: {
     date:     'dd-M-yyyy',
@@ -132,18 +101,10 @@ var config = {
     datetime: 'dd-M-yyyy HH:mm tt'
   },
 
-
-  /**
-   * Roles
-   */
   roles: profile.roles,
-  /**
-   * Timeline options
-   */
+
   timeline: {
-    /**
-     * Plugin options
-     */
+
     options: {
       axisOnTop: true,
       width: '100%',
@@ -158,38 +119,23 @@ var config = {
       showNavigation: false,
       intervalMin: 1000 * 60 * 60 * 1
     },
-    /**
-     * Timeline app settings
-     */
+
     config: {
-      /**
-       * Zoom value
-       */
+
       zoom: '0.4',
-      /**
-       * Bar charts for group agg. data
-       */
+
       bar: false,
-      /**
-       * Group wishes setting
-       */
+
       wishes: false,
-      /**
-       * Timeline legenda settings
-       */
+
       legenda: {},
+
       legendarer: false,
-      /**
-       * Availability states
-       */
+
       states: profile.states,
-      /**
-       * Any given divisions
-       */
+
       divisions: profile.divisions,
-      /**
-       * Density based colors for group aggs.
-       */
+
       densities: {
         less: '#a0a0a0',
         even: '#ba6a24',
@@ -202,13 +148,12 @@ var config = {
         more: '#486877'
       }
     }
-  }, // end timeline options
+  },
+
   pie: {
     colors: ['#415e6b', '#ba6a24', '#a0a0a0']
   },
-  /**
-   * Defaults for settings
-   */
+
   defaults: {
     settingsWebPaige: {
       user: {
@@ -218,7 +163,6 @@ var config = {
     }
   }
 }
-
 
 
 /**

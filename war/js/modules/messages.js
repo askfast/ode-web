@@ -69,9 +69,6 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   function setView (hash)
   {
-    /**
-     * Default view settings
-     */
     $scope.views = {
       compose: false,
       message: false,
@@ -79,9 +76,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       outbox:  false,
       trash:   false
     };
-    /**
-     * Set correct one true
-     */
+
     $scope.views[hash] = true;
   };
 
@@ -91,18 +86,10 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.setViewTo = function (hash)
   {
-    /**
-     * Let angular know things are changing
-     */
     $scope.$watch(hash, function()
     {
-      /**
-       * Set hash
-       */
       $location.hash(hash);
-      /**
-       * Set view intern
-       */
+
       setView(hash);
     });
   };
@@ -113,20 +100,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   if (!$location.hash())
   {
-    /**
-     * Set view
-     */
     var view = 'inbox';
-    /**
-     * Adjust url
-     */
+
     $location.hash('inbox');
   }
   else
   {
-    /**
-     * If given use what's supplied
-     */
     var view = $location.hash();
   };
 
@@ -140,10 +119,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   /**
    * Extract view action from url and set message view
    */
-  if ($location.search().uuid)
-  {
-    setMessageView($location.search().uuid);
-  };
+  if ($location.search().uuid) setMessageView($location.search().uuid);
 
 
   /**
@@ -155,24 +131,12 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   function setMessageView (id)
   {
-    /**
-     * Set loading
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.message.loadingMessage
-    };
-    /**
-     * Set view
-     */
+    $rootScope.statusBar.display($rootScope.ui.message.loadingMessage);
+
     setView('message');
-    /**
-     * Set hash
-     */
+
     $scope.setViewTo('message');
-    /**
-     * Find message
-     */
+
     $scope.message = Messages.find(id);
 
     /**
@@ -184,45 +148,30 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
      */
     if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
     {
-      /**
-       * Trigger change state call
-       */
       Messages.changeState([id], 'READ')
       .then( function (result)
       {
         console.log('state changed');
       });
-      /**
-       * Loop through in inbox
-       */
+
       var _inbox = [];
+
       angular.forEach($scope.messages.inbox, function (message, index)
       {
         if (message.uuid == $scope.message.uuid)
         {
-          /**
-           * Change state for view
-           */
           message.state = "READ";
         };
-        /**
-         * Push changes message to inbox
-         */
+
         _inbox.push(message);
       });
-  		/**
-       * Update inbox container in view
-       */
+
   	  $scope.messages.inbox = _inbox;
-  	  // console.log($scope.messages.inbox);
+
       Messages.unreadCount(); 
     };
-    /**
-     * Turn off loading
-     */
-    $rootScope.loading = {
-      status: false
-    };
+
+    $rootScope.statusBar.off();
   };
 
 
@@ -231,25 +180,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.requestMessage = function (current, origin)
   {
-    /**
-     * Set origin
-     */
     $scope.origin = origin;
-    /**
-     * Set selected group for view
-     */
+
     setMessageView(current);
-    /**
-     * Let angular know things are changing
-     */
+
     $scope.$watch($location.search(), function()
     {
-      /**
-       * Set hash
-       */
-      $location.search({
-        uuid: current
-      });
+      $location.search({uuid: current});
     });
   };
 
@@ -259,25 +196,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.composeMessage = function()
   {
-    /** 
-     * Check on status
-     */
     if ($scope.views.compose)
     {
-      /**
-       * Close all
-       */
       $scope.closeTabs();
     }
     else
     {
-      /**
-       * Reset inline form value
-       */
       $scope.message = {};
-      /**
-       * Set views
-       */
+
       $scope.setViewTo('inbox');
     };
 
@@ -289,25 +215,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.closeTabs = function()
   {
-    /**
-     * Reset message container
-     */
     $scope.message = {};
-    /**
-     * Remove uuid from url
-     */
+
     $location.search({});
-    /**
-     * Set view to inbox
-     */
+
     setView($scope.origin);
-    /**
-     * Set hash
-     */
+
     $scope.setViewTo($scope.origin);
-    /**
-     * Clear session cache for escalation data
-     */
+
     Storage.session.remove('escalation');
   };
 
@@ -317,13 +232,8 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.toggleSelection = function(messages, inbox, master)
   {
-    /**
-     * Set flag
-     */
     var flag = (master) ? true : false;
-    /**
-     * Loop through
-     */
+
     angular.forEach(messages, function(message, index)
     {
       $scope.selection[inbox][message.uuid] = flag;
@@ -336,66 +246,29 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.removeMessage = function (id)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.message.removing
-    };
-    /**
-     * Init bulk
-     */
+    $rootScope.statusBar.display($rootScope.ui.message.removing);
+
     var bulk = [];
-    /**
-     * Push it
-     */
+
     bulk.push(id);
-    /**
-     * Remove message
-     */
+
     Messages.remove(bulk)
     .then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.message.removed
-      });
-      /**
-       * Set loading to refreshing
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.message.refreshing
-      };
-      /**
-       * Query messages
-       */
+      $rootScope.notifier.success($rootScope.ui.message.removed);
+
+      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
       Messages.query()
       .then(function(messages)
       {
-        /**
-         * Reload messages
-         */
         $scope.messages = messages;
-        /**
-         * Set preloader
-         */
+
         $rootScope.loading = false;
-        /**
-         * Return to origin
-         */
+
         $scope.closeTabs();
-        /**
-         * Turn off loading
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -406,67 +279,28 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.removeMessages = function (selection)
   {
-    /**
-     * Set loading
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.message.removingSelected
-    };
-    /**
-     * Init vars
-     */
+    $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
+
     var ids = [];
-    /**
-     * Loop through the selection
-     */
-    angular.forEach(selection, function(flag, id)
+
+    angular.forEach(selection, function (flag, id)
     {
-      /**
-       * If true push it
-       */
-      if (flag)
-      {
-        ids.push(id);
-      }
+      if (flag) ids.push(id);
     });
-    /**
-     * Remove messages
-     */
+
     Messages.remove(ids)
     .then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.message.removed
-      });
-      /**
-       * Set loading to refreshing
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.message.refreshing
-      };
-      /**
-       * Query messages
-       */
+      $rootScope.notifier.success($rootScope.ui.message.removed);
+
+      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
       Messages.query()
       .then(function(messages)
       {
-        /**
-         * Reload messages
-         */
         $scope.messages = messages;
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -477,58 +311,25 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.restoreMessage = function (id)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.message.restoring
-    };
-    /**
-     * Init var
-     */
+    $rootScope.statusBar.display($rootScope.ui.message.restoring);
+
     var bulk = [];
-    /**
-     * Push it
-     */
+
     bulk.push(id);
-    /**
-     * Restore message
-     */
+
     Messages.restore(bulk)
     .then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.message.restored
-      });
-      /**
-       * Set loading to refreshing
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.message.refreshing
-      };
-      /**
-       * Query messages
-       */
+      $rootScope.notifier.success($rootScope.ui.message.restored);
+
+      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
       Messages.query()
       .then(function(messages)
       {
-        /**
-         * Reload messages
-         */
         $scope.messages = messages;
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -539,67 +340,28 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.restoreMessages = function (selection)
   {
-    /**
-     * Set loading
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.message.restoringSelected
-    };
-    /**
-     * Init vars
-     */
+    $rootScope.statusBar.display($rootScope.ui.message.restoringSelected);
+
     var ids = [];
-    /**
-     * Loop through
-     */
-    angular.forEach(selection, function(flag, id)
+
+    angular.forEach(selection, function (flag, id)
     {
-      /**
-       * If true push it
-       */
-      if (flag)
-      {
-        ids.push(id);
-      }
+      if (flag) ids.push(id);
     });
-    /**
-     * Restore message
-     */
+
     Messages.restore(ids)
     .then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.message.removed
-      });
-      /**
-       * Set loading to refreshing
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.message.refreshing
-      };
-      /**
-       * Query messages
-       */
+      $rootScope.notifier.success($rootScope.ui.message.removed);
+
+      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
       Messages.query()
       .then(function(messages)
       {
-        /**
-         * Reload messages
-         */
         $scope.messages = messages;
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -610,50 +372,21 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.emptyTrash = function ()
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.message.emptying
-    };
-    /**
-     * Empty trash
-     */
+    $rootScope.statusBar.display($rootScope.ui.message.emptying);
+
     Messages.emptyTrash()
     .then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.message.empited
-      });
-      /**
-       * Set loading to refreshing
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.message.refreshing
-      };
-      /**
-       * Query messages
-       */
+      $rootScope.notifier.success($rootScope.ui.message.empited);
+
+      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
       Messages.query()
       .then(function(messages)
       {
-        /**
-         * Reload messages
-         */
         $scope.messages = messages;
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });    
   };
@@ -667,30 +400,13 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   $("div#composeTab select.chzn-select").chosen()
   .change(function(item)
   {
-    /**
-     * Loop through list items of chosen
-     */
   	$.each($(this).next().find("ul li.result-selected"), function (i,li)
     {
-      /**
-       * Set name
-       */
   		var name = $(li).html();
-      /**
-       * Loop though options
-       */
+
   		$.each($("div#composeTab select.chzn-select option"), function (j,opt)
       {
-        /**
-         * If found
-         */
-	      if(opt.innerHTML == name)
-        {
-          /**
-           * Set option to selected
-           */
-          opt.selected = true;
-	      };
+	      if(opt.innerHTML == name) opt.selected = true;
 	    });
   	});
   });
@@ -701,32 +417,14 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.reply = function(message)
   {
-    /**
-     * Switch view to compose
-     */
     setView('compose');
 
-    /**
-     * Set hash to compose
-     */
     $scope.setViewTo('compose');
 
-    /**
-     * Get members from localStorage
-     */
     var members = angular.fromJson(Storage.get('members')),
-        /**
-         * Extract sender id
-         */
         senderId = message.requester.split('personalagent/')[1].split('/')[0],
-        /**
-         * Find sender's name in members list
-         */
         name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
 
-    /**
-     * Set data in compose form
-     */
     $scope.message = {
       subject: 'RE: ' + message.subject,
       receivers: [{
@@ -736,20 +434,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       }]
     };
 
-    /**
-     * Trigger chosen
-     */
     angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
     {
-      if (option.innerHTML == name)
-      {
-        option.selected = true;
-      };
+      if (option.innerHTML == name) option.selected = true;
     });
 
-    /**
-     * Let chosen know list is updated
-     */
     $("div#composeTab select.chzn-select").trigger("liszt:updated");
   };
 
@@ -759,58 +448,25 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.send = function (message, broadcast)
   {
-    /**
-     * Set loading
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.message.sending
-    };
-    /**
-     * Empty trash
-     */
+    $rootScope.statusBar.display($rootScope.ui.message.sending);
+
     Messages.send(message, broadcast)
     .then(function(uuid)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.message.sent
-      });
-      /**
-       * Set loading
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.message.refreshing
-      };
-      /**
-       * Query messages
-       */
+      $rootScope.notifier.success($rootScope.ui.message.sent);
+
+      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
       Messages.query()
       .then(function(messages)
       {
-        /**
-         * Reload messages
-         */
         $scope.messages = messages;
-        /**
-         * Close tabs
-         */
+
         $scope.closeTabs();
-        /**
-         * Redirect to messge view
-         */
+
         $scope.requestMessage(uuid, $scope.origin);
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -821,41 +477,20 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   if ($location.search().escalate)
   {
-    var escalation = angular.fromJson(Storage.session.get('escalation'));
-    /**
-     * Grab group uuid
-     */
-    var name = escalation.group.split('>')[1].split('<')[0];
-    var uuid = escalation.group.split('uuid=')[1].split('#view')[0];
-    /**
-     * Wait a bit till DOM is ready
-     */
+    var escalation = angular.fromJson(Storage.session.get('escalation')),
+        name = escalation.group.split('>')[1].split('<')[0],
+        uuid = escalation.group.split('uuid=')[1].split('#view')[0];
+
     setTimeout (function ()
     {
-      /**
-       * Trigger chosen
-       */
       angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
       {
-        /**
-         * Find the correct option
-         */
-        if (option.innerHTML == name)
-        {
-          /**
-           * Set selected
-           */
-          option.selected = true;
-        };
+        if (option.innerHTML == name) option.selected = true;
       });
-      /**
-       * Let chosen know list is updated
-       */
+
       $("div#composeTab select.chzn-select").trigger("liszt:updated");
     }, 100);
-    /**
-     * Set data in compose form
-     */
+
     $scope.message = {
       subject: $rootScope.ui.message.escalation,
       receivers: [{
@@ -863,18 +498,20 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
         id: uuid, 
         name: name
       }],
-      body: $rootScope.ui.message.escalationBody(escalation.diff, escalation.start.date , escalation.start.time ,escalation.end.date ,escalation.end.time)
+      body: $rootScope.ui.message.escalationBody(
+        escalation.diff, 
+        escalation.start.date, 
+        escalation.start.time,
+        escalation.end.date,
+        escalation.end.time)
     };
-    /**
-     * Set broadcasting options
-     */
+
     $scope.broadcast = {
       sms: true
     };
   };
   
 }
-
 
 
 /**
@@ -888,20 +525,12 @@ messagesCtrl.resolve = {
 };
 
 
+messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', '$route', 'data', 'Messages', 'Storage'];
 
-
-messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', 
-                        '$route', 'data', 'Messages', 'Storage'];
-
-
-'use strict';
 
 WebPaige.
 factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
 {
-  /**
-   * Messages resource
-   */
   var Messages = $resource(
     $config.host + '/question/:action',
     {
@@ -945,19 +574,10 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
     Messages.query(function(result) 
     {
-      /**
-       * Save to localStorage
-       */
       Storage.add('messages', angular.toJson(result));
 
-      /**
-       * Update message counter
-       */
       Messages.prototype.unreadCount();
 
-      /**
-       * Return promised
-       */
       deferred.resolve(Messages.prototype.filter(result));
     });
 
@@ -970,46 +590,26 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
    */
   Messages.prototype.filter = function (messages)
   {
-    /**
-     * Set inboxes
-     */
     var filtered = {
       inbox: [],
       outbox: [],
       trash: []
     };
 
-    /**
-     * Loop through messages
-     */
     angular.forEach(messages, function(message, index)
     {
-      /**
-       * If message has no subject
-       */
       if (message.subject == '') message.subject = '-No Subject-';
 
-      /**
-       * Inbox
-       */
       if (message.box == 'inbox' &&
           message.state != 'TRASH')
       {
         filtered.inbox.push(message);
       }
-
-      /**
-       * Outbox
-       */
       else if ( message.box == 'outbox' && 
                 message.state != 'TRASH')
       {
         filtered.outbox.push(message);
       }
-
-      /**
-       * Trash
-       */
       else if ( (message.box == 'inbox' || message.box == 'outbox') &&
                 message.state == 'TRASH')
       {
@@ -1036,18 +636,10 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.find = function (id)
   {
     var gem;
-    /**
-     * Loop through local messages
-     */
+
     angular.forEach(Messages.prototype.local(), function(message, index)
     {
-      /**
-       * Catched you
-       */
-      if (message.uuid == id)
-      {
-        gem = message;
-      };
+      if (message.uuid == id) gem = message;
     });
 
     return gem;
@@ -1059,16 +651,10 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
    */
   Messages.prototype.receviers = function ()
   {
-    /**
-     * Get local unique members list and groups, and init receivers list
-     */
     var members   = angular.fromJson(Storage.get('members')),
         groups    = angular.fromJson(Storage.get('groups')),
         receivers = [];
 
-    /**
-     * Loop through members
-     */
     angular.forEach(members, function(member, index)
     {
         receivers.push({
@@ -1078,9 +664,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       });
     });
 
-    /**
-     * Loop through groups
-     */
     angular.forEach(groups, function(group, index)
     {
         receivers.push({
@@ -1099,38 +682,21 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
    */
   Messages.prototype.send = function (message, broadcast) 
   {
-    /**
-     * Init vars
-     */
     var deferred = $q.defer(),
         members = [],
         types = [];
 
-    /**
-     * Loop through receivers
-     */
     angular.forEach(message.receivers, function (receiver, index)
     {
       members.push(receiver.id);
     });
 
-    /**
-     * Set types
-     * 'paige' is default type
-     */
     types.push('paige');
-    /**
-     * Set 'sms' if it's selected
-     */
+
     if (broadcast.sms) types.push('sms');
-    /**
-     * Set 'email' if its selected
-     */
+
     if (broadcast.email) types.push('email');
 
-    /**
-     * Construct message
-     */
     var message = {
       members: members,
       content: message.body,
@@ -1138,16 +704,10 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       types: types
     };
 
-    /**
-     * Send message
-     */
     Messages.send(null, message, function (result) 
     {
-      /**
-       * Message send call returns only uuid and that is parsed as json
-       * by angular, this is a fix for converting returned object to plain string
-       */
       var returned = '';
+
       angular.forEach(result, function (chr, i)
       {
         returned += chr;
@@ -1165,20 +725,11 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
    */
   Messages.prototype.unread = function ()
   {
-    /**
-     * Get messages and init counter
-     */
     var messages = Messages.prototype.local(),
         unread = [];
-    
-    /**
-     * Loop through local messages
-     */
+
     angular.forEach(messages, function (message, index)
     {
-      /**
-       * Checks
-       */
       if (message.box   == 'inbox' &&
           message.state == 'NEW')
       {
@@ -1195,28 +746,18 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
    */
   Messages.prototype.unreadCount = function ()
   {
-    /**
-     * Get messages and init counter
-     */
     var messages = Messages.prototype.local(),
         counter = 0;
-    /**
-     * Loop through local messages
-     */
+
     angular.forEach(messages, function (message, index)
     {
-      /**
-       * Checks
-       */
       if (message.box   == 'inbox' &&
           message.state == 'NEW')
       {
         counter++;
       };
     });
-    /**
-     * No need to return but set rootScope directly
-     */
+
     $rootScope.app.unreadMessages = counter;
   };
 
@@ -1227,64 +768,38 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   Messages.prototype.changeState = function (ids, state)
   {
     var deferred = $q.defer();
-    /**
-     * Make change state call
-     */
+
     Messages.changeState(null, {
       ids: ids, 
       state: state 
     }, function (result) 
     {
-      /**
-       * Return promised
-       */
       deferred.resolve(result);
     });
+
     /**
      * Change message state locally as well
      * if it is READ
      */
     if (state == 'READ')
     {
-      /**
-       * Get messages
-       */
       var messages = angular.fromJson(Storage.get('messages')),
           converted = [];
-      /**
-       * Loop through messages
-       */
+
       angular.forEach(messages, function (message, index)
       {
-        /**
-         * Loop through given array of ids
-         */
         angular.forEach(ids, function (id, i)
         {
-          /**
-           * Catches
-           */
-          if (message.uuid == id)
-          {
-            message.state = 'READ';
-          };
+          if (message.uuid == id) message.state = 'READ';
         });
-        /**
-         * Push in converted array
-         */
+
         converted.push(message);
       });
-      /**
-       * Remove local messgaes container
-       */
+
       Storage.remove('messages');
-      /**
-       * Store back in localStorage
-       */
+
       Storage.add(angular.toJson('messages', converted));
-      /**
-       * Update unread message counter
-       */
+
       Messages.prototype.unreadCount();
     };
 
@@ -1318,9 +833,6 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   {
     var deferred = $q.defer();
 
-    /**
-     * Make seen message call
-     */
     Messages.prototype.changeState(id, 'SEEN')
     .then(function (result) 
     {
@@ -1340,21 +852,16 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
         messages = Messages.prototype.local(),
         bulk = [];
 
-    /**
-     * Loop through messages
-     */
     angular.forEach(messages, function(message, index)
     {
-      if ( (message.box == 'inbox' || message.box == 'outbox') &&
-                message.state == 'TRASH')
+      if ( (message.box   == 'inbox' || 
+            message.box   == 'outbox') &&
+            message.state == 'TRASH')
       {
         bulk.push(message.uuid);
       };
     });
 
-    /**
-     * Make delete call(s)
-     */
     Messages.remove(null, { 
       members: bulk 
     }, function (result) 
@@ -1368,4 +875,3 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
   return new Messages;
 });
-

@@ -60,25 +60,15 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   if (!params.uuid && !$location.hash())
   {
-    /**
-     * Set param and hash
-     */
-    var uuid = data.groups[0].uuid;
-    var view = 'view';
-    /**
-     * Adjust url
-     */
-    $location.search({
-      uuid: data.groups[0].uuid
-    }).hash('view');
+    var uuid = data.groups[0].uuid,
+        view = 'view';
+
+    $location.search({uuid: data.groups[0].uuid}).hash('view');
   }
   else
   {
-    /**
-     * If given use what's supplied
-     */
-    var uuid = params.uuid;
-    var view = $location.hash();
+    var uuid = params.uuid,
+        view = $location.hash();
   };
 
 
@@ -98,24 +88,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    * Set given group for view
    */
   function setGroupView (id)
-  {  
-    /**
-     * Loop through groups and set current group
-     */
+  {
     angular.forEach(data.groups, function (group, index)
     {
-      if (group.uuid == id)
-      {
-        $scope.group = group;
-      };
+      if (group.uuid == id) $scope.group = group;
     });
-    /**
-     * Set members
-     */
+
     $scope.members = data.members[id];
-    /**
-     * Set current
-     */
+
     $scope.current = id;
   };
 
@@ -125,21 +105,11 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.requestGroup = function (current)
   {
-    /**
-     * Set selected group for view
-     */
     setGroupView(current);
-    /**
-     * Let angular know things are changing
-     */
+
     $scope.$watch($location.search(), function()
     {
-      /**
-       * Set hash
-       */
-      $location.search({
-        uuid: current
-      });
+      $location.search({uuid: current});
     });
   };
 
@@ -149,9 +119,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   function setView (hash)
   {
-    /**
-     * Default view settings
-     */
     $scope.views = {
       view:   false,
       add:    false,
@@ -159,9 +126,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       search: false,
       member: false
     };
-    /**
-     * Set correct one true
-     */
+
     $scope.views[hash] = true;
   };
 
@@ -171,18 +136,10 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.setViewTo = function (hash)
   {
-    /**
-     * Let angular know things are changing
-     */
     $scope.$watch(hash, function()
     {
-      /**
-       * Set hash
-       */
       $location.hash(hash);
-      /**
-       * Set view intern
-       */
+
       setView(hash);
     });
   };
@@ -193,25 +150,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.addGroupForm = function ()
   {
-    /** 
-     * Check on status
-     */
     if ($scope.views.add)
     {
-      /**
-       * Close all
-       */
       $scope.closeTabs();
     }
     else
     {
-      /**
-       * Reset inline form value
-       */
       $scope.groupForm = {};
-      /**
-       * Set views
-       */
+
       $scope.setViewTo('add');
     };
   };
@@ -222,25 +168,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.newMemberForm = function ()
   {
-    /** 
-     * Check on status
-     */
     if ($scope.views.member)
     {
-      /**
-       * Close all
-       */
       $scope.closeTabs();
     }
     else
     {
-      /**
-       * Reset inline form value
-       */
       $scope.memberForm = {};
-      /**
-       * Set views
-       */
+
       $scope.setViewTo('member');
     };
   };
@@ -251,13 +186,8 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.editGroup = function (group)
   {
-    /**
-     * Set view on edit mode
-     */
     $scope.setViewTo('edit');
-    /**
-     * Set values for group edit form
-     */
+
     $scope.groupForm = {
       id: group.uuid,
       name: group.name
@@ -270,14 +200,10 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.closeTabs = function ()
   {
-    /**
-     * Clean forms
-     */
     $scope.groupForm = {};
+
     $scope.memberForm = {};
-    /**
-     * Set views
-     */
+
     $scope.setViewTo('view');
   };
 
@@ -287,44 +213,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.searchMembers = function (query)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.groups.searchingMembers
-    };
-    /**
-     * Search
-     */
+    $rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
+
     Groups.search(query).
     then(function(results)
     {
-      /**
-       * Set query string for view
-       */
       $scope.search = {
         query: '',
         queried: query
       };
-      /**
-       * Show results
-       */
+
       $scope.candidates = results;
-      /**
-       * Set search view on
-       */
+
       $scope.setViewTo('search');
-      /**
-       * Fix height of the content tab
-       */
+
       $rootScope.fixTabHeight('searchTab');
-      /**
-       * Turn off preloader
-       */
-      $rootScope.loading = {
-        status: true
-      };
+
+      $rootScope.statusBar.off();
     });
   };
 
@@ -334,50 +239,21 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.addMember = function (candidate)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.groups.addingNewMember
-    };
-    /**
-     * Add a member
-     */
+    $rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
+
     Groups.addMember(candidate).
     then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.groups.memberAdded
-      });
-      /**
-       * Refresh groups list message
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.groups.refreshingGroupMember
-      };
-      /**
-       * Query fresh data
-       */
+      $rootScope.notifier.success($rootScope.ui.groups.memberAdded);
+
+      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
       Groups.query().
       then(function(data)
       {
-        /**
-         * Set returned data
-         */
         $scope.data = data;
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -388,50 +264,21 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.removeMember = function (member, group)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.groups.removingMember
-    };
-    /**
-     * Remove from group
-     */
+    $rootScope.statusBar.display($rootScope.ui.groups.removingMember);
+
     Groups.removeMember(member, group).
     then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.groups.memberRemoved
-      });
-      /**
-       * Refresh groups list message
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.groups.refreshingGroupMember
-      };
-      /**
-       * Query fresh data
-       */
+      $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+
+      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
       Groups.query().
       then(function(data)
       {
-        /**
-         * Set returned data
-         */
         $scope.data = data;
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -442,54 +289,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.removeMembers = function (selection, group)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.groups.removingSelected
-    };
-    /**
-     * Remove members
-     */
+    $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
+
     Groups.removeMembers(selection, group).
     then(function(result)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.groups.removed
-      });
-      /**
-       * Refresh groups list message
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.groups.refreshingGroupMember
-      };
-      /**
-       * Reset selection
-       */
+      $rootScope.notifier.success($rootScope.ui.groups.removed);
+
+      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
       $scope.selection = {};
-      /**
-       * Query fresh data
-       */
+
       Groups.query().
       then(function(data)
       {
-        /**
-         * Set returned data
-         */
         $scope.data = data;
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
 
@@ -506,62 +322,28 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.groupSubmit = function (group)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.groups.saving
-    };
-    /**
-     * Save group
-     */
+    $rootScope.statusBar.display($rootScope.ui.groups.saving);
+
     Groups.save(group).
     then(function(returned)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.groups.groupSaved
-      });
-      /**
-       * Refresh groups list message
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.groups.refreshingGroupMember
-      };
-      /**
-       * Query fresh data
-       */
+      $rootScope.notifier.success($rootScope.ui.groups.groupSaved);
+
+      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
       Groups.query().
       then(function(data)
       {
-        /**
-         * Close form if its still open
-         */
         $scope.closeTabs();
-        /**
-         * Set returned data
-         */
+
         $scope.data = data;
-        /**
-         * Redirect to group view
-         */
+
         angular.forEach(data.groups, function (group, index)
         {
           if (group.uuid == returned)
           {
-            /**
-             * Reset groups drop down
-             */
             $scope.groups = data.groups;
-            /**
-             * Loop through groups and set current group
-             */
+
             angular.forEach(data.groups, function (g, index)
             {
               if (g.uuid == group.uuid)
@@ -569,37 +351,19 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
                 $scope.group = g;
               };
             });
-            /**
-             * Set members
-             */
+
             $scope.members = data.members[group.uuid];
-            /**
-             * Set current
-             */
+
             $scope.current = group.uuid;
-            /**
-             * Adjust params
-             */
+
             $scope.$watch($location.search(), function()
             {
-              /**
-               * Set hash
-               */
-              $location.search({
-                uuid: group.uuid
-              });
-            });
-            // end of watch
-          };
-          // end of if
-        });
-        // end of foreach
-        /**
-         * Turn off loading
-         */
-        $rootScope.loading = {
-          status: false
-        };
+              $location.search({uuid: group.uuid});
+            }); // end of watch
+          }; // end of if
+        }); // end of foreach
+
+        $rootScope.statusBar.off();
       });
 
     });
@@ -611,54 +375,23 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.memberSubmit = function (member)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.groups.registerNew
-    };
-    /**
-     * Register a new member
-     */
+    $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
+
     Profile.register(member).
     then(function()
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.groups.memberRegstered
-      });
-      /**
-       * Refresh groups list message
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.groups.refreshingGroupMember
-      };
-      /**
-       * Query fresh data
-       */
+      $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+
+      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
       Groups.query().
       then(function(data)
       {
-        /**
-         * Set returned data
-         */
         $scope.data = data;
-        /**
-         * Redirect to profile of new user
-         */
+
         $location.path('/profile/' + member.username).hash('profile');
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -669,87 +402,37 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.deleteGroup = function (id)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.groups.deleting
-    };
-    /**
-     * Delete group
-     */
+    $rootScope.statusBar.display($rootScope.ui.groups.deleting);
+
     Groups.remove(id).
     then(function()
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.groups.deleted
-      });
-      /**
-       * Refresh groups list message
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.groups.refreshingGroupMember
-      };
-      /**
-       * Query fresh data
-       */
+      $rootScope.notifier.success($rootScope.ui.groups.deleted);
+
+      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
       Groups.query().
       then(function(data)
       {
-        /**
-         * Set returned data
-         */
         $scope.data = data;
-        /**
-         * Redirect to group view
-         */
+
         angular.forEach(data.groups, function (group, index)
         {
-          /**
-           * Reset groups drop down
-           */
           $scope.groups = data.groups;
-          /**
-           * Set first group to be displayed
-           * @type {[type]}
-           */
+
           $scope.group = data.groups[0];
-          /**
-           * Set members
-           */
+
           $scope.members = data.members[data.groups[0].uuid];
-          /**
-           * Set current
-           */
+
           $scope.current = data.groups[0].uuid;
-          /**
-           * Adjust params
-           */
-          $scope.$watch($location.search(), function()
+
+          $scope.$watch($location.search(), function ()
           {
-            /**
-             * Set hash
-             */
-            $location.search({
-              uuid: data.groups[0].uuid
-            });
-          });
-          // end of watch
-        });
-        // end of foreach
-        /**
-         * Turn off loading
-         */
-        $rootScope.loading = {
-          status: false
-        };
+            $location.search({uuid: data.groups[0].uuid});
+          }); // end of watch
+        }); // end of foreach
+
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -760,17 +443,9 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.toggleSelection = function (group, master)
   {
-    /**
-     * Set the flag
-     */
-    var flag = (master) ? true : false;
-    /**
-     * Get members
-     */
-    var members = angular.fromJson(Storage.get(group.uuid));
-    /**
-     * Loop through members and set flags
-     */
+    var flag = (master) ? true : false,
+        members = angular.fromJson(Storage.get(group.uuid));
+
     angular.forEach(members, function(member, index)
     {
       $scope.selection[member.uuid] = flag;
@@ -778,8 +453,9 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
   };
 
 
-
-
+  /**
+   * Fetch parent groups
+   */
   $scope.fetchParents = function (id)
   {
     return "fetching user groups";
@@ -790,7 +466,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     //   return 'groups -> ' + result;
     // })
   };
-
 
 
 };
@@ -807,27 +482,15 @@ groupsCtrl.resolve = {
 };
 
 
+groupsCtrl.$inject = ['$rootScope', '$scope', '$config', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage'];
+
+
 /**
- * Groups prototypes
+ * Groups modal
  */
-groupsCtrl.prototype = {
-  constructor: groupsCtrl
-};
-
-
-
-groupsCtrl.$inject = ['$rootScope', '$scope', '$config', '$location', 'data', 'Groups', 'Profile', 
-                      '$route', '$routeParams', 'Storage'];
-
-
-
 WebPaige.
 factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
 {
-
-  /**
-   * Groups resource
-   */
   var Groups = $resource(
     $config.host + '/network/:action/:id',
     {
@@ -862,9 +525,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     }
   );
 
-  /**
-   * Parent resource
-   */
+
   var Parents = $resource(
     $config.host + '/node/:id/container',
     {
@@ -877,9 +538,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     }
   );
 
-  /**
-   * Members resource
-   */
+
   var Members = $resource(
     $config.host + '/network/:id/members/:mid',
     {
@@ -888,7 +547,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       query: {
         method: 'GET',
         params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
-        //params: {id:'', fields: '[role]'},
         isArray: true
       },
       get: {
@@ -918,10 +576,8 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
-    /**
-     * Add member to group
-     */
-    Members.add({ 
+    Members.add(
+    { 
       id: candidate.group.uuid, 
       mid: candidate.id 
     }, {}, function (result) 
@@ -940,10 +596,8 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
-    /**
-     * Remove member
-     */
-    Members.remove({ 
+    Members.remove(
+    { 
       id: groupId, 
       mid: memberId 
     }, function (result) 
@@ -963,9 +617,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     var deferred = $q.defer(),
         calls = [];
 
-    /**
-     * Push selection into a calls pool
-     */
     angular.forEach(selection, function(value, id)
     {
       if (id)
@@ -974,9 +625,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       }
     });
 
-    /**
-     * Loop through and make calls
-     */
     $q.all(calls)
     .then(function(result)
     {
@@ -994,57 +642,32 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
-    /**
-     * Query groups
-     */
     Groups.query(function (groups) 
     {
-      /**
-       * Add data to localStorage
-       */
       Storage.add('groups', angular.toJson(groups));
 
-      /**
-       * Make pool of calls of groups for member list calls
-       */
       var calls = [];
+
       angular.forEach(groups, function(group, index)
       {
         calls.push(Groups.prototype.get(group.uuid));
       });
 
-      /**
-       * Loop through the members listing calls in pool
-       */
       $q.all(calls)
       .then(function(results)
       {
-        /**
-         * Make | Update unique members list
-         */
         Groups.prototype.uniqueMembers();
 
-        /**
-         * Init containers
-         */
         var data = {};
+
         data.members = {};
 
-        /**
-         * Loop through groups
-         */
         angular.forEach(groups, function(group, gindex)
         {
           data.groups = groups;
 
-          /**
-           * Init containers
-           */
           data.members[group.uuid] = [];
 
-          /**
-           * Loop through members
-           */
           angular.forEach(results, function (result, mindex)
           {
             if (result.id == group.uuid)
@@ -1070,9 +693,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {   
     var deferred = $q.defer();
 
-    /**
-     * Query members list
-     */
     Members.query({id: id}, function (result) 
     {
       /**
@@ -1082,6 +702,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
        * if group is empty
        */
       var returned;
+
       if (result.length == 4 && 
           result[0][0] == 'n' && 
           result[1][0] == 'u')
@@ -1092,14 +713,9 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       {
         returned = result;
       };
-      
-      /**
-       * Add members list to localStorage
-       */
+
       Storage.add(id, angular.toJson(returned));
-      /**
-       * Return it baby!
-       */
+
       deferred.resolve({
         id: id,
         data: returned
@@ -1119,14 +735,9 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   Groups.prototype.parents = function (id) 
   {   
     var deferred = $q.defer();
-    /**
-     * Query members list
-     */
+
     Parents.get({id: id}, function (result) 
     {
-      /**
-       * Return it baby!
-       */
       deferred.resolve({
         data: returned
       });
@@ -1140,25 +751,15 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
    */
   Groups.prototype.uniqueMembers = function()
   {
-    /**
-     * Loop through local groups
-     */
     angular.forEach(angular.fromJson(Storage.get('groups')), function(group, index)
     {
-      /**
-       * Init members list
-       */
       var members = angular.fromJson(Storage.get('members')) || {};
-      /**
-       * Loop through members
-       */
+
       angular.forEach(angular.fromJson(Storage.get(group.uuid)), function(member, index)
       {
         members[member.uuid] = member;
       });
-      /**
-       * Add members to localStorage
-       */
+
       Storage.add('members', angular.toJson(members));
     });
   };
@@ -1177,23 +778,13 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
      */
     if (group.id)
     {
-      /**
-       * Edit group
-       */
-      Groups.edit({
-        id: group.id
-      }, {
-        name: group.name
-      }, function (result) 
+      Groups.edit({id: group.id}, {name: group.name}, function (result) 
       {
         deferred.resolve(group.id);
       });
     }
     else
     {
-      /**
-       * Save group
-       */
       Groups.save({
         id: $rootScope.app.resources.uuid
       }, group, function (result) 
@@ -1203,10 +794,12 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
          * by angular, this is a fix for converting returned object to plain string
          */
         var returned = '';
+
         angular.forEach(result, function (chr, i)
         {
           returned += chr;
         });
+
         deferred.resolve(returned);
       }); 
     };
@@ -1222,9 +815,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
-    /**
-     * Delete group
-     */
     Groups.remove({id: id}, function (result) 
     {
       deferred.resolve(result);
@@ -1240,21 +830,13 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   Groups.prototype.search = function (query) 
   {
     var deferred = $q.defer();
-    
-    /**
-     * Search action
-     */
+
     Groups.search(null, {key: query}, function (results) 
     {
       var processed = [];
-      /**
-       * Loop through results
-       */
+
       angular.forEach(results, function(result, index)
       {
-        /**
-         * Push in pool
-         */
         processed.push({
           id: result.id,
           name: result.name,
@@ -1274,29 +856,15 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
    */
   Groups.prototype.getMemberGroups = function(id)
   {
-    /**
-     * Get local groups and init members container
-     */
     var groups = angular.fromJson(Storage.get('groups')),
         memberGroups = [];
 
-    /**
-     * Loop through local groups
-     */
     angular.forEach(groups, function(group, index)
     {
-      /**
-       * Set local group
-       */
       var localGroup = angular.fromJson(Storage.get(group.uuid));
-      /**
-       * Loop through found local group
-       */
+
       angular.forEach(localGroup, function(member, index)
       {
-        /**
-         * If found any add into basket
-         */
         if (member.uuid === id)
         {
           memberGroups.push({

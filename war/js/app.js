@@ -4,11 +4,7 @@
 /**
  * Declare app level module which depends on filters, and services
  */
-var WebPaige = angular.module('WebPaige', [
-  'StorageModule',
-  '$strap.directives',
-  'ngResource'
-]);
+var WebPaige = angular.module('WebPaige', ['StorageModule', '$strap.directives', 'ngResource']);
 
 
 /**
@@ -36,8 +32,13 @@ WebPaige
     redirectTo: '/login'
   });
 
+  /**
+   * Define interceptor
+   */
   $httpProvider.responseInterceptors.push('Interceptor');
 })
+
+
 /**
  * Initial run functions
  */
@@ -165,9 +166,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * If periods are not present calculate them
    */
-  if (!Storage.get('periods')) {
-    Dater.registerPeriods();
-  };
+  if (!Storage.get('periods')) Dater.registerPeriods();
 
 
   /**
@@ -185,9 +184,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Count unread messages
    */
-  if (!$rootScope.app.unreadMessages) {
-    Messages.unreadCount();
-  };
+  if (!$rootScope.app.unreadMessages) Messages.unreadCount();
 
 
   /**
@@ -196,10 +193,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    *
    * Check for valid session
    */
-  if (!Session.check())
-  {
-    $location.path("/login");
-  };
+  if (!Session.check()) $location.path("/login");
 
 
   /**
@@ -253,23 +247,14 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    */
   $rootScope.fixStyles = function () 
   {
-    /**
-     * Fix tab heights
-     *
-     * Get height of the current nav-tabs
-     */
     var tabHeight = $('.tabs-left .nav-tabs').height();
-    /**
-     * Loop through tab-contents
-     */
+
     $.each($('.tab-content').children(), function () 
     {
-      /**
-       * Extract id
-       */
       var $parent = $(this),
           $this = $(this).attr('id'),
           contentHeight = $('.tabs-left .tab-content #' + $this).height();
+
       /**
        * TODO
        * 
@@ -283,10 +268,10 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
       /**
        * Check if one is bigger than another
        */
+      
       if (tabHeight > contentHeight)
       {
-        console.log('tab is taller than content ->', $this);
-
+        // console.log('tab is taller than content ->', $this);
         $('.tabs-left .tab-content #' + $this).css({
           height: $('.tabs-left .nav-tabs').height() - 41
         });
@@ -297,30 +282,21 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
         // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
       };
     });
+
     /**
      * Correct icon-font-library icons for mac and linux
      */
     if ($.os.mac || $.os.linux)
     {
-      /**
-       * Nav tans icons
-       */
       $('.nav-tabs-app li a span').css({
         paddingTop: '10px', 
         marginBottom: '0px'
       });
-      /**
-       * TODO
-       * Maybe not needed since we dont display text under the icon
-       * 
-       * Loading big
-       */
-      $('#loading').css({
-        //marginTop: '-160px'
-        display: 'none'
-      });
+      // $('#loading').css({
+      //   //marginTop: '-160px'
+      //   display: 'none'
+      // });
     };
   };
-
 
 }]);

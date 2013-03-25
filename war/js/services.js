@@ -39,7 +39,7 @@ factory('Session', function ($rootScope, $http, Storage)
       {
         values = pairs[i].split("=");
 
-        if(values[0].trim() == "WebPaige.session")
+        if (values[0].trim() == "WebPaige.session")
         {
           return angular.fromJson(values[1]);
         };

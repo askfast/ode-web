@@ -47,6 +47,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       member: false
     };
   };
+
   resetViews();
 
 
@@ -131,7 +132,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Legenda defaults
    */
-  angular.forEach($rootScope.config.timeline.config.states, function(state, index)
+  angular.forEach($rootScope.config.timeline.config.states, function (state, index)
   {
     $scope.timeline.config.legenda[index] = true;
   });
@@ -159,10 +160,12 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    * States for dropdown
    */
   var states = {};
+
   angular.forEach($scope.timeline.config.states, function(state, key)
   {
     states[key] = state.label;
   });
+
   $scope.states = states;
 
 
@@ -296,7 +299,8 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
       $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
 
-      Slots.all({
+      Slots.all(
+      {
         groupId:  $scope.timeline.current.group,
         division: $scope.timeline.current.division,
         layouts:  $scope.timeline.current.layouts,
@@ -360,21 +364,15 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       case 'group':
         $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
 
-        if ($scope.timeline.current.layouts.members && 
-            !$scope.timeline.current.layouts.group)
-        {
+        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
           $scope.timeline.current.layouts.members = false;
-        };
       break;
 
       case 'members':
         $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
 
-        if ($scope.timeline.current.layouts.members && 
-            !$scope.timeline.current.layouts.group)
-        {
+        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
           $scope.timeline.current.layouts.group = true;
-        };
       break;
     };
 
@@ -684,10 +682,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         return this.nodeValue == 'New' 
       });
       
-    if (news.length > 1)
-    {
-      self.timeline.cancelAdd(); 
-    };
+    if (news.length > 1) self.timeline.cancelAdd();
 
     var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
 
@@ -748,14 +743,12 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   function timelineOnChange (direct, original, slot, options)
   {
     if (!direct)
-    {
       var values  = self.timeline.getItem(self.timeline.getSelection()[0].row),
           options = {
             start:    values.start,
             end:      values.end,
             content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
-          }
-    };
+          };
 
     $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
@@ -954,18 +947,12 @@ planboardCtrl.resolve = {
 planboardCtrl.$inject = ['$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter'];
 
 
-
-
 /**
- * 
- * TimeSlots Resource
+ * Slots modal
  */
 WebPaige.
 factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Dater) 
 {
-  /**
-   * Define Slot Resource from back-end
-   */
   var Slots = $resource(
     $config.host + '/askatars/:user/slots',
     {
@@ -993,9 +980,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   );
 
 
-  /**
-   * Group aggs resource
-   */
   var Aggs = $resource(
     $config.host + '/calc_planning/:id',
     {
@@ -1010,9 +994,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   );
 
 
-  /**
-   * Wishes resource
-   */
   var Wishes = $resource(
     $config.host + '/network/:id/wish',
     {
@@ -1036,22 +1017,18 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.wishes = function (options) 
   {
-    /**
-     * Default params
-     */
     var deferred = $q.defer(),
         params = {
           id: options.id,
           start: options.start,
           end: options.end
         };
-    /**
-     * Fetch wishes
-     */
+
     Wishes.query(params, function (result) 
     {
       deferred.resolve(result);
     });
+
     return deferred.promise;
   };
 
@@ -1061,9 +1038,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.setWish = function (options) 
   {
-    /**
-     * Default params
-     */
     var deferred = $q.defer(),
         params = {
           start: options.start,
@@ -1071,13 +1045,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           wish: options.wish,
           recurring: options.recursive
         };
-    /**
-     * Fetch wishes
-     */
+
     Wishes.save({id: options.id}, params, function (result) 
     {
       deferred.resolve(result);
     });
+
     return deferred.promise;
   };
 
@@ -1087,25 +1060,15 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.aggs = function (options) 
   {
-    /**
-     * Default params
-     */
     var deferred = $q.defer(),
         params = {
           id: options.id,
           start: options.start,
           end: options.end
         };
-    /**
-     * If specific division is selected
-     */
-    if (options.division != undefined)
-    {
-      params.stateGroup = options.division;
-    };
-    /**
-     * Fetch aggs
-     */
+
+    if (options.division != undefined) params.stateGroup = options.division;
+
     Aggs.query(params, function (result) 
     {
 
@@ -1176,6 +1139,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
       /**
        * Produce pie statistics for group
        */
+      
       var stats = {
             less: 0,
             even: 0,
@@ -1188,6 +1152,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
             total: 0
           },
           total = result.length;
+
       /**
        * Loop through results
        */
@@ -1208,10 +1173,12 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         {
           stats.more++;
         };
+
         /**
          * Calculate total absence
          */
         var slotDiff = slot.end - slot.start;
+
         if (slot.diff < 0)
         {
           durations.less = durations.less + slotDiff;
@@ -1224,8 +1191,10 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         {
           durations.more = durations.more + slotDiff;
         };
+
         durations.total = durations.total + slotDiff;
       });
+
       /**
        * Calculate ratios
        */
@@ -1251,12 +1220,9 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         });
       });
 
-
     });
     return deferred.promise;
   };
-
-
 
 
   /**
@@ -1264,13 +1230,8 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
    */
   Slots.prototype.pie = function (options) 
   {
-    /**
-     * Default params
-     */
     var deferred = $q.defer();
-    /**
-     * Get group aggs for ratios
-     */
+
     Aggs.query({
       id: options.id,
       start: options.start,
@@ -1286,6 +1247,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
             more: 0        
           },
           total = result.length;
+
       /**
        * Loop through results
        */
@@ -1307,6 +1269,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
           stats.more++;
         };
       });
+
       /**
        * Calculate ratios
        */
@@ -1315,6 +1278,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
         even: Math.round((stats.even / total) * 100),
         more: Math.round((stats.more / total) * 100)
       };
+
       /**
        * Return promised agg
        */
@@ -1329,16 +1293,11 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   };
 
 
-
-
   /**
    * Get slot bundels; user, group aggs and members
    */
   Slots.prototype.all = function (options) 
   {
-    /**
-     * Define vars
-     */
     var deferred = $q.defer(),
         periods = Dater.getPeriods(),
         params = {
@@ -1520,6 +1479,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   Slots.prototype.user = function (params) 
   {
     var deferred = $q.defer();
+
     Slots.query(params, function (result) 
     {
       /**
@@ -1530,6 +1490,7 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
        */
       var stats = {},
           total = 0;
+
       angular.forEach(result, function(slot, index)
       {
         if (stats[slot.text])
@@ -1592,9 +1553,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   {
     var deferred = $q.defer();
 
-    /**
-     * Save slot
-     */
     Slots.save({user: user}, slot, function (result) 
     {
       deferred.resolve(result);
@@ -1633,9 +1591,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
 
     var deferred = $q.defer();
 
-    /**
-     * Change slot
-     */
     Slots.change(angular.extend(naturalize(changed), {user: user}), 
                   naturalize(original), 
     function (result) 
@@ -1654,9 +1609,6 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   {
     var deferred = $q.defer();
 
-    /**
-     * Delete slot
-     */
     Slots.remove(angular.extend(naturalize(slot), {user: user}), 
     function (result) 
     {
@@ -1721,11 +1673,15 @@ factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $r
   
 
   /**
+   * TODO
+   * Still needed?
+   * 
    * Naturalize Slot for back-end injection
    */
   function naturalize(slot)
   {
     var content = angular.fromJson(slot.content);
+
     return {
       start: new Date(slot.start).getTime() / 1000,
       end: new Date(slot.end).getTime() / 1000,

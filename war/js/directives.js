@@ -1,7 +1,9 @@
 'use strict';
 
-/* Directives */
 
+/**
+ * Chosen
+ */
 WebPaige.
 directive('chosen',function()
 {
@@ -24,28 +26,24 @@ directive('chosen',function()
     restrict:'A',
     link: linker
   }
-})
+});
+
 
 /**
- * TODO
- * Needs attention :)
- * 
+ * Daterangepicker
  */
-.directive('daterangepicker', function($rootScope, $timeout)
+WebPaige.
+directive('daterangepicker', function($rootScope, $timeout)
 {
   return {
-    /**
-     * Directive type
-     */
     restrict: 'A',
-    /**
-     * Directive linker
-     */
+
     link: function postLink(scope, element, attrs, controller)
     {
       // var startDate = Date.create().addDays(-6),
       //     endDate   = Date.create();       
       //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
+      
       element.daterangepicker({
         // startDate: startDate,
         // endDate: endDate,
@@ -61,10 +59,8 @@ directive('chosen',function()
       {
         scope.$apply(function()
         {
-          /**
-           * Calculate difference
-           */
           var diff = end.getTime() - start.getTime();
+
           /**
            * Scope is a day
            */
@@ -110,9 +106,7 @@ directive('chosen',function()
               month: true
             };
           };
-          /**
-           * Broadcast for timeliner
-           */
+
           $rootScope.$broadcast('timeliner', {
             start: start,
             end: end
@@ -120,12 +114,12 @@ directive('chosen',function()
           
         });
       });
+
       /**
-       * TODO
-       * Maybe better hardcoded?
        * Set data toggle
        */
       element.attr('data-toggle', 'daterangepicker');
+
       /**
        * TODO
        * Investigate if its really needed!!
@@ -137,9 +131,12 @@ directive('chosen',function()
   };
 });
 
-'use strict';
 
-WebPaige.directive('wpName', function(Storage){
+/**
+ * ???
+ */
+WebPaige.
+directive('wpName', function(Storage){
     return {
         restrict : 'A',
         link : function linkfn(scope, element, attrs){
@@ -162,6 +159,3 @@ WebPaige.directive('wpName', function(Storage){
         }
     }
 });
-
-
-

@@ -22,9 +22,6 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
   }
   else
   {
-    /**
-     * Set selected user language
-     */
     $scope.settings = {
       user: {
         language: $rootScope.ui.meta.name
@@ -37,10 +34,12 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
    * User settings: Languages
    */
   var languages = {};
+
   angular.forEach(ui, function(lang, index)
   {
     languages[lang.meta.name] = lang.meta.label;
   });
+
   $scope.languages = languages;
 
 
@@ -50,61 +49,26 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
    */
   $scope.save = function (settings)
   {
-    /**
-     * Set preloader
-     */
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.settings.saving
-    };
-    /**
-     * Save settings
-     */
+    $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
     Settings.save($rootScope.app.resources.uuid, settings)
     .then(function(saved)
     {
-      /**
-       * Inform user
-       */
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.settings.saved
-      });
-      /**
-       * Set preloader
-       */
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.settings.refreshing
-      };
-      /**
-       * Refresh profile data
-       */
+      $rootScope.notifier.success($rootScope.ui.settings.saved);
+
+      $rootScope.statusBar.display($rootScope.ui.settings.refreshing);
+
       Profile.get($rootScope.app.resources.uuid, true)
       .then(function(result)
       {
-        /**
-         * Set view
-         */
         $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
-        /**
-         * Change language
-         */
+
         $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
-        /**
-         * Turn off preloader
-         */
-        $rootScope.loading = {
-          status: false
-        };
+
+        $rootScope.statusBar.off();
       })
     });
   };
-
-
-
-
 
 
   /**
@@ -139,15 +103,12 @@ settingsCtrl.resolve = {
 settingsCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Settings', 'Profile'];
 
 
-'use strict';
-
+/**
+ * Settings module
+ */
 WebPaige.
 factory('Settings', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Profile) 
 {
-
-  /**
-   * Define an empty resource for settings
-   */
   var Settings = $resource();
 
 
@@ -166,27 +127,19 @@ factory('Settings', function ($resource, $config, $q, $route, $timeout, Storage,
   Settings.prototype.save = function (id, settings) 
   {
     var deferred = $q.defer();
-    /**
-     * Save settings
-     */
+
     Profile.save(id, {
       settingsWebPaige: angular.toJson(settings)
     })
     .then(function(result)
     {
-      /**
-       * Return promised
-       */
       deferred.resolve({
         saved: true
       });
     });
+
     return deferred.promise;
   };
-
-
-
-
 
 
   /**
@@ -199,20 +152,11 @@ factory('Settings', function ($resource, $config, $q, $route, $timeout, Storage,
     var deferred = $q.defer(),
         calls = [];
 
-    /**
-     * Push selection into a calls pool
-     */
     angular.forEach(demo_users, function(user, index)
     {
-      if (user.uuid)
-      {
-        calls.push(Profile.createSettings(user.uuid));
-      }
+      if (user.uuid) calls.push(Profile.createSettings(user.uuid));
     });
 
-    /**
-     * Loop through and make calls
-     */
     $q.all(calls)
     .then(function(result)
     {

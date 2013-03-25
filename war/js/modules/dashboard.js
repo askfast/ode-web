@@ -32,48 +32,26 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
   Dashboard.pies()
   .then(function (pies)
   {
-    /**
-     * Turn off loader
-     */
     $rootScope.loading = {
       status: false,
     };
-    /**
-     * Set pies data
-     */
+
     $scope.pies = pies;
   })
-  /**
-   * Second then for making sure that first process is done
-   */
   .then( function (result)
   {
-    /**
-     * TODO 
-     * Look for a better way to handle with it
-     * Wait a bit for angular to produce dom
-     */
     setTimeout( function() 
     {
-      /**
-       * Loop through pie statistics data
-       */
       angular.forEach($scope.pies, function (pie, index)
       {
-        /**
-         * Clean group pie chart holder
-         */
         document.getElementById('weeklyPie-' + pie.id).innerHTML = '';
-        /**
-         * Quick fix. If ratio is 0 than pie chart is not displayed at all
-         */
+
         var ratios = [];
+
         if (pie.ratios.more != 0) ratios.push(pie.ratios.more);
         if (pie.ratios.even != 0) ratios.push(pie.ratios.even);
         if (pie.ratios.less != 0) ratios.push(pie.ratios.less);
-        /**
-         * Pie chart it baby!
-         */
+
         var r = Raphael('weeklyPie-' + pie.id),
             pie = r.piechart(40, 40, 40, ratios, {
               colors: $config.pie.colors
@@ -90,6 +68,7 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
   then(function(results)
   {
     var alarms = [];
+
     angular.forEach(results, function (alarm, index)
     {
       if (alarm.body)
@@ -100,21 +79,24 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
           alarm.prio = {
             1: true
           }
-        }
+        };
+
         if (alarm.body.match(/Prio 2/))
         {
           alarm.body = alarm.body.replace('Prio 2 ', '');
           alarm.prio = {
             2: true
           }
-        }
+        };
+
         if (alarm.body.match(/Prio 3/))
         {
           alarm.body = alarm.body.replace('Prio 3 ', '');
           alarm.prio = {
             3: true
           }
-        }
+        };
+
         alarms.push(alarm);
       }
     });
@@ -133,21 +115,18 @@ dashboardCtrl.resolve = {
   {
     return Messages.unread();
   }
-}
+};
 
 
 dashboardCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', 'data', 'Dashboard', 'Slots'];
 
 
-'use strict';
-
+/**
+ * Dashboard modal
+ */
 WebPaige.
 factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Slots, Dater) 
 {
-
-  /**
-   * Define an empty resource for dashboard
-   */
   var Dashboard = $resource(
     'http://knrm.myask.me/rpc/client/p2000.php',
     {
@@ -165,9 +144,6 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
    */
   Dashboard.prototype.pies = function () 
   {
-    /**
-     * Default params
-     */
     var deferred = $q.defer(),
         groups = angular.fromJson(Storage.get('groups')),
         periods = Dater.getPeriods(),
@@ -177,19 +153,10 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
           end:    periods.weeks[current].last.timeStamp / 1000
         };
 
-    /**
-     * Reset calls
-     */
     var calls = [];
 
-    /**
-     * Loop through the groups
-     */
     angular.forEach(groups, function(group, index)
     {
-      /**
-       * Push groups in calls pool
-       */
       calls.push(Slots.pie({
         id: group.uuid,
         name: group.name,
@@ -198,15 +165,9 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
       }));
     });
 
-    /**
-     * Run pool of calls
-     */
     $q.all(calls)
     .then(function (results)
     {
-      /**
-       * Return promised values
-       */
       deferred.resolve(results);
     });
 
@@ -220,9 +181,6 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
   {
     var deferred = $q.defer();
 
-    /**
-     * Grab p2000 feed
-     */
     $.ajax({
        url:"http://knrm.myask.me/rpc/client/p2000.php",
        dataType: 'jsonp',
