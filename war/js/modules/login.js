@@ -36,10 +36,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * KNRM users for testing
    */
-  if ($config.demo_users)
-  {
-    $scope.demo_users = demo_users;
-  };
+  if ($config.demo_users) $scope.demo_users = demo_users;
 
 
   /**
@@ -75,10 +72,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Init rootScope app info container
    */
-  if (!Storage.session.get('app'))
-  {
-    Storage.session.add('app', '{}');
-  };
+  if (!Storage.session.get('app')) Storage.session.add('app', '{}');
 
 
   /**
@@ -101,16 +95,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    */
   var logindata = angular.fromJson(Storage.get('logindata'));
 
-  if (logindata)
-  {
-    /**
-     * If remember is on
-     */
-    if (logindata.remember)
-    {
-      $scope.logindata = logindata;
-    };
-  };
+  if (logindata && logindata.remember) $scope.logindata = logindata;
 
 
   /**
@@ -139,6 +124,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
       $('#login button[type=submit]')
         .text('Login')
         .removeAttr('disabled');
+
       return false;     
     };
 
@@ -177,6 +163,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
         $('#login button[type=submit]')
           .text('Login')
           .removeAttr('disabled');
+
         return false;
       }
       else
@@ -358,7 +345,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 		/**
 		 * Checks
 		 */
-		if(!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
+		if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
     {
 			/**
 			 * Inform user
@@ -389,10 +376,12 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
 			return false;
 		};
+
 		/**
 		 * Change button state
 		 */
 		$('#changePass button[type=submit]').text('changing ...').attr('disabled', 'disabled');
+
 		/**
 		 * Save login to localStorage
 		 */
@@ -401,6 +390,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 		// 	password : $scope.logindata.password,
 		// 	remember : $scope.logindata.remember
 		// }));
+    
 		/**
 		 * Authorize
 		 */

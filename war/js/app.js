@@ -11,7 +11,71 @@ var WebPaige = angular.module('WebPaige', ['StorageModule', '$strap.directives',
  * App configuration
  */
 WebPaige
-.value('$config', config)
+.value('$config', {
+  version: '2.0.0',
+  lang: 'nl',
+  // REMOVE
+  demo_users: true,
+  host: profile.host(),
+  formats: {
+    date:     'dd-M-yyyy',
+    time:     'hh:mm tt',
+    datetime: 'dd-M-yyyy HH:mm tt'
+  },
+  roles: profile.roles,
+  timeline: {
+    options: {
+      axisOnTop: true,
+      width: '100%',
+      height: 'auto',
+      selectable: true,
+      editable: true,
+      style: 'box',
+      groupsWidth: '150px',
+      eventMarginAxis: 0,
+      showCustomTime: true,
+      groupsChangeable: false,
+      showNavigation: false,
+      intervalMin: 1000 * 60 * 60 * 1
+    },
+    config: {
+      zoom: '0.4',
+      bar: false,
+      wishes: false,
+      legenda: {},
+      legendarer: false,
+      states: profile.states,
+      divisions: profile.divisions,
+      densities: {
+        less: '#a0a0a0',
+        even: '#ba6a24',
+        one: '#415e6b',
+        two: '#3d5865',
+        three: '#344c58',
+        four: '#2f4550',
+        five: '#2c424c',
+        six: '#253943',
+        more: '#486877'
+      }
+    }
+  },
+  pie: {
+    colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+  },
+  defaults: {
+    settingsWebPaige: {
+      user: {
+        language: 'nl'
+      },
+      app: {}
+    }
+  }
+})
+
+
+/**
+ * Providers
+ */
 .config(function ($locationProvider, $routeProvider, $httpProvider) 
 {
   /**
