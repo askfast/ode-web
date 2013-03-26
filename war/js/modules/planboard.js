@@ -811,15 +811,32 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   function timelineOnRemove ()
   {
-    $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
-
-    Slots.remove($scope.original, $rootScope.app.resources.uuid)
-    .then(function (result)
+    var news = $('.timeline-event-content')
+                .contents()
+                .filter(function()
+                { 
+                  return this.nodeValue == 'New' 
+                });
+      
+    if (news)
     {
-      $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+      $scope.$apply(function()
+      {
+        $scope.resetInlineForms();
+      });
+    }
+    else
+    {
+      $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
-      timeliner.refresh();
-    });
+      Slots.remove($scope.original, $rootScope.app.resources.uuid)
+      .then(function (result)
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+
+        timeliner.refresh();
+      });
+    };
   };
 
 

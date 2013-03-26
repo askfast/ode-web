@@ -545,15 +545,32 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   function timelineOnDelete ()
   {
-    $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
-
-    Slots.remove($scope.original, $scope.user.id)
-    .then(function (result)
+    var news = $('.timeline-event-content')
+                .contents()
+                .filter(function()
+                { 
+                  return this.nodeValue == 'New' 
+                });
+      
+    if (news)
     {
-      $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+      $scope.$apply(function()
+      {
+        $scope.resetInlineForms();
+      });
+    }
+    else
+    {
+      $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
-      timeliner.refresh();
-    });
+      Slots.remove($scope.original, $scope.user.id)
+      .then(function (result)
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+
+        timeliner.refresh();
+      });
+    };
   };
 
 
