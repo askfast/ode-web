@@ -14,7 +14,8 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
   /**
    * Self this
    */
-	var self = this;
+	var self = this,
+      params = $location.search();
 
 
   /**
@@ -47,12 +48,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    * Groups for dropdown
    */
   $scope.groups = data.groups;
-
-
-  /**
-   * Extract view action from url and set view
-   */
-  var params = $location.search();
 
 
   /**
@@ -103,7 +98,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
   /**
    * Request for a group
    */
-  $scope.requestGroup = function (current)
+  $scope.requestGroup = function (current, switched)
   {
     setGroupView(current);
 
@@ -111,8 +106,15 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     {
       $location.search({uuid: current});
     });
-  };
 
+    if (switched)
+    {
+      if ($location.hash() != 'view') $location.hash('view');
+
+      setView('view');
+    }
+  };
+  
 
   /**
    * View setter
@@ -226,8 +228,6 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $scope.candidates = results;
 
       $scope.setViewTo('search');
-
-      $rootScope.fixTabHeight('searchTab');
 
       $rootScope.statusBar.off();
     });
@@ -346,10 +346,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
 
             angular.forEach(data.groups, function (g, index)
             {
-              if (g.uuid == group.uuid)
-              {
-                $scope.group = g;
-              };
+              if (g.uuid == group.uuid) $scope.group = g;
             });
 
             $scope.members = data.members[group.uuid];
@@ -619,10 +616,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
     angular.forEach(selection, function(value, id)
     {
-      if (id)
-      {
-        calls.push(Groups.prototype.removeMember(id, group.uuid));
-      }
+      if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
     });
 
     $q.all(calls)
@@ -670,10 +664,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
           angular.forEach(results, function (result, mindex)
           {
-            if (result.id == group.uuid)
-            {
-              data.members[group.uuid] = result.data;
-            };
+            if (result.id == group.uuid) data.members[group.uuid] = result.data;
           });
         });
 
@@ -866,12 +857,10 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       angular.forEach(localGroup, function(member, index)
       {
         if (member.uuid === id)
-        {
           memberGroups.push({
             uuid: group.uuid,
             name: group.name
           });
-        }
       });
     });
 
