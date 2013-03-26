@@ -1194,10 +1194,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
           angular.forEach(divisions, function(division, index)
           {
-            if (division.id == data.aggs.division)
-            {
-              label = division.label;
-            }
+            if (division.id == data.aggs.division) label = division.label;
           });
 
           var name =  '<a href="#/groups?uuid=' + 
@@ -1205,7 +1202,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                       '#view">' +
                       groups[data.aggs.id] +
                       '</a>' + 
-                      '<span class="label">' + 
+                      ' <span class="label">' + 
                       label + 
                       '</span>';
         };
@@ -1219,10 +1216,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
           angular.forEach(data.aggs.data, function(slot, index)
           {
-            if (slot.wish > maxh)
-            {
-              maxh = slot.wish;
-            };
+            if (slot.wish > maxh)  maxh = slot.wish;
           });
 
           angular.forEach(data.aggs.data, function(slot, index)
