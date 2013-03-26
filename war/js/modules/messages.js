@@ -398,7 +398,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    * in the case that user wants to add more receivers to the list  
    */
   $("div#composeTab select.chzn-select").chosen()
-  .change(function(item)
+  .change(function (item)
   {
   	$.each($(this).next().find("ul li.result-selected"), function (i,li)
     {
@@ -450,25 +450,34 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   {
     $rootScope.statusBar.display($rootScope.ui.message.sending);
 
-    Messages.send(message, broadcast)
-    .then(function(uuid)
+    if (message.receivers)
     {
-      $rootScope.notifier.success($rootScope.ui.message.sent);
-
-      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-      Messages.query()
-      .then(function(messages)
+      Messages.send(message, broadcast)
+      .then(function(uuid)
       {
-        $scope.messages = messages;
+        $rootScope.notifier.success($rootScope.ui.message.sent);
 
-        $scope.closeTabs();
+        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
-        $scope.requestMessage(uuid, $scope.origin);
+        Messages.query()
+        .then(function(messages)
+        {
+          $scope.messages = messages;
 
-        $rootScope.statusBar.off();
+          $scope.closeTabs();
+
+          $scope.requestMessage(uuid, $scope.origin);
+
+          $rootScope.statusBar.off();
+        });
       });
-    });
+    }
+    else
+    {
+      $rootScope.notifier.error($rootScope.ui.message.noReceivers);
+
+      $rootScope.statusBar.off();
+    };
   };
 
     

@@ -156,7 +156,8 @@ var ui = {
         sent: 'Message sent.',
         typeSubject: 'Type a subject',
         messages: 'Messages',
-        ph_filterMessage: 'Filter messages..'
+        ph_filterMessage: 'Filter messages..',
+        noReceivers: 'Please select a receiver.'
       },
       groups: {
         groups: 'Groups',
@@ -421,7 +422,8 @@ var ui = {
         sent: 'Bericht verstuurd.',
         typeSubject: 'Vul een onderwerp in',
         messages: 'Berichten',
-        ph_filterMessage: 'Berichten filteren...'
+        ph_filterMessage: 'Berichten filteren...',
+        noReceivers: 'Graag een ontvanger selecteren.'
       },
       groups: {
         groups: 'Groepen',
