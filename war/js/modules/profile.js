@@ -170,35 +170,14 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     if (passwords.new1 == '' || 
         passwords.new2 == '')
     {
-
-
-      $rootScope.notify({
-        status: true,
-        type: 'alert-error',
-        message: $rootScope.ui.profile.pleaseFill,
-        permanent: true
-      });
-
-
-
+      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
       return false;
     };
 
     if (passwords.new1 != passwords.new2)
     {
-
-
-
-      $rootScope.notify({
-        status: true,
-        type: 'alert-error',
-        message: $rootScope.ui.profile.passNotMatch,
-        permanent: true
-      });
-
-
-
+      $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
 
       return false;
     }
@@ -224,18 +203,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     }
     else
     {
-
-
-
-      $rootScope.notify({
-        status: true,
-        type: 'alert-error',
-        message: $rootScope.ui.profile.passwrong,
-        permanent: true
-      });
-
-
-
+      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
     };
   };
   
@@ -333,7 +301,6 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       });
     },
 
-
     /**
      * Refresh timeline as it is
      */
@@ -351,7 +318,6 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
         end:    data.periods.end
       });
     }
-
   };
 
 
@@ -607,7 +573,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   {
     if ($scope.timeline.current.week != new Date().getWeek())
     {
-      loadTimeline(periods.weeks[new Date().getWeek()]);
+      timeliner.load({
+        start:  periods.weeks[new Date().getWeek()].first.timeStamp,
+        end:    periods.weeks[new Date().getWeek()].last.timeStamp
+      });
 
       $scope.timeline.range = {
         start:  periods.weeks[new Date().getWeek()].first.day,
@@ -696,9 +665,7 @@ profileCtrl.setAccount = {
   data: function ($rootScope, $route, $location) 
   {
     if (!$route.current.params.userId || !$location.hash())
-    {
       $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
-    };
   }
 };
 
@@ -950,8 +917,8 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
     Slots.user(
     {
       user: id,
-      start: params.start,
-      end: params.end
+      start: params.start / 1000,
+      end: params.end / 1000
     }).then(function (slots)
     {
       deferred.resolve({

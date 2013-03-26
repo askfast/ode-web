@@ -109,37 +109,17 @@ WebPaige
 .run(['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config',
 function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) 
 {
-
+  /**
+   * Pass config
+   */
   $rootScope.config = $config;
 
   /**
    * Default language and change language
    */
-  $rootScope.changeLanguage = function (lang)
-  {
-    $rootScope.ui = ui[lang];
-  };
+  $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang]; };
   
   $rootScope.ui = ui[$config.lang];
-
-
-  /**
-   * Defaults for loading
-   */
-  $rootScope.loading = {
-    status: false,
-    message: 'Loading..'
-  };
-
-
-  /**
-   * Defaults for notifications
-   */
-  $rootScope.notification = {
-    status: false,
-    type: '',
-    message: ''
-  };
 
 
   /**
@@ -175,43 +155,18 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
 
 
   /**
-   * Show notifications
+   * Show action loading messages
    */
-  $rootScope.notifier = 
-  {
-    success: function (message, permanent)
-    {
-      /**
-       * Set notification data
-       */
-      $rootScope.notification = {
-        status: true,
-        type: 'alert-success',
-        message: message
-      };
-      /**
-       * Check if is a permanent notification
-       */
-      if (!permanent)
-      {
-        /**
-         * Run timer for fade out
-         * on 5 seconds
-         */
-        setTimeout(function() {
-          /**
-           * Fade-out with 1 second transition
-           */
-          $('#notification').fadeOut(1000);
-        }, 5000);
-      };
-    }
-  };
-
-
-
   $rootScope.statusBar = 
   {
+    init: function ()
+    {
+      $rootScope.loading = {
+        status: false,
+        message: 'Loading..'
+      };
+    },
+
     display: function (message)
     {
       $rootScope.loading = {
@@ -224,7 +179,49 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
     {
       $rootScope.loading.status = false;
     }
-  }
+  };
+
+  $rootScope.statusBar.init();
+
+
+  /**
+   * Show notifications
+   */
+  $rootScope.notifier = 
+  {
+    init: function (status, type, message)
+    {
+      $rootScope.notification = {
+        status: status,
+        type: type,
+        message: message
+      };
+    },
+
+    success: function (message, permanent)
+    {
+      this.init(true, 'alert-success', message);
+
+      if (!permanent) this.destroy();
+    },
+
+    error: function (message, permanent)
+    {
+      this.init(true, 'alert-danger', message);
+
+      if (!permanent) this.destroy();
+    },
+
+    destroy: function ()
+    {
+      setTimeout(function ()
+      {
+        $rootScope.notification.status = false;
+      }, 5000);
+    }
+  };
+
+  $rootScope.notifier.init(false, '', '');
 
 
   /**

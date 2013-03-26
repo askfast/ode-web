@@ -1,0 +1,1026 @@
+html,body {
+  margin:0;
+}
+
+
+#wrap .container-fluid {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  margin: 0 auto -60px;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+/* Negative indent footer by it's height */
+}
+
+/* Set the fixed height of the footer here */
+#push, #footer {
+  height: 60px;
+}
+
+
+.brand {
+  margin-top: 0px;
+  margin-bottom: 0;
+  margin-left: 20px;
+  padding-bottom: 0;
+  color: white;
+  /* width: 50px; */
+  /* height: 10px; */
+  /* background: url(../img/knrm-logo.png) no-repeat; */
+  /* background-position: 0 8px; */
+  /* text-indent: -9999px; */
+}
+
+.navbar .brand {
+  color: #f5f4ee;
+  /*text-shadow: 0 -1px 0 #000;*/
+  text-shadow: none;
+  font-weight: normal;
+  font-size: 20px;
+}
+
+
+.header {
+  display: table;
+  margin-bottom: 15px;
+}
+.header h2 {
+  display: inline;
+  float: left;
+  margin: 0;
+}
+.header form {
+  float: right;
+  margin: 0;
+  margin-top: 5px;
+}
+
+
+
+
+/* @group login */
+
+#browser-not-compatible {
+  /*display: none;*/
+}
+
+#browser-not-compatible span {
+  /* margin-bottom: 60px; */
+}
+
+#welcome,
+#browser-not-compatible {
+  margin: 30px auto 20px auto;
+  padding: 35px 29px 19px 29px;
+  max-width: 300px;
+  border: 1px solid #d0cec1;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(103,97,83,.05);
+  text-align: center;
+}
+
+#welcome h2,
+#browser-not-compatible h2 {
+  color: #333;
+  text-align: center;
+}
+
+#welcome h4,
+#browser-not-compatible h4 {
+  color: #bbb;
+  text-align: center;
+  font-weight: normal;
+  font-size: 22px;
+}
+
+#welcome h4 {
+  padding-bottom: 25px;
+}
+
+#browser-not-compatible h4 {
+  padding-bottom: 5px;
+}
+
+#browser-not-compatible span {
+  padding-bottom: 10px;
+  font-size: 126px;
+}
+
+
+
+
+
+
+
+#login,
+#forgot {
+  margin: 0;
+}
+
+#login form input[type=text],
+#login form input[type=password],
+#forgot form input[type=text],
+#forgot form input[type=password] {
+  margin-bottom: 15px;
+  padding: 7px 9px;
+  width: 90%;
+  height: auto;
+}
+
+#login form button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+#forgot form button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+#login form .checkbox {
+  margin: 0 auto 25px;
+  padding-left: 35px;
+  width: 90%;
+  text-align: left;
+}
+
+#login span.version,
+#forgot span.version {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  color: #aaa;
+  text-align: center;
+  font-size: 11px;
+}
+
+
+#login .alert,
+#forgot .alert {
+  margin-left: 5px;
+  width: 240px;
+  text-align: left;
+}
+
+#login .alert button,
+#forgot .alert button {
+  margin-top: 0;
+}
+
+#login button[type=submit],
+#forgot button[type=submit] {
+  display: inline;
+  margin: 0 auto;
+}
+
+
+
+
+
+
+
+#alertDiv {
+  display: none;
+}
+
+#preloader {
+  display: none;
+}
+
+
+
+#loading,
+#loggin-out {
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  text-align: center;
+}
+
+#loading p,
+#loggin-out p {
+  color: #a19781;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);
+  font-size: 18px;  
+}
+
+#loading span.entypo,
+#loggin-out span.entypo {
+  display: block;
+  /*height: 160px;*/
+  color: #a19781;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 1);
+  font-size: 20em;
+}
+
+
+
+#notification {
+  position: absolute;
+  top: 110px;
+  left: 50%;
+  margin-left: -175px;
+  width: 300px;
+}
+
+
+
+/* @end */
+
+
+
+
+
+#download {
+  margin: 5px auto;
+  text-align: center;
+}
+
+#download button {
+  /* padding:0; */
+  /* padding-top: 15px; */
+  /* padding-bottom: 10px; */
+  /* width: 360px; */
+}
+
+#download button span.entypo {
+  position: relative;
+  top:-10px;
+  margin-right: 5px;
+  /* height: 30px; */
+  /* text-shadow: 1px 1px 0 black; */
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  text-shadow: none;
+  font-size: 46px;
+  /* line-height: 40px; */
+}
+
+#download button span.msg {
+  position: relative;
+  top: -5px;
+  font-size: 18px;
+}
+
+
+
+
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  /* margin-top: -80px; */
+  width: 100%;
+  background-color: #433c2d;
+  z-index: 10000;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#footer .container-fluid {
+  display: table;
+  padding-top: 10px;
+  height: 100%;
+}
+
+#footer .container-fluid p {
+  display:  table-cell;
+  vertical-align: middle;
+}
+
+#wrap .container {
+  padding-top: 75px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#footer p.muted {
+  float:left;
+  margin-top: 12px;
+}
+
+#footer p.muted img {
+  margin-right: 5px;
+  height: 20px;
+}
+
+#footer #copyrights {
+  position: absolute;
+  right: 20px;
+  margin-top: 0px;
+  text-align: right;
+  line-height: 14px;
+}
+
+#footer #copyrights span.muted {
+  position: absolute;
+  top: 5px;
+  right: 205px;
+  float: right;
+  width: 200px;
+}
+
+#download-footer {
+}
+
+#download-footer button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  float: right;
+  /* padding-top: 10px; */
+  /* padding-bottom: 8px; */
+  width: 190px;
+}
+
+#download-footer button span.entypo {
+  margin-right: 5px;
+  height: 24px;
+  /* text-shadow: 1px 1px 0 black; */
+  /* text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25); */
+  text-shadow: none;
+  font-size: 32px;
+  /* line-height: 30px; */
+}
+
+#download-footer button span.msg {
+  position: relative;
+  top: -5px;
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+#inline-form form {
+  margin: 0;
+  padding: 0;
+}
+
+#inline-form form .control-group label { 
+  display: inline;
+  margin: 0;
+  margin-right: 10px;
+  padding: 0;
+}
+
+#inline-form form h5 {
+  /* display: inline; */
+  /* margin-right: 5px; */
+  margin-bottom: 10px;
+}
+
+#inline-form form .controls {
+  display: inline;
+  /* margin-right: 5px; */
+}
+
+#inline-form form input[type=text] {
+  /* display: inline; */
+  /* margin: 0; */
+  margin-top: 5px;
+  /* margin-right: 5px; */
+  /* margin-right: 10px; */
+}
+
+
+
+
+
+
+
+
+
+
+.page {
+  overflow: hidden;
+  /* margin-top: 15px; */
+  /* margin-left: 30px; */
+  /* padding: 20px; */
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+.page .content {
+  padding: 20px;
+}
+
+
+
+
+.page-header {
+  overflow: hidden;
+  height: 40px;
+}
+
+.page-header h2 {
+  display: inline;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.page-header .btn-group {
+  margin-left: 15px;
+}
+
+.page-header form.form-search {
+  display: inline;
+}
+
+
+
+
+
+
+.left-border-fix {
+  width: 1px; 
+  border-left: 1px solid red; 
+  z-index: 10000; 
+/*  position: absolute;*/
+  top: 0;
+  left: 0;
+  float: left;
+  display: block;
+  margin-left: -1px;
+}
+
+
+
+
+
+
+
+
+.navbar ul.pull-right li a.dropdown-toggle {
+  margin-right: -20px;
+}
+
+.nav-tabs-app li {
+  text-align: center;
+}
+
+.nav-tabs-app li a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.nav-tabs-app li a span {
+  display: block;
+  /* margin-top: 15px; */
+  /* margin-bottom: 10px; */
+  margin-bottom: 10px;
+  height: 30px;
+  font-size: 52px;
+}
+
+
+
+.tab-header {
+  overflow: hidden;
+  height: 35px;
+}
+
+.tab-header h3 {
+  margin-top: 0;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+.nav-tabs-list {
+  margin-right: -1px;
+  width: 170px;
+}
+
+#tab-content-fixed { 
+  padding: 20px; 
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+
+/*.nav-tabs {
+  border-right: none;
+}*/
+
+
+
+
+
+.control-group {
+  margin-bottom: 15px;
+}
+
+
+dl {
+  
+}
+
+dl dt {
+  
+}
+
+dl dd {
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: bold;
+}
+
+
+#login label {
+  font-weight: normal;
+}
+
+#login p {
+  margin-top:15px;
+}
+
+
+
+
+
+
+
+
+.form-toggled {
+  
+}
+
+.form-toggled h4 {
+  margin: 0;
+  padding: 0;
+}
+
+.form-toggled label {
+  font-size: 12px;
+}
+
+
+.form-elements-group {
+  display: inline;
+  margin-right: 20px;
+}
+
+.form-elements-group label,
+.form-elements-group .control-group {
+  display: inline;
+}
+
+.form-elements-group input[type=checkbox] {
+  margin: -2px 0 0 3px;
+}
+
+.form-elements-group select {
+  width: 180px;
+}
+
+.dater {
+  margin-right: 5px;
+}
+
+.dater input[type=text] {
+  width: 100px;
+}
+
+.timer {
+  margin-right: 5px;  
+}
+
+.timer input[type=text] {
+  width: 85px;
+}
+
+.dater .icon-calendar,
+.timer .icon-time {
+  position: relative;
+  margin: 2.5px 0 0 -24px;
+}
+
+
+.form-elements-actions {
+  display: inline;
+}
+
+
+
+
+
+#form-open {
+  border-top: 1px solid #c6c3b6;
+}
+
+#form-open .form-toggled {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #c6c3b6;
+  background-color: #f5f4ee;
+}
+
+#form-open .form-toggled h4 {
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.greetings {
+  margin: 25px 0;
+}
+
+
+#weekly-pies {
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+
+#weekly-pies ul.weekly {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  list-style: none;
+}
+
+
+#weekly-pies ul.weekly li {
+  display: inline;
+  float: left;
+  margin: 0 2% 20px 2%;
+  min-width: 270px;
+  width: 28%;
+  height: auto;
+}
+
+.weekly-pie {
+  display: inline;
+  float: left;
+  margin-right: 20px;
+  width: 80px;
+  height: 100px;
+}
+
+.weekly-pie-info {
+  display: block;
+  float: left;
+  overflow: hidden;
+}
+
+.weekly-pie-info hr {
+  margin: 0 0 10px 0;
+}
+
+.weekly-pie-info h3 {
+  display: inline;
+  margin: 0;
+  margin-top: -10px;
+  padding: 0;
+  font-size: 14px;
+}
+
+.weekly-pie-info {
+  margin-bottom: 10px;
+}
+
+.weekly-pie-info h4 {
+  margin: 0;
+  font-size: 12px;
+}
+
+.weekly-pie-info h5 {
+  display: inline;
+  font-size: 11px;
+}
+
+
+
+
+#announcements {
+  overflow: hidden;
+}
+
+#announcements .announcement {
+  display: block;
+  margin-bottom: 30px;
+}
+
+
+#new-messages {
+  overflow: hidden;
+}
+
+#new-messages table,
+#announcements table {
+  margin: 0;
+  margin-top: -20px;
+  padding: 0;
+  list-style-type: none;
+}
+
+#new-messages table tr,
+#announcements table tr {
+  margin-bottom: 15px;
+}
+
+#new-messages table tr:first-child td,
+#announcements table tr:first-child td {
+  border-top: none;
+}
+
+#new-messages table tr td h5,
+#announcements table tr td h5 {
+  margin-bottom: 2px;
+  font-weight: normal;
+}
+
+#new-messages table tr td span.sender,
+#announcements table tr td span.sender {
+  display: block;
+  font-size: 13px;
+}
+
+#new-messages table tr td small.muted {
+  font-size: 11px;
+}
+
+
+#news {
+  
+}
+
+#news ul { 
+ margin: 0;
+ padding: 0;
+ list-style-type: none;
+}
+
+#news ul li {
+  margin-bottom: 20px;
+}
+
+#news ul li h5 {
+  margin: 0;
+}
+
+#news ul li span {
+  font-size: 11px;
+}
+
+#news ul li p {
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.table thead th a {
+  color: #fff;
+}
+
+.table thead th a:hover {
+  color:#fff;
+  text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#demo_users {
+  position: absolute;
+  right: 20px;
+  bottom: 0;
+}
+
+#demo_users ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none; 
+}
+
+#demo_users ul li {
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Lastly, apply responsive CSS fixes as necessary */
+
+@media (min-width: 768px) and (max-width: 979px) {
+}
+
+
+@media (max-width: 767px) {
+}
+
+
+@media (min-width: 1200px) {
+}
+
+
+@media (min-width: 768px) and (max-width: 979px) {
+}
+
+
+@media (max-width: 767px) {
+  .navbar-fixed-top {
+    position: absolute;
+    margin-bottom: 0;
+  }
+
+  .navbar {
+    width: 100%;
+  }
+
+  .navbar .navbar-inner {
+    margin-right: -20px;
+    padding-right: 15px;
+    padding-left: 25px;
+  }
+  
+  #footer {
+    margin-left: -20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    width: 100%;
+  }
+
+  .brand {
+    margin-top: 20px;
+    background-position: 0 8px;
+  }
+
+  .nav-collapse.collapse ul {
+    margin-top: 10px;
+  }
+}
+
+
+@media (max-width: 979px) {
+
+  .navbar-fixed-top {
+    position: absolute;
+    margin-bottom: 0;
+  }
+
+  .brand {
+    background-position: 0 8px;
+  }
+
+  .nav-collapse.collapse ul {
+    margin-top: 10px;
+  }
+}
+
+
+@media (min-width: 980px) {
+}
+
+
+@media (max-width: 480px) {
+
+  .navbar-fixed-top {
+    position: absolute;
+    margin-bottom: 0;
+  }
+
+  .navbar {
+    width: 100%;
+  }
+
+  .navbar .navbar-inner {
+    margin-right: -20px;
+    padding-right: 15px;
+    padding-left: 25px;
+  }
+
+  #footer {
+    margin-left: -20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    width: 100%;
+  }
+
+  .brand {
+    margin-top: 30px;
+    background-position: 0 8px;
+  }
+
+  .nav-collapse.collapse ul {
+    margin-top: 10px;
+  }
+
+  .header form {
+    display: block;
+    clear: right;
+    margin: 0 auto;
+  }
+}
+
+
+
+

@@ -21,3 +21,5 @@ war/WEB-INF/classes/log4j.properties
 package.json
 server.js
 node_modules/
+
+.sass-cache/
