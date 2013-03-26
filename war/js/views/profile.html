@@ -8,7 +8,6 @@
     
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app">
-      
       <li class="{{(views.profile==true) && 'active'}}">
         <a href="#profileTab" 
             data-toggle="tab"
@@ -16,7 +15,6 @@
           <span class="entypo">&#128100;</span> {{ui.profile.profile}}
         </a>
       </li>
-
       <li class="{{(views.edit==true) && 'active'}}">
         <a href="#editTab" 
             data-toggle="tab"
@@ -24,7 +22,6 @@
           <span class="entypo">&#9998;</span> {{ui.profile.edit}}
         </a>
       </li>
-
       <li class="{{(views.password==true) && 'active'}}" ng-show="views.user">
         <a href="#passwordTab" 
             data-toggle="tab"
@@ -32,7 +29,6 @@
           <span class="entypo">&#128274;</span> {{ui.profile.password}}
         </a>
       </li>
-
       <li class="{{(views.timeline==true) && 'active'}}" ng-hide="views.user">
         <a href="#userTimelineTab" 
             data-toggle="tab"
@@ -40,27 +36,20 @@
           <span class="entypo">&#128340;</span> {{ui.profile.timeline}}
         </a>
       </li>
-
     </ul>
     <!-- end tabs -->
-
 
     <!-- tabs content -->
     <div class="tab-content">
 
-
-
-      
       <!-- profileTab -->
       <div class="tab-pane {{(views.profile==true) && 'active'}}" id="profileTab">
-
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.profileView}}</h3>
         </div>
         <!-- end tab header -->
         <hr>
-
         <!-- profile info -->
         <dl>
           <dt>{{ui.profile.userGroups}}</dt>
@@ -83,25 +72,19 @@
             <dd>{{data.resources.PostCity}}</dd>
         </dl>
         <!-- end profile info -->
-
       </div>
       <!-- end profileTab -->
 
-
-
       <!-- editTab -->
       <div class="tab-pane {{(views.edit==true) && 'active'}}" id="editTab">
-
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.editProfile}}</h3>
         </div>
         <!-- end tab header -->
         <hr>
-
         <!-- edit profile form -->
         <form class="form-vertical">
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.name}}</label>
             <div class="controls">
@@ -111,7 +94,6 @@
                       value="{{data.resources.name}}">
             </div>
           </div>
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.email}}</label>
             <div class="controls">
@@ -121,7 +103,6 @@
                       value="{{data.resources.EmailAddress}}">
             </div>
           </div>
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.phone}}</label>
             <div class="controls">
@@ -131,7 +112,6 @@
                       value="{{data.resources.PhoneAddress}}">
             </div>
           </div>
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.address}}</label>
             <div class="controls">
@@ -141,7 +121,6 @@
                       value="{{data.resources.PostAddress}}">
             </div>
           </div>
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.postcode}}</label>
             <div class="controls">
@@ -151,7 +130,6 @@
                       value="{{data.resources.PostZip}}">
             </div>
           </div>
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.city}}</label>
             <div class="controls">
@@ -161,34 +139,26 @@
                       value="{{data.resources.PostCity}}">
             </div>
           </div>
-
           <div class="form-actions">
             <button   type="submit" 
                       class="btn btn-success"
                       ng-click="save(resources)">{{ui.profile.saveProfile}}</button>
           </div>
-
         </form>
         <!-- end edit profile form -->
-
       </div>
       <!-- end editTab -->
 
-
-
       <!-- passwordTab -->
       <div class="tab-pane {{(views.password==true) && 'active'}}" id="passwordTab" ng-show="views.user">
-
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.passChange}}</h3>
         </div>
         <!-- end tab header -->
         <hr>
-
         <!-- password form -->
         <form class="form-vertical">
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.currentPass}}</label>
             <div class="controls">
@@ -197,7 +167,6 @@
                       ng-model="passwords.current">
             </div>
           </div>
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.newPass}}</label>
             <div class="controls">
@@ -206,7 +175,6 @@
                       ng-model="passwords.new1">
             </div>
           </div>
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.newPassRepeat}}</label>
             <div class="controls">
@@ -215,87 +183,65 @@
                       ng-model="passwords.new2">
             </div>
           </div>
-
           <div class="form-actions">
             <button   type="submit" 
                       class="btn btn-success"
                       ng-click="change(passwords)">{{ui.profile.changePass}}</button>
           </div>
-
         </form>
         <!-- end password form -->
-
       </div>
       <!-- end passwordTab -->
-
 
       <!-- userTimelineTab -->
       <div class="tab-pane {{(views.timeline==true) && 'active'}}" 
             id="userTimelineTab"
             ng-hide="views.user">
-
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.timeline}}</h3>
-
           <div class="btn-group pull-right">
             <button type="submit" 
                     ng-click="toggleSlotForm()" 
                     class="btn btn-success {{(forms.add==true) && 'active'}}">{{ui.profile.newAvail}}</button>
           </div>
-
         </div>
         <!-- end tab header -->
         <hr>
 
-
         <!-- timeline controls -->
         <div class="row-fluid" id="timeline-controls">
-
           <!-- core timeline controls -->
           <div class="pull-left" style="margin-top: 10px">
-
             <!-- this week -->
-            <div class="btn-group pull-left" 
-                  style="margin-right: 5px">
-
+            <div class="btn-group pull-left" style="margin-right: 5px">
               <button type="button" 
                       class="btn"
                       ng-click="timelineThisWeek()">{{ui.dashboard.thisWeek}}</button>
-
             </div>
             <!-- end this week -->
 
             <!-- timeline navigation -->
-            <div class="btn-group pull-left" 
-                  style="margin-right: 5px">
-
+            <div class="btn-group pull-left" style="margin-right: 5px">
               <button type="button" 
                       class="btn"
                       ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
-
               <button type="button" 
                       class="btn"
-                      ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>  
-
+                      ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
             </div>
             <!-- end timeline navigation -->
 
             <!-- timeline zooms -->
-            <div class="btn-group pull-left"
-                  style="margin-right: 5px">
-
+            <div class="btn-group pull-left" style="margin-right: 5px">
               <button type="button" 
                       class="btn"
                       ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
-
               <button type="button" 
                       class="btn"
-                      ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button> 
-
+                      ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button>
             </div>
             <!-- end timeline zooms -->
-
           </div>
           <!-- end core timeline controls -->
 
@@ -311,27 +257,19 @@
             </h4>
           </div>
           <!-- end range indicator -->
-
         </div>
         <!-- end timeline controls -->
 
-
-
         <!-- slot controls -->
         <div id="form-open" class="row-fluid" ng-show="forms.add || forms.edit">
-
           <form class="form-inline form-toggled">
-
             <!-- close btn -->
             <button ng-click="resetInlineForms()" 
                     class="close">&times;</button>
             <!-- end close btn -->
-          
             <h4 ng-show="forms.add">{{ui.profile.newAvail}}</h4>
             <h4 ng-show="forms.edit">{{ui.planboard.updateAvail}}</h4>
-
             <hr>
-
             <!-- slot start -->
             <div class="form-elements-group">
               <label>{{ui.planboard.from}}</label>
@@ -356,7 +294,6 @@
               <!-- end time -->
             </div>
             <!-- end slot start -->
-
 
             <!-- slot end -->
             <div class="form-elements-group">
@@ -383,7 +320,6 @@
             </div>
             <!-- end slot end -->
 
-
             <!-- slot state -->
             <div class="form-elements-group">
               <label>{{ui.planboard.state}}</label>
@@ -394,7 +330,6 @@
             </div>
             <!-- end slot state -->
 
-
             <!-- slot recursive -->
             <div class="form-elements-group">
               <label>{{ui.planboard.reoccuring}}</label>
@@ -402,16 +337,13 @@
             </div>
             <!-- end slot recursive -->
 
-
             <!-- slot actions -->
             <div class="form-elements-actions pull-right">
-              
               <div ng-show="forms.add">
                 <button type="button" 
                         ng-click="slotAdd(slot)" 
                         class="btn btn-success">{{ui.planboard.add}}</button>
               </div>
-
               <div ng-show="forms.edit">
                 <button type="button" 
                         ng-click="slotRemove()" 
@@ -420,26 +352,16 @@
                         ng-click="slotChange(original, slot)" 
                         class="btn btn-success">{{ui.planboard.change}}</button>
               </div>
-
             </div>
             <!-- end slot actions -->
 
-
           </form>
-          
         </div>
         <!-- end slot controls -->
 
-
-        <!-- user timeline -->
-
         <!-- timeline -->
         <div id="timeline">
-
-          <!-- user timeline -->
           <div id="userTimeline"></div>
-          <!-- end user timeline -->
-          
         </div>
         <!-- end timeline -->
         
@@ -458,14 +380,9 @@
       </div>
       <!-- end userTimelineTab -->
 
-
-
     </div>
     <!-- end tabs content -->
 
   </div>
 </div>
 <!-- end profile -->
-
-
-

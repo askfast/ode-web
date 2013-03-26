@@ -3,14 +3,14 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location, $window, Slots)
+function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location, $window, Slots, Sloter)
 {
   /**
    * Fix styles
    */
   $rootScope.fixStyles();
 
-  
+
   /**
    * Self this
    */
@@ -32,9 +32,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Set user
    */
-  $scope.user = {
-    id: $route.current.params.userId
-  };
+  $scope.user = { id: $route.current.params.userId };
 
 
   /**
@@ -97,15 +95,6 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       edit: false
     };
   };
-  
-    
-  /**
-   * Render timeline if hash is timeline
-   */
-  if ($location.hash() == 'timeline')
-  {
-    initTimeline();
-  };
 
 
   /**
@@ -151,35 +140,23 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   $scope.save = function(resources)
   {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.profile.saveProfile
-    };
+    $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
     Profile.save($route.current.params.userId, resources)
     .then(function(result)
     {
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.profile.refreshing
-      };
+      $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
       var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
 
       Profile.get($route.current.params.userId, flag)
       .then(function(data)
       {
+        $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
         $scope.data = data;
 
-        $rootScope.loading = {
-          status: false
-        };
-
-        $rootScope.notify({
-          status: true,
-          type: 'alert-success',
-          message: $rootScope.ui.profile.dataChanged
-        });
+        $rootScope.statusBar.off();
       });
     });
   };
@@ -193,6 +170,8 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     if (passwords.new1 == '' || 
         passwords.new2 == '')
     {
+
+
       $rootScope.notify({
         status: true,
         type: 'alert-error',
@@ -200,11 +179,17 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
         permanent: true
       });
 
+
+
+
       return false;
     };
 
     if (passwords.new1 != passwords.new2)
     {
+
+
+
       $rootScope.notify({
         status: true,
         type: 'alert-error',
@@ -212,93 +197,205 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
         permanent: true
       });
 
+
+
+
       return false;
     }
     else if ($rootScope.app.resources.askPass == $md5.process(passwords.current))
     {
-      $rootScope.loading = {
-        status: true,
-        message: $rootScope.ui.profile.changingPass
-      };
+      $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
       Profile.changePassword(passwords)
       .then(function(result)
       {
-        $rootScope.loading = {
-          status: true,
-          message: $rootScope.ui.profile.refreshing
-        };
+        $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
         Profile.get($rootScope.app.resources.uuid, true)
         .then(function(data)
         {
+          $rootScope.notifier.success($rootScope.ui.profile.passChanged);
+
           $scope.data = data;
 
-          $rootScope.loading = {
-            status: false
-          };
-
-          $rootScope.notify({
-            status: true,
-            type: 'alert-success',
-            message: $rootScope.ui.profile.passChanged
-          });
+          $rootScope.statusBar.off();
         });
       });
     }
     else
     {
+
+
+
       $rootScope.notify({
         status: true,
         type: 'alert-error',
         message: $rootScope.ui.profile.passwrong,
         permanent: true
       });
+
+
+
     };
   };
+  
+
+  /**
+   * Timeline (The big boy)
+   */
+  var timeliner = {
+
+    /**
+     * Init timeline
+     */
+    init: function ()
+    {
+      $scope.timeline = {
+        current: current,
+        options: {
+          start:  new Date(periods.weeks[current.week].first.day),
+          end:    new Date(periods.weeks[current.week].last.day),
+          min:    new Date(periods.weeks[current.week].first.day),
+          max:    new Date(periods.weeks[current.week].last.day)
+        },
+        range: {
+          start: periods.weeks[current.week].first.day,
+          end: periods.weeks[current.week].last.day
+        },
+        config: {
+          states: $config.timeline.config.states
+        }
+      };
+
+      var states = {};
+
+      angular.forEach($scope.timeline.config.states, function(state, key)
+      {
+        states[key] = state.label;
+      });
+
+      $scope.states = states;
+
+      $('#timeline').html('');
+      $('#timeline').append('<div id="userTimeline"></div>');
+
+      self.timeline = new links.Timeline(document.getElementById('userTimeline'));
+
+      links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
+      links.events.addListener(self.timeline, 'add',           timelineOnAdd);
+      links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
+      links.events.addListener(self.timeline, 'change',        timelineOnChange);
+      links.events.addListener(self.timeline, 'select',        timelineOnSelect);
+
+      this.render($scope.timeline.options);
+    },
+
+    /**
+     * Render or re-render timeline
+     */
+    render: function (options)
+    {
+      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
+
+      setTimeout( function() 
+      {
+        self.timeline.draw(
+          Sloter.processSimple(
+            $scope.data.slots.data, 
+            $scope.timeline.config
+          ), $scope.timeline.options);
+      }, 100);
+
+      self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+
+      $scope.synced = data.synced;
+    },
+
+    /**
+     * Grab new timeline data from backend and render timeline again
+     */
+    load: function (stamps)
+    {
+      var _this = this;
+
+      $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
+
+      Profile.getSlots($scope.user.id, stamps)
+      .then(function(data)
+      {
+        $scope.data.slots = data.slots;
+
+        $scope.synced = data.synced;
+
+        _this.render(stamps);
+
+        $rootScope.statusBar.off();
+      });
+    },
+
+
+    /**
+     * Refresh timeline as it is
+     */
+    refresh: function ()
+    {
+      $scope.slot = {};
+
+      $scope.forms = {
+        add: true,
+        edit: false
+      };
+
+      this.load({
+        start:  data.periods.start,
+        end:    data.periods.end
+      });
+    }
+
+  };
+
+
+  /**
+   * Render timeline if hash is timeline
+   */
+  if ($location.hash() == 'timeline') timeliner.init();
 
 
   /**
    * Redraw timeline
    */
-  $scope.redraw = function ()
-  {
-    initTimeline();
-  };
-  
+  $scope.redraw = function () { timeliner.init() };
+
 
   /**
    * Watch for changes in timeline range
    */
-  $scope.$watch(function()
+  $scope.$watch(function ()
   {
     if ($location.hash() == 'timeline')
     {
       var range = self.timeline.getVisibleChartRange();
 
       $scope.timeline.range = {
-        start: new Date(range.start).toString($config.date.stringFormat),
-        end: new Date(range.end).toString($config.date.stringFormat)
+        start:  new Date(range.start).toString(),
+        end:    new Date(range.end).toString()
       };
     };
   });
 
 
   /**
-   * TODO
-   * Is it still needed?
-   * 
    * Timeline get ranges
    */
-  function timelineGetRange()
+  function timelineGetRange ()
   {
     var range = self.timeline.getVisibleChartRange();
 
-    $scope.$apply(function()
+    $scope.$apply(function ()
     {
       $scope.timeline.range = {
-        start: new Date(range.from).toString($config.date.stringFormat),
-        end: new Date(range.till).toString($config.date.stringFormat)
+        start:  new Date(range.from).toString(),
+        end:    new Date(range.till).toString()
       };
     });
   };
@@ -307,25 +404,29 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Get information of the selected slot
    */
-  function selectedSlot()
+  function selectedSlot ()
   {
     var selection;
 
     if (selection = self.timeline.getSelection()[0])
     {
-      var values = self.timeline.getItem(selection.row),
+      var values  = self.timeline.getItem(selection.row),
           content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]);
 
       $scope.original = {
-        start: values.start,
-        end: values.end,
+        start:        values.start,
+        end:          values.end,
         content: {
-          recursive: content.recursive,
-          state: content.state,
-          id: content.id
+          recursive:  content.recursive,
+          state:      content.state,
+          id:         content.id
         }
       };
 
+      /**
+       * TODO
+       * Convert to resetview?
+       */
       $scope.forms = {
         add: false,
         edit: true
@@ -333,16 +434,16 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 
       $scope.slot = {
         start: {
-          date: Dater.readableDate(values.start, $config.date.format),
-          time: Dater.readableTime(values.start, $config.time.format)
+          date: new Date(values.start).toString($rootScope.config.formats.date),
+          time: new Date(values.start).toString($rootScope.config.formats.time)
         },
         end: {
-          date: Dater.readableDate(values.end, $config.date.format),
-          time: Dater.readableTime(values.end, $config.time.format)
+          date: new Date(values.end).toString($rootScope.config.formats.date),
+          time: new Date(values.end).toString($rootScope.config.formats.time)
         },
-        state: content.state,
-        recursive: content.recursive,
-        id: content.id
+        state:      content.state,
+        recursive:  content.recursive,
+        id:         content.id
       };
 
       return values;
@@ -351,20 +452,11 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 
 
   /**
-   * Extract Slot ID of the selected slot
-   */
-  function selectedSlotID()
-  {
-    return angular.fromJson(selectedSlot().content).id;
-  };
-
-
-  /**
    * Timeline on select
    */
-  function timelineOnSelect()
+  function timelineOnSelect ()
   {
-    $scope.$apply(function()
+    $scope.$apply(function ()
     {
       $scope.selectedOriginal = selectedSlot();
     });
@@ -374,9 +466,17 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Timeline on add
    */
-  function timelineOnAdd()
+  function timelineOnAdd ()
   {
-    var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
+    var news = $('.timeline-event-content')
+                .contents()
+                .filter(function()
+                { 
+                  return this.nodeValue == 'New' 
+                }),
+        values = self.timeline.getItem(self.timeline.getSelection()[0].row);
+      
+    if (news.length > 1) self.timeline.cancelAdd();
 
     $scope.$apply(function()
     {
@@ -387,14 +487,20 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
 
       $scope.slot = {
         start: {
-          date: new Date(values.start).toString('dd-MM-yyyy'),
-          time: new Date(values.start).toString('HH:mm tt')
+          date: new Date(values.start).toString($rootScope.config.formats.date),
+          time: new Date(values.start).toString($rootScope.config.formats.time)
         },
         end: {
-          date: new Date(values.end).toString('dd-MM-yyyy'),
-          time: new Date(values.end).toString('HH:mm tt')
+          date: new Date(values.end).toString($rootScope.config.formats.date),
+          time: new Date(values.end).toString($rootScope.config.formats.time)
         },
-        recursive: (values.group.match(/recursive/)) ? true : false
+        recursive: (values.group.match(/recursive/)) ? true : false,
+        /**
+         * INFO
+         * First state is hard-coded
+         * Maybe use the first one from array later on?
+         */
+        state: 'com.ask-cs.State.Available'
       };
     });
   };
@@ -403,30 +509,23 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Add slot trigger start view
    */
-  $scope.slotAdd = function(slot)
+  $scope.slotAdd = function (slot)
   {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planning.addTimeSlot
-    };
+    $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
 
     Slots.add(
     {
-      start: Date.parse(slot.start.date + ' ' + slot.start.time).getTime() / 1000,
-      end: Date.parse(slot.end.date + ' ' + slot.end.time).getTime() / 1000,
-      recursive: (slot.recursive) ? true : false,
-      text: slot.state
+      start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
+      end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
+      recursive:  (slot.recursive) ? true : false,
+      text:       slot.state
     }, 
     $scope.user.id)
     .then(function (result)
     {
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.slotAdded
-      });
+      $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
 
-      refreshTimeline();
+      timeliner.refresh();
     });
   };
 
@@ -434,31 +533,26 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Timeline on change
    */
-  function timelineOnChange()
+  function timelineOnChange (direct, original, slot, options)
   {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.changingSlot
+    if (!direct)
+    {
+      var values  = self.timeline.getItem(self.timeline.getSelection()[0].row),
+          options = {
+            start:    values.start,
+            end:      values.end,
+            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+          };
     };
 
-    var values = self.timeline.getItem(self.timeline.getSelection()[0].row);
+    $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
-    Slots.change($scope.original, 
-    {
-      start: values.start,
-      end: values.end,
-      content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]), 
-    }, 
-    $scope.user.id)
+    Slots.change($scope.original, options, $scope.user.id)
     .then(function (result)
     {
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.slotChanged
-      });
+      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
 
-      refreshTimeline();
+      timeliner.refresh();
     });
   };
 
@@ -466,40 +560,16 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Change slot
    */
-  $scope.slotChange = function(original, slot)
+  $scope.slotChange = function (original, slot)
   {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.profile.changingTimeslot
-    };
-
-    Slots.change($scope.original, 
+    timelineOnChange(true, original, slot, 
     {
-      start: Date.parse(slot.start.date + ' ' + slot.start.time),
-      end: Date.parse(slot.end.date + ' ' + slot.end.time),
-      recursive: (slot.recursive) ? true : false,
-      text: slot.state,
-      /**
-       * REMOVE
-       * Lose id and content later on!
-       */
-      id: (slot.id) ? slot.id : 0,
-      content: angular.toJson({ 
-        id: slot.id, 
-        recursive: slot.recursive, 
-        state: slot.state 
-        })
-    }, 
-    $scope.user.id)
-    .then(function (result)
-    {
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.slotChanged
-      });
-
-      refreshTimeline();
+      start:  Dater.convert.absolute(slot.start.date, slot.start.time, false),
+      end:    Dater.convert.absolute(slot.end.date, slot.end.time, false),
+      content: angular.toJson({
+        recursive:  slot.recursive, 
+        state:      slot.state 
+      })
     });
   };
 
@@ -507,23 +577,16 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Timeline on delete
    */
-  function timelineOnDelete()
+  function timelineOnDelete ()
   {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.deletingTimeslot
-    };
+    $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
     Slots.remove($scope.original, $scope.user.id)
     .then(function (result)
     {
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.timeslotDeleted
-      });
+      $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
 
-      refreshTimeline();
+      timeliner.refresh();
     });
   };
 
@@ -531,69 +594,9 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Delete trigger start view
    */
-  $scope.slotRemove = function()
+  $scope.slotRemove = function ()
   {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.deletingTimeslot
-    };
-
-    Slots.remove($scope.original, $scope.user.id)
-    .then(function (result)
-    {
-      $rootScope.notify({
-        status: true,
-        type: 'alert-success',
-        message: $rootScope.ui.planboard.timeslotDeleted
-      });
-
-      refreshTimeline();
-    });
-  };
-
-
-  /**
-   * TODO
-   * Look for ways to combine with other timeline refreshers
-   *
-   * Refresh timeline
-   */
-  function refreshTimeline ()
-  {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.refreshTimeline
-    };
-
-    $scope.slot = {};
-
-    $scope.forms = {
-      add: true,
-      edit: false
-    };
-
-    Profile.getSlots($scope.user.id, 
-    {
-      start:  new Date($scope.timeline.range.start).getTime(),
-      end:    new Date($scope.timeline.range.end).getTime()
-    })
-    .then(function(data)
-    {
-      $scope.slot = {};
-
-      $scope.data.slots = data.slots;
-
-      $scope.synced = data.synced;
-
-      timeliner({
-        start:  $scope.timeline.range.start,
-        end:    $scope.timeline.range.end
-      });
-
-      $rootScope.loading = {
-        status: false
-      };
-    });
+    timelineOnRemove();
   };
 
 
@@ -623,7 +626,10 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     {
       $scope.timeline.current.week--;
 
-      loadTimeline(periods.weeks[$scope.timeline.current.week]);
+      timeliner.load({
+        start:  periods.weeks[$scope.timeline.current.week].first.timeStamp,
+        end:    periods.weeks[$scope.timeline.current.week].last.timeStamp,
+      });
     };
 
     $scope.timeline.range = {
@@ -642,141 +648,16 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     {
       $scope.timeline.current.week++;
 
-      loadTimeline(periods.weeks[$scope.timeline.current.week]);
+      timeliner.load({
+        start:  periods.weeks[$scope.timeline.current.week].first.timeStamp,
+        end:    periods.weeks[$scope.timeline.current.week].last.timeStamp,
+      });
     };
 
     $scope.timeline.range = {
       start:  periods.weeks[$scope.timeline.current.week].first.day,
       end:    periods.weeks[$scope.timeline.current.week].last.day
     };
-  };
-
-
-  /**
-   * Generic data loader and timeline renderer
-   */
-  function loadTimeline (options)
-  {
-    $rootScope.loading = {
-      status: true,
-      message: $rootScope.ui.planboard.loadingTimeline
-    };
-
-    Profile.getSlots($scope.user.id, {
-      start:  options.first.timeStamp,
-      end:    options.last.timeStamp
-    })
-    .then(function(data)
-    {
-      $scope.data.slots = data.slots;
-
-      $scope.synced = data.synced;
-
-      timeliner({
-        start:  options.first.day,
-        end:    options.last.day
-      });
-
-      $rootScope.loading = {
-        status: false
-      };
-    });
-  };
-
-
-  /**
-   * Render timeline
-   */
-  function initTimeline ()
-  {
-    $scope.timeline = {
-      current: current,
-      options: {
-        start:  new Date(periods.weeks[current.week].first.day),
-        end:    new Date(periods.weeks[current.week].last.day),
-        min:    new Date(periods.weeks[current.week].first.day),
-        max:    new Date(periods.weeks[current.week].last.day)
-      },
-      range: {
-        start: periods.weeks[current.week].first.day,
-        end: periods.weeks[current.week].last.day
-      },
-      config: {
-        states: $config.timeline.config.states
-      }
-    };
-
-    var states = {};
-    angular.forEach($scope.timeline.config.states, function(state, key)
-    {
-      states[key] = state.label;
-    });
-
-    $scope.states = states;
-
-    $('#timeline').html('');
-    $('#timeline').append('<div id="userTimeline"></div>');
-
-    self.timeline = new links.Timeline(document.getElementById('userTimeline'));
-
-    links.events.addListener(self.timeline, 'rangechanged',  timelineGetRange);
-    links.events.addListener(self.timeline, 'add',           timelineOnAdd);
-    links.events.addListener(self.timeline, 'delete',        timelineOnDelete);
-    links.events.addListener(self.timeline, 'change',        timelineOnChange);
-    links.events.addListener(self.timeline, 'select',        timelineOnSelect);
-
-    angular.extend($scope.timeline.options, $config.timeline.options);
-
-    setTimeout( function() 
-    {
-      self.timeline.draw(self.process(
-          $scope.data.slots.data, 
-          $scope.timeline.config
-        ), $scope.timeline.options);
-    }, 100);
-
-    self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-
-    $scope.synced = data.synced;
-  };
-
-
-  /**
-   * Draw and limit timeline
-   */
-  function timeliner (options)
-  {
-    $scope.timeline = {
-      current:  $scope.timeline.current,
-      options: {
-        start:  new Date(options.start),
-        end:    new Date(options.end),
-        min:    new Date(options.start),
-        max:    new Date(options.end)
-      },
-      config: {
-        states: $config.timeline.config.states
-      },
-      range: {
-        start: $scope.timeline.range.start,
-        end: $scope.timeline.range.end
-      }
-    };
-
-    angular.extend($scope.timeline.options, $config.timeline.options);
-
-    setTimeout( function ()
-    {
-      self.timeline.draw(
-        self.process(
-          $scope.data.slots.data, 
-          $scope.timeline.config
-        ), 
-        $scope.timeline.options
-      );
-    }, 100);
-
-    self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
   };
 
 
@@ -794,7 +675,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   $scope.timelineZoomIn = function ()
   {
-    self.timeline.zoom( $config.timeline.config.zoomValue );
+    self.timeline.zoom($rootScope.config.timeline.config.zoom);
   };
 
 
@@ -803,10 +684,8 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   $scope.timelineZoomOut = function ()
   {
-    self.timeline.zoom( -$config.timeline.config.zoomValue );
+    self.timeline.zoom(-$rootScope.config.timeline.config.zoom);
   };
-
-
 };
 
 
@@ -849,88 +728,13 @@ profileCtrl.resolve = {
 };
 
 
+profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', '$md5', 'data', 'Profile', 
+'$route', 'Storage', 'Groups', 'Dater', '$location', '$window', 'Slots', 'Sloter'];
+
+
 /**
- * Profile prototypes
+ * Profile modal
  */
-profileCtrl.prototype = {
-  constructor: profileCtrl,
-  
-  /**
-   * Timeline data processing
-   */
-  process: function (data, config)
-  {
-    /**
-     * Timedata container for all sort of slots
-     */
-    var timedata = [];
-
-    /**
-     * Wrap hidden span for sorting workaround in timeline rows
-     */
-    function wrapper(rank)
-    {
-      return '<span style="display:none;">' + rank + '</span>';
-    };
-
-    /**
-     * Wrap secret content div for content of slot
-     */
-    function secret(content)
-    {
-      return '<span class="secret">' + content + '</span>';
-    };
-
-    /**
-     * Process user slots
-     */
-    angular.forEach(data, function(slot, index)
-    {
-      /**
-       * Push slot in the pool
-       */
-      timedata.push({
-        start: Math.round(slot.start * 1000),
-        end: Math.round(slot.end * 1000),
-        group: (slot.recursive) ? wrapper('b') + 'Wekelijkse planning' + wrapper('recursive') : 
-                                  wrapper('a') + 'Planning' + wrapper('planning'),
-        content: secret(angular.toJson({
-          type: 'slot',
-          id: slot.id, 
-          recursive: slot.recursive, 
-          state: slot.text 
-          })),
-        className: config.states[slot.text].className,
-        editable: true
-      });          
-    });
-
-    timedata.push({
-      start: 0,
-      end: 1,
-      group: wrapper('b') + 'Wekelijkse planning' + wrapper('recursive'),
-      content: '',
-      className: null,
-      editable: false
-    });
-    timedata.push({
-      start: 0,
-      end: 1,
-      group: wrapper('a') + 'Planning' + wrapper('planning'),
-      content: '',
-      className: null,
-      editable: false
-    });
-
-    return timedata;
-  }
-};
-
-
-
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', '$md5', 'data', 'Profile', '$route', 'Storage', 'Groups', 'Dater', '$location', '$window', 'Slots'];
-
-
 WebPaige.
 factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope, Groups, Slots) 
 {
@@ -1123,7 +927,11 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       {
         deferred.resolve(angular.extend(resources, {
           slots: slots,
-          synced: new Date().getTime()
+          synced: new Date().getTime(),
+          periods: {
+            start: params.start,
+            end: params.end
+          }
         }));        
       }); // user slots
     }); // profile get
@@ -1142,13 +950,17 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
     Slots.user(
     {
       user: id,
-      start: params.start / 1000,
-      end: params.end / 1000
+      start: params.start,
+      end: params.end
     }).then(function (slots)
     {
       deferred.resolve({
         slots: slots,
-        synced: new Date().getTime()
+        synced: new Date().getTime(),
+        periods: {
+          start: params.start,
+          end: params.end
+        }
       });        
     });
 

@@ -106,8 +106,7 @@ WebPaige
 /**
  * Initial run functions
  */
-.run(
-['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config',
+.run(['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config',
 function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) 
 {
 
@@ -120,6 +119,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   {
     $rootScope.ui = ui[lang];
   };
+  
   $rootScope.ui = ui[$config.lang];
 
 
