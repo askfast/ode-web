@@ -12,6 +12,12 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 
 
   /**
+   * Redirect to dashboard if logged in
+   */
+  if (Session.check()) redirectToDashboard();
+
+
+  /**
    * Set default views
    */
 	if ($routeParams.uuid && $routeParams.key)
@@ -238,17 +244,28 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 
             Groups.uniqueMembers();
 
-            $('.navbar').show();
-            $('#footer').show();
-            $('body').css({
-              'background': 'url(../img/bg.jpg) repeat'
-            });
-
-            $location.path('/dashboard');
+            redirectToDashboard();
           });
         });
       })
     });
+  };
+
+
+  /**
+   * Redirect to dashboard
+   */
+  function redirectToDashboard ()
+  {
+    $location.path('/dashboard');
+
+    setTimeout(function ()
+    {
+      $('body').css({ 'background': 'none' });
+      $('.navbar').show();
+      $('#footer').show();
+      $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
+    }, 100);
   };
 
 

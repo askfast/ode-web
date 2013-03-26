@@ -123,35 +123,27 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
 
 
   /**
-   * Show notifications
+   * If periods are not present calculate them
    */
-  $rootScope.notify = function (options)
-  {
-    /**
-     * Set notification data
-     */
-    $rootScope.notification = {
-      status: options.status,
-      type: options.type,
-      message: options.message
-    };
-    /**
-     * Check if is a permanent notification
-     */
-    if (!options.permanent)
-    {
-      /**
-       * Run timer for fade out
-       * on 5 seconds
-       */
-      setTimeout(function() {
-        /**
-         * Fade-out with 1 second transition
-         */
-        $('#notification').fadeOut(1000);
-      }, 5000);
-    };
-  };
+  if (!Storage.get('periods')) Dater.registerPeriods();
+
+
+  /**
+   * Set important info back if refreshed
+   */
+  $rootScope.app = $rootScope.app || {};
+
+
+  /**
+   * Set up resources
+   */
+  $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+
+
+  /**
+   * Count unread messages
+   */
+  if (!$rootScope.app.unreadMessages) Messages.unreadCount();
 
 
   /**
@@ -225,56 +217,16 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
 
 
   /**
-   * If periods are not present calculate them
-   */
-  if (!Storage.get('periods')) Dater.registerPeriods();
-
-
-  /**
-   * Set important info back if refreshed
-   */
-  $rootScope.app = $rootScope.app || {};
-
-
-  /**
-   * Set up resources
-   */
-  $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
-
-
-  /**
-   * Count unread messages
-   */
-  if (!$rootScope.app.unreadMessages) Messages.unreadCount();
-
-
-  /**
-   * TODO
-   * Control session mechanism later on!
-   *
-   * Check for valid session
-   */
-  if (!Session.check()) $location.path("/login");
-
-
-  /**
    * Detect route change start
    */
   $rootScope.$on("$routeChangeStart", function (event, next, current)
   {
-    /**
-     * TODO
-     * !!!!!!!!!!!!!!!!!!!!!!!!!!!
-     * A BIG TODO FINISH THIS !!!!
-     * !!!!!!!!!!!!!!!!!!!!!!!!!!!
-     * Prevent Deep Linking
-     */
     if (!Session.check()) $location.path("/login");
-    /**
-     * Default routing
-     */
+
     $rootScope.loadingBig = true;
-    $rootScope.loading = true;
+
+    $rootScope.statusBar.display('');
+
     $('div[ng-view]').hide();
   });
 
@@ -285,8 +237,11 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   $rootScope.$on("$routeChangeSuccess", function (event, current, previous)
   {
     $rootScope.newLocation = $location.path();
+
     $rootScope.loadingBig = false;
-    $rootScope.loading = false;
+
+    $rootScope.statusBar.off();
+
     $('div[ng-view]').show();
   });
 
