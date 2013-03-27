@@ -437,7 +437,7 @@ var ui = {
         searchResults: 'Zoekresultaten',
         group: 'Groep',
         close: 'Sluiten',
-        name: 'Naan',
+        name: 'Naam',
         saveGroup: 'Groep opslaan',
         registerMember: 'Lid registreren',
         role: 'Functie',
