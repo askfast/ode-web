@@ -231,18 +231,22 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
           end: periods.weeks[current.week].last.day
         },
         config: {
-          states: $config.timeline.config.states
+          legenda:    {},
+          legendarer: $rootScope.config.timeline.config.legendarer,
+          states:     $rootScope.config.timeline.config.states
         }
       };
 
       var states = {};
 
-      angular.forEach($scope.timeline.config.states, function(state, key)
-      {
-        states[key] = state.label;
-      });
+      angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
 
       $scope.states = states;
+
+      angular.forEach($rootScope.config.timeline.config.states, function (state, index)
+      {
+        $scope.timeline.config.legenda[index] = true;
+      });
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');
@@ -268,7 +272,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
       setTimeout( function() 
       {
         self.timeline.draw(
-          Sloter.processSimple(
+          Sloter.profile(
             $scope.data.slots.data, 
             $scope.timeline.config
           ), $scope.timeline.options);
@@ -671,6 +675,29 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   $scope.timelineZoomOut = function ()
   {
     self.timeline.zoom(-$rootScope.config.timeline.config.zoom);
+  };
+  
+
+  /**
+   * Timeline legenda toggler
+   */
+  $scope.showLegenda = function()
+  {
+    $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
+  };
+
+
+  /**
+   * Alter legenda settings
+   */
+  $scope.alterLegenda = function(legenda)
+  {
+    $scope.timeline.config.legenda = legenda;
+
+    timeliner.render({
+      start:  $scope.timeline.range.start,
+      end:    $scope.timeline.range.end
+    });
   };
 };
 

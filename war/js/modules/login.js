@@ -14,7 +14,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Redirect to dashboard if logged in
    */
-  if (Session.check()) redirectToDashboard();
+  // if (Session.check()) redirectToDashboard();
 
 
   /**

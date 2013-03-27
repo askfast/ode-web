@@ -242,6 +242,15 @@
                       ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button>
             </div>
             <!-- end timeline zooms -->
+
+            <!-- legenda -->
+            <div  class="btn-group pull-left">
+              <button type="button" 
+                      ng-click="showLegenda()"
+                      class="btn {{(timeline.config.legendarer==true) && 'active'}}" 
+                      ng-model="timeline.config.legendarer">{{ui.planboard.legenda}}</button>
+            </div>
+            <!-- end legenda -->
           </div>
           <!-- end core timeline controls -->
 
@@ -259,6 +268,75 @@
           <!-- end range indicator -->
         </div>
         <!-- end timeline controls -->
+
+        <hr>
+        
+        <!-- timeline legenda content -->
+        <div class="legenda" ng-show="timeline.config.legendarer">
+          
+          <div class="legenda-row">
+            <strong>{{ui.planboard.members}}</strong>
+            <ul>
+              <li class="legenda-Available">
+                <label>
+                  <div class="square"></div>
+                  <input  type="checkbox" 
+                          ng-click="alterLegenda(timeline.config.legenda)" 
+                          ng-model="timeline.config.legenda['com.ask-cs.State.Available']">
+                  {{ui.planboard.bothAvailable}}
+                </label>
+              </li>
+              <li class="legenda-BeschikbaarNoord">
+                <label>
+                  <div class="square"></div>
+                  <input  type="checkbox"
+                          ng-click="alterLegenda(timeline.config.legenda)" 
+                          ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarNoord']">
+                  {{ui.planboard.northAavailable}}
+                </label>
+              </li>
+              <li class="legenda-BeschikbaarZuid">
+                <label>
+                  <div class="square"></div>
+                  <input  type="checkbox" 
+                          ng-click="alterLegenda(timeline.config.legenda)" 
+                          ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarZuid']">
+                  {{ui.planboard.southAvailable}}
+                </label>
+              </li>
+              <li class="legenda-SchipperVanDienst">
+                <label>
+                  <div class="square"></div>
+                  <input  type="checkbox"   
+                          ng-click="alterLegenda(timeline.config.legenda)" 
+                          ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.SchipperVanDienst']">
+                  {{ui.planboard.skipperOutService}}
+                </label>
+              </li>
+              <li class="legenda-Unavailable">
+                <label>
+                  <div class="square"></div>
+                  <input  type="checkbox" 
+                          ng-click="alterLegenda(timeline.config.legenda)" 
+                          ng-model="timeline.config.legenda['com.ask-cs.State.Unavailable']">
+                  {{ui.planboard.notAvailable}}
+                </label>
+              </li>
+              <li class="legenda-NotReached">
+                <label>
+                  <div class="square"></div>
+                  <input  type="checkbox" 
+                          ng-click="alterLegenda(timeline.config.legenda)" 
+                          ng-model="timeline.config.legenda['com.ask-cs.State.Unreached']">
+                  {{ui.planboard.notachieve}} 
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <hr>
+        </div>
+        <!-- end timeline legenda content -->
 
         <!-- slot controls -->
         <div id="form-open" class="row-fluid" ng-show="forms.add || forms.edit">
