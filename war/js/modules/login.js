@@ -23,19 +23,19 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 	if ($routeParams.uuid && $routeParams.key)
   {
 		$scope.views = {
-			changePass : true,
+			changePass: true,
 		};
 
 		$scope.changepass = {
-			uuid : $routeParams.uuid,
-			key :  $routeParams.key,
+			uuid: $routeParams.uuid,
+			key:  $routeParams.key,
 		}
 	}
   else
   {
 		$scope.views = {
-			login : true,
-			forgot : false
+			login: true,
+			forgot: false
 		};
 	};
 

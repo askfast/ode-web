@@ -4,7 +4,7 @@
 /**
  * Settings Controller
  */
-function settingsCtrl ($rootScope, $scope, data, Settings, Profile)
+function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
 {
 	/**
 	 * Fix styles
@@ -67,6 +67,26 @@ function settingsCtrl ($rootScope, $scope, data, Settings, Profile)
     });
   };
 
+
+  /**
+   * Google authorization
+   */
+  $scope.authGoogle = function (account)
+  {
+    window.location = 'http://sven.ask-services.appspot.com/auth/google' + 
+                      '?agentUrl=http://sven.ask-services.appspot.com/eveagents/personalagent/' + 
+                      account + 
+                      '/' + 
+                      '&agentMethod=createGoogleAgents' +
+                      '&applicationCallback=' + 
+                      location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
+                      '/index.html' + 
+                      '?account=' +
+                      account +
+                      encodeURIComponent('#') + 
+                      '/settings';
+  };
+
 };
 
 
@@ -81,7 +101,7 @@ settingsCtrl.resolve = {
 };
 
 
-settingsCtrl.$inject = ['$rootScope', '$scope', 'data', 'Settings', 'Profile'];
+settingsCtrl.$inject = ['$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile'];
 
 
 /**

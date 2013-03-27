@@ -15,11 +15,11 @@
             data-toggle="tab"
             ng-click="fixTabHeight('userSettingsTab')"><span class="entypo">&#128100;</span> {{ui.settings.user}}</a>
       </li>
-      <li>
+      <!-- <li>
         <a href="#appSettingsTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('appSettingsTab')"><span class="entypo">&#9881;</span> {{ui.settings.application}}</a>
-      </li>
+      </li> -->
     </ul>
     <!-- end tabs -->
 
@@ -32,13 +32,6 @@
 
         <div class="tab-header">
           <h3 class="pull-left">{{ui.settings.userSettings}}</h3>
-
-          <!-- REMOVE -->
-          <!-- build settings resource for users -->
-          <!-- <button type="submit" 
-                  ng-click="buildSettingsForUsers()" 
-                  class="btn btn-warning pull-right">Build Settings</button> -->
-
         </div>
         <hr>
 
@@ -48,12 +41,24 @@
         
             <div class="control-group">
               <label class="control-label">{{ui.settings.langSetting}}</label>
-
               <select ng-model="settings.user.language" 
                       ng-options="option as value for (option, value) in languages">
               </select>
-
             </div>
+        
+            <div class="control-group">
+              <label class="control-label">Google account</label>
+              <div class="input-append">
+                <input  class="span3"
+                        type="text"
+                        ng-model="settings.user.google">
+                <button class="btn btn-success" 
+                        type="button"
+                        ng-click="authGoogle(settings.user.google)">Authorize</button>
+              </div>
+            </div>
+
+            <br>
 
             <div class="form-actions">
               <button type="submit" 
@@ -69,14 +74,14 @@
       <!-- end userSettingsTab -->
 
       <!-- appSettingsTab -->
-      <div class="tab-pane" id="appSettingsTab">
+      <!-- <div class="tab-pane" id="appSettingsTab">
 
         <div class="tab-header">
           <h3 class="pull-left">{{ui.settings.appSettings}}</h3>
         </div>
         <hr>
 
-      </div>
+      </div> -->
       <!-- end appSettingsTab -->
 
     </div>

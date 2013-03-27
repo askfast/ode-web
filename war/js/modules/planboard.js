@@ -1452,7 +1452,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
               start: Math.round(slot.start * 1000),
               end: Math.round(slot.end * 1000),
               group: (slot.recursive) ? _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                        _this.wrapper('a') + 'Planning' + _this.wrapper('planning'),
+                                        _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
               content: _this.secret(angular.toJson({
                 type: 'slot',
                 id: slot.id, 
@@ -1467,8 +1467,8 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
       });
 
       timedata = _this.addLoading(data, timedata, [
-        _this.wrapper('b') + 'Wekelijkse planning' + _this.wrapper('recursive'),
-        _this.wrapper('a') + 'Planning' + _this.wrapper('planning')
+        _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+        _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning')
       ]);
 
       return timedata;

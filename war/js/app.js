@@ -14,7 +14,7 @@ WebPaige
 .value('$config', {
   version: '2.0.0',
   lang: 'nl',
-  
+
   // REMOVE
   demo_users: false,
 
@@ -146,7 +146,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Count unread messages
    */
-  // if (!$rootScope.app.unreadMessages) Messages.unreadCount();
+  if (!$rootScope.app.unreadMessages) Messages.unreadCount();
 
 
   /**
