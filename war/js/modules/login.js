@@ -198,7 +198,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
     $('#download').hide();
     $('#preloader').show();
 
-    self.progress(20, $rootScope.ui.login.loading_User);
+    self.progress(30, $rootScope.ui.login.loading_User);
 
     User.resources()
     .then(function (resources)
@@ -214,59 +214,63 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
         $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
       };
 
-      self.progress(40, $rootScope.ui.login.loading_Message);
+      self.progress(70, $rootScope.ui.login.loading_Group);
 
-      Messages.query()
-      .then(function (messages)
+      Groups.query(true)
+      .then(function (groups)
       {
-        $rootScope.app.unreadMessages = Messages.unreadCount();
+        self.progress(100, $rootScope.ui.login.loading_everything);
 
-        Storage.session.unreadMessages = Messages.unreadCount();
+        self.redirectToDashboard();
 
-        self.progress(60, $rootScope.ui.login.loading_Group);
+        self.getMessages();
 
-        Groups.query()
-        .then(function (groups)
-        {
-          self.progress(80, $rootScope.ui.login.loading_Members);
+        self.getMembers();
+      });
 
-          var calls = [];
-
-          angular.forEach(groups, function (group, index)
-          {
-            calls.push(Groups.get(group.uuid));
-          });
-
-          $q.all(calls)
-          .then(function (result)
-          {
-            self.progress(100, $rootScope.ui.login.loading_everything);
-
-            Groups.uniqueMembers();
-
-            redirectToDashboard();
-          });
-        });
-      })
     });
   };
 
 
-  self.uniqueMembers = function ()
+  self.getMembers = function ()
   {
     var groups = Storage.local.groups();
 
-    console.warn('groups ->', groups);
-  }
+    Groups.query()
+    .then(function (groups)
+    {
+      var calls = [];
+
+      angular.forEach(groups, function (group, index)
+      {
+        calls.push(Groups.get(group.uuid));
+      });
+
+      $q.all(calls)
+      .then(function (result)
+      {
+        Groups.uniqueMembers();
+      });
+    });
+  };
 
 
-  // self.uniqueMembers();
+  self.getMessages = function ()
+  {
+    Messages.query()
+    .then(function (messages)
+    {
+      $rootScope.app.unreadMessages = Messages.unreadCount();
+
+      Storage.session.unreadMessages = Messages.unreadCount();
+    });
+  };
 
 
   /**
    * Redirect to dashboard
    */
-  function redirectToDashboard ()
+  self.redirectToDashboard = function ()
   {
     $location.path('/dashboard');
 

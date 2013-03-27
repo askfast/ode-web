@@ -632,7 +632,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * General query function from groups and their members
    */
-  Groups.prototype.query = function ()
+  Groups.prototype.query = function (only)
   {
     var deferred = $q.defer();
 
@@ -640,37 +640,43 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     {
       Storage.add('groups', angular.toJson(groups));
 
-      var calls = [];
-
-      angular.forEach(groups, function (group, index)
+      if (!only)
       {
-        calls.push(Groups.prototype.get(group.uuid));
-      });
+        var calls = [];
 
-      $q.all(calls)
-      .then(function (results)
-      {
-        Groups.prototype.uniqueMembers();
-
-        var data = {};
-
-        data.members = {};
-
-        angular.forEach(groups, function (group, gindex)
+        angular.forEach(groups, function (group, index)
         {
-          data.groups = groups;
-
-          data.members[group.uuid] = [];
-
-          angular.forEach(results, function (result, mindex)
-          {
-            if (result.id == group.uuid) data.members[group.uuid] = result.data;
-          });
+          calls.push(Groups.prototype.get(group.uuid));
         });
 
-        deferred.resolve(data);
-      });
+        $q.all(calls)
+        .then(function (results)
+        {
+          Groups.prototype.uniqueMembers();
 
+          var data = {};
+
+          data.members = {};
+
+          angular.forEach(groups, function (group, gindex)
+          {
+            data.groups = groups;
+
+            data.members[group.uuid] = [];
+
+            angular.forEach(results, function (result, mindex)
+            {
+              if (result.id == group.uuid) data.members[group.uuid] = result.data;
+            });
+          });
+
+          deferred.resolve(data);
+        });
+      }
+      else
+      {
+        deferred.resolve(groups);
+      };
     });
 
     return deferred.promise;
