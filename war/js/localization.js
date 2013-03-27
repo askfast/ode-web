@@ -93,6 +93,7 @@ var ui = {
         refreshTimeline: 'Refreshing timeline...',
         preCompilingStortageMessage: 'Pre-compiling shortage message',
         weeklyPlanning: 'Weekly planning',
+        planning: 'Planning',
         minNumber: 'Minimum number benodigden'
       },
       message: {
@@ -359,6 +360,7 @@ var ui = {
         refreshTimeline: 'Tijdlijn vernieuwen...',
         preCompilingStortageMessage: 'Opstellen tekortbericht',
         weeklyPlanning: 'Wekelijkse planning',
+        planning: 'Planning',
         minNumber: 'Minimum aantal benodigde mensen'
       },
       message: {

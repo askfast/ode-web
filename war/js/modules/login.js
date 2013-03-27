@@ -3,7 +3,7 @@
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage,$routeParams)
+var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage, $routeParams)
 {
   /**
    * Self this
@@ -25,6 +25,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 		$scope.views = {
 			changePass : true,
 		};
+
 		$scope.changepass = {
 			uuid : $routeParams.uuid,
 			key :  $routeParams.key,
@@ -42,13 +43,13 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * KNRM users for testing
    */
-  if ($config.demo_users) $scope.demo_users = demo_users;
+  if ($rootScope.config.demo_users) $scope.demo_users = demo_users;
 
 
   /**
    * Real KNRM users for testing
    */
-   $scope.knrmLogin = function(user)
+   $scope.knrmLogin = function (user)
    {
      $('#login button[type=submit]')
        .text('Login..')
@@ -151,10 +152,10 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Authorize user
    */
-  self.auth = function(uuid, pass)
+  self.auth = function (uuid, pass)
   {
     User.login(uuid, pass)
-    .then(function(result)
+    .then(function (result)
 	  {
       if (result.status == 400)
       {
@@ -200,24 +201,23 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
     self.progress(20, $rootScope.ui.login.loading_User);
 
     User.resources()
-    .then(function(resources)
+    .then(function (resources)
     {
       $rootScope.app.resources = resources;
 
-      if (resources.settingsWebPaige != null || 
-          resources.settingsWebPaige != undefined)
+      if (resources.settingsWebPaige != null || resources.settingsWebPaige != undefined)
       {
         $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
       }
       else
       {
-        $rootScope.changeLanguage($config.defaults.settingsWebPaige.user.language);
+        $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
       };
 
       self.progress(40, $rootScope.ui.login.loading_Message);
 
       Messages.query()
-      .then(function(messages)
+      .then(function (messages)
       {
         $rootScope.app.unreadMessages = Messages.unreadCount();
 
@@ -226,19 +226,19 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
         self.progress(60, $rootScope.ui.login.loading_Group);
 
         Groups.query()
-        .then(function(groups)
+        .then(function (groups)
         {
           self.progress(80, $rootScope.ui.login.loading_Members);
 
           var calls = [];
 
-          angular.forEach(groups, function(group, index)
+          angular.forEach(groups, function (group, index)
           {
             calls.push(Groups.get(group.uuid));
           });
 
           $q.all(calls)
-          .then(function(result)
+          .then(function (result)
           {
             self.progress(100, $rootScope.ui.login.loading_everything);
 
@@ -250,6 +250,17 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
       })
     });
   };
+
+
+  self.uniqueMembers = function ()
+  {
+    var groups = Storage.local.groups();
+
+    console.warn('groups ->', groups);
+  }
+
+
+  // self.uniqueMembers();
 
 
   /**
@@ -272,7 +283,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
   /**
    * Progress bar
    */
-  self.progress = function(ratio , message)
+  self.progress = function (ratio, message)
   {
     $('#preloader .progress .bar').css({ width: ratio + '%' }); 
     $('#preloader span').text(message);    
@@ -289,12 +300,14 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    * 
    * Forgot password
    */
-	$scope.forgot = function() {
+	$scope.forgot = function ()
+  {
 		$('#forgot button[type=submit]').text('setting ...').attr('disabled', 'disabled');
-		User.password($scope.remember.id).then(function(result) {
-			console.log("res?? ", result);
-			
-			if(result == "ok") {
+
+		User.password($scope.remember.id).then(function (result)
+		{
+			if (result == "ok")
+      {
 				$scope.alert = {
 					forget : {
 						display : true,
@@ -302,7 +315,9 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 						message : 'Please check your email to reset your password!'
 					}
 				};
-			} else {
+			}
+      else 
+      {
 				$scope.alert = {
 					forget : {
 						display : true,
@@ -310,7 +325,8 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 						message : 'Error, we can not find this account !'
 					}
 				};
-			}
+			};
+
 			$('#forgot button[type=submit]').text('change password').removeAttr('disabled');
 		});
 	};
@@ -322,9 +338,12 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    *
    * Change password
    */
-	self.changePass =  function(uuid, newpass, key){
-		User.changePass(uuid, newpass, key).then(function(result){
-			if(result.status == 400 || result.status == 500 || result.status == 409){
+	self.changePass =  function (uuid, newpass, key)
+  {
+		User.changePass(uuid, newpass, key).then(function (result)
+    {
+			if(result.status == 400 || result.status == 500 || result.status == 409)
+      {
 				$scope.alert = {
 					changePass : {
 						display : true,
@@ -332,8 +351,9 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 						message : 'Something wrong with password changing!'
 					}
 				};
-				
-			}else { // successfully changed
+			}
+      else
+      { // successfully changed
 				$scope.alert = {
 					changePass : {
 						display : true,
@@ -343,7 +363,8 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 				}; 
 				
 				$location.path( "/message" );
-			}
+			};
+
 			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
 		})
 	}
@@ -354,19 +375,12 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
    *
    * Change password
    */
-	$scope.changePass = function() {
-		/**
-		 * Reset alerts
-		 */
+	$scope.changePass = function ()
+  {
 		$('#alertDiv').hide();
-		/**
-		 * Checks
-		 */
+
 		if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
     {
-			/**
-			 * Inform user
-			 */
 			$scope.alert = {
 				changePass : {
 					display : true,
@@ -374,14 +388,12 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 					message : 'Please fill all fields!'
 				}
 			};
-			/**
-			 * Put button state back to default
-			 */
+
 			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
 
 			return false;
 		}
-    else if($scope.changeData.newPass != $scope.changeData.retypePass)
+    else if ($scope.changeData.newPass != $scope.changeData.retypePass)
     {
 			$scope.alert = {
 				changePass : {
@@ -390,27 +402,14 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
 					message : 'Please make the reType password is indentical !'
 				}
 			};
+
 			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
+
 			return false;
 		};
 
-		/**
-		 * Change button state
-		 */
 		$('#changePass button[type=submit]').text('changing ...').attr('disabled', 'disabled');
 
-		/**
-		 * Save login to localStorage
-		 */
-		// Storage.add('logindata', angular.toJson({
-		// 	username : $scope.logindata.username,
-		// 	password : $scope.logindata.password,
-		// 	remember : $scope.logindata.remember
-		// }));
-    
-		/**
-		 * Authorize
-		 */
 		self.changePass($scope.changepass.uuid, $md5.process($scope.changeData.newPass), $scope.changepass.key);
 	};
 
@@ -423,7 +422,7 @@ var loginCtrl = function($rootScope, $config, $location, $q, $scope, Session, Us
  * 
  * Logout from app
  */
-loginCtrl.logout = function($rootScope, $config, $scope, $window, Session, User, Storage)
+loginCtrl.logout = function ($rootScope, $scope, $window, Session, User, Storage)
 {
   $('.navbar').hide();
   $('#footer').hide();
@@ -444,7 +443,7 @@ loginCtrl.logout = function($rootScope, $config, $scope, $window, Session, User,
 };
 
 
-loginCtrl.$inject = ['$rootScope', '$config', '$location', '$q', '$scope', 'Session', 'User', '$md5', 'Groups', 'Messages', 'Storage', '$routeParams'];
+loginCtrl.$inject = ['$rootScope', '$location', '$q', '$scope', 'Session', 'User', '$md5', 'Groups', 'Messages', 'Storage', '$routeParams'];
 
 
 /**
@@ -458,9 +457,7 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
 {
   var self = this;
 
-  /**
-   * User resource (general)
-   */
+
   var User = $resource();
 
 
@@ -514,6 +511,11 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
       }
     }
   );
+
+  // var changePassword = $resource($config.host+'/passwordReset', 
+  //   {uuid: uuid,
+  //    pass: newpass,
+  //    key: key});
   
   
 
@@ -523,21 +525,29 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
    * 
    * User login
    */
-  User.prototype.password = function(uuid) {
+  User.prototype.password = function (uuid)
+  {
     var deferred = $q.defer();
-    Reset.password({
-      uuid : uuid.toLowerCase(),
-      path : $location.absUrl()
-    }, function(result) {
-        console.log("success resolve ",result);
-        if (angular.equals(result, [])){
-            deferred.resolve("ok");
-        }else{
-            deferred.resolve(result);
-        }
-    },function(error){
+
+    Reset.password(
+      {
+      uuid: uuid.toLowerCase(),
+      path: $location.absUrl()
+    }, function (result)
+    {
+      if (angular.equals(result, []))
+      {
+        deferred.resolve("ok");
+      }
+      else
+      {
+        deferred.resolve(result);
+      };
+    },function (error)
+    {
         deferred.resolve(error);
     });
+
     return deferred.promise;
   };
 
@@ -558,7 +568,7 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
       else 
       {
         deferred.resolve(result);
-      }
+      };
     },
     function (error)
     {
@@ -574,19 +584,20 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
    * 
    * change user password
    */
-  User.prototype.changePass = function(uuid, newpass, key){
-      var deferred = $q.defer();
-      var changePassword = $resource($config.host+'/passwordReset', 
-        {uuid: uuid,
-         pass: newpass,
-         key: key});
-      
-      changePassword.get(function(res){ // success
-        console.log("change pass result : ", res);
-        deferred.resolve(res);
-      },function(error){ // error
-        deferred.resolve(error);
-      })
+  User.prototype.changePass = function (uuid, newpass, key)
+  {
+    var deferred = $q.defer();
+    
+    /**
+     * RE-FACTORY
+     */
+    changePassword.get(function (res)
+    { // success
+      deferred.resolve(res);
+    },function (error)
+    { // error
+      deferred.resolve(error);
+    });
     
     return deferred.promise;
   }

@@ -47,6 +47,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       member: false
     };
   };
+
   resetViews();
 
 
@@ -359,21 +360,15 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       case 'group':
         $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
 
-        if ($scope.timeline.current.layouts.members && 
-            !$scope.timeline.current.layouts.group)
-        {
+        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
           $scope.timeline.current.layouts.members = false;
-        };
       break;
 
       case 'members':
         $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
 
-        if ($scope.timeline.current.layouts.members && 
-            !$scope.timeline.current.layouts.group)
-        {
+        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
           $scope.timeline.current.layouts.group = true;
-        };
       break;
     };
 
@@ -535,19 +530,13 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Timeline zoom in
    */
-  $scope.timelineZoomIn = function ()
-  {
-    self.timeline.zoom($rootScope.config.timeline.config.zoom);
-  };
+  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom) };
 
 
   /**
    * Timeline zoom out
    */
-  $scope.timelineZoomOut = function ()
-  {
-    self.timeline.zoom(-$rootScope.config.timeline.config.zoom);
-  };
+  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom) };
 
 
   /**
@@ -633,7 +622,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       /**
        * TODO
        * Check if this can be combined with switch later on!
-       *
        * Set extra data based slot type for inline form
        */
       switch (content.type)
@@ -664,7 +652,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   function timelineOnSelect ()
   {
-    $scope.$apply(function()
+    $scope.$apply(function ()
     {
       $scope.selectedOriginal = selectedSlot();
     });
@@ -819,7 +807,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       
     if (news)
     {
-      $scope.$apply(function()
+      $scope.$apply(function ()
       {
         $scope.resetInlineForms();
       });
@@ -842,25 +830,19 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Delete trigger start view
    */
-  $scope.remove = function ()
-  {
-    timelineOnRemove();
-  };
+  $scope.remove = function () { timelineOnRemove() };
 
 
   /**
    * Redraw timeline on window resize
    */
-  $window.onresize = function ()
-  {
-    self.timeline.redraw();
-  };
+  $window.onresize = function () { self.timeline.redraw() };
 
 
   /**
    * Group aggs barCharts toggler
    */
-  $scope.barCharts = function()
+  $scope.barCharts = function ()
   {
     $scope.timeline.config.bar = !$scope.timeline.config.bar;
 
@@ -874,7 +856,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Group wishes toggler
    */
-  $scope.groupWishes = function()
+  $scope.groupWishes = function ()
   {
     $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
 
@@ -888,16 +870,13 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Timeline legenda toggler
    */
-  $scope.showLegenda = function()
-  {
-    $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
-  };
+  $scope.showLegenda = function () { $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer; };
 
 
   /**
    * Alter legenda settings
    */
-  $scope.alterLegenda = function(legenda)
+  $scope.alterLegenda = function (legenda)
   {
     $scope.timeline.config.legenda = legenda;
 
@@ -971,7 +950,7 @@ planboardCtrl.$inject = ['$rootScope', '$scope', '$q', '$window', '$location', '
  * TimeSlots Resource
  */
 WebPaige.
-factory('Slots', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Dater, Sloter, Stats) 
+factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout, Storage, Dater, Sloter, Stats) 
 {
   /**
    * Define Slot Resource from back-end
@@ -1516,7 +1495,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
               start: Math.round(slot.start * 1000),
               end: Math.round(slot.end * 1000),
               group: (slot.recursive) ? _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                        _this.wrapper('a') + 'Planning' + _this.wrapper('planning'),
+                                        _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
               content: _this.secret(angular.toJson({
                 type: 'slot',
                 id: slot.id, 
@@ -1533,7 +1512,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
       timedata.push({
         start: 0,
         end: 1,
-        group: _this.wrapper('b') + 'Wekelijkse planning' + _this.wrapper('recursive'),
+        group: _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
         content: '',
         className: null,
         editable: false
@@ -1542,7 +1521,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
       timedata.push({
         start: 0,
         end: 1,
-        group: _this.wrapper('a') + 'Planning' + _this.wrapper('planning'),
+        group: _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
         content: '',
         className: null,
         editable: false
@@ -1604,7 +1583,33 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
             requirement = '<div class="requirement" style="' + 
                           style + 
                           '" ' + 
+
+
+
+
+
+
+
+
+
+
                           'title="'+'Minimum aantal benodigden'+': ' + 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                           num + 
                           ' personen"></div>';
 
@@ -1659,7 +1664,44 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
         var actual = '<div class="bar" style="' + 
                       style + 
                       '" ' + 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       ' title="Huidig aantal beschikbaar: ' + 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       num + 
                       ' personen">' + 
                       span + 
@@ -1708,13 +1750,13 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
         {
           switch (slot.diff)
           {
-            case 0: cn = 'even'; break
-            case 1: cn = 1; break
-            case 2: cn = 2; break
-            case 3: cn = 3; break
-            case 4: cn = 4; break
-            case 5: cn = 5; break
-            case 6: cn = 6; break
+            case 0: cn = 'even';  break
+            case 1: cn = 1;       break
+            case 2: cn = 2;       break
+            case 3: cn = 3;       break
+            case 4: cn = 4;       break
+            case 5: cn = 5;       break
+            case 6: cn = 6;       break
           }
         }
         else if (slot.diff >= 7)

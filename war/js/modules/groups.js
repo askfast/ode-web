@@ -3,7 +3,7 @@
 /**
  * Groups Controller
  */
-function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profile, $route, $routeParams, Storage)
+function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage)
 {
   /**
    * Fix styles
@@ -41,7 +41,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
   /**
    * Grab and set roles for view
    */
-  $scope.roles = $config.roles;
+  $scope.roles = $rootScope.config.roles;
 
 
   /**
@@ -102,7 +102,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
   {
     setGroupView(current);
 
-    $scope.$watch($location.search(), function()
+    $scope.$watch($location.search(), function ()
     {
       $location.search({uuid: current});
     });
@@ -138,7 +138,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
    */
   $scope.setViewTo = function (hash)
   {
-    $scope.$watch(hash, function()
+    $scope.$watch(hash, function ()
     {
       $location.hash(hash);
 
@@ -353,7 +353,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
 
             $scope.current = group.uuid;
 
-            $scope.$watch($location.search(), function()
+            $scope.$watch($location.search(), function ()
             {
               $location.search({uuid: group.uuid});
             }); // end of watch
@@ -382,7 +382,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
       $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
       Groups.query().
-      then(function(data)
+      then(function (data)
       {
         $scope.data = data;
 
@@ -402,14 +402,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     $rootScope.statusBar.display($rootScope.ui.groups.deleting);
 
     Groups.remove(id).
-    then(function()
+    then(function ()
     {
       $rootScope.notifier.success($rootScope.ui.groups.deleted);
 
       $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
       Groups.query().
-      then(function(data)
+      then(function (data)
       {
         $scope.data = data;
 
@@ -443,7 +443,7 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
     var flag = (master) ? true : false,
         members = angular.fromJson(Storage.get(group.uuid));
 
-    angular.forEach(members, function(member, index)
+    angular.forEach(members, function (member, index)
     {
       $scope.selection[member.uuid] = flag;
     });
@@ -472,14 +472,14 @@ function groupsCtrl($rootScope, $scope, $config, $location, data, Groups, Profil
  * Groups resolver
  */
 groupsCtrl.resolve = {
-  data: function ($rootScope, $config, Groups, $route) 
+  data: function (Groups) 
   {
     return Groups.query();
   }
 };
 
 
-groupsCtrl.$inject = ['$rootScope', '$scope', '$config', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage'];
+groupsCtrl.$inject = ['$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage'];
 
 
 /**
@@ -569,7 +569,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * Add Member to a group
    */
-  Groups.prototype.addMember = function(candidate)
+  Groups.prototype.addMember = function (candidate)
   {
     var deferred = $q.defer();
 
@@ -589,7 +589,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * Remove member from group
    */
-  Groups.prototype.removeMember = function(memberId, groupId)
+  Groups.prototype.removeMember = function (memberId, groupId)
   {
     var deferred = $q.defer();
 
@@ -609,12 +609,12 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * Remove members from a group (bulk action)
    */
-  Groups.prototype.removeMembers = function(selection, group)
+  Groups.prototype.removeMembers = function (selection, group)
   {
     var deferred = $q.defer(),
         calls = [];
 
-    angular.forEach(selection, function(value, id)
+    angular.forEach(selection, function (value, id)
     {
       if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
     });
@@ -632,7 +632,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * General query function from groups and their members
    */
-  Groups.prototype.query = function()
+  Groups.prototype.query = function ()
   {
     var deferred = $q.defer();
 
@@ -642,13 +642,13 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
       var calls = [];
 
-      angular.forEach(groups, function(group, index)
+      angular.forEach(groups, function (group, index)
       {
         calls.push(Groups.prototype.get(group.uuid));
       });
 
       $q.all(calls)
-      .then(function(results)
+      .then(function (results)
       {
         Groups.prototype.uniqueMembers();
 
@@ -656,7 +656,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
 
         data.members = {};
 
-        angular.forEach(groups, function(group, gindex)
+        angular.forEach(groups, function (group, gindex)
         {
           data.groups = groups;
 
@@ -740,13 +740,13 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * Make an inuque list of members
    */
-  Groups.prototype.uniqueMembers = function()
+  Groups.prototype.uniqueMembers = function ()
   {
-    angular.forEach(angular.fromJson(Storage.get('groups')), function(group, index)
+    angular.forEach(angular.fromJson(Storage.get('groups')), function (group, index)
     {
       var members = angular.fromJson(Storage.get('members')) || {};
 
-      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function(member, index)
+      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, index)
       {
         members[member.uuid] = member;
       });
@@ -826,7 +826,7 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     {
       var processed = [];
 
-      angular.forEach(results, function(result, index)
+      angular.forEach(results, function (result, index)
       {
         processed.push({
           id: result.id,
@@ -845,16 +845,16 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   /**
    * Get groups of given member
    */
-  Groups.prototype.getMemberGroups = function(id)
+  Groups.prototype.getMemberGroups = function (id)
   {
     var groups = angular.fromJson(Storage.get('groups')),
         memberGroups = [];
 
-    angular.forEach(groups, function(group, index)
+    angular.forEach(groups, function (group, index)
     {
       var localGroup = angular.fromJson(Storage.get(group.uuid));
 
-      angular.forEach(localGroup, function(member, index)
+      angular.forEach(localGroup, function (member, index)
       {
         if (member.uuid === id)
           memberGroups.push({

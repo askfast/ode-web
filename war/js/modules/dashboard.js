@@ -3,7 +3,7 @@
 /**
  * Dashboard Controller
  */
-function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
+function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
 {
   /**
    * Fix styles
@@ -40,7 +40,7 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
   })
   .then( function (result)
   {
-    setTimeout( function() 
+    setTimeout( function () 
     {
       angular.forEach($scope.pies, function (pie, index)
       {
@@ -54,7 +54,7 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
 
         var r = Raphael('weeklyPie-' + pie.id),
             pie = r.piechart(40, 40, 40, ratios, {
-              colors: $config.pie.colors
+              colors: $rootScope.config.pie.colors
             });
       });
     }, 100);
@@ -111,14 +111,14 @@ function dashboardCtrl($scope, $rootScope, $config, $q, data, Dashboard, Slots)
  * Dashboard resolver
  */
 dashboardCtrl.resolve = {
-  data: function ($rootScope, $config, Messages) 
+  data: function (Messages) 
   {
     return Messages.unread();
   }
 };
 
 
-dashboardCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', 'data', 'Dashboard', 'Slots'];
+dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'data', 'Dashboard', 'Slots'];
 
 
 /**
@@ -155,7 +155,7 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
 
     var calls = [];
 
-    angular.forEach(groups, function(group, index)
+    angular.forEach(groups, function (group, index)
     {
       calls.push(Slots.pie({
         id: group.uuid,
@@ -184,11 +184,11 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
     $.ajax({
        url:"http://knrm.myask.me/rpc/client/p2000.php",
        dataType: 'jsonp',
-       success: function(results)
+       success: function (results)
        {
          deferred.resolve(results);
        },
-       error: function()
+       error: function ()
        {
          deferred.reject('Something bad happened with fetching p2000 messages');
        },

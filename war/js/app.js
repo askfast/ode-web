@@ -14,9 +14,12 @@ WebPaige
 .value('$config', {
   version: '2.0.0',
   lang: 'nl',
+  
   // REMOVE
-  demo_users: true,
+  demo_users: false,
+
   host: profile.host(),
+
   formats: {
     date:     'dd-M-yyyy',
     time:     'hh:mm tt',
@@ -117,9 +120,9 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Default language and change language
    */
-  $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang]; };
+  $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang] };
   
-  $rootScope.ui = ui[$config.lang];
+  $rootScope.ui = ui[$rootScope.config.lang];
 
 
   /**
@@ -143,7 +146,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   /**
    * Count unread messages
    */
-  if (!$rootScope.app.unreadMessages) Messages.unreadCount();
+  // if (!$rootScope.app.unreadMessages) Messages.unreadCount();
 
 
   /**

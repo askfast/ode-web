@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $route, Storage, Groups, Dater, $location, $window, Slots, Sloter)
+function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, data, Profile, Storage, Groups, Dater, Slots, Sloter)
 {
   /**
    * Fix styles
@@ -126,7 +126,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   $scope.setViewTo = function (hash)
   {
-    $scope.$watch($location.hash(), function()
+    $scope.$watch($location.hash(), function ()
     {
       $location.hash(hash);
 
@@ -143,14 +143,14 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
     $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
     Profile.save($route.current.params.userId, resources)
-    .then(function(result)
+    .then(function (result)
     {
       $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
       var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
 
       Profile.get($route.current.params.userId, flag)
-      .then(function(data)
+      .then(function (data)
       {
         $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
 
@@ -167,8 +167,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
    */
   $scope.change = function(passwords)
   {
-    if (passwords.new1 == '' || 
-        passwords.new2 == '')
+    if (passwords.new1 == '' || passwords.new2 == '')
     {
       $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
@@ -440,15 +439,12 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   {
     var news = $('.timeline-event-content')
                 .contents()
-                .filter(function()
-                { 
-                  return this.nodeValue == 'New' 
-                }),
+                .filter(function () { return this.nodeValue == 'New' }),
         values = self.timeline.getItem(self.timeline.getSelection()[0].row);
       
     if (news.length > 1) self.timeline.cancelAdd();
 
-    $scope.$apply(function()
+    $scope.$apply(function ()
     {
       $scope.forms = {
         add: true,
@@ -551,14 +547,11 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   {
     var news = $('.timeline-event-content')
                 .contents()
-                .filter(function()
-                { 
-                  return this.nodeValue == 'New' 
-                });
+                .filter(function () { return this.nodeValue == 'New' });
       
     if (news)
     {
-      $scope.$apply(function()
+      $scope.$apply(function ()
       {
         $scope.resetInlineForms();
       });
@@ -581,10 +574,7 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Delete trigger start view
    */
-  $scope.slotRemove = function ()
-  {
-    timelineOnRemove();
-  };
+  $scope.slotRemove = function () { timelineOnRemove() };
 
 
   /**
@@ -654,37 +644,25 @@ function profileCtrl($rootScope, $scope, $config, $q, $md5, data, Profile, $rout
   /**
    * Redraw timeline on window resize
    */
-  $window.onresize = function ()
-  {
-    self.timeline.redraw();
-  };
+  $window.onresize = function () { self.timeline.redraw() };
 
 
   /**
    * Timeline zoom in
    */
-  $scope.timelineZoomIn = function ()
-  {
-    self.timeline.zoom($rootScope.config.timeline.config.zoom);
-  };
+  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom) };
 
 
   /**
    * Timeline zoom out
    */
-  $scope.timelineZoomOut = function ()
-  {
-    self.timeline.zoom(-$rootScope.config.timeline.config.zoom);
-  };
+  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom) };
   
 
   /**
    * Timeline legenda toggler
    */
-  $scope.showLegenda = function()
-  {
-    $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
-  };
+  $scope.showLegenda = function () { $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer };
 
 
   /**
@@ -723,10 +701,10 @@ profileCtrl.resolve = {
     if ($route.current.params.userId != $rootScope.app.resources.uuid)
     {
       var periods = Dater.getPeriods(),
-          current = new Date().getWeek(),
+          current = Dater.current.week(),
           ranges = {
-            start: periods.weeks[current].first.timeStamp / 1000,
-            end: periods.weeks[current].last.timeStamp / 1000,
+            start:  periods.weeks[current].first.timeStamp / 1000,
+            end:    periods.weeks[current].last.timeStamp / 1000,
           };
 
       return Profile.getWithSlots($route.current.params.userId, false, ranges);
@@ -734,20 +712,19 @@ profileCtrl.resolve = {
     else
     {
       return Profile.get($route.current.params.userId, false);
-    }
+    };
   }
 };
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$config', '$q', '$md5', 'data', 'Profile', 
-'$route', 'Storage', 'Groups', 'Dater', '$location', '$window', 'Slots', 'Sloter'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$q', '$location', '$window', '$route', '$md5', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'Slots', 'Sloter'];
 
 
 /**
  * Profile modal
  */
 WebPaige.
-factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $rootScope, Groups, Slots) 
+factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, Storage, Groups, Slots) 
 {
   var Profile = $resource(
     $config.host + '/node/:id/:section',
@@ -822,11 +799,9 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       phone: profile.PhoneAddress
     }, function (registered) 
     {
-
       Profile.prototype.role(profile.username, profile.role.id)
       .then(function(roled)
       {
-
         Profile.prototype.save(profile.username, {
           EmailAddress: profile.EmailAddress,
           PostAddress: profile.PostAddress,
@@ -836,7 +811,7 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
         {
           var calls = [];
 
-          angular.forEach(profile.groups, function(group, index)
+          angular.forEach(profile.groups, function (group, index)
           {
             calls.push(Groups.addMember({
               id: profile.username,
@@ -905,10 +880,7 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
 
     Profile.get({id: id}, function (result) 
     {
-      if (localize)
-      {
-        Storage.add('resources', angular.toJson(result));
-      };
+      if (localize) Storage.add('resources', angular.toJson(result));
 
       deferred.resolve({
         resources: result
@@ -929,7 +901,6 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
     Profile.prototype.get(id, localize)
     .then(function (resources)
     {
-
       Slots.user({
         user: id,
         start: params.start,
@@ -982,10 +953,7 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
   /**
    * Get local resource data
    */
-  Profile.prototype.local = function()
-  {
-    return angular.fromJson(Storage.get('resources'));
-  };
+  Profile.prototype.local = function () { return angular.fromJson(Storage.get('resources')) };
 
 
   /**
@@ -995,7 +963,7 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
   {
     var deferred = $q.defer();
 
-    Profile.save({id: id}, resources, function(result) 
+    Profile.save({id: id}, resources, function (result) 
     {
       deferred.resolve(result);
     });
@@ -1010,35 +978,16 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
   Profile.prototype.createSettings_ = function (id) 
   {    
     var deferred = $q.defer();
-        // /**
-        //  * WebPaige settings defaults
-        //  */
-        // defaults = {
-        //   settingsWebPaige: {
-        //     lang: 'nl'
-        //   }
-        // };
 
-    /**
-     * Get profile data
-     */
     Profile.prototype.get(id, false)
     .then(function (result) 
     {
-      console.log('result ->', result.resources.uuid, 'settings ->', $config.defaults.settingsWebPaige);
-
-      /**
-       * If user has no default settings give settings
-       */
       if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
       {
         Profile.save({id: result.resources.uuid}, angular.toJson({
-          settingsWebPaige: $config.defaults.settingsWebPaige
+          settingsWebPaige: $rootScope.config.defaults.settingsWebPaige
         }), function(result)
         {
-          /**
-           * Return promised
-           */
           deferred.resolve({
             status: 'modified',
             resources: result
@@ -1047,15 +996,11 @@ factory('Profile', function ($resource, $config, $q, $route, $md5, Storage, $roo
       }
       else
       {
-        /**
-         * Return promised
-         */
         deferred.resolve({
           status: 'full',
           resources: result
         });
       }
-
     });
 
     return deferred.promise;

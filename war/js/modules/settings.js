@@ -4,7 +4,7 @@
 /**
  * Settings Controller
  */
-function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
+function settingsCtrl ($rootScope, $scope, data, Settings, Profile)
 {
 	/**
 	 * Fix styles
@@ -27,7 +27,7 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
         language: $rootScope.ui.meta.name
       }
     };
-  }
+  };
 
 
   /**
@@ -35,10 +35,7 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
    */
   var languages = {};
 
-  angular.forEach(ui, function(lang, index)
-  {
-    languages[lang.meta.name] = lang.meta.label;
-  });
+  angular.forEach(ui, function (lang, index) { languages[lang.meta.name] = lang.meta.label; });
 
   $scope.languages = languages;
 
@@ -52,7 +49,7 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
     $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
     Settings.save($rootScope.app.resources.uuid, settings)
-    .then(function(saved)
+    .then(function (saved)
     {
       $rootScope.notifier.success($rootScope.ui.settings.saved);
 
@@ -70,22 +67,6 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
     });
   };
 
-
-  /**
-   * DASHBOARD
-   * 
-   * Build settings
-   */
-  $scope.buildSettingsForUsers = function ()
-  {
-  	Settings.buildSettingsForUsers()
-  	.then(function(results)
-  	{
-  		// console.log('results ->', results);
-  	});
-  }
-  // buildSettingsForUsers :: Dashboard
-
 };
 
 
@@ -93,22 +74,26 @@ function settingsCtrl ($rootScope, $scope, $config, data, Settings, Profile)
  * Settings resolver
  */
 settingsCtrl.resolve = {
-  data: function ($rootScope, $config, Settings) 
+  data: function (Settings) 
   {
   	return angular.fromJson(Settings.get());
   }
 };
 
 
-settingsCtrl.$inject = ['$rootScope', '$scope', '$config', 'data', 'Settings', 'Profile'];
+settingsCtrl.$inject = ['$rootScope', '$scope', 'data', 'Settings', 'Profile'];
 
 
 /**
  * Settings module
  */
 WebPaige.
-factory('Settings', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Profile) 
+factory('Settings', function ($rootScope, $config, $resource, $q, Storage, Profile) 
 {
+  /**
+   * Define settings resource
+   * In this case it empty :)
+   */
   var Settings = $resource();
 
 
@@ -140,32 +125,6 @@ factory('Settings', function ($resource, $config, $q, $route, $timeout, Storage,
 
     return deferred.promise;
   };
-
-
-  /**
-   * DASHBOARD
-   * 
-   * Settings builder for users missing settings resource
-   */
-  Settings.prototype.buildSettingsForUsers = function ()
-  {
-    var deferred = $q.defer(),
-        calls = [];
-
-    angular.forEach(demo_users, function(user, index)
-    {
-      if (user.uuid) calls.push(Profile.createSettings(user.uuid));
-    });
-
-    $q.all(calls)
-    .then(function(result)
-    {
-      deferred.resolve(result);
-    });
-
-    return deferred.promise;
-  }
-  // buildSettingsForUsers :: Dashboard
 
 
   return new Settings;

@@ -3,7 +3,7 @@
 /**
  * Messages Controller
  */
-function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, Messages, Storage)
+function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages, Storage)
 {
   /**
    * Fix styles
@@ -86,7 +86,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
    */
   $scope.setViewTo = function (hash)
   {
-    $scope.$watch(hash, function()
+    $scope.$watch(hash, function ()
     {
       $location.hash(hash);
 
@@ -184,7 +184,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
 
     setMessageView(current);
 
-    $scope.$watch($location.search(), function()
+    $scope.$watch($location.search(), function ()
     {
       $location.search({uuid: current});
     });
@@ -194,7 +194,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   /**
    * Compose message view toggler
    */
-  $scope.composeMessage = function()
+  $scope.composeMessage = function ()
   {
     if ($scope.views.compose)
     {
@@ -213,7 +213,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   /**
    * Reset views
    */
-  $scope.closeTabs = function()
+  $scope.closeTabs = function ()
   {
     $scope.message = {};
 
@@ -230,11 +230,11 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
   /**
    * Toggle selections
    */
-  $scope.toggleSelection = function(messages, inbox, master)
+  $scope.toggleSelection = function (messages, inbox, master)
   {
     var flag = (master) ? true : false;
 
-    angular.forEach(messages, function(message, index)
+    angular.forEach(messages, function (message, index)
     {
       $scope.selection[inbox][message.uuid] = flag;
     });
@@ -260,7 +260,7 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
       $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
       Messages.query()
-      .then(function(messages)
+      .then(function (messages)
       {
         $scope.messages = messages;
 
@@ -527,18 +527,21 @@ function messagesCtrl($scope, $rootScope, $config, $q, $location, $route, data, 
  * Messages resolver
  */
 messagesCtrl.resolve = {
-  data: function ($route, Messages, Storage) 
+  data: function ($route, Messages) 
   {
     return Messages.query();
   }
 };
 
 
-messagesCtrl.$inject = ['$scope', '$rootScope', '$config', '$q', '$location', '$route', 'data', 'Messages', 'Storage'];
+messagesCtrl.$inject = ['$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage'];
 
 
+/**
+ * Messages model
+ */
 WebPaige.
-factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+factory('Messages', function ($rootScope, $config, $resource, $q, $route, $timeout, Storage) 
 {
   var Messages = $resource(
     $config.host + '/question/:action',
@@ -581,7 +584,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   {
     var deferred = $q.defer();
 
-    Messages.query(function(result) 
+    Messages.query(function (result) 
     {
       Storage.add('messages', angular.toJson(result));
 
@@ -605,7 +608,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
       trash: []
     };
 
-    angular.forEach(messages, function(message, index)
+    angular.forEach(messages, function (message, index)
     {
       if (message.subject == '') message.subject = '-No Subject-';
 
@@ -633,10 +636,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   /**
    * Serve messages from localStorage
    */
-  Messages.prototype.local = function ()
-  {
-    return angular.fromJson(Storage.get('messages'));
-  };
+  Messages.prototype.local = function () { return angular.fromJson(Storage.get('messages')) };
 
 
   /**
@@ -646,7 +646,7 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
   {
     var gem;
 
-    angular.forEach(Messages.prototype.local(), function(message, index)
+    angular.forEach(Messages.prototype.local(), function (message, index)
     {
       if (message.uuid == id) gem = message;
     });
@@ -739,11 +739,8 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
     angular.forEach(messages, function (message, index)
     {
-      if (message.box   == 'inbox' &&
-          message.state == 'NEW')
-      {
+      if (message.box   == 'inbox' && message.state == 'NEW')
         unread.push(message);
-      };
     });
 
     return unread;
@@ -760,11 +757,8 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
     angular.forEach(messages, function (message, index)
     {
-      if (message.box   == 'inbox' &&
-          message.state == 'NEW')
-      {
+      if (message.box   == 'inbox' && message.state == 'NEW')
         counter++;
-      };
     });
 
     $rootScope.app.unreadMessages = counter;
@@ -863,12 +857,8 @@ factory('Messages', function ($resource, $config, $q, $route, $timeout, Storage,
 
     angular.forEach(messages, function(message, index)
     {
-      if ( (message.box   == 'inbox' || 
-            message.box   == 'outbox') &&
-            message.state == 'TRASH')
-      {
+      if ((message.box   == 'inbox' || message.box   == 'outbox') && message.state == 'TRASH')
         bulk.push(message.uuid);
-      };
     });
 
     Messages.remove(null, { 

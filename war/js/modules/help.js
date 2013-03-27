@@ -4,7 +4,7 @@
 /**
  * Help Controller
  */
-function helpCtrl ($rootScope, $scope, $config)
+function helpCtrl ($rootScope, $scope)
 {
 	/**
 	 * Fix styles
@@ -14,4 +14,4 @@ function helpCtrl ($rootScope, $scope, $config)
 };
 
 
-helpCtrl.$inject = ['$rootScope', '$scope', '$config'];
+helpCtrl.$inject = ['$rootScope', '$scope'];
