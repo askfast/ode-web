@@ -8,17 +8,26 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>WebPaige v2.0.0</title>
+    <title>{{config.profile.title}}</title>
     
     <meta name="description" content="WebPaige v2.0.0">
     <meta name="viewport" content="width=device-width">
-    
-    <link rel="shortcut icon" href="img/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="img/ico/apple-touch-icon-57-precomposed.png">
 
+    <!-- jquery -->
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="js/libs/jquery/jquery-browser.js"></script>
+
+    <!-- profile configs -->
+    <script src="profiles/brandweer/profile.js"></script>
+    
+    <!-- favicons -->
+    <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
+
+    <!-- styles -->
     <link rel="stylesheet" href="css/custom.css">
     
     <!-- compability tests and css fixers -->
@@ -39,7 +48,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#dashboard">WebPaige</a>
+          <a class="brand" href="#dashboard">{{config.profile.title}}</a>
           <!-- nav-collapse -->
           <div class="nav-collapse collapse">
             <!-- main nav -->
@@ -142,13 +151,6 @@
       </div>
     </div>
     <!-- end footer -->
-
-    <!-- jquery -->
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="js/libs/jquery/jquery-browser.js"></script>
-
-    <!-- profile configs -->
-    <script src="js/profiles/knrm.js"></script>
 
     <script src="js/localization.js"></script>
     <!-- custom jquery and other stuff -->

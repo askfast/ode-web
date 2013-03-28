@@ -2,8 +2,7 @@
 
 	<!-- preloader -->
 	<div id="preloader">
-		<img src="img/login_knrm_logo.png" alt="KNRM" />
-		<!-- <h2>WebPaige</h2> -->
+		<img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 	  <h4>Setting up the application</h4>
 	  <div class="progress progress-striped active" class="span3">
 	    <div class="bar"></div>
@@ -15,8 +14,7 @@
 	<!-- loginForm -->
 	<div id="login" ng-show="views.login">
 		<form ng-submit="login()">
-		  <img src="img/login_knrm_logo.png" alt="KNRM" />
-			<!-- <h2>WebPaige</h2> -->
+		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.login.header}}</h4>
       <!-- alert login -->
       <div class="alert {{alert.login.type}}" ng-show="alert.login.display">
@@ -56,8 +54,7 @@
 	<!-- remember login -->
 	<div id="forgot" ng-show="views.forgot">
 		<form ng-submit="forgot()">
-		  <img src="img/login_knrm_logo.png" alt="KNRM" />
-			<!-- <h2>WebPaige</h2> -->
+		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>
 	      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
 	        <button class="close" type="button" ng-click="alert.forget=false">×</button>
@@ -79,7 +76,8 @@
 	<!-- change pass --> 
 	<div id="changePass" ng-show="views.changePass">
 		<form ng-submit="changePass()">
-			<img src="img/login_knrm_logo.png" alt="KNRM" /><br>
+			<img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
+			<br>
 			<h4 class="form-signin-heading">{{changepass.uuid}}</h4>
 			<div class="alert {{alert.changePass.type}}" ng-show="alert.changePass.display">
 				<button class="close" type="button" ng-click="alert.changePass=false">×</button>
@@ -100,8 +98,6 @@
 <!-- download mobile app -->
 <div id="download">
 	<button class="btn btn-success btn-large" type="button" bs-tooltip="ui.downloads.app">
-		<!-- <span class="entypo">&#128241;</span> -->
-		<!-- <i class="icon-download icon-white"></i> -->
 		{{ui.login.downloadApp}}
 	</button>
 </div>

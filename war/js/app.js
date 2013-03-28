@@ -11,12 +11,23 @@ var WebPaige = angular.module('WebPaige', ['StorageModule', '$strap.directives',
  * App configuration
  */
 WebPaige
-.value('$config', {
+.value('$config', 
+{
   version: '2.0.0',
   lang: 'nl',
 
   // REMOVE
   demo_users: false,
+
+  profile: {
+    meta: profile.meta,
+    title: profile.title,
+    logos: {
+      login: 'profiles/' + profile.meta + '/img/login_logo.png',
+      app: ''
+    },
+    background: 'profiles/' + profile.meta + '/img/login_bg.jpg' // jpg for smaller size
+  },
 
   host: profile.host(),
 

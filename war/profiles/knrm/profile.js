@@ -3,12 +3,14 @@
  */
 var profile = {
 
-	namespace: 'ns_knrmtest',
+  meta: 'knrm',
 
-	host: function ()
-	{
+  title: 'KNRM',
+
+  host: function ()
+  {
     return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
-	},
+  },
 
   states: {
     'com.ask-cs.State.Available': {
@@ -79,6 +81,23 @@ var profile = {
     }
   ]
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**

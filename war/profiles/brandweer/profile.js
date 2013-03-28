@@ -3,11 +3,13 @@
  */
 var profile = {
 
-	namespace: 'ns_gvrb',
+  meta: 'brandweer',
+
+  title: 'BRANDWEER',
 
 	host: function ()
 	{
-    return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_gvrb';
+    return ($.browser.msie) ? '/proxy/ns_gvrb' : 'http://3rc2.ask-services.appspot.com/ns_gvrb';
 	},
 
   states: {

@@ -91,7 +91,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
   $('.navbar').hide();
   $('#footer').hide();
   $('body').css({
-    'background': 'url(../img/login_bg.jpg) no-repeat center center fixed',
+    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
     'backgroundSize': 'cover'
   });
 
@@ -331,7 +331,9 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 				};
 			};
 
-			$('#forgot button[type=submit]').text('change password').removeAttr('disabled');
+			$('#forgot button[type=submit]')
+        .text('change password')
+        .removeAttr('disabled');
 		});
 	};
 
@@ -369,7 +371,9 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 				$location.path( "/message" );
 			};
 
-			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
+			$('#changePass button[type=submit]')
+        .text('change password')
+        .removeAttr('disabled');
 		})
 	}
 
@@ -393,7 +397,9 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 				}
 			};
 
-			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
+			$('#changePass button[type=submit]')
+        .text('change password')
+        .removeAttr('disabled');
 
 			return false;
 		}
@@ -407,12 +413,16 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 				}
 			};
 
-			$('#changePass button[type=submit]').text('change password').removeAttr('disabled');
+			$('#changePass button[type=submit]')
+        .text('change password')
+        .removeAttr('disabled');
 
 			return false;
 		};
 
-		$('#changePass button[type=submit]').text('changing ...').attr('disabled', 'disabled');
+		$('#changePass button[type=submit]')
+      .text('changing ...')
+      .attr('disabled', 'disabled');
 
 		self.changePass($scope.changepass.uuid, $md5.process($scope.changeData.newPass), $scope.changepass.key);
 	};
@@ -534,7 +544,7 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
     var deferred = $q.defer();
 
     Reset.password(
-      {
+    {
       uuid: uuid.toLowerCase(),
       path: $location.absUrl()
     }, function (result)
@@ -595,11 +605,13 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
     /**
      * RE-FACTORY
      */
-    changePassword.get(function (res)
-    { // success
-      deferred.resolve(res);
-    },function (error)
-    { // error
+    changePassword.get(
+    function (result)
+    {
+      deferred.resolve(result);
+    },
+    function (error)
+    {
       deferred.resolve(error);
     });
     
