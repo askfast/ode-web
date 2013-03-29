@@ -73,8 +73,8 @@ function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
    */
   $scope.authGoogle = function (account)
   {
-    window.location = 'http://sven.ask-services.appspot.com/auth/google' + 
-                      '?agentUrl=http://sven.ask-services.appspot.com/eveagents/personalagent/' + 
+    window.location = 'http://10.200.200.196:9000/auth/google' + 
+                      '?agentUrl=http://10.200.200.196:9000/eveagents/personalagent/' + 
                       account + 
                       '/' + 
                       '&agentMethod=createGoogleAgents' +
@@ -85,6 +85,19 @@ function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
                       account +
                       encodeURIComponent('#') + 
                       '/settings';
+                      
+    // window.location = 'http://sven.ask-services.appspot.com/auth/google' + 
+    //                   '?agentUrl=http://sven.ask-services.appspot.com/eveagents/personalagent/' + 
+    //                   account + 
+    //                   '/' + 
+    //                   '&agentMethod=createGoogleAgents' +
+    //                   '&applicationCallback=' + 
+    //                   location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
+    //                   '/index.html' + 
+    //                   '?account=' +
+    //                   account +
+    //                   encodeURIComponent('#') + 
+    //                   '/settings';
   };
 
 };

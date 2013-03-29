@@ -308,7 +308,8 @@
                 <select ng-model="timeline.current.division" 
                         ng-options="division.id as division.label for division in divisions"
                         ng-selected="timeline.current.division"
-                        ng-change="requestTimeline()">
+                        ng-change="requestTimeline()"
+                        ng-show="divisions.length > 0">
                 </select>
                 <!-- end divisions list -->
               </div>
@@ -497,9 +498,11 @@
               <select ng-model="timeline.current.division" 
                       ng-options="division.id as division.label for division in divisions"
                       ng-selected="timeline.current.division"
-                      ng-change="requestTimeline()">
+                      ng-change="requestTimeline()"
+                      ng-show="divisions.length > 0">
               </select>
               <!-- end divisions list -->
+
             </div>
 
             <!-- groups members controls -->

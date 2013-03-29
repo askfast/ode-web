@@ -3,13 +3,13 @@
  */
 var profile = {
 
-  meta: 'knrm',
+  meta: 'test',
 
-  title: 'KNRM',
+  title: 'TEST',
 
   host: function ()
   {
-    return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
+    return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://10.200.200.196\\:9000/ns_knrm';
   },
 
   states: [

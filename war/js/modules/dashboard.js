@@ -4,7 +4,7 @@
  * Dashboard Controller
  */
 function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
-{
+{  
   /**
    * Fix styles
    */
