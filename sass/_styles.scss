@@ -2,6 +2,9 @@ html,body {
   margin:0;
 }
 
+a:hover {
+  cursor: pointer
+}
 
 #wrap .container-fluid {
   padding-top: 60px;
@@ -888,6 +891,17 @@ label {
 
 
 
+
+
+#watermark {
+  position: absolute;
+  bottom: 40px;
+  right: -10px;
+  z-index: 1;
+  background: url(../profiles/knrm/img/watermark.png) no-repeat;
+  width: 582px;
+  height: 287px
+}
 
 
 

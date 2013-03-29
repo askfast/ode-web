@@ -668,7 +668,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   /**
    * Alter legenda settings
    */
-  $scope.alterLegenda = function(legenda)
+  $scope.alterLegenda = function (legenda)
   {
     $scope.timeline.config.legenda = legenda;
 
