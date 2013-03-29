@@ -666,7 +666,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     var news = $('.timeline-event-content')
                 .contents()
-                .filter(function()
+                .filter(function ()
                 { 
                   return this.nodeValue == 'New' 
                 }),
