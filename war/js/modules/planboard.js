@@ -530,13 +530,13 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Timeline zoom in
    */
-  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom) };
+  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom, Date.now()) };
 
 
   /**
    * Timeline zoom out
    */
-  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom) };
+  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now()) };
 
 
   /**
@@ -798,22 +798,22 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   function timelineOnRemove ()
   {
-    var news = $('.timeline-event-content')
-                .contents()
-                .filter(function()
-                { 
-                  return this.nodeValue == 'New' 
-                });
+    // var news = $('.timeline-event-content')
+    //             .contents()
+    //             .filter(function()
+    //             { 
+    //               return this.nodeValue == 'New' 
+    //             });
       
-    if (news)
-    {
-      $scope.$apply(function ()
-      {
-        $scope.resetInlineForms();
-      });
-    }
-    else
-    {
+    // if (news)
+    // {
+    //   $scope.$apply(function ()
+    //   {
+    //     $scope.resetInlineForms();
+    //   });
+    // }
+    // else
+    // {
       $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
       Slots.remove($scope.original, $rootScope.app.resources.uuid)
@@ -823,14 +823,17 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
         timeliner.refresh();
       });
-    };
+    // };
   };
 
 
   /**
    * Delete trigger start view
    */
-  $scope.remove = function () { timelineOnRemove() };
+  $scope.remove = function () 
+  {
+    timelineOnRemove()
+  };
 
 
   /**
