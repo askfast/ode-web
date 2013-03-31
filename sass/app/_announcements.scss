@@ -1,5 +1,5 @@
 #announcements {
-  overflow: hidden;
+  margin-top: 5px;
 
   ul {
     list-style: none;
@@ -40,5 +40,22 @@
         }
       }
     }
+  }
+}
+
+
+
+.head {
+  overflow: hidden;
+
+  h4 {
+    margin-top: 20px;
+    display: inline;
+  }
+
+  button {
+    float: right;
+    padding-left: 6px;
+    padding-right: 6px;
   }
 }

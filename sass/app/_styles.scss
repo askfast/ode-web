@@ -51,3 +51,13 @@ dl {
   width: 400px;
   height: 400px
 }
+
+
+.label-natural,
+.badge-natural {
+  background-color: #433c2d;
+}
+.label-natural[href],
+.badge-natural[href] {
+  background-color: #342f23;
+}

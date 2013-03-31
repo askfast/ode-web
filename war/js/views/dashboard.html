@@ -7,8 +7,14 @@
     
     <!-- announcements sidebar -->
     <div id="announcements" class="span4">
-      <h4>Announcements</h4>
+
+      <div class="head">
+        <h4>Announcements</h4>
+        <button class="btn btn-small"><i class="icon-cog"></i></button>
+      </div>
+
       <hr>
+
       <!-- p2000 loop -->
       <ul>
         <li ng-repeat="alarm in alarms">
@@ -28,7 +34,7 @@
                 <small class="muted"><i>{{alarm.msgCode}}</i></small>
               </td>
               <td>
-                <span class="badge pull-right">{{alarm.day}} {{alarm.time}}</span>
+                <span class="label label-natural pull-right">{{alarm.day}} {{alarm.time}}</span>
               </td>
             </tr>
           </table>
@@ -41,9 +47,16 @@
 
     <!-- pie charts for groups -->
     <div id="weekly-pies" class="span8">
-      <h4>{{ui.dashboard.thisWeek}}</h4>
+
+      <div class="head">
+        <h4>{{ui.dashboard.thisWeek}}</h4>
+        <button class="btn btn-small"><i class="icon-cog"></i></button>
+      </div>
+
       <hr>
+
       <p class="muted" ng-show="loading.status">{{loading.message}}</p>
+      
       <!-- pie loop -->
       <ul class="weekly" ng-hide="loadingPies">
         <li ng-repeat="pie in pies">
