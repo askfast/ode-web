@@ -1,0 +1,57 @@
+#weekly-pies {
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  ul.weekly {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+
+    li {
+      display: inline;
+      float: left;
+      margin: 0 2% 20px 2%;
+      min-width: 270px;
+      width: 28%;
+      height: auto;
+
+      .weekly-pie {
+        display: inline;
+        float: left;
+        margin-right: 20px;
+        width: 80px;
+        height: 100px;
+      }
+
+      .weekly-pie-info {
+        display: block;
+        float: left;
+        overflow: hidden;
+        margin-bottom: 10px;
+
+        hr {
+          margin: 0 0 10px 0;
+        }
+
+        h3 {
+          display: inline;
+          margin: 0;
+          margin-top: -10px;
+          padding: 0;
+          font-size: 14px;
+        }
+
+        h4 {
+          margin: 0;
+          font-size: 12px;
+        }
+
+        h5 {
+          display: inline;
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}

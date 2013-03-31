@@ -65,43 +65,43 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
    * P2000 annnouncements
    */
   Dashboard.p2000().
-  then(function(results)
+  then(function (results)
   {
-    var alarms = [];
+    // var alarms = [];
 
-    angular.forEach(results, function (alarm, index)
-    {
-      if (alarm.body)
-      {
-        if (alarm.body.match(/Prio 1/))
-        {
-          alarm.body = alarm.body.replace('Prio 1 ', '');
-          alarm.prio = {
-            1: true
-          }
-        };
+    // angular.forEach(results, function (alarm, index)
+    // {
+    //   if (alarm.body)
+    //   {
+    //     if (alarm.body.match(/Prio 1/))
+    //     {
+    //       alarm.body = alarm.body.replace('Prio 1 ', '');
+    //       alarm.prio = {
+    //         1: true
+    //       }
+    //     };
 
-        if (alarm.body.match(/Prio 2/))
-        {
-          alarm.body = alarm.body.replace('Prio 2 ', '');
-          alarm.prio = {
-            2: true
-          }
-        };
+    //     if (alarm.body.match(/Prio 2/))
+    //     {
+    //       alarm.body = alarm.body.replace('Prio 2 ', '');
+    //       alarm.prio = {
+    //         2: true
+    //       }
+    //     };
 
-        if (alarm.body.match(/Prio 3/))
-        {
-          alarm.body = alarm.body.replace('Prio 3 ', '');
-          alarm.prio = {
-            3: true
-          }
-        };
+    //     if (alarm.body.match(/Prio 3/))
+    //     {
+    //       alarm.body = alarm.body.replace('Prio 3 ', '');
+    //       alarm.prio = {
+    //         3: true
+    //       }
+    //     };
 
-        alarms.push(alarm);
-      }
-    });
+    //     alarms.push(alarm);
+    //   }
+    // });
 
-    $scope.alarms = alarms;
+    $scope.alarms = results;
   })
 	
 };
@@ -125,7 +125,7 @@ dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'data', 'Dashboard', 'Slo
  * Dashboard modal
  */
 WebPaige.
-factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Slots, Dater) 
+factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $timeout, Storage, Slots, Dater) 
 {
   var Dashboard = $resource(
     'http://knrm.myask.me/rpc/client/p2000.php',
@@ -186,7 +186,7 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
        dataType: 'jsonp',
        success: function (results)
        {
-         deferred.resolve(results);
+         deferred.resolve( proP2000(results) );
        },
        error: function ()
        {
@@ -197,5 +197,73 @@ factory('Dashboard', function ($resource, $config, $q, $route, $timeout, Storage
     return deferred.promise;
   };
 
+
+  /**
+   * TODO
+   * Modify p2000 script in ask70 for date conversions!!
+   *
+   * p2000 messages processor
+   */
+  function proP2000 (results)
+  {
+    var alarms  = [],
+        limit   = 4,
+        count   = 0;
+
+    angular.forEach(results, function (alarm, index)
+    {
+      if (alarm.body)
+      {
+        if (alarm.body.match(/Prio 1/))
+        {
+          alarm.body = alarm.body.replace('Prio 1 ', '');
+          alarm.prio = {
+            1: true
+          }
+        };
+
+        if (alarm.body.match(/Prio 2/))
+        {
+          alarm.body = alarm.body.replace('Prio 2 ', '');
+          alarm.prio = {
+            2: true
+          }
+        };
+
+        if (alarm.body.match(/Prio 3/))
+        {
+          alarm.body = alarm.body.replace('Prio 3 ', '');
+          alarm.prio = {
+            3: true
+          }
+        };
+
+        // var dates     = alarm.day.split('-'),
+        //     swap      = dates[0] + 
+        //                 '-' + 
+        //                 dates[1] + 
+        //                 '-' + 
+        //                 dates[2],
+        //     dstr      = swap + ' ' + alarm.time,
+        //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
+        //     timeStamp = new Date(datetime).getTime();
+        // alarm.datetime = datetime;
+        // alarm.timeStamp = timeStamp;
+
+        if (count < 4) alarms.push(alarm);
+
+        count++;
+      }
+    });
+
+    return alarms;
+
+  };
+
   return new Dashboard;
 });
+
+
+
+
+

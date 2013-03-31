@@ -81,6 +81,9 @@ function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
                       '&applicationCallback=' + 
                       location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
                       '/index.html' + 
+                      /**
+                       * Fix a return value
+                       */
                       '?account=' +
                       $rootScope.app.resources.uuid +
                       encodeURIComponent('#') + 

@@ -1,0 +1,66 @@
+html,body {
+  margin:0;
+}
+
+body {
+  background: url(../img/bg.jpg) repeat;
+}
+
+a {
+  &:hover {
+    cursor: pointer
+  }
+}
+
+
+.navbar .brand {
+  margin-top: 0px;
+  margin-bottom: 0;
+  // margin-left: 20px;
+  padding-bottom: 0;
+  /* width: 50px; */
+  /* height: 10px; */
+  /* background: url(../img/knrm-logo.png) no-repeat; */
+  /* background-position: 0 8px; */
+  /* text-indent: -9999px; */
+  color: #f5f4ee;
+  /*text-shadow: 0 -1px 0 #000;*/
+  text-shadow: none;
+  font-weight: normal;
+  font-size: 20px;
+}
+
+.left-border-fix {
+  width: 1px; 
+  border-left: 1px solid red; 
+  z-index: 10000; 
+/*  position: absolute;*/
+  top: 0;
+  left: 0;
+  float: left;
+  display: block;
+  margin-left: -1px;
+}
+
+dl {
+  dt {
+    
+  }
+  dd {
+    margin-bottom: 15px;
+  }
+}
+
+.greetings {
+  margin: 25px 0;
+}
+
+#watermark {
+  position: absolute;
+  bottom: 40px;
+  right: -10px;
+  z-index: 1;
+  background: url(../profiles/knrm/img/watermark.png) no-repeat;
+  width: 582px;
+  height: 287px
+}

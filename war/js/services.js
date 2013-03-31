@@ -122,7 +122,7 @@ factory('Dater', function ($rootScope, Storage)
 
     convert:
     {
-      absolute: function(date, time, flag)
+      absolute: function (date, time, flag)
       {
         var dates   = date.split('-'),
             result  = new Date(Date.parse(dates[2] + 

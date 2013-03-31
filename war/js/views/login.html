@@ -12,7 +12,7 @@
 	<!-- end preloader -->
 
 	<!-- loginForm -->
-	<div id="login" ng-show="views.login">
+	<div class="login" ng-show="views.login">
 		<form ng-submit="login()">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.login.header}}</h4>
@@ -52,7 +52,7 @@
 	<!-- end loginForm -->
 
 	<!-- remember login -->
-	<div id="forgot" ng-show="views.forgot">
+	<div class="login" ng-show="views.forgot">
 		<form ng-submit="forgot()">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>

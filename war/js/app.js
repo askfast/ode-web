@@ -74,7 +74,8 @@ WebPaige
   formats: {
     date:     'dd-M-yyyy',
     time:     'hh:mm',
-    datetime: 'dd-M-yyyy HH:mm'
+    datetime: 'dd-M-yyyy HH:mm',
+    datetimefull: 'dd-M-yyyy HH:mm'
     // time:     'hh:mm tt',
     // datetime: 'dd-M-yyyy HH:mm tt'
   },
