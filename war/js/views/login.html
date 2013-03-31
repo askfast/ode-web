@@ -12,7 +12,7 @@
 	<!-- end preloader -->
 
 	<!-- loginForm -->
-	<div class="login" ng-show="views.login">
+	<div id="login" class="boxed" ng-show="views.login">
 		<form ng-submit="login()">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.login.header}}</h4>
@@ -52,7 +52,7 @@
 	<!-- end loginForm -->
 
 	<!-- remember login -->
-	<div class="login" ng-show="views.forgot">
+	<div id="forgot" class="boxed" ng-show="views.forgot">
 		<form ng-submit="forgot()">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>
@@ -95,6 +95,7 @@
 	<!-- end change pass -->
 </div>
 
+
 <!-- download mobile app -->
 <div id="download">
 	<button class="btn btn-success btn-large" type="button" bs-tooltip="ui.downloads.app">
@@ -102,6 +103,7 @@
 	</button>
 </div>
 <!-- end download mobile app -->
+
 
 <!-- knrm users -->
 <div id="demo_users" class="well" ng-show="demo_users">

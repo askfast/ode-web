@@ -1,5 +1,29 @@
+.navbar {
+  z-index: 10000;
+
+  .brand {
+    margin-top: 0px;
+    margin-bottom: 0;
+    // margin-left: 20px;
+    padding-bottom: 0;
+    /* width: 50px; */
+    /* height: 10px; */
+    /* background: url(../img/knrm-logo.png) no-repeat; */
+    /* background-position: 0 8px; */
+    /* text-indent: -9999px; */
+    color: #f5f4ee;
+    /*text-shadow: 0 -1px 0 #000;*/
+    text-shadow: none;
+    font-weight: normal;
+    font-size: 20px;
+  }
+}
+
+
 /* Wrapper for page content to push down footer */
 #wrap {
+  z-index: 9999;
+  position: relative;
   margin: 0 auto -60px;
   min-height: 100%;
   height: auto !important;
@@ -18,7 +42,7 @@
 
 
 /* Set the fixed height of the footer here */
-#push, #footer {
+#push {
   height: 60px;
 }
 
@@ -77,7 +101,7 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  /* margin-top: -80px; */
+  height: 60px;
   width: 100%;
   background-color: #433c2d;
   z-index: 10000;

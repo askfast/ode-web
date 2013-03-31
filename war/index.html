@@ -18,7 +18,7 @@
     <script src="js/libs/jquery/jquery-browser.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/knrm/profile.js"></script>
+    <script src="profiles/gvrb/profile.js"></script>
     
     <!-- favicons -->
     <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
@@ -40,6 +40,10 @@
     
   </head>
   <body>
+
+    <!-- watermark for app -->
+    <div id="watermark" style="background: url(../profiles/{{config.profile.meta}}/img/watermark.png) no-repeat;"></div>
+    <!-- end watermark for app -->
 
     <!-- navbar -->
     <div class="navbar navbar-fixed-top" bs-navbar>
@@ -161,8 +165,6 @@
       </div>
     </div>
     <!-- end footer -->
-
-    <!-- <div id="watermark"></div> -->
 
     <script src="js/localization.js"></script>
     <!-- custom jquery and other stuff -->

@@ -2,9 +2,11 @@ html,body {
   margin:0;
 }
 
+
 body {
   background: url(../img/bg.jpg) repeat;
 }
+
 
 a {
   &:hover {
@@ -13,22 +15,15 @@ a {
 }
 
 
-.navbar .brand {
-  margin-top: 0px;
-  margin-bottom: 0;
-  // margin-left: 20px;
-  padding-bottom: 0;
-  /* width: 50px; */
-  /* height: 10px; */
-  /* background: url(../img/knrm-logo.png) no-repeat; */
-  /* background-position: 0 8px; */
-  /* text-indent: -9999px; */
-  color: #f5f4ee;
-  /*text-shadow: 0 -1px 0 #000;*/
-  text-shadow: none;
-  font-weight: normal;
-  font-size: 20px;
+dl {
+  dt {
+    
+  }
+  dd {
+    margin-bottom: 15px;
+  }
 }
+
 
 .left-border-fix {
   width: 1px; 
@@ -42,25 +37,17 @@ a {
   margin-left: -1px;
 }
 
-dl {
-  dt {
-    
-  }
-  dd {
-    margin-bottom: 15px;
-  }
-}
 
 .greetings {
   margin: 25px 0;
 }
 
 #watermark {
-  position: absolute;
-  bottom: 40px;
+  z-index: 1;
+  position: fixed;
+  bottom: 50px;
   right: -10px;
   z-index: 1;
-  background: url(../profiles/knrm/img/watermark.png) no-repeat;
-  width: 582px;
-  height: 287px
+  width: 400px;
+  height: 400px
 }

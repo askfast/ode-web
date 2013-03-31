@@ -7,29 +7,34 @@
     
     <!-- announcements sidebar -->
     <div id="announcements" class="span4">
-
-      <!-- news -->
-      <div id="news">
-        <h4>Announcements</h4>
-        <hr>
-        <!-- p2000 loop -->
-        <table class="table table-striped">
-          <tr ng-repeat="alarm in alarms">
-            <td>
-              <h5>
-              <span class="label label-important" ng-show="alarm.prio.1">PRIO 1</span>
-              <span class="label label-warning" ng-show="alarm.prio.2">PRIO 2</span>
-              <span class="label label-info" ng-show="alarm.prio.3">PRIO 3</span>
-              <p>{{alarm.body}}</p>
-              </h5>
-              <span class="badge pull-right">{{alarm.msgCode}}</span>
-              <small class="muted"><i>{{alarm.day}} {{alarm.time}}</i></small>
-            </td>
-          </tr>
-        </table>
-        <!-- end p2000 loop -->
-      </div>
-      <!-- end news -->
+      <h4>Announcements</h4>
+      <hr>
+      <!-- p2000 loop -->
+      <ul>
+        <li ng-repeat="alarm in alarms">
+          <table>
+            <tr>
+              <td width="65">
+                <span class="label label-important" ng-show="alarm.prio.1">PRIO 1</span>
+                <span class="label label-warning" ng-show="alarm.prio.2">PRIO 2</span>
+                <span class="label label-info" ng-show="alarm.prio.3">PRIO 3</span>
+              </td>
+              <td>
+                <p>{{alarm.body}}</p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <small class="muted"><i>{{alarm.msgCode}}</i></small>
+              </td>
+              <td>
+                <span class="badge pull-right">{{alarm.day}} {{alarm.time}}</span>
+              </td>
+            </tr>
+          </table>
+        </li>
+      </ul>
+      <!-- end p2000 loop -->
 
     </div>
     <!-- end announcements sidebar -->
