@@ -893,7 +893,7 @@ factory('Strings', function ()
     /**
      * Truncate string from words with ..
      */
-    truncate: function(txt, n, useWordBoundary)
+    truncate: function (txt, n, useWordBoundary)
     {
        var toLong = txt.length > n,
            s_ = toLong ? txt.substr(0, n-1) : txt,

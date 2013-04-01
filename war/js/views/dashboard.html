@@ -1,81 +1,80 @@
-<div class="well well-large greetings">
-  <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
-</div>
+<section id="dashboard">
 
-<!-- row-fluid -->
-<div class="row-fluid">
-    
-    <!-- announcements sidebar -->
-    <div id="announcements" class="span4">
+  <div class="well well-large greetings">
+    <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
+  </div>
 
-      <div class="head">
-        <h4>Announcements</h4>
-        <button class="btn btn-small"><i class="icon-cog"></i></button>
+  <!-- row-fluid -->
+  <div class="row-fluid">
+
+      <!-- pie charts for groups -->
+      <div class="widget span8">
+        <div class="head">
+          <h4>{{ui.dashboard.thisWeek}}</h4>
+          <button class="btn btn-small"><i class="icon-cog"></i></button>
+        </div>
+        <hr>
+        <p class="muted" ng-show="loading.status">{{loading.message}}</p>        
+        <!-- pie loop -->
+        <ul ng-hide="loadingPies">
+          <li ng-repeat="pie in pies">
+            <div id="weeklyPie-{{pie.id}}" class="pie"></div>
+            <div class="info">
+              <h3>{{pie.name | truncateGroupTitle}}</h3>
+              <hr>
+              <h5>{{pie.ratios.more}}%</h5> 
+              <small class="muted">more</small>, 
+              <h5>{{pie.ratios.even}}%</h5> 
+              <small class="muted">even</small>, 
+              <h5>{{pie.ratios.less}}%</h5> 
+              <small class="muted">less</small>
+            </div>
+          </li>
+        </ul>
+        <!-- end pie loop -->
       </div>
-
-      <hr>
-
-      <!-- p2000 loop -->
-      <ul>
-        <li ng-repeat="alarm in alarms">
-          <table>
-            <tr>
-              <td width="65">
-                <span class="label label-important" ng-show="alarm.prio.1">PRIO 1</span>
-                <span class="label label-warning" ng-show="alarm.prio.2">PRIO 2</span>
-                <span class="label label-info" ng-show="alarm.prio.3">PRIO 3</span>
-              </td>
-              <td>
-                <p>{{alarm.body}}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <small class="muted"><i>{{alarm.msgCode}}</i></small>
-              </td>
-              <td>
-                <span class="label label-natural pull-right">{{alarm.day}} {{alarm.time}}</span>
-              </td>
-            </tr>
-          </table>
-        </li>
-      </ul>
-      <!-- end p2000 loop -->
-
-    </div>
-    <!-- end announcements sidebar -->
-
-    <!-- pie charts for groups -->
-    <div id="weekly-pies" class="span8">
-
-      <div class="head">
-        <h4>{{ui.dashboard.thisWeek}}</h4>
-        <button class="btn btn-small"><i class="icon-cog"></i></button>
-      </div>
-
-      <hr>
-
-      <p class="muted" ng-show="loading.status">{{loading.message}}</p>
+      <!-- end pie charts for groups -->
       
-      <!-- pie loop -->
-      <ul class="weekly" ng-hide="loadingPies">
-        <li ng-repeat="pie in pies">
-          <div id="weeklyPie-{{pie.id}}" class="weekly-pie"></div>
-          <div class="weekly-pie-info">
-            <h3>{{pie.name | truncateGroupTitle}}</h3>
-            <hr>
-            <h5>{{pie.ratios.more}}%</h5> 
-            <small class="muted">more</small>, 
-            <h5>{{pie.ratios.even}}%</h5> 
-            <small class="muted">even</small>, 
-            <h5>{{pie.ratios.less}}%</h5> 
-            <small class="muted">less</small>
-          </div>
-        </li>
-      </ul>
-      <!-- end pie loop -->
-    </div>
-    <!-- end pie charts for groups -->
+      <!-- announcements sidebar -->
+      <div class="widget span4">
+        <div class="head">
+          <h4>Announcements</h4>
+          <button class="btn btn-small"><i class="icon-cog"></i></button>
+        </div>
+        <hr>
+        <!-- p2000 loop -->
+        <ul>
+          <li ng-repeat="alarm in alarms.list">
+            <table>
+              <tr>
+                <td class="first">
+                  <span class="prio label label-important"  ng-show="alarm.prio.1">PRIO 1</span>
+                  <span class="prio label label-warning"    ng-show="alarm.prio.2">PRIO 2</span>
+                  <span class="prio label label-info"       ng-show="alarm.prio.3">PRIO 3</span>
+                  <span class="prio label label-inverse"    ng-show="alarm.prio.test">PROEFALARM</span>
+                </td>
+                <td class="last">
+                  <p>{{alarm.body}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <small class="muted"><i>{{alarm.msgCode}}</i></small>
+                </td>
+                <td>
+                  <span class="label label-natural pull-right">{{alarm.day}} {{alarm.time}}</span>
+                </td>
+              </tr>
+            </table>
+          </li>
+        </ul>
+        <!-- end p2000 loop -->
+        <br>
+        <a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>
+      </div>
+      <!-- end announcements sidebar -->
 
-</div>
-<!-- end row-fluid -->
+  </div>
+  <!-- end row-fluid -->
+
+</section>

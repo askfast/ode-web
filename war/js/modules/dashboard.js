@@ -20,10 +20,7 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
   /**
    * Set loader for pies
    */
-  $rootScope.loading = {
-    message: $rootScope.ui.dashboard.loadingPie,
-    status: true,
-  };
+  $rootScope.statusBar.display($rootScope.ui.dashboard.loadingPie);
 
   /**
    * Produce pie charts for groups
@@ -32,9 +29,7 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
   Dashboard.pies()
   .then(function (pies)
   {
-    $rootScope.loading = {
-      status: false,
-    };
+    $rootScope.statusBar.off();
 
     $scope.pies = pies;
   })
@@ -67,43 +62,28 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
   Dashboard.p2000().
   then(function (results)
   {
-    // var alarms = [];
-
-    // angular.forEach(results, function (alarm, index)
-    // {
-    //   if (alarm.body)
-    //   {
-    //     if (alarm.body.match(/Prio 1/))
-    //     {
-    //       alarm.body = alarm.body.replace('Prio 1 ', '');
-    //       alarm.prio = {
-    //         1: true
-    //       }
-    //     };
-
-    //     if (alarm.body.match(/Prio 2/))
-    //     {
-    //       alarm.body = alarm.body.replace('Prio 2 ', '');
-    //       alarm.prio = {
-    //         2: true
-    //       }
-    //     };
-
-    //     if (alarm.body.match(/Prio 3/))
-    //     {
-    //       alarm.body = alarm.body.replace('Prio 3 ', '');
-    //       alarm.prio = {
-    //         3: true
-    //       }
-    //     };
-
-    //     alarms.push(alarm);
-    //   }
-    // });
-
     $scope.alarms = results;
-  })
+    $scope.alarms.list = $scope.alarms.short;
+  });
 	
+
+  $scope.more = {
+    status: false,
+    text:   'show more' 
+  };
+
+  /**
+   * Show more alarms
+   */
+  $scope.toggle = function (more)
+  {
+    $scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
+
+    $scope.more.text = (more) ? 'show more' : 'show less';
+
+    $scope.more.status = !$scope.more.status;
+  };
+
 };
 
 
@@ -125,7 +105,7 @@ dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'data', 'Dashboard', 'Slo
  * Dashboard modal
  */
 WebPaige.
-factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $timeout, Storage, Slots, Dater) 
+factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $timeout, Storage, Slots, Dater, Announcer) 
 {
   var Dashboard = $resource(
     'http://knrm.myask.me/rpc/client/p2000.php',
@@ -138,6 +118,7 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
       }
     }
   );
+
 
   /**
    * Get group aggs for pie charts
@@ -174,6 +155,7 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
     return deferred.promise;
   };
 
+
   /**
    * Get p2000 announcements
    */
@@ -186,7 +168,7 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
        dataType: 'jsonp',
        success: function (results)
        {
-         deferred.resolve( proP2000(results) );
+         deferred.resolve( Announcer.process(results) );
        },
        error: function ()
        {
@@ -198,72 +180,93 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
   };
 
 
-  /**
-   * TODO
-   * Modify p2000 script in ask70 for date conversions!!
-   *
-   * p2000 messages processor
-   */
-  function proP2000 (results)
-  {
-    var alarms  = [],
-        limit   = 4,
-        count   = 0;
-
-    angular.forEach(results, function (alarm, index)
-    {
-      if (alarm.body)
-      {
-        if (alarm.body.match(/Prio 1/))
-        {
-          alarm.body = alarm.body.replace('Prio 1 ', '');
-          alarm.prio = {
-            1: true
-          }
-        };
-
-        if (alarm.body.match(/Prio 2/))
-        {
-          alarm.body = alarm.body.replace('Prio 2 ', '');
-          alarm.prio = {
-            2: true
-          }
-        };
-
-        if (alarm.body.match(/Prio 3/))
-        {
-          alarm.body = alarm.body.replace('Prio 3 ', '');
-          alarm.prio = {
-            3: true
-          }
-        };
-
-        // var dates     = alarm.day.split('-'),
-        //     swap      = dates[0] + 
-        //                 '-' + 
-        //                 dates[1] + 
-        //                 '-' + 
-        //                 dates[2],
-        //     dstr      = swap + ' ' + alarm.time,
-        //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
-        //     timeStamp = new Date(datetime).getTime();
-        // alarm.datetime = datetime;
-        // alarm.timeStamp = timeStamp;
-
-        if (count < 4) alarms.push(alarm);
-
-        count++;
-      }
-    });
-
-    return alarms;
-
-  };
-
   return new Dashboard;
 });
 
 
+/**
+ * Process alarms
+ */
+WebPaige.
+factory('Announcer', function () 
+{
+  return {
+    /**
+     * TODO
+     * Modify p2000 script in ask70 for date conversions!!
+     *
+     * p2000 messages processor
+     */
+    process: function (results)
+    {
+      var alarms  = {
+            short:  [],
+            long:   [] 
+          },
+          limit   = 4,
+          count   = 0;
 
+      angular.forEach(results, function (alarm, index)
+      {
+        if (alarm.body)
+        {
+          if (alarm.body.match(/Prio 1/))
+          {
+            alarm.body = alarm.body.replace('Prio 1 ', '');
+            alarm.prio = {
+              1:    true,
+              test: false
+            };
+          };
+
+          if (alarm.body.match(/Prio 2/))
+          {
+            alarm.body = alarm.body.replace('Prio 2 ', '');
+            alarm.prio = {
+              2:    true,
+              test: false
+            };
+          };
+
+          if (alarm.body.match(/Prio 3/))
+          {
+            alarm.body = alarm.body.replace('Prio 3 ', '');
+            alarm.prio = {
+              3:    true,
+              test: false
+            }
+          };
+
+          if (alarm.body.match(/PROEFALARM/))
+          {
+            alarm.prio = {
+              test: true
+            };
+          };
+
+          // var dates     = alarm.day.split('-'),
+          //     swap      = dates[0] + 
+          //                 '-' + 
+          //                 dates[1] + 
+          //                 '-' + 
+          //                 dates[2],
+          //     dstr      = swap + ' ' + alarm.time,
+          //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
+          //     timeStamp = new Date(datetime).getTime();
+          // alarm.datetime = datetime;
+          // alarm.timeStamp = timeStamp;
+
+          if (count < 4) alarms.short.push(alarm);
+
+          alarms.long.push(alarm);
+
+          count++;
+        }
+      });
+
+      return alarms;
+    }
+  }
+});
 
 

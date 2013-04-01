@@ -1,0 +1,159 @@
+#dashboard {
+  overflow: hidden;
+
+  .widget {
+    margin-top: 5px;
+    margin-bottom: 10px;
+
+    .head {
+      overflow: hidden;
+
+      h4 {
+        margin-top: 20px;
+        display: inline;
+      }
+
+      button {
+        float: right;
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      margin-top: -20px;
+      padding: 0;
+
+      li {
+        border-bottom:1px solid #d3d1c4;
+        padding: 10px;
+        margin: 0;
+        overflow: hidden;
+
+        &:nth-child(odd) {
+          background-color: #f2f1ed;
+        }
+
+        &:nth-child(even) {
+          background-color: #f9f9f9;
+        }
+
+        .pie {
+          display: inline;
+          float: left;
+          margin-right: 20px;
+          width: 80px;
+          height: 100px;
+        }
+
+        .info {
+          display: block;
+          float: left;
+          overflow: hidden;
+          margin-bottom: 10px;
+
+          hr {
+            margin: 0 0 10px 0;
+          }
+
+          h3 {
+            display: inline;
+            margin: 0;
+            margin-top: -10px;
+            padding: 0;
+            font-size: 14px;
+          }
+
+          h4 {
+            margin: 0;
+            font-size: 12px;
+          }
+
+          h5 {
+            display: inline;
+            font-size: 11px;
+          }
+        }
+
+        table {
+          margin: 5px 0;
+
+          tr {
+            vertical-align: top;
+
+            td {
+              .prio {
+                margin-right: 10px;
+              }
+
+              p {
+                font-size: 13px;
+              }
+
+              .sender {
+                display: block;
+                font-size: 13px;
+                float: right;
+                margin-right: 10px;
+              }
+
+              .muted {
+                font-size: 11px;
+              }
+            }
+
+            td.first {
+              width: 80px;
+            }
+
+            td.last { 
+              width: 100%;              
+            }
+          }
+        }
+      }
+    }
+    
+  }
+  
+}
+
+
+
+
+// #announcements {
+//   margin-top: 5px;
+
+// }
+
+
+
+
+
+
+
+// #weekly-pies {
+
+//   ul {
+//     margin: 0;
+//     padding: 0;
+//     width: 100%;
+//     list-style: none;
+
+//     li {
+//       display: inline;
+//       float: left;
+//       // margin: 0 2% 20px 2%;
+
+//       min-width: 270px;
+//       // width: 320px;
+
+//       background-color: red;
+//             // width: 28%;
+
+//       height: auto;
+//     }
+//   }
+// }
