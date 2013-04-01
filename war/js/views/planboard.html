@@ -199,7 +199,7 @@
       <!-- end slot state -->
 
       <!-- slot recursive -->
-      <div class="form-elements-group" ng-show="views.slot.add || views.slot.edit || views.wish">
+      <div class="form-elements-group" ng-show="views.slot.add || views.slot.edit">
         <label>{{ui.planboard.reoccuring}}</label>
         <input type="checkbox" ng-model="slot.recursive">
       </div>
@@ -221,7 +221,14 @@
         <input  name="wish-count" 
                 type="text" 
                 class="input-mini" 
-                ng-model="slot.wish">
+                ng-model="slot.wish"
+                ng-hide="app.resources.role > 1">
+        <input  name="wish-count" 
+                type="text" 
+                class="input-mini" 
+                ng-model="slot.wish"
+                disabled
+                ng-show="app.resources.role > 1">
       </div>
       <!-- end wish diff -->
 
@@ -239,7 +246,8 @@
         <div ng-show="(slot.diff < 0)">
           <button type="button" 
                   ng-click="sendShortageMessage(slot)" 
-                  class="btn btn-success">{{ui.planboard.sendMsgToMember}}</button>
+                  class="btn btn-success"
+                  ng-hide="app.resources.role > 1">{{ui.planboard.sendMsgToMember}}</button>
         </div>
         <div ng-show="views.slot.add">
           <button type="button" 
@@ -257,7 +265,8 @@
         <div ng-show="views.wish">
           <button type="button" 
                   ng-click="setWish(slot)" 
-                  class="btn btn-success">{{ui.planboard.setWish}}</button>
+                  class="btn btn-success"
+                  ng-hide="app.resources.role > 1">{{ui.planboard.setWish}}</button>
         </div>
       </div>
       <!-- end slot actions -->

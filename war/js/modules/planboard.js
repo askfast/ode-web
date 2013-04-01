@@ -1559,7 +1559,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
       if (data.aggs.division == 'all' || data.aggs.division == undefined)
       {
-        title = (privilage == 1) ? link : name;
+        title = (privilage == 1) ? link : '<span>' + name + '</span>';
       }
       else
       {
@@ -1567,7 +1567,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
         angular.forEach(divisions, function(division, index) { if (division.id == data.aggs.division) label = division.label; });
 
-        title = (privilage == 1) ? link : name;
+        title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
         title += ' <span class="label">' + label + '</span>';
       };
