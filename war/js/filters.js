@@ -1,30 +1,23 @@
 'use strict';
 
-
 /**
- * TODO
- * Lose hard-coded stuff!
  * Translate roles
  */
 WebPaige.
-filter('translateRole', function()
+filter('translateRole', ['$config', function ($config)
 {
 	return function (role)
 	{
-		switch (role)
+		var urole;
+
+		angular.forEach($config.roles, function (prole, index)
 		{
-			case '1':
-				return 'Planner';
-			break;
-			case '2':
-			    return 'Schipper';
-			break;
-			case '3':
-				return 'Opstapper';
-			break;
-		};
+			if (prole.id == role) urole = prole.label;
+		});
+
+		return urole;
 	}
-});
+}]);
 
 
 /**
@@ -202,7 +195,7 @@ filter('convertTimeStamp', function()
  * Convert ratios to readable formats
  */
 WebPaige.
-filter('convertRatios', ['$config', function($config)
+filter('convertRatios', ['$config', function ($config)
 {
 	return function (stats)
 	{
@@ -334,21 +327,13 @@ filter('convertUserIdToName', ['Storage', function(Storage)
  * Convert timeStamps to dates
  */
 WebPaige.
-filter('nicelyDate', ['Dater', function(Dater)
+filter('nicelyDate', ['Dater', function (Dater)
 {
  	return function (date)
  	{
- 	  var cov_date = Dater.readable.date(date);
-
- 		if (cov_date == "Invalid Date")
- 		{
-	    /**
-	     * Could be unix time stamp
-	     */
-	    date = Math.round(date);
- 		};
-
- 		return new Date(date).toString('dd-MM-yyyy HH:mm');
+ 		console.warn('date ->', date);
+ 		
+ 		return Dater.stringify(date);
  	};
 }]);
  

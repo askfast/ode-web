@@ -155,13 +155,13 @@ factory('Dater', function ($rootScope, Storage)
       // }
     },
 
-    // stringify:
-    // {
-    //   date: function (date)
-    //   {
-    //     return new Date(date).toString($rootScope.config.formats.date);
-    //   }
-    // },
+    stringify:
+    {
+      date: function (date)
+      {
+        return new Date(Math.round(date)).toString($rootScope.config.formats.date);
+      }
+    },
 
     calculate:
     {
@@ -323,7 +323,7 @@ factory('Dater', function ($rootScope, Storage)
       return days;
     },
 
-    registerPeriods: function()
+    registerPeriods: function ()
     {
       var periods = angular.fromJson(Storage.get('periods') || '{}');
       Storage.add('periods', angular.toJson({
@@ -333,7 +333,7 @@ factory('Dater', function ($rootScope, Storage)
       }));      
     },
 
-    getPeriods: function()
+    getPeriods: function ()
     {
       return angular.fromJson(Storage.get('periods'));
     }

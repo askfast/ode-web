@@ -1107,18 +1107,27 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
    */
   Slots.prototype.pie = function (options) 
   {
-    var deferred = $q.defer();
+    var deferred  = $q.defer();
+        // ,now       = Math.round(Date.now().getTime()) / 1000;
+
+    // console.warn('now ->', now);
 
     Aggs.query({
       id: options.id,
       start: options.start,
       end: options.end
-    }, function (result)
+    }, function (results)
     {
+      // angular.forEach(results, function (slot, index)
+      // {
+      //   if (slot.start <= now && slot.end >= now) console.log('found one ->', slot, index)
+      // });
+
       deferred.resolve({
-        id: options.id,
-        name: options.name,
-        ratios: Stats.pies(result)
+        id:       options.id,
+        name:     options.name,
+        // current:  current, 
+        ratios:   Stats.pies(results)
       });      
     });
 
@@ -1588,29 +1597,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                           '" ' + 
 
 
-
-
-
-
-
-
-
-
                           'title="'+'Minimum aantal benodigden'+': ' + 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                           num + 
@@ -1668,42 +1655,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                       style + 
                       '" ' + 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       ' title="Huidig aantal beschikbaar: ' + 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       num + 
                       ' personen">' + 

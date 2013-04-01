@@ -74,8 +74,8 @@ WebPaige
   formats: {
     date:     'dd-M-yyyy',
     time:     'hh:mm',
-    datetime: 'dd-M-yyyy HH:mm',
-    datetimefull: 'dd-M-yyyy HH:mm'
+    datetime: 'dd-MM-yyyy HH:mm',
+    datetimefull: 'dd-MM-yyyy HH:mm'
     // time:     'hh:mm tt',
     // datetime: 'dd-M-yyyy HH:mm tt'
   },
@@ -153,7 +153,7 @@ WebPaige
   $routeProvider
   .when('/login',     { templateUrl: 'js/views/login.html',       controller: loginCtrl })
   .when('/logout',    { templateUrl: 'js/views/logout.html',      controller: loginCtrl.logout })
-  .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl,  resolve: dashboardCtrl.resolve })
+  .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl })
   .when('/planboard', { templateUrl: 'js/views/planboard.html',   controller: planboardCtrl,  resolve: planboardCtrl.resolve })
   .when('/messages',  { templateUrl: 'js/views/messages.html',    controller: messagesCtrl,   resolve: messagesCtrl.resolve,  reloadOnSearch: false })
   .when('/groups',    { templateUrl: 'js/views/groups.html',      controller: groupsCtrl,     resolve: groupsCtrl.resolve,    reloadOnSearch: false })

@@ -3,57 +3,139 @@
 /**
  * Dashboard Controller
  */
-function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
+function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater)
 {  
   /**
    * Fix styles
    */
   $rootScope.fixStyles();
 
-  
+
   /**
-   * Get unread messages
+   * Get periods
    */
-	$scope.messages = data;
+  var periods = Dater.getPeriods(),
+      current = Dater.current.week();
 
 
   /**
-   * Set loader for pies
+   * Defaults for weeks
    */
-  $rootScope.statusBar.display($rootScope.ui.dashboard.loadingPie);
+  $scope.current = true;
+
+
+  /**
+   * Default settings for pie
+   * widget settings modal
+   */
+  $scope.modal = {
+    header: 'some header',
+    title: 'title comes here',
+    content: 'Hello Modal'
+  };
+
+
+  /**
+   * Save settings
+   */
+  $scope.saveSettings = function ()
+  {
+    console.warn('modal changing ->');
+  };
+
+
+  /**
+   * Get current week groups overview
+   */
+  getWeekStats();
+
 
   /**
    * Produce pie charts for groups
-   * for current week
+   * for current week or next week
    */
-  Dashboard.pies()
-  .then(function (pies)
+  $scope.weeker = function ()
   {
-    $rootScope.statusBar.off();
+    $scope.current = !$scope.current;
 
-    $scope.pies = pies;
-  })
-  .then( function (result)
+    getWeekStats();
+  };
+
+
+  function resetLoaders ()
   {
-    setTimeout( function () 
+    $scope.loading = {
+      pies: {
+        status:   false,
+        message:  ''
+      },
+      alerts: {
+        status:   false,
+        message:  ''
+      }
+    }
+  };
+
+  resetLoaders();
+
+
+  /**
+   * Get weekly stats
+   */
+  function getWeekStats ()
+  {
+    $scope.loading.pies = {
+      status:   true,
+      message:  'Loading group stats' 
+    };
+
+    var week = ($scope.current) ? current + 1 : current;
+
+    $scope.periods = {
+      first:  periods.weeks[week].first.day,
+      last:   periods.weeks[week].last.day,
+      start:  periods.weeks[week].first.timeStamp,
+      end:    periods.weeks[week].last.timeStamp
+    };
+
+    $rootScope.statusBar.display($rootScope.ui.dashboard.loadingPie);
+
+    Dashboard.pies({
+      start:  $scope.periods.start,
+      end:    $scope.periods.end
+    })
+    .then(function (pies)
     {
-      angular.forEach($scope.pies, function (pie, index)
+      // console.warn('pies ->', pies);
+      
+      resetLoaders();
+
+      $rootScope.statusBar.off();
+
+      $scope.pies = pies;
+    })
+    .then( function (result)
+    {
+      setTimeout( function () 
       {
-        document.getElementById('weeklyPie-' + pie.id).innerHTML = '';
+        angular.forEach($scope.pies, function (pie, index)
+        {
+          document.getElementById('weeklyPie-' + pie.id).innerHTML = '';
 
-        var ratios = [];
+          var ratios = [];
 
-        if (pie.ratios.more != 0) ratios.push(pie.ratios.more);
-        if (pie.ratios.even != 0) ratios.push(pie.ratios.even);
-        if (pie.ratios.less != 0) ratios.push(pie.ratios.less);
+          if (pie.ratios.more != 0) ratios.push(pie.ratios.more);
+          if (pie.ratios.even != 0) ratios.push(pie.ratios.even);
+          if (pie.ratios.less != 0) ratios.push(pie.ratios.less);
 
-        var r = Raphael('weeklyPie-' + pie.id),
-            pie = r.piechart(40, 40, 40, ratios, {
-              colors: $rootScope.config.pie.colors
-            });
-      });
-    }, 100);
-  });
+          var r = Raphael('weeklyPie-' + pie.id),
+              pie = r.piechart(40, 40, 40, ratios, {
+                colors: $rootScope.config.pie.colors
+              });
+        });
+      }, 100);
+    });
+  };
 
 
   /**
@@ -63,17 +145,22 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
   then(function (results)
   {
     $scope.alarms = results;
+
     $scope.alarms.list = $scope.alarms.short;
   });
 	
 
+  /**
+   * Defaults for toggler
+   */
   $scope.more = {
     status: false,
     text:   'show more' 
   };
 
+
   /**
-   * Show more alarms
+   * Show more or less alarms
    */
   $scope.toggle = function (more)
   {
@@ -87,18 +174,7 @@ function dashboardCtrl($scope, $rootScope, $q, data, Dashboard, Slots)
 };
 
 
-/**
- * Dashboard resolver
- */
-dashboardCtrl.resolve = {
-  data: function (Messages) 
-  {
-    return Messages.unread();
-  }
-};
-
-
-dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'data', 'Dashboard', 'Slots'];
+dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater'];
 
 
 /**
@@ -123,26 +199,20 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
   /**
    * Get group aggs for pie charts
    */
-  Dashboard.prototype.pies = function () 
+  Dashboard.prototype.pies = function (periods) 
   {
-    var deferred = $q.defer(),
-        groups = angular.fromJson(Storage.get('groups')),
-        periods = Dater.getPeriods(),
-        current = new Date().getWeek(),
-        week = {
-          start:  periods.weeks[current].first.timeStamp / 1000,
-          end:    periods.weeks[current].last.timeStamp / 1000
-        };
-
-    var calls = [];
+    var deferred  = $q.defer(),
+        groups    = angular.fromJson(Storage.get('groups')),
+        now       = new Date.now().getTime(),
+        calls     = [];
 
     angular.forEach(groups, function (group, index)
     {
       calls.push(Slots.pie({
-        id: group.uuid,
-        name: group.name,
-        start: week.start,
-        end: week.end
+        id:     group.uuid,
+        name:   group.name,
+        start:  periods.start / 1000,
+        end:    periods.end / 1000
       }));
     });
 
