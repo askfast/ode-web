@@ -89,7 +89,7 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater)
       message:  'Loading group stats' 
     };
 
-    var week = ($scope.current) ? current + 1 : current;
+    var week = ($scope.current) ? current : current + 1;
 
     $scope.periods = {
       first:  periods.weeks[week].first.day,

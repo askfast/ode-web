@@ -344,14 +344,7 @@ filter('noTitle',function()
 {
 	return function (title)
 	{
-		if (title == "")
-		{
-			return "- No Title -";
-		}
-		else
-		{
-			return title;
-		}
+		return (title == "") ? "- No Title -" : title;
 	}
 });
 
@@ -380,10 +373,7 @@ filter('stripHtml', function()
 {
   return function (string)
   {
-  	if (string)
-  	{
-    	return string.split('>')[1].split('<')[0];
-  	};
+  	if (string) return string.split('>')[1].split('<')[0];
   }
 });
 
@@ -400,10 +390,7 @@ filter('groupIdToName', ['Storage', function (Storage)
 
   	for (var i in groups)
   	{
-  		if (groups[i].uuid == id)
-  		{
-  			return groups[i].name;
-  		};	
+  		if (groups[i].uuid == id) return groups[i].name;
   	};
   }
 }]);

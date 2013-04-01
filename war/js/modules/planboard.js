@@ -1108,10 +1108,9 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
    */
   Slots.prototype.pie = function (options) 
   {
-    var deferred  = $q.defer();
-        // ,now       = Math.round(Date.now().getTime()) / 1000;
-
-    // console.warn('now ->', now);
+    var deferred  = $q.defer(),
+        now       = Math.floor(Date.now().getTime() / 1000),
+        current;
 
     Aggs.query({
       id: options.id,
@@ -1119,15 +1118,15 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
       end: options.end
     }, function (results)
     {
-      // angular.forEach(results, function (slot, index)
-      // {
-      //   if (slot.start <= now && slot.end >= now) console.log('found one ->', slot, index)
-      // });
+      angular.forEach(results, function (slot, index)
+      {
+        if (now >= slot.start && now <= slot.end) current = slot;
+      });
 
       deferred.resolve({
         id:       options.id,
         name:     options.name,
-        // current:  current, 
+        current:  current, 
         ratios:   Stats.pies(results)
       });      
     });
