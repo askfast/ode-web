@@ -155,13 +155,13 @@ factory('Dater', function ($rootScope, Storage)
       // }
     },
 
-    stringify:
-    {
-      date: function (date)
-      {
-        return new Date(Math.round(date)).toString($rootScope.config.formats.date);
-      }
-    },
+    // stringify:
+    // {
+    //   date: function (date)
+    //   {
+    //     return new Date(date).toString($rootScope.config.formats.date);
+    //   }
+    // },
 
     calculate:
     {

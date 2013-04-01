@@ -279,7 +279,8 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         Sloter.process(
           $scope.data,
           $scope.timeline.config,
-          $scope.divisions
+          $scope.divisions,
+          $rootScope.app.resources.role
         ), 
         $scope.timeline.options
       );
@@ -1545,17 +1546,20 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
     /**
      * Handle group name whether divisions selected
      */
-    namer: function (data, divisions)
+    namer: function (data, divisions, privilage)
     {
-      var groups = this.get.groups();
+      var groups  = this.get.groups(),
+          name    = groups[data.aggs.id],
+          link    = '<a href="#/groups?uuid=' + 
+                    data.aggs.id + 
+                    '#view">' +
+                    name +
+                    '</a>',
+                    title;
 
       if (data.aggs.division == 'all' || data.aggs.division == undefined)
       {
-        return  '<a href="#/groups?uuid=' + 
-                data.aggs.id + 
-                '#view">' +
-                groups[data.aggs.id] +
-                '</a>';
+        title = (privilage == 1) ? link : name;
       }
       else
       {
@@ -1563,15 +1567,12 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
         angular.forEach(divisions, function(division, index) { if (division.id == data.aggs.division) label = division.label; });
 
-        return  '<a href="#/groups?uuid=' + 
-                data.aggs.id + 
-                '#view">' +
-                groups[data.aggs.id] +
-                '</a>' + 
-                ' <span class="label">' + 
-                label + 
-                '</span>';
+        title = (privilage == 1) ? link : name;
+
+        title += ' <span class="label">' + label + '</span>';
       };
+
+      return title;
     },
 
     /**
@@ -1798,13 +1799,23 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
     /**
      * Process members
      */
-    members: function (data, timedata, config)
+    members: function (data, timedata, config, privilage)
     {
       var _this   = this,
-          members = this.get.members();
+          members = this.get.members();          
 
       angular.forEach(data.members, function (member, index)
       {
+        var link = (privilage == 1) ? 
+                      _this.wrapper('d') + 
+                      '<a href="#/profile/' + 
+                      member.id + 
+                      '#timeline">' + 
+                      members[member.id] + 
+                      '</a>' :
+                      _this.wrapper('d') + 
+                      members[member.id];
+
         angular.forEach(member.data, function (slot, i)
         {
           angular.forEach(config.legenda, function (value, legenda)
@@ -1814,12 +1825,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
               timedata.push({
                 start: Math.round(slot.start * 1000),
                 end: Math.round(slot.end * 1000),
-                group: _this.wrapper('d') + 
-                        '<a href="#/profile/' + 
-                        member.id + 
-                        '#timeline">' + 
-                        members[member.id] + 
-                        '</a>',
+                group: link,
                 content: _this.secret(angular.toJson({ 
                   type: 'member',
                   id: slot.id, 
@@ -1835,27 +1841,15 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
         });
 
         timedata.push({
-          start: 0,
-          end: 0,
-          group: _this.wrapper('d') + 
-                  '<a href="#/profile/' + 
-                  member.id + 
-                  '#timeline">' + 
-                  members[member.id] + 
-                  '</a>',
-          content: null,
-          className: null,
+          start:    0,
+          end:      0,
+          group:    link,
+          content:  null,
+          className:null,
           editable: false
         });
 
-        timedata = _this.addLoading(data, timedata, [
-          _this.wrapper('d') + 
-          '<a href="#/profile/' + 
-          member.id + 
-          '#timeline">' + 
-          members[member.id] + 
-          '</a>'
-        ]);
+        timedata = _this.addLoading(data, timedata, [ link ]);
 
         /**
          * TODO
@@ -1942,7 +1936,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
     /**
      * Timeline data processing
      */
-    process: function (data, config, divisions)
+    process: function (data, config, divisions, privilage)
     {
       var _this     = this,
           timedata  = [];
@@ -1951,7 +1945,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
       if (data.aggs)
       {
-        var name = _this.namer(data, divisions);
+        var name = _this.namer(data, divisions, privilage);
 
         if (config.bar) 
         {
@@ -1965,7 +1959,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
       if (config.wishes) timedata = _this.wishes(data, timedata, name);
 
-      if (data.members) timedata = _this.members(data, timedata, config);
+      if (data.members) timedata = _this.members(data, timedata, config, privilage);
 
       if (data.aggs && data.aggs.ratios) _this.pies(data);
 

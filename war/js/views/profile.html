@@ -55,7 +55,8 @@
           <dt>{{ui.profile.userGroups}}</dt>
             <dd>
               <span ng-repeat="group in groups">
-                <a href="#/groups?uuid={{group.uuid}}#view">{{group.name}}</a>,
+                <span ng-hide="app.resources.role > 1"><a href="#/groups?uuid={{group.uuid}}#view">{{group.name}}</a>,</span>
+                <span ng-show="app.resources.role > 1">{{group.name}}, </span>
               </span>
           </dd>
           <dt>{{ui.profile.role}}</dt>

@@ -327,13 +327,11 @@ filter('convertUserIdToName', ['Storage', function(Storage)
  * Convert timeStamps to dates
  */
 WebPaige.
-filter('nicelyDate', ['Dater', function (Dater)
+filter('nicelyDate', ['$rootScope', function ($rootScope)
 {
  	return function (date)
  	{
- 		console.warn('date ->', date);
- 		
- 		return Dater.stringify(date);
+ 		return new Date(date).toString($rootScope.config.formats.datetime);
  	};
 }]);
  

@@ -75,7 +75,7 @@
                   <!-- end unread messages -->
                 </a>
               </li>
-              <li data-match-route="/groups">
+              <li data-match-route="/groups" ng-hide="app.resources.role > 1">
                 <a href="#groups">{{ui.groups.groups}}</a>
               </li>
             </ul>
@@ -123,7 +123,7 @@
       {{notification.message}}
     </div>
     <!-- end notifications -->
-    
+
     <!-- wrap -->
     <div id="wrap">
       <!-- container-fluid -->
@@ -138,6 +138,7 @@
     <!-- footer -->
     <div id="footer">
       <div class="container-fluid">
+
         <!-- copyrights -->
         <div id="copyrights">
           <!-- ask & version -->
