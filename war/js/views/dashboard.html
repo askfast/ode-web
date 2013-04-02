@@ -31,28 +31,29 @@
               <h4>{{pie.name}}</h4>
             </div>
 
-            <div class="block">
+            <div class="block" ng-show="current">
 
               <table>
                 <tr>
-                  <td><h6>Current status</h6></td>
+                  <td><h6>Huidige status</h6></td>
                   <td>
-                    <span class="badge badge-success" ng-show="pie.current.diff > 0">{{pie.current.diff}}</span>
+                    <!-- <span class="badge badge-success" ng-show="pie.current.diff > 0">{{pie.current.diff}}</span>
                     <span class="badge badge-warning" ng-show="pie.current.diff == 0">{{pie.current.diff}}</span>
-                    <span class="badge badge-important" ng-show="pie.current.diff < 0">{{pie.current.diff}}</span>
+                    <span class="badge badge-important" ng-show="pie.current.diff < 0">{{pie.current.diff}}</span> -->
+                    <span class="badge badge-{{pie.current.cls}}">{{pie.current.diff}}</span>
                   </td>
                 </tr>
                 <tr>
                   <td><span class="muted"><i>Start:</i></span></td>
-                  <td>{{pie.current.start|nicelyDate}}</td>
+                  <td><small>{{pie.current.start|nicelyDate}}</small></td>
                 </tr>
                 <tr>
                   <td><span class="muted"><i>End:</i></span></td>
-                  <td>{{pie.current.end|nicelyDate}}</td>
+                  <td><small>{{pie.current.end|nicelyDate}}</small></td>
                 </tr>
                 <tr>
-                  <td><span class="muted"><i>Wish:</i></span></td>
-                  <td>{{pie.current.wish}}</td>
+                  <td><span class="muted"><i>Behoefte:</i></span></td>
+                  <td><small>{{pie.current.wish}} persoon(en)</small></td>
                 </tr>
               </table>
             </div>
@@ -60,7 +61,11 @@
             <div class="block">
               <div id="weeklyPie-{{pie.id}}" class="pie"></div>
               <div class="info">
-                <h3>{{pie.name | truncateGroupTitle}}</h3>
+                <!-- <h3>{{pie.name|truncateGroupTitle}}</h3> -->
+                <h3>
+                  <span ng-show="current">Deze week</span>
+                  <span ng-hide="current">Volgende week</span>
+                </h3>
                 <hr>
                 <h5>{{pie.ratios.more}}%</h5> 
                 <small class="muted">more</small>, 

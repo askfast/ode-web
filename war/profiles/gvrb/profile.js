@@ -33,5 +33,10 @@ var profile = {
       id: 3,
       label: 'Opstapper'
     }
-  ]
+  ],
+
+  p2000: {
+    status: false,
+    url: ''
+  }
 };

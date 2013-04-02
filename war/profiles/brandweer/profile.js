@@ -36,5 +36,10 @@ var profile = {
       id: 3,
       label: 'Opstapper'
     }
-  ]
+  ],
+
+  p2000: {
+    status: true,
+    url: 'http://knrmtest.myask.me/rpc/client/p2000.php'
+  }
 };

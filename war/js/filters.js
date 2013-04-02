@@ -331,12 +331,9 @@ filter('nicelyDate', ['$rootScope', function ($rootScope)
 {
  	return function (date)
  	{
- 		console.warn('date ->', date);
- 		
  		return new Date(date).toString($rootScope.config.formats.datetime);
  	};
 }]);
- 
 
 /**
  * No title filter
@@ -386,7 +383,7 @@ filter('stripHtml', function()
 WebPaige.
 filter('groupIdToName', ['Storage', function (Storage)
 {
-  return function(id)
+  return function (id)
   {
   	var groups = angular.fromJson(Storage.get('groups'));
 

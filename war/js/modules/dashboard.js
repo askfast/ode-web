@@ -105,8 +105,27 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
     })
     .then(function (pies)
     {
-      // console.warn('pies ->', pies);
-      
+      if ($scope.current)
+      {
+        angular.forEach(pies, function (pie, index)
+        {
+          console.warn('->', pie.current);
+
+          if (pie.current.diff > 0)
+          {
+            pie.current.cls = 'more';
+          }
+          else if (pie.current.diff == 0)
+          {
+            pie.current.cls = 'even';
+          }
+          else if (pie.current.diff < 0)
+          {
+            pie.current.cls = 'less';
+          };
+        });
+      };
+
       resetLoaders();
 
       $rootScope.statusBar.off();
@@ -233,8 +252,7 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
     var deferred = $q.defer();
 
     $.ajax({
-       //url:"http://knrm.myask.me/rpc/client/p2000.php",
-       url:"http://knrmtest.myask.me/rpc/client/p2000.php",
+       url: $config.profile.p2000.url,
        dataType: 'jsonp',
        success: function (results)
        {
@@ -280,7 +298,7 @@ factory('Announcer', function ()
       {
         if (alarm.body)
         {
-          if (alarm.body.match(/Prio 1/))
+          if (alarm.body.match(/Prio 1/) || alarm.body.match(/PRIO 1/))
           {
             alarm.body = alarm.body.replace('Prio 1 ', '');
             alarm.prio = {
@@ -289,7 +307,7 @@ factory('Announcer', function ()
             };
           };
 
-          if (alarm.body.match(/Prio 2/))
+          if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
           {
             alarm.body = alarm.body.replace('Prio 2 ', '');
             alarm.prio = {
@@ -298,7 +316,7 @@ factory('Announcer', function ()
             };
           };
 
-          if (alarm.body.match(/Prio 3/))
+          if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
           {
             alarm.body = alarm.body.replace('Prio 3 ', '');
             alarm.prio = {
