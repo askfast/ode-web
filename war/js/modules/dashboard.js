@@ -32,7 +32,7 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
     header: 'Groep overzicht instellingen',
     groups: Storage.local.groups()
   };
-  
+
 
   /**
    * Save settings
@@ -233,7 +233,8 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
     var deferred = $q.defer();
 
     $.ajax({
-       url:"http://knrm.myask.me/rpc/client/p2000.php",
+       //url:"http://knrm.myask.me/rpc/client/p2000.php",
+       url:"http://knrmtest.myask.me/rpc/client/p2000.php",
        dataType: 'jsonp',
        success: function (results)
        {

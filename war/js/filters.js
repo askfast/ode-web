@@ -331,6 +331,8 @@ filter('nicelyDate', ['$rootScope', function ($rootScope)
 {
  	return function (date)
  	{
+ 		console.warn('date ->', date);
+ 		
  		return new Date(date).toString($rootScope.config.formats.datetime);
  	};
 }]);
