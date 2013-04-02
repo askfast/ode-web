@@ -3,7 +3,7 @@
 /**
  * Dashboard Controller
  */
-function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater)
+function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
 {  
   /**
    * Fix styles
@@ -29,11 +29,10 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater)
    * widget settings modal
    */
   $scope.modal = {
-    header: 'some header',
-    title: 'title comes here',
-    content: 'Hello Modal'
+    header: 'Groep overzicht instellingen',
+    groups: Storage.local.groups()
   };
-
+  
 
   /**
    * Save settings
@@ -73,7 +72,7 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater)
         status:   false,
         message:  ''
       }
-    }
+    };
   };
 
   resetLoaders();
@@ -174,7 +173,7 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater)
 };
 
 
-dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater'];
+dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage'];
 
 
 /**

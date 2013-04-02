@@ -4,9 +4,40 @@
 </div>
 
 <div class="modal-body">
-  <p>{{modal.title}}</p>
-  <br/>
-  <pre>{{modal.content}}</pre>
+
+  <!-- member form -->
+  <form>
+    <fieldset>
+
+      <div class="control-group">
+        <label class="control-label">Groups to show</label>
+        <div class="controls">
+
+          <ul>
+            <li ng-repeat="group in modal.groups">
+              <label>
+                <input type="checkbox" ng-modal="modal.selected"> {{group.name}}
+              </label>
+            </li>
+          </ul>
+
+          <!-- <select data-placeholder=" " 
+                  multiple 
+                  class="chzn-select" 
+                  style="width:530px" 
+                  chosen
+                  ng-model="modal.groups" 
+                  ng-options="group.name for group in modal.groups">
+          </select> -->
+          <!-- <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p> -->
+
+        </div>
+        </div>
+        
+    </fieldset>
+  </form>
+
+
 </div>
 
 <div class="modal-footer">

@@ -57,7 +57,27 @@ dl {
 .badge-natural {
   background-color: #433c2d;
 }
+
 .label-natural[href],
 .badge-natural[href] {
   background-color: #342f23;
+}
+
+.modal-body {
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      margin-bottom: 5px;
+
+      label {
+        font-weight: normal;
+        
+        input[type=checkbox] {
+          margin: -2px 3px 0 2px;
+        }
+      }
+    }
+  }
 }

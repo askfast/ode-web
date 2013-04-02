@@ -59,42 +59,85 @@
           border-bottom: none;
         }
 
-        .pie {
-          display: inline;
-          float: left;
-          margin-right: 20px;
-          width: 80px;
-          height: 100px;
+        .block-title {
+          
+          h4 {
+            display: block;
+            margin: 0;
+          }
         }
 
-        .info {
-          display: block;
+        .block {
+          min-width: 320px;
+          max-width: 380px;
+          width: 100%;
+
           float: left;
-          overflow: hidden;
+          display: inline;
+          margin-right: 20px;
           margin-bottom: 10px;
 
-          hr {
-            margin: 0 0 10px 0;
+          table {
+            tr {
+              margin: 0;
+              padding: 0;
+
+              td {
+
+                &:first-child {
+                  width: 55%;
+                }
+
+                h6 {
+                  margin-bottom: 0;  
+                }
+
+                .badge {
+                  margin-top: 10px;
+                }
+              }
+            }
           }
 
-          h3 {
+          .pie {
             display: inline;
-            margin: 0;
-            margin-top: -10px;
-            padding: 0;
-            font-size: 14px;
+            float: left;
+            margin-right: 20px;
+            width: 80px;
+            height: 100px;
           }
 
-          h4 {
-            margin: 0;
-            font-size: 12px;
+          .info {
+            display: block;
+            float: left;
+            overflow: hidden;
+            margin-bottom: 10px;
+
+            hr {
+              margin: 0 0 10px 0;
+            }
+
+            h3 {
+              display: inline;
+              margin: 0;
+              margin-top: -10px;
+              padding: 0;
+              font-size: 14px;
+            }
+
+            h4 {
+              margin: 0;
+              font-size: 12px;
+            }
+
+            h5 {
+              display: inline;
+              font-size: 11px;
+            }
           }
 
-          h5 {
-            display: inline;
-            font-size: 11px;
-          }
         }
+
 
         table {
           margin: 5px 0;
@@ -132,6 +175,8 @@
             }
           }
         }
+
+
       }
     }
     
