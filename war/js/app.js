@@ -336,41 +336,41 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    */
   $rootScope.fixStyles = function () 
   {
-    var tabHeight = $('.tabs-left .nav-tabs').height();
+    // var tabHeight = $('.tabs-left .nav-tabs').height();
 
-    $.each($('.tab-content').children(), function () 
-    {
-      var $parent = $(this),
-          $this = $(this).attr('id'),
-          contentHeight = $('.tabs-left .tab-content #' + $this).height();
+    // $.each($('.tab-content').children(), function () 
+    // {
+    //   var $parent = $(this),
+    //       $this = $(this).attr('id'),
+    //       contentHeight = $('.tabs-left .tab-content #' + $this).height();
 
-      /**
-       * TODO
-       * 
-       * Append left border fix
-       */
-      // $parent.append('<div class="left-border-fix"></div>');
-      // console.log('parent ->', $parent);
-      // $('#' + $this + ' .left-border-fix').css({
-      //   height: contentHeight
-      // });
-      /**
-       * Check if one is bigger than another
-       */
+    //   /**
+    //    * TODO
+    //    * 
+    //    * Append left border fix
+    //    */
+    //   // $parent.append('<div class="left-border-fix"></div>');
+    //   // console.log('parent ->', $parent);
+    //   // $('#' + $this + ' .left-border-fix').css({
+    //   //   height: contentHeight
+    //   // });
+    //   /**
+    //    * Check if one is bigger than another
+    //    */
       
-      if (tabHeight > contentHeight)
-      {
-        // console.log('tab is taller than content ->', $this);
-        $('.tabs-left .tab-content #' + $this).css({
-          height: $('.tabs-left .nav-tabs').height() - 41
-        });
-      }
-      else if (contentHeight > tabHeight)
-      {
-        // console.log('content is taller than tabs ->', $this);
-        // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
-      };
-    });
+    //   if (tabHeight > contentHeight)
+    //   {
+    //     // console.log('tab is taller than content ->', $this);
+    //     $('.tabs-left .tab-content #' + $this).css({
+    //       height: $('.tabs-left .nav-tabs').height() - 41
+    //     });
+    //   }
+    //   else if (contentHeight > tabHeight)
+    //   {
+    //     // console.log('content is taller than tabs ->', $this);
+    //     // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
+    //   };
+    // });
 
     /**
      * Correct icon-font-library icons for mac and linux

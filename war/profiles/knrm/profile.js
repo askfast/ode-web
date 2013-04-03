@@ -11,6 +11,7 @@ var profile = {
   {
     // return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
     return ($.browser.msie) ? '/proxy/ns_knrm' : 'http://3rc2.ask-services.appspot.com/ns_knrm';
+    // return '/proxy/ns_knrm';
   },
 
   states: [
