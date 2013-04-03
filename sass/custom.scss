@@ -1,14 +1,21 @@
 /*
- * CornerStone Custom Styles v0.1.0
+ * WebPaige v2.0.0
  *
  * Designed and compiled from other resources by Cengiz Ulusoy
  */
 
-@import "bootstrap-datepicker"; // Import custom styles
-@import "bootstrap-timepicker"; // Import custom styles
-@import "daterangepicker"; // Import custom styles
-@import "custom"; // Import custom styles
-@import "angular"; // Fix Angular style issues
-@import "timeline"; // Fix Angular style issues
-@import "notifier"; // Fix Angular style issues
-@import "browse-happy"; // Fix Angular style issues
+@import "app/entypo";
+
+@import "app/styles";
+@import "app/login";
+@import "app/dashboard";
+@import "app/forms";
+@import "app/frame";
+@import "app/notifications";
+@import "app/tabs";
+@import "app/tables";
+
+@import "app/timeline";
+@import "app/chosen";
+
+@import "app/queries";

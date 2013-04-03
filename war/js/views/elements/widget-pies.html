@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+  <h3 id="myModalLabel">{{modal.header}}</h3>
+</div>
+
+<div class="modal-body">
+
+  <!-- member form -->
+  <form>
+    <fieldset>
+
+      <div class="control-group">
+        <label class="control-label">Groups to show</label>
+        <div class="controls">
+
+          <ul>
+            <li ng-repeat="group in modal.groups">
+              <label>
+                <input type="checkbox" ng-modal="modal.selected[group.uuid]"> {{group.name}}
+              </label>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+        
+    </fieldset>
+  </form>
+
+
+</div>
+
+<div class="modal-footer">
+  <button type="button" 
+  				class="btn" 
+  				ng-click="dismiss()">Close</button>
+
+  <button class="btn btn-primary" 
+  				ng-click="saveSettings(); dismiss()">Save changes</button>
+</div>
