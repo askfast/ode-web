@@ -218,18 +218,26 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
 
     Groups.search(query).
-    then(function(results)
+    then(function (result)
     {
-      $scope.search = {
-        query: '',
-        queried: query
+      if (result.error)
+      {
+        $rootScope.notifier.error('Error with search.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $scope.search = {
+          query: '',
+          queried: query
+        };
+
+        $scope.candidates = result;
+
+        $scope.setViewTo('search');
+
+        $rootScope.statusBar.off();
       };
-
-      $scope.candidates = results;
-
-      $scope.setViewTo('search');
-
-      $rootScope.statusBar.off();
     });
   };
 
@@ -242,19 +250,35 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
 
     Groups.addMember(candidate).
-    then(function(result)
+    then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.groups.memberAdded);
-
-      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-      Groups.query().
-      then(function(data)
+      if (result.error)
       {
-        $scope.data = data;
+        $rootScope.notifier.error('Error with adding a member.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.groups.memberAdded);
 
-        $rootScope.statusBar.off();
-      });
+        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+        Groups.query().
+        then(function (data)
+        {
+          if (data.error)
+          {
+            $rootScope.notifier.error('Error with getting groups and users.');
+            console.warn('error ->', data);
+          }
+          else
+          {
+            $scope.data = data;
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
     });
   };
 
@@ -267,19 +291,35 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $rootScope.statusBar.display($rootScope.ui.groups.removingMember);
 
     Groups.removeMember(member, group).
-    then(function(result)
+    then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-
-      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-      Groups.query().
-      then(function(data)
+      if (result.error)
       {
-        $scope.data = data;
+        $rootScope.notifier.error('Error with removing a member.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-        $rootScope.statusBar.off();
-      });
+        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+        Groups.query().
+        then(function (data)
+        {
+          if (data.error)
+          {
+            $rootScope.notifier.error('Error with getting groups and users.');
+            console.warn('error ->', data);
+          }
+          else
+          {
+            $scope.data = data;
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
     });
   };
 
@@ -292,21 +332,37 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
 
     Groups.removeMembers(selection, group).
-    then(function(result)
+    then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.groups.removed);
-
-      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-      $scope.selection = {};
-
-      Groups.query().
-      then(function(data)
+      if (result.error)
       {
-        $scope.data = data;
+        $rootScope.notifier.error('Error with removing members.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.groups.removed);
 
-        $rootScope.statusBar.off();
-      });
+        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+        $scope.selection = {};
+
+        Groups.query().
+        then(function (data)
+        {
+          if (data.error)
+          {
+            $rootScope.notifier.error('Error with getting groups and users.');
+            console.warn('error ->', data);
+          }
+          else
+          {
+            $scope.data = data;
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
     });
 
     /**
@@ -325,44 +381,61 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $rootScope.statusBar.display($rootScope.ui.groups.saving);
 
     Groups.save(group).
-    then(function(returned)
+    then(function (returned)
     {
-      $rootScope.notifier.success($rootScope.ui.groups.groupSaved);
-
-      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-      Groups.query().
-      then(function(data)
+      if (returned.error)
       {
-        $scope.closeTabs();
+        $rootScope.notifier.error('Error with saving group.');
+        console.warn('error ->', returned);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.groups.groupSaved);
 
-        $scope.data = data;
+        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-        angular.forEach(data.groups, function (group, index)
+        Groups.query().
+        then(function (data)
         {
-          if (group.uuid == returned)
+          if (data.error)
           {
-            $scope.groups = data.groups;
+            $rootScope.notifier.error('Error with getting groups and users.');
+            console.warn('error ->', data);
+          }
+          else
+          {
+            $scope.closeTabs();
 
-            angular.forEach(data.groups, function (g, index)
+            $scope.data = data;
+
+            angular.forEach(data.groups, function (group, index)
             {
-              if (g.uuid == group.uuid) $scope.group = g;
-            });
+              if (group.uuid == returned)
+              {
+                $scope.groups = data.groups;
 
-            $scope.members = data.members[group.uuid];
+                angular.forEach(data.groups, function (g, index)
+                {
+                  if (g.uuid == group.uuid) $scope.group = g;
+                });
 
-            $scope.current = group.uuid;
+                $scope.members = data.members[group.uuid];
 
-            $scope.$watch($location.search(), function ()
-            {
-              $location.search({uuid: group.uuid});
-            }); // end of watch
-          }; // end of if
-        }); // end of foreach
+                $scope.current = group.uuid;
 
-        $rootScope.statusBar.off();
-      });
+                $scope.$watch($location.search(), function ()
+                {
+                  $location.search({uuid: group.uuid});
+                }); // end of watch
 
+              }; // end of if
+
+            }); // end of foreach
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
     });
   };
 
@@ -375,21 +448,37 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
     Profile.register(member).
-    then(function()
+    then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
-
-      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-      Groups.query().
-      then(function (data)
+      if (result.error)
       {
-        $scope.data = data;
+        $rootScope.notifier.error('Error with registering a member.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
 
-        $location.path('/profile/' + member.username).hash('profile');
+        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-        $rootScope.statusBar.off();
-      });
+        Groups.query().
+        then(function (data)
+        {
+          if (data.error)
+          {
+            $rootScope.notifier.error('Error with getting groups and users.');
+            console.warn('error ->', data);
+          }
+          else
+          {
+            $scope.data = data;
+
+            $location.path('/profile/' + member.username).hash('profile');
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
     });
   };
 
@@ -402,35 +491,52 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $rootScope.statusBar.display($rootScope.ui.groups.deleting);
 
     Groups.remove(id).
-    then(function ()
+    then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.groups.deleted);
-
-      $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-      Groups.query().
-      then(function (data)
+      if (result.error)
       {
-        $scope.data = data;
+        $rootScope.notifier.error('Error with deleting a group.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.groups.deleted);
 
-        angular.forEach(data.groups, function (group, index)
+        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+        Groups.query().
+        then(function (data)
         {
-          $scope.groups = data.groups;
-
-          $scope.group = data.groups[0];
-
-          $scope.members = data.members[data.groups[0].uuid];
-
-          $scope.current = data.groups[0].uuid;
-
-          $scope.$watch($location.search(), function ()
+          if (data.error)
           {
-            $location.search({uuid: data.groups[0].uuid});
-          }); // end of watch
-        }); // end of foreach
+            $rootScope.notifier.error('Error with getting groups and users.');
+            console.warn('error ->', data);
+          }
+          else
+          {
+            $scope.data = data;
 
-        $rootScope.statusBar.off();
-      });
+            angular.forEach(data.groups, function (group, index)
+            {
+              $scope.groups = data.groups;
+
+              $scope.group = data.groups[0];
+
+              $scope.members = data.members[data.groups[0].uuid];
+
+              $scope.current = data.groups[0].uuid;
+
+              $scope.$watch($location.search(), function ()
+              {
+                $location.search({uuid: data.groups[0].uuid});
+              }); // end of watch
+            }); // end of foreach
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
+
     });
   };
 
@@ -574,13 +680,20 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     var deferred = $q.defer();
 
     Members.add(
-    { 
-      id: candidate.group.uuid, 
-      mid: candidate.id 
-    }, {}, function (result) 
-    {
-      deferred.resolve(result);
-    });
+      { 
+        id: candidate.group.uuid, 
+        mid: candidate.id 
+      }, 
+      {}, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;    
   };
@@ -594,13 +707,19 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     var deferred = $q.defer();
 
     Members.remove(
-    { 
-      id: groupId, 
-      mid: memberId 
-    }, function (result) 
-    {
-      deferred.resolve(result);
-    });
+      { 
+        id: groupId, 
+        mid: memberId 
+      }, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;    
   };
@@ -636,48 +755,54 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
-    Groups.query(function (groups) 
-    {
-      Storage.add('groups', angular.toJson(groups));
-
-      if (!only)
+    Groups.query(
+      function (groups) 
       {
-        var calls = [];
+        Storage.add('groups', angular.toJson(groups));
 
-        angular.forEach(groups, function (group, index)
+        if (!only)
         {
-          calls.push(Groups.prototype.get(group.uuid));
-        });
+          var calls = [];
 
-        $q.all(calls)
-        .then(function (results)
-        {
-          Groups.prototype.uniqueMembers();
-
-          var data = {};
-
-          data.members = {};
-
-          angular.forEach(groups, function (group, gindex)
+          angular.forEach(groups, function (group, index)
           {
-            data.groups = groups;
-
-            data.members[group.uuid] = [];
-
-            angular.forEach(results, function (result, mindex)
-            {
-              if (result.id == group.uuid) data.members[group.uuid] = result.data;
-            });
+            calls.push(Groups.prototype.get(group.uuid));
           });
 
-          deferred.resolve(data);
-        });
-      }
-      else
+          $q.all(calls)
+          .then(function (results)
+          {
+            Groups.prototype.uniqueMembers();
+
+            var data = {};
+
+            data.members = {};
+
+            angular.forEach(groups, function (group, gindex)
+            {
+              data.groups = groups;
+
+              data.members[group.uuid] = [];
+
+              angular.forEach(results, function (result, mindex)
+              {
+                if (result.id == group.uuid) data.members[group.uuid] = result.data;
+              });
+            });
+
+            deferred.resolve(data);
+          });
+        }
+        else
+        {
+          deferred.resolve(groups);
+        };
+      },
+      function (error)
       {
-        deferred.resolve(groups);
-      };
-    });
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -690,34 +815,41 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {   
     var deferred = $q.defer();
 
-    Members.query({id: id}, function (result) 
-    {
-      /**
-       * DIRTY CHECK!
-       * 
-       * Check for 'null' return from back-end
-       * if group is empty
-       */
-      var returned;
-
-      if (result.length == 4 && 
-          result[0][0] == 'n' && 
-          result[1][0] == 'u')
+    Members.query(
+      {id: id}, 
+      function (result) 
       {
-        returned = [];
+        /**
+         * DIRTY CHECK!
+         * 
+         * Check for 'null' return from back-end
+         * if group is empty
+         */
+        var returned;
+
+        if (result.length == 4 && 
+            result[0][0] == 'n' && 
+            result[1][0] == 'u')
+        {
+          returned = [];
+        }
+        else
+        {
+          returned = result;
+        };
+
+        Storage.add(id, angular.toJson(returned));
+
+        deferred.resolve({
+          id: id,
+          data: returned
+        });
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
       }
-      else
-      {
-        returned = result;
-      };
-
-      Storage.add(id, angular.toJson(returned));
-
-      deferred.resolve({
-        id: id,
-        data: returned
-      });
-    });
+    );
 
     return deferred.promise;
   };
@@ -733,12 +865,18 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {   
     var deferred = $q.defer();
 
-    Parents.get({id: id}, function (result) 
-    {
-      deferred.resolve({
-        data: returned
-      });
-    });
+    Parents.get(
+      {id: id}, 
+      function (result) 
+      {
+        deferred.resolve({data: returned});
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
+
     return deferred.promise;
   };
 
@@ -782,23 +920,29 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     }
     else
     {
-      Groups.save({
-        id: $rootScope.app.resources.uuid
-      }, group, function (result) 
-      {
-        /**
-         * Group save call returns only uuid and that is parsed as json
-         * by angular, this is a fix for converting returned object to plain string
-         */
-        var returned = '';
-
-        angular.forEach(result, function (chr, i)
+      Groups.save(
+        { id: $rootScope.app.resources.uuid }, 
+        group, 
+        function (result) 
         {
-          returned += chr;
-        });
+          /**
+           * Group save call returns only uuid and that is parsed as json
+           * by angular, this is a fix for converting returned object to plain string
+           */
+          var returned = '';
 
-        deferred.resolve(returned);
-      }); 
+          angular.forEach(result, function (chr, i)
+          {
+            returned += chr;
+          });
+
+          deferred.resolve(returned);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      ); 
     };
 
     return deferred.promise;
@@ -812,10 +956,17 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
-    Groups.remove({id: id}, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Groups.remove(
+      {id: id}, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -828,21 +979,29 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   {
     var deferred = $q.defer();
 
-    Groups.search(null, {key: query}, function (results) 
-    {
-      var processed = [];
-
-      angular.forEach(results, function (result, index)
+    Groups.search(
+      null, 
+      {key: query}, 
+      function (results) 
       {
-        processed.push({
-          id: result.id,
-          name: result.name,
-          groups: Groups.prototype.getMemberGroups(result.id)
-        });
-      });
+        var processed = [];
 
-      deferred.resolve(processed);
-    });
+        angular.forEach(results, function (result, index)
+        {
+          processed.push({
+            id: result.id,
+            name: result.name,
+            groups: Groups.prototype.getMemberGroups(result.id)
+          });
+        });
+
+        deferred.resolve(processed);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };

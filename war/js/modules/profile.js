@@ -145,19 +145,35 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
     Profile.save($route.current.params.userId, resources)
     .then(function (result)
     {
-      $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
-
-      var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
-
-      Profile.get($route.current.params.userId, flag)
-      .then(function (data)
+      if (result.error)
       {
-        $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+        $rootScope.notifier.error('Error with saving profile information.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
-        $scope.data = data;
+        var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
 
-        $rootScope.statusBar.off();
-      });
+        Profile.get($route.current.params.userId, flag)
+        .then(function (data)
+        {
+          if (data.error)
+          {
+            $rootScope.notifier.error('Error with getting profile data.');
+            console.warn('error ->', data);
+          }
+          else
+          {
+            $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
+            $scope.data = data;
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
     });
   };
 
@@ -185,19 +201,35 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
       $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
       Profile.changePassword(passwords)
-      .then(function(result)
+      .then(function (result)
       {
-        $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
-
-        Profile.get($rootScope.app.resources.uuid, true)
-        .then(function(data)
+        if (result.error)
         {
-          $rootScope.notifier.success($rootScope.ui.profile.passChanged);
+          $rootScope.notifier.error('Error with changing password.');
+          console.warn('error ->', result);
+        }
+        else
+        {
+          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
-          $scope.data = data;
+          Profile.get($rootScope.app.resources.uuid, true)
+          .then(function (data)
+          {
+            if (data.error)
+            {
+              $rootScope.notifier.error('Error with getting profile data.');
+              console.warn('error ->', data);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.profile.passChanged);
 
-          $rootScope.statusBar.off();
-        });
+              $scope.data = data;
+
+              $rootScope.statusBar.off();
+            };
+          });
+        };
       });
     }
     else
@@ -489,7 +521,15 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
     $scope.user.id)
     .then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+      if (result.error)
+      {
+        $rootScope.notifier.error('Error with adding a timeslot.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+      };
 
       timeliner.refresh();
     });
@@ -516,7 +556,15 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
     Slots.change($scope.original, options, $scope.user.id)
     .then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+      if (result.error)
+      {
+        $rootScope.notifier.error('Error with changing a timeslot.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+      };
 
       timeliner.refresh();
     });
@@ -563,7 +611,15 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
       Slots.remove($scope.original, $scope.user.id)
       .then(function (result)
       {
-        $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+        if (result.error)
+        {
+          $rootScope.notifier.error('Error with deleting a timeslot.');
+          console.warn('error ->', result);
+        }
+        else
+        {
+          $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+        };
 
         timeliner.refresh();
       });
@@ -717,7 +773,8 @@ profileCtrl.resolve = {
 };
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$q', '$location', '$window', '$route', '$md5', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'Slots', 'Sloter'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$q', '$location', '$window', '$route', 
+'$md5', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'Slots', 'Sloter'];
 
 
 /**
@@ -792,46 +849,54 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
     var deferred = $q.defer();
 
     Register.profile(
-    {
-      uuid: profile.username,
-      pass: $md5.process(profile.password),
-      name: profile.name,
-      phone: profile.PhoneAddress
-    }, function (registered) 
-    {
-      Profile.prototype.role(profile.username, profile.role.id)
-      .then(function(roled)
       {
-        Profile.prototype.save(profile.username, {
-          EmailAddress: profile.EmailAddress,
-          PostAddress: profile.PostAddress,
-          PostZip: profile.PostZip,
-          PostCity: profile.PostCity
-        }).then(function(resourced)
+        uuid: profile.username,
+        pass: $md5.process(profile.password),
+        name: profile.name,
+        phone: profile.PhoneAddress
+      }, 
+      function (registered) 
+      {
+        Profile.prototype.role(profile.username, profile.role.id)
+        .then(function(roled)
         {
-          var calls = [];
-
-          angular.forEach(profile.groups, function (group, index)
+          Profile.prototype.save(profile.username, {
+            EmailAddress: profile.EmailAddress,
+            PostAddress: profile.PostAddress,
+            PostZip: profile.PostZip,
+            PostCity: profile.PostCity
+          }).then(function(resourced)
           {
-            calls.push(Groups.addMember({
-              id: profile.username,
-              group: group
-            }));
-          });
+            var calls = [];
 
-          $q.all(calls)
-          .then(function(grouped)
-          {
-            deferred.resolve({
-              registered: registered,
-              roled: roled,
-              resourced: resourced,
-              grouped: grouped
+            angular.forEach(profile.groups, function (group, index)
+            {
+              calls.push(Groups.addMember({
+                id: profile.username,
+                group: group
+              }));
             });
-          });
-        }); // save profile
-      }); // role
-    }); // register
+
+            $q.all(calls)
+            .then(function(grouped)
+            {
+              deferred.resolve({
+                registered: registered,
+                roled: roled,
+                resourced: resourced,
+                grouped: grouped
+              });
+            });
+
+          }); // save profile
+
+        }); // role
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    ); // register
    
     return deferred.promise;
   };
@@ -844,10 +909,18 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
   {    
     var deferred = $q.defer();
 
-    Profile.role({id: id}, role, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Profile.role(
+      {id: id}, 
+      role, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -860,12 +933,18 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
   {    
     var deferred = $q.defer();
 
-    Resources.save(null, {
-      askPass: $md5.process(passwords.new1)
-    }, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Resources.save(
+      null, 
+      { askPass: $md5.process(passwords.new1) }, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -882,9 +961,7 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
     {
       if (localize) Storage.add('resources', angular.toJson(result));
 
-      deferred.resolve({
-        resources: result
-      });
+      deferred.resolve({resources: result});
     });
 
     return deferred.promise;
@@ -963,10 +1040,18 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
   {
     var deferred = $q.defer();
 
-    Profile.save({id: id}, resources, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Profile.save(
+      {id: id}, 
+      resources, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -984,15 +1069,21 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
     {
       if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
       {
-        Profile.save({id: result.resources.uuid}, angular.toJson({
-          settingsWebPaige: $rootScope.config.defaults.settingsWebPaige
-        }), function(result)
-        {
-          deferred.resolve({
-            status: 'modified',
-            resources: result
-          });
-        })
+        Profile.save(
+          {id: result.resources.uuid}, 
+          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }), 
+          function (result)
+          {
+            deferred.resolve({
+              status: 'modified',
+              resources: result
+            });
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
       }
       else
       {

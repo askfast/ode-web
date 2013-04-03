@@ -67,7 +67,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       resetViews();
 
       $scope.views.slot.add = true;
-    }
+    };
   };
 
 
@@ -304,11 +304,19 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         month:    $scope.timeline.current.month,
         stamps:   stamps
       })
-      .then(function(data)
+      .then(function (data)
       {
-        $scope.data = data;
+        if (data.error)
+        {
+          $rootScope.notifier.error('Error with gettings timeslots.');
+          console.warn('error ->', result);
+        }
+        else
+        {
+          $scope.data = data;
 
-        _this.render(stamps);
+          _this.render(stamps);
+        };
 
         $rootScope.statusBar.off();
       });
@@ -331,8 +339,20 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       });
     },
 
-    redraw: function() {
+    /**
+     * Redraw timeline
+     */
+    redraw: function ()
+    {
       self.timeline.redraw();
+    },
+
+    /**
+     * Cancel add
+     */
+    cancelAdd: function ()
+    {
+      self.timeline.cancelAdd();
     }
   };
  
@@ -723,6 +743,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
     {
       $rootScope.notifier.error('You can not input timeslots in past.');
 
+      // timeliner.cancelAdd();
       timeliner.refresh();
     }
     else
@@ -730,12 +751,22 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
 
       Slots.add(values, $rootScope.app.resources.uuid)
-      .then(function (result)
-      {
-        $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+      .then(
+        function (result)
+        {
+          if (result.error)
+          {
+            $rootScope.notifier.error('Error with adding a new timeslot.');
+            console.warn('error ->', result);
+          }
+          else
+          {
+            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+          };
 
-        timeliner.refresh();
-      });
+          timeliner.refresh();
+        }
+      );
     };
   };
 
@@ -768,12 +799,22 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
       Slots.change($scope.original, options, $rootScope.app.resources.uuid)
-      .then(function (result)
-      {
-        $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+      .then(
+        function (result)
+        {
+          if (result.error)
+          {
+            $rootScope.notifier.error('Error with changing timeslot.');
+            console.warn('error ->', result);
+          }
+          else
+          {
+            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+          };
 
-        timeliner.refresh();
-      });
+          timeliner.refresh();
+        }
+      );
     };
   };
 
@@ -810,12 +851,22 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       recursive:  slot.recursive,
       wish:       slot.wish
     })
-    .then(function (result)
-    {
-      $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+    .then(
+      function (result)
+      {
+        if (result.error)
+        {
+          $rootScope.notifier.error('Error with changing wish value.');
+          console.warn('error ->', result);
+        }
+        else
+        {
+          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+        };
 
-      timeliner.refresh();
-    });
+        timeliner.refresh();
+      }
+    );
   };
 
 
@@ -853,12 +904,22 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
         Slots.remove($scope.original, $rootScope.app.resources.uuid)
-        .then(function (result)
-        {
-          $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+        .then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error('Error with removing timeslot.');
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+            };
 
-          timeliner.refresh();
-        });
+            timeliner.refresh();
+          }
+        );
       // };
     };
   };
@@ -951,19 +1012,21 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   };
 
 
+  /**
+   * Prevent re-rendering issues with timeline
+   */
   $scope.destroy = {
     timeline: function ()
     {
     },
     statistics: function ()
     {
-      setTimeout(function()
+      setTimeout(function ()
       {
         timeliner.redraw();
       }, 10);
-
     }
-  }
+  };
 
 };
 
@@ -1087,10 +1150,16 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
           end: options.end
         };
 
-    Wishes.query(params, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Wishes.query(params, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1109,10 +1178,16 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
           recurring: options.recursive
         };
 
-    Wishes.save({id: options.id}, params, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Wishes.save({id: options.id}, params, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1132,23 +1207,29 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
 
     if (options.division != undefined) params.stateGroup = options.division;
 
-    Aggs.query(params, function (result) 
-    {
-      var stats = Stats.aggs(result);
-
-      Slots.prototype.wishes(params)
-      .then(function(wishes)
+    Aggs.query(params, 
+      function (result) 
       {
-        deferred.resolve({
-          id: options.id,
-          division: options.division,
-          wishes: wishes,
-          data: result,
-          ratios: stats.ratios,
-          durations: stats.durations
+        var stats = Stats.aggs(result);
+
+        Slots.prototype.wishes(params)
+        .then(function (wishes)
+        {
+          deferred.resolve({
+            id:       options.id,
+            division: options.division,
+            wishes:   wishes,
+            data:     result,
+            ratios:   stats.ratios,
+            durations: stats.durations
+          });
         });
-      });
-    });
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1167,20 +1248,26 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
       id: options.id,
       start: options.start,
       end: options.end
-    }, function (results)
-    {
-      angular.forEach(results, function (slot, index)
+    }, 
+      function (results)
       {
-        if (now >= slot.start && now <= slot.end) current = slot;
-      });
+        angular.forEach(results, function (slot, index)
+        {
+          if (now >= slot.start && now <= slot.end) current = slot;
+        });
 
-      deferred.resolve({
-        id:       options.id,
-        name:     options.name,
-        current:  current, 
-        ratios:   Stats.pies(results)
-      });      
-    });
+        deferred.resolve({
+          id:       options.id,
+          name:     options.name,
+          current:  current, 
+          ratios:   Stats.pies(results)
+        });      
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1203,80 +1290,86 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
         },
         data = {};
     
-    Slots.query(params, function(user) 
-    {
-      if (options.layouts.group)
+    Slots.query(params, 
+      function (user) 
       {
-        var groupParams = {
-            id: options.groupId,
-            start: params.start,
-            end: params.end,
-            month: options.month
-        };
-
-        if (options.division != 'all') groupParams.division = options.division;
-
-        Slots.prototype.aggs(groupParams)
-        .then(function(aggs)
+        if (options.layouts.group)
         {
-          if (options.layouts.members)
+          var groupParams = {
+              id:     options.groupId,
+              start:  params.start,
+              end:    params.end,
+              month:  options.month
+          };
+
+          if (options.division != 'all') groupParams.division = options.division;
+
+          Slots.prototype.aggs(groupParams)
+          .then(function(aggs)
           {
-            var members = angular.fromJson(Storage.get(options.groupId)),
-                calls = [];
-
-            angular.forEach(members, function(member, index)
+            if (options.layouts.members)
             {
-              calls.push(Slots.prototype.user({
-                user: member.uuid,
-                start: params.start,
-                end: params.end,
-                type: 'both'
-              }));
-            });
+              var members = angular.fromJson(Storage.get(options.groupId)),
+                  calls = [];
 
-            $q.all(calls)
-            .then(function(members)
+              angular.forEach(members, function(member, index)
+              {
+                calls.push(Slots.prototype.user({
+                  user: member.uuid,
+                  start:params.start,
+                  end:  params.end,
+                  type: 'both'
+                }));
+              });
+
+              $q.all(calls)
+              .then(function(members)
+              {
+                deferred.resolve({
+                  user:     user,
+                  groupId:  options.groupId,
+                  aggs:     aggs,
+                  members:  members,
+                  synced:   new Date().getTime(),
+                  periods: {
+                    start:  options.stamps.start,
+                    end:    options.stamps.end
+                  }
+                });
+              });
+            }
+            else
             {
               deferred.resolve({
-                user: user,
-                groupId: options.groupId,
-                aggs: aggs,
-                members: members,
-                synced: new Date().getTime(),
+                user:     user,
+                groupId:  options.groupId,
+                aggs:     aggs,
+                synced:   new Date().getTime(),
                 periods: {
-                  start: options.stamps.start,
-                  end: options.stamps.end
+                  start:  options.stamps.start,
+                  end:    options.stamps.end
                 }
               });
-            });
-          }
-          else
-          {
-            deferred.resolve({
-              user: user,
-              groupId: options.groupId,
-              aggs: aggs,
-              synced: new Date().getTime(),
-              periods: {
-                start: options.stamps.start,
-                end: options.stamps.end
-              }
-            });
-          };
-        });
-      }
-      else
+            };
+          });
+        }
+        else
+        {
+          deferred.resolve({
+            user:   user,
+            synced: new Date().getTime(),
+            periods: {
+              start:  options.stamps.start,
+              end:    options.stamps.end
+            }
+          });
+        };
+      },
+      function (error)
       {
-        deferred.resolve({
-          user: user,
-          synced: new Date().getTime(),
-          periods: {
-            start: options.stamps.start,
-            end: options.stamps.end
-          }
-        });
-      };
-    });
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1291,14 +1384,20 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
   {
     var deferred = $q.defer();
 
-    Slots.query(params, function (result) 
-    {
-      deferred.resolve({
-        id: params.user,
-        data: result,
-        stats: Stats.member(result)
-      });
-    });
+    Slots.query(params, 
+      function (result) 
+      {
+        deferred.resolve({
+          id:   params.user,
+          data: result,
+          stats: Stats.member(result)
+        });
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1317,10 +1416,16 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
   {
     var deferred = $q.defer();
 
-    Slots.save({user: user}, slot, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Slots.save({user: user}, slot,
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1342,10 +1447,15 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
     var deferred = $q.defer();
 
     Slots.change(angular.extend(naturalize(changed), {user: user}), naturalize(original), 
-    function (result) 
-    {
-      deferred.resolve(result);
-    });
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -1359,10 +1469,15 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
     var deferred = $q.defer();
 
     Slots.remove(angular.extend(naturalize(slot), {user: user}), 
-    function (result) 
-    {
-      deferred.resolve(result);
-    });
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };

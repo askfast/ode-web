@@ -56,13 +56,21 @@ function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
       $rootScope.statusBar.display($rootScope.ui.settings.refreshing);
 
       Profile.get($rootScope.app.resources.uuid, true)
-      .then(function(result)
+      .then(function (result)
       {
-        $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
+        if (result.error)
+        {
+          $rootScope.notifier.error('Error with saving settings.');
+          console.warn('error ->', result);
+        }
+        else
+        {
+          $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
 
-        $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
+          $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
 
-        $rootScope.statusBar.off();
+          $rootScope.statusBar.off();
+        };
       })
     });
   };
@@ -139,7 +147,7 @@ factory('Settings', function ($rootScope, $config, $resource, $q, Storage, Profi
     Profile.save(id, {
       settingsWebPaige: angular.toJson(settings)
     })
-    .then(function(result)
+    .then(function (result)
     {
       deferred.resolve({
         saved: true

@@ -61,6 +61,12 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
   };
 
 
+  /**
+   * TODO
+   * Work on it!
+   * 
+   * Reset loaders
+   */
   function resetLoaders ()
   {
     $scope.loading = {
@@ -105,30 +111,38 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
     })
     .then(function (pies)
     {
-      if ($scope.current)
+      if (pies.error)
       {
-        angular.forEach(pies, function (pie, index)
+        $rootScope.notifier.error('Error with getting group overviews.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        if ($scope.current)
         {
-          if (pie.current.diff > 0)
+          angular.forEach(pies, function (pie, index)
           {
-            pie.current.cls = 'more';
-          }
-          else if (pie.current.diff == 0)
-          {
-            pie.current.cls = 'even';
-          }
-          else if (pie.current.diff < 0)
-          {
-            pie.current.cls = 'less';
-          };
-        });
+            if (pie.current.diff > 0)
+            {
+              pie.current.cls = 'more';
+            }
+            else if (pie.current.diff == 0)
+            {
+              pie.current.cls = 'even';
+            }
+            else if (pie.current.diff < 0)
+            {
+              pie.current.cls = 'less';
+            };
+          });
+        };
+
+        resetLoaders();
+
+        $rootScope.statusBar.off();
+
+        $scope.pies = pies;
       };
-
-      resetLoaders();
-
-      $rootScope.statusBar.off();
-
-      $scope.pies = pies;
     })
     .then( function (result)
     {
@@ -158,11 +172,19 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
    * P2000 annnouncements
    */
   Dashboard.p2000().
-  then(function (results)
+  then(function (result)
   {
-    $scope.alarms = results;
+    if (result.error)
+    {
+      $rootScope.notifier.error('Error with getting p2000 alarm messages.');
+      console.warn('error ->', result);
+    }
+    else
+    {
+      $scope.alarms = result;
 
-    $scope.alarms.list = $scope.alarms.short;
+      $scope.alarms.list = $scope.alarms.short;
+    };
   });
 	
 
@@ -206,7 +228,8 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
     {
       p2000: {
         method: 'GET',
-        params: {}
+        params: {},
+        isArray: true
       }
     }
   );
@@ -249,17 +272,30 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
   {
     var deferred = $q.defer();
 
+    // Dashboard.p2000(null, 
+    //    function (result) 
+    //    {
+    //      deferred.resolve(result);
+
+    //      console.log('result ->', result);
+    //    },
+    //    function (error)
+    //    {
+    //      deferred.resolve({error: error});
+    //    }
+    //  );
+
     $.ajax({
-       url: $config.profile.p2000.url,
-       dataType: 'jsonp',
-       success: function (results)
-       {
-         deferred.resolve( Announcer.process(results) );
-       },
-       error: function ()
-       {
-         deferred.reject('Something bad happened with fetching p2000 messages');
-       },
+      url: $config.profile.p2000.url,
+      dataType: 'jsonp',
+      success: function (results)
+      {
+        deferred.resolve( Announcer.process(results) );
+      },
+      error: function ()
+      {
+        deferred.resolve({error: error});
+      }
     });
 
     return deferred.promise;

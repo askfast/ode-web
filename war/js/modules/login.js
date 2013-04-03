@@ -204,35 +204,54 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
     User.resources()
     .then(function (resources)
     {
-      $rootScope.app.resources = resources;
-
-      if (resources.settingsWebPaige != null || resources.settingsWebPaige != undefined)
+      if (resources.error)
       {
-        $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+        console.warn('error ->', resources);
       }
       else
       {
-        $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+        $rootScope.app.resources = resources;
+
+        if (resources.settingsWebPaige != null || resources.settingsWebPaige != undefined)
+        {
+          $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+        }
+        else
+        {
+          $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+        };
+
+        self.progress(70, $rootScope.ui.login.loading_Group);
+
+        Groups.query(true)
+        .then(function (groups)
+        {
+          if (groups.error)
+          {
+            console.warn('error ->', groups);
+          }
+          else
+          {
+            self.progress(100, $rootScope.ui.login.loading_everything);
+
+            self.redirectToDashboard();
+
+            self.getMessages();
+
+            self.getMembers();
+          };
+        });
       };
-
-      self.progress(70, $rootScope.ui.login.loading_Group);
-
-      Groups.query(true)
-      .then(function (groups)
-      {
-        self.progress(100, $rootScope.ui.login.loading_everything);
-
-        self.redirectToDashboard();
-
-        self.getMessages();
-
-        self.getMembers();
-      });
-
     });
   };
 
 
+  /**
+   * TODO
+   * Implement an error handling
+   *
+   * Get members list (SILENTLY)
+   */
   self.getMembers = function ()
   {
     var groups = Storage.local.groups();
@@ -256,14 +275,27 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
   };
 
 
+  /**
+   * TODO
+   * Implement an error handling
+   *
+   * Get messages (SILENTLY)
+   */
   self.getMessages = function ()
   {
     Messages.query()
     .then(function (messages)
     {
-      $rootScope.app.unreadMessages = Messages.unreadCount();
+      if (messages.error)
+      {
+        console.warn('error ->', messages);
+      }
+      else
+      {
+        $rootScope.app.unreadMessages = Messages.unreadCount();
 
-      Storage.session.unreadMessages = Messages.unreadCount();
+        Storage.session.unreadMessages = Messages.unreadCount();
+      };
     });
   };
 
@@ -310,7 +342,8 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
   {
 		$('#forgot button[type=submit]').text('setting ...').attr('disabled', 'disabled');
 
-		User.password($scope.remember.id).then(function (result)
+		User.password($scope.remember.id)
+    .then(function (result)
 		{
 			if (result == "ok")
       {
@@ -348,7 +381,8 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
    */
 	self.changePass =  function (uuid, newpass, key)
   {
-		User.changePass(uuid, newpass, key).then(function (result)
+		User.changePass(uuid, newpass, key)
+    .then(function (result)
     {
 			if(result.status == 400 || result.status == 500 || result.status == 409)
       {
@@ -446,15 +480,22 @@ loginCtrl.logout = function ($rootScope, $scope, $window, Session, User, Storage
   var logindata = angular.fromJson(Storage.get('logindata'));
 
 	User.logout()
-	.then(function()
+	.then(function (result)
 	{
-		Storage.clearAll();
+    if (result.error)
+    {
+      console.warn('error ->', result);
+    }
+    else
+    {
+      Storage.clearAll();
 
-    Storage.session.clearAll();
+      Storage.session.clearAll();
 
-    Storage.add('logindata', angular.toJson(logindata));
+      Storage.add('logindata', angular.toJson(logindata));
 
-    $window.location.href = 'logout.html';
+      $window.location.href = 'logout.html';
+    };
 	});
 };
 
@@ -546,23 +587,26 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
     var deferred = $q.defer();
 
     Reset.password(
-    {
-      uuid: uuid.toLowerCase(),
-      path: $location.absUrl()
-    }, function (result)
-    {
-      if (angular.equals(result, []))
       {
-        deferred.resolve("ok");
-      }
-      else
+        uuid: uuid.toLowerCase(),
+        path: $location.absUrl()
+      }, 
+      function (result)
       {
-        deferred.resolve(result);
-      };
-    },function (error)
-    {
+        if (angular.equals(result, []))
+        {
+          deferred.resolve("ok");
+        }
+        else
+        {
+          deferred.resolve(result);
+        };
+      },
+      function (error)
+      {
         deferred.resolve(error);
-    });
+      }
+    );
 
     return deferred.promise;
   };
@@ -575,21 +619,23 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   {    
     var deferred = $q.defer();
 
-    Login.process({uuid: uuid, pass: pass}, function (result) 
-    {
-      if (angular.equals(result, [])) 
+    Login.process({uuid: uuid, pass: pass}, 
+      function (result) 
       {
-        deferred.reject("Something went wrong with login!");
+        if (angular.equals(result, [])) 
+        {
+          deferred.reject("Something went wrong with login!");
+        }
+        else 
+        {
+          deferred.resolve(result);
+        };
+      },
+      function (error)
+      {
+        deferred.resolve(error);
       }
-      else 
-      {
-        deferred.resolve(result);
-      };
-    },
-    function (error)
-    {
-      deferred.resolve(error);
-    });
+    );
 
     return deferred.promise;
   };
@@ -608,14 +654,15 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
      * RE-FACTORY
      */
     changePassword.get(
-    function (result)
-    {
-      deferred.resolve(result);
-    },
-    function (error)
-    {
-      deferred.resolve(error);
-    });
+      function (result)
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve(error);
+      }
+    );
     
     return deferred.promise;
   }
@@ -628,10 +675,16 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   {    
     var deferred = $q.defer();
 
-    Logout.process(null, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Logout.process(null, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -644,19 +697,25 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   {    
     var deferred = $q.defer();
 
-    Resources.get(null, function (result) 
-    {
-      if (angular.equals(result, [])) 
+    Resources.get(null, 
+      function (result) 
       {
-        deferred.reject("User has no resources!");
-      }
-      else 
-      {
-        Storage.add('resources', angular.toJson(result));
+        if (angular.equals(result, [])) 
+        {
+          deferred.reject("User has no resources!");
+        }
+        else 
+        {
+          Storage.add('resources', angular.toJson(result));
 
-        deferred.resolve(result);
+          deferred.resolve(result);
+        }
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
       }
-    });
+    );
 
     return deferred.promise;
   };

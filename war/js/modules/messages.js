@@ -149,9 +149,17 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
     if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
     {
       Messages.changeState([id], 'READ')
-      .then( function (result)
+      .then(function (result)
       {
-        console.log('state changed');
+        if (result.error)
+        {
+          $rootScope.notifier.error('Error with changing message state.');
+          console.warn('error ->', result);
+        }
+        else
+        {
+          console.log('state changed');
+        };
       });
 
       var _inbox = [];
@@ -253,23 +261,31 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
     bulk.push(id);
 
     Messages.remove(bulk)
-    .then(function(result)
+    .then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.message.removed);
-
-      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-      Messages.query()
-      .then(function (messages)
+      if (result.error)
       {
-        $scope.messages = messages;
+        $rootScope.notifier.error('Error with removing message.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.message.removed);
 
-        $rootScope.loading = false;
+        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
-        $scope.closeTabs();
+        Messages.query()
+        .then(function (messages)
+        {
+          $scope.messages = messages;
 
-        $rootScope.statusBar.off();
-      });
+          $rootScope.loading = false;
+
+          $scope.closeTabs();
+
+          $rootScope.statusBar.off();
+        });
+      };
     });
   };
 
@@ -289,19 +305,27 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
     });
 
     Messages.remove(ids)
-    .then(function(result)
+    .then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.message.removed);
-
-      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-      Messages.query()
-      .then(function(messages)
+      if (result.error)
       {
-        $scope.messages = messages;
+        $rootScope.notifier.error('Error with removing messages.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.message.removed);
 
-        $rootScope.statusBar.off();
-      });
+        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+        Messages.query()
+        .then(function (messages)
+        {
+          $scope.messages = messages;
+
+          $rootScope.statusBar.off();
+        });
+      };
     });
   };
 
@@ -318,19 +342,27 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
     bulk.push(id);
 
     Messages.restore(bulk)
-    .then(function(result)
+    .then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.message.restored);
-
-      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-      Messages.query()
-      .then(function(messages)
+      if (result.error)
       {
-        $scope.messages = messages;
+        $rootScope.notifier.error('Error with restoring message.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.message.restored);
 
-        $rootScope.statusBar.off();
-      });
+        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+        Messages.query()
+        .then(function(messages)
+        {
+          $scope.messages = messages;
+
+          $rootScope.statusBar.off();
+        });
+      };
     });
   };
 
@@ -350,19 +382,27 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
     });
 
     Messages.restore(ids)
-    .then(function(result)
+    .then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.message.removed);
-
-      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-      Messages.query()
-      .then(function(messages)
+      if (result.error)
       {
-        $scope.messages = messages;
+        $rootScope.notifier.error('Error with restoring message.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.message.removed);
 
-        $rootScope.statusBar.off();
-      });
+        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+        Messages.query()
+        .then(function(messages)
+        {
+          $scope.messages = messages;
+
+          $rootScope.statusBar.off();
+        });
+      };      
     });
   };
 
@@ -375,19 +415,35 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
     $rootScope.statusBar.display($rootScope.ui.message.emptying);
 
     Messages.emptyTrash()
-    .then(function(result)
+    .then(function (result)
     {
-      $rootScope.notifier.success($rootScope.ui.message.empited);
-
-      $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-      Messages.query()
-      .then(function(messages)
+      if (result.error)
       {
-        $scope.messages = messages;
+        $rootScope.notifier.error('Error with emting trash.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.message.empited);
 
-        $rootScope.statusBar.off();
-      });
+        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+        Messages.query()
+        .then(function (messages)
+        {
+          if (messages.error)
+          {
+            $rootScope.notifier.error('Error with getting messages.');
+            console.warn('error ->', messages);
+          }
+          else
+          {
+            $scope.messages = messages;
+
+            $rootScope.statusBar.off();
+          };
+        });
+      };
     });    
   };
 
@@ -453,23 +509,39 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
     if (message.receivers)
     {
       Messages.send(message, broadcast)
-      .then(function(uuid)
+      .then(function (uuid)
       {
-        $rootScope.notifier.success($rootScope.ui.message.sent);
-
-        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-        Messages.query()
-        .then(function(messages)
+        if (uuid.error)
         {
-          $scope.messages = messages;
+          $rootScope.notifier.error('Error with sending message.');
+          console.warn('error ->', uuid);
+        }
+        else
+        {
+          $rootScope.notifier.success($rootScope.ui.message.sent);
 
-          $scope.closeTabs();
+          $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
-          $scope.requestMessage(uuid, $scope.origin);
+          Messages.query()
+          .then(function (messages)
+          {
+            if (messages.error)
+            {
+              $rootScope.notifier.error('Error with getting messages.');
+              console.warn('error ->', messages);
+            }
+            else
+            {
+              $scope.messages = messages;
 
-          $rootScope.statusBar.off();
-        });
+              $scope.closeTabs();
+
+              $scope.requestMessage(uuid, $scope.origin);
+
+              $rootScope.statusBar.off();
+            };
+          });
+        };
       });
     }
     else
@@ -584,20 +656,29 @@ factory('Messages', function ($rootScope, $config, $resource, $q, $route, $timeo
   {
     var deferred = $q.defer();
 
-    Messages.query(function (result) 
-    {
-      Storage.add('messages', angular.toJson(result));
+    Messages.query(
+      function (result) 
+      {
+        Storage.add('messages', angular.toJson(result));
 
-      Messages.prototype.unreadCount();
+        Messages.prototype.unreadCount();
 
-      deferred.resolve(Messages.prototype.filter(result));
-    });
+        deferred.resolve(Messages.prototype.filter(result));
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
 
 
   /**
+   * TODO
+   * Extract this to a data processer
+   * 
    * Filter messages based on box
    */
   Messages.prototype.filter = function (messages)
@@ -713,17 +794,23 @@ factory('Messages', function ($rootScope, $config, $resource, $q, $route, $timeo
       types: types
     };
 
-    Messages.send(null, message, function (result) 
-    {
-      var returned = '';
-
-      angular.forEach(result, function (chr, i)
+    Messages.send(null, message, 
+      function (result) 
       {
-        returned += chr;
-      });
+        var returned = '';
 
-      deferred.resolve(returned);
-    });
+        angular.forEach(result, function (chr, i)
+        {
+          returned += chr;
+        });
+
+        deferred.resolve(returned);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
@@ -739,8 +826,7 @@ factory('Messages', function ($rootScope, $config, $resource, $q, $route, $timeo
 
     angular.forEach(messages, function (message, index)
     {
-      if (message.box   == 'inbox' && message.state == 'NEW')
-        unread.push(message);
+      if (message.box == 'inbox' && message.state == 'NEW') unread.push(message);
     });
 
     return unread;
@@ -757,8 +843,7 @@ factory('Messages', function ($rootScope, $config, $resource, $q, $route, $timeo
 
     angular.forEach(messages, function (message, index)
     {
-      if (message.box   == 'inbox' && message.state == 'NEW')
-        counter++;
+      if (message.box == 'inbox' && message.state == 'NEW') counter++;
     });
 
     $rootScope.app.unreadMessages = counter;
@@ -772,13 +857,20 @@ factory('Messages', function ($rootScope, $config, $resource, $q, $route, $timeo
   {
     var deferred = $q.defer();
 
-    Messages.changeState(null, {
-      ids: ids, 
-      state: state 
-    }, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Messages.changeState(null, 
+      {
+        ids: ids, 
+        state: state 
+      }, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     /**
      * Change message state locally as well
@@ -857,16 +949,22 @@ factory('Messages', function ($rootScope, $config, $resource, $q, $route, $timeo
 
     angular.forEach(messages, function(message, index)
     {
-      if ((message.box   == 'inbox' || message.box   == 'outbox') && message.state == 'TRASH')
-        bulk.push(message.uuid);
+      if ((message.box == 'inbox' || message.box == 'outbox') && message.state == 'TRASH') bulk.push(message.uuid);
     });
 
-    Messages.remove(null, { 
-      members: bulk 
-    }, function (result) 
-    {
-      deferred.resolve(result);
-    });
+    Messages.remove(null,
+      { 
+        members: bulk 
+      }, 
+      function (result) 
+      {
+        deferred.resolve(result);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
 
     return deferred.promise;
   };
