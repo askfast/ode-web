@@ -85,7 +85,7 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
   {
     $scope.loading.pies = {
       status:   true,
-      message:  'Loading group stats' 
+      message:  'Loading group stats..' 
     };
 
     var week = ($scope.current) ? current : current + 1;
@@ -109,8 +109,6 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
       {
         angular.forEach(pies, function (pie, index)
         {
-          console.warn('->', pie.current);
-
           if (pie.current.diff > 0)
           {
             pie.current.cls = 'more';

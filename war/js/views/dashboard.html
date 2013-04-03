@@ -8,7 +8,7 @@
   <div class="row-fluid">
 
       <!-- pie charts for groups -->
-      <div class="widget span8">
+      <div class="widget {{(config.profile.p2000.status) && 'span8' || 'span12'}}">
 
         <div class="head">
           <!-- nav pills for weeker -->
@@ -21,7 +21,7 @@
         </div>
         <hr>
 
-        <p class="muted text-center" ng-show="loading.pies.status">{{loading.pies.message}}</p>
+        <p class="muted" ng-show="loading.pies.status"><small><i>{{loading.pies.message}}</i></small></p>
 
         <!-- pie loop -->
         <ul class="itemslist" ng-hide="loading.pies.status">
@@ -95,9 +95,10 @@
 
       </div>
       <!-- end pie charts for groups -->
-      
+
       <!-- announcements sidebar -->
-      <div class="widget span4">
+      <div class="widget span4"
+            ng-show="config.profile.p2000.status">
 
         <div class="head">
           <h4>Announcements</h4>
