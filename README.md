@@ -1,3 +1,3 @@
 WebPaige Base
 
-Angular based core functionalities without styling.
+v2.0.0
