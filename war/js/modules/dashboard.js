@@ -134,6 +134,9 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
             {
               pie.current.cls = 'less';
             };
+
+            console.log('date ->', pie.current.start, '->', Date(new Date(pie.current.start)).toString('dd-MM-yyyy HH:mm'));
+
           });
         };
 

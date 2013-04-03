@@ -43,7 +43,13 @@
   <body>
 
     <!-- watermark for app -->
-    <div id="watermark" style="background: url(../profiles/{{config.profile.meta}}/img/watermark.png) no-repeat;"></div>
+    <div id="watermark"></div>
+    <script type="text/javascript">
+      $('#watermark').css({
+        backgroundImage: 'url(../profiles/' + profile.meta  + '/img/watermark.png)',
+        backgroundRepeat: 'no-repeat'
+      });
+    </script>
     <!-- end watermark for app -->
 
     <div watermarker="{{config.profile.meta}}"></div>
