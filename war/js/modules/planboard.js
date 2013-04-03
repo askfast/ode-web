@@ -279,7 +279,8 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         Sloter.process(
           $scope.data,
           $scope.timeline.config,
-          $scope.divisions
+          $scope.divisions,
+          $rootScope.app.resources.role
         ), 
         $scope.timeline.options
       );
@@ -328,6 +329,10 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         start:  data.periods.start,
         end:    data.periods.end
       });
+    },
+
+    redraw: function() {
+      self.timeline.redraw();
     }
   };
  
@@ -530,13 +535,13 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Timeline zoom in
    */
-  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom) };
+  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom, Date.now()) };
 
 
   /**
    * Timeline zoom out
    */
-  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom) };
+  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now()) };
 
 
   /**
@@ -666,7 +671,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     var news = $('.timeline-event-content')
                 .contents()
-                .filter(function()
+                .filter(function ()
                 { 
                   return this.nodeValue == 'New' 
                 }),
@@ -706,22 +711,32 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   $scope.add = function (slot)
   {
-    $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+    var now     = Date.now().getTime(),
+        values  = {
+                    start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
+                    end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
+                    recursive:  (slot.recursive) ? true : false,
+                    text:       slot.state
+                  };
 
-    Slots.add(
+    if (values.start * 1000 <= now || values.end * 1000 <= now)
     {
-      start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
-      end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
-      recursive:  (slot.recursive) ? true : false,
-      text:       slot.state
-    }, 
-    $rootScope.app.resources.uuid)
-    .then(function (result)
-    {
-      $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+      $rootScope.notifier.error('You can not input timeslots in past.');
 
       timeliner.refresh();
-    });
+    }
+    else
+    {
+      $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+
+      Slots.add(values, $rootScope.app.resources.uuid)
+      .then(function (result)
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+
+        timeliner.refresh();
+      });
+    };
   };
 
 
@@ -740,15 +755,26 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
           };
     };
 
-    $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+    var now = Date.now().getTime();
 
-    Slots.change($scope.original, options, $rootScope.app.resources.uuid)
-    .then(function (result)
+    if (options.start <= now || options.end <= now)
     {
-      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+      $rootScope.notifier.error('You can not change timeslots in past.');
 
       timeliner.refresh();
-    });
+    }
+    else
+    {
+      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
+      Slots.change($scope.original, options, $rootScope.app.resources.uuid)
+      .then(function (result)
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+
+        timeliner.refresh();
+      });
+    };
   };
 
 
@@ -798,31 +824,42 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   function timelineOnRemove ()
   {
-    var news = $('.timeline-event-content')
-                .contents()
-                .filter(function()
-                { 
-                  return this.nodeValue == 'New' 
-                });
-      
-    if (news)
+    var now = Date.now().getTime();
+
+    if ($scope.original.start.getTime() <= now || $scope.original.end.getTime() <= now)
     {
-      $scope.$apply(function ()
-      {
-        $scope.resetInlineForms();
-      });
+      $rootScope.notifier.error('You can not delete timeslots in past.');
+
+      timeliner.refresh();
     }
     else
     {
-      $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+      // var news = $('.timeline-event-content')
+      //             .contents()
+      //             .filter(function()
+      //             { 
+      //               return this.nodeValue == 'New' 
+      //             });
+        
+      // if (news)
+      // {
+      //   $scope.$apply(function ()
+      //   {
+      //     $scope.resetInlineForms();
+      //   });
+      // }
+      // else
+      // {
+        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
-      Slots.remove($scope.original, $rootScope.app.resources.uuid)
-      .then(function (result)
-      {
-        $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+        Slots.remove($scope.original, $rootScope.app.resources.uuid)
+        .then(function (result)
+        {
+          $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
 
-        timeliner.refresh();
-      });
+          timeliner.refresh();
+        });
+      // };
     };
   };
 
@@ -830,7 +867,10 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Delete trigger start view
    */
-  $scope.remove = function () { timelineOnRemove() };
+  $scope.remove = function () 
+  {
+    timelineOnRemove()
+  };
 
 
   /**
@@ -909,6 +949,21 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
     $location.path('/messages').search({ escalate: true }).hash('compose');
   };
+
+
+  $scope.destroy = {
+    timeline: function ()
+    {
+    },
+    statistics: function ()
+    {
+      setTimeout(function()
+      {
+        timeliner.redraw();
+      }, 10);
+
+    }
+  }
 
 };
 
@@ -1104,18 +1159,26 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
    */
   Slots.prototype.pie = function (options) 
   {
-    var deferred = $q.defer();
+    var deferred  = $q.defer(),
+        now       = Math.floor(Date.now().getTime() / 1000),
+        current;
 
     Aggs.query({
       id: options.id,
       start: options.start,
       end: options.end
-    }, function (result)
+    }, function (results)
     {
+      angular.forEach(results, function (slot, index)
+      {
+        if (now >= slot.start && now <= slot.end) current = slot;
+      });
+
       deferred.resolve({
-        id: options.id,
-        name: options.name,
-        ratios: Stats.pies(result)
+        id:       options.id,
+        name:     options.name,
+        current:  current, 
+        ratios:   Stats.pies(results)
       });      
     });
 
@@ -1533,17 +1596,20 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
     /**
      * Handle group name whether divisions selected
      */
-    namer: function (data, divisions)
+    namer: function (data, divisions, privilage)
     {
-      var groups = this.get.groups();
+      var groups  = this.get.groups(),
+          name    = groups[data.aggs.id],
+          link    = '<a href="#/groups?uuid=' + 
+                    data.aggs.id + 
+                    '#view">' +
+                    name +
+                    '</a>',
+                    title;
 
       if (data.aggs.division == 'all' || data.aggs.division == undefined)
       {
-        return  '<a href="#/groups?uuid=' + 
-                data.aggs.id + 
-                '#view">' +
-                groups[data.aggs.id] +
-                '</a>';
+        title = (privilage == 1) ? link : '<span>' + name + '</span>';
       }
       else
       {
@@ -1551,15 +1617,12 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
         angular.forEach(divisions, function(division, index) { if (division.id == data.aggs.division) label = division.label; });
 
-        return  '<a href="#/groups?uuid=' + 
-                data.aggs.id + 
-                '#view">' +
-                groups[data.aggs.id] +
-                '</a>' + 
-                ' <span class="label">' + 
-                label + 
-                '</span>';
+        title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+        title += ' <span class="label">' + label + '</span>';
       };
+
+      return title;
     },
 
     /**
@@ -1585,29 +1648,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                           '" ' + 
 
 
-
-
-
-
-
-
-
-
                           'title="'+'Minimum aantal benodigden'+': ' + 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                           num + 
@@ -1665,42 +1706,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                       style + 
                       '" ' + 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       ' title="Huidig aantal beschikbaar: ' + 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       num + 
                       ' personen">' + 
@@ -1843,13 +1849,23 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
     /**
      * Process members
      */
-    members: function (data, timedata, config)
+    members: function (data, timedata, config, privilage)
     {
       var _this   = this,
-          members = this.get.members();
+          members = this.get.members();          
 
       angular.forEach(data.members, function (member, index)
       {
+        var link = (privilage == 1) ? 
+                      _this.wrapper('d') + 
+                      '<a href="#/profile/' + 
+                      member.id + 
+                      '#timeline">' + 
+                      members[member.id] + 
+                      '</a>' :
+                      _this.wrapper('d') + 
+                      members[member.id];
+
         angular.forEach(member.data, function (slot, i)
         {
           angular.forEach(config.legenda, function (value, legenda)
@@ -1859,12 +1875,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
               timedata.push({
                 start: Math.round(slot.start * 1000),
                 end: Math.round(slot.end * 1000),
-                group: _this.wrapper('d') + 
-                        '<a href="#/profile/' + 
-                        member.id + 
-                        '#timeline">' + 
-                        members[member.id] + 
-                        '</a>',
+                group: link,
                 content: _this.secret(angular.toJson({ 
                   type: 'member',
                   id: slot.id, 
@@ -1880,27 +1891,15 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
         });
 
         timedata.push({
-          start: 0,
-          end: 0,
-          group: _this.wrapper('d') + 
-                  '<a href="#/profile/' + 
-                  member.id + 
-                  '#timeline">' + 
-                  members[member.id] + 
-                  '</a>',
-          content: null,
-          className: null,
+          start:    0,
+          end:      0,
+          group:    link,
+          content:  null,
+          className:null,
           editable: false
         });
 
-        timedata = _this.addLoading(data, timedata, [
-          _this.wrapper('d') + 
-          '<a href="#/profile/' + 
-          member.id + 
-          '#timeline">' + 
-          members[member.id] + 
-          '</a>'
-        ]);
+        timedata = _this.addLoading(data, timedata, [ link ]);
 
         /**
          * TODO
@@ -1987,7 +1986,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
     /**
      * Timeline data processing
      */
-    process: function (data, config, divisions)
+    process: function (data, config, divisions, privilage)
     {
       var _this     = this,
           timedata  = [];
@@ -1996,7 +1995,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
       if (data.aggs)
       {
-        var name = _this.namer(data, divisions);
+        var name = _this.namer(data, divisions, privilage);
 
         if (config.bar) 
         {
@@ -2010,7 +2009,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
       if (config.wishes) timedata = _this.wishes(data, timedata, name);
 
-      if (data.members) timedata = _this.members(data, timedata, config);
+      if (data.members) timedata = _this.members(data, timedata, config, privilage);
 
       if (data.aggs && data.aggs.ratios) _this.pies(data);
 

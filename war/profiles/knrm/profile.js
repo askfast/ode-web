@@ -10,46 +10,17 @@ var profile = {
   host: function ()
   {
     return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
+    // return ($.browser.msie) ? '/proxy/ns_knrm' : 'http://3rc2.ask-services.appspot.com/ns_knrm';
   },
 
-  states: {
-    'com.ask-cs.State.Available': {
-      'className': 'state-available',
-      'label': 'Beschikbaar',
-      'color': '#4f824f',
-      'type': 'Beschikbaar'
-    },
-    'com.ask-cs.State.KNRM.BeschikbaarNoord': {
-      'className': 'state-available-north',
-      'label': 'Beschikbaar voor Noord',
-      'color': '#000',
-      'type': 'Beschikbaar'
-    },
-    'com.ask-cs.State.KNRM.BeschikbaarZuid': {
-      'className': 'state-available-south',
-      'label': 'Beschikbaar voor Zuid',
-      'color': '#e08a0c',
-      'type': 'Beschikbaar'
-    },
-    'com.ask-cs.State.Unavailable': {
-      'className': 'state-unavailable',
-      'label': 'Niet Beschikbaar',
-      'color': '#a93232',
-      'type': 'Niet Beschikbaar'
-    },
-    'com.ask-cs.State.KNRM.SchipperVanDienst': {
-      'className': 'state-schipper-service',
-      'label': 'Schipper van Dienst',
-      'color': '#e0c100',
-      'type': 'Beschikbaar'
-    },
-    'com.ask-cs.State.Unreached': {
-      'className': 'state-unreached',
-      'label': 'Niet Bereikt',
-      'color': '#65619b',
-      'type': 'Niet Beschikbaar'
-    }
-  },
+  states: [
+    'com.ask-cs.State.Available',
+    'com.ask-cs.State.KNRM.BeschikbaarNoord',
+    'com.ask-cs.State.KNRM.BeschikbaarZuid',
+    'com.ask-cs.State.Unavailable',
+    'com.ask-cs.State.KNRM.SchipperVanDienst',
+    'com.ask-cs.State.Unreached'
+  ],
 
   divisions: [
     {
@@ -79,7 +50,12 @@ var profile = {
       id: 3,
       label: 'Opstapper'
     }
-  ]
+  ],
+
+  p2000: {
+    status: true,
+    url: 'http://knrm.myask.me/rpc/client/p2000.php'
+  }
 };
 
 

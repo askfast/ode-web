@@ -650,13 +650,13 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   /**
    * Timeline zoom in
    */
-  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom) };
+  $scope.timelineZoomIn = function () { self.timeline.zoom($rootScope.config.timeline.config.zoom, Date.now()) };
 
 
   /**
    * Timeline zoom out
    */
-  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom) };
+  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now()) };
   
 
   /**
@@ -668,7 +668,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   /**
    * Alter legenda settings
    */
-  $scope.alterLegenda = function(legenda)
+  $scope.alterLegenda = function (legenda)
   {
     $scope.timeline.config.legenda = legenda;
 

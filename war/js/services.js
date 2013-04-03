@@ -35,7 +35,7 @@ factory('Session', function ($rootScope, $http, Storage)
 
       var pairs = document.cookie.split(";");
 
-      for(var i=0; i<pairs.length; i++)
+      for(var i=0; i < pairs.length; i++)
       {
         values = pairs[i].split("=");
 
@@ -122,7 +122,7 @@ factory('Dater', function ($rootScope, Storage)
 
     convert:
     {
-      absolute: function(date, time, flag)
+      absolute: function (date, time, flag)
       {
         var dates   = date.split('-'),
             result  = new Date(Date.parse(dates[2] + 
@@ -323,7 +323,7 @@ factory('Dater', function ($rootScope, Storage)
       return days;
     },
 
-    registerPeriods: function()
+    registerPeriods: function ()
     {
       var periods = angular.fromJson(Storage.get('periods') || '{}');
       Storage.add('periods', angular.toJson({
@@ -333,7 +333,7 @@ factory('Dater', function ($rootScope, Storage)
       }));      
     },
 
-    getPeriods: function()
+    getPeriods: function ()
     {
       return angular.fromJson(Storage.get('periods'));
     }
@@ -893,7 +893,7 @@ factory('Strings', function ()
     /**
      * Truncate string from words with ..
      */
-    truncate: function(txt, n, useWordBoundary)
+    truncate: function (txt, n, useWordBoundary)
     {
        var toLong = txt.length > n,
            s_ = toLong ? txt.substr(0, n-1) : txt,

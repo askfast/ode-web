@@ -5,7 +5,7 @@
  * Chosen
  */
 WebPaige.
-directive('chosen',function()
+directive('chosen',function ()
 {
   var linker = function(scope,element,attr)
   {
@@ -33,7 +33,7 @@ directive('chosen',function()
  * Daterangepicker
  */
 WebPaige.
-directive('daterangepicker', function($rootScope, $timeout)
+directive('daterangepicker', function ($rootScope, $timeout)
 {
   return {
     restrict: 'A',

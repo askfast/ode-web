@@ -71,18 +71,21 @@ function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
   /**
    * Google authorization
    */
-  $scope.authGoogle = function (account)
-  {
-    window.location = 'http://sven.ask-services.appspot.com/auth/google' + 
-                      '?agentUrl=http://sven.ask-services.appspot.com/eveagents/personalagent/' + 
-                      account + 
+  $scope.authGoogle = function ()
+  {               
+    window.location = 'http://3rc2.ask-services.appspot.com/auth/google' + 
+                      '?agentUrl=http://3rc2.ask-services.appspot.com/eveagents/personalagent/' + 
+                      $rootScope.app.resources.uuid + 
                       '/' + 
                       '&agentMethod=createGoogleAgents' +
                       '&applicationCallback=' + 
                       location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
                       '/index.html' + 
+                      /**
+                       * Fix a return value
+                       */
                       '?account=' +
-                      account +
+                      $rootScope.app.resources.uuid +
                       encodeURIComponent('#') + 
                       '/settings';
   };

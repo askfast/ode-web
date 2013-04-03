@@ -14,6 +14,7 @@ WebPaige
 .value('$config', 
 {
   version: '2.0.0',
+
   lang: 'nl',
 
   // REMOVE
@@ -26,17 +27,62 @@ WebPaige
       login: 'profiles/' + profile.meta + '/img/login_logo.png',
       app: ''
     },
-    background: 'profiles/' + profile.meta + '/img/login_bg.jpg' // jpg for smaller size
+    background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
+    p2000: profile.p2000
+  },
+
+  statesall: {
+    'com.ask-cs.State.Available': {
+      'className': 'state-available',
+      'label': 'Beschikbaar',
+      'color': '#4f824f',
+      'type': 'Beschikbaar'
+    },
+    'com.ask-cs.State.KNRM.BeschikbaarNoord': {
+      'className': 'state-available-north',
+      'label': 'Beschikbaar voor Noord',
+      'color': '#000',
+      'type': 'Beschikbaar'
+    },
+    'com.ask-cs.State.KNRM.BeschikbaarZuid': {
+      'className': 'state-available-south',
+      'label': 'Beschikbaar voor Zuid',
+      'color': '#e08a0c',
+      'type': 'Beschikbaar'
+    },
+    'com.ask-cs.State.Unavailable': {
+      'className': 'state-unavailable',
+      'label': 'Niet Beschikbaar',
+      'color': '#a93232',
+      'type': 'Niet Beschikbaar'
+    },
+    'com.ask-cs.State.KNRM.SchipperVanDienst': {
+      'className': 'state-schipper-service',
+      'label': 'Schipper van Dienst',
+      'color': '#e0c100',
+      'type': 'Beschikbaar'
+    },
+    'com.ask-cs.State.Unreached': {
+      'className': 'state-unreached',
+      'label': 'Niet Bereikt',
+      'color': '#65619b',
+      'type': 'Niet Beschikbaar'
+    }
   },
 
   host: profile.host(),
 
   formats: {
     date:     'dd-M-yyyy',
-    time:     'hh:mm tt',
-    datetime: 'dd-M-yyyy HH:mm tt'
+    time:     'hh:mm',
+    datetime: 'dd-MM-yyyy HH:mm',
+    datetimefull: 'dd-MM-yyyy HH:mm'
+    // time:     'hh:mm tt',
+    // datetime: 'dd-M-yyyy HH:mm tt'
   },
+
   roles: profile.roles,
+
   timeline: {
     options: {
       axisOnTop: true,
@@ -58,7 +104,7 @@ WebPaige
       wishes: false,
       legenda: {},
       legendarer: false,
-      states: profile.states,
+      states: {},
       divisions: profile.divisions,
       densities: {
         less: '#a0a0a0',
@@ -73,9 +119,9 @@ WebPaige
       }
     }
   },
-  pie: {
-    colors: ['#415e6b', '#ba6a24', '#a0a0a0']
-  },
+
+  pie: { colors: ['#415e6b', '#ba6a24', '#a0a0a0'] },
+
   defaults: {
     settingsWebPaige: {
       user: {
@@ -83,6 +129,16 @@ WebPaige
       },
       app: {}
     }
+  },
+
+  init: function ()
+  {
+    var _this = this;
+
+    angular.forEach(profile.states, function (state, index)
+    {
+      _this.timeline.config.states[state] = _this.statesall[state];
+    });
   }
 })
 
@@ -98,11 +154,11 @@ WebPaige
   $routeProvider
   .when('/login',     { templateUrl: 'js/views/login.html',       controller: loginCtrl })
   .when('/logout',    { templateUrl: 'js/views/logout.html',      controller: loginCtrl.logout })
-  .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl,  resolve: dashboardCtrl.resolve })
+  .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl })
   .when('/planboard', { templateUrl: 'js/views/planboard.html',   controller: planboardCtrl,  resolve: planboardCtrl.resolve })
-  .when('/messages',  { templateUrl: 'js/views/messages.html',    controller: messagesCtrl,   resolve: messagesCtrl.resolve,  reloadOnSearch: false })
-  .when('/groups',    { templateUrl: 'js/views/groups.html',      controller: groupsCtrl,     resolve: groupsCtrl.resolve,    reloadOnSearch: false })
-  .when('/profile/:userId', { templateUrl: 'js/views/profile.html', controller: profileCtrl,  resolve: profileCtrl.resolve,   reloadOnSearch: false })
+  .when('/messages',  { templateUrl: 'js/views/messages.html',    controller: messagesCtrl,   resolve: messagesCtrl.resolve,  reloadOnSearch: false})
+  .when('/groups',    { templateUrl: 'js/views/groups.html',      controller: groupsCtrl,     resolve: groupsCtrl.resolve,    reloadOnSearch: false})
+  .when('/profile/:userId', { templateUrl: 'js/views/profile.html', controller: profileCtrl,  resolve: profileCtrl.resolve,   reloadOnSearch: false})
   .when('/profile',   { templateUrl: 'js/views/profile.html',     controller: profileCtrl,    resolve: profileCtrl.setAccount })
   .when('/settings',  { templateUrl: 'js/views/settings.html',    controller: settingsCtrl,   resolve: settingsCtrl.resolve })
   .when('/help',      { templateUrl: 'js/views/help.html',        controller: helpCtrl })
@@ -124,9 +180,12 @@ WebPaige
 function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) 
 {
   /**
-   * Pass config
+   * Pass config and init dynamic config values
    */
   $rootScope.config = $config;
+
+  $rootScope.config.init();
+
 
   /**
    * Default language and change language

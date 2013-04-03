@@ -1,30 +1,23 @@
 'use strict';
 
-
 /**
- * TODO
- * Lose hard-coded stuff!
  * Translate roles
  */
 WebPaige.
-filter('translateRole', function()
+filter('translateRole', ['$config', function ($config)
 {
 	return function (role)
 	{
-		switch (role)
+		var urole;
+
+		angular.forEach($config.roles, function (prole, index)
 		{
-			case '1':
-				return 'Planner';
-			break;
-			case '2':
-			    return 'Schipper';
-			break;
-			case '3':
-				return 'Opstapper';
-			break;
-		};
+			if (prole.id == role) urole = prole.label;
+		});
+
+		return urole;
 	}
-});
+}]);
 
 
 /**
@@ -202,7 +195,7 @@ filter('convertTimeStamp', function()
  * Convert ratios to readable formats
  */
 WebPaige.
-filter('convertRatios', ['$config', function($config)
+filter('convertRatios', ['$config', function ($config)
 {
 	return function (stats)
 	{
@@ -334,24 +327,13 @@ filter('convertUserIdToName', ['Storage', function(Storage)
  * Convert timeStamps to dates
  */
 WebPaige.
-filter('nicelyDate', ['Dater', function(Dater)
+filter('nicelyDate', ['$rootScope', function ($rootScope)
 {
  	return function (date)
  	{
- 	  var cov_date = Dater.readable.date(date);
-
- 		if (cov_date == "Invalid Date")
- 		{
-	    /**
-	     * Could be unix time stamp
-	     */
-	    date = Math.round(date);
- 		};
-
- 		return new Date(date).toString('dd-MM-yyyy HH:mm');
+ 		return new Date(date).toString($rootScope.config.formats.datetime);
  	};
 }]);
- 
 
 /**
  * No title filter
@@ -361,14 +343,7 @@ filter('noTitle',function()
 {
 	return function (title)
 	{
-		if (title == "")
-		{
-			return "- No Title -";
-		}
-		else
-		{
-			return title;
-		}
+		return (title == "") ? "- No Title -" : title;
 	}
 });
 
@@ -397,10 +372,7 @@ filter('stripHtml', function()
 {
   return function (string)
   {
-  	if (string)
-  	{
-    	return string.split('>')[1].split('<')[0];
-  	};
+  	if (string) return string.split('>')[1].split('<')[0];
   }
 });
 
@@ -411,16 +383,13 @@ filter('stripHtml', function()
 WebPaige.
 filter('groupIdToName', ['Storage', function (Storage)
 {
-  return function(id)
+  return function (id)
   {
   	var groups = angular.fromJson(Storage.get('groups'));
 
   	for (var i in groups)
   	{
-  		if (groups[i].uuid == id)
-  		{
-  			return groups[i].name;
-  		};	
+  		if (groups[i].uuid == id) return groups[i].name;
   	};
   }
 }]);

@@ -14,11 +14,12 @@
     <meta name="viewport" content="width=device-width">
 
     <!-- jquery -->
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script> -->
+    <script src="js/libs/jquery/1.9.1/jquery-1.9.1.min.js"></script>
     <script src="js/libs/jquery/jquery-browser.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/brandweer/profile.js"></script>
+    <script src="profiles/knrm/profile.js"></script>
     
     <!-- favicons -->
     <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
@@ -28,6 +29,8 @@
     <link rel="apple-touch-icon-precomposed" sizes="57x57" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
 
     <!-- styles -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/custom.css">
     
     <!-- compability tests and css fixers -->
@@ -38,6 +41,12 @@
     
   </head>
   <body>
+
+    <!-- watermark for app -->
+    <div id="watermark" style="background: url(../profiles/{{config.profile.meta}}/img/watermark.png) no-repeat;"></div>
+    <!-- end watermark for app -->
+
+    <div watermarker="{{config.profile.meta}}"></div>
 
     <!-- navbar -->
     <div class="navbar navbar-fixed-top" bs-navbar>
@@ -68,22 +77,30 @@
                   <!-- end unread messages -->
                 </a>
               </li>
-              <li data-match-route="/groups">
+              <li data-match-route="/groups" ng-hide="app.resources.role > 1">
                 <a href="#groups">{{ui.groups.groups}}</a>
               </li>
             </ul>
             <!-- end main nav -->
             <!-- user menu -->
             <ul class="nav pull-right">
-              <li><a href="#help"><i class="icon-question-sign icon-white"></i> Help & Support</a></li>
+              <li>
+                <a href="#help"><i class="icon-question-sign icon-white"></i> Help & Support</a>
+              </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a></li>
-                  <li><a href="#settings"><i class="icon-cog"></i> {{ui.settings.settings}}</a></li>
+                  <li>
+                    <a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a>
+                  </li>
+                  <li>
+                    <a href="#settings"><i class="icon-cog"></i> {{ui.settings.settings}}</a>
+                  </li>
                   <li class="divider"></li>
-                  <li><a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a></li>
+                  <li>
+                    <a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a>
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -108,7 +125,7 @@
       {{notification.message}}
     </div>
     <!-- end notifications -->
-    
+
     <!-- wrap -->
     <div id="wrap">
       <!-- container-fluid -->
@@ -123,6 +140,7 @@
     <!-- footer -->
     <div id="footer">
       <div class="container-fluid">
+
         <!-- copyrights -->
         <div id="copyrights">
           <!-- ask & version -->
@@ -160,8 +178,10 @@
     <script src="js/libs/chosen/chosen.jquery.min.js"></script>
     <script src="js/libs/date/1.0/date.js"></script>
     <!-- angular -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-resource.min.js"></script>
+    <script src="js/libs/angular/1.0.5/angular.min.js"></script>
+    <script src="js/libs/angular/1.0.5/angular-resource.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-resource.min.js"></script> -->
     <!-- bootstrap -->
     <script src="js/libs/bootstrap/bootstrap.js"></script>
     <!-- third parties -->

@@ -112,7 +112,7 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
       if ($location.hash() != 'view') $location.hash('view');
 
       setView('view');
-    }
+    };
   };
   
 

@@ -74,7 +74,8 @@
                         class="btn btn-small" 
                         ng-model="broadcast.sms" 
                         ng-click=""
-                        bs-button="">{{ui.message.sms}}</button>
+                        bs-button=""
+                        ng-hide="app.resources.role > 2">{{ui.message.sms}}</button>
                 <button type="button" 
                         class="btn btn-small" 
                         ng-model="broadcast.email" 
@@ -141,7 +142,7 @@
               </span>
             </dd>
           <dt>{{ui.message.date}}</dt>
-            <dd>{{message.creationTime|nicelyDate}}</dd>
+            <dd>{{message.creationTime}}</dd>
           <dt>{{ui.message.questionText}}</dt>
             <dd>{{message.question_text}}</dd>
         </dl>
@@ -203,7 +204,7 @@
                 <td><span class="label label-warning" ng-show="(message.state=='NEW')">{{ui.message.newMsg}}</span></td>
                 <td>{{message.requester|convertEve|convertUserIdToName}}</td>
                 <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
-                <td>{{message.creationTime|nicelyDate}}</td>
+                <td>{{message.creationTime}}</td>
                 <td>
                   <div class="pull-right">
                     <button class="btn btn-mini"
@@ -270,7 +271,7 @@
                   <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
                 </td>
                 <td><a ng-click="requestMessage(message.uuid,'outbox')">{{message.subject}}</a></td>
-                <td>{{message.creationTime|nicelyDate}}</td>
+                <td>{{message.creationTime}}</td>
                 <td>
                   <div class="pull-right">
                     <button type="submit" 
@@ -345,7 +346,7 @@
                   <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
                 </td>
                 <td><a ng-click="requestMessage(message.uuid, 'trash')">{{message.subject}}</a></td>
-                <td>{{message.creationTime|nicelyDate}}</td>
+                <td>{{message.creationTime}}</td>
                 <td>
                   <div class="pull-right">
                     <button type="submit" 

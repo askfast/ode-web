@@ -796,7 +796,7 @@
     , defaultTime: 'current'
     , showSeconds: false
     , showInputs: true
-    , showMeridian: true
+    , showMeridian: false
     , template: 'dropdown'
     , modalBackdrop: false
     , templates: {} // set custom templates
