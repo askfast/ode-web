@@ -35,7 +35,7 @@ factory('Session', function ($rootScope, $http, Storage)
 
       var pairs = document.cookie.split(";");
 
-      for(var i=0; i<pairs.length; i++)
+      for(var i=0; i < pairs.length; i++)
       {
         values = pairs[i].split("=");
 

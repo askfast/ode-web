@@ -329,6 +329,10 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         start:  data.periods.start,
         end:    data.periods.end
       });
+    },
+
+    redraw: function() {
+      self.timeline.redraw();
     }
   };
  
@@ -707,22 +711,32 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   $scope.add = function (slot)
   {
-    $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+    var now     = Date.now().getTime(),
+        values  = {
+                    start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
+                    end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
+                    recursive:  (slot.recursive) ? true : false,
+                    text:       slot.state
+                  };
 
-    Slots.add(
+    if (values.start * 1000 <= now || values.end * 1000 <= now)
     {
-      start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
-      end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
-      recursive:  (slot.recursive) ? true : false,
-      text:       slot.state
-    }, 
-    $rootScope.app.resources.uuid)
-    .then(function (result)
-    {
-      $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+      $rootScope.notifier.error('You can not input timeslots in past.');
 
       timeliner.refresh();
-    });
+    }
+    else
+    {
+      $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+
+      Slots.add(values, $rootScope.app.resources.uuid)
+      .then(function (result)
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+
+        timeliner.refresh();
+      });
+    };
   };
 
 
@@ -741,15 +755,26 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
           };
     };
 
-    $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+    var now = Date.now().getTime();
 
-    Slots.change($scope.original, options, $rootScope.app.resources.uuid)
-    .then(function (result)
+    if (options.start <= now || options.end <= now)
     {
-      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+      $rootScope.notifier.error('You can not change timeslots in past.');
 
       timeliner.refresh();
-    });
+    }
+    else
+    {
+      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
+      Slots.change($scope.original, options, $rootScope.app.resources.uuid)
+      .then(function (result)
+      {
+        $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+
+        timeliner.refresh();
+      });
+    };
   };
 
 
@@ -799,32 +824,43 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   function timelineOnRemove ()
   {
-    // var news = $('.timeline-event-content')
-    //             .contents()
-    //             .filter(function()
-    //             { 
-    //               return this.nodeValue == 'New' 
-    //             });
-      
-    // if (news)
-    // {
-    //   $scope.$apply(function ()
-    //   {
-    //     $scope.resetInlineForms();
-    //   });
-    // }
-    // else
-    // {
-      $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+    var now = Date.now().getTime();
 
-      Slots.remove($scope.original, $rootScope.app.resources.uuid)
-      .then(function (result)
-      {
-        $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+    if ($scope.original.start.getTime() <= now || $scope.original.end.getTime() <= now)
+    {
+      $rootScope.notifier.error('You can not delete timeslots in past.');
 
-        timeliner.refresh();
-      });
-    // };
+      timeliner.refresh();
+    }
+    else
+    {
+      // var news = $('.timeline-event-content')
+      //             .contents()
+      //             .filter(function()
+      //             { 
+      //               return this.nodeValue == 'New' 
+      //             });
+        
+      // if (news)
+      // {
+      //   $scope.$apply(function ()
+      //   {
+      //     $scope.resetInlineForms();
+      //   });
+      // }
+      // else
+      // {
+        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+
+        Slots.remove($scope.original, $rootScope.app.resources.uuid)
+        .then(function (result)
+        {
+          $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+
+          timeliner.refresh();
+        });
+      // };
+    };
   };
 
 
@@ -913,6 +949,21 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
     $location.path('/messages').search({ escalate: true }).hash('compose');
   };
+
+
+  $scope.destroy = {
+    timeline: function ()
+    {
+    },
+    statistics: function ()
+    {
+      setTimeout(function()
+      {
+        timeliner.redraw();
+      }, 10);
+
+    }
+  }
 
 };
 
