@@ -277,62 +277,16 @@
           
           <div class="legenda-row">
             <strong>{{ui.planboard.members}}</strong>
-            <ul>
-              <li class="legenda-Available">
-                <label>
-                  <div class="square"></div>
-                  <input  type="checkbox" 
-                          ng-click="alterLegenda(timeline.config.legenda)" 
-                          ng-model="timeline.config.legenda['com.ask-cs.State.Available']">
-                  {{ui.planboard.bothAvailable}}
-                </label>
-              </li>
-              <li class="legenda-BeschikbaarNoord">
-                <label>
-                  <div class="square"></div>
-                  <input  type="checkbox"
-                          ng-click="alterLegenda(timeline.config.legenda)" 
-                          ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarNoord']">
-                  {{ui.planboard.northAavailable}}
-                </label>
-              </li>
-              <li class="legenda-BeschikbaarZuid">
-                <label>
-                  <div class="square"></div>
-                  <input  type="checkbox" 
-                          ng-click="alterLegenda(timeline.config.legenda)" 
-                          ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarZuid']">
-                  {{ui.planboard.southAvailable}}
-                </label>
-              </li>
-              <li class="legenda-SchipperVanDienst">
-                <label>
-                  <div class="square"></div>
-                  <input  type="checkbox"   
-                          ng-click="alterLegenda(timeline.config.legenda)" 
-                          ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.SchipperVanDienst']">
-                  {{ui.planboard.skipperOutService}}
-                </label>
-              </li>
-              <li class="legenda-Unavailable">
-                <label>
-                  <div class="square"></div>
-                  <input  type="checkbox" 
-                          ng-click="alterLegenda(timeline.config.legenda)" 
-                          ng-model="timeline.config.legenda['com.ask-cs.State.Unavailable']">
-                  {{ui.planboard.notAvailable}}
-                </label>
-              </li>
-              <li class="legenda-NotReached">
-                <label>
-                  <div class="square"></div>
-                  <input  type="checkbox" 
-                          ng-click="alterLegenda(timeline.config.legenda)" 
-                          ng-model="timeline.config.legenda['com.ask-cs.State.Unreached']">
-                  {{ui.planboard.notachieve}} 
-                </label>
-              </li>
-            </ul>
+              <ul>
+                <li ng-repeat="(key, value) in timeline.config.states" class="legenda-{{value.className}}">
+                  <label>
+                    <div class="square"></div>
+                    <input  type="checkbox" 
+                            ng-click="alterLegenda(timeline.config.legenda)" 
+                            ng-model="timeline.config.legenda[key]">{{value.label}}
+                  </label>
+                </li>
+              </ul>
           </div>
 
           <hr>
