@@ -1,24 +1,13 @@
 .DS_Store
 
-.class
-
 project/
 
-.classpath
-.project
 .settings/
 
 src/META-INF/
 src/log4j.properties
 
-war/WEB-INF/appengine-web.xml
-war/WEB-INF/logging.properties
-war/WEB-INF/web.xml
-
-war/WEB-INF/lib/
-
-war/WEB-INF/classes/META-INF/
-war/WEB-INF/classes/log4j.properties
+war/WEB-INF/classes/
 
 package.json
 server.js
