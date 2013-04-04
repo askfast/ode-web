@@ -493,23 +493,8 @@
             <div class="legenda-row">
               <strong>{{ui.planboard.members}}</strong>
               <ul>
-                <li class="legenda-Available">
-                  <label><div class="square"></div>{{ui.planboard.bothAvailable}}</label>
-                </li>
-                <li class="legenda-BeschikbaarNoord">
-                  <label><div class="square"></div>{{ui.planboard.northAavailable}}</label>
-                </li>
-                <li class="legenda-BeschikbaarZuid">
-                  <label><div class="square"></div>{{ui.planboard.southAvailable}}</label>
-                </li>
-                <li class="legenda-SchipperVanDienst">
-                  <label><div class="square"></div>{{ui.planboard.skipperOutService}}</label>
-                </li>
-                <li class="legenda-Unavailable">
-                  <label><div class="square"></div>{{ui.planboard.notAvailable}}</label>
-                </li>
-                <li class="legenda-NotReached">
-                  <label><div class="square"></div>{{ui.planboard.notachieve}}</label>
+                <li ng-repeat="(key, value) in timeline.config.states" class="legenda-{{value.className}}">
+                  <label><div class="square"></div>{{value.label}}</label>
                 </li>
               </ul>
             </div>
