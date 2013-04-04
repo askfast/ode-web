@@ -4,6 +4,7 @@
 ## Versions
 
 	2.0.1
+		* hot fix for not displaying date time conversions in message center 4-4-2013
 		* Case-insesitive login 4-4-2013
 		* Quick css fix for IE. (Not showing timeslots) 3-4-2013
 		* CSS fix for tabs left border. (Bug with dynamic height sizing when there is no content in tab is still open!!) 3-4-2013
