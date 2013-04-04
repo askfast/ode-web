@@ -46,7 +46,7 @@
 			  	<a ng-click="changeLanguage('nl')">Nederlands</a>
 		  	</small>
 		  </p>
-		  <span class="version">v2.0.0</span>
+		  <span class="version">v{{config.version}}</span>
 		</form>
 	</div>
 	<!-- end loginForm -->
@@ -68,7 +68,7 @@
 
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
 		  <p><small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small></p>
-		  <span class="version">v2.0.0</span>
+		  <span class="version">v{{config.version}}</span>
 		</form>
 	</div>
 	<!-- end remember login -->
@@ -83,12 +83,12 @@
 				<button class="close" type="button" ng-click="alert.changePass=false">×</button>
 				{{alert.changePass.message}}
 			</div>
-			<input class="" type="password" ng-model="changeData.newPass" placeholder="{{ui.login.ph_newPass}}new  password">
-			<input class="" type="password" ng-model="changeData.retypePass" placeholder="{{ui.login.ph_retypePass}}retype password">
+			<input class="" type="password" ng-model="changeData.newPass" placeholder="{{ui.login.ph_newPass}}">
+			<input class="" type="password" ng-model="changeData.retypePass" placeholder="{{ui.login.ph_retypePass}}">
 			
 			<button class="btn btn-large btn-primary" type="submit">{{ui.login.changePassword}}</button>
 
-		    <br><span class="version">v2.0.0</span>
+		    <br><span class="version">v{{config.version}}</span>
 		</form>
 	</div>
 	
