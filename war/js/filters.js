@@ -174,19 +174,6 @@ filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
 
 
 /**
- * Convert timeStamp to readable date and time
- */
-WebPaige.
-filter('convertTimeStamp', function()
-{
-	return function (stamp)
-	{
-		return Date(stamp).toString('dd-M-yyyy HH:mm');
-	};
-});
-
-
-/**
  * BUG!
  * Maybe not replace bar- ?
  * 
@@ -332,9 +319,32 @@ filter('nicelyDate', ['$rootScope', function ($rootScope)
 {
  	return function (date)
  	{
+ 		if (typeof date == 'string') date = Number(date);
+
  		return new Date(date).toString($rootScope.config.formats.datetime);
  	};
 }]);
+
+
+/**
+ * TODO
+ * Not used probably!
+ *
+ * Combine this either with nicelyDate or terminate!
+ * 
+ * Convert timeStamp to readable date and time
+ */
+WebPaige.
+filter('convertTimeStamp', function ()
+{
+	return function (stamp)
+	{
+		console.warn(typeof stamp);
+
+		return new Date(stamp).toString('dd-MM-yyyy HH:mm');
+	};
+});
+
 
 /**
  * No title filter
