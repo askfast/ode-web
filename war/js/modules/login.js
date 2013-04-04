@@ -155,7 +155,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
    */
   self.auth = function (uuid, pass)
   {
-    User.login(uuid, pass)
+    User.login(uuid.toLowerCase(), pass)
     .then(function (result)
 	  {
       if (result.status == 400)
