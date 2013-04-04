@@ -1,5 +1,7 @@
 ## Changes
 
+	2.0.1
+	----------------------------------------------------------------------------------------------------------------
 	*	Quick css fix for IE. (Not showing timeslots)
 	* CSS fix for tabs left border. (Bug with dynamic height sizing when there is no content in tab is still open!!)
 

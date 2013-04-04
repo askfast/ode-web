@@ -174,6 +174,22 @@ var demo_users = [
     },
     {
         "config": {},
+        "name": "Cengiz TEST",
+        "personalAgentUrl": "http://sven.ask-services.appspot.com/eveagents/personalagent/apptestknrm/",
+        "rate": 1,
+        "resources": {
+            "id": "culusoy@ask-cs.com",
+            "askPass": "eadeb77d8fba90b42b32b7de13e8aaa6",
+            "name": "apptest  knrm",
+            "EmailAddress": "dferro@ask-cs.com",
+            "PhoneAddress": "+31627033823",
+            "role": "1"
+        },
+        "state": "com.ask-cs.State.NoPlanning",
+        "uuid": "apptestknrm"
+    },
+    {
+        "config": {},
         "name": "Joris  2Rietveld",
         "personalAgentUrl": "http://sven.ask-services.appspot.com/eveagents/personalagent/4641rietveld/",
         "rate": 1,
