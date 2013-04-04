@@ -152,6 +152,7 @@ WebPaige
    * Routes
    */
   $routeProvider
+  .when('/version',   { templateUrl: 'js/views/version.html',     controller: versionCtrl })
   .when('/login',     { templateUrl: 'js/views/login.html',       controller: loginCtrl })
   .when('/logout',    { templateUrl: 'js/views/logout.html',      controller: loginCtrl.logout })
   .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl })
