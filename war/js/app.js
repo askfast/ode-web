@@ -152,7 +152,6 @@ WebPaige
    * Routes
    */
   $routeProvider
-  .when('/version',   { templateUrl: 'js/views/version.html',     controller: versionCtrl })
   .when('/login',     { templateUrl: 'js/views/login.html',       controller: loginCtrl })
   .when('/logout',    { templateUrl: 'js/views/logout.html',      controller: loginCtrl.logout })
   .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl })
@@ -163,9 +162,7 @@ WebPaige
   .when('/profile',   { templateUrl: 'js/views/profile.html',     controller: profileCtrl,    resolve: profileCtrl.setAccount })
   .when('/settings',  { templateUrl: 'js/views/settings.html',    controller: settingsCtrl,   resolve: settingsCtrl.resolve })
   .when('/help',      { templateUrl: 'js/views/help.html',        controller: helpCtrl })
-  .otherwise({
-    redirectTo: '/login'
-  });
+  .otherwise({ redirectTo: '/login' });
 
   /**
    * Define interceptor
