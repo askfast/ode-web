@@ -4,6 +4,7 @@
 ## Versions
 
 	2.0.1
+		* dynamic listing for legenda based on available states of that particular installation
 		* hot fix for not displaying date time conversions in message center 4-4-2013
 		* Case-insesitive login 4-4-2013
 		* Quick css fix for IE. (Not showing timeslots) 3-4-2013
