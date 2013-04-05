@@ -39,26 +39,84 @@
 
     #groupPie {
       float:left;
-      width: 380px;
+      width: 235px;
       height: 270px;
+
+      margin-right: 25px;
     }
 
     .groupStatInfo {
+      margin-top: 40px;
+
       ul {
         list-style: none;
 
         li {
-          width: 300px;
-          margin-right: 15px;
+          width: auto;
+          margin-right: 30px;
           float: left;
-          margin-bottom: 25px;
+          margin-bottom: 30px;
           display: inline;
 
-          h5 {
-            display: inline;
+          div {
+            float: left;
+            height: 40px;
           }
 
-          small {
+          .ratios {
+            margin-right: 15px;
+            margin-top: -5px;
+            width: 75px;
+            height: 75px;
+            text-align: center;
+            -webkit-border-radius: 5px;
+               -moz-border-radius: 5px;
+                    border-radius: 5px;
+            color: #fff;
+
+            .ratio {
+              display: block;
+              font-size: 38px;
+              font-weight: bold;
+              padding-top: 18px;
+            }
+
+            .percentage {
+              display: block;
+              padding-top: 10px;
+            }
+          }
+
+          .more {
+            background-color: #415e6b;  
+          }
+
+          .even {
+            background-color: #ba6a24;  
+          }
+
+          .less {
+            background-color: #a0a0a0;  
+          }
+
+          .info {
+            margin-top: -5px;
+
+            h5 {
+              display: inline;
+
+              &:first-child {
+                margin-top: 0;
+              }
+            }
+
+            h4 {
+              padding-bottom: 10px;
+              border-bottom: 1px solid #ddd;
+            }
+
+            small {
+            }
           }
         }
       }

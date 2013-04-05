@@ -11,6 +11,10 @@
   </div>
   <!-- end page header -->
 
+
+
+
+
   <!-- timeline controls -->
   <div class="row-fluid" id="timeline-controls">
 
@@ -85,6 +89,10 @@
 
   </div>
   <!-- end timeline controls -->
+
+
+
+
 
   <!-- slot controls -->
   <div class="row-fluid" ng-show="views.slot.add || views.slot.edit || views.group || views.wish || views.member">
@@ -274,6 +282,9 @@
   </div>
   <!-- end slot controls -->
 
+
+
+
   <!-- timelines & statistics -->
   <div class="row-fluid">
     <div class="tabbable tabs-left">
@@ -297,8 +308,11 @@
       <!-- tabs content -->
       <div class="tab-content">
 
+
+
+
         <!-- timelines -->
-        <div class="tab-pane active" id="timelineTab">
+        <div class="tab-pane" id="timelineTab">
           <!-- timeline -->
           <div id="timeline">
             <!-- timeline-toolbar -->
@@ -442,8 +456,11 @@
         </div>
         <!-- end timelines -->
 
+
+
+
         <!-- statistics -->
-        <div class="tab-pane" id="statisticsTab">
+        <div class="tab-pane active" id="statisticsTab">
 
           <!-- timeline toolbar -->
           <div id="timeline-toolbar">
@@ -525,41 +542,61 @@
               
               <div class="groupStatInfo">
                 <h3>{{data.aggs.id|groupIdToName}}</h3>
-                <!-- <h3>Total Durations In Period</h3> -->
                 <hr>
                 <ul>
                   <li>
-                    <h4>More people then expected</h4>
-                    <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5> 
-                    <small class="muted">days</small>, 
-                    <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5> 
-                    <small class="muted">hours</small>, 
-                    <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5> 
-                    <small class="muted">minutes</small>
+                    <div class="ratios more">
+                      <span class="ratio">{{data.aggs.ratios.more}}</span>
+                      <span class="percentage">%</span>
+                    </div>
+                    <div class="info">                    
+                      <h4>More people then expected</h4>
+                      <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5> 
+                      <small class="muted">days</small>, 
+                      <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5> 
+                      <small class="muted">hours</small>, 
+                      <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5> 
+                      <small class="muted">minutes</small>
+                    </div>
                   </li>
                   <li>
-                    <h4>Just so many people as wished</h4>
-                    <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5> 
-                    <small class="muted">days</small>, 
-                    <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5> 
-                    <small class="muted">hours</small>, 
-                    <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5> 
-                    <small class="muted">minutes</small>
+                    <div class="ratios even">
+                      <span class="ratio">{{data.aggs.ratios.even}}</span>
+                      <span class="percentage">%</span>
+                    </div>
+                    <div class="info">                    
+                      <h4>Just so many people as wished</h4>
+                      <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5> 
+                      <small class="muted">days</small>, 
+                      <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5> 
+                      <small class="muted">hours</small>, 
+                      <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5> 
+                      <small class="muted">minutes</small>
+                    </div>
                   </li>
                   <li>
-                    <h4>Less people then expected</h4>
-                    <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5> 
-                    <small class="muted">days</small>, 
-                    <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5> 
-                    <small class="muted">hours</small>, 
-                    <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5> 
-                    <small class="muted">minutes</small>
+                    <div class="ratios less">
+                      <span class="ratio">{{data.aggs.ratios.less}}</span>
+                      <span class="percentage">%</span>
+                    </div>
+                    <div class="info">
+                      <h4>Less people then expected</h4>
+                      <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5> 
+                      <small class="muted">days</small>, 
+                      <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5> 
+                      <small class="muted">hours</small>, 
+                      <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5> 
+                      <small class="muted">minutes</small>
+                    </div>
                   </li>
                 </ul>
               </div>
 
             </div>
             <!-- end group charts -->
+
+
+
 
             <!-- member bars -->
             <div id="memberBars">
@@ -597,6 +634,10 @@
           <!-- end planbaord footer -->
         </div>
         <!-- end statistics -->
+
+
+
+
 
       </div>
       <!-- end tabs content -->

@@ -1018,6 +1018,8 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   $scope.destroy = {
     timeline: function ()
     {
+      // Not working !! :(
+      // Sloter.pies($scope.data);
     },
     statistics: function ()
     {
@@ -2038,8 +2040,14 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
     {
       document.getElementById("groupPie").innerHTML = '';
 
-      var ratios  = [],
-          legends = [];
+      var ratios    = [],
+          colorMap  = {
+            more: '#415e6b',
+            even: '#ba6a24',
+            less: '#a0a0a0'
+          },
+          colors    = [],
+          xratios   = [];
 
       angular.forEach(data.aggs.ratios, function (ratio, index)
       {
@@ -2049,53 +2057,23 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
          */
         if (ratio != 0)
         {
-          ratios.push(ratio);
-
-          legends.push(ratio + '% ' + index);
-        };
-      });
-
-      var r = Raphael("groupPie"),
-          pie = r.piechart(120, 120, 100, ratios, 
-          { 
-            legend: legends,
-            colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+          ratios.push({
+            ratio: ratio, 
+            color: colorMap[index]
           });
-
-      /**
-       * Pie chart title
-       */
-      // r.text(140, 240, name).attr({
-      //   font: "20px sans-serif"
-      // });
-      
-      pie.hover(function ()
-      {
-        this.sector.stop();
-
-        this.sector.scale(1.1, 1.1, this.cx, this.cy);
-
-        if (this.label)
-        {
-          this.label[0].stop();
-
-          this.label[0].attr({ r: 7.5 });
-
-          this.label[1].attr({ "font-weight": 800 });
-        };
-      }, function ()
-      {
-        this.sector.animate({
-          transform: 's1 1 ' + this.cx + ' ' + this.cy
-        }, 500, "bounce");
-
-        if (this.label)
-        {
-          this.label[0].animate({ r: 5 }, 500, "bounce");
-
-          this.label[1].attr({ "font-weight": 400 });
         };
       });
+
+      ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+      angular.forEach(ratios, function (ratio, index)
+      {
+        colors.push(ratio.color);
+        xratios.push(ratio.ratio);
+      });
+
+      var r   = Raphael("groupPie"),
+          pie = r.piechart(120, 120, 100, xratios, { colors: colors });
     },
     
     /**
@@ -2286,7 +2264,7 @@ factory('Stats', ['$rootScope', 'Storage', function ($rootScope, Storage)
       // console.warn('confirm ->', confirm);
       
       return ratios;
-    },
+    }
 
   }
 }]);
