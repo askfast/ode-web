@@ -295,40 +295,40 @@ function messagesCtrl($scope, $rootScope, $q, $location, $route, data, Messages,
    */
   $scope.removeMessages = function (selection)
   {
-    console.log('it is coming to bulk remove ->', selection.length);
+    // console.log('it is coming to bulk remove ->', selection.length);
 
-    // $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
+    $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
 
-    // var ids = [];
+    var ids = [];
 
-    // angular.forEach(selection, function (flag, id)
-    // {
-    //   if (flag) ids.push(id);
-    // });
+    angular.forEach(selection, function (flag, id)
+    {
+      if (flag) ids.push(id);
+    });
 
-    // Messages.remove(ids)
-    // .then(function (result)
-    // {
-    //   if (result.error)
-    //   {
-    //     $rootScope.notifier.error('Error with removing messages.');
-    //     console.warn('error ->', result);
-    //   }
-    //   else
-    //   {
-    //     $rootScope.notifier.success($rootScope.ui.message.removed);
+    Messages.remove(ids)
+    .then(function (result)
+    {
+      if (result.error)
+      {
+        $rootScope.notifier.error('Error with removing messages.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $rootScope.notifier.success($rootScope.ui.message.removed);
 
-    //     $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
-    //     Messages.query()
-    //     .then(function (messages)
-    //     {
-    //       $scope.messages = messages;
+        Messages.query()
+        .then(function (messages)
+        {
+          $scope.messages = messages;
 
-    //       $rootScope.statusBar.off();
-    //     });
-    //   };
-    // });
+          $rootScope.statusBar.off();
+        });
+      };
+    });
   };
 
 

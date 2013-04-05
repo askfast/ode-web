@@ -2051,10 +2051,6 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
       angular.forEach(data.aggs.ratios, function (ratio, index)
       {
-        /**
-         * Quick fix against 0 ratios
-         * Dont display them at all
-         */
         if (ratio != 0)
         {
           ratios.push({
