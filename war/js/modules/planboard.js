@@ -739,7 +739,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
                     text:       slot.state
                   };
 
-    if (values.start * 1000 <= now || values.end * 1000 <= now)
+    if (values.end * 1000 <= now)
     {
       $rootScope.notifier.error('You can not input timeslots in past.');
 
@@ -788,7 +788,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
     var now = Date.now().getTime();
 
-    if (options.start <= now || options.end <= now)
+    if (options.end <= now)
     {
       $rootScope.notifier.error('You can not change timeslots in past.');
 
@@ -877,7 +877,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     var now = Date.now().getTime();
 
-    if ($scope.original.start.getTime() <= now || $scope.original.end.getTime() <= now)
+    if ($scope.original.end.getTime() <= now)
     {
       $rootScope.notifier.error('You can not delete timeslots in past.');
 
@@ -1145,11 +1145,11 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
    */
   Slots.prototype.wishes = function (options) 
   {
-    var deferred = $q.defer(),
-        params = {
-          id: options.id,
-          start: options.start,
-          end: options.end
+    var deferred  = $q.defer(),
+        params    = {
+          id:     options.id,
+          start:  options.start,
+          end:    options.end
         };
 
     Wishes.query(params, 
@@ -1174,10 +1174,10 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
   {
     var deferred = $q.defer(),
         params = {
-          start: options.start,
-          end: options.end,
-          wish: options.wish,
-          recurring: options.recursive
+          start:      options.start,
+          end:        options.end,
+          wish:       options.wish,
+          recurring:  options.recursive
         };
 
     Wishes.save({id: options.id}, params, 
@@ -1202,9 +1202,9 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
   {
     var deferred = $q.defer(),
         params = {
-          id: options.id,
-          start: options.start,
-          end: options.end
+          id:     options.id,
+          start:  options.start,
+          end:    options.end
         };
 
     if (options.division != undefined) params.stateGroup = options.division;
@@ -1244,26 +1244,179 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
   {
     var deferred  = $q.defer(),
         now       = Math.floor(Date.now().getTime() / 1000),
-        current;
+        periods   = Dater.getPeriods(),
+        current   = Dater.current.week(),
+        weeks      = {
+          current:  {
+            period: periods.weeks[current],
+            data:   [],
+            shortages: []
+          },
+          next: {
+            period: periods.weeks[current + 1],
+            data:   [],
+            shortages: []
+          }
+        },
+        slicer    = weeks.current.period.last.timeStamp;
 
     Aggs.query({
-      id: options.id,
-      start: options.start,
-      end: options.end
+      id:     options.id,
+      start:  weeks.current.period.first.timeStamp / 1000,
+      end:    weeks.next.period.last.timeStamp / 1000
     }, 
       function (results)
       {
-        angular.forEach(results, function (slot, index)
-        {
-          if (now >= slot.start && now <= slot.end) current = slot;
-        });
+        var state;
 
-        deferred.resolve({
-          id:       options.id,
-          name:     options.name,
-          current:  current, 
-          ratios:   Stats.pies(results)
-        });      
+        // Check whether it is only one
+        if (results.length > 1)
+        {
+          angular.forEach(results, function (slot, index)
+          {
+            // Fish out the current
+            if (now >= slot.start && now <= slot.end) state = slot;
+
+            // Slice from end of first week
+            if (slicer <= slot.start * 1000)
+            {
+              weeks.next.data.push(slot);
+            }
+            else if (slicer >= slot.start * 1000)
+            {
+              weeks.current.data.push(slot)
+            };
+          });
+
+          // slice extra timestamp from the last of current week dataset and add that to week next
+          var last        = weeks.current.data[weeks.current.data.length-1],
+              next        = weeks.next.data[0],
+              difference  = (last.end * 1000 - slicer) / 1000,
+              currents    = [];
+
+          // if start of current of is before the start reset it to start
+          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
+          if (difference > 0)
+          {
+            last.end = slicer / 1000;
+
+            weeks.next.data.unshift({
+              diff: last.diff,
+              start: slicer / 1000,
+              end: last.end,
+              wish: last.wish
+            });
+          };
+
+          // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
+          angular.forEach(weeks.current.data, function (slot, index)
+          {
+            if (slot.end - slot.start > 0) currents.push(slot);
+
+            // add to shortages
+            if (slot.diff < 0) weeks.current.shortages.push(slot);
+          });
+
+          // reset to start of current weekly begin to week begin
+          currents[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // add to shortages
+          angular.forEach(weeks.next.data, function (slot, index)
+          {
+            if (slot.diff < 0) weeks.next.shortages.push(slot);
+          });
+
+          deferred.resolve({
+            id:       options.id,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data:   currents,
+                state:  state,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currents)
+              },
+              next: {
+                data:   weeks.next.data,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(weeks.next.data)
+              }
+            }
+          }); 
+        }
+        else
+        {
+          if (results[0].diff == null) results[0].diff = 0;
+          if (results[0].wish == null) results[0].wish = 0;
+
+          var currentWeek = [{
+                start:  weeks.current.period.first.timeStamp / 1000,
+                end:    weeks.current.period.last.timeStamp / 1000,
+                wish:   results[0].wish,
+                diff:   results[0].diff
+              }],
+              nextWeek = [{
+                start:  weeks.next.period.first.timeStamp / 1000,
+                end:    weeks.next.period.last.timeStamp / 1000,
+                wish:   results[0].wish,
+                diff:   results[0].diff
+              }];
+          
+          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+
+          deferred.resolve({
+            id:       options.id,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data: currentWeek,
+                state: currentWeek,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currentWeek)
+              },
+              next: {
+                data: nextWeek,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(nextWeek)
+              }
+            }
+          });
+        };          
       },
       function (error)
       {
@@ -1283,14 +1436,14 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
     /**
      * Define vars
      */
-    var deferred = $q.defer(),
-        periods = Dater.getPeriods(),
-        params = {
+    var deferred  = $q.defer(),
+        periods   = Dater.getPeriods(),
+        params    = {
           user:   angular.fromJson(Storage.get('resources')).uuid, // user hardcoded!!
           start:  options.stamps.start / 1000,
           end:    options.stamps.end / 1000
         },
-        data = {};
+        data      = {};
     
     Slots.query(params, 
       function (user) 
@@ -1307,12 +1460,12 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
           if (options.division != 'all') groupParams.division = options.division;
 
           Slots.prototype.aggs(groupParams)
-          .then(function(aggs)
+          .then(function (aggs)
           {
             if (options.layouts.members)
             {
               var members = angular.fromJson(Storage.get(options.groupId)),
-                  calls = [];
+                  calls   = [];
 
               angular.forEach(members, function(member, index)
               {
@@ -1325,7 +1478,7 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
               });
 
               $q.all(calls)
-              .then(function(members)
+              .then(function (members)
               {
                 deferred.resolve({
                   user:     user,
@@ -1390,9 +1543,9 @@ factory('Slots', function ($rootScope, $config, $resource, $q, $route, $timeout,
       function (result) 
       {
         deferred.resolve({
-          id:   params.user,
-          data: result,
-          stats: Stats.member(result)
+          id:     params.user,
+          data:   result,
+          stats:  Stats.member(result)
         });
       },
       function (error)
@@ -1594,21 +1747,21 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
       angular.forEach(rows, function(row, index)
       {
         timedata.push({
-          start: data.periods.end,
-          end: 1577836800000,
-          group: row,
-          content: 'loading',
-          className: 'state-loading-right',
-          editable: false
+          start:  data.periods.end,
+          end:    1577836800000,
+          group:  row,
+          content:    'loading',
+          className:  'state-loading-right',
+          editable:   false
         });
 
         timedata.push({
-          start: 0,
-          end: data.periods.start,
-          group: row,
-          content: 'loading',
-          className: 'state-loading-left',
-          editable: false
+          start:  0,
+          end:    data.periods.start,
+          group:  row,
+          content:    'loading',
+          className:  'state-loading-left',
+          editable:   false
         });
       });
 
@@ -1629,18 +1782,18 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
           if (slot.text == legenda && value)
           {
             timedata.push({
-              start: Math.round(slot.start * 1000),
-              end: Math.round(slot.end * 1000),
-              group: (slot.recursive) ? _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                        _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-              content: _this.secret(angular.toJson({
-                type: 'slot',
-                id: slot.id, 
+              start:  Math.round(slot.start * 1000),
+              end:    Math.round(slot.end * 1000),
+              group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
+                                          _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+              content:  _this.secret(angular.toJson({
+                type:   'slot',
+                id:     slot.id, 
                 recursive: slot.recursive, 
-                state: slot.text 
+                state:  slot.text 
                 })),
-              className: config.states[slot.text].className,
-              editable: true
+              className:  config.states[slot.text].className,
+              editable:   true
             });
           };
         });       
@@ -1672,39 +1825,39 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
           if (slot.text == legenda && value)
           {
             timedata.push({
-              start: Math.round(slot.start * 1000),
-              end: Math.round(slot.end * 1000),
-              group: (slot.recursive) ? _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                        _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+              start:  Math.round(slot.start * 1000),
+              end:    Math.round(slot.end * 1000),
+              group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
+                                          _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
               content: _this.secret(angular.toJson({
                 type: 'slot',
-                id: slot.id, 
-                recursive: slot.recursive, 
-                state: slot.text 
+                id:   slot.id, 
+                recursive:  slot.recursive, 
+                state:      slot.text 
                 })),
-              className: config.states[slot.text].className,
-              editable: true
+              className:  config.states[slot.text].className,
+              editable:   true
             });  
           };
         });       
       });
 
       timedata.push({
-        start: 0,
-        end: 1,
-        group: _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
-        content: '',
-        className: null,
-        editable: false
+        start:  0,
+        end:    1,
+        group:  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+        content:    '',
+        className:  null,
+        editable:   false
       });
 
       timedata.push({
-        start: 0,
-        end: 1,
-        group: _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-        content: '',
-        className: null,
-        editable: false
+        start:  0,
+        end:    1,
+        group:  _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+        content:    '',
+        className:  null,
+        editable:   false
       });
 
       return timedata;
@@ -1732,7 +1885,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
       {
         var label;
 
-        angular.forEach(divisions, function(division, index) { if (division.id == data.aggs.division) label = division.label; });
+        angular.forEach(divisions, function (division, index) { if (division.id == data.aggs.division) label = division.label; });
 
         title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
@@ -1750,9 +1903,9 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
       var _this = this,
           maxh = 0;
 
-      angular.forEach(data.aggs.data, function(slot, index) { if (slot.wish > maxh)  maxh = slot.wish; });
+      angular.forEach(data.aggs.data, function (slot, index) { if (slot.wish > maxh)  maxh = slot.wish; });
 
-      angular.forEach(data.aggs.data, function(slot, index)
+      angular.forEach(data.aggs.data, function (slot, index)
       {
         var maxNum      = maxh,
             num         = slot.wish,
@@ -1764,9 +1917,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                           style + 
                           '" ' + 
 
-
                           'title="'+'Minimum aantal benodigden'+': ' + 
-
 
                           num + 
                           ' personen"></div>';
@@ -1779,7 +1930,7 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
 
         if (slot.diff >= 0 && slot.diff < 7)
         {
-          switch(slot.diff)
+          switch (slot.diff)
           {
             case 0:
               var color = config.densities.even;
@@ -1830,9 +1981,9 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                       span + 
                       '</div>';
 
-        if (  (slot.diff > 0 && config.legenda.groups.more) ||
+        if (  (slot.diff > 0  && config.legenda.groups.more) ||
               (slot.diff == 0 && config.legenda.groups.even) || 
-              (slot.diff < 0 && config.legenda.groups.less) )
+              (slot.diff < 0  && config.legenda.groups.less) )
         {
           timedata.push({
             start:    Math.round(slot.start * 1000),
@@ -1891,22 +2042,22 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
           cn = 'less'
         };
 
-        if (  (slot.diff > 0 && config.legenda.groups.more) ||
+        if (  (slot.diff > 0  && config.legenda.groups.more) ||
               (slot.diff == 0 && config.legenda.groups.even) || 
-              (slot.diff < 0 && config.legenda.groups.less) )
+              (slot.diff < 0  && config.legenda.groups.less) )
         {
           timedata.push({
-            start: Math.round(slot.start * 1000),
-            end: Math.round(slot.end * 1000),
+            start:  Math.round(slot.start * 1000),
+            end:    Math.round(slot.end * 1000),
             group: _this.wrapper('c') + name,
-            content: cn +
+            content:  cn +
                       _this.secret(angular.toJson({
                         type: 'group',
                         diff: slot.diff,
                         group: name
                       })),
-            className: 'agg-' + cn,
-            editable: false
+            className:  'agg-' + cn,
+            editable:   false
           });
         };
 
@@ -1941,9 +2092,9 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
         };
 
         timedata.push({
-          start: Math.round(wish.start * 1000),
-          end: Math.round(wish.end * 1000),
-          group: _this.wrapper('c') + name + ' (Wishes)',
+          start:  Math.round(wish.start * 1000),
+          end:    Math.round(wish.end * 1000),
+          group:  _this.wrapper('c') + name + ' (Wishes)',
           content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
                     _this.secret(angular.toJson({
                       type: 'wish',
@@ -1951,8 +2102,8 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
                       group: name,
                       groupId: data.aggs.id
                     })),
-          className: cn,
-          editable: false
+          className:  cn,
+          editable:   false
         });
 
         timedata = _this.addLoading(data, timedata, [
@@ -1990,18 +2141,18 @@ factory('Sloter', ['$rootScope', 'Storage', function ($rootScope, Storage)
             if (slot.text == legenda && value)
             {
               timedata.push({
-                start: Math.round(slot.start * 1000),
-                end: Math.round(slot.end * 1000),
-                group: link,
+                start:  Math.round(slot.start * 1000),
+                end:    Math.round(slot.end * 1000),
+                group:  link,
                 content: _this.secret(angular.toJson({ 
                   type: 'member',
-                  id: slot.id, 
-                  mid: member.id,
+                  id:   slot.id, 
+                  mid:  member.id,
                   recursive: slot.recursive, 
                   state: slot.text 
                   })),
-                className: config.states[slot.text].className,
-                editable: false
+                className:  config.states[slot.text].className,
+                editable:   false
               });
             };
           });

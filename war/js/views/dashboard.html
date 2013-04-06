@@ -8,70 +8,98 @@
   <div class="row-fluid">
 
       <!-- pie charts for groups -->
-      <div class="widget {{(config.profile.p2000.status) && 'span8' || 'span12'}}">
+      <div class="widget {{(config.profile.p2000.status) && 'span9' || 'span12'}}">
 
         <div class="head">
-          <!-- nav pills for weeker -->
-          <ul id="weeker" class="nav nav-pills">
-            <li class="{{(current==true) && 'active'}}"><a ng-click="weeker()">{{ui.dashboard.thisWeek}}</a></li>
-            <li class="{{(current==false) && 'active'}}"><a ng-click="weeker()">Volgende Week</a></li>
-          </ul>
-          <!-- end nav pills for weeker -->
+          <h4>Overzicht</h4>
           <button class="btn btn-small" bs-modal="'js/views/elements/widget-pies.html'"><i class="icon-cog"></i></button>
         </div>
         <hr>
 
-        <p class="muted" ng-show="loading.pies.status"><small><i>{{loading.pies.message}}</i></small></p>
-
         <!-- pie loop -->
-        <ul class="itemslist" ng-hide="loading.pies.status">
+        <ul id="pies">
           <li ng-repeat="pie in pies">
 
-            <div class="block-title">
+            <header>
               <h4>{{pie.name}}</h4>
-            </div>
+            </header>
 
-            <div class="block" ng-show="current">
-
-              <table>
-                <tr>
-                  <td><h6>Huidige status</h6></td>
-                  <td>
-                    <span class="badge badge-{{pie.current.cls}}">{{pie.current.diff}}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><span class="muted"><i>Start:</i></span></td>
-                  <td><small>{{pie.current.start}}</small></td>
-                </tr>
-                <tr>
-                  <td><span class="muted"><i>End:</i></span></td>
-                  <td><small>{{pie.current.end}}</small></td>
-                </tr>
-                <tr>
-                  <td><span class="muted"><i>Behoefte:</i></span></td>
-                  <td><small>{{pie.current.wish}} persoon(en)</small></td>
-                </tr>
-              </table>
-            </div>
-
-            <div class="block">
-              <div id="weeklyPie-{{pie.id}}" class="pie"></div>
-              <div class="info">
-                <!-- <h3>{{pie.name|truncateGroupTitle}}</h3> -->
-                <h3>
-                  <span ng-show="current">Deze week</span>
-                  <span ng-hide="current">Volgende week</span>
-                </h3>
-                <hr>
-                <h5>{{pie.ratios.more}}%</h5> 
-                <small class="muted">more</small>, 
-                <h5>{{pie.ratios.even}}%</h5> 
-                <small class="muted">even</small>, 
-                <h5>{{pie.ratios.less}}%</h5> 
-                <small class="muted">less</small>
+            <div class="blocks">
+              <div class="span4">
+                <div class="block">
+                  <div class="icon">
+                    <div class="scoreboard {{pie.weeks.current.state.cls}}">
+                      <span class="state">{{pie.weeks.current.state.diff + pie.weeks.current.state.wish}}</span>
+                      <span class="seperator">/</span>
+                      <span class="wish">{{pie.weeks.current.state.wish}}</span>
+                      <!-- <span class="state">14</span>
+                      <span class="seperator">/</span>
+                      <span class="wish">20</span> -->
+                    </div>
+                  </div>
+                  <div class="body">
+                    <h3>Huidige status</h3>
+                    <hr>
+                    <h5>{{pie.weeks.current.state.start}}</h5> 
+                    <small class="muted"> van</small>
+                    <br>
+                    <h5>{{pie.weeks.current.state.end}}</h5> 
+                    <small class="muted"> tot</small>
+                  </div>
+                </div>
               </div>
+
+              <div class="span4">
+                <div class="block">
+                  <div class="icon">
+                    <div id="weeklyPieCurrent-{{pie.id}}" class="pie"></div>
+                  </div>
+                  <div class="body">
+                    <h3>Deze week</h3>
+                    <hr>
+                    <small class="muted">{{pie.weeks.current.start.date}} / {{pie.weeks.current.end.date}}</small>
+                    <br>
+                    <h5>{{pie.weeks.current.ratios.more}}%</h5> 
+                    <small class="muted">more</small>, 
+                    <h5>{{pie.weeks.current.ratios.even}}%</h5> 
+                    <small class="muted">even</small>, 
+                    <h5>{{pie.weeks.current.ratios.less}}%</h5> 
+                    <small class="muted">less</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="span4">
+                <div class="block">
+                  <div class="icon">
+                    <div id="weeklyPieNext-{{pie.id}}" class="pie"></div>
+                  </div>
+                  <div class="body">
+                    <h3>Volgende week</h3>
+                    <hr>
+                    <small class="muted">{{pie.weeks.next.start.date}} / {{pie.weeks.next.end.date}}</small>
+                    <br>
+                    <h5>{{pie.weeks.next.ratios.more}}%</h5> 
+                    <small class="muted">more</small>, 
+                    <h5>{{pie.weeks.next.ratios.even}}%</h5> 
+                    <small class="muted">even</small>, 
+                    <h5>{{pie.weeks.next.ratios.less}}%</h5> 
+                    <small class="muted">less</small>
+                  </div>
+                </div>
+              </div>
+
             </div>
+
+            <footer>
+              <div class="btn-group">
+                <button class="btn btn-mini dropdown-toggle {{(pie.weeks.current.shortages.length > 0) && 'disabled'}}" 
+                        data-toggle="dropdown">Shortages <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li ng-repeat="shortage in pie.weeks.current.shortages">{{shortage}}</li>
+                </ul>
+              </div>
+            </footer>
 
           </li>
         </ul>
@@ -83,9 +111,9 @@
             <span class="text-warning">Periods: </span>
             <span class="muted">
               &nbsp;
-              {{periods.start | nicelyDate}}
+              {{periods.start}}
               &nbsp;/&nbsp;
-              {{periods.end | nicelyDate}}
+              {{periods.end}}
             </span>
           </small>
         </p>
@@ -94,7 +122,7 @@
       <!-- end pie charts for groups -->
 
       <!-- announcements sidebar -->
-      <div class="widget span4"
+      <div class="widget span3"
             ng-show="config.profile.p2000.status">
 
         <div class="head">
@@ -104,7 +132,7 @@
         <hr>
 
         <!-- p2000 loop -->
-        <ul class="itemslist">
+        <ul id="announcements">
           <li ng-repeat="alarm in alarms.list">
             <table>
               <tr>

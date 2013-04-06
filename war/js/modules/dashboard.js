@@ -12,56 +12,6 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
 
 
   /**
-   * Get periods
-   */
-  var periods = Dater.getPeriods(),
-      current = Dater.current.week();
-
-
-  /**
-   * Defaults for weeks
-   */
-  $scope.current = true;
-
-
-  /**
-   * Default settings for pie
-   * widget settings modal
-   */
-  $scope.modal = {
-    header: 'Groep overzicht instellingen',
-    groups: Storage.local.groups()
-  };
-
-
-  /**
-   * Save settings
-   */
-  $scope.saveSettings = function ()
-  {
-    console.warn('modal changing ->');
-  };
-
-
-  /**
-   * Get current week groups overview
-   */
-  getWeekStats();
-
-
-  /**
-   * Produce pie charts for groups
-   * for current week or next week
-   */
-  $scope.weeker = function ()
-  {
-    $scope.current = !$scope.current;
-
-    getWeekStats();
-  };
-
-
-  /**
    * TODO
    * Work on it!
    * 
@@ -85,91 +35,118 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
 
 
   /**
-   * Get weekly stats
+   * Set status bar
    */
-  function getWeekStats ()
+  $rootScope.statusBar.display($rootScope.ui.dashboard.loadingPie);
+
+
+  /**
+   * Get pies
+   */
+  Dashboard.pies()
+  .then(function (pies)
   {
-    $scope.loading.pies = {
-      status:   true,
-      message:  'Loading group stats..' 
-    };
-
-    var week = ($scope.current) ? current : current + 1;
-
-    $scope.periods = {
-      first:  periods.weeks[week].first.day,
-      last:   periods.weeks[week].last.day,
-      start:  periods.weeks[week].first.timeStamp,
-      end:    periods.weeks[week].last.timeStamp
-    };
-
-    $rootScope.statusBar.display($rootScope.ui.dashboard.loadingPie);
-
-    Dashboard.pies({
-      start:  $scope.periods.start,
-      end:    $scope.periods.end
-    })
-    .then(function (pies)
+    if (pies.error)
     {
-      if (pies.error)
+      $rootScope.notifier.error('Error with getting group overviews.');
+      console.warn('error ->', result);
+    }
+    else
+    {
+      $scope.periods = {
+        start:  pies[0].weeks.current.start.date,
+        end:    pies[0].weeks.next.end.date
+      };
+
+      angular.forEach(pies, function (pie, index)
       {
-        $rootScope.notifier.error('Error with getting group overviews.');
-        console.warn('error ->', result);
-      }
-      else
-      {
-        if ($scope.current)
+        if (pie.weeks.current.state.diff == null) pie.weeks.current.state.diff = 0;
+        if (pie.weeks.current.state.wish == null) pie.weeks.current.state.wish = 0;
+            
+        if (pie.weeks.current.state.diff > 0)
         {
-          angular.forEach(pies, function (pie, index)
-          {
-            if (pie.current.diff > 0)
-            {
-              pie.current.cls = 'more';
-            }
-            else if (pie.current.diff == 0)
-            {
-              pie.current.cls = 'even';
-            }
-            else if (pie.current.diff < 0)
-            {
-              pie.current.cls = 'less';
-            };
-
-            pie.current.start = new Date(pie.current.start * 1000).toString($rootScope.config.formats.datetime);
-            pie.current.end   = new Date(pie.current.end * 1000).toString($rootScope.config.formats.datetime);
-
-          });
+          pie.weeks.current.state.cls = 'more';
+        }
+        else if (pie.weeks.current.state.diff == 0)
+        {
+          pie.weeks.current.state.cls = 'even';
+        }
+        else if (pie.weeks.current.state.diff < 0)
+        {
+          pie.weeks.current.state.cls = 'less';
         };
 
-        resetLoaders();
+        pie.weeks.current.state.start = (pie.weeks.current.state.start != undefined) 
+                                        ? new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime)
+                                        : 'undefined';
 
-        $rootScope.statusBar.off();
+        pie.weeks.current.state.end   = (pie.weeks.current.state.end != undefined)
+                                        ? new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime)
+                                        : 'undefined';
+      });
 
-        $scope.pies = pies;
-      };
-    })
-    .then( function (result)
+      $scope.pies = pies;
+    };
+  })
+  .then( function (result)
+  {
+    angular.forEach($scope.pies, function (pie, index)
     {
+      pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
+      pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
+    });
+
+    function pieMaker ($id, id, name, _ratios)
+    {    
       setTimeout( function () 
       {
-        angular.forEach($scope.pies, function (pie, index)
+        document.getElementById($id + id).innerHTML = '';
+
+        var ratios    = [],
+            colorMap  = {
+              more: '#415e6b',
+              even: '#ba6a24',
+              less: '#a0a0a0'
+            },
+            colors    = [],
+            xratios   = [];
+
+        angular.forEach(_ratios, function (ratio, index)
         {
-          document.getElementById('weeklyPie-' + pie.id).innerHTML = '';
-
-          var ratios = [];
-
-          if (pie.ratios.more != 0) ratios.push(pie.ratios.more);
-          if (pie.ratios.even != 0) ratios.push(pie.ratios.even);
-          if (pie.ratios.less != 0) ratios.push(pie.ratios.less);
-
-          var r = Raphael('weeklyPie-' + pie.id),
-              pie = r.piechart(40, 40, 40, ratios, {
-                colors: $rootScope.config.pie.colors
-              });
+          if (ratio != 0)
+          {
+            ratios.push({
+              ratio: ratio, 
+              color: colorMap[index]
+            });
+          };
         });
+
+        ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+        angular.forEach(ratios, function (ratio, index)
+        {
+          colors.push(ratio.color);
+          xratios.push(ratio.ratio);
+        });
+
+        var r   = Raphael($id + id),
+            pie = r.piechart(40, 40, 40, xratios, { colors: colors });
+
       }, 100);
-    });
-  };
+    };
+
+    resetLoaders();
+
+    $rootScope.statusBar.off();
+  });
+
+
+
+
+
+
+
 
 
   /**
@@ -242,7 +219,7 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
   /**
    * Get group aggs for pie charts
    */
-  Dashboard.prototype.pies = function (periods) 
+  Dashboard.prototype.pies = function () 
   {
     var deferred  = $q.defer(),
         groups    = angular.fromJson(Storage.get('groups')),
@@ -253,9 +230,7 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
     {
       calls.push(Slots.pie({
         id:     group.uuid,
-        name:   group.name,
-        start:  periods.start / 1000,
-        end:    periods.end / 1000
+        name:   group.name
       }));
     });
 
@@ -394,5 +369,3 @@ factory('Announcer', function ()
     }
   }
 });
-
-
