@@ -96,8 +96,6 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
   })
   .then( function (result)
   {
-    // console.log('pies ->', $scope.pies, $scope.shortageHolders);
-
     angular.forEach($scope.pies, function (pie, index)
     {
       pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
@@ -147,18 +145,6 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
 
 
   /**
-   * Toggle shortage holders
-   */
-  $scope.toggleHolder = function (id)
-  {
-    $scope.$watch(function ()
-    {
-      $scope.shortageHolders['shortage-' + id] = true;
-    });
-  }
-
-
-  /**
    * P2000 annnouncements
    */
   Dashboard.p2000().
@@ -191,6 +177,32 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
 
     $scope.more.status = !$scope.more.status;
   };
+
+
+
+
+
+  var groups = Storage.local.groups(),
+      selection = {};
+
+  angular.forEach(groups, function (group, index)
+  {
+    selection[group.uuid] = true;
+  });
+
+  $scope.popover = {
+    groups: groups,
+    selection: selection
+  };
+
+  $scope.saveOverviewWidget = function (selection)
+  {
+    console.warn('selection ->', selection);
+  }
+
+
+
+
 
 };
 

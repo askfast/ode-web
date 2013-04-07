@@ -1,40 +1,33 @@
-<div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-  <h3 id="myModalLabel">{{modal.header}}</h3>
-</div>
-
-<div class="modal-body">
-
-  <!-- member form -->
+ <section id="widget-pies">
   <form>
     <fieldset>
 
       <div class="control-group">
-        <label class="control-label">Groups to show</label>
         <div class="controls">
-
           <ul>
-            <li ng-repeat="group in modal.groups">
+            <li ng-repeat="group in popover.groups">
               <label>
-                <input type="checkbox" ng-modal="modal.selected[group.uuid]"> {{group.name}}
+                <input type="checkbox" ng-model="popover.selection[group.uuid]"> {{group.name}}
               </label>
             </li>
           </ul>
-
         </div>
       </div>
         
     </fieldset>
   </form>
 
+  <hr>
+  
+  <div class="actions">
 
-</div>
+    <button type="button" 
+            class="btn btn-small" 
+            ng-click="dismiss()">Close</button>
 
-<div class="modal-footer">
-  <button type="button" 
-  				class="btn" 
-  				ng-click="dismiss()">Close</button>
+    <button type="button" 
+            class="btn btn-primary btn-small" 
+            ng-click="saveOverviewWidget(popover.selection); dismiss()">Save changes</button>
 
-  <button class="btn btn-primary" 
-  				ng-click="saveSettings(); dismiss()">Save changes</button>
-</div>
+  </div>
+</section>

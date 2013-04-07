@@ -127,8 +127,18 @@
         }
 
         header {
+          position: relative;
+
           h4 {
             margin: 15px 0 20px 15px;
+          }
+
+          button {
+            position: absolute;
+            top: -5px;
+            right: 10px;
+            padding-left: 3px;
+            padding-right: 3px;
           }
         }
 
@@ -276,6 +286,10 @@
             height: 21px;
           }
 
+          .remove {
+            font-size: 0;
+          }
+
           .shortages {
             margin-top: -30px;
 
@@ -333,43 +347,39 @@
 }
 
 
+#widget-pies {
+  padding-bottom: 0;
 
-
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    li {
+      margin: 3px auto;
         
+      label {
+        font-weight: normal;
+        font-size: 13px;
 
+        input {
+          margin-right: 4px;
+          margin-top: -2px;
+        }
+      }
+    }
+  }
 
+  hr {
+    margin: 5px auto 10px auto;  
+  }
 
-// #announcements {
-//   margin-top: 5px;
+  .actions {
+    margin-bottom: 10px;
+    overflow: hidden;
 
-// }
+    button {
+      margin-left: 10px;
+    }
+  }
+}
 
-
-
-
-
-
-
-// #weekly-pies {
-
-//   ul {
-//     margin: 0;
-//     padding: 0;
-//     width: 100%;
-//     list-style: none;
-
-//     li {
-//       display: inline;
-//       float: left;
-//       // margin: 0 2% 20px 2%;
-
-//       min-width: 270px;
-//       // width: 320px;
-
-//       background-color: red;
-//             // width: 28%;
-
-//       height: auto;
-//     }
-//   }
-// }
