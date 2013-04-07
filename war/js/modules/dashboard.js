@@ -12,32 +12,21 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
 
 
   /**
-   * TODO
-   * Work on it!
-   * 
-   * Reset loaders
+   * Defaults for loaders
    */
-  function resetLoaders ()
-  {
-    $scope.loading = {
-      pies: {
-        status:   false,
-        message:  ''
-      },
-      alerts: {
-        status:   false,
-        message:  ''
-      }
-    };
+  $scope.loading = {
+    pies:   true,
+    alerts: true
   };
-
-  resetLoaders();
-
+  
 
   /**
-   * Set status bar
+   * Defaults for toggler
    */
-  $rootScope.statusBar.display($rootScope.ui.dashboard.loadingPie);
+  $scope.more = {
+    status: false,
+    text:   'show more' 
+  };
 
 
   /**
@@ -53,6 +42,10 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
     }
     else
     {
+      $scope.shortageHolders = {};
+
+      $scope.loading.pies = false;
+
       $scope.periods = {
         start:  pies[0].weeks.current.start.date,
         end:    pies[0].weeks.next.end.date
@@ -83,6 +76,19 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
         pie.weeks.current.state.end   = (pie.weeks.current.state.end != undefined)
                                         ? new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime)
                                         : 'undefined';
+        
+        pie.shortages = {
+          current:  pie.weeks.current.shortages,
+          next:     pie.weeks.next.shortages,
+          total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
+        };
+
+        pie.state = pie.weeks.current.state;
+
+        delete(pie.weeks.current.shortages);
+        delete(pie.weeks.current.state);
+
+        $scope.shortageHolders['shortages-' + pie.id] = false;
       });
 
       $scope.pies = pies;
@@ -90,6 +96,8 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
   })
   .then( function (result)
   {
+    // console.log('pies ->', $scope.pies, $scope.shortageHolders);
+
     angular.forEach($scope.pies, function (pie, index)
     {
       pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
@@ -135,18 +143,19 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
 
       }, 100);
     };
-
-    resetLoaders();
-
-    $rootScope.statusBar.off();
   });
 
 
-
-
-
-
-
+  /**
+   * Toggle shortage holders
+   */
+  $scope.toggleHolder = function (id)
+  {
+    $scope.$watch(function ()
+    {
+      $scope.shortageHolders['shortage-' + id] = true;
+    });
+  }
 
 
   /**
@@ -162,20 +171,13 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
     }
     else
     {
+      $scope.loading.alerts = false;
+
       $scope.alarms = result;
 
       $scope.alarms.list = $scope.alarms.short;
     };
   });
-	
-
-  /**
-   * Defaults for toggler
-   */
-  $scope.more = {
-    status: false,
-    text:   'show more' 
-  };
 
 
   /**
