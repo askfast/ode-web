@@ -18,7 +18,7 @@ WebPaige
   lang: 'nl',
 
   // REMOVE
-  demo_users: false,
+  demo_users: true,
 
   profile: {
     meta: profile.meta,
@@ -127,7 +127,11 @@ WebPaige
       user: {
         language: 'nl'
       },
-      app: {}
+      app: {
+        widgets: {
+          groups: {}
+        }
+      }
     }
   },
 

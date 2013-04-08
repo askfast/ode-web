@@ -3,7 +3,7 @@
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage, $routeParams)
+var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage, $routeParams, Settings, Profile)
 {
   /**
    * Self this
@@ -212,15 +212,6 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
       {
         $rootScope.app.resources = resources;
 
-        if (resources.settingsWebPaige != null || resources.settingsWebPaige != undefined)
-        {
-          $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
-        }
-        else
-        {
-          $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
-        };
-
         self.progress(70, $rootScope.ui.login.loading_Group);
 
         Groups.query(true)
@@ -232,19 +223,123 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
           }
           else
           {
-            self.progress(100, $rootScope.ui.login.loading_everything);
+            var settings  = angular.fromJson(resources.settingsWebPaige) || {},
+                sync      = false,
+                defaults  = $rootScope.config.defaults.settingsWebPaige,
+                _groups   = function (groups)
+                {
+                  var _groups = {};
+                  angular.forEach(groups, function (group, index) { _groups[group.uuid] = true; });
+                  return _groups;
+                };
 
-            self.redirectToDashboard();
+            if (settings != null || settings != undefined)
+            {
+              if (settings.user)
+              {
+                if (settings.user.language)
+                {
+                  console.warn('user HAS language settings');
+                  $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+                  defaults.user.language = settings.user.language;
+                }
+                else
+                {
+                  console.warn('user has NO language!!');
+                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+                  sync = true;
+                };             
+              }
+              else
+              {
+                console.log('NO user settings at all !!');
+                sync = true;
+              };
 
-            self.getMessages();
+              if (settings.app)
+              {
+                if (settings.app.widgets)
+                {
+                  if (settings.app.widgets.groups)
+                  {
+                    console.warn('user HAS app widgets groups settings');
+                    defaults.app.widgets.groups = settings.app.widgets.groups;
+                  }
+                  else
+                  {
+                    console.warn('user has NO app widgets groups!!');
+                    defaults.app.widgets.groups = _groups(groups);
+                    sync = true;
+                  }
+                }
+                else
+                {
+                  console.warn('user has no widget settings!!');
+                  defaults.app.widgets = { groups: _groups(groups) };
+                  sync = true;
+                }                
+              }
+              else
+              {
+                console.log('NO app settings!!');
+                defaults.app = { widgets: { groups: _groups(groups) } };
+                sync = true;
+              };
+            }
+            else
+            {
+              console.log('NO SETTINGS AT ALL!!');
+              defaults = {
+                user: $rootScope.config.defaults.settingsWebPaige.user,
+                app: {
+                  widgets: {
+                    groups: _groups(groups)
+                  }
+                }
+              };
+              sync = true;
+            };
 
-            self.getMembers();
+            if (sync)
+            {
+              console.warn('SAVE ME ->', defaults);
+
+              Settings.save(resources.uuid, defaults)
+              .then(function (setted)
+              {
+                User.resources()
+                .then(function (got)
+                {
+                  console.log('gotted ->', got);
+
+                  $rootScope.app.resources = got;
+
+                  finalize();
+                })
+              });
+
+            }
+            else
+            {
+              finalize();
+            }
           };
         });
       };
     });
   };
 
+
+  function finalize ()
+  {
+    self.progress(100, $rootScope.ui.login.loading_everything);
+
+    self.redirectToDashboard();
+
+    self.getMessages();
+
+    self.getMembers();    
+  }
 
   /**
    * TODO
@@ -500,7 +595,8 @@ loginCtrl.logout = function ($rootScope, $scope, $window, Session, User, Storage
 };
 
 
-loginCtrl.$inject = ['$rootScope', '$location', '$q', '$scope', 'Session', 'User', '$md5', 'Groups', 'Messages', 'Storage', '$routeParams'];
+loginCtrl.$inject = ['$rootScope', '$location', '$q', '$scope', 'Session', 'User', '$md5', 'Groups', 'Messages', 
+'Storage', '$routeParams', 'Settings', 'Profile'];
 
 
 /**

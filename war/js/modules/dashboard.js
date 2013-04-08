@@ -3,7 +3,7 @@
 /**
  * Dashboard Controller
  */
-function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
+function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile)
 {  
   /**
    * Fix styles
@@ -29,119 +29,247 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
   };
 
 
+
+
+
+
+  console.warn('settings ->', Storage.local.settings());
+
+  // console.warn('settings.app.widgets.groups ->', settings.app.widgets.groups);
+  var settings = Storage.local.settings();
   /**
-   * Get pies
+   * If no app settings at all add it
    */
-  Dashboard.pies()
-  .then(function (pies)
+  if (!settings || !settings.app || settings.app.widgets.groups == {})
+  // if (settings.app.widgets.groups == {})
   {
-    if (pies.error)
+    // createSettings();
+    console.warn('no settings');
+  }
+  else
+  {
+    getOverviews();
+  };
+
+
+  function createSettings ()
+  {
+    var groups  = Storage.local.groups(),
+        all     = {};
+
+    console.log('groups ->', groups);
+
+    angular.forEach(groups, function (group, index)
     {
-      $rootScope.notifier.error('Error with getting group overviews.');
-      console.warn('error ->', result);
-    }
-    else
+      console.log('group ---->', group);
+
+      all[group.uuid] = true; 
+    });
+    
+    console.log('groups to be saved ->', all);  
+
+    Settings.save($rootScope.app.resources.uuid, {
+      user: $rootScope.config.defaults.settingsWebPaige.user,
+      app: {
+        widgets: {
+          groups: all
+        }
+      }
+    })
+    .then(function (result)
     {
-      $scope.shortageHolders = {};
-
-      $scope.loading.pies = false;
-
-      $scope.periods = {
-        start:  pies[0].weeks.current.start.date,
-        end:    pies[0].weeks.next.end.date
-      };
-
-      angular.forEach(pies, function (pie, index)
+      Profile.get($rootScope.app.resources.uuid, true)
+      .then(function (resources)
       {
-        if (pie.weeks.current.state.diff == null) pie.weeks.current.state.diff = 0;
-        if (pie.weeks.current.state.wish == null) pie.weeks.current.state.wish = 0;
-            
-        if (pie.weeks.current.state.diff > 0)
-        {
-          pie.weeks.current.state.cls = 'more';
-        }
-        else if (pie.weeks.current.state.diff == 0)
-        {
-          pie.weeks.current.state.cls = 'even';
-        }
-        else if (pie.weeks.current.state.diff < 0)
-        {
-          pie.weeks.current.state.cls = 'less';
+        getOverviews();
+      })
+    });
+  }
+
+
+
+
+
+
+
+  /**
+   * Get group overviews
+   */
+  function getOverviews ()
+  {
+    Dashboard.pies()
+    .then(function (pies)
+    {
+      if (pies.error)
+      {
+        $rootScope.notifier.error('Error with getting group overviews.');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        $scope.shortageHolders = {};
+
+        $scope.loading.pies = false;
+
+        $scope.periods = {
+          start:  pies[0].weeks.current.start.date,
+          end:    pies[0].weeks.next.end.date
         };
 
-        pie.weeks.current.state.start = (pie.weeks.current.state.start != undefined) 
-                                        ? new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime)
-                                        : 'undefined';
+        angular.forEach(pies, function (pie, index)
+        {
+          if (pie.weeks.current.state.diff == null) pie.weeks.current.state.diff = 0;
+          if (pie.weeks.current.state.wish == null) pie.weeks.current.state.wish = 0;
+              
+          if (pie.weeks.current.state.diff > 0)
+          {
+            pie.weeks.current.state.cls = 'more';
+          }
+          else if (pie.weeks.current.state.diff == 0)
+          {
+            pie.weeks.current.state.cls = 'even';
+          }
+          else if (pie.weeks.current.state.diff < 0)
+          {
+            pie.weeks.current.state.cls = 'less';
+          };
 
-        pie.weeks.current.state.end   = (pie.weeks.current.state.end != undefined)
-                                        ? new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime)
-                                        : 'undefined';
-        
-        pie.shortages = {
-          current:  pie.weeks.current.shortages,
-          next:     pie.weeks.next.shortages,
-          total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
-        };
+          pie.weeks.current.state.start = (pie.weeks.current.state.start != undefined) 
+                                          ? new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime)
+                                          : 'undefined';
 
-        pie.state = pie.weeks.current.state;
+          pie.weeks.current.state.end   = (pie.weeks.current.state.end != undefined)
+                                          ? new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime)
+                                          : 'undefined';
+          
+          pie.shortages = {
+            current:  pie.weeks.current.shortages,
+            next:     pie.weeks.next.shortages,
+            total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
+          };
 
-        delete(pie.weeks.current.shortages);
-        delete(pie.weeks.current.state);
+          pie.state = pie.weeks.current.state;
 
-        $scope.shortageHolders['shortages-' + pie.id] = false;
+          delete(pie.weeks.current.shortages);
+          delete(pie.weeks.current.state);
+
+          $scope.shortageHolders['shortages-' + pie.id] = false;
+        });
+
+        $scope.pies = pies;
+      };
+    })
+    .then( function (result)
+    {
+      angular.forEach($scope.pies, function (pie, index)
+      {
+        pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
+        pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
       });
 
-      $scope.pies = pies;
-    };
-  })
-  .then( function (result)
-  {
-    angular.forEach($scope.pies, function (pie, index)
-    {
-      pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
-      pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
-    });
-
-    function pieMaker ($id, id, name, _ratios)
-    {    
-      setTimeout( function () 
-      {
-        document.getElementById($id + id).innerHTML = '';
-
-        var ratios    = [],
-            colorMap  = {
-              more: '#415e6b',
-              even: '#ba6a24',
-              less: '#a0a0a0'
-            },
-            colors    = [],
-            xratios   = [];
-
-        angular.forEach(_ratios, function (ratio, index)
+      function pieMaker ($id, id, name, _ratios)
+      {    
+        setTimeout( function () 
         {
-          if (ratio != 0)
+          document.getElementById($id + id).innerHTML = '';
+
+          var ratios    = [],
+              colorMap  = {
+                more: '#415e6b',
+                even: '#ba6a24',
+                less: '#a0a0a0'
+              },
+              colors    = [],
+              xratios   = [];
+
+          angular.forEach(_ratios, function (ratio, index)
           {
-            ratios.push({
-              ratio: ratio, 
-              color: colorMap[index]
-            });
-          };
-        });
+            if (ratio != 0)
+            {
+              ratios.push({
+                ratio: ratio, 
+                color: colorMap[index]
+              });
+            };
+          });
 
-        ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+          ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
 
-        angular.forEach(ratios, function (ratio, index)
-        {
-          colors.push(ratio.color);
-          xratios.push(ratio.ratio);
-        });
+          angular.forEach(ratios, function (ratio, index)
+          {
+            colors.push(ratio.color);
+            xratios.push(ratio.ratio);
+          });
 
-        var r   = Raphael($id + id),
-            pie = r.piechart(40, 40, 40, xratios, { colors: colors });
+          var r   = Raphael($id + id),
+              pie = r.piechart(40, 40, 40, xratios, { colors: colors });
 
-      }, 100);
-    };
+        }, 100);
+      };
+    });
+  };
+
+
+
+
+  
+
+  $scope.saveOverviewWidget = function (selection)
+  {
+    $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+    Settings.save($rootScope.app.resources.uuid, {
+      user: Storage.local.settings().user,
+      app: {
+        widgets: {
+          groups: selection
+        }
+      }
+    })
+    .then(function (result)
+    {
+      $rootScope.statusBar.display('Refreshing group overviews..');
+
+      Profile.get($rootScope.app.resources.uuid, true)
+      .then(function (resources)
+      {
+        getOverviews();
+      })
+    });
+  };
+
+
+  /**
+   * TODO
+   * Check somewhere that user-settings widget-groups are synced with the
+   * real groups list and if a group is missing in settings-groups add by
+   * default!
+   */
+  var groups    = Storage.local.groups(),
+      settings  = Storage.local.settings(),
+      selection = {};
+
+console.warn('settings ->', settings);
+
+  angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
+  {
+    selection[group] = value;
   });
+
+  $scope.popover = {
+    groups: groups,
+    selection: selection
+  };
+
+
+
+
+
+
+
+
+
+
 
 
   /**
@@ -166,6 +294,9 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
   });
 
 
+
+
+
   /**
    * Show more or less alarms
    */
@@ -178,36 +309,10 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage)
     $scope.more.status = !$scope.more.status;
   };
 
-
-
-
-
-  var groups = Storage.local.groups(),
-      selection = {};
-
-  angular.forEach(groups, function (group, index)
-  {
-    selection[group.uuid] = true;
-  });
-
-  $scope.popover = {
-    groups: groups,
-    selection: selection
-  };
-
-  $scope.saveOverviewWidget = function (selection)
-  {
-    console.warn('selection ->', selection);
-  }
-
-
-
-
-
 };
 
 
-dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage'];
+dashboardCtrl.$inject = ['$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile'];
 
 
 /**
@@ -237,13 +342,22 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
   {
     var deferred  = $q.defer(),
         groups    = angular.fromJson(Storage.get('groups')),
+        settings  = Storage.local.settings().app.widgets.groups,
+        list      = [],
         now       = new Date.now().getTime(),
         calls     = [];
 
-    angular.forEach(groups, function (group, index)
+    if (settings.length == 0) console.warn('no settings');
+
+    angular.forEach(groups, function(group, index)
+    {
+      if (settings[group.uuid]) list.push({ id: group.uuid, name: group.name});
+    });
+
+    angular.forEach(list, function (group, index)
     {
       calls.push(Slots.pie({
-        id:     group.uuid,
+        id:     group.id,
         name:   group.name
       }));
     });
@@ -251,6 +365,8 @@ factory('Dashboard', function ($rootScope, $resource, $config, $q, $route, $time
     $q.all(calls)
     .then(function (results)
     {
+      $rootScope.statusBar.off();
+
       deferred.resolve(results);
     });
 

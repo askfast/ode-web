@@ -820,6 +820,15 @@ function($rootScope, prefix, cookie)
     return angular.fromJson(getFromLocalStorage('members'));
   };
 
+  var getSettings = function ()
+  {
+    var settings = angular.fromJson(getFromLocalStorage('resources'));
+
+    // if  console.warn('no settings');
+
+    return (!settings.settingsWebPaige) ? $rootScope.config.defaults.settingsWebPaige : angular.fromJson(settings.settingsWebPaige);
+  };
+
   return {
     isSupported: browserSupportsLocalStorage,
     add:        addToLocalStorage,
@@ -841,7 +850,8 @@ function($rootScope, prefix, cookie)
     local: {
       periods:  getPeriods,
       groups:   getGroups,
-      members:  getMembers
+      members:  getMembers,
+      settings: getSettings
     }
   };
 

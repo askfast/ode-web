@@ -27,7 +27,7 @@
 
             <header>
               <h4>{{pie.name}}</h4>
-              <button class="btn btn-mini pull-right"><i class="icon-remove"></i></button>
+              <!-- <button class="btn btn-mini pull-right"><i class="icon-remove"></i></button> -->
             </header>
 
             <div class="blocks">
@@ -213,7 +213,11 @@
         </ul>
         <!-- end p2000 loop -->
         <hr class="lastline">
-        <p><small><a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a></small></p>
+        <p>
+          <small>
+            <a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>
+          </small>
+        </p>
 
       </div>
       <!-- end announcements sidebar -->

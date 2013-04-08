@@ -3,6 +3,9 @@
 
 ## Versions
 
+	2.0.2
+		* dashboard 2.0 8-4-2013
+
 	2.0.1
 		* fixed rendering issues with pie chart of totals in statistics in plan 5-4-2013
 		* dynamic listing for legenda based on available states of that particular installation 4-4-2013
