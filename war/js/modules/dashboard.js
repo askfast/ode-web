@@ -29,67 +29,25 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage,
   };
 
 
-
-
-
-
-  console.warn('settings ->', Storage.local.settings());
-
-  // console.warn('settings.app.widgets.groups ->', settings.app.widgets.groups);
-  var settings = Storage.local.settings();
   /**
-   * If no app settings at all add it
+   * TODO
+   * Check somewhere that user-settings widget-groups are synced with the
+   * real groups list and if a group is missing in settings-groups add by
+   * default!
    */
-  if (!settings || !settings.app || settings.app.widgets.groups == {})
-  // if (settings.app.widgets.groups == {})
+  var groups    = Storage.local.groups(),
+      settings  = Storage.local.settings(),
+      selection = {};
+
+  angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
   {
-    // createSettings();
-    console.warn('no settings');
-  }
-  else
-  {
-    getOverviews();
+    selection[group] = value;
+  });
+
+  $scope.popover = {
+    groups: groups,
+    selection: selection
   };
-
-
-  function createSettings ()
-  {
-    var groups  = Storage.local.groups(),
-        all     = {};
-
-    console.log('groups ->', groups);
-
-    angular.forEach(groups, function (group, index)
-    {
-      console.log('group ---->', group);
-
-      all[group.uuid] = true; 
-    });
-    
-    console.log('groups to be saved ->', all);  
-
-    Settings.save($rootScope.app.resources.uuid, {
-      user: $rootScope.config.defaults.settingsWebPaige.user,
-      app: {
-        widgets: {
-          groups: all
-        }
-      }
-    })
-    .then(function (result)
-    {
-      Profile.get($rootScope.app.resources.uuid, true)
-      .then(function (resources)
-      {
-        getOverviews();
-      })
-    });
-  }
-
-
-
-
-
 
 
   /**
@@ -209,11 +167,11 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage,
     });
   };
 
+  getOverviews();
 
-
-
-  
-
+  /**
+   * Save widget settings
+   */
   $scope.saveOverviewWidget = function (selection)
   {
     $rootScope.statusBar.display($rootScope.ui.settings.saving);
@@ -240,39 +198,6 @@ function dashboardCtrl($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage,
 
 
   /**
-   * TODO
-   * Check somewhere that user-settings widget-groups are synced with the
-   * real groups list and if a group is missing in settings-groups add by
-   * default!
-   */
-  var groups    = Storage.local.groups(),
-      settings  = Storage.local.settings(),
-      selection = {};
-
-console.warn('settings ->', settings);
-
-  angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
-  {
-    selection[group] = value;
-  });
-
-  $scope.popover = {
-    groups: groups,
-    selection: selection
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-  /**
    * P2000 annnouncements
    */
   Dashboard.p2000().
@@ -292,9 +217,6 @@ console.warn('settings ->', settings);
       $scope.alarms.list = $scope.alarms.short;
     };
   });
-
-
-
 
 
   /**

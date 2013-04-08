@@ -13,12 +13,12 @@ var WebPaige = angular.module('WebPaige', ['StorageModule', '$strap.directives',
 WebPaige
 .value('$config', 
 {
-  version: '2.0.1',
+  version: '2.0.2',
 
   lang: 'nl',
 
   // REMOVE
-  demo_users: true,
+  demo_users: false,
 
   profile: {
     meta: profile.meta,

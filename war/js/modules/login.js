@@ -186,9 +186,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 
   /**
    * TODO
-   * 
    * What happens if preloader stucks?
-   * 
    * Optimize preloader and messages
    * 
    * Initialize preloader
@@ -239,20 +237,20 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
               {
                 if (settings.user.language)
                 {
-                  console.warn('user HAS language settings');
+                  // console.warn('user HAS language settings');
                   $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
                   defaults.user.language = settings.user.language;
                 }
                 else
                 {
-                  console.warn('user has NO language!!');
+                  // console.warn('user has NO language!!');
                   $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
                   sync = true;
                 };             
               }
               else
               {
-                console.log('NO user settings at all !!');
+                // console.log('NO user settings at all !!');
                 sync = true;
               };
 
@@ -262,33 +260,33 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
                 {
                   if (settings.app.widgets.groups)
                   {
-                    console.warn('user HAS app widgets groups settings');
+                    // console.warn('user HAS app widgets groups settings');
                     defaults.app.widgets.groups = settings.app.widgets.groups;
                   }
                   else
                   {
-                    console.warn('user has NO app widgets groups!!');
+                    // console.warn('user has NO app widgets groups!!');
                     defaults.app.widgets.groups = _groups(groups);
                     sync = true;
                   }
                 }
                 else
                 {
-                  console.warn('user has no widget settings!!');
+                  // console.warn('user has no widget settings!!');
                   defaults.app.widgets = { groups: _groups(groups) };
                   sync = true;
                 }                
               }
               else
               {
-                console.log('NO app settings!!');
+                // console.log('NO app settings!!');
                 defaults.app = { widgets: { groups: _groups(groups) } };
                 sync = true;
               };
             }
             else
             {
-              console.log('NO SETTINGS AT ALL!!');
+              // console.log('NO SETTINGS AT ALL!!');
               defaults = {
                 user: $rootScope.config.defaults.settingsWebPaige.user,
                 app: {
@@ -302,22 +300,19 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 
             if (sync)
             {
-              console.warn('SAVE ME ->', defaults);
-
+              // console.warn('SAVE ME ->', defaults);
               Settings.save(resources.uuid, defaults)
               .then(function (setted)
               {
                 User.resources()
                 .then(function (got)
                 {
-                  console.log('gotted ->', got);
-
+                  // console.log('gotted ->', got);
                   $rootScope.app.resources = got;
 
                   finalize();
                 })
               });
-
             }
             else
             {
@@ -425,9 +420,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 
   /**
    * RE-FACTORY
-   * 
    * TODO
-   * 
    * Make button state change!
    * Finish it!
    * 
@@ -471,7 +464,6 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 
   /**
    * RE-FACTORY
-   *
    * Change password
    */
 	self.changePass =  function (uuid, newpass, key)
@@ -511,7 +503,6 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
 
   /**
    * RE-FACTORY
-   *
    * Change password
    */
 	$scope.changePass = function ()
@@ -671,7 +662,6 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
   //    key: key});
   
   
-
   /**
    * TODO
    * RE-FACTORY
@@ -739,7 +729,6 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
 
   /**
    * RE-FACTORY
-   * 
    * change user password
    */
   User.prototype.changePass = function (uuid, newpass, key)
