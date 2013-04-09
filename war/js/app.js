@@ -18,7 +18,7 @@ WebPaige
   lang: 'nl',
 
   // REMOVE
-  demo_users: false,
+  demo_users: true,
 
   profile: {
     meta: profile.meta,

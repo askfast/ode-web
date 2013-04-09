@@ -272,10 +272,21 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
                 }
                 else
                 {
-                  // console.warn('user has no widget settings!!');
+                  // console.warn('user has NO widget settings!!');
                   defaults.app.widgets = { groups: _groups(groups) };
                   sync = true;
-                }                
+                }
+                if (settings.app.group)
+                {
+                  // console.warn('user HAS app first group setting');
+                  defaults.app.group = settings.app.group;
+                }
+                else
+                {
+                  console.warn('user has NO first group setting!!, so setting for ->', groups[0].uuid);
+                  defaults.app.group = groups[0].uuid;
+                  sync = true;
+                }          
               }
               else
               {

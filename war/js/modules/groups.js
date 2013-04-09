@@ -3,7 +3,7 @@
 /**
  * Groups Controller
  */
-function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage)
+function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
 {
   /**
    * Fix styles
@@ -92,6 +92,64 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
     $scope.members = data.members[id];
 
     $scope.current = id;
+
+    wisher(id);
+  };
+
+
+  function wisher (id)
+  {
+    $scope.wished = false;
+
+    Groups.wish(id)
+    .then(function (wish)
+    {
+      $scope.wished = true;
+
+      $scope.wish = wish.count;
+
+      $scope.popover = {
+        id: id,
+        wish: wish.count
+      }
+    });
+  }
+
+
+  /**
+   * Set wish for the group
+   */
+  $scope.saveWish = function (id, wish)
+  {
+    console.warn('setting the wish:' + wish + ' for the group:', id);
+    
+    $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
+
+    Slots.setWish(
+    {
+      id:     id,
+      start:  255600,
+      end:    860400,
+      recursive:  true,
+      wish:   wish
+    })
+    .then(
+      function (result)
+      {
+        if (result.error)
+        {
+          $rootScope.notifier.error('Error with changing wish value.');
+          console.warn('error ->', result);
+        }
+        else
+        {
+          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+        };
+
+        wisher(id);
+      }
+    );
+
   };
 
 
@@ -585,14 +643,14 @@ groupsCtrl.resolve = {
 };
 
 
-groupsCtrl.$inject = ['$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage'];
+groupsCtrl.$inject = ['$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots'];
 
 
 /**
  * Groups modal
  */
 WebPaige.
-factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope) 
+factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $rootScope, Slots) 
 {
   var Groups = $resource(
     $config.host + '/network/:action/:id',
@@ -739,13 +797,38 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
     });
 
     $q.all(calls)
-    .then(function(result)
+    .then(function (result)
     {
       deferred.resolve(result);
     });
 
     return deferred.promise; 
   };
+
+
+  Groups.prototype.wish = function (id)
+  {
+    var deferred  = $q.defer(),
+        count     = 0;
+
+    Slots.wishes({
+      id: id,
+      start:  255600,
+      end:    860400
+    }).then(function (results)
+    {
+      angular.forEach(results, function (slot, index)
+      {
+        if (slot.start == 255600 && slot.end == 860400 && slot.count != null) count = slot.count;
+      });
+
+      deferred.resolve({
+        count: count
+      });
+    });
+
+    return deferred.promise; 
+  }
 
 
   /**

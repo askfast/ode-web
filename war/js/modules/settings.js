@@ -4,7 +4,7 @@
 /**
  * Settings Controller
  */
-function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
+function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile, Storage)
 {
 	/**
 	 * Fix styles
@@ -12,22 +12,10 @@ function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
 	$rootScope.fixStyles();
 
 
-	/**
-	 * Check whether settings has been defined 
-   * for the user otherwise display a message
-	 */
-  if (!angular.equals({}, data))
-  {
-    $scope.settings = angular.fromJson(data);
-  }
-  else
-  {
-    $scope.settings = {
-      user: {
-        language: $rootScope.ui.meta.name
-      }
-    };
-  };
+  /**
+   * Pass the settings
+   */
+  $scope.settings = angular.fromJson(data);
 
 
   /**
@@ -39,6 +27,18 @@ function settingsCtrl ($rootScope, $scope, $window, data, Settings, Profile)
 
   $scope.languages = languages;
 
+
+  /**
+   * Pass the groups
+   */
+   var groups = {};
+
+   angular.forEach(Storage.local.groups(), function (group, index)
+   {
+     groups[group.uuid] = group.name;
+   });
+
+   $scope.groups = groups;
 
 
   /**
@@ -112,7 +112,7 @@ settingsCtrl.resolve = {
 };
 
 
-settingsCtrl.$inject = ['$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile'];
+settingsCtrl.$inject = ['$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile', 'Storage'];
 
 
 /**

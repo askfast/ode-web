@@ -594,6 +594,13 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     var selection;
 
+    /**
+     * TODO
+     * 
+     * Not working!!
+     */
+    timeliner.cancelAdd();
+
     if (selection = self.timeline.getSelection()[0])
     {
       var values  = self.timeline.getItem(selection.row),
@@ -848,7 +855,8 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       id:     slot.groupId,
       start:  Dater.convert.absolute(slot.start.date, slot.start.time, true),
       end:    Dater.convert.absolute(slot.end.date, slot.end.time, true),
-      recursive:  slot.recursive,
+      recursive:  false,
+      // recursive:  slot.recursive,
       wish:       slot.wish
     })
     .then(
@@ -889,7 +897,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
     if (news.length > 0)
     {
       self.timeline.cancelAdd();
-      
+
       $scope.$apply(function ()
       {
         $scope.resetInlineForms();

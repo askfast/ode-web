@@ -3,7 +3,8 @@
 
 ## Versions
 
-	2.0.2
+	2.0.2 (snapshot)
+		* default wish value setting for groups
 		* dashboard 2.0 8-4-2013
 
 	2.0.1
