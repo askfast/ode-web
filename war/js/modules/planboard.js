@@ -875,32 +875,38 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   function timelineOnRemove ()
   {
-    var now = Date.now().getTime();
-
-    if ($scope.original.end.getTime() <= now)
+    /**
+     * TODO
+     * Look ways to implement cancelAdd of timeline itself!!
+     */
+    var news = $('.timeline-event-content')
+                .contents()
+                .filter(function()
+                { 
+                  return this.nodeValue == 'New' 
+                });
+      
+    if (news.length > 0)
     {
-      $rootScope.notifier.error('You can not delete timeslots in past.');
-
-      timeliner.refresh();
+      self.timeline.cancelAdd();
+      
+      $scope.$apply(function ()
+      {
+        $scope.resetInlineForms();
+      });
     }
     else
     {
-      // var news = $('.timeline-event-content')
-      //             .contents()
-      //             .filter(function()
-      //             { 
-      //               return this.nodeValue == 'New' 
-      //             });
-        
-      // if (news)
-      // {
-      //   $scope.$apply(function ()
-      //   {
-      //     $scope.resetInlineForms();
-      //   });
-      // }
-      // else
-      // {
+      var now = Date.now().getTime();
+
+      if ($scope.original.end.getTime() <= now)
+      {
+        $rootScope.notifier.error('You can not delete timeslots in past.');
+
+        timeliner.refresh();
+      }
+      else
+      {
         $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
         Slots.remove($scope.original, $rootScope.app.resources.uuid)
@@ -920,7 +926,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
             timeliner.refresh();
           }
         );
-      // };
+      };
     };
   };
 
@@ -928,10 +934,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   /**
    * Delete trigger start view
    */
-  $scope.remove = function () 
-  {
-    timelineOnRemove()
-  };
+  $scope.remove = function () { timelineOnRemove() };
 
 
   /**
