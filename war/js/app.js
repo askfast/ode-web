@@ -18,7 +18,7 @@ WebPaige
   lang: 'nl',
 
   // REMOVE
-  demo_users: true,
+  demo_users: false,
 
   profile: {
     meta: profile.meta,
@@ -187,6 +187,12 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   $rootScope.config = $config;
 
   $rootScope.config.init();
+
+
+  /**
+   * Pass Jquery browser data to angular
+   */
+  $rootScope.browser = $.browser;
 
 
   /**

@@ -4,7 +4,8 @@
  *
  * https://github.com/gabceb/jquery-browser-plugin
  */
-(function(jQuery, window, undefined) {
+(function (jQuery, window, undefined) 
+{
   "use strict";
 
   var matched, browser;
@@ -31,20 +32,35 @@
   matched = jQuery.uaMatch(window.navigator.userAgent);
   browser = {};
 
-  if (matched.browser) {
+  if (matched.browser) 
+  {
     browser[matched.browser] = true;
     browser.version = matched.version;
-  }
+  };
 
-  if (matched.platform) {
+  if (matched.platform) 
+  {
     browser[matched.platform] = true
-  }
+  };
 
   // Chrome is Webkit, but Webkit is also Safari.
-  if (browser.chrome) {
+  if (browser.chrome) 
+  {
     browser.webkit = true;
-  } else if (browser.webkit) {
+  } 
+  else if (browser.webkit) 
+  {
     browser.safari = true;
+  };
+
+  // check for mobile
+  if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(window.navigator.userAgent) )
+  {
+    browser.mobile = true;
+  }
+  else
+  {
+    browser.mobile = false;
   }
 
   jQuery.browser = browser;
@@ -58,7 +74,7 @@
  *
  * Author: Cengiz Ulusoy
  */
-(function(jQuery, window, undefined) 
+(function (jQuery, window, undefined) 
 {
   "use strict";
 
