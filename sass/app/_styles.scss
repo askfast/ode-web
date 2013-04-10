@@ -159,3 +159,28 @@ dl {
     }
   }
 }
+
+
+#mobile-status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 5000;
+  background-color: #433c2d;
+  color: white;
+  padding: 5px;
+
+  img {
+    width: 16px;
+    height: 16px;
+  }
+
+  small {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 11px;
+  }
+}
+
+
+

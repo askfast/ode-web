@@ -8,13 +8,13 @@
   <div class="row-fluid">
 
       <!-- pie charts for groups -->
-      <div class="widget {{(config.profile.p2000.status) && 'span9' || 'span12'}}">
+      <div class="widget {{(!browser.mobile) && 'span9' || 'span12'}}">
 
         <div class="head">
           <h4>Overzicht</h4>
           <button class="btn btn-small" 
                   bs-popover="'js/views/elements/widget-pies.html'" 
-                  data-placement="bottom"
+                  data-placement="{{(browser.mobile) && 'left' || 'bottom'}}"
                   data-title="Overzicht instellingen"><i class="icon-cog"></i></button>
         </div>
         <hr>
@@ -174,7 +174,8 @@
       <!-- end pie charts for groups -->
 
       <!-- announcements sidebar -->
-      <div class="widget span3"
+      <div class="widget {{(!browser.mobile) && 'span3' || 'span12'}}"
+            style="{{(browser.mobile) && 'margin-left: 0;'}}"
             ng-show="config.profile.p2000.status">
 
         <div class="head">

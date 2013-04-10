@@ -50,6 +50,11 @@
         backgroundImage: 'url(../profiles/' + profile.meta  + '/img/watermark.png)',
         backgroundRepeat: 'no-repeat'
       });
+
+      if ($.browser.mobile)
+      {
+        $('#watermark').css({ bottom: '-10px' });
+      }
     </script>
     <!-- end watermark for app -->
 
@@ -91,6 +96,7 @@
             <!-- end main nav -->
 
             <!-- user menu -->
+            <!-- desktop version -->
             <ul class="nav pull-right" ng-hide="browser.mobile">
               <!-- <li>
                 <a href="#help"><i class="icon-question-sign icon-white"></i> Help & Support</a>
@@ -112,6 +118,8 @@
                 </ul>
               </li>
             </ul>
+            <!-- end desktop version -->
+            <!-- mobile or tablet version -->
             <ul class="nav pull-right" ng-show="browser.mobile">
               <li>
                 <a href="#profile">
@@ -132,6 +140,7 @@
                 </a>
               </li>
             </ul>
+            <!-- end mobile or tablet version -->
             <!-- end user menu -->
 
           </div>
@@ -166,8 +175,12 @@
     </div>
     <!-- end wrap -->
 
+    <div id="mobile-status-bar" ng-show="loading.status && browser.mobile">
+      <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
+    </div>
+
     <!-- footer -->
-    <div id="footer">
+    <div id="footer" ng-hide="browser.mobile">
       <div class="container-fluid">
 
         <!-- copyrights -->

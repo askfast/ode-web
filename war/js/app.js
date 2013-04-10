@@ -235,7 +235,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
       };
     });
   };
-
+  
 
   /**
    * Default language and change language
