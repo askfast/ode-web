@@ -615,17 +615,31 @@ function groupsCtrl($rootScope, $scope, $location, data, Groups, Profile, $route
 
 
   /**
+   * Not used in groups yet but login uses modal call..
+   * 
    * Fetch parent groups
    */
-  $scope.fetchParents = function (id)
+  $scope.fetchParent = function ()
   {
-    return "fetching user groups";
+    Groups.parents()
+    .then(function (result)
+    {
+      console.warn('parent -> ', result);
+    });
+  };
 
-    // Groups.parents(id)
-    // .then(function(result)
-    // {
-    //   return 'groups -> ' + result;
-    // })
+  /**
+   * Not used in groups yet..
+   * 
+   * Fetch parent groups
+   */
+  $scope.fetchContainers = function (id)
+  {
+    Groups.containers(id)
+    .then(function (result)
+    {
+      console.warn('containers -> ', result);
+    });
   };
 
 
@@ -687,14 +701,29 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
   );
 
 
-  var Parents = $resource(
+  var Containers = $resource(
     $config.host + '/node/:id/container',
     {
     },
     {
       get: {
         method: 'GET',
-        params: {id:''}
+        params: {id:''},
+        isArray: true
+      }
+    }
+  );
+
+
+  var Parents = $resource(
+    $config.host + '/parent',
+    {
+    },
+    {
+      get: {
+        method: 'GET',
+        params: {},
+        isArray: true
       }
     }
   );
@@ -728,6 +757,85 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
       }
     }
   );
+
+
+  /**
+   * Get parent group data
+   */
+  Groups.prototype.parents = function (all) 
+  {   
+    var deferred = $q.defer();
+
+    Parents.get(
+      null, 
+      function (result) 
+      {
+        if (!all)
+        {
+          // console.warn('returned ===>', result.length);
+
+          if (result.length == 0)
+          {
+            deferred.resolve(null);
+          }
+          else
+          {
+            deferred.resolve(result[0].uuid);
+          }
+        }
+        else
+        {
+          deferred.resolve(result);
+        }
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
+
+    return deferred.promise;
+  };
+
+
+  /**
+   * TODO
+   * Extract only the groups which are in the local list
+   * 
+   * Get container (parent) group data
+   */
+  Groups.prototype.containers = function (id) 
+  {   
+    var deferred  = $q.defer(),
+        cons      = [];
+
+    Containers.get(
+      {id: id}, 
+      function (result) 
+      {
+        /**
+         * Group save call returns only uuid and that is parsed as json
+         * by angular, this is a fix for converting returned object to plain string
+         */
+        angular.forEach(result, function (_r, _i)
+        {
+          var returned = [];
+
+          angular.forEach(_r, function (chr, i) { returned += chr });
+
+          cons.push(returned);
+        });
+        
+        deferred.resolve(cons);
+      },
+      function (error)
+      {
+        deferred.resolve({error: error});
+      }
+    );
+
+    return deferred.promise;
+  };
 
 
   /**
@@ -927,32 +1035,6 @@ factory('Groups', function ($resource, $config, $q, $route, $timeout, Storage, $
           id: id,
           data: returned
         });
-      },
-      function (error)
-      {
-        deferred.resolve({error: error});
-      }
-    );
-
-    return deferred.promise;
-  };
-
-
-  /**
-   * TODO
-   * Extract only the groups which are in the local list
-   * 
-   * Get parent group data
-   */
-  Groups.prototype.parents = function (id) 
-  {   
-    var deferred = $q.defer();
-
-    Parents.get(
-      {id: id}, 
-      function (result) 
-      {
-        deferred.resolve({data: returned});
       },
       function (error)
       {

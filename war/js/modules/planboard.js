@@ -18,6 +18,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   var self = this,
       periods = Dater.getPeriods(),
       groups  = Storage.local.groups(),
+      settings = Storage.local.settings(),
       current = {
         layouts: {
           user:     true,
@@ -27,7 +28,8 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         day:      Dater.current.today(),
         week:     Dater.current.week(),
         month:    Dater.current.month(),
-        group:    groups[0].uuid,
+        group:    settings.app.group,
+        // group:    groups[0].uuid,
         division: 'all'
       };
 
@@ -1053,10 +1055,12 @@ planboardCtrl.resolve = {
     var periods = Storage.local.periods(),
         current = Dater.current.week(),
         initial = periods.weeks[current],
-        groups  = Storage.local.groups();
+        groups  = Storage.local.groups(),
+        settings = Storage.local.settings();
 
     return Slots.all({
-      groupId:  groups[0].uuid,
+      // groupId:  groups[0].uuid,
+      groupId:  settings.app.group,
       division: 'all',
       stamps: {
         start:  initial.first.timeStamp,

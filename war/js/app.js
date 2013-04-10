@@ -13,7 +13,7 @@ var WebPaige = angular.module('WebPaige', ['StorageModule', '$strap.directives',
 WebPaige
 .value('$config', 
 {
-  version: '2.0.2',
+  version: '2.0.2 (snapshot)',
 
   lang: 'nl',
 

@@ -4,7 +4,8 @@
 ## Versions
 
 	2.0.2 (snapshot)
-		* default wish value setting for groups
+		* first group to render setting functionality 10-4-2013
+		* default wish value setting for groups 9-4-2013
 		* dashboard 2.0 8-4-2013
 
 	2.0.1

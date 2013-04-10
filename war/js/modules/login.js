@@ -223,6 +223,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
           {
             var settings  = angular.fromJson(resources.settingsWebPaige) || {},
                 sync      = false,
+                parenting = false,
                 defaults  = $rootScope.config.defaults.settingsWebPaige,
                 _groups   = function (groups)
                 {
@@ -231,10 +232,13 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
                   return _groups;
                 };
 
+            // Check if there is any settings at all
             if (settings != null || settings != undefined)
             {
+              // check for user settigns-all
               if (settings.user)
               {
+                // check for user-language settings
                 if (settings.user.language)
                 {
                   // console.warn('user HAS language settings');
@@ -254,10 +258,13 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
                 sync = true;
               };
 
+              // check for app settings-all
               if (settings.app)
               {
+                // check for app-widget settings
                 if (settings.app.widgets)
                 {
+                  // check for app-widget-groups setting
                   if (settings.app.widgets.groups)
                   {
                     // console.warn('user HAS app widgets groups settings');
@@ -275,18 +282,20 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
                   // console.warn('user has NO widget settings!!');
                   defaults.app.widgets = { groups: _groups(groups) };
                   sync = true;
-                }
-                if (settings.app.group)
+                };
+
+                // check for app group setting
+                if (settings.app.group && settings.app.group != undefined)
                 {
                   // console.warn('user HAS app first group setting');
                   defaults.app.group = settings.app.group;
                 }
                 else
                 {
-                  console.warn('user has NO first group setting!!, so setting for ->', groups[0].uuid);
-                  defaults.app.group = groups[0].uuid;
-                  sync = true;
-                }          
+                  // console.warn('user has NO first group setting!!');
+                  parenting = true;
+                  sync      = true;
+                };          
               }
               else
               {
@@ -303,27 +312,74 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
                 app: {
                   widgets: {
                     groups: _groups(groups)
-                  }
+                  },
+                  group: groups[0].uuid
                 }
               };
               sync = true;
             };
 
+            // sync settings with missing parts also parenting check
             if (sync)
             {
-              // console.warn('SAVE ME ->', defaults);
-              Settings.save(resources.uuid, defaults)
-              .then(function (setted)
+              if (parenting)
               {
-                User.resources()
-                .then(function (got)
-                {
-                  // console.log('gotted ->', got);
-                  $rootScope.app.resources = got;
+                // console.warn('setting up parent group for the user');
 
-                  finalize();
-                })
-              });
+                Groups.parents()
+                .then(function (_parent)
+                {
+                  // console.warn('parent group been fetched ->', _parent);
+
+                  if (_parent != null)
+                  {
+                    // console.warn('found parent parent -> ', _parent);
+
+                    defaults.app.group = _parent;
+                  }
+                  else
+                  {
+                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
+
+                    defaults.app.group = groups[0].uuid;
+                  };
+                                
+                  // console.warn('SAVE ME (with parenting) ->', defaults);
+
+                  Settings.save(resources.uuid, defaults)
+                  .then(function (setted)
+                  {
+                    User.resources()
+                    .then(function (got)
+                    {
+                      // console.log('gotted (with setting parent group) ->', got);
+                      $rootScope.app.resources = got;
+
+                      finalize();
+                    })
+                  });
+
+                });
+              }
+              else
+              {              
+                // console.warn('SAVE ME ->', defaults);
+                
+                defaults.app.group = groups[0].uuid;
+
+                Settings.save(resources.uuid, defaults)
+                .then(function (setted)
+                {
+                  User.resources()
+                  .then(function (got)
+                  {
+                    // console.log('gotted ->', got);
+                    $rootScope.app.resources = got;
+
+                    finalize();
+                  })
+                });
+              }
             }
             else
             {
@@ -336,8 +392,16 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
   };
 
 
+  /**
+   * Finalize the preloading
+   */
   function finalize ()
   {
+    // console.warn( 'settings ->',
+    //               'user ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).user,
+    //               'widgets ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.widgets,
+    //               'group ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.group);
+
     self.progress(100, $rootScope.ui.login.loading_everything);
 
     self.redirectToDashboard();
