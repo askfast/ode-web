@@ -178,8 +178,8 @@ WebPaige
 /**
  * Initial run functions
  */
-.run(['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config',
-function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config) 
+.run(['$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
+function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window) 
 {
   /**
    * Pass config and init dynamic config values
@@ -193,6 +193,48 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    * Pass Jquery browser data to angular
    */
   $rootScope.browser = $.browser;
+
+  angular.extend($rootScope.browser, {
+    screen: $window.screen
+  });
+
+  if ($rootScope.browser.ios)
+  {
+    angular.extend($rootScope.browser, {
+      landscape:    Math.abs($window.orientation) == 90 ? true : false,
+      portrait:     Math.abs($window.orientation) != 90 ? true : false
+    });
+  }
+  else
+  {
+    angular.extend($rootScope.browser, {
+      landscape:    Math.abs($window.orientation) != 90 ? true : false,
+      portrait:     Math.abs($window.orientation) == 90 ? true : false
+    });
+  };
+
+  $window.onresize = function () { $rootScope.browser.screen = $window.screen };
+
+  $window.onorientationchange = function ()
+  {
+    $rootScope.$apply(function ()
+    {
+      if ($rootScope.browser.ios)
+      {
+        angular.extend($rootScope.browser, {
+          landscape:    Math.abs($window.orientation) == 90 ? true : false,
+          portrait:     Math.abs($window.orientation) != 90 ? true : false
+        });
+      }
+      else
+      {
+        angular.extend($rootScope.browser, {
+          landscape:    Math.abs($window.orientation) != 90 ? true : false,
+          portrait:     Math.abs($window.orientation) == 90 ? true : false
+        });
+      };
+    });
+  };
 
 
   /**

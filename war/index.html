@@ -89,8 +89,9 @@
               </li>
             </ul>
             <!-- end main nav -->
+
             <!-- user menu -->
-            <ul class="nav pull-right">
+            <ul class="nav pull-right" ng-hide="browser.mobile">
               <!-- <li>
                 <a href="#help"><i class="icon-question-sign icon-white"></i> Help & Support</a>
               </li> -->
@@ -102,7 +103,7 @@
                     <a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a>
                   </li>
                   <li>
-                    <a href="#settings"><i class="icon-cog"></i> {{ui.settings.settings}}</a>
+                    <a href="#settings"><i class="icon-wrench"></i> {{ui.settings.settings}}</a>
                   </li>
                   <li class="divider"></li>
                   <li>
@@ -111,7 +112,28 @@
                 </ul>
               </li>
             </ul>
+            <ul class="nav pull-right" ng-show="browser.mobile">
+              <li>
+                <a href="#profile">
+                  <i class="icon-user icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
+                  <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.profile.profile}}</span>
+                </a>
+              </li>
+              <li>
+                <a href="#settings">
+                  <i class="icon-wrench icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
+                  <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.settings.settings}}</span>
+                </a>
+              </li>
+              <li>
+                <a href="#logout">
+                  <i class="icon-off icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
+                  <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.login.logout}}</span>
+                </a>
+              </li>
+            </ul>
             <!-- end user menu -->
+
           </div>
           <!-- end nav-collapse -->
         </div>
