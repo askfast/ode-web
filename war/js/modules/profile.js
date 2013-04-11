@@ -343,7 +343,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
       $scope.slot = {};
 
       $scope.forms = {
-        add: true,
+        add:  true,
         edit: false
       };
 
@@ -428,7 +428,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
        * Convert to resetview?
        */
       $scope.forms = {
-        add: false,
+        add:  false,
         edit: true
       };
 

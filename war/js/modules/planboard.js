@@ -710,7 +710,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       
     if (news.length > 1) self.timeline.cancelAdd();
 
-    $scope.$apply(function s()
+    $scope.$apply(function ()
     {
       resetViews();
 
@@ -756,7 +756,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
                     text:       slot.state
                   };
 
-    if (values.end * 1000 <= now)
+    if (values.end * 1000 <= now && values.recursive == false)
     {
       $rootScope.notifier.error('You can not input timeslots in past.');
 
@@ -805,7 +805,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
 
     var now = Date.now().getTime();
 
-    if (options.end <= now)
+    if (options.end <= now && options.content.recursive == false)
     {
       $rootScope.notifier.error('You can not change timeslots in past.');
 
@@ -925,7 +925,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
     {
       var now = Date.now().getTime();
 
-      if ($scope.original.end.getTime() <= now)
+      if ($scope.original.end.getTime() <= now && $scope.original.recursive == false)
       {
         $rootScope.notifier.error('You can not delete timeslots in past.');
 
