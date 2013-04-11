@@ -4,6 +4,7 @@
 ## Versions
 
 	2.0.2 (snapshot)
+		* corrected a localization issue with 'no messages' in the box 11-4-2013
 		* tablet datetime selectors for planboard and profile timeline 11-4-2013
 		* removed footer for mobile and tablets and changed it to portable preloader 10-4-2013
 		* main navigation menu more friendly with apple or android tablets or mobiles 10-4-2013

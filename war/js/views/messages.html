@@ -176,7 +176,9 @@
           <!-- end filter messages -->
         </div>
         <hr>
+
         <p ng-hide="(messages.inbox|filter:query.inbox).length > 0">{{ui.message.noMessage}}</p>
+        
         <!-- inbox listing -->
         <div ng-show="(messages.inbox|filter:query.inbox).length > 0">
           <table class="table table-striped">
