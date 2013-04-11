@@ -91,17 +91,15 @@
             <div class="controls">
               <input  type="text" 
                       class="span4" 
-                      ng-model="resources.name"
-                      value="{{data.resources.name}}">
+                      ng-model="data.resources.name">
             </div>
-          </div>
+            </div>
           <div class="control-group">
             <label class="control-label">{{ui.profile.email}}</label>
             <div class="controls">
               <input  type="text" 
                       class="span4" 
-                      ng-model="resources.EmailAddress"
-                      value="{{data.resources.EmailAddress}}">
+                      ng-model="data.resources.EmailAddress">
             </div>
           </div>
           <div class="control-group">
@@ -109,8 +107,7 @@
             <div class="controls">
               <input  type="text" 
                       class="span3" 
-                      ng-model="resources.PhoneAddress"
-                      value="{{data.resources.PhoneAddress}}">
+                      ng-model="data.resources.PhoneAddress">
             </div>
           </div>
           <div class="control-group">
@@ -118,8 +115,7 @@
             <div class="controls">
               <input  type="text" 
                       class="span5" 
-                      ng-model="resources.PostAddress"
-                      value="{{data.resources.PostAddress}}">
+                      ng-model="data.resources.PostAddress">
             </div>
           </div>
           <div class="control-group">
@@ -127,8 +123,7 @@
             <div class="controls">
               <input  type="text" 
                       class="span2" 
-                      ng-model="resources.PostZip"
-                      value="{{data.resources.PostZip}}">
+                      ng-model="data.resources.PostZip">
             </div>
           </div>
           <div class="control-group">
@@ -136,14 +131,13 @@
             <div class="controls">
               <input  type="text" 
                       class="span3" 
-                      ng-model="resources.PostCity"
-                      value="{{data.resources.PostCity}}">
+                      ng-model="data.resources.PostCity">
             </div>
           </div>
           <div class="form-actions">
             <button   type="submit" 
                       class="btn btn-success"
-                      ng-click="save(resources)">{{ui.profile.saveProfile}}</button>
+                      ng-click="save(data.resources)">{{ui.profile.saveProfile}}</button>
           </div>
         </form>
         <!-- end edit profile form -->

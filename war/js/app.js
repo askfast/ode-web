@@ -235,8 +235,6 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
       };
     });
   };
-
-  $rootScope.browser.mobile = true;
   
 
   /**

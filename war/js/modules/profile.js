@@ -28,6 +28,9 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   $scope.data = data;
 
 
+  console.log('data ->', data.resources);
+
+
   /**
    * Set user
    */
@@ -971,6 +974,8 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
 
     Profile.get({id: id}, function (result) 
     {
+      $rootScope.app.resources = result;
+
       if (localize) Storage.add('resources', angular.toJson(result));
 
       deferred.resolve({resources: result});
