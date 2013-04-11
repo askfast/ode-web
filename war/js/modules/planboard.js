@@ -11,8 +11,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   $rootScope.fixStyles();
 
-  $rootScope.browser.mobile = true;
-
   
   /**
    * Set default currents

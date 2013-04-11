@@ -10,16 +10,15 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
    */
   $rootScope.fixStyles();
 
-
   /**
    * Self this
    */
 	var self = this,
       periods = Dater.getPeriods(),
       current = {
-        day: Date.today().getDayOfYear() + 1,
-        week: new Date().getWeek(),
-        month: new Date().getMonth() + 1
+        day:    Date.today().getDayOfYear() + 1,
+        week:   new Date().getWeek(),
+        month:  new Date().getMonth() + 1
       };
 
 
@@ -55,7 +54,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
    * Default form views
    */
   $scope.forms = {
-    add: false,
+    add:  false,
     edit: false
   };
 
@@ -138,7 +137,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   /**
    * Save user
    */
-  $scope.save = function(resources)
+  $scope.save = function (resources)
   {
     $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
@@ -181,7 +180,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   /**
    * Change passwords
    */
-  $scope.change = function(passwords)
+  $scope.change = function (passwords)
   {
     if (passwords.new1 == '' || passwords.new2 == '')
     {
@@ -324,7 +323,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
       $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
 
       Profile.getSlots($scope.user.id, stamps)
-      .then(function(data)
+      .then(function (data)
       {
         $scope.data.slots = data.slots;
 
@@ -436,11 +435,14 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
       $scope.slot = {
         start: {
           date: new Date(values.start).toString($rootScope.config.formats.date),
-          time: new Date(values.start).toString($rootScope.config.formats.time)
+          time: new Date(values.start).toString($rootScope.config.formats.time),
+          datetime: new Date(values.start).toISOString()
+
         },
         end: {
           date: new Date(values.end).toString($rootScope.config.formats.date),
-          time: new Date(values.end).toString($rootScope.config.formats.time)
+          time: new Date(values.end).toString($rootScope.config.formats.time),
+          datetime: new Date(values.end).toISOString()
         },
         state:      content.state,
         recursive:  content.recursive,
@@ -479,18 +481,20 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
     $scope.$apply(function ()
     {
       $scope.forms = {
-        add: true,
+        add:  true,
         edit: false
       };
 
       $scope.slot = {
         start: {
           date: new Date(values.start).toString($rootScope.config.formats.date),
-          time: new Date(values.start).toString($rootScope.config.formats.time)
+          time: new Date(values.start).toString($rootScope.config.formats.time),
+          datetime: new Date(values.start).toISOString()
         },
         end: {
           date: new Date(values.end).toString($rootScope.config.formats.date),
-          time: new Date(values.end).toString($rootScope.config.formats.time)
+          time: new Date(values.end).toString($rootScope.config.formats.time),
+          datetime: new Date(values.end).toISOString()
         },
         recursive: (values.group.match(/recursive/)) ? true : false,
         /**
@@ -513,8 +517,12 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
 
     Slots.add(
     {
-      start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
-      end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
+      start:      ($rootScope.browser.mobile) ? 
+                    new Date(slot.start.datetime).getTime() / 1000 :
+                    Dater.convert.absolute(slot.start.date, slot.start.time, true),
+      end:        ($rootScope.browser.mobile) ? 
+                    new Date(slot.end.datetime).getTime() / 1000 : 
+                    Dater.convert.absolute(slot.end.date, slot.end.time, true),
       recursive:  (slot.recursive) ? true : false,
       text:       slot.state
     }, 
@@ -578,8 +586,12 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   {
     timelineOnChange(true, original, slot, 
     {
-      start:  Dater.convert.absolute(slot.start.date, slot.start.time, false),
-      end:    Dater.convert.absolute(slot.end.date, slot.end.time, false),
+      start:  ($rootScope.browser.mobile) ?
+                new Date(slot.start.datetime).getTime() : 
+                Dater.convert.absolute(slot.start.date, slot.start.time, false),
+      end:    ($rootScope.browser.mobile) ? 
+                new Date(slot.end.datetime).getTime() :
+                Dater.convert.absolute(slot.end.date, slot.end.time, false),
       content: angular.toJson({
         recursive:  slot.recursive, 
         state:      slot.state 
@@ -597,7 +609,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
                 .contents()
                 .filter(function () { return this.nodeValue == 'New' });
       
-    if (news)
+    if (news.length > 0)
     {
       $scope.$apply(function ()
       {
@@ -630,7 +642,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   /**
    * Delete trigger start view
    */
-  $scope.slotRemove = function () { timelineOnRemove() };
+  $scope.slotRemove = function () { timelineOnDelete() };
 
 
   /**
@@ -1008,9 +1020,11 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
 
     Slots.user(
     {
-      user: id,
-      start: params.start / 1000,
-      end: params.end / 1000
+      user:   id,
+      // start: params.start / 1000,
+      // end: params.end / 1000
+      start:  params.start,
+      end:    params.end
     }).then(function (slots)
     {
       deferred.resolve({
@@ -1061,7 +1075,7 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
    * Create settings resources for user if it is missing
    */
   Profile.prototype.createSettings_ = function (id) 
-  {    
+  {
     var deferred = $q.defer();
 
     Profile.prototype.get(id, false)

@@ -30,7 +30,7 @@ label {
 
 .dater-mobile {
   input[type=datetime] {
-    width: 145px;
+    width: 140px;
     height: 28px;
     color: black;
   }
@@ -68,8 +68,12 @@ label {
   }
 
   select {
-    width: 160px;
+    width: 140px;
   }
+}
+
+.rightest {
+  margin-right: 0;
 }
 
 

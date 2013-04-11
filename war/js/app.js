@@ -306,10 +306,17 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   {
     init: function (status, type, message)
     {
-      $rootScope.notification = {
-        status: status,
-        type: type,
-        message: message
+      if ($rootScope.browser.mobile && status == true)
+      {
+        $window.alert(message);
+      }
+      else
+      {
+        $rootScope.notification = {
+          status: status,
+          type: type,
+          message: message
+        };
       };
     },
 
@@ -317,16 +324,12 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
     {
       this.init(true, 'alert-success', message);
 
-      if ($rootScope.browser.mobile) alert(message);
-
       if (!permanent) this.destroy();
     },
 
     error: function (message, permanent)
     {
       this.init(true, 'alert-danger', message);
-
-      if ($rootScope.browser.mobile) alert(message);
 
       if (!permanent) this.destroy();
     },
@@ -381,7 +384,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    */
   $rootScope.$on("$routeChangeError", function (event, current, previous, rejection)
   {
-    alert("ROUTE CHANGE ERROR: " + rejection);
+    $window.alert("ROUTE CHANGE ERROR: " + rejection);
   });
 
 

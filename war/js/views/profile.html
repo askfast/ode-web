@@ -229,20 +229,15 @@
                       ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
               <button type="button" 
                       class="btn"
-                      ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
-            </div>
-            <!-- end timeline navigation -->
-
-            <!-- timeline zooms -->
-            <div class="btn-group pull-left" style="margin-right: 5px">
-              <button type="button" 
-                      class="btn"
                       ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
               <button type="button" 
                       class="btn"
                       ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button>
+              <button type="button" 
+                      class="btn"
+                      ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
             </div>
-            <!-- end timeline zooms -->
+            <!-- end timeline navigation -->
 
             <!-- legenda -->
             <div  class="btn-group pull-left">
@@ -270,7 +265,7 @@
         </div>
         <!-- end timeline controls -->
 
-        <hr>
+        <hr ng-hide="forms.add || forms.edit">
         
         <!-- timeline legenda content -->
         <div class="legenda" ng-show="timeline.config.legendarer">
@@ -302,9 +297,21 @@
             <!-- end close btn -->
             <h4 ng-show="forms.add">{{ui.profile.newAvail}}</h4>
             <h4 ng-show="forms.edit">{{ui.planboard.updateAvail}}</h4>
+
             <hr>
+
             <!-- slot start -->
-            <div class="form-elements-group">
+            <div class="form-elements-group" ng-show="browser.mobile">
+              <label>{{ui.planboard.from}}</label>
+              <!-- datetime -->
+              <div class="control-group dater-mobile">
+                <input  name="date-start" 
+                        type="datetime" 
+                        ng-model="slot.start.datetime">
+              </div>
+              <!-- end datetime -->
+            </div>
+            <div class="form-elements-group" ng-hide="browser.mobile">
               <label>{{ui.planboard.from}}</label>
               <!-- date -->
               <div class="control-group dater">
@@ -329,7 +336,17 @@
             <!-- end slot start -->
 
             <!-- slot end -->
-            <div class="form-elements-group">
+            <div class="form-elements-group" ng-show="browser.mobile">
+              <label>{{ui.planboard.till}}</label>
+              <!-- datetime -->
+              <div class="control-group dater-mobile">
+                <input  name="date-start" 
+                        type="datetime" 
+                        ng-model="slot.end.datetime">
+              </div>
+              <!-- end datetime -->
+            </div>
+            <div class="form-elements-group" ng-hide="browser.mobile">
               <label>{{ui.planboard.till}}</label>
               <!-- date -->
               <div class="control-group dater">
@@ -364,7 +381,7 @@
             <!-- end slot state -->
 
             <!-- slot recursive -->
-            <div class="form-elements-group">
+            <div class="form-elements-group rightest">
               <label>{{ui.planboard.reoccuring}}</label>
               <input type="checkbox" ng-model="slot.recursive">
             </div>
