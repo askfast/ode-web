@@ -476,6 +476,8 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
     {
       $('body').css({ 'background': 'none' });
       $('.navbar').show();
+      // $('#mobile-status-bar').show();
+      // $('#notification').show();
       if (!$rootScope.browser.mobile) $('#footer').show();
       $('#watermark').show();
       $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });

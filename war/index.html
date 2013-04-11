@@ -19,7 +19,7 @@
     <script src="js/libs/jquery/jquery-browser.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/gvrb/profile.js"></script>
+    <script src="profiles/knrmtest/profile.js"></script>
     
     <!-- favicons -->
     <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
@@ -117,7 +117,7 @@
             </ul>
             <!-- end desktop version -->
             <!-- mobile or tablet version -->
-            <ul class="nav pull-right" ng-show="browser.mobile">
+            <ul class="nav pull-right" ng-show="browser.mobile" style="{{(browser.landscape) && 'margin-right:-20px'}}">
               <li>
                 <a href="#profile">
                   <i class="icon-user icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
