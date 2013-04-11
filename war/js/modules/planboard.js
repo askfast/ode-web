@@ -11,6 +11,8 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   $rootScope.fixStyles();
 
+  $rootScope.browser.mobile = true;
+
   
   /**
    * Set default currents
@@ -642,11 +644,13 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       $scope.slot = {
         start: {
           date: new Date(values.start).toString($rootScope.config.formats.date),
-          time: new Date(values.start).toString($rootScope.config.formats.time)
+          time: new Date(values.start).toString($rootScope.config.formats.time),
+          datetime: new Date(values.start).toISOString()
         },
         end: {
           date: new Date(values.end).toString($rootScope.config.formats.date),
-          time: new Date(values.end).toString($rootScope.config.formats.time)
+          time: new Date(values.end).toString($rootScope.config.formats.time),
+          datetime: new Date(values.end).toISOString()
         },
         state:      content.state,
         recursive:  content.recursive,
@@ -708,7 +712,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       
     if (news.length > 1) self.timeline.cancelAdd();
 
-    $scope.$apply(function()
+    $scope.$apply(function s()
     {
       resetViews();
 
@@ -717,11 +721,13 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
       $scope.slot = {
         start: {
           date: new Date(values.start).toString($rootScope.config.formats.date),
-          time: new Date(values.start).toString($rootScope.config.formats.time)
+          time: new Date(values.start).toString($rootScope.config.formats.time),
+          datetime: new Date(values.start).toISOString()
         },
         end: {
           date: new Date(values.end).toString($rootScope.config.formats.date),
-          time: new Date(values.end).toString($rootScope.config.formats.time)
+          time: new Date(values.end).toString($rootScope.config.formats.time),
+          datetime: new Date(values.end).toISOString()
         },
         recursive: (values.group.match(/recursive/)) ? true : false,
         /**
@@ -742,8 +748,12 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     var now     = Date.now().getTime(),
         values  = {
-                    start:      Dater.convert.absolute(slot.start.date, slot.start.time, true),
-                    end:        Dater.convert.absolute(slot.end.date, slot.end.time, true),
+                    start:      ($rootScope.browser.mobile) ? 
+                                  new Date(slot.start.datetime).getTime() / 1000 :
+                                  Dater.convert.absolute(slot.start.date, slot.start.time, true),
+                    end:        ($rootScope.browser.mobile) ? 
+                                  new Date(slot.end.datetime).getTime() / 1000 : 
+                                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
                     recursive:  (slot.recursive) ? true : false,
                     text:       slot.state
                   };
@@ -835,8 +845,12 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
   {
     timelineOnChange(true, original, slot, 
     {
-      start:  Dater.convert.absolute(slot.start.date, slot.start.time, false),
-      end:    Dater.convert.absolute(slot.end.date, slot.end.time, false),
+      start:  ($rootScope.browser.mobile) ?
+                new Date(slot.start.datetime).getTime() : 
+                Dater.convert.absolute(slot.start.date, slot.start.time, false),
+      end:    ($rootScope.browser.mobile) ? 
+                new Date(slot.end.datetime).getTime() :
+                Dater.convert.absolute(slot.end.date, slot.end.time, false),
       content: angular.toJson({
         recursive:  slot.recursive, 
         state:      slot.state 
@@ -855,8 +869,12 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
     Slots.setWish(
     {
       id:     slot.groupId,
-      start:  Dater.convert.absolute(slot.start.date, slot.start.time, true),
-      end:    Dater.convert.absolute(slot.end.date, slot.end.time, true),
+      start:  ($rootScope.browser.mobile) ? 
+                new Date(slot.start.datetime).getTime() / 1000 : 
+                Dater.convert.absolute(slot.start.date, slot.start.time, true),
+      end:    ($rootScope.browser.mobile) ? 
+                new Date(slot.end.datetime).getTime() / 1000 : 
+                Dater.convert.absolute(slot.end.date, slot.end.time, true),
       recursive:  false,
       // recursive:  slot.recursive,
       wish:       slot.wish
@@ -891,7 +909,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
      */
     var news = $('.timeline-event-content')
                 .contents()
-                .filter(function()
+                .filter(function ()
                 { 
                   return this.nodeValue == 'New' 
                 });

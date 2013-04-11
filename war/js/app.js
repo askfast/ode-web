@@ -317,12 +317,16 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
     {
       this.init(true, 'alert-success', message);
 
+      if ($rootScope.browser.mobile) alert(message);
+
       if (!permanent) this.destroy();
     },
 
     error: function (message, permanent)
     {
       this.init(true, 'alert-danger', message);
+
+      if ($rootScope.browser.mobile) alert(message);
 
       if (!permanent) this.destroy();
     },
