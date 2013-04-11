@@ -355,7 +355,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
 
     $rootScope.loadingBig = true;
 
-    $rootScope.statusBar.display('');
+    $rootScope.statusBar.display('Loading..');
 
     $('div[ng-view]').hide();
   });
@@ -392,7 +392,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    * Fix styles
    */
   $rootScope.fixStyles = function () 
-  {
+  {    
     // var tabHeight = $('.tabs-left .nav-tabs').height();
 
     // $.each($('.tab-content').children(), function () 
