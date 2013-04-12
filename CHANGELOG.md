@@ -4,6 +4,8 @@
 ## Versions
 
 	2.0.2 (snapshot)
+		* meridian time (hour) issue with selecting time range with mouse either by shift or ctrl keys is resolved 12-4-2013
+		* tablet issues has been solved 12-4-2013
 		* corrected a localization issue with 'no messages' in the box 11-4-2013
 		* tablet datetime selectors for planboard and profile timeline 11-4-2013
 		* removed footer for mobile and tablets and changed it to portable preloader 10-4-2013
