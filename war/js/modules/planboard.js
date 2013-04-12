@@ -163,7 +163,7 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
    */
   var states = {};
 
-  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
+  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
 
   $scope.states = states;
 
@@ -476,7 +476,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         });
       };
     }
-
     else if ($scope.timeline.scope.week)
     {
       if ($scope.timeline.current.week != 1)
@@ -489,7 +488,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         });
       };
     }
-
     else if ($scope.timeline.scope.month)
     {
       if ($scope.timeline.current.month != 1)
@@ -525,7 +523,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         });
       };
     }
-
     else if ($scope.timeline.scope.week)
     {
       if ($scope.timeline.current.week != 53)
@@ -538,7 +535,6 @@ function planboardCtrl ($rootScope, $scope, $q, $window, $location, data, Slots,
         });
       };
     }
-
     else if ($scope.timeline.scope.month)
     {
       if ($scope.timeline.current.month != 12)

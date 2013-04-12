@@ -1,5 +1,7 @@
 'use strict';
 
+
+
 // Factory template
 // 
 // WebPaige.
@@ -12,6 +14,7 @@
 //     }
 //   }
 // });
+
 
 
 /**
@@ -44,18 +47,14 @@ factory('Session', function ($rootScope, $http, Storage)
      */
     cookie: function(session)
     {
-      var values;
+      var values,
+          pairs = document.cookie.split(";");
 
-      var pairs = document.cookie.split(";");
-
-      for(var i=0; i < pairs.length; i++)
+      for (var i=0; i < pairs.length; i++)
       {
         values = pairs[i].split("=");
 
-        if (values[0].trim() == "WebPaige.session")
-        {
-          return angular.fromJson(values[1]);
-        };
+        if (values[0].trim() == "WebPaige.session") return angular.fromJson(values[1]);
       };
 
     },
@@ -67,7 +66,9 @@ factory('Session', function ($rootScope, $http, Storage)
     get: function(session)
     {
       this.check(session);
+
       this.set(session.id);
+
       return session.id;
     },
 
@@ -84,6 +85,7 @@ factory('Session', function ($rootScope, $http, Storage)
       Storage.cookie.add('session', angular.toJson(session));
 
       $rootScope.session = session;
+
       $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
 
       return session;
@@ -95,10 +97,12 @@ factory('Session', function ($rootScope, $http, Storage)
     clear: function()
     {
       $rootScope.session = null;
+
       $http.defaults.headers.common['X-SESSION_ID'] = null;
     }
   }
 });
+
 
 
 /**
@@ -148,33 +152,7 @@ factory('Dater', function ($rootScope, Storage)
         
         return (flag) ? result / 1000 : result;
       }
-      // range: function (range)
-      // {
-      //   var range = {
-      //     start:  new Date(range.start).toString($rootScope.config.formats.date),
-      //     end:    new Date(range.end).toString($rootScope.config.formats.date)
-      //   };
-
-      //   return range;
-      // },
-
-      // /**
-      //  * Not working either       
-      //  *
-      //  */
-      // stamp: function (date)
-      // {
-      //   return Date(date).getTime();
-      // }
     },
-
-    // stringify:
-    // {
-    //   date: function (date)
-    //   {
-    //     return new Date(date).toString($rootScope.config.formats.date);
-    //   }
-    // },
 
     calculate:
     {
@@ -354,23 +332,35 @@ factory('Dater', function ($rootScope, Storage)
     {
       return angular.fromJson(Storage.get('periods'));
     }
-
   }
 });
+
 
 
 /**
  * EventBus Service
  */
+// WebPaige.
+// factory('EventBus', function ($rootScope, Storage) 
+// {
+//   return {
+//     fn: function ()
+//     {
+//       return 'some value';
+//     }
+//   }
+// });
+
+
 WebPaige.
 service('$eventBus', 
 function ($rootScope) 
 {
-  var self = this,
+  var self      = this,
       listeners = {},
-      history = {};
+      history   = {};
  
-  self.emit = function(eventName) 
+  self.emit = function (eventName) 
   {
     var args = Array.prototype.slice.call(arguments, 1);
 
@@ -390,29 +380,24 @@ function ($rootScope)
     });
   };
  
-  self.on = function(eventName, fn) 
+  self.on = function (eventName, fn) 
   {
-    if(!(listeners[eventName] instanceof Array))
-    {
-      listeners[eventName] = [];
-    }
+    if (!(listeners[eventName] instanceof Array)) listeners[eventName] = [];
 
     listeners[eventName].push(fn);
 
     $rootScope.$on(listeners[eventName], fn);
   };
  
-  self.remove = function(eventName, fn) 
+  self.remove = function (eventName, fn) 
   {
-    var lsnrs = listeners[eventName];
-    var ind = lsnrs instanceof Array ? lsnrs.indexOf(fn) : -1;
-    if(ind > -1)
-    {
-      listeners[eventName].splice(ind,1);
-    }
+    var lsnrs = listeners[eventName],
+        ind   = lsnrs instanceof Array ? lsnrs.indexOf(fn) : -1;
+
+    if (ind > -1) listeners[eventName].splice(ind,1);
   };
  
-  self.removeAll = function(eventName) 
+  self.removeAll = function (eventName) 
   {
     if (eventName)
     {
@@ -477,6 +462,7 @@ factory('Timer', function ($rootScope, $timeout)
       if (timers[id].delay == timers[id].counter)
       {
         timers[id].event.call();
+        
         timers[id].counter = 0;
       };
     };
