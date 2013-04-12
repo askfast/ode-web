@@ -1,5 +1,18 @@
 'use strict';
 
+// Factory template
+// 
+// WebPaige.
+// factory('Template', function ($rootScope, Storage) 
+// {
+//   return {
+//     fn: function ()
+//     {
+//       return 'some value';
+//     }
+//   }
+// });
+
 
 /**
  * Session Service
@@ -174,7 +187,7 @@ factory('Dater', function ($rootScope, Storage)
     /**
      * Get the current month
      */
-    getThisMonth: function()
+    getThisMonth: function ()
     {
       return new Date().toString('M');
     },
@@ -182,7 +195,7 @@ factory('Dater', function ($rootScope, Storage)
     /**
      * Get the current year
      */
-    getThisYear: function()
+    getThisYear: function ()
     {
       return new Date().toString('yyyy');
     },
@@ -191,26 +204,27 @@ factory('Dater', function ($rootScope, Storage)
      * Get begin and end timestamps of months
      * in the current year
      */
-    getMonthTimeStamps: function()
+    getMonthTimeStamps: function ()
     {
       var months = {}, 
           year = this.getThisYear();
 
       for (var i = 0; i < 12; i++)
       {
-        var firstDay = new Date(year, i).moveToFirstDayOfMonth();
-        var lastDay = new Date(year, i).moveToLastDayOfMonth();
-        var month = {
-          first: {
-            day: firstDay,
-            timeStamp: firstDay.getTime()
-          },
-          last: { 
-            day: lastDay,
-            timeStamp: lastDay.getTime() 
-          },
-          totalDays: Date.getDaysInMonth(year, i)
-        };
+        var firstDay  = new Date(year, i).moveToFirstDayOfMonth(),
+            lastDay   = new Date(year, i).moveToLastDayOfMonth(),
+            month     = {
+              first: {
+                day: firstDay,
+                timeStamp: firstDay.getTime()
+              },
+              last: { 
+                day: lastDay,
+                timeStamp: lastDay.getTime() 
+              },
+              totalDays: Date.getDaysInMonth(year, i)
+            };
+
         months[i+1] = month;
       };
 
@@ -222,13 +236,13 @@ factory('Dater', function ($rootScope, Storage)
      */
     getWeekTimeStamps: function()
     {
-      var nweeks = [],
-          weeks = {},
+      var nweeks    = [],
+          weeks     = {},
           nextMonday,
-          year = this.getThisYear(), 
-          firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth(),
+          year      = this.getThisYear(), 
+          firstDayInYear    = new Date(year, 0).moveToFirstDayOfMonth(),
           firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
-          firstMonday = new Date(firstMondayOfYear);
+          firstMonday       = new Date(firstMondayOfYear);
 
       for (var i = 0; i < 53; i++)
       {
@@ -239,7 +253,8 @@ factory('Dater', function ($rootScope, Storage)
         else
         {
           nextMonday = new Date(nweeks[i-1]).addWeeks(1);
-        }
+        };
+
         nweeks.push(new Date(nextMonday));
       };
 
@@ -289,7 +304,8 @@ factory('Dater', function ($rootScope, Storage)
         else
         {
           nextDay = new Date(ndays[i-1]).addDays(1);
-        }
+        };
+
         ndays.push(new Date(nextDay));
       };
 
@@ -304,7 +320,7 @@ factory('Dater', function ($rootScope, Storage)
             day: ndays[i+1],
             timeStamp: new Date(ndays[i+1]).getTime()
           }
-        }
+        };
       };
 
       /**
@@ -326,6 +342,7 @@ factory('Dater', function ($rootScope, Storage)
     registerPeriods: function ()
     {
       var periods = angular.fromJson(Storage.get('periods') || '{}');
+
       Storage.add('periods', angular.toJson({
         months: this.getMonthTimeStamps(),
         weeks: this.getWeekTimeStamps(),
@@ -347,7 +364,7 @@ factory('Dater', function ($rootScope, Storage)
  */
 WebPaige.
 service('$eventBus', 
-function($rootScope) 
+function ($rootScope) 
 {
   var self = this,
       listeners = {},
@@ -410,50 +427,100 @@ function($rootScope)
 });
 
 
+
+
+
+
+
+
+
 /**
- * Timer Service
- */
-var timerService = angular.module('timerModule', []);
-timerService.constant('initer', 0);
-
-timerService.service('timerService', [
-  '$rootScope', 
-  '$timeout', 
-  function($rootScope, $timeout)
+ * Timer service
+ *
+ * Example use
+ *
+ * Don't forget the Dependency injection
+ * 
+  $scope.stopTimer = function ()
   {
-    var timers = [];
-    var addTimer = function (id, event, delay)
+    Timer.stop('timerExample');
+  };
+
+  Timer.start('timerExample', function ()
+  {
+    console.warn('timer started');
+  }, 
+  5 // in seconds
+  );
+ *
+ */
+WebPaige.
+factory('Timer', function ($rootScope, $timeout) 
+{
+  var initer = 0,
+      timers = [];
+
+  var addTimer = function (id, event, delay)
+  {
+    timers[id] = {
+      event: event, 
+      delay: delay, 
+      counter: 0
+    };
+
+    var onTimeout = function ()
     {
-      timers[id] = {event: event, delay: delay, counter: 0};
-      var onTimeout = function()
+      timers[id].counter++;
+
+      timers[id].mytimeout = $timeout(onTimeout, 1000);
+
+      if (timers[id].delay == timers[id].counter)
       {
-        timers[id].counter++;
-        timers[id].mytimeout = $timeout(onTimeout, 1000);
-        if (timers[id].delay == timers[id].counter)
-        {
-          timers[id].event.call();
-          timers[id].counter = 0;
-        }
-        // REMOVE LATER
-        // 
-        // $rootScope.counter = timers[id].counter;
-        //
-      }
-      timers[id].mytimeout = $timeout(onTimeout, 1000);  
+        timers[id].event.call();
+        timers[id].counter = 0;
+      };
     };
 
-    var stopTimer = function (id)
-    {
-      $timeout.cancel(timers[id].mytimeout);
-    };
+    timers[id].mytimeout = $timeout(onTimeout, 1000);  
+  };
 
-    return {
-      start: addTimer,
-      stop: stopTimer
-    };
+  var stopTimer = function (id)
+  {
+    $timeout.cancel(timers[id].mytimeout);
+  };
 
-  }
-]);
+  return {
+    start:  addTimer,
+    stop:   stopTimer
+  };
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -461,36 +528,38 @@ timerService.service('timerService', [
  */
 var angularLocalStorage = angular.module('StorageModule', []);
 
+
+
 angularLocalStorage.constant('prefix', 'WebPaige');
+
+
 
 // Cookie options (usually in case of fallback)
 // expiry = Number of days before cookies expire // 0 = Does not expire
 // path = The web path the cookie represents
 angularLocalStorage.constant('cookie', { expiry:30, path: '/'});
 
+
+
 angularLocalStorage.service('Storage', [
   '$rootScope', 
   'prefix', 
   'cookie',
-function($rootScope, prefix, cookie)
+function ($rootScope, prefix, cookie)
 {
   // If there is a prefix set in the config lets use that with an appended 
   // period for readability
   // var prefix = angularLocalStorage.constant;
-  if (prefix.substr(-1)!=='.')
-  {
-    prefix = !!prefix ? prefix + '.' : '';
-  };
+  
+  if (prefix.substr(-1) !== '.') prefix = !!prefix ? prefix + '.' : '';
 
   // Checks the browser to see if local storage is supported
   var browserSupportsLocalStorage = function ()
   {
-    try
-    {
+    try {
       return ('localStorage' in window && window['localStorage'] !== null);           
     }
-    catch (e)
-    {
+    catch (e) {
       return false;
     }
   };
@@ -500,68 +569,59 @@ function($rootScope, prefix, cookie)
   // Example use: Storage.add('library','angular');
   var addToLocalStorage = function (key, value)
   {
-    if (!browserSupportsLocalStorage())
-    {
-      return false;
-    }
+    if (!browserSupportsLocalStorage()) return false;
 
     // 0 and "" is allowed as a value but let's limit other falsey values like "undefined"
     if (!value && value!==0 && value!=="") return false;
 
-    try
-    {
+    try {
       localStorage.setItem(prefix+key, value);
     }
-    catch (e)
-    {
+    catch (e) {
       return false;
-    }
+    };
+
     return true;
   };
+
 
   // Directly get a value from local storage
   // Example use: Storage.get('library'); // returns 'angular'
   var getFromLocalStorage = function (key)
   {
-    if (!browserSupportsLocalStorage()) 
-    {
-      return false;
-    }
+    if (!browserSupportsLocalStorage()) return false;
 
     var item = localStorage.getItem(prefix+key);
+
     if (!item) return null;
+
     return item;
   };
+
 
   // Remove an item from local storage
   // Example use: Storage.remove('library'); // removes the key/value pair of library='angular'
   var removeFromLocalStorage = function (key) 
   {
-    if (!browserSupportsLocalStorage()) 
-    {
-      return false;
-    }
+    if (!browserSupportsLocalStorage()) return false;
 
-    try 
-    {
+    try {
       localStorage.removeItem(prefix+key);
     } 
-    catch (e) 
-    {
+    catch (e) {
       return false;
-    }
+    };
+
     return true;
   };
+
 
   // Remove all data for this app from local storage
   // Example use: Storage.clearAll();
   // Should be used mostly for development purposes
   var clearAllFromLocalStorage = function () 
   {
-    if (!browserSupportsLocalStorage()) 
-    {
-      return false;
-    }
+    if (!browserSupportsLocalStorage()) return false;
 
     var prefixLength = prefix.length;
 
@@ -570,105 +630,92 @@ function($rootScope, prefix, cookie)
       // Only remove items that are for this app
       if (key.substr(0,prefixLength) === prefix) 
       {
-        try 
-        {
+        try {
           removeFromLocalStorage(key.substr(prefixLength));
         } 
-        catch (e) 
-        {
+        catch (e) {
           return false;
-        }
-      }
-    }
+        };
+      };
+    };
+
     return true;
   };
+
 
   /**
    * Checks the browser to see if session storage is supported
    */
   var browserSupportsSessionStorage = function ()
   {
-    try
-    {
+    try {
       return ('sessionStorage' in window && window['sessionStorage'] !== null);           
     }
-    catch (e)
-    {
+    catch (e) {
       return false;
     }
   };
+
 
   /**
    * Directly adds a value to session storage
    */
   var addToSessionStorage = function (key, value)
   {
-    if (!browserSupportsSessionStorage())
-    {
-      return false;
-    };
+    if (!browserSupportsSessionStorage()) return false;
 
     if (!value && value!==0 && value!=="") return false;
 
-    try
-    {
+    try {
       sessionStorage.setItem(prefix+key, value);
     }
-    catch (e)
-    {
+    catch (e) {
       return false;
     };
 
     return true;
   };
+
 
   /**
    * Get value from session storage
    */
   var getFromSessionStorage = function (key)
   {
-    if (!browserSupportsSessionStorage()) 
-    {
-      return false;
-    };
+    if (!browserSupportsSessionStorage()) return false;
 
     var item = sessionStorage.getItem(prefix+key);
+
     if (!item) return null;
 
     return item;
   };
+
 
   /**
    * Remove item from session storage
    */
   var removeFromSessionStorage = function (key) 
   {
-    if (!browserSupportsSessionStorage()) 
-    {
-      return false;
-    };
+    if (!browserSupportsSessionStorage()) return false;
 
-    try 
-    {
+    try {
       sessionStorage.removeItem(prefix+key);
     } 
-    catch (e) 
-    {
+    catch (e) {
       return false;
     };
 
     return true;
   };
 
+
   /**
    * Remove all data from session storage
    */
   var clearAllFromSessionStorage = function () 
   {
-    if (!browserSupportsSessionStorage()) 
-    {
-      return false;
-    };
+    if (!browserSupportsSessionStorage()) return false;
 
     var prefixLength = prefix.length;
 
@@ -677,34 +724,32 @@ function($rootScope, prefix, cookie)
       // Only remove items that are for this app
       if (key.substr(0,prefixLength) === prefix) 
       {
-        try 
-        {
+        try {
           removeFromSessionStorage(key.substr(prefixLength));
         } 
-        catch (e) 
-        {
+        catch (e) {
           return false;
-        }
-      }
-    }
+        };
+      };
+    };
 
     return true;
   };
 
+
   // Checks the browser to see if cookies are supported
   var browserSupportsCookies = function() 
   {
-    try 
-    {
+    try {
       return navigator.cookieEnabled ||
         ("cookie" in document && (document.cookie.length > 0 ||
         (document.cookie = "test").indexOf.call(document.cookie, "test") > -1));
     } 
-    catch (e) 
-    {
+    catch (e) {
       return false;
     }
-  }
+  };
+
 
   // Directly adds a value to cookies
   // Typically used as a fallback is local storage is not available in the browser
@@ -713,23 +758,22 @@ function($rootScope, prefix, cookie)
   {
     if (typeof value == "undefined") return false;
 
-    if (!browserSupportsCookies()) 
-    {
-      return false;
-    }
+    if (!browserSupportsCookies())  return false;
 
-    try 
-    {
+    try {
       var expiry = '', expiryDate = new Date();
+
       if (value === null) 
       {
         cookie.expiry = -1;
+
         value = '';
       };
 
       if (cookie.expiry !== 0) 
       {
         expiryDate.setTime(expiryDate.getTime() + (cookie.expiry * 60 * 60 * 1000));
+
         expiry = "; expires="+expiryDate.toGMTString();
       };
 
@@ -742,14 +786,15 @@ function($rootScope, prefix, cookie)
                         "; path=" + 
                         cookie.path;
     } 
-    catch (e) 
-    {
+    catch (e) {
       $rootScope.$broadcast('StorageModule.notification.error',e.Description);
+
       return false;
-    }
+    };
 
     return true;
   };
+
 
   // Directly get a value from a cookie
   // Example use: Storage.cookie.get('library'); // returns 'angular'
@@ -763,62 +808,65 @@ function($rootScope, prefix, cookie)
 
     var cookies = document.cookie.split(';');
     
-    for(var i=0;i < cookies.length;i++) 
+    for (var i=0; i < cookies.length; i++) 
     {
       var thisCookie = cookies[i];
       
-      while (thisCookie.charAt(0)==' ') 
-      {
+      while (thisCookie.charAt(0)==' ')
         thisCookie = thisCookie.substring(1,thisCookie.length);
-      }
 
-      if (thisCookie.indexOf(prefix+key+'=') == 0) 
-      {
+      if (thisCookie.indexOf(prefix+key+'=') == 0)
         return decodeURIComponent(thisCookie.substring(prefix.length+key.length+1,thisCookie.length));
-      }
-    }
+    };
+
     return null;
   };
+
 
   var removeFromCookies = function (key) 
   {
     addToCookies(key,null);
-  }
+  };
+
 
   var clearAllFromCookies = function () 
   {
-    var thisCookie = null, thisKey = null;
-    var prefixLength = prefix.length;
-    var cookies = document.cookie.split(';');
+    var thisCookie    = null, 
+        thisKey       = null,
+        prefixLength  = prefix.length,
+        cookies       = document.cookie.split(';');
     
-    for(var i=0;i < cookies.length;i++) 
+    for (var i=0; i < cookies.length; i++) 
     {
       thisCookie = cookies[i];
       
       while (thisCookie.charAt(0)==' ') 
-      {
         thisCookie = thisCookie.substring(1,thisCookie.length);
-      }
 
       key = thisCookie.substring(prefixLength,thisCookie.indexOf('='));
+
       removeFromCookies(key);
-    }
-  }
+    };
+  };
+
 
   var getPeriods = function ()
   {
     return angular.fromJson(getFromLocalStorage('periods'));
   };
 
+
   var getGroups = function ()
   {
     return angular.fromJson(getFromLocalStorage('groups'));
   };
 
+
   var getMembers = function ()
   {
     return angular.fromJson(getFromLocalStorage('members'));
   };
+
 
   var getSettings = function ()
   {
@@ -828,6 +876,7 @@ function($rootScope, prefix, cookie)
 
     return (!settings.settingsWebPaige) ? $rootScope.config.defaults.settingsWebPaige : angular.fromJson(settings.settingsWebPaige);
   };
+
 
   return {
     isSupported: browserSupportsLocalStorage,
@@ -856,6 +905,33 @@ function($rootScope, prefix, cookie)
   };
 
 }]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -893,7 +969,31 @@ factory('Interceptor', function ($q, $location)
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
+ * TODO
+ * Still used?
+ * 
  * String manupulators
  */
 WebPaige.
@@ -914,11 +1014,28 @@ factory('Strings', function ()
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /** 
  * MD5 Service
  */
 WebPaige.service('$md5', 
-function() 
+function () 
 {
   var self = this;
   
