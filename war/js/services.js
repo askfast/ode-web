@@ -367,25 +367,10 @@ angular.module('Services', ['ngResource'])
 }])
 
 
-
 /**
  * EventBus Service
  */
-// WebPaige.
-// factory('EventBus', function ($rootScope, Storage) 
-// {
-//   return {
-//     fn: function ()
-//     {
-//       return 'some value';
-//     }
-//   }
-// });
-
-
-WebPaige.
-service('$eventBus', 
-function ($rootScope) 
+.factory('EventBus', ['$rootScope', function ($rootScope)
 {
   var self      = this,
       listeners = {},
@@ -439,8 +424,7 @@ function ($rootScope)
       listeners = {};
     }
   };
-
-});
+}])
 
 
 
