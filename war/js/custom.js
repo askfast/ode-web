@@ -30,5 +30,5 @@ if ($.browser.msie)
 {
   var ver = $.browser.version || $.browser.version[0];
 
-  if (ver == '6.0' || ver == '7.0') window.location = 'browse-happy.html';
+  if (ver == '6.0' || ver == '7.0') window.location = 'browsers.html';
 };
