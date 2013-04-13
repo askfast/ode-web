@@ -1,7 +1,7 @@
 'use strict';
 
 
-angular.module('Modals', ['ngResource'])
+angular.module('WebPaige.Modals', ['ngResource'])
 
 /**
  * User
@@ -2231,5 +2231,3 @@ function ($rootScope, $config, $resource, $q, Storage, Profile)
 
   return new Settings;
 }]);
-
-

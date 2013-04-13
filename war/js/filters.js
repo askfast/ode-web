@@ -1,11 +1,13 @@
 'use strict';
 
 
+angular.module('WebPaige.Filters', ['ngResource'])
+
+
 /**
  * Translate roles
  */
-WebPaige.
-filter('translateRole', ['$config', function ($config)
+.filter('translateRole', ['$config', function ($config)
 {
 	return function (role)
 	{
@@ -18,14 +20,13 @@ filter('translateRole', ['$config', function ($config)
 
 		return urole;
 	}
-}]);
+}])
 
 
 /**
  * Main range filter
  */
-WebPaige.
-filter('rangeMainFilter', ['Dater', 'Storage', function (Dater, Storage)
+.filter('rangeMainFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	var periods = Dater.getPeriods();
 
@@ -76,14 +77,13 @@ filter('rangeMainFilter', ['Dater', 'Storage', function (Dater, Storage)
 		};
 
 	}
-}]);
+}])
 
 
 /**
  * Main range week filter
  */
-WebPaige.
-filter('rangeMainWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
+.filter('rangeMainWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	var periods = Dater.getPeriods();
 
@@ -103,14 +103,13 @@ filter('rangeMainWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
 							Dater.getThisYear();
 		};
 	}
-}]);
+}])
 
 
 /**
  * Range info filter
  */
-WebPaige.
-filter('rangeInfoFilter', ['Dater', 'Storage', function (Dater, Storage)
+.filter('rangeInfoFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	var periods = Dater.getPeriods();
 
@@ -155,14 +154,13 @@ filter('rangeInfoFilter', ['Dater', 'Storage', function (Dater, Storage)
 			};
 		};
 	};
-}]);
+}])
 
 
 /**
  * Range info week filter
  */
-WebPaige.
-filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
+.filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
 {
 	var periods = Dater.getPeriods();
 
@@ -170,7 +168,7 @@ filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
 	{
 		if (timeline) return 'Week number: ' + timeline.current.week;
 	};
-}]);
+}])
 
 
 /**
@@ -182,8 +180,7 @@ filter('rangeInfoWeekFilter', ['Dater', 'Storage', function (Dater, Storage)
  * 
  * Convert ratios to readable formats
  */
-WebPaige.
-filter('convertRatios', ['$config', function ($config)
+.filter('convertRatios', ['$config', function ($config)
 {
 	return function (stats)
 	{
@@ -196,14 +193,13 @@ filter('convertRatios', ['$config', function ($config)
 
 		return ratios.substring(0, ratios.length - 2);
 	};
-}]);
+}])
 
 
 /** 
  * Calculate time in days
  */
-WebPaige.
-filter('calculateTimeInDays', function()
+.filter('calculateTimeInDays', function ()
 {
 	return function (stamp)
 	{
@@ -217,14 +213,13 @@ filter('calculateTimeInDays', function()
 
 		return 	Math.floor(days / day);
 	};
-});
+})
 
 
 /**
  * Calculate time in hours
  */
-WebPaige.
-filter('calculateTimeInHours', function()
+.filter('calculateTimeInHours', function ()
 {
 	return function (stamp)
 	{
@@ -238,14 +233,13 @@ filter('calculateTimeInHours', function()
 
 		return 	Math.floor(hours / hour);
 	};
-});
+})
 
 
 /**
  * Calculate time in minutes
  */
-WebPaige.
-filter('calculateTimeInMinutes', function()
+.filter('calculateTimeInMinutes', function ()
 {
 	return function (stamp)
 	{
@@ -262,14 +256,13 @@ filter('calculateTimeInMinutes', function()
 
 		return 	Math.floor(minutes / minute);
 	};
-});
+})
 
 
 /**
  * Convert eve urls to ids
  */
-WebPaige.
-filter('convertEve', function()
+.filter('convertEve', function ()
 {
   return function (url)
   {
@@ -286,14 +279,13 @@ filter('convertEve', function()
 
     return eve[eve.length-2];
   };
-});
+})
 
 
 /** 
  * Convert user uuid to name
  */
-WebPaige.
-filter('convertUserIdToName', ['Storage', function(Storage)
+.filter('convertUserIdToName', ['Storage', function (Storage)
 {
 	var members = angular.fromJson(Storage.get('members'));
 
@@ -308,14 +300,13 @@ filter('convertUserIdToName', ['Storage', function(Storage)
       return members[id].name;
     };
 	};
-}]);
+}])
 
 
 /**
  * Convert timeStamps to dates
  */
-WebPaige.
-filter('nicelyDate', ['$rootScope', function ($rootScope)
+.filter('nicelyDate', ['$rootScope', function ($rootScope)
 {
  	return function (date)
  	{
@@ -323,7 +314,7 @@ filter('nicelyDate', ['$rootScope', function ($rootScope)
 
  		return new Date(date).toString($rootScope.config.formats.datetime);
  	};
-}]);
+}])
 
 
 /**
@@ -334,8 +325,7 @@ filter('nicelyDate', ['$rootScope', function ($rootScope)
  * 
  * Convert timeStamp to readable date and time
  */
-WebPaige.
-filter('convertTimeStamp', function ()
+.filter('convertTimeStamp', function ()
 {
 	return function (stamp)
 	{
@@ -343,20 +333,22 @@ filter('convertTimeStamp', function ()
 
 		return new Date(stamp).toString('dd-MM-yyyy HH:mm');
 	};
-});
+})
 
 
 /**
+ * TODO
+ * Still used?
+ * 
  * No title filter
  */
-WebPaige.
-filter('noTitle',function()
+.filter('noTitle',function ()
 {
 	return function (title)
 	{
 		return (title == "") ? "- No Title -" : title;
 	}
-});
+})
 
 
 /**
@@ -365,34 +357,31 @@ filter('noTitle',function()
  * 
  * Strip span tags
  */
-WebPaige.
-filter('stripSpan', function()
+.filter('stripSpan', function ()
 {
   return function (string)
   {
     return string.match(/<span class="label">(.*)<\/span>/);
   }
-});
+})
 
 
 /**
  * Strip html tags
  */
-WebPaige.
-filter('stripHtml', function()
+.filter('stripHtml', function ()
 {
   return function (string)
   {
   	if (string) return string.split('>')[1].split('<')[0];
   }
-});
+})
 
 
 /**
  * Convert group id to name
  */
-WebPaige.
-filter('groupIdToName', ['Storage', function (Storage)
+.filter('groupIdToName', ['Storage', function (Storage)
 {
   return function (id)
   {
@@ -403,11 +392,15 @@ filter('groupIdToName', ['Storage', function (Storage)
   		if (groups[i].uuid == id) return groups[i].name;
   	};
   }
-}]);
+}])
 
 
-WebPaige.
-filter('i18n_spec',['$rootScope', function ($rootScope)
+
+/**
+ * TODO
+ * Unknown filter
+ */
+.filter('i18n_spec',['$rootScope', function ($rootScope)
 {
 	return function (string, type)
 	{
@@ -417,14 +410,13 @@ filter('i18n_spec',['$rootScope', function ($rootScope)
 		
 		return ret;
 	}
-}]);
+}])
 
 
 /**
  * Truncate group titles for dashboard pie widget
  */
-WebPaige.
-filter('truncateGroupTitle', ['Strings', function (Strings) 
+.filter('truncateGroupTitle', ['Strings', function (Strings) 
 {
 	return function (title)
 	{

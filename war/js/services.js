@@ -1,7 +1,7 @@
 'use strict';
 
 
-angular.module('Services', ['ngResource'])
+angular.module('WebPaige.Services', ['ngResource'])
 
 /**
  * Timer service
@@ -1898,5 +1898,4 @@ angular.module('Services', ['ngResource'])
     }
 
   }
-}])
-
+}]);

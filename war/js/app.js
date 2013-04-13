@@ -4,19 +4,20 @@
 /**
  * Declare app level module which depends on filters, and services
  */
-var WebPaige = angular.module('WebPaige', 
+angular.module('WebPaige', 
 [
   '$strap.directives', 
-  'ngResource', 
-  'Modals',
-  'Services'
-]);
-
+  'ngResource',
+  'WebPaige.Controllers',
+  'WebPaige.Directives',
+  'WebPaige.Filters',
+  'WebPaige.Modals',
+  'WebPaige.Services'
+])
 
 /**
  * App configuration
  */
-WebPaige
 .value('$config', 
 {
   title: 'WebPaige',
@@ -159,25 +160,180 @@ WebPaige
 
 
 /**
- * Providers
+ * Providers & Routes
  */
 .config(function ($locationProvider, $routeProvider, $httpProvider) 
 {
   /**
-   * Routes
+   * Login router
    */
   $routeProvider
-  .when('/login',     { templateUrl: 'js/views/login.html',       controller: loginCtrl })
-  .when('/logout',    { templateUrl: 'js/views/logout.html',      controller: loginCtrl.logout })
-  .when('/dashboard', { templateUrl: 'js/views/dashboard.html',   controller: dashboardCtrl })
-  .when('/planboard', { templateUrl: 'js/views/planboard.html',   controller: planboardCtrl,  resolve: planboardCtrl.resolve })
-  .when('/messages',  { templateUrl: 'js/views/messages.html',    controller: messagesCtrl,   resolve: messagesCtrl.resolve,  reloadOnSearch: false})
-  .when('/groups',    { templateUrl: 'js/views/groups.html',      controller: groupsCtrl,     resolve: groupsCtrl.resolve,    reloadOnSearch: false})
-  .when('/profile/:userId', { templateUrl: 'js/views/profile.html', controller: profileCtrl,  resolve: profileCtrl.resolve,   reloadOnSearch: false})
-  .when('/profile',   { templateUrl: 'js/views/profile.html',     controller: profileCtrl,    resolve: profileCtrl.setAccount })
-  .when('/settings',  { templateUrl: 'js/views/settings.html',    controller: settingsCtrl,   resolve: settingsCtrl.resolve })
-  .when('/help',      { templateUrl: 'js/views/help.html',        controller: helpCtrl })
-  .otherwise({ redirectTo: '/login' });
+  .when('/login',
+  {
+    templateUrl: 'js/views/login.html',
+    controller: 'loginCtrl' 
+  })
+
+  /**
+   * Logout router
+   */
+  .when('/logout',
+  { 
+    templateUrl: 'js/views/logout.html',
+    controller: 'logoutCtrl'
+  })
+
+  /**
+   * Dashboard router
+   */
+  .when('/dashboard', 
+  { 
+    templateUrl: 'js/views/dashboard.html',
+    controller: 'dashboardCtrl'
+  })
+
+  /**
+   * Planboard router
+   */
+  .when('/planboard', 
+  { 
+    templateUrl: 'js/views/planboard.html',
+    controller: 'planboardCtrl',
+    resolve: {
+      data: function ($route, Slots, Storage, Dater) 
+      {
+        var periods = Storage.local.periods(),
+            current = Dater.current.week(),
+            initial = periods.weeks[current],
+            groups  = Storage.local.groups(),
+            settings = Storage.local.settings();
+
+        return  Slots.all({
+                  groupId:  settings.app.group,
+                  division: 'all',
+                  stamps: {
+                    start:  initial.first.timeStamp,
+                    end:    initial.last.timeStamp
+                  },
+                  month: Dater.current.month(),
+                  layouts: {
+                    user:     true,
+                    group:    true,
+                    members:  false
+                  }
+                });
+      }
+    }
+  })
+
+  /**
+   * Messages router
+   */
+  .when('/messages', 
+  { 
+    templateUrl: 'js/views/messages.html',    
+    controller: 'messagesCtrl',   
+    resolve: {
+      data: function ($route, Messages) 
+      {
+        return Messages.query();
+      }
+    }, 
+    reloadOnSearch: false
+  })
+
+  /**
+   * Groups router
+   */
+  .when('/groups',
+  {
+    templateUrl: 'js/views/groups.html',
+    controller: 'groupsCtrl',
+    resolve: {
+      data: function (Groups) 
+      {
+        return Groups.query();
+      }
+    },
+    reloadOnSearch: false
+  })
+
+  /**
+   * Profile (user specific) router
+   */
+  .when('/profile/:userId', 
+  { 
+    templateUrl: 'js/views/profile.html',
+    controller: 'profileCtrl',
+    resolve: {
+      data: function ($rootScope, Profile, $route, $location, Dater) 
+      {
+        if ($route.current.params.userId != $rootScope.app.resources.uuid)
+        {
+          var periods = Dater.getPeriods(),
+              current = Dater.current.week(),
+              ranges  = {
+                start:  periods.weeks[current].first.timeStamp / 1000,
+                end:    periods.weeks[current].last.timeStamp / 1000,
+              };
+
+          return Profile.getWithSlots($route.current.params.userId, false, ranges);
+        }
+        else
+        {
+          return Profile.get($route.current.params.userId, false);
+        };
+      }
+    },
+    reloadOnSearch: false
+  })
+
+  /**
+   * Profile (user hiself) router
+   */
+  .when('/profile', 
+  { 
+    templateUrl: 'js/views/profile.html', 
+    controller: 'profileCtrl',
+    resolve: {
+      data: function ($rootScope, $route, $location) 
+      {
+        if (!$route.current.params.userId || !$location.hash())
+          $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
+      }
+    }
+  })
+
+  /**
+   * Settings router
+   */
+  .when('/settings',
+  { 
+    templateUrl: 'js/views/settings.html',
+    controller: 'settingsCtrl',
+    resolve: {
+      data: function (Settings) 
+      {
+        return angular.fromJson(Settings.get());
+      }
+    }
+  })
+
+  /**
+   * Help router
+   */
+  .when('/help',
+  {
+    templateUrl: 'js/views/help.html',
+    controller: 'helpCtrl'
+  })
+
+  /**
+   * Router fallback
+   */
+  .otherwise({ 
+    redirectTo: '/login' 
+  });
 
   /**
    * Define interceptor
@@ -395,7 +551,7 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
    */
   $rootScope.$on("$routeChangeError", function (event, current, previous, rejection)
   {
-    $window.alert("ROUTE CHANGE ERROR: " + rejection);
+    $rootScope.notifier.error("ROUTE CHANGE ERROR: " + rejection);
   });
 
 
@@ -457,8 +613,4 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   };
 
 }]);
-
-
-
-
 

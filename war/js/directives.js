@@ -1,20 +1,22 @@
 'use strict';
 
 
+angular.module('WebPaige.Directives', ['ngResource'])
+
+
 /**
  * Chosen
  */
-WebPaige.
-directive('chosen',function ()
+.directive('chosen', function ()
 {
-  var linker = function(scope,element,attr)
+  var linker = function (scope,element,attr)
   {
-    scope.$watch('receviersList',function()
+    scope.$watch('receviersList', function ()
     {   
        element.trigger('liszt:updated');
     });
     
-    scope.$watch('message.receviers',function()
+    scope.$watch('message.receviers', function ()
     {   
        $(element[0]).trigger('liszt:updated');
     });
@@ -23,17 +25,16 @@ directive('chosen',function ()
   };
 
   return {
-    restrict:'A',
-    link: linker
+    restrict: 'A',
+    link:     linker
   }
-});
+})
 
 
 /**
  * Daterangepicker
  */
-WebPaige.
-directive('daterangepicker', function ($rootScope, $timeout)
+.directive('daterangepicker', ['$rootScope', function ($rootScope)
 {
   return {
     restrict: 'A',
@@ -48,16 +49,16 @@ directive('daterangepicker', function ($rootScope, $timeout)
         // startDate: startDate,
         // endDate: endDate,
         ranges: {
-                'Today': ['today', 'tomorrow'],
-                'Tomorrow': ['tomorrow', new Date.today().addDays(2)],
-                'Yesterday': ['yesterday', 'today'],
-                'Next 3 Days': ['today', new Date.create().addDays(3)],
-                'Next 7 Days': ['today', new Date.create().addDays(7)]
-            }
+          'Today': ['today', 'tomorrow'],
+          'Tomorrow': ['tomorrow', new Date.today().addDays(2)],
+          'Yesterday': ['yesterday', 'today'],
+          'Next 3 Days': ['today', new Date.create().addDays(3)],
+          'Next 7 Days': ['today', new Date.create().addDays(7)]
+        }
       },
-      function(start, end)
+      function (start, end)
       {
-        scope.$apply(function()
+        scope.$apply(function ()
         {
           var diff = end.getTime() - start.getTime();
 
@@ -129,33 +130,40 @@ directive('daterangepicker', function ($rootScope, $timeout)
       });
     }
   };
-});
+}])
 
 
 /**
  * ???
  */
-WebPaige.
-directive('wpName', function(Storage){
-    return {
-        restrict : 'A',
-        link : function linkfn(scope, element, attrs){
-            var getmemberName = function(uid){
-                var members = angular.fromJson(Storage.get('members'));
-                var retName = uid; 
-                angular.forEach(members , function(mem, i){
-                   if(mem.uuid == uid){
-                       retName = mem.name;
-                       return false;
-                   } 
-                });
-                return retName;
-            }
-            
-            scope.$watch(attrs.wpName,function(uid){
-                element.text(getmemberName(uid)); 
-            });
-            
-        }
+.directive('wpName', ['Storage', function (Storage)
+{
+  return {
+    restrict : 'A',
+    link : function linkfn(scope, element, attrs)
+    {
+      var getmemberName = function (uid)
+      {
+        var members = angular.fromJson(Storage.get('members')),
+            retName = uid;
+
+        angular.forEach(members , function (mem, i)
+        {
+          if (mem.uuid == uid)
+          {
+            retName = mem.name;
+
+            return false;
+          };
+        });
+
+        return retName;
+      };
+      
+      scope.$watch(attrs.wpName, function (uid)
+      {
+        element.text(getmemberName(uid)); 
+      });
     }
-});
+  }
+}]);

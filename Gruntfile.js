@@ -7,17 +7,31 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['src/**/*.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: [
+          'war/js/app.js',
+          'war/js/modals.js',
+          'war/js/login.js',
+          'war/js/dashboard.js',
+          'war/js/planboard.js',
+          'war/js/messages.js',
+          'war/js/groups.js',
+          'war/js/profile.js',
+          'war/js/settings.js',
+          'war/js/help.js',
+          'war/js/directives.js',
+          'war/js/services.js',
+          'war/js/filters.js'
+        ],
+        dest: 'war/js/_all.js'
       }
     },
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+        banner: '/*! WebPaige <%= grunt.template.today("dd-mm-yyyy") %> */\n'
       },
       dist: {
         files: {
-          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+          'war/js/_all.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
@@ -25,13 +39,15 @@ module.exports = function(grunt) {
       files: ['test/**/*.html']
     },
     jshint: {
-      files: ['gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+      files: [
+              'Gruntfile.js'
+              ],
       options: {
         // options here to override JSHint defaults
         globals: {
-          jQuery: true,
-          console: true,
-          module: true,
+          jQuery:   true,
+          console:  true,
+          module:   true,
           document: true
         }
       }
@@ -51,5 +67,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint', 'qunit']);
 
   grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+
+  grunt.registerTask('webpaige', ['concat', 'uglify']);
 
 };
