@@ -8,6 +8,7 @@ var WebPaige = angular.module('WebPaige',
 [
   '$strap.directives', 
   'ngResource', 
+  'Modals',
   'Services'
 ]);
 
