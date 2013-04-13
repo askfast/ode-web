@@ -705,34 +705,15 @@ angular.module('Services', ['ngResource'])
 
 
 /**
- * angularLocalStorage
+ * Storage service for localStorage, Session and cookies management
  */
-var angularLocalStorage = angular.module('StorageModule', []);
-
-
-
-angularLocalStorage.constant('prefix', 'WebPaige');
-
-
-
-// Cookie options (usually in case of fallback)
-// expiry = Number of days before cookies expire // 0 = Does not expire
-// path = The web path the cookie represents
-angularLocalStorage.constant('cookie', { expiry:30, path: '/'});
-
-
-
-angularLocalStorage.service('Storage', [
-  '$rootScope', 
-  'prefix', 
-  'cookie',
-function ($rootScope, prefix, cookie)
+.factory('Storage', ['$rootScope', '$config', function ($rootScope, $config)
 {
   // If there is a prefix set in the config lets use that with an appended 
   // period for readability
   // var prefix = angularLocalStorage.constant;
   
-  if (prefix.substr(-1) !== '.') prefix = !!prefix ? prefix + '.' : '';
+  if ($config.title.substr(-1) !== '.') $config.title = !!$config.title ? $config.title + '.' : '';
 
   // Checks the browser to see if local storage is supported
   var browserSupportsLocalStorage = function ()
@@ -753,10 +734,10 @@ function ($rootScope, prefix, cookie)
     if (!browserSupportsLocalStorage()) return false;
 
     // 0 and "" is allowed as a value but let's limit other falsey values like "undefined"
-    if (!value && value!==0 && value!=="") return false;
+    if (!value && value !== 0 && value !== "") return false;
 
     try {
-      localStorage.setItem(prefix+key, value);
+      localStorage.setItem($config.title + key, value);
     }
     catch (e) {
       return false;
@@ -772,7 +753,7 @@ function ($rootScope, prefix, cookie)
   {
     if (!browserSupportsLocalStorage()) return false;
 
-    var item = localStorage.getItem(prefix+key);
+    var item = localStorage.getItem($config.title + key);
 
     if (!item) return null;
 
@@ -787,7 +768,7 @@ function ($rootScope, prefix, cookie)
     if (!browserSupportsLocalStorage()) return false;
 
     try {
-      localStorage.removeItem(prefix+key);
+      localStorage.removeItem($config.title + key);
     } 
     catch (e) {
       return false;
@@ -804,12 +785,12 @@ function ($rootScope, prefix, cookie)
   {
     if (!browserSupportsLocalStorage()) return false;
 
-    var prefixLength = prefix.length;
+    var prefixLength = $config.title.length;
 
     for (var key in localStorage) 
     {
       // Only remove items that are for this app
-      if (key.substr(0,prefixLength) === prefix) 
+      if (key.substr(0, prefixLength) === $config.title) 
       {
         try {
           removeFromLocalStorage(key.substr(prefixLength));
@@ -845,10 +826,10 @@ function ($rootScope, prefix, cookie)
   {
     if (!browserSupportsSessionStorage()) return false;
 
-    if (!value && value!==0 && value!=="") return false;
+    if (!value && value !== 0 && value !== "") return false;
 
     try {
-      sessionStorage.setItem(prefix+key, value);
+      sessionStorage.setItem($config.title + key, value);
     }
     catch (e) {
       return false;
@@ -865,7 +846,7 @@ function ($rootScope, prefix, cookie)
   {
     if (!browserSupportsSessionStorage()) return false;
 
-    var item = sessionStorage.getItem(prefix+key);
+    var item = sessionStorage.getItem($config.title + key);
 
     if (!item) return null;
 
@@ -881,7 +862,7 @@ function ($rootScope, prefix, cookie)
     if (!browserSupportsSessionStorage()) return false;
 
     try {
-      sessionStorage.removeItem(prefix+key);
+      sessionStorage.removeItem($config.title + key);
     } 
     catch (e) {
       return false;
@@ -898,12 +879,12 @@ function ($rootScope, prefix, cookie)
   {
     if (!browserSupportsSessionStorage()) return false;
 
-    var prefixLength = prefix.length;
+    var prefixLength = $config.title.length;
 
     for (var key in sessionStorage) 
     {
       // Only remove items that are for this app
-      if (key.substr(0,prefixLength) === prefix) 
+      if (key.substr(0, prefixLength) === $config.title) 
       {
         try {
           removeFromSessionStorage(key.substr(prefixLength));
@@ -919,7 +900,7 @@ function ($rootScope, prefix, cookie)
 
 
   // Checks the browser to see if cookies are supported
-  var browserSupportsCookies = function() 
+  var browserSupportsCookies = function () 
   {
     try {
       return navigator.cookieEnabled ||
@@ -942,34 +923,33 @@ function ($rootScope, prefix, cookie)
     if (!browserSupportsCookies())  return false;
 
     try {
-      var expiry = '', expiryDate = new Date();
+      var expiry      = '', 
+          expiryDate  = new Date();
 
       if (value === null) 
       {
-        cookie.expiry = -1;
+        $config.cookie.expiry = -1;
 
         value = '';
       };
 
-      if (cookie.expiry !== 0) 
+      if ($config.cookie.expiry !== 0) 
       {
-        expiryDate.setTime(expiryDate.getTime() + (cookie.expiry * 60 * 60 * 1000));
+        expiryDate.setTime(expiryDate.getTime() + ($config.cookie.expiry * 60 * 60 * 1000));
 
-        expiry = "; expires="+expiryDate.toGMTString();
+        expiry = "; expires=" + expiryDate.toGMTString();
       };
 
-      document.cookie = prefix + 
+      document.cookie = $config.title + 
                         key + 
                         "=" + 
                         //encodeURIComponent(value) + 
                         value + 
                         expiry + 
                         "; path=" + 
-                        cookie.path;
+                        $config.cookie.path;
     } 
     catch (e) {
-      $rootScope.$broadcast('StorageModule.notification.error',e.Description);
-
       return false;
     };
 
@@ -983,7 +963,7 @@ function ($rootScope, prefix, cookie)
   {
     if (!browserSupportsCookies()) 
     {
-      $rootScope.$broadcast('StorageModule.notification.error','COOKIES_NOT_SUPPORTED');
+      $rootScope.$broadcast('StorageModule.notification.error', 'COOKIES_NOT_SUPPORTED');
       return false;
     }
 
@@ -994,10 +974,10 @@ function ($rootScope, prefix, cookie)
       var thisCookie = cookies[i];
       
       while (thisCookie.charAt(0)==' ')
-        thisCookie = thisCookie.substring(1,thisCookie.length);
+        thisCookie = thisCookie.substring(1, thisCookie.length);
 
-      if (thisCookie.indexOf(prefix+key+'=') == 0)
-        return decodeURIComponent(thisCookie.substring(prefix.length+key.length+1,thisCookie.length));
+      if (thisCookie.indexOf($config.title + key + '=') == 0)
+        return decodeURIComponent(thisCookie.substring($config.title.length + key.length + 1, thisCookie.length));
     };
 
     return null;
@@ -1006,7 +986,7 @@ function ($rootScope, prefix, cookie)
 
   var removeFromCookies = function (key) 
   {
-    addToCookies(key,null);
+    addToCookies(key, null);
   };
 
 
@@ -1014,17 +994,17 @@ function ($rootScope, prefix, cookie)
   {
     var thisCookie    = null, 
         thisKey       = null,
-        prefixLength  = prefix.length,
+        prefixLength  = $config.title.length,
         cookies       = document.cookie.split(';');
     
     for (var i=0; i < cookies.length; i++) 
     {
       thisCookie = cookies[i];
       
-      while (thisCookie.charAt(0)==' ') 
-        thisCookie = thisCookie.substring(1,thisCookie.length);
+      while (thisCookie.charAt(0) == ' ') 
+        thisCookie = thisCookie.substring(1, thisCookie.length);
 
-      key = thisCookie.substring(prefixLength,thisCookie.indexOf('='));
+      key = thisCookie.substring(prefixLength, thisCookie.indexOf('='));
 
       removeFromCookies(key);
     };
@@ -1083,9 +1063,9 @@ function ($rootScope, prefix, cookie)
       members:  getMembers,
       settings: getSettings
     }
-  };
+  }
 
-}]);
+}])
 
 
 /**
@@ -1094,20 +1074,20 @@ function ($rootScope, prefix, cookie)
  * 
  * String manupulators
  */
-// .factory('Strings', function ()
-// {
-//   return {
-//     /**
-//      * Truncate string from words with ..
-//      */
-//     truncate: function (txt, n, useWordBoundary)
-//     {
-//        var toLong = txt.length > n,
-//            s_ = toLong ? txt.substr(0, n-1) : txt,
-//            s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+.factory('Strings', function ()
+{
+  return {
+    /**
+     * Truncate string from words with ..
+     */
+    truncate: function (txt, n, useWordBoundary)
+    {
+       var toLong = txt.length > n,
+           s_ = toLong ? txt.substr(0, n-1) : txt,
+           s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
 
-//        return toLong ? s_ + '..' : s_;
-//     }
-//   }
-// })
+       return toLong ? s_ + '..' : s_;
+    }
+  }
+})
 

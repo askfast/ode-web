@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, Slots, Sloter)
+function profileCtrl($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, Slots, Sloter, MD5)
 {
   /**
    * Fix styles
@@ -195,7 +195,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, data, P
 
       return false;
     }
-    else if ($rootScope.app.resources.askPass == $rootScope.md5(passwords.current))
+    else if ($rootScope.app.resources.askPass == MD5(passwords.current))
     {
       $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
@@ -786,7 +786,7 @@ profileCtrl.resolve = {
 
 
 profileCtrl.$inject = ['$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 
-'Storage', 'Groups', 'Dater', 'Slots', 'Sloter'];
+'Storage', 'Groups', 'Dater', 'Slots', 'Sloter', 'MD5'];
 
 
 /**
@@ -863,7 +863,7 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, Storage
     Register.profile(
       {
         uuid: profile.username,
-        pass: $rootScope.md5(profile.password),
+        pass: MD5(profile.password),
         name: profile.name,
         phone: profile.PhoneAddress
       }, 
@@ -947,7 +947,7 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, Storage
 
     Resources.save(
       null, 
-      { askPass: $rootScope.md5(passwords.new1) }, 
+      { askPass: MD5(passwords.new1) }, 
       function (result) 
       {
         deferred.resolve(result);

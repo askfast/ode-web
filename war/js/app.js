@@ -6,7 +6,6 @@
  */
 var WebPaige = angular.module('WebPaige', 
 [
-  'StorageModule', 
   '$strap.directives', 
   'ngResource', 
   'Services'
@@ -19,6 +18,8 @@ var WebPaige = angular.module('WebPaige',
 WebPaige
 .value('$config', 
 {
+  title: 'WebPaige',
+
   version: '2.0.2 (snapshot)',
 
   lang: 'nl',
@@ -137,6 +138,11 @@ WebPaige
         }
       }
     }
+  },
+
+  cookie: {
+    expiry: 30, 
+    path:   '/'
   },
 
   init: function ()
