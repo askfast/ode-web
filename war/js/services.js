@@ -819,8 +819,7 @@ function ($rootScope, prefix, cookie)
  * Register the interceptor as a service,
  * intercepts ALL angular ajax http calls
  */
-WebPaige.
-factory('Interceptor', function ($q, $location)
+.factory('Interceptor', ['$q', '$location', function ($q, $location)
 {
   return function (promise)
   {
@@ -847,7 +846,7 @@ factory('Interceptor', function ($q, $location)
       return $q.reject(response);
     });
   }
-});
+}])
 
 
 
