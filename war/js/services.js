@@ -48,18 +48,13 @@ angular.module('Services', ['ngResource'])
     start:  addTimer,
     stop:   stopTimer
   };
-}]);
-
-
-
-
+}])
 
 
 /**
  * Session Service
  */
-WebPaige.
-factory('Session', function ($rootScope, $http, Storage) 
+.factory('Session', ['$rootScope', '$http', 'Storage', function ($rootScope, $http, Storage)
 {
   return {
     /**
@@ -139,7 +134,7 @@ factory('Session', function ($rootScope, $http, Storage)
       $http.defaults.headers.common['X-SESSION_ID'] = null;
     }
   }
-});
+}])
 
 
 
