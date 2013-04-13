@@ -3,13 +3,12 @@
 /**
  * Login Controller
  */
-var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5, Groups, Messages, Storage, $routeParams, Settings, Profile)
+var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
 {
   /**
    * Self this
    */
 	var self = this;
-
 
   /**
    * Redirect to dashboard if logged in
@@ -146,7 +145,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
       remember: $scope.logindata.remember
     }));
 
-    self.auth( $scope.logindata.username, $md5.process($scope.logindata.password ));
+    self.auth( $scope.logindata.username, MD5($scope.logindata.password ));
   };
 
 
@@ -624,7 +623,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
       .text('changing ...')
       .attr('disabled', 'disabled');
 
-		self.changePass($scope.changepass.uuid, $md5.process($scope.changeData.newPass), $scope.changepass.key);
+		self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
 	};
 
 };
@@ -664,8 +663,8 @@ loginCtrl.logout = function ($rootScope, $scope, $window, Session, User, Storage
 };
 
 
-loginCtrl.$inject = ['$rootScope', '$location', '$q', '$scope', 'Session', 'User', '$md5', 'Groups', 'Messages', 
-'Storage', '$routeParams', 'Settings', 'Profile'];
+loginCtrl.$inject = ['$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 
+'Storage', '$routeParams', 'Settings', 'Profile', 'MD5'];
 
 
 /**
@@ -886,3 +885,17 @@ factory('User', function ($resource, $config, $q, $location, $timeout, Storage, 
 
   return new User;
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+

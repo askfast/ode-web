@@ -4,7 +4,13 @@
 /**
  * Declare app level module which depends on filters, and services
  */
-var WebPaige = angular.module('WebPaige', ['StorageModule', '$strap.directives', 'ngResource', 'Services']);
+var WebPaige = angular.module('WebPaige', 
+[
+  'StorageModule', 
+  '$strap.directives', 
+  'ngResource', 
+  'Services'
+]);
 
 
 /**
@@ -444,3 +450,8 @@ function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $c
   };
 
 }]);
+
+
+
+
+

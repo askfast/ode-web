@@ -3,7 +3,7 @@
 /**
  * Profile Controller
  */
-function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, data, Profile, Storage, Groups, Dater, Slots, Sloter)
+function profileCtrl($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, Slots, Sloter)
 {
   /**
    * Fix styles
@@ -195,7 +195,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
 
       return false;
     }
-    else if ($rootScope.app.resources.askPass == $md5.process(passwords.current))
+    else if ($rootScope.app.resources.askPass == $rootScope.md5(passwords.current))
     {
       $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
@@ -785,15 +785,15 @@ profileCtrl.resolve = {
 };
 
 
-profileCtrl.$inject = ['$rootScope', '$scope', '$q', '$location', '$window', '$route', 
-'$md5', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'Slots', 'Sloter'];
+profileCtrl.$inject = ['$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 
+'Storage', 'Groups', 'Dater', 'Slots', 'Sloter'];
 
 
 /**
  * Profile modal
  */
 WebPaige.
-factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, Storage, Groups, Slots) 
+factory('Profile', function ($rootScope, $config, $resource, $q, $route, Storage, Groups, Slots) 
 {
   var Profile = $resource(
     $config.host + '/node/:id/:section',
@@ -863,7 +863,7 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
     Register.profile(
       {
         uuid: profile.username,
-        pass: $md5.process(profile.password),
+        pass: $rootScope.md5(profile.password),
         name: profile.name,
         phone: profile.PhoneAddress
       }, 
@@ -947,7 +947,7 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
 
     Resources.save(
       null, 
-      { askPass: $md5.process(passwords.new1) }, 
+      { askPass: $rootScope.md5(passwords.new1) }, 
       function (result) 
       {
         deferred.resolve(result);
