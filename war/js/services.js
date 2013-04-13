@@ -137,12 +137,10 @@ angular.module('Services', ['ngResource'])
 }])
 
 
-
 /**
  * Dater service (Wrapper on Date)
  */
-WebPaige.
-factory('Dater', function ($rootScope, Storage) 
+.factory('Dater', ['$rootScope', 'Storage', function ($rootScope, Storage)
 {
   return {
 
@@ -366,7 +364,7 @@ factory('Dater', function ($rootScope, Storage)
       return angular.fromJson(Storage.get('periods'));
     }
   }
-});
+}])
 
 
 
