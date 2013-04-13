@@ -1,19 +1,57 @@
 'use strict';
 
 
+angular.module('Services', ['ngResource'])
 
-// Factory template
-// 
-// WebPaige.
-// factory('Template', function ($rootScope, Storage) 
-// {
-//   return {
-//     fn: function ()
-//     {
-//       return 'some value';
-//     }
-//   }
-// });
+/**
+ * Timer service
+ *
+ * Timer.start('timerExample', function () { console.warn('timer started') }, 5);
+ * $scope.stopTimer = function () { Timer.stop('timerExample') };
+ */
+.factory('Timer', ['$rootScope', '$timeout', function ($rootScope, $timeout)
+{
+  var initer = 0,
+      timers = [];
+
+  var addTimer = function (id, event, delay)
+  {
+    timers[id] = {
+      event: event, 
+      delay: delay, 
+      counter: 0
+    };
+
+    var onTimeout = function ()
+    {
+      timers[id].counter++;
+
+      timers[id].mytimeout = $timeout(onTimeout, 1000);
+
+      if (timers[id].delay == timers[id].counter)
+      {
+        timers[id].event.call();
+
+        timers[id].counter = 0;
+      };
+    };
+
+    timers[id].mytimeout = $timeout(onTimeout, 1000);  
+  };
+
+  var stopTimer = function (id)
+  {
+    $timeout.cancel(timers[id].mytimeout);
+  };
+
+  return {
+    start:  addTimer,
+    stop:   stopTimer
+  };
+}]);
+
+
+
 
 
 
@@ -414,101 +452,6 @@ function ($rootScope)
 
 
 
-
-
-
-
-
-/**
- * Timer service
- *
- * Example use
- *
- * Don't forget the Dependency injection
- * 
-  $scope.stopTimer = function ()
-  {
-    Timer.stop('timerExample');
-  };
-
-  Timer.start('timerExample', function ()
-  {
-    console.warn('timer started');
-  }, 
-  5 // in seconds
-  );
- *
- */
-WebPaige.
-factory('Timer', function ($rootScope, $timeout) 
-{
-  var initer = 0,
-      timers = [];
-
-  var addTimer = function (id, event, delay)
-  {
-    timers[id] = {
-      event: event, 
-      delay: delay, 
-      counter: 0
-    };
-
-    var onTimeout = function ()
-    {
-      timers[id].counter++;
-
-      timers[id].mytimeout = $timeout(onTimeout, 1000);
-
-      if (timers[id].delay == timers[id].counter)
-      {
-        timers[id].event.call();
-        
-        timers[id].counter = 0;
-      };
-    };
-
-    timers[id].mytimeout = $timeout(onTimeout, 1000);  
-  };
-
-  var stopTimer = function (id)
-  {
-    $timeout.cancel(timers[id].mytimeout);
-  };
-
-  return {
-    start:  addTimer,
-    stop:   stopTimer
-  };
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * angularLocalStorage
  */
@@ -895,31 +838,6 @@ function ($rootScope, prefix, cookie)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Register the interceptor as a service,
  * intercepts ALL angular ajax http calls
@@ -957,25 +875,6 @@ factory('Interceptor', function ($q, $location)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * TODO
  * Still used?
@@ -999,20 +898,6 @@ factory('Strings', function ()
     }
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -434,6 +434,7 @@ var loginCtrl = function($rootScope, $location, $q, $scope, Session, User, $md5,
       $q.all(calls)
       .then(function (result)
       {
+        // console.warn('members ->', result);
         Groups.uniqueMembers();
       });
     });

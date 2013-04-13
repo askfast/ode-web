@@ -28,9 +28,6 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
   $scope.data = data;
 
 
-  console.log('data ->', data.resources);
-
-
   /**
    * Set user
    */
@@ -93,7 +90,7 @@ function profileCtrl($rootScope, $scope, $q, $location, $window, $route, $md5, d
     $scope.original = {};
 
     $scope.forms = {
-      add: false,
+      add:  false,
       edit: false
     };
   };
@@ -773,7 +770,7 @@ profileCtrl.resolve = {
     {
       var periods = Dater.getPeriods(),
           current = Dater.current.week(),
-          ranges = {
+          ranges  = {
             start:  periods.weeks[current].first.timeStamp / 1000,
             end:    periods.weeks[current].last.timeStamp / 1000,
           };
@@ -974,7 +971,7 @@ factory('Profile', function ($rootScope, $config, $resource, $q, $route, $md5, S
 
     Profile.get({id: id}, function (result) 
     {
-      $rootScope.app.resources = result;
+      if (id == $rootScope.app.resources.uuid) $rootScope.app.resources = result;
 
       if (localize) Storage.add('resources', angular.toJson(result));
 
