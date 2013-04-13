@@ -187,7 +187,7 @@ angular.module('WebPaige',
     .when('/login',
     {
       templateUrl: 'js/views/login.html',
-      controller: 'loginCtrl' 
+      controller: 'login' 
     })
 
     /**
@@ -196,7 +196,7 @@ angular.module('WebPaige',
     .when('/logout',
     { 
       templateUrl: 'js/views/logout.html',
-      controller: 'logoutCtrl'
+      controller: 'logout'
     })
 
     /**
@@ -205,7 +205,7 @@ angular.module('WebPaige',
     .when('/dashboard', 
     { 
       templateUrl: 'js/views/dashboard.html',
-      controller: 'dashboardCtrl'
+      controller: 'dashboard'
     })
 
     /**
@@ -214,7 +214,7 @@ angular.module('WebPaige',
     .when('/planboard', 
     { 
       templateUrl: 'js/views/planboard.html',
-      controller: 'planboardCtrl',
+      controller: 'planboard',
       resolve: {
         data: 
         [
@@ -252,7 +252,7 @@ angular.module('WebPaige',
     .when('/messages', 
     { 
       templateUrl: 'js/views/messages.html',    
-      controller: 'messagesCtrl',   
+      controller: 'messages',   
       resolve: {
         data: [
           '$route', 'Messages',
@@ -271,7 +271,7 @@ angular.module('WebPaige',
     .when('/groups',
     {
       templateUrl: 'js/views/groups.html',
-      controller: 'groupsCtrl',
+      controller: 'groups',
       resolve: {
         data: [
           'Groups',
@@ -290,7 +290,7 @@ angular.module('WebPaige',
     .when('/profile/:userId', 
     { 
       templateUrl: 'js/views/profile.html',
-      controller: 'profileCtrl',
+      controller: 'profile',
       resolve: {
         data: [
           '$rootScope', 'Profile', '$route', '$location', 'Dater',
@@ -323,7 +323,7 @@ angular.module('WebPaige',
     .when('/profile', 
     { 
       templateUrl: 'js/views/profile.html', 
-      controller: 'profileCtrl',
+      controller: 'profile',
       resolve: {
         data: [
           '$rootScope', '$route', '$location',
@@ -342,7 +342,7 @@ angular.module('WebPaige',
     .when('/settings',
     { 
       templateUrl: 'js/views/settings.html',
-      controller: 'settingsCtrl',
+      controller: 'settings',
       resolve: {
         data: [
           'Settings',
@@ -360,7 +360,7 @@ angular.module('WebPaige',
     .when('/help',
     {
       templateUrl: 'js/views/help.html',
-      controller: 'helpCtrl'
+      controller: 'help'
     })
 
     /**
@@ -689,3 +689,8 @@ if ($.browser.msie)
   if (ver == '6.0' || ver == '7.0') window.location = 'browsers.html';
 };
 
+
+/**
+ * Sticky timeline header
+ */
+// $('#mainTimeline .timeline-frame div:first div:first').css({'top': '0px'})

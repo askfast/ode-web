@@ -7,7 +7,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Login controller
  */
-.controller('loginCtrl', 
+.controller('login', 
 [
 	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5', 
 	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) 
@@ -639,7 +639,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Logout controller
  */
-.controller('logoutCtrl', 
+.controller('logout', 
 [
 	'$rootScope', '$scope', '$window', 'Session', 'User', 'Storage', 
 	function ($rootScope, $scope, $window, Session, User, Storage) 
@@ -674,7 +674,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Dashboard controller
  */
-.controller('dashboardCtrl', 
+.controller('dashboard', 
 [
 	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 
 	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile) 
@@ -909,7 +909,7 @@ angular.module('WebPaige.Controllers', [])
 
 
 
-.controller('planboardCtrl', 
+.controller('planboard', 
 [
 	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter', 
 	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
@@ -1969,7 +1969,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Messages controller
  */
-.controller('messagesCtrl', 
+.controller('messages', 
 [
 	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 
 	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage) 
@@ -2570,7 +2570,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Groups controller
  */
-.controller('groupsCtrl', 
+.controller('groups', 
 [
 	'$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots', 
 	function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots) 
@@ -3220,7 +3220,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Profile controller
  */
-.controller('profileCtrl', 
+.controller('profile', 
 [
 	'$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'Slots', 'Sloter', 'MD5', 
 	function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, Slots, Sloter, MD5) 
@@ -3974,7 +3974,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Settings controller
  */
-.controller('settingsCtrl', 
+.controller('settings', 
 [
 	'$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile', 'Storage', 
 	function ($rootScope, $scope, $window, data, Settings, Profile, Storage) 
@@ -4079,7 +4079,7 @@ angular.module('WebPaige.Controllers', [])
 /**
  * Help controller
  */
-.controller('helpCtrl', 
+.controller('help', 
 [
 	'$rootScope', '$scope', 
 	function ($rootScope, $scope) 
