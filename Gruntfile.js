@@ -10,19 +10,12 @@ module.exports = function(grunt) {
         src: [
           'war/js/app.js',
           'war/js/modals.js',
-          'war/js/login.js',
-          'war/js/dashboard.js',
-          'war/js/planboard.js',
-          'war/js/messages.js',
-          'war/js/groups.js',
-          'war/js/profile.js',
-          'war/js/settings.js',
-          'war/js/help.js',
+          'war/js/controllers.js',
           'war/js/directives.js',
           'war/js/services.js',
           'war/js/filters.js'
         ],
-        dest: 'war/js/_all.js'
+        dest: 'war/js/all.js'
       }
     },
     uglify: {
@@ -31,7 +24,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'war/js/_all.min.js': ['<%= concat.dist.dest %>']
+          'war/js/all.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
