@@ -21,71 +21,75 @@ angular.module('WebPaige',
 .value(
   '$config', 
   {
-    'title': 'WebPaige',
-
-    'version': '2.0.2 (snapshot)',
-
-    'lang': 'nl',
+    'title':    'WebPaige',
+    'version':  '2.0.2 (snapshot)',
+    'lang':     'nl',
 
     // REMOVE
     'demo_users': false,
 
     'profile': {
-      'meta': profile.meta,
-      'title': profile.title,
+      'meta':   profile.meta,
+      'title':  profile.title,
       'logos': {
-        'login': 'js/profiles/' + profile.meta + '/img/login_logo.png',
-        'app': ''
+        'login':  'js/profiles/' + profile.meta + '/img/login_logo.png',
+        'app':    ''
       },
       'background': 'js/profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
-      'p2000': profile.p2000
+      'p2000':      profile.p2000
     },
 
     'statesall': {
-      'com.ask-cs.State.Available': {
-        'className': 'state-available',
-        'label': 'Beschikbaar',
-        'color': '#4f824f',
-        'type': 'Beschikbaar'
+      'com.ask-cs.State.Available': 
+      {
+        'className':'state-available',
+        'label':    'Beschikbaar',
+        'color':    '#4f824f',
+        'type':     'Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.BeschikbaarNoord': {
-        'className': 'state-available-north',
-        'label': 'Beschikbaar voor Noord',
-        'color': '#000',
-        'type': 'Beschikbaar'
+      'com.ask-cs.State.KNRM.BeschikbaarNoord': 
+      {
+        'className':'state-available-north',
+        'label':    'Beschikbaar voor Noord',
+        'color':    '#000',
+        'type':     'Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.BeschikbaarZuid': {
-        'className': 'state-available-south',
-        'label': 'Beschikbaar voor Zuid',
-        'color': '#e08a0c',
-        'type': 'Beschikbaar'
+      'com.ask-cs.State.KNRM.BeschikbaarZuid': 
+      {
+        'className':'state-available-south',
+        'label':    'Beschikbaar voor Zuid',
+        'color':    '#e08a0c',
+        'type':     'Beschikbaar'
       },
-      'com.ask-cs.State.Unavailable': {
-        'className': 'state-unavailable',
-        'label': 'Niet Beschikbaar',
-        'color': '#a93232',
-        'type': 'Niet Beschikbaar'
+      'com.ask-cs.State.Unavailable': 
+      {
+        'className':'state-unavailable',
+        'label':    'Niet Beschikbaar',
+        'color':    '#a93232',
+        'type':     'Niet Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.SchipperVanDienst': {
-        'className': 'state-schipper-service',
-        'label': 'Schipper van Dienst',
-        'color': '#e0c100',
-        'type': 'Beschikbaar'
+      'com.ask-cs.State.KNRM.SchipperVanDienst': 
+      {
+        'className':'state-schipper-service',
+        'label':    'Schipper van Dienst',
+        'color':    '#e0c100',
+        'type':     'Beschikbaar'
       },
-      'com.ask-cs.State.Unreached': {
-        'className': 'state-unreached',
-        'label': 'Niet Bereikt',
-        'color': '#65619b',
-        'type': 'Niet Beschikbaar'
+      'com.ask-cs.State.Unreached': 
+      {
+        'className':'state-unreached',
+        'label':    'Niet Bereikt',
+        'color':    '#65619b',
+        'type':     'Niet Beschikbaar'
       }
     },
 
     'host': profile.host(),
 
     'formats': {
-      'date':     'dd-MM-yyyy',
-      'time':     'HH:mm',
-      'datetime': 'dd-MM-yyyy HH:mm',
+      'date':         'dd-MM-yyyy',
+      'time':         'HH:mm',
+      'datetime':     'dd-MM-yyyy HH:mm',
       'datetimefull': 'dd-MM-yyyy HH:mm'
     },
 
@@ -93,42 +97,49 @@ angular.module('WebPaige',
 
     'timeline': {
       'options': {
-        'axisOnTop': true,
-        'width': '100%',
-        'height': 'auto',
-        'selectable': true,
-        'editable': true,
-        'style': 'box',
-        'groupsWidth': '150px',
-        'eventMarginAxis': 0,
-        'showCustomTime': true,
+        'axisOnTop':        true,
+        'width':            '100%',
+        'height':           'auto',
+        'selectable':       true,
+        'editable':         true,
+        'style':            'box',
+        'groupsWidth':      '150px',
+        'eventMarginAxis':  0,
+        'showCustomTime':   true,
         'groupsChangeable': false,
-        'showNavigation': false,
-        'intervalMin': 1000 * 60 * 60 * 1
+        'showNavigation':   false,
+        'intervalMin':      1000 * 60 * 60 * 1
       },
       'config': {
-        'zoom': '0.4',
-        'bar': false,
-        'wishes': false,
-        'legenda': {},
+        'zoom':       '0.4',
+        'bar':        false,
+        'wishes':     false,
+        'legenda':    {},
         'legendarer': false,
-        'states': {},
-        'divisions': profile.divisions,
+        'states':     {},
+        'divisions':  profile.divisions,
         'densities': {
-          'less': '#a0a0a0',
-          'even': '#ba6a24',
-          'one': '#415e6b',
-          'two': '#3d5865',
-          'three': '#344c58',
-          'four': '#2f4550',
-          'five': '#2c424c',
-          'six': '#253943',
-          'more': '#486877'
+          'less':   '#a0a0a0',
+          'even':   '#ba6a24',
+          'one':    '#415e6b',
+          'two':    '#3d5865',
+          'three':  '#344c58',
+          'four':   '#2f4550',
+          'five':   '#2c424c',
+          'six':    '#253943',
+          'more':   '#486877'
         }
       }
     },
 
-    'pie': { 'colors': ['#415e6b', '#ba6a24', '#a0a0a0'] },
+    'pie': {
+      'colors': 
+      [
+        '#415e6b', 
+        '#ba6a24', 
+        '#a0a0a0'
+      ]
+    },
 
     'defaults': {
       'settingsWebPaige': {
@@ -165,6 +176,8 @@ angular.module('WebPaige',
  * Providers & Routes
  */
 .config(
+[
+  '$locationProvider', '$routeProvider', '$httpProvider',
   function ($locationProvider, $routeProvider, $httpProvider) 
   {
     /**
@@ -203,29 +216,33 @@ angular.module('WebPaige',
       templateUrl: 'js/views/planboard.html',
       controller: 'planboardCtrl',
       resolve: {
-        data: function ($route, Slots, Storage, Dater) 
-        {
-          var periods = Storage.local.periods(),
-              current = Dater.current.week(),
-              initial = periods.weeks[current],
-              groups  = Storage.local.groups(),
-              settings = Storage.local.settings();
+        data: 
+        [
+          '$route', 'Slots', 'Storage', 'Dater',
+          function ($route, Slots, Storage, Dater) 
+          {
+            var periods = Storage.local.periods(),
+                current = Dater.current.week(),
+                initial = periods.weeks[current],
+                groups  = Storage.local.groups(),
+                settings = Storage.local.settings();
 
-          return  Slots.all({
-                    groupId:  settings.app.group,
-                    division: 'all',
-                    stamps: {
-                      start:  initial.first.timeStamp,
-                      end:    initial.last.timeStamp
-                    },
-                    month: Dater.current.month(),
-                    layouts: {
-                      user:     true,
-                      group:    true,
-                      members:  false
-                    }
-                  });
-        }
+            return  Slots.all({
+                      groupId:  settings.app.group,
+                      division: 'all',
+                      stamps: {
+                        start:  initial.first.timeStamp,
+                        end:    initial.last.timeStamp
+                      },
+                      month: Dater.current.month(),
+                      layouts: {
+                        user:     true,
+                        group:    true,
+                        members:  false
+                      }
+                    });
+          }
+        ]
       }
     })
 
@@ -237,10 +254,13 @@ angular.module('WebPaige',
       templateUrl: 'js/views/messages.html',    
       controller: 'messagesCtrl',   
       resolve: {
-        data: function ($route, Messages) 
-        {
-          return Messages.query();
-        }
+        data: [
+          '$route', 'Messages',
+          function ($route, Messages) 
+          {
+            return Messages.query();
+          }
+        ]
       }, 
       reloadOnSearch: false
     })
@@ -253,10 +273,13 @@ angular.module('WebPaige',
       templateUrl: 'js/views/groups.html',
       controller: 'groupsCtrl',
       resolve: {
-        data: function (Groups) 
-        {
-          return Groups.query();
-        }
+        data: [
+          'Groups',
+          function (Groups) 
+          {
+            return Groups.query();
+          }
+        ]
       },
       reloadOnSearch: false
     })
@@ -269,24 +292,27 @@ angular.module('WebPaige',
       templateUrl: 'js/views/profile.html',
       controller: 'profileCtrl',
       resolve: {
-        data: function ($rootScope, Profile, $route, $location, Dater) 
-        {
-          if ($route.current.params.userId != $rootScope.app.resources.uuid)
+        data: [
+          '$rootScope', 'Profile', '$route', '$location', 'Dater',
+          function ($rootScope, Profile, $route, $location, Dater) 
           {
-            var periods = Dater.getPeriods(),
-                current = Dater.current.week(),
-                ranges  = {
-                  start:  periods.weeks[current].first.timeStamp / 1000,
-                  end:    periods.weeks[current].last.timeStamp / 1000,
-                };
+            if ($route.current.params.userId != $rootScope.app.resources.uuid)
+            {
+              var periods = Dater.getPeriods(),
+                  current = Dater.current.week(),
+                  ranges  = {
+                    start:  periods.weeks[current].first.timeStamp / 1000,
+                    end:    periods.weeks[current].last.timeStamp / 1000,
+                  };
 
-            return Profile.getWithSlots($route.current.params.userId, false, ranges);
+              return Profile.getWithSlots($route.current.params.userId, false, ranges);
+            }
+            else
+            {
+              return Profile.get($route.current.params.userId, false);
+            };
           }
-          else
-          {
-            return Profile.get($route.current.params.userId, false);
-          };
-        }
+        ]
       },
       reloadOnSearch: false
     })
@@ -299,11 +325,14 @@ angular.module('WebPaige',
       templateUrl: 'js/views/profile.html', 
       controller: 'profileCtrl',
       resolve: {
-        data: function ($rootScope, $route, $location) 
-        {
-          if (!$route.current.params.userId || !$location.hash())
-            $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
-        }
+        data: [
+          '$rootScope', '$route', '$location',
+          function ($rootScope, $route, $location) 
+          {
+            if (!$route.current.params.userId || !$location.hash())
+              $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
+          }
+        ]
       }
     })
 
@@ -315,10 +344,13 @@ angular.module('WebPaige',
       templateUrl: 'js/views/settings.html',
       controller: 'settingsCtrl',
       resolve: {
-        data: function (Settings) 
-        {
-          return angular.fromJson(Settings.get());
-        }
+        data: [
+          'Settings',
+          function (Settings) 
+          {
+            return angular.fromJson(Settings.get());
+          }
+        ]
       }
     })
 
@@ -343,7 +375,7 @@ angular.module('WebPaige',
      */
     $httpProvider.responseInterceptors.push('Interceptor');
   }
-)
+])
 
 
 /**
