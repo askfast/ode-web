@@ -8,6 +8,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
+          'war/js/localization.js',
           'war/js/app.js',
           'war/js/modals.js',
           'war/js/controllers.js',
@@ -20,7 +21,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! WebPaige <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+        banner: '/*!\n * WebPaige v2.0.2 (snapshot)\n * Ask Community Systems\n * Authors: Cengiz Ulusoy\n * <%= grunt.template.today("dd-mm-yyyy hh:mm") %>\n */\n'
       },
       dist: {
         files: {
