@@ -548,11 +548,13 @@ angular.module('WebPaige',
   'WebPaige.Filters',
   'WebPaige.Modals',
   'WebPaige.Services'
-])
+]);;'use strict';
+
 
 /**
  * App configuration
  */
+angular.module('WebPaige')
 .value(
   '$config', 
   {
@@ -704,12 +706,13 @@ angular.module('WebPaige',
       });
     }
   }
-)
+);;'use strict';
 
 
 /**
  * Providers & Routes
  */
+angular.module('WebPaige')
 .config(
 [
   '$locationProvider', '$routeProvider', '$httpProvider',
@@ -910,12 +913,13 @@ angular.module('WebPaige',
      */
     $httpProvider.responseInterceptors.push('Interceptor');
   }
-])
+]);;'use strict';
 
 
 /**
  * Initial run functions
  */
+angular.module('WebPaige')
 .run(
 [
   '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
@@ -930,6 +934,9 @@ angular.module('WebPaige',
 
 
     /**
+     * TODO
+     * Move these checks to jquery.browser
+     * 
      * Pass Jquery browser data to angular
      */
     $rootScope.browser = $.browser;
@@ -1228,8 +1235,7 @@ if ($.browser.msie)
 /**
  * Sticky timeline header
  */
-// $('#mainTimeline .timeline-frame div:first div:first').css({'top': '0px'})
-;'use strict';
+// $('#mainTimeline .timeline-frame div:first div:first').css({'top': '0px'});'use strict';
 
 
 angular.module('WebPaige.Modals', ['ngResource'])
@@ -8202,6 +8208,9 @@ angular.module('WebPaige.Services', ['ngResource'])
 
 
 /**
+ * TODO
+ * Implement a call registering system with general error handling
+ * 
  * Intercepts *all* angular ajax http calls
  */
 .factory('Interceptor', 
@@ -8217,7 +8226,7 @@ angular.module('WebPaige.Services', ['ngResource'])
        */
       function (response) 
       {
-        console.log('call ->', arguments[0].config.url, 'method ->', arguments[0].config.method, arguments);
+        // console.log('call ->', arguments[0].config.url, 'method ->', arguments[0].config.method, arguments);
         return response;
       },
       /**

@@ -10,6 +10,9 @@ module.exports = function(grunt) {
         src: [
           'war/js/localization.js',
           'war/js/app.js',
+          'war/js/config.js',
+          'war/js/routes.js',
+          'war/js/bootstrap.js',
           'war/js/modals.js',
           'war/js/controllers.js',
           'war/js/directives.js',
