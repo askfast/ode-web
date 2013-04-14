@@ -4,6 +4,7 @@
 ## Versions
 
 	2.0.2 (snapshot)
+		* major app loading performanace tweaks with reducing requests and minified and compiled to one version of app libraries 13-4-2013
 		* meridian time (hour) issue with selecting time range with mouse either by shift or ctrl keys is resolved 12-4-2013
 		* tablet issues has been solved 12-4-2013
 		* corrected a localization issue with 'no messages' in the box 11-4-2013
