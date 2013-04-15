@@ -377,3 +377,78 @@ module.exports = function(grunt) {
 //   grunt.registerTask('daterangepicker', ['concat', 'uglify']);
 
 // };
+
+
+
+
+
+
+
+
+
+/**
+ * Date configuration
+ */
+// module.exports = function(grunt) {
+
+//   grunt.initConfig({
+
+//     pkg: grunt.file.readJSON('package.json'),
+
+//     concat: {
+//       options: {
+//         separator: ';'
+//       },
+//       dist: {
+//         src: [
+//           'war/js/libs/date/1.0/date.js'
+//         ],
+//         dest: 'war/js/libs/date/1.0/date.js'
+//       }
+//     },
+
+//     uglify: {
+//       options: {
+//         banner: '/*! date 1.0 */\n'
+//       },
+//       dist: {
+//         files: {
+//           'war/js/libs/date/1.0/date.min.js': ['<%= concat.dist.dest %>']
+//         }
+//       }
+//     },
+
+//     qunit: {
+//       files: ['test/**/*.html']
+//     },
+
+//     jshint: {
+//       files: [
+//               'Gruntfile.js'
+//               ],
+//       options: {
+//         // options here to override JSHint defaults
+//         globals: {
+//           jQuery:   true,
+//           console:  true,
+//           module:   true,
+//           document: true
+//         }
+//       }
+//     },
+
+//     watch: {
+//       files: ['<%= jshint.files %>'],
+//       tasks: ['jshint', 'qunit']
+//     }
+//   });
+
+//   grunt.loadNpmTasks('grunt-contrib-uglify');
+//   grunt.loadNpmTasks('grunt-contrib-jshint');
+//   grunt.loadNpmTasks('grunt-contrib-qunit');
+//   grunt.loadNpmTasks('grunt-contrib-watch');
+//   grunt.loadNpmTasks('grunt-contrib-concat');
+
+//   grunt.registerTask('date', ['concat', 'uglify']);
+
+// };
