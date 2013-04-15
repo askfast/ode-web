@@ -1222,6 +1222,15 @@ angular.module('WebPaige')
       };
     };
 
+
+    /**
+     * Experimental full screen ability
+     */
+	  $rootScope.fullScreen = function ()
+	  {
+	  	screenfull.toggle($('html')[0]);
+	  };
+
   }
 ]);
 
@@ -4438,9 +4447,6 @@ angular.module('WebPaige.Controllers', [])
 	   * Fix styles
 	   */
 	  $rootScope.fixStyles();
-
-
-	  console.warn('Storage size: ', Storage.size());
 
 	  
 	  /**

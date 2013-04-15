@@ -12,6 +12,8 @@ angular.module('WebPaige')
     'version':  '2.0.2 (snapshot)',
     'lang':     'nl',
 
+    'fullscreen': true,
+
     // REMOVE
     'demo_users': false,
 

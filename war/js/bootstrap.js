@@ -277,6 +277,17 @@ angular.module('WebPaige')
       };
     };
 
+
+    /**
+     * Experimental full screen ability
+     */
+	  $rootScope.fullScreen = function ()
+	  {
+	  	screenfull.toggle($('html')[0]);
+
+	  	// if (screenfull.isFullscreen) $('body').css({background: 'none'});
+	  };
+
   }
 ]);
 

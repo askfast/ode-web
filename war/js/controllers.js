@@ -919,9 +919,6 @@ angular.module('WebPaige.Controllers', [])
 	   */
 	  $rootScope.fixStyles();
 
-
-	  console.warn('Storage size: ', Storage.size());
-
 	  
 	  /**
 	   * Set default currents

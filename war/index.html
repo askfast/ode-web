@@ -14,7 +14,6 @@
     <meta name="viewport" content="width=device-width">
 
     <!-- jquery -->
-    <!-- <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script> -->
     <script src="js/libs/jquery/1.9.1/jquery-1.9.1.min.js"></script>
     <script src="js/libs/rsvp/1.0.0/rsvp.min.js"></script>
     <script src="js/plugins.js"></script>
@@ -112,6 +111,9 @@
                     <a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a>
                   </li>
                 </ul>
+              </li>
+              <li id="fullscreener" ng-show="config.fullscreen">
+                <a ng-click="fullScreen()"><i class="icon-fullscreen icon-white"></i></a>
               </li>
             </ul>
             <!-- end desktop version -->
@@ -215,7 +217,7 @@
     <script src="js/libs/angular/1.0.5/angular.min.js"></script>
     <script src="js/libs/angular/1.0.5/angular-resource.min.js"></script>
     <script src="js/libs/bootstrap/bootstrap.min.js"></script>
-    
+
     <!-- init angular app -->
     <!-- <script src="js/app.min.js"></script> -->
     <script src="js/localization.js"></script>
