@@ -974,6 +974,22 @@ angular.module('WebPaige.Controllers', [])
 	    {
 	      $scope.slot = {};
 
+	      $scope.slot = {
+	        start: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        end: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        state:      '',
+	        recursive:  false,
+	        id:         ''
+	      };
+
 	      resetViews();
 
 	      $scope.views.slot.add = true;
