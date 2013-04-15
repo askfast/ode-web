@@ -4,6 +4,7 @@
 ## Versions
 
 	2.0.2 (snapshot)
+		* full screen ability for webkit browsers 15-4-2013
 		* compressed third party libraries 15-4-2013
 		* AMD support added for loading third-party-libraries (performance tweak) 15-4-2013
 		* major app loading performanace tweaks with reducing requests and minified and compiled to one version of app libraries 13-4-2013

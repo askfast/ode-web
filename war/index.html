@@ -112,7 +112,7 @@
                   </li>
                 </ul>
               </li>
-              <li id="fullscreener" ng-show="config.fullscreen">
+              <li id="fullscreener" ng-show="config.fullscreen && browser.webkit">
                 <a ng-click="fullScreen()"><i class="icon-fullscreen icon-white"></i></a>
               </li>
             </ul>
@@ -228,10 +228,11 @@
     <script src="js/modals.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
-    <script src="js/libs/angular-strap/0.7.2/angular-strap.js"></script>
+    <script src="js/libs/angular-strap/0.7.0/angular-strap.min.js"></script>
     <script src="js/services.js"></script>
     <script src="js/filters.js"></script>
     <!--<![endif]-->
+
 
   </body>
 </html>

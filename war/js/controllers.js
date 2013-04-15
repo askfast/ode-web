@@ -1543,6 +1543,7 @@ angular.module('WebPaige.Controllers', [])
 	        break;
 	      };
 
+
 	      $scope.slot = {
 	        start: {
 	          date: new Date(values.start).toString($rootScope.config.formats.date),
@@ -1558,6 +1559,7 @@ angular.module('WebPaige.Controllers', [])
 	        recursive:  content.recursive,
 	        id:         content.id
 	      };
+
 
 	      /**
 	       * TODO
@@ -1962,6 +1964,7 @@ angular.module('WebPaige.Controllers', [])
 	      }, 10);
 	    }
 	  };
+
 	}
 ])
 
