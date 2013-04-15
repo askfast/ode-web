@@ -4,6 +4,7 @@
 ## Versions
 
 	2.0.2 (snapshot)
+		* by adding a new slot, slot form now opens with time of now and 1 hour later 15-4-2013
 		* full screen ability for webkit browsers 15-4-2013
 		* compressed third party libraries 15-4-2013
 		* AMD support added for loading third-party-libraries (performance tweak) 15-4-2013
