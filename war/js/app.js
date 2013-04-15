@@ -7795,6 +7795,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 
 
+// .directive('shortcuts', 
+// [
+//   '$rootScope',
+//   function ($rootScope)
+//   {
+//     return {
+//         restrict: 'E',
+//         replace: true,
+//         scope: { key: '@', value: '@' },
+//         template: '<link rel="{{key}}" data="{{value}}">'            
+//     }
+//   }
+// ]);​;
 /**
  * AngularStrap - Twitter Bootstrap directives for AngularJS
  * @version v0.7.2 - 2013-04-13

@@ -17,6 +17,7 @@ module.exports = function(grunt) {
           'war/js/modals.js',
           'war/js/controllers.js',
           'war/js/directives.js',
+          'war/js/libs/angular-strap/0.7.2/angular-strap.js',
           'war/js/services.js',
           'war/js/filters.js'
         ],
