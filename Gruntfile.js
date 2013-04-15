@@ -2,6 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
     concat: {
       options: {
         separator: ';'
@@ -9,7 +10,7 @@ module.exports = function(grunt) {
       dist: {
         src: [
           'war/js/localization.js',
-          'war/js/app.js',
+          'war/js/webpaige.js',
           'war/js/config.js',
           'war/js/routes.js',
           'war/js/bootstrap.js',
@@ -19,22 +20,25 @@ module.exports = function(grunt) {
           'war/js/services.js',
           'war/js/filters.js'
         ],
-        dest: 'war/js/all.js'
+        dest: 'war/js/app.js'
       }
     },
+
     uglify: {
       options: {
         banner: '/*!\n * WebPaige v2.0.2 (snapshot)\n * Ask Community Systems\n * Authors: Cengiz Ulusoy\n * <%= grunt.template.today("dd-mm-yyyy hh:mm") %>\n */\n'
       },
       dist: {
         files: {
-          'war/js/all.min.js': ['<%= concat.dist.dest %>']
+          'war/js/app.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
+
     qunit: {
       files: ['test/**/*.html']
     },
+
     jshint: {
       files: [
               'Gruntfile.js'
@@ -49,6 +53,7 @@ module.exports = function(grunt) {
         }
       }
     },
+
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint', 'qunit']

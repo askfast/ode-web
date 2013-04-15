@@ -1040,6 +1040,14 @@ angular.module('WebPaige.Services', ['ngResource'])
   };
 
 
+  var storageSize = function (key)
+  {
+    var item = (key) ? localStorage.key : localStorage;
+
+    return ((3 + ((item.length * 16) / (8 * 1024))) * 0.0009765625).toPrecision(2) + ' MB';
+  }
+
+
   var getPeriods = function ()
   {
     return angular.fromJson(getFromLocalStorage('periods'));
@@ -1061,8 +1069,6 @@ angular.module('WebPaige.Services', ['ngResource'])
   var getSettings = function ()
   {
     var settings = angular.fromJson(getFromLocalStorage('resources'));
-
-    // if  console.warn('no settings');
 
     return (!settings.settingsWebPaige) ? $rootScope.config.defaults.settingsWebPaige : angular.fromJson(settings.settingsWebPaige);
   };
@@ -1086,6 +1092,7 @@ angular.module('WebPaige.Services', ['ngResource'])
       remove:   removeFromCookies,
       clearAll: clearAllFromCookies
     },
+    size: storageSize,
     local: {
       periods:  getPeriods,
       groups:   getGroups,

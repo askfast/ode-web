@@ -216,7 +216,7 @@ angular.module('WebPaige')
      */
     $rootScope.$on("$routeChangeError", function (event, current, previous, rejection)
     {
-      $rootScope.notifier.error("ROUTE CHANGE ERROR: " + rejection);
+      $rootScope.notifier.error(rejection);
     });
 
 
