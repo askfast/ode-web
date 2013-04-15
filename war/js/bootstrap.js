@@ -183,6 +183,54 @@ angular.module('WebPaige')
      */
     $rootScope.$on("$routeChangeStart", function (event, next, current)
     {
+      function resetLoaders ()
+      {    
+        $rootScope.loaderIcons = {
+          general:    false,
+          dashboard:  false,
+          planboard:  false,
+          messages:   false,
+          groups:     false,
+          profile:    false,
+          settings:   false
+        };
+      };
+
+      resetLoaders();
+
+      switch ($location.path())
+      {
+        case '/dashboard':
+          $rootScope.loaderIcons.dashboard = true;
+        break;
+
+        case '/planboard':
+          $rootScope.loaderIcons.planboard = true;
+        break;
+
+        case '/messages':
+          $rootScope.loaderIcons.messages = true;
+        break;
+
+        case '/groups':
+          $rootScope.loaderIcons.groups = true;
+        break;
+
+        case '/settings':
+          $rootScope.loaderIcons.settings = true;
+        break;
+
+        default:
+          if ($location.path().match(/profile/))
+          {
+            $rootScope.loaderIcons.profile = true;
+          }
+          else
+          {
+            $rootScope.loaderIcons.general = true;
+          };
+      };
+
       if (!Session.check()) $location.path("/login");
 
       $rootScope.loadingBig = true;

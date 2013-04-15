@@ -182,36 +182,24 @@ angular.module('WebPaige.Directives', ['ngResource'])
 /**
  * 
  */
-// .directive('signIn', 
+// .directive('shortcuts', 
 // [
 //   '$rootScope', 
 //   function ($rootScope)
 //   {
 //     return {
 //       restrict: 'E',
-//       // templateUrl: 'views/directive/signin.html', // using this method causes the tests to fail
-//       template: '<section class="sign-in" ng-show="show==true"><form class="well form-inline"><input type="email" placeholder="Username" ng-model="username" required /><input type="password" placeholder="Password" ng-model="password" required /><button ng-click="signin()">Signin</button></form><button ng-click="signout()">Signout</button></section>',
+//       template: '<link rel="shortcut icon" ng-href="js/profiles/{{profile}}/img/ico/favicon.ico">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-144-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-114-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="72x72"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-72-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="57x57"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-57-precomposed.png">',
 //       replace: true,
-//       scope: true,
-//       link: function (scope, element, attrs) {
-
-//           // scope.$on('event:auth:bad-request', function (event) {
-//           //     scope.show = true;
-//           // });
-
-//           // scope.$on('event:auth:not-authorised', function (event) {
-//           //     scope.show = true;
-//           // });
-
-//           // scope.$on('event:auth:success', function (event) {
-//           //     scope.show = false;
-//           // });
-
-//           // scope.signin = function() {
-//           //     if(scope.username && scope.password) {
-//           //         Authentication.login(scope.username, scope.password);
-//           //     }
-//           // };
+//       scope: {
+//         profile: '@profile'
+//       },
+//       link: function (scope, element, attrs)
+//       {
 //       }
 //     }
 //   }

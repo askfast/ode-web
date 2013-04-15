@@ -16,17 +16,17 @@
     <!-- jquery -->
     <script src="js/libs/jquery/1.9.1/jquery-1.9.1.min.js"></script>
     <script src="js/libs/rsvp/1.0.0/rsvp.min.js"></script>
-    <script src="js/plugins.js"></script>
+    <script src="js/plugins.min.js"></script>
 
     <!-- profile configs -->
     <script src="js/profiles/knrmtest/profile.js"></script>
     
     <!-- favicons -->
     <link rel="shortcut icon" ng-href="js/profiles/{{config.profile.meta}}/img/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="57x57" ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"  ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114"  ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"    ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57"    ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
 
     <!-- styles -->
     <link rel="stylesheet" href="css/styles.css">
@@ -39,8 +39,6 @@
     
   </head>
   <body>
-
-    <sign-in />
 
     <!-- watermark for app -->
     <div id="watermark"></div>
@@ -150,7 +148,13 @@
 
     <!-- loading -->
     <div id="loading" ng-show="loadingBig">
-      <span class="entypo">&#9203;</span>
+      <span class="entypo" ng-show="loaderIcons.general">&#9203;</span>
+      <span class="entypo" ng-show="loaderIcons.dashboard">&#9716;</span>
+      <span class="entypo" ng-show="loaderIcons.planboard">&#128340;</span>
+      <span class="entypo" ng-show="loaderIcons.messages">&#59255;</span>
+      <span class="entypo" ng-show="loaderIcons.groups">&#128101;</span>
+      <span class="entypo" ng-show="loaderIcons.profile">&#128100;</span>
+      <span class="entypo" ng-show="loaderIcons.settings">&#9874;</span>
       <!-- <p>{{ui.login.loading}}</p> -->
     </div>
     <!-- end loading -->
