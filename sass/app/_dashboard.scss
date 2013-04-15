@@ -1,6 +1,16 @@
 #dashboard {
   overflow: hidden;
 
+  .alert {
+    margin-top: 15px;
+    padding-right: 15px;
+
+    button {
+      margin-top: -3px;
+      margin-left: 10px;
+    }
+  }
+
   .widget {
     margin-top: 5px;
     margin-bottom: 30px;

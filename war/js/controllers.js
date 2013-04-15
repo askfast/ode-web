@@ -676,13 +676,27 @@ angular.module('WebPaige.Controllers', [])
  */
 .controller('dashboard', 
 [
-	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 
-	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile) 
+	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', '$window', 
+	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile, $window) 
 	{
 	  /**
 	   * Fix styles
 	   */
 	  $rootScope.fixStyles();
+
+
+    if ($window.webkitNotifications.checkPermission() != 0) $scope.notificationsAllowed = false;
+
+    $scope.allowNotifications = function ()
+    {
+      $window.webkitNotifications.requestPermission(function ()
+      {}); // Callback so it will work in Safari    	
+    };
+
+    $scope.setNotification = function ()
+    {
+      $window.webkitNotifications.createNotification('http://www.inserthtml.com/favicon.ico', 'Notification Title', 'This is a bit of text describing the notification').show();    	
+    };
 
 
 	  /**
@@ -1559,7 +1573,6 @@ angular.module('WebPaige.Controllers', [])
 	        break;
 	      };
 
-
 	      $scope.slot = {
 	        start: {
 	          date: new Date(values.start).toString($rootScope.config.formats.date),
@@ -1575,7 +1588,6 @@ angular.module('WebPaige.Controllers', [])
 	        recursive:  content.recursive,
 	        id:         content.id
 	      };
-
 
 	      /**
 	       * TODO

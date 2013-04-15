@@ -1,5 +1,13 @@
 <section id="dashboard">
 
+  <div class="alert alert-block" ng-hide="notificationsAllowed">
+    WebPaige can display notifications. Would you like to turn that on?
+    <button class="btn btn-small pull-right" data-dismiss="alert">Close</button>
+    <button class="btn btn-small btn-success pull-right" ng-click="allowNotifications()">Activate Notifications</button>
+  </div>
+
+<button class="btn btn-small" ng-click="setNotification()">Set Notification</button>
+
   <div class="well well-large greetings">
     <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
   </div>
