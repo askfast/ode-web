@@ -24,10 +24,10 @@ angular.module('WebPaige',
 basket
   .require(
     { url: 'js/libs/chosen/chosen.jquery.min.js' },
-    { url: 'js/libs/chaps/timeline/2.4.0/timeline.js' },
-    { url: 'js/libs/bootstrap-datepicker/bootstrap-datepicker.js' },
-    { url: 'js/libs/bootstrap-timepicker/bootstrap-timepicker.js' },
-    { url: 'js/libs/daterangepicker/1.1.0/daterangepicker.js' },
+    { url: 'js/libs/chaps/timeline/2.4.0/timeline_modified.min.js' },
+    { url: 'js/libs/bootstrap-datepicker/bootstrap-datepicker.min.js' },
+    { url: 'js/libs/bootstrap-timepicker/bootstrap-timepicker.min.js' },
+    { url: 'js/libs/daterangepicker/1.1.0/daterangepicker.min.js' },
     { url: 'js/libs/sugar/1.3.7/sugar.min.js' },
     { url: 'js/libs/raphael/2.1.0/raphael-min.js' }
   )

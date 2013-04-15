@@ -1,3 +1,6 @@
+/**
+ * Main compiler for app
+ */
 module.exports = function(grunt) {
 
   grunt.initConfig({
@@ -74,3 +77,303 @@ module.exports = function(grunt) {
   grunt.registerTask('webpaige', ['concat', 'uglify']);
 
 };
+
+
+
+
+
+
+
+
+
+/**
+ * Timeline configuration
+ */
+// module.exports = function(grunt) {
+
+//   grunt.initConfig({
+
+//     pkg: grunt.file.readJSON('package.json'),
+
+//     concat: {
+//       options: {
+//         separator: ';'
+//       },
+//       dist: {
+//         src: [
+//           'war/js/libs/chaps/timeline/2.4.0/timeline.js'
+//         ],
+//         dest: 'war/js/libs/chaps/timeline/2.4.0/timeline_modified.js'
+//       }
+//     },
+
+//     uglify: {
+//       options: {
+//         banner: '/*! timeline 2.4.0 modified */\n'
+//       },
+//       dist: {
+//         files: {
+//           'war/js/libs/chaps/timeline/2.4.0/timeline_modified.min.js': ['<%= concat.dist.dest %>']
+//         }
+//       }
+//     },
+
+//     qunit: {
+//       files: ['test/**/*.html']
+//     },
+
+//     jshint: {
+//       files: [
+//               'Gruntfile.js'
+//               ],
+//       options: {
+//         // options here to override JSHint defaults
+//         globals: {
+//           jQuery:   true,
+//           console:  true,
+//           module:   true,
+//           document: true
+//         }
+//       }
+//     },
+
+//     watch: {
+//       files: ['<%= jshint.files %>'],
+//       tasks: ['jshint', 'qunit']
+//     }
+//   });
+
+//   grunt.loadNpmTasks('grunt-contrib-uglify');
+//   grunt.loadNpmTasks('grunt-contrib-jshint');
+//   grunt.loadNpmTasks('grunt-contrib-qunit');
+//   grunt.loadNpmTasks('grunt-contrib-watch');
+//   grunt.loadNpmTasks('grunt-contrib-concat');
+
+//   grunt.registerTask('timeline', ['concat', 'uglify']);
+
+// };
+
+
+
+
+
+
+
+
+
+/**
+ * Bootstrap datepicker configuration
+ */
+// module.exports = function(grunt) {
+
+//   grunt.initConfig({
+
+//     pkg: grunt.file.readJSON('package.json'),
+
+//     concat: {
+//       options: {
+//         separator: ';'
+//       },
+//       dist: {
+//         src: [
+//           'war/js/libs/bootstrap-datepicker/bootstrap-datepicker.js'
+//         ],
+//         dest: 'war/js/libs/bootstrap-datepicker/bootstrap-datepicker.js'
+//       }
+//     },
+
+//     uglify: {
+//       options: {
+//         banner: '/*! bootstrap datepicker */\n'
+//       },
+//       dist: {
+//         files: {
+//           'war/js/libs/bootstrap-datepicker/bootstrap-datepicker.min.js': ['<%= concat.dist.dest %>']
+//         }
+//       }
+//     },
+
+//     qunit: {
+//       files: ['test/**/*.html']
+//     },
+
+//     jshint: {
+//       files: [
+//               'Gruntfile.js'
+//               ],
+//       options: {
+//         // options here to override JSHint defaults
+//         globals: {
+//           jQuery:   true,
+//           console:  true,
+//           module:   true,
+//           document: true
+//         }
+//       }
+//     },
+
+//     watch: {
+//       files: ['<%= jshint.files %>'],
+//       tasks: ['jshint', 'qunit']
+//     }
+//   });
+
+//   grunt.loadNpmTasks('grunt-contrib-uglify');
+//   grunt.loadNpmTasks('grunt-contrib-jshint');
+//   grunt.loadNpmTasks('grunt-contrib-qunit');
+//   grunt.loadNpmTasks('grunt-contrib-watch');
+//   grunt.loadNpmTasks('grunt-contrib-concat');
+
+//   grunt.registerTask('datepicker', ['concat', 'uglify']);
+
+// };
+
+
+
+
+
+
+
+
+
+/**
+ * Bootstrap timepicker configuration
+ */
+// module.exports = function(grunt) {
+
+//   grunt.initConfig({
+
+//     pkg: grunt.file.readJSON('package.json'),
+
+//     concat: {
+//       options: {
+//         separator: ';'
+//       },
+//       dist: {
+//         src: [
+//           'war/js/libs/bootstrap-timepicker/bootstrap-timepicker.js'
+//         ],
+//         dest: 'war/js/libs/bootstrap-timepicker/bootstrap-timepicker.js'
+//       }
+//     },
+
+//     uglify: {
+//       options: {
+//         banner: '/*! bootstrap timepicker */\n'
+//       },
+//       dist: {
+//         files: {
+//           'war/js/libs/bootstrap-timepicker/bootstrap-timepicker.min.js': ['<%= concat.dist.dest %>']
+//         }
+//       }
+//     },
+
+//     qunit: {
+//       files: ['test/**/*.html']
+//     },
+
+//     jshint: {
+//       files: [
+//               'Gruntfile.js'
+//               ],
+//       options: {
+//         // options here to override JSHint defaults
+//         globals: {
+//           jQuery:   true,
+//           console:  true,
+//           module:   true,
+//           document: true
+//         }
+//       }
+//     },
+
+//     watch: {
+//       files: ['<%= jshint.files %>'],
+//       tasks: ['jshint', 'qunit']
+//     }
+//   });
+
+//   grunt.loadNpmTasks('grunt-contrib-uglify');
+//   grunt.loadNpmTasks('grunt-contrib-jshint');
+//   grunt.loadNpmTasks('grunt-contrib-qunit');
+//   grunt.loadNpmTasks('grunt-contrib-watch');
+//   grunt.loadNpmTasks('grunt-contrib-concat');
+
+//   grunt.registerTask('timepicker', ['concat', 'uglify']);
+
+// };
+
+
+
+
+
+
+
+
+
+/**
+ * Bootstrap daterangepicker configuration
+ */
+// module.exports = function(grunt) {
+
+//   grunt.initConfig({
+
+//     pkg: grunt.file.readJSON('package.json'),
+
+//     concat: {
+//       options: {
+//         separator: ';'
+//       },
+//       dist: {
+//         src: [
+//           'war/js/libs/daterangepicker/1.1.0/daterangepicker.js'
+//         ],
+//         dest: 'war/js/libs/daterangepicker/1.1.0/daterangepicker.js'
+//       }
+//     },
+
+//     uglify: {
+//       options: {
+//         banner: '/*! bootstrap daterangepicker */\n'
+//       },
+//       dist: {
+//         files: {
+//           'war/js/libs/daterangepicker/1.1.0/daterangepicker.min.js': ['<%= concat.dist.dest %>']
+//         }
+//       }
+//     },
+
+//     qunit: {
+//       files: ['test/**/*.html']
+//     },
+
+//     jshint: {
+//       files: [
+//               'Gruntfile.js'
+//               ],
+//       options: {
+//         // options here to override JSHint defaults
+//         globals: {
+//           jQuery:   true,
+//           console:  true,
+//           module:   true,
+//           document: true
+//         }
+//       }
+//     },
+
+//     watch: {
+//       files: ['<%= jshint.files %>'],
+//       tasks: ['jshint', 'qunit']
+//     }
+//   });
+
+//   grunt.loadNpmTasks('grunt-contrib-uglify');
+//   grunt.loadNpmTasks('grunt-contrib-jshint');
+//   grunt.loadNpmTasks('grunt-contrib-qunit');
+//   grunt.loadNpmTasks('grunt-contrib-watch');
+//   grunt.loadNpmTasks('grunt-contrib-concat');
+
+//   grunt.registerTask('daterangepicker', ['concat', 'uglify']);
+
+// };
