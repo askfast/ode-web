@@ -191,11 +191,16 @@ angular.module('WebPaige')
     /**
      * Set webkit notification
      */
-    $rootScope.setWebkitNotification = function (icon, title, message, params)
+    $rootScope.setWebkitNotification = function (title, message, params)
     {
       if ($config.notifications.webkit.app)
       {
-        var notification = $window.webkitNotifications.createNotification(icon, title, message);
+        var notification =  $window.webkitNotifications.createNotification(
+                              location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
+                              '/js/profiles/' + $config.profile.meta + '/img/ico/apple-touch-icon-144x144-precomposed.png', 
+                              title, 
+                              message
+                            );
 
         notification.onclick = function () 
         {
@@ -223,19 +228,16 @@ angular.module('WebPaige')
         notification.show();
       };     
     };
-
-
     $rootScope.setWebkitNotification(
-      'localhost:3000/war/icon.png', 
       'Some new message', 
       'Message description is here and telling you that you have a new..',
       {
         path: 'messages',
-        // search: {
-        //   param1: true,
-        //   param2: 'letsdo'
-        // },
-        // hash: 'compose'
+        search: {
+          param1: true,
+          param2: 'letsdo'
+        },
+        hash: 'compose'
       }
     );
 
