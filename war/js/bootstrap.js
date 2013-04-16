@@ -181,53 +181,53 @@ angular.module('WebPaige')
     /**
      * Allow webkit desktop notifications
      */
-    $rootScope.allowWebkitNotifications = function ()
-    {
-      // Callback so it will work in Safari 
-      $window.webkitNotifications.requestPermission(function () {});     
-    };
+    // $rootScope.allowWebkitNotifications = function ()
+    // {
+    //   // Callback so it will work in Safari 
+    //   $window.webkitNotifications.requestPermission(function () {});     
+    // };
 
 
     /**
      * Set webkit notification
      */
-    $rootScope.setWebkitNotification = function (title, message, params)
-    {
-      if ($window.webkitNotifications && $config.notifications.webkit.app)
-      {
-        var notification =  $window.webkitNotifications.createNotification(
-                              location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
-                              '/js/profiles/' + $config.profile.meta + '/img/ico/apple-touch-icon-144x144-precomposed.png', 
-                              title, 
-                              message
-                            );
+    // $rootScope.setWebkitNotification = function (title, message, params)
+    // {
+    //   if ($window.webkitNotifications && $config.notifications.webkit.app)
+    //   {
+    //     var notification =  $window.webkitNotifications.createNotification(
+    //                           location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
+    //                           '/js/profiles/' + $config.profile.meta + '/img/ico/apple-touch-icon-144x144-precomposed.png', 
+    //                           title, 
+    //                           message
+    //                         );
 
-        notification.onclick = function () 
-        {
-          $rootScope.$apply(function ()
-          {            
-            if (params.search && !params.hash)
-            {
-              $location.path('/' + params.path).search(params.search);
-            }
-            else if (!params.search && params.hash)
-            {
-              $location.path('/' + params.path).hash(params.hash); 
-            }
-            else if (!params.search && !params.hash)
-            {
-              $location.path('/' + params.path); 
-            }
-            else if (params.search && params.hash)
-            {
-              $location.path('/' + params.path).search(params.search).hash(params.hash); 
-            }
-          });
-        };
+    //     notification.onclick = function () 
+    //     {
+    //       $rootScope.$apply(function ()
+    //       {            
+    //         if (params.search && !params.hash)
+    //         {
+    //           $location.path('/' + params.path).search(params.search);
+    //         }
+    //         else if (!params.search && params.hash)
+    //         {
+    //           $location.path('/' + params.path).hash(params.hash); 
+    //         }
+    //         else if (!params.search && !params.hash)
+    //         {
+    //           $location.path('/' + params.path); 
+    //         }
+    //         else if (params.search && params.hash)
+    //         {
+    //           $location.path('/' + params.path).search(params.search).hash(params.hash); 
+    //         }
+    //       });
+    //     };
 
-        notification.show();
-      };     
-    };
+    //     notification.show();
+    //   };     
+    // };
 
 
 
