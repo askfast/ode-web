@@ -11,7 +11,7 @@ angular.module('WebPaige.Services', ['ngResource'])
  */
 .factory('Timer', 
 [
-  '$rootScope', '$timeout', 
+  '$rootScope', '$timeout',
   function ($rootScope, $timeout)
   {
     var initer = 0,
@@ -29,17 +29,24 @@ angular.module('WebPaige.Services', ['ngResource'])
       {
         timers[id].counter++;
 
-        timers[id].mytimeout = $timeout(onTimeout, 1000);
+        timers[id].mytimeout = $timeout(onTimeout, delay * 1000);
 
         if (timers[id].delay == timers[id].counter)
         {
-          timers[id].event.call();
+          // if (id == 'unreadCount')
+          // {            
+          //   $rootScope.$broadcast('unreadCount');
+          // }
+          // else
+          // {
+            timers[id].event.call();
+          // }
 
           timers[id].counter = 0;
         };
       };
 
-      timers[id].mytimeout = $timeout(onTimeout, 1000);  
+      timers[id].mytimeout = $timeout(onTimeout, delay * 1000);  
     };
 
     var stopTimer = function (id)

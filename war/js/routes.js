@@ -35,7 +35,25 @@ angular.module('WebPaige')
     .when('/dashboard', 
     { 
       templateUrl: 'js/views/dashboard.html',
-      controller: 'dashboard'
+      controller: 'dashboard',
+      resolve: {
+        timers:
+        [
+          '$rootScope', 'Timer', 'Messages',
+          function ($rootScope, Timer, Messages)
+          {
+            $rootScope.$on('unreadCount', function () 
+            {
+              Messages.query();
+            });
+
+            Timer.start('unreadCount', function ()
+            {
+              $rootScope.$broadcast('unreadCount');
+            }, 60);
+          }
+        ]
+      }
     })
 
     /**
@@ -87,7 +105,7 @@ angular.module('WebPaige')
         data: [
           '$route', 'Messages',
           function ($route, Messages) 
-          {
+          {    
             return Messages.query();
           }
         ]

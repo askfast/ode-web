@@ -637,6 +637,11 @@ angular.module('WebPaige.Controllers', [])
 
 
 
+
+
+
+
+
 /**
  * Logout controller
  */
@@ -670,6 +675,11 @@ angular.module('WebPaige.Controllers', [])
 		});
 	}
 ])
+
+
+
+
+
 
 
 /**
@@ -907,6 +917,11 @@ angular.module('WebPaige.Controllers', [])
 	  };
 	}
 ])
+
+
+
+
+
 
 
 
@@ -1985,20 +2000,24 @@ angular.module('WebPaige.Controllers', [])
 
 
 
+
+
+
+
+
 /**
  * Messages controller
  */
 .controller('messages', 
 [
-	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 
-	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage) 
+	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer',
+	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer) 
 	{
 	  /**
 	   * Fix styles
 	   */
 	  $rootScope.fixStyles();
 
-	  
 	  /**
 	   * Self this
 	   */
@@ -2146,7 +2165,7 @@ angular.module('WebPaige.Controllers', [])
 	        }
 	        else
 	        {
-	          console.log('state changed');
+	          // console.log('state changed');
 	        };
 	      });
 
@@ -2583,6 +2602,11 @@ angular.module('WebPaige.Controllers', [])
 	  };
 	}
 ])
+
+
+
+
+
 
 
 
@@ -3233,6 +3257,11 @@ angular.module('WebPaige.Controllers', [])
 
 	}
 ])
+
+
+
+
+
 
 
 
@@ -3990,6 +4019,11 @@ angular.module('WebPaige.Controllers', [])
 
 
 
+
+
+
+
+
 /**
  * Settings controller
  */
@@ -4092,6 +4126,11 @@ angular.module('WebPaige.Controllers', [])
 
 	}
 ])
+
+
+
+
+
 
 
 

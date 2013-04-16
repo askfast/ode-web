@@ -223,6 +223,11 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 
 
+
+
+
+
+
 /**
  * Dashboard modal
  */
@@ -324,6 +329,11 @@ angular.module('WebPaige.Modals', ['ngResource'])
 	  return new Dashboard;
 	}
 ])
+
+
+
+
+
 
 
 
@@ -957,6 +967,11 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 
 
+
+
+
+
+
 /**
  * Messages model
  */
@@ -1185,12 +1200,28 @@ angular.module('WebPaige.Modals', ['ngResource'])
 	   */
 	  Messages.prototype.unreadCount = function ()
 	  {
-	    var messages = Messages.prototype.local(),
+	  	var messages = Messages.prototype.local(),
 	        counter = 0;
 
 	    angular.forEach(messages, function (message, index)
 	    {
-	      if (message.box == 'inbox' && message.state == 'NEW') counter++;
+	      if (message.box == 'inbox' && message.state == 'NEW')
+	      {
+		      counter++;
+
+			    $rootScope.setWebkitNotification(
+			      'New message: ' + message.subject, 
+			      message.question_text,
+			      {
+			        path: 'messages',
+			        search: 
+			        {
+			          uuid: message.uuid,
+			        },
+			        hash: 'message'
+			      }
+			    );
+		    };
 	    });
 
 	    $rootScope.app.unreadMessages = counter;
@@ -1320,6 +1351,11 @@ angular.module('WebPaige.Modals', ['ngResource'])
 	  return new Messages;
 	}
 ])
+
+
+
+
+
 
 
 /**
@@ -1868,6 +1904,11 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 
 
+
+
+
+
+
 /**
  * Profile modal
  */
@@ -2198,6 +2239,11 @@ angular.module('WebPaige.Modals', ['ngResource'])
 	  return new Profile;
 	}
 ])
+
+
+
+
+
 
 
 

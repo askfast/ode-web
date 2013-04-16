@@ -7,8 +7,8 @@
 angular.module('WebPaige')
 .run(
 [
-  '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
-  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window) 
+  '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window', 'Timer',
+  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, Timer) 
   {
     /**
      * Pass config and init dynamic config values
@@ -228,18 +228,7 @@ angular.module('WebPaige')
         notification.show();
       };     
     };
-    $rootScope.setWebkitNotification(
-      'Some new message', 
-      'Message description is here and telling you that you have a new..',
-      {
-        path: 'messages',
-        search: {
-          param1: true,
-          param2: 'letsdo'
-        },
-        hash: 'compose'
-      }
-    );
+
 
 
     /**
@@ -396,8 +385,6 @@ angular.module('WebPaige')
 	  $rootScope.fullScreen = function ()
 	  {
 	  	screenfull.toggle($('html')[0]);
-
-	  	// if (screenfull.isFullscreen) $('body').css({background: 'none'});
 	  };
 
   }

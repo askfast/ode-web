@@ -4,6 +4,7 @@
 ## Versions
 
 	2.0.2 (snapshot)
+		* background syncing for every minute and displaying webkit desktop notification for new messages
 		* by adding a new slot, slot form now opens with time of now and 1 hour later 15-4-2013
 		* full screen ability for webkit browsers 15-4-2013
 		* compressed third party libraries 15-4-2013
