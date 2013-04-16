@@ -148,6 +148,13 @@ angular.module('WebPaige')
       path:   '/'
     },
 
+    notifications: {
+      webkit: {
+        user: true,
+        app: (window.webkitNotifications.checkPermission() == 0) ? true : false
+      }
+    },
+
     init: function ()
     {
       var _this = this;

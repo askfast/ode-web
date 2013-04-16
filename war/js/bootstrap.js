@@ -179,6 +179,68 @@ angular.module('WebPaige')
 
 
     /**
+     * Allow webkit desktop notifications
+     */
+    $rootScope.allowWebkitNotifications = function ()
+    {
+      // Callback so it will work in Safari 
+      $window.webkitNotifications.requestPermission(function () {});     
+    };
+
+
+    /**
+     * Set webkit notification
+     */
+    $rootScope.setWebkitNotification = function (icon, title, message, params)
+    {
+      if ($config.notifications.webkit.app)
+      {
+        var notification = $window.webkitNotifications.createNotification(icon, title, message);
+
+        notification.onclick = function () 
+        {
+          $rootScope.$apply(function ()
+          {            
+            if (params.search && !params.hash)
+            {
+              $location.path('/' + params.path).search(params.search);
+            }
+            else if (!params.search && params.hash)
+            {
+              $location.path('/' + params.path).hash(params.hash); 
+            }
+            else if (!params.search && !params.hash)
+            {
+              $location.path('/' + params.path); 
+            }
+            else if (params.search && params.hash)
+            {
+              $location.path('/' + params.path).search(params.search).hash(params.hash); 
+            }
+          });
+        };
+
+        notification.show();
+      };     
+    };
+
+
+    $rootScope.setWebkitNotification(
+      'localhost:3000/war/icon.png', 
+      'Some new message', 
+      'Message description is here and telling you that you have a new..',
+      {
+        path: 'messages',
+        // search: {
+        //   param1: true,
+        //   param2: 'letsdo'
+        // },
+        // hash: 'compose'
+      }
+    );
+
+
+    /**
      * Detect route change start
      */
     $rootScope.$on("$routeChangeStart", function (event, next, current)

@@ -1026,9 +1026,6 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Extract this to a data processer
-	   * 
 	   * Filter messages based on box
 	   */
 	  Messages.prototype.filter = function (messages)

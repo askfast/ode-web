@@ -636,6 +636,7 @@ angular.module('WebPaige.Controllers', [])
 ])
 
 
+
 /**
  * Logout controller
  */
@@ -676,27 +677,13 @@ angular.module('WebPaige.Controllers', [])
  */
 .controller('dashboard', 
 [
-	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', '$window', 
-	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile, $window) 
+	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 
+	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile) 
 	{
 	  /**
 	   * Fix styles
 	   */
 	  $rootScope.fixStyles();
-
-
-    if ($window.webkitNotifications.checkPermission() != 0) $scope.notificationsAllowed = false;
-
-    $scope.allowNotifications = function ()
-    {
-      $window.webkitNotifications.requestPermission(function ()
-      {}); // Callback so it will work in Safari    	
-    };
-
-    $scope.setNotification = function ()
-    {
-      $window.webkitNotifications.createNotification('http://www.inserthtml.com/favicon.ico', 'Notification Title', 'This is a bit of text describing the notification').show();    	
-    };
 
 
 	  /**
@@ -848,7 +835,7 @@ angular.module('WebPaige.Controllers', [])
 	          });
 
 	          var r   = Raphael($id + id),
-	              pie = r.piechart(40, 40, 40, xratios, { colors: colors });
+	              pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
 	        }, 100);
 	      };
@@ -1995,6 +1982,7 @@ angular.module('WebPaige.Controllers', [])
 
 	}
 ])
+
 
 
 /**

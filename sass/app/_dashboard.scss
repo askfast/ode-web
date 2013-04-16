@@ -3,11 +3,13 @@
 
   .alert {
     margin-top: 15px;
-    padding-right: 15px;
 
-    button {
-      margin-top: -3px;
+    #activation {
       margin-left: 10px;
+    }
+
+    .close {
+      margin-top: 2px;
     }
   }
 
