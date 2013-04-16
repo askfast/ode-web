@@ -1,6 +1,6 @@
 <section id="dashboard">
 
-  <div class="alert alert-block" ng-hide="config.notifications.webkit.app || !config.notifications.webkit.user">
+  <div class="alert alert-block" ng-hide="config.notifications.webkit.app || !config.notifications.webkit.user || !browser.webkit">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     WebPaige can display notifications. Would you like to turn that on?
     <button id="activation" class="btn btn-small btn-success" ng-click="allowWebkitNotifications()" data-dismiss="alert">Activate Notifications</button>

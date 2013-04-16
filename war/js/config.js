@@ -151,7 +151,7 @@ angular.module('WebPaige')
     notifications: {
       webkit: {
         user: true,
-        app: (window.webkitNotifications.checkPermission() == 0) ? true : false
+        app: window.webkitNotifications && (window.webkitNotifications.checkPermission() == 0) ? true : false
       }
     },
 

@@ -1209,18 +1209,21 @@ angular.module('WebPaige.Modals', ['ngResource'])
 	      {
 		      counter++;
 
-			    $rootScope.setWebkitNotification(
-			      'New message: ' + message.subject, 
-			      message.question_text,
-			      {
-			        path: 'messages',
-			        search: 
-			        {
-			          uuid: message.uuid,
-			        },
-			        hash: 'message'
-			      }
-			    );
+		      // if ($rootScope.browser.webkit)
+		      // {
+				    // $rootScope.setWebkitNotification(
+				    //   'New message: ' + message.subject, 
+				    //   message.question_text,
+				    //   {
+				    //     path: 'messages',
+				    //     search: 
+				    //     {
+				    //       uuid: message.uuid,
+				    //     },
+				    //     hash: 'message'
+				    //   }
+				    // );
+		      // };
 		    };
 	    });
 

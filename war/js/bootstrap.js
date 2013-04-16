@@ -193,7 +193,7 @@ angular.module('WebPaige')
      */
     $rootScope.setWebkitNotification = function (title, message, params)
     {
-      if ($config.notifications.webkit.app)
+      if ($window.webkitNotifications && $config.notifications.webkit.app)
       {
         var notification =  $window.webkitNotifications.createNotification(
                               location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 

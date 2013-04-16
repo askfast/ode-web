@@ -36,24 +36,24 @@ angular.module('WebPaige')
     { 
       templateUrl: 'js/views/dashboard.html',
       controller: 'dashboard',
-      resolve: {
-        timers:
-        [
-          '$rootScope', 'Timer', 'Messages',
-          function ($rootScope, Timer, Messages)
-          {
-            $rootScope.$on('unreadCount', function () 
-            {
-              Messages.query();
-            });
+      // resolve: {
+      //   timers:
+      //   [
+      //     '$rootScope', 'Timer', 'Messages',
+      //     function ($rootScope, Timer, Messages)
+      //     {
+      //       $rootScope.$on('unreadCount', function () 
+      //       {
+      //         Messages.query();
+      //       });
 
-            Timer.start('unreadCount', function ()
-            {
-              $rootScope.$broadcast('unreadCount');
-            }, 60);
-          }
-        ]
-      }
+      //       Timer.start('unreadCount', function ()
+      //       {
+      //         $rootScope.$broadcast('unreadCount');
+      //       }, 60);
+      //     }
+      //   ]
+      // }
     })
 
     /**
