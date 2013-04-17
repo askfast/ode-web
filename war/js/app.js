@@ -543,11 +543,35 @@ angular.module('WebPaige',
 [
   '$strap.directives', 
   'ngResource',
-  'WebPaige.Controllers',
+  'WebPaige.Modals.User',
+  'WebPaige.Modals.Dashboard',
+  'WebPaige.Modals.Slots',
+  'WebPaige.Modals.Messages',
+  'WebPaige.Modals.Groups',
+  'WebPaige.Modals.Profile',
+  'WebPaige.Modals.Settings',
+  'WebPaige.Controllers.Login',
+  'WebPaige.Controllers.Logout',
+  'WebPaige.Controllers.Dashboard',
+  'WebPaige.Controllers.Planboard',
+  'WebPaige.Controllers.Messages',
+  'WebPaige.Controllers.Groups',
+  'WebPaige.Controllers.Profile',
+  'WebPaige.Controllers.Settings',
+  'WebPaige.Controllers.Help',
   'WebPaige.Directives',
   'WebPaige.Filters',
-  'WebPaige.Modals',
-  'WebPaige.Services'
+  'WebPaige.Services.Timer',
+  'WebPaige.Services.Session',
+  'WebPaige.Services.Dater',
+  'WebPaige.Services.EventBus',
+  'WebPaige.Services.Interceptor',
+  'WebPaige.Services.MD5',
+  'WebPaige.Services.Storage',
+  'WebPaige.Services.Strings',
+  'WebPaige.Services.Announcer',
+  'WebPaige.Services.Sloter',
+  'WebPaige.Services.Stats'
 ]);
 
 
@@ -588,121 +612,121 @@ angular.module('WebPaige')
 .value(
   '$config', 
   {
-    'title':    'WebPaige',
-    'version':  '2.0.2 (snapshot)',
-    'lang':     'nl',
+    title:    'WebPaige',
+    version:  '2.0.2 (snapshot)',
+    lang:     'nl',
 
-    'fullscreen': true,
+    fullscreen: true,
 
     // REMOVE
-    'demo_users': false,
+    demo_users: false,
 
-    'profile': {
-      'meta':   profile.meta,
-      'title':  profile.title,
-      'logos': {
-        'login':  'js/profiles/' + profile.meta + '/img/login_logo.png',
-        'app':    ''
+    profile: {
+      meta:   profile.meta,
+      title:  profile.title,
+      logos: {
+        login:  'js/profiles/' + profile.meta + '/img/login_logo.png',
+        app:    ''
       },
-      'background': 'js/profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
-      'p2000':      profile.p2000
+      background: 'js/profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
+      p2000:      profile.p2000
     },
 
-    'statesall': {
+    statesall: {
       'com.ask-cs.State.Available': 
       {
-        'className':'state-available',
-        'label':    'Beschikbaar',
-        'color':    '#4f824f',
-        'type':     'Beschikbaar'
+        className:'state-available',
+        label:    'Beschikbaar',
+        color:    '#4f824f',
+        type:     'Beschikbaar'
       },
       'com.ask-cs.State.KNRM.BeschikbaarNoord': 
       {
-        'className':'state-available-north',
-        'label':    'Beschikbaar voor Noord',
-        'color':    '#000',
-        'type':     'Beschikbaar'
+        className:'state-available-north',
+        label:    'Beschikbaar voor Noord',
+        color:    '#000',
+        type:     'Beschikbaar'
       },
       'com.ask-cs.State.KNRM.BeschikbaarZuid': 
       {
-        'className':'state-available-south',
-        'label':    'Beschikbaar voor Zuid',
-        'color':    '#e08a0c',
-        'type':     'Beschikbaar'
+        className:'state-available-south',
+        label:    'Beschikbaar voor Zuid',
+        color:    '#e08a0c',
+        type:     'Beschikbaar'
       },
       'com.ask-cs.State.Unavailable': 
       {
-        'className':'state-unavailable',
-        'label':    'Niet Beschikbaar',
-        'color':    '#a93232',
-        'type':     'Niet Beschikbaar'
+        className:'state-unavailable',
+        label:    'Niet Beschikbaar',
+        color:    '#a93232',
+        type:     'Niet Beschikbaar'
       },
       'com.ask-cs.State.KNRM.SchipperVanDienst': 
       {
-        'className':'state-schipper-service',
-        'label':    'Schipper van Dienst',
-        'color':    '#e0c100',
-        'type':     'Beschikbaar'
+        className:'state-schipper-service',
+        label:    'Schipper van Dienst',
+        color:    '#e0c100',
+        type:     'Beschikbaar'
       },
       'com.ask-cs.State.Unreached': 
       {
-        'className':'state-unreached',
-        'label':    'Niet Bereikt',
-        'color':    '#65619b',
-        'type':     'Niet Beschikbaar'
+        className:'state-unreached',
+        label:    'Niet Bereikt',
+        color:    '#65619b',
+        type:     'Niet Beschikbaar'
       }
     },
 
-    'host': profile.host(),
+    host: profile.host(),
 
-    'formats': {
-      'date':         'dd-MM-yyyy',
-      'time':         'HH:mm',
-      'datetime':     'dd-MM-yyyy HH:mm',
-      'datetimefull': 'dd-MM-yyyy HH:mm'
+    formats: {
+      date:         'dd-MM-yyyy',
+      time:         'HH:mm',
+      datetime:     'dd-MM-yyyy HH:mm',
+      datetimefull: 'dd-MM-yyyy HH:mm'
     },
 
-    'roles': profile.roles,
+    roles: profile.roles,
 
-    'timeline': {
-      'options': {
-        'axisOnTop':        true,
-        'width':            '100%',
-        'height':           'auto',
-        'selectable':       true,
-        'editable':         true,
-        'style':            'box',
-        'groupsWidth':      '150px',
-        'eventMarginAxis':  0,
-        'showCustomTime':   true,
-        'groupsChangeable': false,
-        'showNavigation':   false,
-        'intervalMin':      1000 * 60 * 60 * 1
+    timeline: {
+      options: {
+        axisOnTop:        true,
+        width:            '100%',
+        height:           'auto',
+        selectable:       true,
+        editable:         true,
+        style:            'box',
+        groupsWidth:      '150px',
+        eventMarginAxis:  0,
+        showCustomTime:   true,
+        groupsChangeable: false,
+        showNavigation:   false,
+        intervalMin:      1000 * 60 * 60 * 1
       },
-      'config': {
-        'zoom':       '0.4',
-        'bar':        false,
-        'wishes':     false,
-        'legenda':    {},
-        'legendarer': false,
-        'states':     {},
-        'divisions':  profile.divisions,
-        'densities': {
-          'less':   '#a0a0a0',
-          'even':   '#ba6a24',
-          'one':    '#415e6b',
-          'two':    '#3d5865',
-          'three':  '#344c58',
-          'four':   '#2f4550',
-          'five':   '#2c424c',
-          'six':    '#253943',
-          'more':   '#486877'
+      config: {
+        zoom:       '0.4',
+        bar:        false,
+        wishes:     false,
+        legenda:    {},
+        legendarer: false,
+        states:     {},
+        divisions:  profile.divisions,
+        densities: {
+          less:   '#a0a0a0',
+          even:   '#ba6a24',
+          one:    '#415e6b',
+          two:    '#3d5865',
+          three:  '#344c58',
+          four:   '#2f4550',
+          five:   '#2c424c',
+          six:    '#253943',
+          more:   '#486877'
         }
       }
     },
 
-    'pie': {
-      'colors': 
+    pie: {
+      colors: 
       [
         '#415e6b', 
         '#ba6a24', 
@@ -710,23 +734,30 @@ angular.module('WebPaige')
       ]
     },
 
-    'defaults': {
-      'settingsWebPaige': {
-        'user': {
-          'language': 'nl'
+    defaults: {
+      settingsWebPaige: {
+        user: {
+          language: 'nl'
         },
-        'app': {
-          'widgets': {
-            'groups': {}
+        app: {
+          widgets: {
+            groups: {}
           }
         }
       }
     },
 
-    'cookie': {
-      'expiry': 30, 
-      'path':   '/'
+    cookie: {
+      expiry: 30, 
+      path:   '/'
     },
+
+    // notifications: {
+    //   webkit: {
+    //     user: true,
+    //     app: window.webkitNotifications && (window.webkitNotifications.checkPermission() == 0) ? true : false
+    //   }
+    // },
 
     init: function ()
     {
@@ -775,7 +806,25 @@ angular.module('WebPaige')
     .when('/dashboard', 
     { 
       templateUrl: 'js/views/dashboard.html',
-      controller: 'dashboard'
+      controller: 'dashboard',
+      // resolve: {
+      //   timers:
+      //   [
+      //     '$rootScope', 'Timer', 'Messages',
+      //     function ($rootScope, Timer, Messages)
+      //     {
+      //       $rootScope.$on('unreadCount', function () 
+      //       {
+      //         Messages.query();
+      //       });
+
+      //       Timer.start('unreadCount', function ()
+      //       {
+      //         $rootScope.$broadcast('unreadCount');
+      //       }, 60);
+      //     }
+      //   ]
+      // }
     })
 
     /**
@@ -827,7 +876,7 @@ angular.module('WebPaige')
         data: [
           '$route', 'Messages',
           function ($route, Messages) 
-          {
+          {    
             return Messages.query();
           }
         ]
@@ -954,8 +1003,8 @@ angular.module('WebPaige')
 angular.module('WebPaige')
 .run(
 [
-  '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
-  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window) 
+  '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window', 'Timer',
+  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, Timer) 
   {
     /**
      * Pass config and init dynamic config values
@@ -1126,10 +1175,111 @@ angular.module('WebPaige')
 
 
     /**
+     * Allow webkit desktop notifications
+     */
+    // $rootScope.allowWebkitNotifications = function ()
+    // {
+    //   // Callback so it will work in Safari 
+    //   $window.webkitNotifications.requestPermission(function () {});     
+    // };
+
+
+    /**
+     * Set webkit notification
+     */
+    // $rootScope.setWebkitNotification = function (title, message, params)
+    // {
+    //   if ($window.webkitNotifications && $config.notifications.webkit.app)
+    //   {
+    //     var notification =  $window.webkitNotifications.createNotification(
+    //                           location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
+    //                           '/js/profiles/' + $config.profile.meta + '/img/ico/apple-touch-icon-144x144-precomposed.png', 
+    //                           title, 
+    //                           message
+    //                         );
+
+    //     notification.onclick = function () 
+    //     {
+    //       $rootScope.$apply(function ()
+    //       {            
+    //         if (params.search && !params.hash)
+    //         {
+    //           $location.path('/' + params.path).search(params.search);
+    //         }
+    //         else if (!params.search && params.hash)
+    //         {
+    //           $location.path('/' + params.path).hash(params.hash); 
+    //         }
+    //         else if (!params.search && !params.hash)
+    //         {
+    //           $location.path('/' + params.path); 
+    //         }
+    //         else if (params.search && params.hash)
+    //         {
+    //           $location.path('/' + params.path).search(params.search).hash(params.hash); 
+    //         }
+    //       });
+    //     };
+
+    //     notification.show();
+    //   };     
+    // };
+
+
+
+    /**
      * Detect route change start
      */
     $rootScope.$on("$routeChangeStart", function (event, next, current)
     {
+      function resetLoaders ()
+      {    
+        $rootScope.loaderIcons = {
+          general:    false,
+          dashboard:  false,
+          planboard:  false,
+          messages:   false,
+          groups:     false,
+          profile:    false,
+          settings:   false
+        };
+      };
+
+      resetLoaders();
+
+      switch ($location.path())
+      {
+        case '/dashboard':
+          $rootScope.loaderIcons.dashboard = true;
+        break;
+
+        case '/planboard':
+          $rootScope.loaderIcons.planboard = true;
+        break;
+
+        case '/messages':
+          $rootScope.loaderIcons.messages = true;
+        break;
+
+        case '/groups':
+          $rootScope.loaderIcons.groups = true;
+        break;
+
+        case '/settings':
+          $rootScope.loaderIcons.settings = true;
+        break;
+
+        default:
+          if ($location.path().match(/profile/))
+          {
+            $rootScope.loaderIcons.profile = true;
+          }
+          else
+          {
+            $rootScope.loaderIcons.general = true;
+          };
+      };
+
       if (!Session.check()) $location.path("/login");
 
       $rootScope.loadingBig = true;
@@ -1231,8 +1381,6 @@ angular.module('WebPaige')
 	  $rootScope.fullScreen = function ()
 	  {
 	  	screenfull.toggle($('html')[0]);
-
-	  	// if (screenfull.isFullscreen) $('body').css({background: 'none'});
 	  };
 
   }
@@ -1281,7 +1429,8 @@ if ($.browser.msie)
 // $('#mainTimeline .timeline-frame div:first div:first').css({'top': '0px'});'use strict';
 
 
-angular.module('WebPaige.Modals', ['ngResource'])
+angular.module('WebPaige.Modals.User', ['ngResource'])
+
 
 /**
  * User
@@ -1499,8 +1648,10 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 	  return new User;
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
 
 /**
@@ -1603,8 +1754,10 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 	  return new Dashboard;
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 /**
@@ -2233,8 +2386,10 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 	  return new Slots;
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 
 /**
@@ -2306,9 +2461,6 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Extract this to a data processer
-	   * 
 	   * Filter messages based on box
 	   */
 	  Messages.prototype.filter = function (messages)
@@ -2468,12 +2620,31 @@ angular.module('WebPaige.Modals', ['ngResource'])
 	   */
 	  Messages.prototype.unreadCount = function ()
 	  {
-	    var messages = Messages.prototype.local(),
+	  	var messages = Messages.prototype.local(),
 	        counter = 0;
 
 	    angular.forEach(messages, function (message, index)
 	    {
-	      if (message.box == 'inbox' && message.state == 'NEW') counter++;
+	      if (message.box == 'inbox' && message.state == 'NEW')
+	      {
+		      counter++;
+
+		      // if ($rootScope.browser.webkit)
+		      // {
+				    // $rootScope.setWebkitNotification(
+				    //   'New message: ' + message.subject, 
+				    //   message.question_text,
+				    //   {
+				    //     path: 'messages',
+				    //     search: 
+				    //     {
+				    //       uuid: message.uuid,
+				    //     },
+				    //     hash: 'message'
+				    //   }
+				    // );
+		      // };
+		    };
 	    });
 
 	    $rootScope.app.unreadMessages = counter;
@@ -2602,7 +2773,10 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 	  return new Messages;
 	}
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 /**
@@ -3147,8 +3321,10 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 	  return new Groups;
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
 /**
@@ -3480,8 +3656,10 @@ angular.module('WebPaige.Modals', ['ngResource'])
 
 	  return new Profile;
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Modals.Settings', ['ngResource'])
 
 
 /**
@@ -3534,7 +3712,7 @@ angular.module('WebPaige.Modals', ['ngResource'])
 ]);;'use strict';
 
 
-angular.module('WebPaige.Controllers', [])
+angular.module('WebPaige.Controllers.Login', [])
 
 
 /**
@@ -4166,7 +4344,10 @@ angular.module('WebPaige.Controllers', [])
 		};
 
 	}
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Controllers.Logout', [])
 
 
 /**
@@ -4201,7 +4382,10 @@ angular.module('WebPaige.Controllers', [])
 	    };
 		});
 	}
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 /**
@@ -4367,7 +4551,7 @@ angular.module('WebPaige.Controllers', [])
 	          });
 
 	          var r   = Raphael($id + id),
-	              pie = r.piechart(40, 40, 40, xratios, { colors: colors });
+	              pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
 	        }, 100);
 	      };
@@ -4438,8 +4622,10 @@ angular.module('WebPaige.Controllers', [])
 	    $scope.more.status = !$scope.more.status;
 	  };
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Controllers.Planboard', [])
 
 
 .controller('planboard', 
@@ -5092,7 +5278,6 @@ angular.module('WebPaige.Controllers', [])
 	        break;
 	      };
 
-
 	      $scope.slot = {
 	        start: {
 	          date: new Date(values.start).toString($rootScope.config.formats.date),
@@ -5108,7 +5293,6 @@ angular.module('WebPaige.Controllers', [])
 	        recursive:  content.recursive,
 	        id:         content.id
 	      };
-
 
 	      /**
 	       * TODO
@@ -5515,7 +5699,10 @@ angular.module('WebPaige.Controllers', [])
 	  };
 
 	}
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Controllers.Messages', [])
 
 
 /**
@@ -5523,15 +5710,14 @@ angular.module('WebPaige.Controllers', [])
  */
 .controller('messages', 
 [
-	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 
-	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage) 
+	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer',
+	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer) 
 	{
 	  /**
 	   * Fix styles
 	   */
 	  $rootScope.fixStyles();
 
-	  
 	  /**
 	   * Self this
 	   */
@@ -5679,7 +5865,7 @@ angular.module('WebPaige.Controllers', [])
 	        }
 	        else
 	        {
-	          console.log('state changed');
+	          // console.log('state changed');
 	        };
 	      });
 
@@ -6115,8 +6301,10 @@ angular.module('WebPaige.Controllers', [])
 	    };
 	  };
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Controllers.Groups', [])
 
 
 /**
@@ -6765,8 +6953,10 @@ angular.module('WebPaige.Controllers', [])
 	  };
 
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Controllers.Profile', [])
 
 
 /**
@@ -7519,8 +7709,10 @@ angular.module('WebPaige.Controllers', [])
 	  };
 
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Controllers.Settings', [])
 
 
 /**
@@ -7624,8 +7816,10 @@ angular.module('WebPaige.Controllers', [])
 	  };
 
 	}
-])
+]);;'use strict';
 
+
+angular.module('WebPaige.Controllers.Help', [])
 
 
 /**
@@ -7826,36 +8020,24 @@ angular.module('WebPaige.Directives', ['ngResource'])
 /**
  * 
  */
-// .directive('signIn', 
+// .directive('shortcuts', 
 // [
 //   '$rootScope', 
 //   function ($rootScope)
 //   {
 //     return {
 //       restrict: 'E',
-//       // templateUrl: 'views/directive/signin.html', // using this method causes the tests to fail
-//       template: '<section class="sign-in" ng-show="show==true"><form class="well form-inline"><input type="email" placeholder="Username" ng-model="username" required /><input type="password" placeholder="Password" ng-model="password" required /><button ng-click="signin()">Signin</button></form><button ng-click="signout()">Signout</button></section>',
+//       template: '<link rel="shortcut icon" ng-href="js/profiles/{{profile}}/img/ico/favicon.ico">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-144-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-114-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="72x72"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-72-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="57x57"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-57-precomposed.png">',
 //       replace: true,
-//       scope: true,
-//       link: function (scope, element, attrs) {
-
-//           // scope.$on('event:auth:bad-request', function (event) {
-//           //     scope.show = true;
-//           // });
-
-//           // scope.$on('event:auth:not-authorised', function (event) {
-//           //     scope.show = true;
-//           // });
-
-//           // scope.$on('event:auth:success', function (event) {
-//           //     scope.show = false;
-//           // });
-
-//           // scope.signin = function() {
-//           //     if(scope.username && scope.password) {
-//           //         Authentication.login(scope.username, scope.password);
-//           //     }
-//           // };
+//       scope: {
+//         profile: '@profile'
+//       },
+//       link: function (scope, element, attrs)
+//       {
 //       }
 //     }
 //   }
@@ -7871,7 +8053,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
 angular.module("$strap.config",[]).value("$strap.config",{}),angular.module("$strap.filters",["$strap.config"]),angular.module("$strap.directives",["$strap.config"]),angular.module("$strap",["$strap.filters","$strap.directives","$strap.config"]),angular.module("$strap.directives").directive("bsAlert",["$parse","$timeout","$compile",function(t,e,n){"use strict";return{restrict:"A",link:function(e,i,a){var o=t(a.bsAlert),r=(o.assign,o(e));a.bsAlert?e.$watch(a.bsAlert,function(t,o){r=t,i.html((t.title?"<strong>"+t.title+"</strong>&nbsp;":"")+t.content||""),t.closed&&i.hide(),n(i.contents())(e),(t.type||o.type)&&(o.type&&i.removeClass("alert-"+o.type),t.type&&i.addClass("alert-"+t.type)),(angular.isUndefined(a.closeButton)||"0"!==a.closeButton&&"false"!==a.closeButton)&&i.prepend('<button type="button" class="close" data-dismiss="alert">&times;</button>')},!0):(angular.isUndefined(a.closeButton)||"0"!==a.closeButton&&"false"!==a.closeButton)&&i.prepend('<button type="button" class="close" data-dismiss="alert">&times;</button>'),i.addClass("alert").alert(),i.hasClass("fade")&&(i.removeClass("in"),setTimeout(function(){i.addClass("in")}));var s=a.ngRepeat&&a.ngRepeat.split(" in ").pop();i.on("close",function(t){var n;s?(t.preventDefault(),i.removeClass("in"),n=function(){i.trigger("closed"),e.$parent&&e.$parent.$apply(function(){for(var t=s.split("."),n=e.$parent,i=0;t.length>i;++i)n&&(n=n[t[i]]);n&&n.splice(e.$index,1)})},$.support.transition&&i.hasClass("fade")?i.on($.support.transition.end,n):n()):r&&(t.preventDefault(),i.removeClass("in"),n=function(){i.trigger("closed"),e.$apply(function(){r.closed=!0})},$.support.transition&&i.hasClass("fade")?i.on($.support.transition.end,n):n())})}}}]),angular.module("$strap.directives").directive("bsButton",["$parse","$timeout",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){if(a){n.parent('[data-toggle="buttons-checkbox"], [data-toggle="buttons-radio"]').length||n.attr("data-toggle","button");var o=!!e.$eval(i.ngModel);o&&n.addClass("active"),e.$watch(i.ngModel,function(t,e){var i=!!t,a=!!e;i!==a?$.fn.button.Constructor.prototype.toggle.call(r):i&&!o&&n.addClass("active")})}n.hasClass("btn")||n.on("click.button.data-api",function(){n.button("toggle")}),n.button();var r=n.data("button");r.toggle=function(){if(!a)return $.fn.button.Constructor.prototype.toggle.call(this);var i=n.parent('[data-toggle="buttons-radio"]');i.length?(n.siblings("[ng-model]").each(function(n,i){t($(i).attr("ng-model")).assign(e,!1)}),e.$digest(),a.$modelValue||(a.$setViewValue(!a.$modelValue),e.$digest())):e.$apply(function(){a.$setViewValue(!a.$modelValue)})}}}}]).directive("bsButtonsCheckbox",["$parse",function(){"use strict";return{restrict:"A",require:"?ngModel",compile:function(t){t.attr("data-toggle","buttons-checkbox").find("a, button").each(function(t,e){$(e).attr("bs-button","")})}}}]).directive("bsButtonsRadio",["$parse",function(){"use strict";return{restrict:"A",require:"?ngModel",compile:function(t,e){return t.attr("data-toggle","buttons-radio"),e.ngModel||t.find("a, button").each(function(t,e){$(e).attr("bs-button","")}),function(t,e,n,i){i&&(e.find("[value]").button().filter('[value="'+t.$eval(n.ngModel)+'"]').addClass("active"),e.on("click.button.data-api",function(e){t.$apply(function(){i.$setViewValue($(e.target).closest("button").attr("value"))})}),t.$watch(n.ngModel,function(i,a){if(i!==a){var o=e.find('[value="'+t.$eval(n.ngModel)+'"]');o.length&&$.fn.button.Constructor.prototype.toggle.call(o.data("button"))}}))}}}}]),angular.module("$strap.directives").directive("bsButtonSelect",["$parse","$timeout",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){var o=t(i.bsButtonSelect);o.assign,a&&(n.text(e.$eval(i.ngModel)),e.$watch(i.ngModel,function(t){n.text(t)}));var r,s,l,u;n.bind("click",function(){r=o(e),s=a?e.$eval(i.ngModel):n.text(),l=r.indexOf(s),u=l>r.length-2?r[0]:r[l+1],console.warn(r,u),e.$apply(function(){n.text(u),a&&a.$setViewValue(u)})})}}}]),angular.module("$strap.directives").directive("bsDatepicker",["$timeout",function(){"use strict";var t="ontouchstart"in window&&!window.navigator.userAgent.match(/PhantomJS/i),e={"/":"[\\/]","-":"[-]",".":"[.]",dd:"(?:(?:[0-2]?[0-9]{1})|(?:[3][01]{1}))",d:"(?:(?:[0-2]?[0-9]{1})|(?:[3][01]{1}))",mm:"(?:[0]?[1-9]|[1][012])",m:"(?:[0]?[1-9]|[1][012])",yyyy:"(?:(?:[1]{1}[0-9]{1}[0-9]{1}[0-9]{1})|(?:[2]{1}[0-9]{3}))(?![[0-9]])",yy:"(?:(?:[0-9]{1}[0-9]{1}))(?![[0-9]])"};return{restrict:"A",require:"?ngModel",link:function(n,i,a,o){var r=function(t,n){n||(n={});var i=t,a=e;return angular.forEach(a,function(t,e){i=i.split(e).join(t)}),RegExp("^"+i+"$",["i"])},s=t?"yyyy/mm/dd":r(a.dateFormat||"mm/dd/yyyy");o&&o.$parsers.unshift(function(t){return!t||s.test(t)?(o.$setValidity("date",!0),t):(o.$setValidity("date",!1),void 0)});var l=i.next('[data-toggle="datepicker"]');if(l.length&&l.on("click",function(){t?i.trigger("focus"):i.datepicker("show")}),t&&"text"===i.prop("type"))i.prop("type","date"),i.on("change",function(){n.$apply(function(){o.$setViewValue(i.val())})});else{o&&i.on("changeDate",function(){n.$apply(function(){o.$setViewValue(i.val())})});var u=i.closest(".popover");u&&u.on("hide",function(){var t=i.data("datepicker");t&&(t.picker.remove(),i.data("datepicker",null))}),i.attr("data-toggle","datepicker"),i.datepicker({autoclose:!0,forceParse:a.forceParse||!1,language:a.language||"en"})}}}}]),angular.module("$strap.directives").directive("bsDropdown",["$parse","$compile",function(t,e){"use strict";var n=Array.prototype.slice,i='<ul class="dropdown-menu" role="menu" aria-labelledby="drop1"><li ng-repeat="item in items" ng-class="{divider: !!item.divider, \'dropdown-submenu\': !!item.submenu && item.submenu.length}"><a ng-hide="!!item.divider" tabindex="-1" ng-href="{{item.href}}" ng-click="{{item.click}}" target="{{item.target}}" ng-bind-html-unsafe="item.text"></a></li></ul>',a=function(t,n,a){for(var r,s,l,u=0,c=t.length;c>u;u++)(r=t[u].submenu)&&(l=a.$new(),l.items=r,s=e(i)(l),s=s.appendTo(n.children("li:nth-child("+(u+1)+")")),o(r,s,l))},o=function(){var t=n.call(arguments);setTimeout(function(){a.apply(null,t)})};return{restrict:"EA",scope:!0,link:function(n,a,r){var s=t(r.bsDropdown);n.items=s(n);var l=e(i)(n);o(n.items,l,n),l.insertAfter(a),a.addClass("dropdown-toggle").attr("data-toggle","dropdown")}}}]),angular.module("$strap.directives").directive("bsModal",["$parse","$compile","$http","$timeout","$q","$templateCache",function(t,e,n,i,a,o){"use strict";return{restrict:"A",scope:!0,link:function(r,s,l){var u=t(l.bsModal),c=(u.assign,u(r));a.when(o.get(c)||n.get(c,{cache:!0})).then(function(t){angular.isObject(t)&&(t=t.data);var n=u(r).replace(".html","").replace(/[\/|\.|:]/g,"-")+"-"+r.$id,a=$('<div class="modal hide" tabindex="-1"></div>').attr("id",n).attr("data-backdrop",l.backdrop||!0).attr("data-keyboard",l.keyboard||!0).addClass(l.modalClass?"fade "+l.modalClass:"fade").html(t);$("body").append(a),s.attr("href","#"+n).attr("data-toggle","modal"),i(function(){e(a)(r)}),r._modal=function(t){a.modal(t)},r.hide=function(){a.modal("hide")},r.show=function(){a.modal("show")},r.dismiss=r.hide})}}}]),angular.module("$strap.directives").directive("bsNavbar",["$location",function(t){"use strict";return{restrict:"A",link:function(e,n){e.$watch(function(){return t.path()},function(t){n.find("li[data-match-route]").each(function(e,n){var i=angular.element(n),a=i.attr("data-match-route"),o=RegExp("^"+a+"$",["i"]);o.test(t)?i.addClass("active"):i.removeClass("active")})})}}}]),angular.module("$strap.directives").directive("bsPopover",["$parse","$compile","$http","$timeout","$q","$templateCache",function(t,e,n,i,a,o){"use strict";return $("body").on("keyup",function(t){27===t.keyCode&&$(".popover.in").each(function(){$(this).popover("hide")})}),{restrict:"A",scope:!0,link:function(i,r,s){var l=t(s.bsPopover),u=(l.assign,l(i)),c={};angular.isObject(u)&&(c=u),a.when(c.content||o.get(u)||n.get(u,{cache:!0})).then(function(t){angular.isObject(t)&&(t=t.data),s.unique&&r.on("show",function(){$(".popover.in").each(function(){var t=$(this),e=t.data("popover");e&&!e.$element.is(r)&&t.popover("hide")})}),s.hide&&i.$watch(s.hide,function(t,e){t?n.hide():t!==e&&n.show()}),r.popover(angular.extend({},c,{content:t,html:!0}));var n=r.data("popover");n.hasContent=function(){return this.getTitle()||t},n.getPosition=function(){var t=$.fn.popover.Constructor.prototype.getPosition.apply(this,arguments);return e(this.$tip)(i),i.$digest(),this.$tip.data("popover",this),t},i._popover=function(t){r.popover(t)},i.hide=function(){r.popover("hide")},i.show=function(){r.popover("show")},i.dismiss=i.hide})}}}]),angular.module("$strap.directives").directive("bsTabs",["$parse","$compile",function(t,e){"use strict";return{restrict:"A",link:function(t,n){var i=['<ul class="nav nav-tabs">',"</ul>"],a=['<div class="tab-content">',"</div>"];n.find("[data-tab]").each(function(e){var n=angular.element(this),o="tab-"+t.$id+"-"+e,r=n.hasClass("active"),s=n.hasClass("fade"),l=t.$eval(n.data("tab"));i.splice(e+1,0,"<li"+(r?' class="active"':"")+'><a href="#'+o+'" data-toggle="tab">'+l+"</a></li>"),a.splice(e+1,0,'<div class="tab-pane '+n.attr("class")+(s&&r?" in":"")+'" id="'+o+'">'+this.innerHTML+"</div>")}),n.html(i.join("")+a.join("")),e(n.children("div.tab-content"))(t)}}}]),angular.module("$strap.directives").directive("bsTimepicker",["$timeout",function(){"use strict";var t="((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){a&&n.on("change",function(){e.$apply(function(){a.$setViewValue(n.val())})});var o=RegExp("^"+t+"$",["i"]);a.$parsers.unshift(function(t){return!t||o.test(t)?(a.$setValidity("time",!0),t):(a.$setValidity("time",!1),void 0)});var r=n.closest(".popover");r&&r.on("hide",function(){var t=n.data("timepicker");t&&(t.$widget.remove(),n.data("timepicker",null))}),n.attr("data-toggle","timepicker"),n.timepicker()}}}]),angular.module("$strap.directives").directive("bsTooltip",["$parse","$compile",function(t){"use strict";return{restrict:"A",scope:!0,link:function(e,n,i){var a=t(i.bsTooltip),o=(a.assign,a(e));e.$watch(i.bsTooltip,function(t,e){t!==e&&(o=t)}),i.unique&&n.on("show",function(){$(".tooltip.in").each(function(){var t=$(this),e=t.data("tooltip");e&&!e.$element.is(n)&&t.tooltip("hide")})}),n.tooltip({title:function(){return angular.isFunction(o)?o.apply(null,arguments):o},html:!0});var r=n.data("tooltip");r.show=function(){var t=$.Event("show");if(this.$element.trigger(t),!t.isDefaultPrevented()){var e=$.fn.tooltip.Constructor.prototype.show.apply(this,arguments);return this.tip().data("tooltip",this),e}},r.hide=function(){var t=$.Event("hide");return this.$element.trigger(t),t.isDefaultPrevented()?void 0:$.fn.tooltip.Constructor.prototype.hide.apply(this,arguments)},e._tooltip=function(t){n.tooltip(t)},e.hide=function(){n.tooltip("hide")},e.show=function(){n.tooltip("show")},e.dismiss=e.hide}}}]),angular.module("$strap.directives").directive("bsTypeahead",["$parse",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){var o=t(i.bsTypeahead),r=(o.assign,o(e));e.$watch(i.bsTypeahead,function(t,e){t!==e&&(r=t)}),n.attr("data-provide","typeahead"),n.typeahead({source:function(){return angular.isFunction(r)?r.apply(null,arguments):r},minLength:i.minLength||1,items:i.items,updater:function(t){return a&&e.$apply(function(){a.$setViewValue(t)}),t}});var s=n.data("typeahead");s.lookup=function(){var t;return this.query=this.$element.val()||"",this.query.length<this.options.minLength?this.shown?this.hide():this:(t=$.isFunction(this.source)?this.source(this.query,$.proxy(this.process,this)):this.source,t?this.process(t):this)},"0"===i.minLength&&setTimeout(function(){n.on("focus",function(){0===n.val().length&&setTimeout(n.typeahead.bind(n,"lookup"),200)})})}}}]);;'use strict';
 
 
-angular.module('WebPaige.Services', ['ngResource'])
+angular.module('WebPaige.Services.Timer', ['ngResource'])
 
 /**
  * Timer service
@@ -7881,7 +8063,7 @@ angular.module('WebPaige.Services', ['ngResource'])
  */
 .factory('Timer', 
 [
-  '$rootScope', '$timeout', 
+  '$rootScope', '$timeout',
   function ($rootScope, $timeout)
   {
     var initer = 0,
@@ -7899,17 +8081,24 @@ angular.module('WebPaige.Services', ['ngResource'])
       {
         timers[id].counter++;
 
-        timers[id].mytimeout = $timeout(onTimeout, 1000);
+        timers[id].mytimeout = $timeout(onTimeout, delay * 1000);
 
         if (timers[id].delay == timers[id].counter)
         {
-          timers[id].event.call();
+          // if (id == 'unreadCount')
+          // {            
+          //   $rootScope.$broadcast('unreadCount');
+          // }
+          // else
+          // {
+            timers[id].event.call();
+          // }
 
           timers[id].counter = 0;
         };
       };
 
-      timers[id].mytimeout = $timeout(onTimeout, 1000);  
+      timers[id].mytimeout = $timeout(onTimeout, delay * 1000);  
     };
 
     var stopTimer = function (id)
@@ -7922,7 +8111,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       stop:   stopTimer
     };
   }
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Session', ['ngResource'])
 
 
 /**
@@ -8013,7 +8205,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       }
     }
   }
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Dater', ['ngResource'])
 
 
 /**
@@ -8250,7 +8445,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       }
     }
   }
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.EventBus', ['ngResource'])
 
 
 /**
@@ -8314,7 +8512,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       }
     };
   }
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Interceptor', ['ngResource'])
 
 
 /**
@@ -8358,7 +8559,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       });
     }
   }
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.MD5', ['ngResource'])
 
 
 /**
@@ -8600,7 +8804,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       return temp.toLowerCase();
     }
   }
-)
+);;'use strict';
+
+
+angular.module('WebPaige.Services.Storage', ['ngResource'])
 
 
 /**
@@ -8971,7 +9178,10 @@ angular.module('WebPaige.Services', ['ngResource'])
     }
   }
 
-}])
+}]);;'use strict';
+
+
+angular.module('WebPaige.Services.Strings', ['ngResource'])
 
 
 /**
@@ -8997,8 +9207,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       }
     }
   }
-)
+);;'use strict';
 
+
+angular.module('WebPaige.Services.Announcer', ['ngResource'])
 
 
 /**
@@ -9085,7 +9297,10 @@ angular.module('WebPaige.Services', ['ngResource'])
       }
     }
   }
-)
+);;'use strict';
+
+
+angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
 
 /**
@@ -9656,7 +9871,10 @@ angular.module('WebPaige.Services', ['ngResource'])
 
     }
   }
-])
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Stats', ['ngResource'])
 
 
 /**
@@ -9844,6 +10062,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
+
 /**
  * Main range filter
  */
@@ -9903,6 +10127,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
+
 /**
  * Main range week filter
  */
@@ -9931,6 +10161,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 ])
+
+
+
+
+
+
 
 
 /**
@@ -9988,6 +10224,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
 /**
  * Range info week filter
  */
@@ -10004,6 +10245,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		};
 	}
 ])
+
+
+
+
+
+
 
 
 /**
@@ -10035,6 +10282,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
+
 /** 
  * Calculate time in days
  */
@@ -10057,6 +10310,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
+
 /**
  * Calculate time in hours
  */
@@ -10077,6 +10336,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		};
 	}
 )
+
+
+
+
+
 
 
 /**
@@ -10104,6 +10368,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
 /**
  * Convert eve urls to ids
  */
@@ -10120,6 +10389,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  };
 	}
 )
+
+
+
+
+
 
 
 /** 
@@ -10147,6 +10421,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
 /**
  * Convert timeStamps to dates
  */
@@ -10163,6 +10442,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	 	};
 	}
 ])
+
+
+
+
+
 
 
 /**
@@ -10186,6 +10470,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
 /**
  * TODO
  * Still used?
@@ -10201,6 +10490,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 )
+
+
+
+
+
 
 
 /**
@@ -10220,6 +10514,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
 /**
  * Strip html tags
  */
@@ -10232,6 +10531,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
+
+
+
+
+
 
 
 /**
@@ -10256,6 +10560,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 
+
+
+
+
+
 /**
  * TODO
  * Unknown filter
@@ -10275,6 +10584,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 ])
+
+
+
+
+
 
 
 /**

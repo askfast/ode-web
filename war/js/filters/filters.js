@@ -27,6 +27,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
+
 /**
  * Main range filter
  */
@@ -86,6 +92,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
+
 /**
  * Main range week filter
  */
@@ -101,8 +113,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			if (dates)
 			{
 				var dates = {
-					start: new Date(dates.start).toString('dddd, MMMM d'),
-					end: new Date(dates.end).toString('dddd, MMMM d')
+					start: 	new Date(dates.start).toString('dddd, MMMM d'),
+					end: 		new Date(dates.end).toString('dddd, MMMM d')
 				};
 
 				return 	dates.start + 
@@ -114,6 +126,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 ])
+
+
+
+
+
+
 
 
 /**
@@ -171,6 +189,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
 /**
  * Range info week filter
  */
@@ -187,6 +210,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		};
 	}
 ])
+
+
+
+
+
+
 
 
 /**
@@ -218,6 +247,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
+
 /** 
  * Calculate time in days
  */
@@ -240,6 +275,12 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
+
 /**
  * Calculate time in hours
  */
@@ -260,6 +301,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		};
 	}
 )
+
+
+
+
+
 
 
 /**
@@ -287,6 +333,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
 /**
  * Convert eve urls to ids
  */
@@ -303,6 +354,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  };
 	}
 )
+
+
+
+
+
 
 
 /** 
@@ -330,6 +386,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
+
+
+
+
+
 /**
  * Convert timeStamps to dates
  */
@@ -346,6 +407,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	 	};
 	}
 ])
+
+
+
+
+
 
 
 /**
@@ -369,6 +435,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
 /**
  * TODO
  * Still used?
@@ -384,6 +455,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 )
+
+
+
+
+
 
 
 /**
@@ -403,6 +479,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
+
+
+
+
+
 /**
  * Strip html tags
  */
@@ -415,6 +496,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
+
+
+
+
+
 
 
 /**
@@ -439,6 +525,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 
+
+
+
+
+
 /**
  * TODO
  * Unknown filter
@@ -451,13 +542,18 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		return function (string, type)
 		{
 			var types = type.split("."),
-					ret = $rootScope.ui[types[0]][types[1]],
-					ret = ret.replace('$v',string);
+					ret 	= $rootScope.ui[types[0]][types[1]],
+					ret 	= ret.replace('$v',string);
 			
 			return ret;
 		}
 	}
 ])
+
+
+
+
+
 
 
 /**

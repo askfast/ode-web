@@ -17,12 +17,41 @@ module.exports = function(grunt) {
           'war/js/config.js',
           'war/js/routes.js',
           'war/js/bootstrap.js',
-          'war/js/modals.js',
-          'war/js/controllers.js',
-          'war/js/directives.js',
+          // modals
+          'war/js/modals/user.js',
+          'war/js/modals/dashboard.js',
+          'war/js/modals/slots.js',
+          'war/js/modals/messages.js',
+          'war/js/modals/groups.js',
+          'war/js/modals/profile.js',
+          'war/js/modals/settings.js',
+          // controllers
+          'war/js/controllers/login.js',
+          'war/js/controllers/logout.js',
+          'war/js/controllers/dashboard.js',
+          'war/js/controllers/planboard.js',
+          'war/js/controllers/messages.js',
+          'war/js/controllers/groups.js',
+          'war/js/controllers/profile.js',
+          'war/js/controllers/settings.js',
+          'war/js/controllers/help.js',
+          // directives
+          'war/js/directives/directives.js',
           'war/js/libs/angular-strap/0.7.0/angular-strap.min.js',
-          'war/js/services.js',
-          'war/js/filters.js'
+          // services
+          'war/js/services/timer.js',
+          'war/js/services/session.js',
+          'war/js/services/dater.js',
+          'war/js/services/eventbus.js',
+          'war/js/services/interceptor.js',
+          'war/js/services/md5.js',
+          'war/js/services/storage.js',
+          'war/js/services/strings.js',
+          'war/js/services/announcer.js',
+          'war/js/services/sloter.js',
+          'war/js/services/stats.js',
+          // filters
+          'war/js/filters/filters.js'
         ],
         dest: 'war/js/app.js'
       }
