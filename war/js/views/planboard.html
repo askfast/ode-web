@@ -11,6 +11,7 @@
   </div>
   <!-- end page header -->
 
+
   <!-- timeline controls -->
   <div class="row-fluid" id="timeline-controls">
 
@@ -52,20 +53,15 @@
                 ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
         <button type="button" 
                 class="btn"
-                ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
-      </div>
-      <!-- end timeline navigation -->
-
-      <!-- timeline zooms -->
-      <div class="btn-group pull-left" style="margin-right: 5px">
-        <button type="button" 
-                class="btn"
                 ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
         <button type="button" 
                 class="btn"
                 ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button>
+        <button type="button" 
+                class="btn"
+                ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
       </div>
-      <!-- end timeline zooms -->
+      <!-- end timeline navigation -->
 
     </div>
     <!-- end core timeline controls -->
@@ -86,6 +82,7 @@
   </div>
   <!-- end timeline controls -->
 
+
   <!-- slot controls -->
   <div class="row-fluid" ng-show="views.slot.add || views.slot.edit || views.group || views.wish || views.member">
 
@@ -105,7 +102,23 @@
       <hr>
 
       <!-- slot start -->
-      <div class="form-elements-group">
+      <div class="form-elements-group" ng-show="browser.mobile">
+        <label>{{ui.planboard.from}}</label>
+        <!-- datetime -->
+        <div class="control-group dater-mobile" ng-show="views.slot.add || views.slot.edit || views.wish">
+          <input  name="date-start" 
+                  type="datetime"
+                  ng-model="slot.start.datetime">
+        </div>
+        <div class="control-group dater-mobile" ng-show="views.group || views.member">
+          <input  name="date-start" 
+                  type="datetime"
+                  ng-model="slot.start.datetime"
+                  disabled>
+        </div>
+        <!-- end datetime -->
+      </div>
+      <div class="form-elements-group" ng-hide="browser.mobile">
         <label>{{ui.planboard.from}}</label>
         <!-- date -->
         <div class="control-group dater" ng-show="views.slot.add || views.slot.edit || views.wish">
@@ -144,7 +157,23 @@
       <!-- end slot start -->
 
       <!-- slot end -->
-      <div class="form-elements-group">
+      <div class="form-elements-group" ng-show="browser.mobile">
+        <label>{{ui.planboard.from}}</label>
+        <!-- datetime -->
+        <div class="control-group dater-mobile" ng-show="views.slot.add || views.slot.edit || views.wish">
+          <input  name="date-start" 
+                  type="datetime"
+                  ng-model="slot.end.datetime">
+        </div>
+        <div class="control-group dater-mobile" ng-show="views.group || views.member">
+          <input  name="date-start" 
+                  type="datetime"
+                  ng-model="slot.end.datetime"
+                  disabled>
+        </div>
+        <!-- end datetime -->
+      </div>
+      <div class="form-elements-group" ng-hide="browser.mobile">
         <label>{{ui.planboard.till}}</label>
         <!-- date -->
         <div class="control-group dater" ng-show="views.slot.add || views.slot.edit || views.wish">
@@ -199,7 +228,7 @@
       <!-- end slot state -->
 
       <!-- slot recursive -->
-      <div class="form-elements-group" ng-show="views.slot.add || views.slot.edit">
+      <div class="form-elements-group rightest" ng-show="views.slot.add || views.slot.edit">
         <label>{{ui.planboard.reoccuring}}</label>
         <input type="checkbox" ng-model="slot.recursive">
       </div>
@@ -273,6 +302,8 @@
     </form>
   </div>
   <!-- end slot controls -->
+  
+
 
   <!-- timelines & statistics -->
   <div class="row-fluid">
@@ -296,6 +327,9 @@
 
       <!-- tabs content -->
       <div class="tab-content">
+
+
+
 
         <!-- timelines -->
         <div class="tab-pane active" id="timelineTab">
@@ -372,58 +406,12 @@
               <div class="legenda-row">
                 <strong>{{ui.planboard.members}}</strong>
                 <ul>
-                  <li class="legenda-Available">
+                  <li ng-repeat="(key, value) in timeline.config.states" class="legenda-{{value.className}}">
                     <label>
                       <div class="square"></div>
                       <input  type="checkbox" 
                               ng-click="alterLegenda(timeline.config.legenda)" 
-                              ng-model="timeline.config.legenda['com.ask-cs.State.Available']">
-                      {{ui.planboard.bothAvailable}}
-                    </label>
-                  </li>
-                  <li class="legenda-BeschikbaarNoord">
-                    <label>
-                      <div class="square"></div>
-                      <input  type="checkbox"
-                              ng-click="alterLegenda(timeline.config.legenda)" 
-                              ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarNoord']">
-                      {{ui.planboard.northAavailable}}
-                    </label>
-                  </li>
-                  <li class="legenda-BeschikbaarZuid">
-                    <label>
-                      <div class="square"></div>
-                      <input  type="checkbox" 
-                              ng-click="alterLegenda(timeline.config.legenda)" 
-                              ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.BeschikbaarZuid']">
-                      {{ui.planboard.southAvailable}}
-                    </label>
-                  </li>
-                  <li class="legenda-SchipperVanDienst">
-                    <label>
-                      <div class="square"></div>
-                      <input  type="checkbox"   
-                              ng-click="alterLegenda(timeline.config.legenda)" 
-                              ng-model="timeline.config.legenda['com.ask-cs.State.KNRM.SchipperVanDienst']">
-                      {{ui.planboard.skipperOutService}}
-                    </label>
-                  </li>
-                  <li class="legenda-Unavailable">
-                    <label>
-                      <div class="square"></div>
-                      <input  type="checkbox" 
-                              ng-click="alterLegenda(timeline.config.legenda)" 
-                              ng-model="timeline.config.legenda['com.ask-cs.State.Unavailable']">
-                      {{ui.planboard.notAvailable}}
-                    </label>
-                  </li>
-                  <li class="legenda-NotReached">
-                    <label>
-                      <div class="square"></div>
-                      <input  type="checkbox" 
-                              ng-click="alterLegenda(timeline.config.legenda)" 
-                              ng-model="timeline.config.legenda['com.ask-cs.State.Unreached']">
-                      {{ui.planboard.notachieve}} 
+                              ng-model="timeline.config.legenda[key]">{{value.label}}
                     </label>
                   </li>
                 </ul>
@@ -488,6 +476,9 @@
         </div>
         <!-- end timelines -->
 
+
+
+
         <!-- statistics -->
         <div class="tab-pane" id="statisticsTab">
 
@@ -539,23 +530,8 @@
             <div class="legenda-row">
               <strong>{{ui.planboard.members}}</strong>
               <ul>
-                <li class="legenda-Available">
-                  <label><div class="square"></div>{{ui.planboard.bothAvailable}}</label>
-                </li>
-                <li class="legenda-BeschikbaarNoord">
-                  <label><div class="square"></div>{{ui.planboard.northAavailable}}</label>
-                </li>
-                <li class="legenda-BeschikbaarZuid">
-                  <label><div class="square"></div>{{ui.planboard.southAvailable}}</label>
-                </li>
-                <li class="legenda-SchipperVanDienst">
-                  <label><div class="square"></div>{{ui.planboard.skipperOutService}}</label>
-                </li>
-                <li class="legenda-Unavailable">
-                  <label><div class="square"></div>{{ui.planboard.notAvailable}}</label>
-                </li>
-                <li class="legenda-NotReached">
-                  <label><div class="square"></div>{{ui.planboard.notachieve}}</label>
+                <li ng-repeat="(key, value) in timeline.config.states" class="legenda-{{value.className}}">
+                  <label><div class="square"></div>{{value.label}}</label>
                 </li>
               </ul>
             </div>
@@ -586,41 +562,61 @@
               
               <div class="groupStatInfo">
                 <h3>{{data.aggs.id|groupIdToName}}</h3>
-                <!-- <h3>Total Durations In Period</h3> -->
                 <hr>
                 <ul>
                   <li>
-                    <h4>More people then expected</h4>
-                    <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5> 
-                    <small class="muted">days</small>, 
-                    <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5> 
-                    <small class="muted">hours</small>, 
-                    <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5> 
-                    <small class="muted">minutes</small>
+                    <div class="ratios more">
+                      <span class="ratio">{{data.aggs.ratios.more}}</span>
+                      <span class="percentage">%</span>
+                    </div>
+                    <div class="info">                    
+                      <h4>More people then expected</h4>
+                      <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5> 
+                      <small class="muted">days</small>, 
+                      <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5> 
+                      <small class="muted">hours</small>, 
+                      <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5> 
+                      <small class="muted">minutes</small>
+                    </div>
                   </li>
                   <li>
-                    <h4>Just so many people as wished</h4>
-                    <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5> 
-                    <small class="muted">days</small>, 
-                    <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5> 
-                    <small class="muted">hours</small>, 
-                    <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5> 
-                    <small class="muted">minutes</small>
+                    <div class="ratios even">
+                      <span class="ratio">{{data.aggs.ratios.even}}</span>
+                      <span class="percentage">%</span>
+                    </div>
+                    <div class="info">                    
+                      <h4>Just so many people as wished</h4>
+                      <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5> 
+                      <small class="muted">days</small>, 
+                      <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5> 
+                      <small class="muted">hours</small>, 
+                      <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5> 
+                      <small class="muted">minutes</small>
+                    </div>
                   </li>
                   <li>
-                    <h4>Less people then expected</h4>
-                    <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5> 
-                    <small class="muted">days</small>, 
-                    <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5> 
-                    <small class="muted">hours</small>, 
-                    <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5> 
-                    <small class="muted">minutes</small>
+                    <div class="ratios less">
+                      <span class="ratio">{{data.aggs.ratios.less}}</span>
+                      <span class="percentage">%</span>
+                    </div>
+                    <div class="info">
+                      <h4>Less people then expected</h4>
+                      <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5> 
+                      <small class="muted">days</small>, 
+                      <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5> 
+                      <small class="muted">hours</small>, 
+                      <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5> 
+                      <small class="muted">minutes</small>
+                    </div>
                   </li>
                 </ul>
               </div>
 
             </div>
             <!-- end group charts -->
+
+
+
 
             <!-- member bars -->
             <div id="memberBars">
@@ -658,6 +654,10 @@
           <!-- end planbaord footer -->
         </div>
         <!-- end statistics -->
+
+
+
+
 
       </div>
       <!-- end tabs content -->

@@ -14,24 +14,22 @@
     <meta name="viewport" content="width=device-width">
 
     <!-- jquery -->
-    <!-- <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script> -->
     <script src="js/libs/jquery/1.9.1/jquery-1.9.1.min.js"></script>
-    <script src="js/libs/jquery/jquery-browser.js"></script>
+    <script src="js/libs/rsvp/1.0.0/rsvp.min.js"></script>
+    <script src="js/plugins/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/knrm/profile.js"></script>
+    <script src="js/profiles/knrmtest/profile.js"></script>
     
     <!-- favicons -->
-    <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="57x57" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" ng-href="js/profiles/{{config.profile.meta}}/img/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"  ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114"  ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"    ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57"    ng-href="js/profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
 
     <!-- styles -->
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/styles.css">
     
     <!-- compability tests and css fixers -->
     <script src="js/libs/modernizr/2.6.2/modernizr-2.6.2.min.js"></script>
@@ -43,10 +41,17 @@
   <body>
 
     <!-- watermark for app -->
-    <div id="watermark" style="background: url(../profiles/{{config.profile.meta}}/img/watermark.png) no-repeat;"></div>
-    <!-- end watermark for app -->
+    <div id="watermark"></div>
+    
+    <script type="text/javascript">
+      $('#watermark').css({
+        backgroundImage: 'url(../js/profiles/' + profile.meta  + '/img/watermark.png)',
+        backgroundRepeat: 'no-repeat'
+      });
 
-    <div watermarker="{{config.profile.meta}}"></div>
+      if ($.browser.mobile) $('#watermark').css({ bottom: '-10px' });
+    </script>
+    <!-- end watermark for app -->
 
     <!-- navbar -->
     <div class="navbar navbar-fixed-top" bs-navbar>
@@ -82,11 +87,13 @@
               </li>
             </ul>
             <!-- end main nav -->
+
             <!-- user menu -->
-            <ul class="nav pull-right">
-              <li>
+            <!-- desktop version -->
+            <ul class="nav pull-right" ng-hide="browser.mobile">
+              <!-- <li>
                 <a href="#help"><i class="icon-question-sign icon-white"></i> Help & Support</a>
-              </li>
+              </li> -->
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
@@ -95,7 +102,7 @@
                     <a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a>
                   </li>
                   <li>
-                    <a href="#settings"><i class="icon-cog"></i> {{ui.settings.settings}}</a>
+                    <a href="#settings"><i class="icon-wrench"></i> {{ui.settings.settings}}</a>
                   </li>
                   <li class="divider"></li>
                   <li>
@@ -103,8 +110,35 @@
                   </li>
                 </ul>
               </li>
+              <li id="fullscreener" ng-show="config.fullscreen && browser.webkit">
+                <a ng-click="fullScreen()"><i class="icon-fullscreen icon-white"></i></a>
+              </li>
             </ul>
+            <!-- end desktop version -->
+            <!-- mobile or tablet version -->
+            <ul class="nav pull-right" ng-show="browser.mobile" style="{{(browser.landscape) && 'margin-right:-20px'}}">
+              <li>
+                <a href="#profile">
+                  <i class="icon-user icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
+                  <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.profile.profile}}</span>
+                </a>
+              </li>
+              <li>
+                <a href="#settings">
+                  <i class="icon-wrench icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
+                  <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.settings.settings}}</span>
+                </a>
+              </li>
+              <li>
+                <a href="#logout">
+                  <i class="icon-off icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
+                  <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.login.logout}}</span>
+                </a>
+              </li>
+            </ul>
+            <!-- end mobile or tablet version -->
             <!-- end user menu -->
+
           </div>
           <!-- end nav-collapse -->
         </div>
@@ -114,7 +148,13 @@
 
     <!-- loading -->
     <div id="loading" ng-show="loadingBig">
-      <span class="entypo">&#9203;</span>
+      <span class="entypo" ng-show="loaderIcons.general">&#9203;</span>
+      <span class="entypo" ng-show="loaderIcons.dashboard">&#9716;</span>
+      <span class="entypo" ng-show="loaderIcons.planboard">&#128340;</span>
+      <span class="entypo" ng-show="loaderIcons.messages">&#59255;</span>
+      <span class="entypo" ng-show="loaderIcons.groups">&#128101;</span>
+      <span class="entypo" ng-show="loaderIcons.profile">&#128100;</span>
+      <span class="entypo" ng-show="loaderIcons.settings">&#9874;</span>
       <!-- <p>{{ui.login.loading}}</p> -->
     </div>
     <!-- end loading -->
@@ -137,8 +177,14 @@
     </div>
     <!-- end wrap -->
 
+    <!-- mobile status bar -->
+    <div id="mobile-status-bar" ng-show="loading.status && browser.mobile">
+      <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
+    </div>
+    <!-- end mobile status bar -->
+
     <!-- footer -->
-    <div id="footer">
+    <div id="footer" ng-hide="browser.mobile">
       <div class="container-fluid">
 
         <!-- copyrights -->
@@ -146,7 +192,7 @@
           <!-- ask & version -->
           <span class="muted">
             <small>
-              Ask Community Systems, 2013<br><i>WebPaige v2.0.0</i>
+              Ask Community Systems, 2013<br><i>WebPaige <a href="version.html" target="_blank">v{{config.version}}</a></i>
             </small>
           </span>
           <!-- end ask & version -->
@@ -170,51 +216,57 @@
     </div>
     <!-- end footer -->
 
-    <script src="js/localization.js"></script>
-    <!-- custom jquery and other stuff -->
-    <script src="js/custom.js"></script>
     <!--[if gt IE 7]><!-->
-    <!-- third parties -->
-    <script src="js/libs/chosen/chosen.jquery.min.js"></script>
-    <script src="js/libs/date/1.0/date.js"></script>
-    <!-- angular -->
+    <script src="js/libs/date/1.0/date.min.js"></script>
     <script src="js/libs/angular/1.0.5/angular.min.js"></script>
     <script src="js/libs/angular/1.0.5/angular-resource.min.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-resource.min.js"></script> -->
-    <!-- bootstrap -->
-    <script src="js/libs/bootstrap/bootstrap.js"></script>
-    <!-- third parties -->
-    <script src="js/libs/chaps/timeline/2.4.0/timeline.js"></script>
-    <script src="js/libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
-    <script src="js/libs/bootstrap-timepicker/bootstrap-timepicker.js"></script>
-    <script src="js/libs/daterangepicker/1.1.0/daterangepicker.js"></script>
-    <!-- third parties - Lose sugar dependencies in daterangepicker plugin and remove this -->
-    <script src="js/libs/sugar/1.3.7/sugar.min.js"></script>
+    <script src="js/libs/bootstrap/bootstrap.min.js"></script>
+
     <!-- init angular app -->
-    <script src="js/app.js"></script>
-    <!-- modules -->
-    <script src="js/modules/login.js"></script>
-    <script src="js/modules/dashboard.js"></script>
-    <script src="js/modules/planboard.js"></script>
-    <script src="js/modules/messages.js"></script>
-    <script src="js/modules/groups.js"></script>
-    <script src="js/modules/profile.js"></script>
-    <script src="js/modules/settings.js"></script>
-    <script src="js/modules/help.js"></script>
-    <!-- angular services, directives and filters -->
-    <script src="js/directives.js"></script>
-    <script src="js/services.js"></script>
-    <script src="js/filters.js"></script>
-    <!-- angular-strap -->
-    <!-- Move angularstrap into directives maybe? -->
+    <script src="js/app.min.js"></script>
+
+    <!-- <script src="js/localization.js"></script>
+    <script src="js/webpaige.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/routes.js"></script>
+    <script src="js/bootstrap.js"></script>
+
+    <script src="js/modals/user.js"></script>
+    <script src="js/modals/dashboard.js"></script>
+    <script src="js/modals/slots.js"></script>
+    <script src="js/modals/messages.js"></script>
+    <script src="js/modals/groups.js"></script>
+    <script src="js/modals/profile.js"></script>
+    <script src="js/modals/settings.js"></script>
+
+    <script src="js/controllers/login.js"></script>
+    <script src="js/controllers/logout.js"></script>
+    <script src="js/controllers/dashboard.js"></script>
+    <script src="js/controllers/planboard.js"></script>
+    <script src="js/controllers/messages.js"></script>
+    <script src="js/controllers/groups.js"></script>
+    <script src="js/controllers/profile.js"></script>
+    <script src="js/controllers/settings.js"></script>
+    <script src="js/controllers/help.js"></script>
+
+    <script src="js/directives/directives.js"></script>
     <script src="js/libs/angular-strap/0.7.0/angular-strap.min.js"></script>
-    <!-- raphael -->
-    <script src="js/libs/raphael/2.1.0/raphael-min.js"></script>
-    <!-- g-raphael -->
-    <script src="js/libs/g-raphael/0.5.1/g.raphael-min.js"></script>
-    <script src="js/libs/g-raphael/0.5.1/g.pie-min.js"></script>
+
+    <script src="js/services/timer.js"></script>
+    <script src="js/services/session.js"></script>
+    <script src="js/services/dater.js"></script>
+    <script src="js/services/eventbus.js"></script>
+    <script src="js/services/interceptor.js"></script>
+    <script src="js/services/md5.js"></script>
+    <script src="js/services/storage.js"></script>
+    <script src="js/services/strings.js"></script>
+    <script src="js/services/announcer.js"></script>
+    <script src="js/services/sloter.js"></script>
+    <script src="js/services/stats.js"></script>
+
+    <script src="js/filters/filters.js"></script> -->
     <!--<![endif]-->
+
 
   </body>
 </html>

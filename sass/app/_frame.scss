@@ -140,6 +140,10 @@
       right: 205px;
       float: right;
       width: 200px;
+
+      a {
+        color: #ddd;
+      }
     }
   }
 }
@@ -191,7 +195,7 @@
 
 .page-header {
   overflow: hidden;
-  height: 40px;
+  min-height: 40px;
 
   h2 {
     display: inline;

@@ -8,12 +8,12 @@
 /* @group accordions */
 
 .accordion {
-  margin-bottom: 20px;
+  margin-bottom: $baseLineHeight;
 }
 .accordion-group {
   margin-bottom: 2px;
   border: 1px solid #e5e5e5;
-  border-radius: 4px;
+  @include border-radius($baseBorderRadius);
 }
 .accordion-heading {
   border-bottom: 0;
@@ -21,6 +21,7 @@
 .accordion-heading .accordion-toggle {
   display: block;
   padding: 8px 15px;
+  // those under are new
   background-color: #e6e4da;
   color: #433c2d;
 }
@@ -36,6 +37,7 @@ a.accordion-toggle {
 .accordion-inner {
   padding: 9px 15px;
   border-top: 1px solid #e5e5e5;
+  // this is new
   background-color: #fff;
 }
 

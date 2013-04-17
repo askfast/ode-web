@@ -5,6 +5,11 @@
         margin-right: -20px;
       }
     }
+
+    #fullscreener {
+      margin-right: -20px;
+      margin-left: 20px;
+    }
   }
 }
 
@@ -40,6 +45,15 @@ ul.nav-tabs-app {
   }
 }
 
+.tabs-left {
+  .tab-content {
+    border-left: 1px solid #ddd;
+  }
+}
+
+.tabs-left > .nav-tabs {
+  border-right: none;
+}
 
 .nav-tabs-list {
   margin-right: -1px;

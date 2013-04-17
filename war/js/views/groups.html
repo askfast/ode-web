@@ -304,7 +304,7 @@
                 </span>
               </td>
               <td>
-                <select style="margin:0" 
+                <select style="margin:0; width: 160px;" 
                         ng-model="candidate.group" 
                         ng-options="group.name for group in data.groups">
                   <option value="">{{ui.groups.selectGroup}}</option>
@@ -342,11 +342,20 @@
         </div>
         <!-- end groups list -->
         <div class="pull-right">
+
           <input type="text" 
                   class="span2 search-query" 
                   placeholder="{{ui.groups.filterMembers}}" 
                   style="margin-right:5px"
                   ng-model="filtered">
+
+          <button type="button"
+                  class="btn"
+                  style="margin-right:5px"
+                  bs-popover="'js/views/elements/groups-wish.html'" 
+                  data-placement="bottom"
+                  data-title="Behoefte wijzigen"><span class="badge badge-inset" ng-show="wished">{{wish}}</span> Behoefte</button>
+
           <button type="button" 
                   ng-click="editGroup(group)" 
                   style="margin-right:5px"
@@ -354,6 +363,7 @@
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
                   class="btn btn-danger"><i class="icon-trash icon-white"></i> {{ui.groups.deleteGroup}}</button>
+
         </div>
       </div>
       <hr>

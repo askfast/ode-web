@@ -39,26 +39,84 @@
 
     #groupPie {
       float:left;
-      width: 380px;
+      width: 235px;
       height: 270px;
+
+      margin-right: 25px;
     }
 
     .groupStatInfo {
+      margin-top: 40px;
+
       ul {
         list-style: none;
 
         li {
-          width: 300px;
-          margin-right: 15px;
+          width: auto;
+          margin-right: 30px;
           float: left;
-          margin-bottom: 25px;
+          margin-bottom: 30px;
           display: inline;
 
-          h5 {
-            display: inline;
+          div {
+            float: left;
+            height: 40px;
           }
 
-          small {
+          .ratios {
+            margin-right: 15px;
+            margin-top: -5px;
+            width: 75px;
+            height: 75px;
+            text-align: center;
+            -webkit-border-radius: 5px;
+               -moz-border-radius: 5px;
+                    border-radius: 5px;
+            color: #fff;
+
+            .ratio {
+              display: block;
+              font-size: 38px;
+              font-weight: bold;
+              padding-top: 18px;
+            }
+
+            .percentage {
+              display: block;
+              padding-top: 10px;
+            }
+          }
+
+          .more {
+            background-color: #415e6b;  
+          }
+
+          .even {
+            background-color: #ba6a24;  
+          }
+
+          .less {
+            background-color: #a0a0a0;  
+          }
+
+          .info {
+            margin-top: -5px;
+
+            h5 {
+              display: inline;
+
+              &:first-child {
+                margin-top: 0;
+              }
+            }
+
+            h4 {
+              padding-bottom: 10px;
+              border-bottom: 1px solid #ddd;
+            }
+
+            small {
+            }
           }
         }
       }
@@ -217,28 +275,31 @@
 }
 
 
-.legenda-row .legenda-Available .square {
+
+
+
+.legenda-row .legenda-state-available .square {
   background-color: #4f824f;
 }
 
-.legenda-row .legenda-BeschikbaarZuid .square {
-  background-color: #e08a0c;
-}
-
-.legenda-row .legenda-BeschikbaarNoord .square {
+.legenda-row .legenda-state-available-north .square {
   background-color: black; 
 }
 
-.legenda-row .legenda-SchipperVanDienst .square {
-  background-color: #e0c100; 
+.legenda-row .legenda-state-available-south .square {
+  background-color: #e08a0c;
 }
 
-.legenda-row .legenda-Unavailable .square {
+.legenda-row .legenda-state-unavailable .square {
   background-color: #a93232;  
 }
 
-.legenda-row .legenda-NotReached .square {
-  background-color: #65619b;  
+.legenda-row .legenda-state-schipper-service .square {
+  background-color: #e0c100; 
+}
+
+.legenda-row .legenda-state-unreached .square {
+  background-color: #65619b;
 }
 
 .legenda-row .legenda-more .square {
@@ -252,6 +313,9 @@
 .legenda-row .legenda-less .square {
   background-color: #a0a0a0;  
 }
+
+
+
 
 
 
