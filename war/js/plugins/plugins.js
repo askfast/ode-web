@@ -69,11 +69,7 @@
 
   jQuery.browser = browser;
 
-})(jQuery, window);
-
-
-
-/**
+})(jQuery, window);;/**
  * jQuery $.os plugin
  *
  * Author: Cengiz Ulusoy
@@ -101,11 +97,7 @@
    */
   jQuery.os = os;
 
-})(jQuery, window);
-
-
-
-/*!
+})(jQuery, window);;/*!
 * basket.js
 * v0.3.0 - 2012-12-28
 * http://addyosmani.github.com/basket.js
@@ -310,15 +302,7 @@
   // delete expired keys
   basket.clear( true );
 
-})( this, document );
-
-
-
-
-
-
-
-/**
+})( this, document );;/**
  * Screenfull - Sindresorhus
  * 
  * https://github.com/sindresorhus/screenfull.js

@@ -9,7 +9,7 @@ angular.module('WebPaige')
   '$config', 
   {
     title:    'WebPaige',
-    version:  '2.0.2 (snapshot)',
+    version:  '2.0.2',
     lang:     'nl',
 
     fullscreen: true,

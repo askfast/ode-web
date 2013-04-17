@@ -3,9 +3,10 @@
 
 ## Versions
 
-	2.0.2 (snapshot)
+	2.0.2
+		* KNRM (live) 17-4-2013
 		* core modules seperated 17-4-2013
-		* background syncing for every minute and displaying webkit desktop notification for new messages 16-4-2013
+		* background syncing for every minute and displaying webkit desktop notification for new messages (still in development, temporarily disabled) 16-4-2013
 		* by adding a new slot, slot form now opens with time of now and 1 hour later 15-4-2013
 		* full screen ability for webkit browsers 15-4-2013
 		* compressed third party libraries 15-4-2013

@@ -505,9 +505,12 @@ module.exports = function(grunt) {
 //       },
 //       dist: {
 //         src: [
-//           'war/js/plugins.js'
+//           'war/js/plugins/browser.js',
+//           'war/js/plugins/os.js',
+//           'war/js/plugins/basket.js',
+//           'war/js/plugins/screenfull.js'
 //         ],
-//         dest: 'war/js/plugins.js'
+//         dest: 'war/js/plugins/plugins.js'
 //       }
 //     },
 
@@ -517,7 +520,7 @@ module.exports = function(grunt) {
 //       },
 //       dist: {
 //         files: {
-//           'war/js/plugins.min.js': ['<%= concat.dist.dest %>']
+//           'war/js/plugins/plugins.min.js': ['<%= concat.dist.dest %>']
 //         }
 //       }
 //     },
