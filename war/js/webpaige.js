@@ -6,8 +6,8 @@
  */
 angular.module('WebPaige', 
 [
-  '$strap.directives', 
   'ngResource',
+  // modals
   'WebPaige.Modals.User',
   'WebPaige.Modals.Dashboard',
   'WebPaige.Modals.Slots',
@@ -15,6 +15,7 @@ angular.module('WebPaige',
   'WebPaige.Modals.Groups',
   'WebPaige.Modals.Profile',
   'WebPaige.Modals.Settings',
+  // controller
   'WebPaige.Controllers.Login',
   'WebPaige.Controllers.Logout',
   'WebPaige.Controllers.Dashboard',
@@ -24,8 +25,12 @@ angular.module('WebPaige',
   'WebPaige.Controllers.Profile',
   'WebPaige.Controllers.Settings',
   'WebPaige.Controllers.Help',
+  // directives
   'WebPaige.Directives',
+  '$strap.directives', 
+  // filters
   'WebPaige.Filters',
+  // services
   'WebPaige.Services.Timer',
   'WebPaige.Services.Session',
   'WebPaige.Services.Dater',
