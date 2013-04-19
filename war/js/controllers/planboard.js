@@ -61,74 +61,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Reset views for default views
-	   */
-	  $scope.resetViews = function ()
-	  {
-	    $scope.views = {
-	      slot: {
-	        add:  false,
-	        edit: false
-	      },
-	      group:  false,
-	      wish:   false,
-	      member: false
-	    };
-	  };
-
-	  $scope.resetViews();
-
-
-	  /**
-	   * Slot form toggler
-	   */
-	  $scope.toggleSlotForm = function ()
-	  {
-	    if ($scope.views.slot.add)
-	    {
-	      $scope.resetInlineForms();
-	    }
-	    else
-	    {
-	      $scope.slot = {};
-
-	      $scope.slot = {
-	        start: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        end: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        state:      '',
-	        recursive:  false,
-	        id:         ''
-	      };
-
-	      $scope.resetViews();
-
-	      $scope.views.slot.add = true;
-	    };
-	  };
-
-
-	  /**
-	   * Reset inline forms
-	   */
-	  $scope.resetInlineForms = function ()
-	  {
-	    $scope.slot = {};
-
-	    $scope.original = {};
-
-	    $scope.resetViews();
-	  };
-
-
-	  /**
 	   * Reset and init slot container which
 	   * is used for adding or changing slots
 	   */
@@ -219,6 +151,74 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * Groups for dropdown
 	   */
 	  $scope.divisions = $scope.timeline.config.divisions;
+
+
+	  /**
+	   * Reset views for default views
+	   */
+	  $scope.resetViews = function ()
+	  {
+	    $scope.views = {
+	      slot: {
+	        add:  false,
+	        edit: false
+	      },
+	      group:  false,
+	      wish:   false,
+	      member: false
+	    };
+	  };
+
+	  $scope.resetViews();
+
+
+	  /**
+	   * Slot form toggler
+	   */
+	  $scope.toggleSlotForm = function ()
+	  {
+	    if ($scope.views.slot.add)
+	    {
+	      $scope.resetInlineForms();
+	    }
+	    else
+	    {
+	      $scope.slot = {};
+
+	      $scope.slot = {
+	        start: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        end: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        state:      '',
+	        recursive:  false,
+	        id:         ''
+	      };
+
+	      $scope.resetViews();
+
+	      $scope.views.slot.add = true;
+	    };
+	  };
+
+
+	  /**
+	   * Reset inline forms
+	   */
+	  $scope.resetInlineForms = function ()
+	  {
+	    $scope.slot = {};
+
+	    $scope.original = {};
+
+	    $scope.resetViews();
+	  };
 
 
 	  /**

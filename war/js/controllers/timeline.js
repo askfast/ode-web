@@ -90,11 +90,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    getRange: function () { $scope.timelineGetRange() },
 
-	    onAdd: 		function () { $scope.timelineOnAdd() },
+	    onAdd: 		function () { $scope.add() },
 
-	    onRemove: function () { $scope.timelineOnRemove() },
+	    onRemove: function () { $scope.remove() },
 
-	    onChange: function () { $scope.timelineOnChange() },
+	    onChange: function () { $scope.change() },
 
 	    onSelect: function () { $scope.timelineOnSelect() },
 
@@ -189,6 +189,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    redraw: function ()
 	    {
 	      $scope.self.timeline.redraw();
+	    },
+
+	    isAdded: function ()
+	    {
+	    	return $('.timeline-event-content')
+	                .contents()
+	                .filter(function ()
+	                { 
+	                  return this.nodeValue == 'New' 
+	                }).length;
 	    },
 
 	    /**
@@ -288,7 +298,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    if (selection = $scope.self.timeline.getSelection()[0])
 	    {
 	      var values  = $scope.self.timeline.getItem(selection.row),
-	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]);
+	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
 
 	      $scope.original = {
 	        start:        values.start,
@@ -302,63 +312,66 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      $scope.resetViews();
 
-	      switch (content.type)
+	      if (content.type)
 	      {
-	        case 'slot':
-	          $scope.views.slot.edit = true;
-	        break;
+		      switch (content.type)
+		      {
+		        case 'slot':
+		          $scope.views.slot.edit = true;
+		        break;
 
-	        case 'group':
-	          $scope.views.group = true;
-	        break;
+		        case 'group':
+		          $scope.views.group = true;
+		        break;
 
-	        case 'wish':
-	          $scope.views.wish = true;
-	        break;
+		        case 'wish':
+		          $scope.views.wish = true;
+		        break;
 
-	        case 'member':
-	          $scope.views.member = true;
-	        break;
+		        case 'member':
+		          $scope.views.member = true;
+		        break;
+		      };
+
+		      $scope.slot = {
+		        start: {
+		          date: new Date(values.start).toString($rootScope.config.formats.date),
+		          time: new Date(values.start).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.start).toISOString()
+		        },
+		        end: {
+		          date: new Date(values.end).toString($rootScope.config.formats.date),
+		          time: new Date(values.end).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.end).toISOString()
+		        },
+		        state:      content.state,
+		        recursive:  content.recursive,
+		        id:         content.id
+		      };
+
+		      /**
+		       * TODO
+		       * Check if this can be combined with switch later on!
+		       * Set extra data based slot type for inline form
+		       */
+		      switch (content.type)
+		      {
+		        case 'group':
+		          $scope.slot.diff  = content.diff;
+		          $scope.slot.group = content.group;
+		        break;
+
+		        case 'wish':
+		          $scope.slot.wish    = content.wish;
+		          $scope.slot.group   = content.group;
+		          $scope.slot.groupId = content.groupId;
+		        break;
+
+		        case 'member':
+		          $scope.slot.member = content.mid;
+		        break;
+		      };
 	      };
-
-	      $scope.slot = {
-	        start: {
-	          date: new Date(values.start).toString($rootScope.config.formats.date),
-	          time: new Date(values.start).toString($rootScope.config.formats.time),
-	          datetime: new Date(values.start).toISOString()
-	        },
-	        end: {
-	          date: new Date(values.end).toString($rootScope.config.formats.date),
-	          time: new Date(values.end).toString($rootScope.config.formats.time),
-	          datetime: new Date(values.end).toISOString()
-	        },
-	        state:      content.state,
-	        recursive:  content.recursive,
-	        id:         content.id
-	      };
-
-	      /**
-	       * TODO
-	       * Check if this can be combined with switch later on!
-	       * Set extra data based slot type for inline form
-	       */
-	      switch (content.type)
-	      {
-	        case 'group':
-	          $scope.slot.diff  = content.diff;
-	          $scope.slot.group = content.group;
-	        break;
-
-	        case 'wish':
-	          $scope.slot.wish    = content.wish;
-	          $scope.slot.group   = content.group;
-	          $scope.slot.groupId = content.groupId;
-	        break;
-
-	        case 'member':
-	          $scope.slot.member = content.mid;
-	        break;
-	      }
 
 	      return values;
 	    };
@@ -427,7 +440,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Timeline legenda toggler
 	   */
-	  $scope.showLegenda = function () { $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer; };
+	  $scope.showLegenda = function ()
+	  {
+		  $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
+		};
 
 
 	  /**
@@ -445,102 +461,100 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
-	   * Timeline on add
-	   */
-	  $scope.timelineOnAdd = function ()
-	  {
-	    var news = $('.timeline-event-content')
-	                .contents()
-	                .filter(function ()
-	                { 
-	                  return this.nodeValue == 'New' 
-	                }),
-	        values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-	      
-	    if (news.length > 1) $scope.self.timeline.cancelAdd();
-
-	    $scope.$apply(function ()
-	    {
-	      $scope.resetViews();
-
-	      $scope.views.slot.add = true;
-
-	      $scope.slot = {
-	        start: {
-	          date: new Date(values.start).toString($rootScope.config.formats.date),
-	          time: new Date(values.start).toString($rootScope.config.formats.time),
-	          datetime: new Date(values.start).toISOString()
-	        },
-	        end: {
-	          date: new Date(values.end).toString($rootScope.config.formats.date),
-	          time: new Date(values.end).toString($rootScope.config.formats.time),
-	          datetime: new Date(values.end).toISOString()
-	        },
-	        recursive: (values.group.match(/recursive/)) ? true : false,
-	        /**
-	         * INFO
-	         * First state is hard-coded
-	         * Maybe use the first one from array later on?
-	         */
-	        state: 'com.ask-cs.State.Available'
-	      };
-	    });
-	  };
-
-
-	  /**
 	   * Add slot trigger start view
 	   */
-	  $scope.add = function (slot)
+	  $scope.add = function (form, slot)
 	  {
-	    var now     = Date.now().getTime(),
-	        values  = {
-	                    start:      ($rootScope.browser.mobile) ? 
-	                                  new Date(slot.start.datetime).getTime() / 1000 :
-	                                  Dater.convert.absolute(slot.start.date, slot.start.time, true),
-	                    end:        ($rootScope.browser.mobile) ? 
-	                                  new Date(slot.end.datetime).getTime() / 1000 : 
-	                                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
-	                    recursive:  (slot.recursive) ? true : false,
-	                    text:       slot.state
-	                  };
+	  	/**
+	  	 * Make view for new slot
+	  	 */
+	  	if (!form)
+	  	{
+		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+		      
+		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
-	    if (values.end * 1000 <= now && values.recursive == false)
-	    {
-	      $rootScope.notifier.error('You can not input timeslots in past.');
+		    $scope.$apply(function ()
+		    {
+		      $scope.resetViews();
 
-	      // timeliner.cancelAdd();
-	      $scope.timeliner.refresh();
-	    }
-	    else
-	    {
-	      $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+		      $scope.views.slot.add = true;
 
-	      Slots.add(values, $scope.timeline.user.id)
-	      .then(
-	        function (result)
-	        {
-	          if (result.error)
-	          {
-	            $rootScope.notifier.error('Error with adding a new timeslot.');
-	            console.warn('error ->', result);
-	          }
-	          else
-	          {
-	            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
-	          };
+		      $scope.slot = {
+		        start: {
+		          date: new Date(values.start).toString($rootScope.config.formats.date),
+		          time: new Date(values.start).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.start).toISOString()
+		        },
+		        end: {
+		          date: new Date(values.end).toString($rootScope.config.formats.date),
+		          time: new Date(values.end).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.end).toISOString()
+		        },
+		        recursive: (values.group.match(/recursive/)) ? true : false,
+		        /**
+		         * INFO
+		         * First state is hard-coded
+		         * Maybe use the first one from array later on?
+		         */
+		        state: 'com.ask-cs.State.Available'
+		      };
+		    });
+	  	}
+	  	/**
+	  	 * Add new slot
+	  	 */
+	  	else
+	  	{
+		    var now     = Date.now().getTime(),
+		        values  = {
+		                    start:      ($rootScope.browser.mobile) ? 
+		                                  new Date(slot.start.datetime).getTime() / 1000 :
+		                                  Dater.convert.absolute(slot.start.date, slot.start.time, true),
+		                    end:        ($rootScope.browser.mobile) ? 
+		                                  new Date(slot.end.datetime).getTime() / 1000 : 
+		                                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
+		                    recursive:  (slot.recursive) ? true : false,
+		                    text:       slot.state
+		                  };
 
-	          $scope.timeliner.refresh();
-	        }
-	      );
-	    };
+		    if (values.end * 1000 <= now && values.recursive == false)
+		    {
+		      $rootScope.notifier.error('You can not input timeslots in past.');
+
+		      // timeliner.cancelAdd();
+		      $scope.timeliner.refresh();
+		    }
+		    else
+		    {
+		      $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+
+		      Slots.add(values, $scope.timeline.user.id)
+		      .then(
+		        function (result)
+		        {
+		          if (result.error)
+		          {
+		            $rootScope.notifier.error('Error with adding a new timeslot.');
+		            console.warn('error ->', result);
+		          }
+		          else
+		          {
+		            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+		          };
+
+		          $scope.timeliner.refresh();
+		        }
+		      );
+		    };
+	  	}
 	  };
 
 
 	  /**
 	   * Timeline on change
 	   */
-	  $scope.timelineOnChange = function (direct, original, slot, options)
+	  $scope.change = function (direct, original, slot, options)
 	  {
 	    if (!direct)
 	    {
@@ -550,7 +564,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            end:      values.end,
 	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
 	          };
-	    };
+	    }
+	    else
+	    {
+	    	var options = {
+		      start:  ($rootScope.browser.mobile) ?
+		                new Date(slot.start.datetime).getTime() : 
+		                Dater.convert.absolute(slot.start.date, slot.start.time, false),
+		      end:    ($rootScope.browser.mobile) ? 
+		                new Date(slot.end.datetime).getTime() :
+		                Dater.convert.absolute(slot.end.date, slot.end.time, false),
+		      content: angular.toJson({
+		        recursive:  slot.recursive, 
+		        state:      slot.state 
+		      })
+		    };
+	    }
 
 	    var now = Date.now().getTime();
 
@@ -586,82 +615,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
-	   * Change slot
+	   * Timeline on remove
 	   */
-	  $scope.change = function (original, slot)
-	  {
-	    $scope.timelineOnChange(true, original, slot, 
-	    {
-	      start:  ($rootScope.browser.mobile) ?
-	                new Date(slot.start.datetime).getTime() : 
-	                Dater.convert.absolute(slot.start.date, slot.start.time, false),
-	      end:    ($rootScope.browser.mobile) ? 
-	                new Date(slot.end.datetime).getTime() :
-	                Dater.convert.absolute(slot.end.date, slot.end.time, false),
-	      content: angular.toJson({
-	        recursive:  slot.recursive, 
-	        state:      slot.state 
-	      })
-	    });
-	  };
-
-
-	  /**
-	   * Set wish
-	   */
-	  $scope.setWish = function (slot)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
-
-	    Slots.setWish(
-	    {
-	      id:     slot.groupId,
-	      start:  ($rootScope.browser.mobile) ? 
-	                new Date(slot.start.datetime).getTime() / 1000 : 
-	                Dater.convert.absolute(slot.start.date, slot.start.time, true),
-	      end:    ($rootScope.browser.mobile) ? 
-	                new Date(slot.end.datetime).getTime() / 1000 : 
-	                Dater.convert.absolute(slot.end.date, slot.end.time, true),
-	      recursive:  false,
-	      // recursive:  slot.recursive,
-	      wish:       slot.wish
-	    })
-	    .then(
-	      function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error('Error with changing wish value.');
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
-	        };
-
-	        $scope.timeliner.refresh();
-	      }
-	    );
-	  }; 
-
-
-	  /**
-	   * Timeline on delete
-	   */
-	  $scope.timelineOnRemove = function ()
-	  {
-	    /**
-	     * TODO
-	     * Look ways to implement cancelAdd of timeline itself!!
-	     */
-	    var news = $('.timeline-event-content')
-	                .contents()
-	                .filter(function ()
-	                { 
-	                  return this.nodeValue == 'New' 
-	                });
-	      
-	    if (news.length > 0)
+	  $scope.remove = function ()
+	  {	      
+	    if ($scope.timeliner.isAdded() > 0)
 	    {
 	      $scope.self.timeline.cancelAdd();
 
@@ -707,11 +665,42 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
-	   * Delete trigger start view
+	   * Set wish
 	   */
-	  $scope.remove = function ()
+	  $scope.wisher = function (slot)
 	  {
-		  $scope.timelineOnRemove();
-		};
+	    $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
+
+	    Slots.setWish(
+	    {
+	      id:     slot.groupId,
+	      start:  ($rootScope.browser.mobile) ? 
+	                new Date(slot.start.datetime).getTime() / 1000 : 
+	                Dater.convert.absolute(slot.start.date, slot.start.time, true),
+	      end:    ($rootScope.browser.mobile) ? 
+	                new Date(slot.end.datetime).getTime() / 1000 : 
+	                Dater.convert.absolute(slot.end.date, slot.end.time, true),
+	      recursive:  false,
+	      // recursive:  slot.recursive,
+	      wish:       slot.wish
+	    })
+	    .then(
+	      function (result)
+	      {
+	        if (result.error)
+	        {
+	          $rootScope.notifier.error('Error with changing wish value.');
+	          console.warn('error ->', result);
+	        }
+	        else
+	        {
+	          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+	        };
+
+	        $scope.timeliner.refresh();
+	      }
+	    );
+	  };
+
 	}
 ]);

@@ -280,7 +280,7 @@
         </div>
         <div ng-show="views.slot.add">
           <button type="button" 
-                  ng-click="add(slot)" 
+                  ng-click="add('true', slot)" 
                   class="btn btn-success">{{ui.planboard.add}}</button>
         </div>
         <div ng-show="views.slot.edit">
@@ -288,12 +288,12 @@
                   ng-click="remove()" 
                   class="btn btn-danger">{{ui.planboard.del}}</button>
           <button type="button" 
-                  ng-click="change(original, slot)" 
+                  ng-click="change('true', original, slot)" 
                   class="btn btn-success">{{ui.planboard.change}}</button>
         </div>
         <div ng-show="views.wish">
           <button type="button" 
-                  ng-click="setWish(slot)" 
+                  ng-click="wisher(slot)" 
                   class="btn btn-success"
                   ng-hide="app.resources.role > 1">{{ui.planboard.setWish}}</button>
         </div>

@@ -245,6 +245,18 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  };
 	  
 
+
+
+
+
+
+
+
+
+
+
+
+
 	  /**
 	   * Timeline (The big boy)
 	   */
@@ -473,6 +485,17 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  };
 
 
+
+
+
+
+
+
+
+
+
+
+
 	  /**
 	   * Timeline on add
 	   */
@@ -652,6 +675,18 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  $scope.slotRemove = function () { timelineOnDelete() };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 	  /**
 	   * Go to this week
 	   */
@@ -733,6 +768,15 @@ angular.module('WebPaige.Controllers.Profile', [])
 	   */
 	  $scope.timelineZoomOut = function () { self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now()) };
 	  
+
+
+
+
+
+
+
+
+
 
 	  /**
 	   * Timeline legenda toggler
