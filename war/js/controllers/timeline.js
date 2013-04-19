@@ -128,6 +128,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      	main: 		$scope.timeline.main,
 	      	user: 		$scope.timeline.user,
 	        current:  $scope.timeline.current,
+	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
 	          start:  new Date(options.start),
@@ -136,8 +137,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          max:    new Date(options.end)
 	        }
 	      };
-
-	    	if ($scope.timeline.main) $scope.timeline.scope = $scope.timeline.scope;
 
 	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
 
