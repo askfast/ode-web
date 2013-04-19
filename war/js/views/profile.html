@@ -394,15 +394,15 @@
             <div class="form-elements-actions pull-right">
               <div ng-show="forms.add">
                 <button type="button" 
-                        ng-click="slotAdd(slot)" 
+                        ng-click="timelineOnAdd('true', slot)" 
                         class="btn btn-success">{{ui.planboard.add}}</button>
               </div>
               <div ng-show="forms.edit">
                 <button type="button" 
-                        ng-click="slotRemove()" 
+                        ng-click="timelineOnRemove()" 
                         class="btn btn-danger">{{ui.planboard.del}}</button>
                 <button type="button" 
-                        ng-click="slotChange(original, slot)" 
+                        ng-click="timelineOnChange('true', original, slot)" 
                         class="btn btn-success">{{ui.planboard.change}}</button>
               </div>
             </div>
