@@ -91,7 +91,8 @@ angular.module('WebPaige')
                     });
           }
         ]
-      }
+      },
+      reloadOnSearch: false
     })
 
     /**

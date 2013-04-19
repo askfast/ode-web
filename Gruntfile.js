@@ -30,6 +30,8 @@ module.exports = function(grunt) {
           'war/js/controllers/logout.js',
           'war/js/controllers/dashboard.js',
           'war/js/controllers/planboard.js',
+          'war/js/controllers/timeline.js',
+          'war/js/controllers/timeline-navigation.js',
           'war/js/controllers/messages.js',
           'war/js/controllers/groups.js',
           'war/js/controllers/profile.js',
