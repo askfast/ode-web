@@ -6,64 +6,84 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline', 
 [
-	'$rootScope', '$scope', '$q', 'Slots', 'Dater', 'Storage', 'Sloter', 
-	function ($rootScope, $scope, $q, Slots, Dater, Storage, Sloter) 
+	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
+	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile) 
 	{
-
 	  /**
 	   * Watch for changes in timeline range
 	   */
 	  $scope.$watch(function ()
 	  {
-	    var range = $scope.self.timeline.getVisibleChartRange(),
-	        diff  = Dater.calculate.diff(range);
+	  	/**
+	  	 * If main timeline
+	  	 */
+	  	if ($scope.timeline.main)
+	  	{
+		    var range = $scope.self.timeline.getVisibleChartRange(),
+		        diff  = Dater.calculate.diff(range);
 
-	    /**
-	     * Scope is a day
-	     * 
-	     * TODO
-	     * try later on!
-	     * new Date(range.start).toString('d') == new Date(range.end).toString('d')
-	     */
-	    if (diff <= 86400000)
-	    {
-	      $scope.timeline.scope = {
-	        day:    true,
-	        week:   false,
-	        month:  false
-	      };
-	    }
-	    /**
-	     * Scope is less than a week
-	     */
-	    else if (diff < 604800000)
-	    {
-	      $scope.timeline.scope = {
-	        day:    false,
-	        week:   true,
-	        month:  false
-	      };
-	    }
-	    /**
-	     * Scope is more than a week
-	     */
-	    else if (diff > 604800000)
-	    {
-	      $scope.timeline.scope = {
-	        day:    false,
-	        week:   false,
-	        month:  true
-	      };
-	    };
+		    /**
+		     * Scope is a day
+		     * 
+		     * TODO
+		     * try later on!
+		     * new Date(range.start).toString('d') == new Date(range.end).toString('d')
+		     */
+		    if (diff <= 86400000)
+		    {
+		      $scope.timeline.scope = {
+		        day:    true,
+		        week:   false,
+		        month:  false
+		      };
+		    }
+		    /**
+		     * Scope is less than a week
+		     */
+		    else if (diff < 604800000)
+		    {
+		      $scope.timeline.scope = {
+		        day:    false,
+		        week:   true,
+		        month:  false
+		      };
+		    }
+		    /**
+		     * Scope is more than a week
+		     */
+		    else if (diff > 604800000)
+		    {
+		      $scope.timeline.scope = {
+		        day:    false,
+		        week:   false,
+		        month:  true
+		      };
+		    };
 
-	    $scope.timeline.range = {
-	      start:  new Date(range.start).toString(),
-	      end:    new Date(range.end).toString()
-	    };
+		    $scope.timeline.range = {
+		      start:  new Date(range.start).toString(),
+		      end:    new Date(range.end).toString()
+		    };
 
-	    $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + 
-	                        ' / ' + 
-	                        Dater.readable.date($scope.timeline.range.end);
+		    $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + 
+		                        ' / ' + 
+		                        Dater.readable.date($scope.timeline.range.end);
+	  	}
+	  	/**
+	  	 * User timeline
+	  	 */
+	  	else
+	  	{
+		    if ($location.hash() == 'timeline')
+		    {
+		      var range = $scope.self.timeline.getVisibleChartRange();
+
+		      $scope.timeline.range = {
+		        start:  new Date(range.start).toString(),
+		        end:    new Date(range.end).toString()
+		      };
+		    };
+	  	}
 	  });
 
 
@@ -90,11 +110,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    getRange: function () { $scope.timelineGetRange() },
 
-	    onAdd: 		function () { $scope.add() },
+	    onAdd: 		function () { $scope.timelineOnAdd() },
 
-	    onRemove: function () { $scope.remove() },
+	    onRemove: function () { $scope.timelineOnRemove() },
 
-	    onChange: function () { $scope.change() },
+	    onChange: function () { $scope.timelineOnChange() },
 
 	    onSelect: function () { $scope.timelineOnSelect() },
 
@@ -102,12 +122,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     * (Re-)Render timeline
 	     */
 	    render: function (options)
-	    {
+	    {		
 	      $scope.timeline = {
 	      	id: 			$scope.timeline.id,
+	      	main: 		$scope.timeline.main,
 	      	user: 		$scope.timeline.user,
 	        current:  $scope.timeline.current,
-	        scope:    $scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
 	          start:  new Date(options.start),
@@ -117,17 +137,33 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        }
 	      };
 
+	    	if ($scope.timeline.main) $scope.timeline.scope = $scope.timeline.scope;
+
 	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
 
-	      $scope.self.timeline.draw(
-	        Sloter.process(
-	          $scope.data,
-	          $scope.timeline.config,
-	          $scope.divisions,
-	          $scope.timeline.user.role
-	        ), 
-	        $scope.timeline.options
-	      );
+	      if ($scope.timeline.main)
+	      {
+		      $scope.self.timeline.draw(
+		        Sloter.process(
+		          $scope.data,
+		          $scope.timeline.config,
+		          $scope.divisions,
+		          $scope.timeline.user.role
+		        ), 
+		        $scope.timeline.options
+		      );
+		    }
+		    else
+		    {
+			    setTimeout( function() 
+		      {
+		        $scope.self.timeline.draw(
+		          Sloter.profile(
+		            $scope.data.slots.data, 
+		            $scope.timeline.config
+		          ), $scope.timeline.options);
+		      }, 100);
+		    };
 
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	    },
@@ -141,29 +177,54 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
 
-	      Slots.all({
-	        groupId:  $scope.timeline.current.group,
-	        division: $scope.timeline.current.division,
-	        layouts:  $scope.timeline.current.layouts,
-	        month:    $scope.timeline.current.month,
-	        stamps:   stamps
-	      })
-	      .then(function (data)
+	      if ($scope.timeline.main)
 	      {
-	        if (data.error)
-	        {
-	          $rootScope.notifier.error('Error with gettings timeslots.');
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          $scope.data = data;
+		      Slots.all({
+		        groupId:  $scope.timeline.current.group,
+		        division: $scope.timeline.current.division,
+		        layouts:  $scope.timeline.current.layouts,
+		        month:    $scope.timeline.current.month,
+		        stamps:   stamps
+		      })
+		      .then(function (data)
+		      {
+		        if (data.error)
+		        {
+		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          console.warn('error ->', result);
+		        }
+		        else
+		        {
+		          $scope.data = data;
 
-	          _this.render(stamps);
-	        };
+		          _this.render(stamps);
+		        };
 
-	        $rootScope.statusBar.off();
-	      });
+		        $rootScope.statusBar.off();
+		      });
+		    }
+	      else
+	      {
+	      	Profile.getSlots($scope.timeline.user.id, stamps)
+		      .then(function (data)
+		      {
+		        if (data.error)
+		        {
+		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          console.warn('error ->', result);
+		        }
+		        else
+		        {
+			      	data.user 	= data.slots.data;
+
+			        $scope.data = data;
+
+			        _this.render(stamps);
+
+			        $rootScope.statusBar.off();
+		        };
+		      });
+		    };
 	    },
 
 	    /**
@@ -173,9 +234,19 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      $scope.slot = {};
 
-	      $scope.resetViews();
+	      if ($scope.timeline.main)
+	      {
+		      $scope.resetViews();
 
-	      $scope.views.slot.add = true;
+		      $scope.views.slot.add = true;
+	      }
+	      else
+	      {
+		      $scope.forms = {
+		        add:  true,
+		        edit: false
+		      };
+		    };
 
 	      this.load({
 	        start:  $scope.data.periods.start,
@@ -272,9 +343,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        end:    new Date(range.till).toString()
 	      };
 
-	      $scope.daterange = {
-	        start:  Dater.readable.date(new Date(range.start).getTime()),
-	        end:    Dater.readable.date(new Date(range.end).getTime())
+	      if ($scope.timeline.main)
+	      {
+		      $scope.daterange = {
+		        start:  Dater.readable.date(new Date(range.start).getTime()),
+		        end:    Dater.readable.date(new Date(range.end).getTime())
+		      };
 	      };
 
 	    });
@@ -310,28 +384,45 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        }
 	      };
 
-	      $scope.resetViews();
+	      if ($scope.timeline.main)
+	      {
+		      $scope.resetViews();
+		    }
+		    else
+		    {
+		      /**
+		       * TODO
+		       * Convert to resetview?
+		       */
+		      $scope.forms = {
+		        add:  false,
+		        edit: true
+		      };
+		    };
 
 	      if (content.type)
 	      {
-		      switch (content.type)
-		      {
-		        case 'slot':
-		          $scope.views.slot.edit = true;
-		        break;
+	      	if ($scope.timeline.main)
+	      	{
+			      switch (content.type)
+			      {
+			        case 'slot':
+			          $scope.views.slot.edit = true;
+			        break;
 
-		        case 'group':
-		          $scope.views.group = true;
-		        break;
+			        case 'group':
+			          $scope.views.group = true;
+			        break;
 
-		        case 'wish':
-		          $scope.views.wish = true;
-		        break;
+			        case 'wish':
+			          $scope.views.wish = true;
+			        break;
 
-		        case 'member':
-		          $scope.views.member = true;
-		        break;
-		      };
+			        case 'member':
+			          $scope.views.member = true;
+			        break;
+			      };
+	      	};
 
 		      $scope.slot = {
 		        start: {
@@ -354,22 +445,25 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		       * Check if this can be combined with switch later on!
 		       * Set extra data based slot type for inline form
 		       */
-		      switch (content.type)
+		      if ($scope.timeline.main)
 		      {
-		        case 'group':
-		          $scope.slot.diff  = content.diff;
-		          $scope.slot.group = content.group;
-		        break;
+			      switch (content.type)
+			      {
+			        case 'group':
+			          $scope.slot.diff  = content.diff;
+			          $scope.slot.group = content.group;
+			        break;
 
-		        case 'wish':
-		          $scope.slot.wish    = content.wish;
-		          $scope.slot.group   = content.group;
-		          $scope.slot.groupId = content.groupId;
-		        break;
+			        case 'wish':
+			          $scope.slot.wish    = content.wish;
+			          $scope.slot.group   = content.group;
+			          $scope.slot.groupId = content.groupId;
+			        break;
 
-		        case 'member':
-		          $scope.slot.member = content.mid;
-		        break;
+			        case 'member':
+			          $scope.slot.member = content.mid;
+			        break;
+			      };
 		      };
 	      };
 
@@ -463,7 +557,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Add slot trigger start view
 	   */
-	  $scope.add = function (form, slot)
+	  $scope.timelineOnAdd = function (form, slot)
 	  {
 	  	/**
 	  	 * Make view for new slot
@@ -476,9 +570,19 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 		    $scope.$apply(function ()
 		    {
-		      $scope.resetViews();
+		    	if ($scope.timeline.main)
+		    	{
+			      $scope.resetViews();
 
-		      $scope.views.slot.add = true;
+			      $scope.views.slot.add = true;
+		    	}
+		    	else
+		    	{
+			      $scope.forms = {
+			        add:  true,
+			        edit: false
+			      };
+			    };
 
 		      $scope.slot = {
 		        start: {
@@ -554,7 +658,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Timeline on change
 	   */
-	  $scope.change = function (direct, original, slot, options)
+	  $scope.timelineOnChange = function (direct, original, slot, options)
 	  {
 	    if (!direct)
 	    {
@@ -617,7 +721,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Timeline on remove
 	   */
-	  $scope.remove = function ()
+	  $scope.timelineOnRemove = function ()
 	  {	      
 	    if ($scope.timeliner.isAdded() > 0)
 	    {

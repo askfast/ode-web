@@ -153,6 +153,71 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	  };
 
 
+
+	  /**
+	   * Go to this week
+	   */
+	  $scope.timelineThisWeek = function ()
+	  {
+	    if ($scope.timeline.current.week != new Date().getWeek())
+	    {
+	      $scope.timeliner.load({
+	        start:  $scope.periods.weeks[new Date().getWeek()].first.timeStamp,
+	        end:    $scope.periods.weeks[new Date().getWeek()].last.timeStamp
+	      });
+
+	      $scope.timeline.range = {
+	        start:  $scope.periods.weeks[new Date().getWeek()].first.day,
+	        end:    $scope.periods.weeks[new Date().getWeek()].last.day
+	      };
+	    }
+	  };
+
+
+	  /**
+	   * Go one week in past
+	   */
+	  $scope.timelineWeekBefore = function ()
+	  {
+	    if ($scope.timeline.current.week != 1)
+	    {
+	      $scope.timeline.current.week--;
+
+	      $scope.timeliner.load({
+	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	      });
+	    };
+
+	    $scope.timeline.range = {
+	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
+	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
+	    };
+	  };
+
+
+	  /**
+	   * Go one week in future
+	   */
+	  $scope.timelineWeekAfter = function ()
+	  {
+	  	if ($scope.timeline.current.week != 53)
+	    {
+	      $scope.timeline.current.week++;
+
+	      $scope.timeliner.load({
+	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	      });
+	    };
+
+  		$scope.timeline.range = {
+	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
+	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
+	    };
+	  };
+
+
 	  /**
 	   * Timeline zoom in
 	   */

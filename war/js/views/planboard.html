@@ -280,15 +280,15 @@
         </div>
         <div ng-show="views.slot.add">
           <button type="button" 
-                  ng-click="add('true', slot)" 
+                  ng-click="timelineOAdd('true', slot)" 
                   class="btn btn-success">{{ui.planboard.add}}</button>
         </div>
         <div ng-show="views.slot.edit">
           <button type="button" 
-                  ng-click="remove()" 
+                  ng-click="timelineOnRemove()" 
                   class="btn btn-danger">{{ui.planboard.del}}</button>
           <button type="button" 
-                  ng-click="change('true', original, slot)" 
+                  ng-click="timelineOnChange('true', original, slot)" 
                   class="btn btn-success">{{ui.planboard.change}}</button>
         </div>
         <div ng-show="views.wish">
@@ -467,7 +467,7 @@
             <small class="pull-right">
               <span class="text-warning">{{ui.planboard.dataRangeStart}}</span>
               <span class="muted">{{data.periods.start | nicelyDate}}</span>
-              &nbsp;
+              &nbsp;|&nbsp;
               <span class="text-warning">{{ui.planboard.dataRangeEnd}}</span>
               <span class="muted">{{data.periods.end | nicelyDate}}</span>
             </small>
@@ -646,7 +646,7 @@
             <small class="pull-right">
               <span class="text-warning">{{ui.planboard.dataRangeStart}} </span>
               <span class="muted">{{data.periods.start | nicelyDate}}</span>
-              &nbsp;
+              &nbsp;|&nbsp;
               <span class="text-warning">{{ui.planboard.dataRangeEnd}} </span>
               <span class="muted">{{data.periods.end | nicelyDate}}</span>
             </small>

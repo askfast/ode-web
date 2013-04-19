@@ -1,3 +1,5 @@
+<section id="profile">
+
 <div class="page-header">
   <h2>{{data.resources.name}}</h2>
 </div>
@@ -197,7 +199,8 @@
       <!-- userTimelineTab -->
       <div class="tab-pane {{(views.timeline==true) && 'active'}}" 
             id="userTimelineTab"
-            ng-hide="views.user">
+            ng-hide="views.user"ng-controller="timeline">
+
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.timeline}}</h3>
@@ -211,7 +214,7 @@
         <hr>
 
         <!-- timeline controls -->
-        <div class="row-fluid" id="timeline-controls">
+        <div class="row-fluid" id="timeline-controls" ng-controller="timeline-navigation">
           <!-- core timeline controls -->
           <div class="pull-left" style="margin-top: 10px">
             <!-- this week -->
@@ -226,7 +229,7 @@
             <div class="btn-group pull-left" style="margin-right: 5px">
               <button type="button" 
                       class="btn"
-                      ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
+                      ng-click="timelineWeekBefore()"><i class="icon-arrow-left"></i></button>
               <button type="button" 
                       class="btn"
                       ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
@@ -235,7 +238,7 @@
                       ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button>
               <button type="button" 
                       class="btn"
-                      ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
+                      ng-click="timelineWeekAfter()"><i class="icon-arrow-right"></i></button>
             </div>
             <!-- end timeline navigation -->
 
@@ -416,14 +419,21 @@
         <!-- end timeline -->
         
         <hr>
-        <!-- planbaord footer -->
+        <!-- timeline footer -->
         <p>
           <small class="pull-left">
-            <span class="text-warning">{{ui.planbaord.lastSyncTime}}</span>
-            <span class="muted">{{synced | nicelyDate}}</span>
+            <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>
+            <span class="muted">{{data.synced | nicelyDate}}</span>
+          </small>
+          <small class="pull-right">
+            <span class="text-warning">{{ui.planboard.dataRangeStart}}</span>
+            <span class="muted">{{data.periods.start | nicelyDate}}</span>
+            &nbsp;|&nbsp;
+            <span class="text-warning">{{ui.planboard.dataRangeEnd}}</span>
+            <span class="muted">{{data.periods.end | nicelyDate}}</span>
           </small>
         </p>
-        <!-- end planbaord footer -->
+        <!-- end timeline footer -->
 
         <!-- end user timeline -->
 
@@ -435,4 +445,5 @@
 
   </div>
 </div>
+</section>
 <!-- end profile -->

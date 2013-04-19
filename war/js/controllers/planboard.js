@@ -12,8 +12,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Fix styles
 	   */
-	  $rootScope.fixStyles();
-
+		$rootScope.fixStyles();
 
 	  /**
 	   * Pass the self
@@ -28,36 +27,34 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 	  
 	  /**
-	   * Set default currents
+	   * Get groups and settings
 	   */
-	  var periods = Dater.getPeriods(),
-	      groups  = Storage.local.groups(),
-	      settings = Storage.local.settings(),
-	      current = {
-	        layouts: {
-	          user:     true,
-	          group:    true,
-	          members:  false
-	        },
-	        day:      Dater.current.today(),
-	        week:     Dater.current.week(),
-	        month:    Dater.current.month(),
-	        group:    settings.app.group,
-	        // group:    groups[0].uuid,
-	        division: 'all'
-	      };
+	  var groups  	= Storage.local.groups(),
+	      settings 	= Storage.local.settings();
 
 
 	  /**
 	   * Pass current
 	   */
-	  $scope.current = current;
+	  $scope.current = {
+      layouts: {
+        user:     true,
+        group:    true,
+        members:  false
+      },
+      day:      Dater.current.today(),
+      week:     Dater.current.week(),
+      month:    Dater.current.month(),
+      group:    settings.app.group,
+      // group:    groups[0].uuid,
+      division: 'all'
+    };
 
 
 	  /**
 	   * Pass periods
 	   */
-	  $scope.periods = periods;
+	  $scope.periods = Dater.getPeriods();
 
 
 	  /**
@@ -72,20 +69,21 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.timeline = {
 	  	id: 'mainTimeline',
+	  	main: true,
 	  	user: {
 	  		id: 	$rootScope.app.resources.uuid,
 	  		role: $rootScope.app.resources.role
 	  	},
-	    current: current,
+	    current: $scope.current,
 	    options: {
-	      start:  new Date(periods.weeks[current.week].first.day),
-	      end:    new Date(periods.weeks[current.week].last.day),
-	      min:    new Date(periods.weeks[current.week].first.day),
-	      max:    new Date(periods.weeks[current.week].last.day)
+	      start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
+	      end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
+	      min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
+	      max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
 	    },
 	    range: {
-	      start:  periods.weeks[current.week].first.day,
-	      end:    periods.weeks[current.week].last.day
+	      start:  $scope.periods.weeks[$scope.current.week].first.day,
+	      end:    $scope.periods.weeks[$scope.current.week].last.day
 	    },
 	    scope: {
 	      day:    false,

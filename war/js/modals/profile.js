@@ -210,17 +210,17 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    .then(function (resources)
 	    {
 	      Slots.user({
-	        user: id,
-	        start: params.start,
-	        end: params.end
+	        user: 	id,
+	        start: 	params.start,
+	        end: 		params.end
 	      }).then(function (slots)
 	      {
 	        deferred.resolve(angular.extend(resources, {
-	          slots: slots,
-	          synced: new Date().getTime(),
+	          slots: 		slots,
+	          synced: 	new Date().getTime(),
 	          periods: {
-	            start: params.start,
-	            end: params.end
+	            start: 	params.start * 1000,
+	            end: 		params.end * 1000
 	          }
 	        }));        
 	      }); // user slots
@@ -240,18 +240,18 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    Slots.user(
 	    {
 	      user:   id,
-	      // start: params.start / 1000,
-	      // end: params.end / 1000
-	      start:  params.start,
-	      end:    params.end
+	      start: 	params.start / 1000,
+	      end: 		params.end / 1000
+	      // start:  params.start,
+	      // end:    params.end
 	    }).then(function (slots)
 	    {
 	      deferred.resolve({
-	        slots: slots,
+	        slots: 	slots,
 	        synced: new Date().getTime(),
 	        periods: {
-	          start: params.start,
-	          end: params.end
+	          start: 	params.start,
+	          end: 		params.end
 	        }
 	      });        
 	    });
