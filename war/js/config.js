@@ -24,10 +24,10 @@ angular.module('WebPaige')
       meta:   profile.meta,
       title:  profile.title,
       logos: {
-        login:  'js/profiles/' + profile.meta + '/img/login_logo.png',
+        login:  'profiles/' + profile.meta + '/img/login_logo.png',
         app:    ''
       },
-      background: 'js/profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
+      background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000:      profile.p2000
     },
 
