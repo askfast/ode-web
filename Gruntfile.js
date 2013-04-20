@@ -55,7 +55,7 @@ module.exports = function(grunt) {
           // filters
           'war/js/filters/filters.js'
         ],
-        dest: 'war/js/app.js'
+        dest: 'war/js/dist/app.js'
       }
     },
 
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'war/js/app.min.js': ['<%= concat.dist.dest %>']
+          'war/js/dist/app.min.js': ['<%= concat.dist.dest %>']
         }
       }
     },
@@ -76,8 +76,9 @@ module.exports = function(grunt) {
 
     jshint: {
       files: [
-              'Gruntfile.js'
+              'Gruntfile.js', 'war/js/**/*.js'
               ],
+      src: ['war/js/src/*.js'],
       options: {
         // options here to override JSHint defaults
         globals: {
@@ -105,7 +106,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 
-  grunt.registerTask('webpaige', ['concat', 'uglify']);
+  grunt.registerTask('webpaige', ['jshint', 'qunit', 'concat', 'uglify']);
 
 };
 

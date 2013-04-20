@@ -4,6 +4,7 @@
 ## Versions
 
 	2.1.0 (snapshot)
+		* Language corrections in planboard statistics 19-4-2013
 		* Hotfix for not displaying correct weeks by previous/future weeks in profile timeline 19-4-2013
 
 	2.0.2

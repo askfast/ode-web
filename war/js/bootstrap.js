@@ -1,3 +1,8 @@
+/*jslint node: true */
+/*global angular */
+/*global $ */
+/*global ui */
+/*global screenfull */
 'use strict';
 
 
@@ -8,7 +13,7 @@ angular.module('WebPaige')
 .run(
 [
   '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window', 'Timer',
-  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, Timer) 
+  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, Timer)
   {
     /**
      * Pass config and init dynamic config values
@@ -43,9 +48,9 @@ angular.module('WebPaige')
         landscape:    Math.abs($window.orientation) != 90 ? true : false,
         portrait:     Math.abs($window.orientation) == 90 ? true : false
       });
-    };
+    }
 
-    $window.onresize = function () { $rootScope.browser.screen = $window.screen };
+    $window.onresize = function () { $rootScope.browser.screen = $window.screen; };
 
     $window.onorientationchange = function ()
     {
@@ -64,16 +69,15 @@ angular.module('WebPaige')
             landscape:    Math.abs($window.orientation) != 90 ? true : false,
             portrait:     Math.abs($window.orientation) == 90 ? true : false
           });
-        };
+        }
       });
     };
-    
+
 
     /**
      * Default language and change language
      */
-    $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang] };
-    
+    $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang]; };
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
@@ -104,7 +108,7 @@ angular.module('WebPaige')
     /**
      * Show action loading messages
      */
-    $rootScope.statusBar = 
+    $rootScope.statusBar =
     {
       init: function ()
       {
@@ -134,11 +138,11 @@ angular.module('WebPaige')
     /**
      * Show notifications
      */
-    $rootScope.notifier = 
+    $rootScope.notifier =
     {
       init: function (status, type, message)
       {
-        if ($rootScope.browser.mobile && status == true)
+        if ($rootScope.browser.mobile && status === true)
         {
           $window.alert(message);
         }
@@ -149,7 +153,7 @@ angular.module('WebPaige')
             type: type,
             message: message
           };
-        };
+        }
       },
 
       success: function (message, permanent)
@@ -237,7 +241,7 @@ angular.module('WebPaige')
     $rootScope.$on("$routeChangeStart", function (event, next, current)
     {
       function resetLoaders ()
-      {    
+      {
         $rootScope.loaderIcons = {
           general:    false,
           dashboard:  false,
@@ -247,7 +251,7 @@ angular.module('WebPaige')
           profile:    false,
           settings:   false
         };
-      };
+      }
 
       resetLoaders();
 
@@ -281,8 +285,8 @@ angular.module('WebPaige')
           else
           {
             $rootScope.loaderIcons.general = true;
-          };
-      };
+          }
+      }
 
       if (!Session.check()) $location.path("/login");
 
@@ -324,8 +328,8 @@ angular.module('WebPaige')
     /**
      * Fix styles
      */
-    $rootScope.fixStyles = function () 
-    {    
+    $rootScope.fixStyles = function ()
+    {
       // var tabHeight = $('.tabs-left .nav-tabs').height();
 
       // $.each($('.tab-content').children(), function () 
@@ -347,7 +351,7 @@ angular.module('WebPaige')
       //   /**
       //    * Check if one is bigger than another
       //    */
-        
+
       //   if (tabHeight > contentHeight)
       //   {
       //     // console.log('tab is taller than content ->', $this);
@@ -368,24 +372,21 @@ angular.module('WebPaige')
       if ($.os.mac || $.os.linux)
       {
         $('.nav-tabs-app li a span').css({
-          paddingTop: '10px', 
+          paddingTop: '10px',
           marginBottom: '0px'
         });
         // $('#loading').css({
         //   //marginTop: '-160px'
         //   display: 'none'
         // });
-      };
+      }
     };
 
 
     /**
      * Experimental full screen ability
      */
-	  $rootScope.fullScreen = function ()
-	  {
-	  	screenfull.toggle($('html')[0]);
-	  };
+    $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]); };
 
   }
 ]);
@@ -412,7 +413,7 @@ angular.module('WebPaige')
     method = methods[length];
 
     if (!console[method]) console[method] = noop;
-  };
+  }
 }());
 
 
@@ -424,7 +425,7 @@ if ($.browser.msie)
   var ver = $.browser.version || $.browser.version[0];
 
   if (ver == '6.0' || ver == '7.0') window.location = 'browsers.html';
-};
+}
 
 
 /**

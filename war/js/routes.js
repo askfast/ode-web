@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global angular */
 'use strict';
 
 
@@ -8,7 +10,7 @@ angular.module('WebPaige')
 .config(
 [
   '$locationProvider', '$routeProvider', '$httpProvider',
-  function ($locationProvider, $routeProvider, $httpProvider) 
+  function ($locationProvider, $routeProvider, $httpProvider)
   {
     /**
      * Login router
@@ -17,14 +19,14 @@ angular.module('WebPaige')
     .when('/login',
     {
       templateUrl: 'js/views/login.html',
-      controller: 'login' 
+      controller: 'login'
     })
 
     /**
      * Logout router
      */
     .when('/logout',
-    { 
+    {
       templateUrl: 'js/views/logout.html',
       controller: 'logout'
     })
@@ -32,10 +34,10 @@ angular.module('WebPaige')
     /**
      * Dashboard router
      */
-    .when('/dashboard', 
-    { 
+    .when('/dashboard',
+    {
       templateUrl: 'js/views/dashboard.html',
-      controller: 'dashboard',
+      controller: 'dashboard'
       // resolve: {
       //   timers:
       //   [
@@ -59,15 +61,15 @@ angular.module('WebPaige')
     /**
      * Planboard router
      */
-    .when('/planboard', 
-    { 
+    .when('/planboard',
+    {
       templateUrl: 'js/views/planboard.html',
       controller: 'planboard',
       resolve: {
-        data: 
+        data:
         [
           '$route', 'Slots', 'Storage', 'Dater',
-          function ($route, Slots, Storage, Dater) 
+          function ($route, Slots, Storage, Dater)
           {
             var periods = Storage.local.periods(),
                 current = Dater.current.week(),
@@ -98,19 +100,19 @@ angular.module('WebPaige')
     /**
      * Messages router
      */
-    .when('/messages', 
-    { 
-      templateUrl: 'js/views/messages.html',    
-      controller: 'messages',   
+    .when('/messages',
+    {
+      templateUrl: 'js/views/messages.html',
+      controller: 'messages',
       resolve: {
         data: [
           '$route', 'Messages',
-          function ($route, Messages) 
-          {    
+          function ($route, Messages)
+          {
             return Messages.query();
           }
         ]
-      }, 
+      },
       reloadOnSearch: false
     })
 
@@ -124,7 +126,7 @@ angular.module('WebPaige')
       resolve: {
         data: [
           'Groups',
-          function (Groups) 
+          function (Groups)
           {
             return Groups.query();
           }
@@ -136,14 +138,14 @@ angular.module('WebPaige')
     /**
      * Profile (user specific) router
      */
-    .when('/profile/:userId', 
-    { 
+    .when('/profile/:userId',
+    {
       templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
           '$rootScope', 'Profile', '$route', '$location', 'Dater',
-          function ($rootScope, Profile, $route, $location, Dater) 
+          function ($rootScope, Profile, $route, $location, Dater)
           {
             if ($route.current.params.userId != $rootScope.app.resources.uuid)
             {
@@ -151,7 +153,7 @@ angular.module('WebPaige')
                   current = Dater.current.week(),
                   ranges  = {
                     start:  periods.weeks[current].first.timeStamp / 1000,
-                    end:    periods.weeks[current].last.timeStamp / 1000,
+                    end:    periods.weeks[current].last.timeStamp / 1000
                   };
 
               return Profile.getWithSlots($route.current.params.userId, false, ranges);
@@ -159,7 +161,7 @@ angular.module('WebPaige')
             else
             {
               return Profile.get($route.current.params.userId, false);
-            };
+            }
           }
         ]
       },
@@ -169,14 +171,14 @@ angular.module('WebPaige')
     /**
      * Profile (user hiself) router
      */
-    .when('/profile', 
-    { 
-      templateUrl: 'js/views/profile.html', 
+    .when('/profile',
+    {
+      templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
           '$rootScope', '$route', '$location',
-          function ($rootScope, $route, $location) 
+          function ($rootScope, $route, $location)
           {
             if (!$route.current.params.userId || !$location.hash())
               $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
@@ -189,13 +191,13 @@ angular.module('WebPaige')
      * Settings router
      */
     .when('/settings',
-    { 
+    {
       templateUrl: 'js/views/settings.html',
       controller: 'settings',
       resolve: {
         data: [
           'Settings',
-          function (Settings) 
+          function (Settings)
           {
             return angular.fromJson(Settings.get());
           }
@@ -215,8 +217,8 @@ angular.module('WebPaige')
     /**
      * Router fallback
      */
-    .otherwise({ 
-      redirectTo: '/login' 
+    .otherwise({
+      redirectTo: '/login'
     });
 
     /**

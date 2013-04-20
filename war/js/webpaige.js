@@ -1,11 +1,13 @@
+/*jslint node: true */
+/*global angular */
+/*global basket */
 'use strict';
 
 
 /**
  * Declare app level module which depends on filters, and services
  */
-angular.module('WebPaige', 
-[
+angular.module('WebPaige',[
   'ngResource',
   // modals
   'WebPaige.Modals.User',
@@ -29,7 +31,7 @@ angular.module('WebPaige',
   'WebPaige.Controllers.Help',
   // directives
   'WebPaige.Directives',
-  '$strap.directives', 
+  '$strap.directives',
   // filters
   'WebPaige.Filters',
   // services
@@ -47,7 +49,6 @@ angular.module('WebPaige',
 ]);
 
 
-
 /**
  * Fetch libraries with AMD (if they are not present) and save in localStorage
  * If a library is presnet it wont be fetched from server
@@ -62,7 +63,7 @@ basket
     { url: 'js/libs/sugar/1.3.7/sugar.min.js' },
     { url: 'js/libs/raphael/2.1.0/raphael-min.js' }
   )
-  .then(function () 
+  .then(function ()
     {
       basket
         .require(
@@ -70,7 +71,7 @@ basket
           { url: 'js/libs/g-raphael/0.5.1/g.pie-min.js' }
         )
         .then(function ()
-        { 
+        {
           // console.warn('basket parsed scripts..');
       });
     }

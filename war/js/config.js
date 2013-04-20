@@ -1,3 +1,6 @@
+/*jslint node: true */
+/*global angular */
+/*global profile */
 'use strict';
 
 
@@ -6,7 +9,7 @@
  */
 angular.module('WebPaige')
 .value(
-  '$config', 
+  '$config',
   {
     title:    'WebPaige',
     version:  '2.1.0 (snapshot)',
@@ -29,42 +32,42 @@ angular.module('WebPaige')
     },
 
     statesall: {
-      'com.ask-cs.State.Available': 
+      'com.ask-cs.State.Available':
       {
         className:'state-available',
         label:    'Beschikbaar',
         color:    '#4f824f',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.BeschikbaarNoord': 
+      'com.ask-cs.State.KNRM.BeschikbaarNoord':
       {
         className:'state-available-north',
         label:    'Beschikbaar voor Noord',
         color:    '#000',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.BeschikbaarZuid': 
+      'com.ask-cs.State.KNRM.BeschikbaarZuid':
       {
         className:'state-available-south',
         label:    'Beschikbaar voor Zuid',
         color:    '#e08a0c',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.Unavailable': 
+      'com.ask-cs.State.Unavailable':
       {
         className:'state-unavailable',
         label:    'Niet Beschikbaar',
         color:    '#a93232',
         type:     'Niet Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.SchipperVanDienst': 
+      'com.ask-cs.State.KNRM.SchipperVanDienst':
       {
         className:'state-schipper-service',
         label:    'Schipper van Dienst',
         color:    '#e0c100',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.Unreached': 
+      'com.ask-cs.State.Unreached':
       {
         className:'state-unreached',
         label:    'Niet Bereikt',
@@ -122,12 +125,7 @@ angular.module('WebPaige')
     },
 
     pie: {
-      colors: 
-      [
-        '#415e6b', 
-        '#ba6a24', 
-        '#a0a0a0'
-      ]
+      colors: ['#415e6b', '#ba6a24', '#a0a0a0']
     },
 
     defaults: {
@@ -144,7 +142,7 @@ angular.module('WebPaige')
     },
 
     cookie: {
-      expiry: 30, 
+      expiry: 30,
       path:   '/'
     },
 
