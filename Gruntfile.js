@@ -16,7 +16,7 @@ module.exports = function(grunt)
       dist: {
         files: {
 
-          'war/js/src/app.js': [
+          'war/src/app.js': [
             'war/js/localization.js',
             'war/js/webpaige.js',
             'war/js/config.js',
@@ -44,7 +44,7 @@ module.exports = function(grunt)
             'war/js/controllers/help.js',
             // directives
             'war/js/directives/directives.js',
-            'war/js/libs/angular-strap/0.7.0/angular-strap.min.js',
+            'war/libs/angular-strap/0.7.0/angular-strap.min.js',
             // services
             'war/js/services/timer.js',
             'war/js/services/session.js',
@@ -61,7 +61,7 @@ module.exports = function(grunt)
             'war/js/filters/filters.js'
           ],
 
-          'war/js/src/plugins.js': [
+          'war/src/plugins.js': [
             'war/js/plugins/browser.js',
             'war/js/plugins/os.js',
             'war/js/plugins/basket.js',
@@ -80,8 +80,8 @@ module.exports = function(grunt)
 
       dist: {
         files: {
-          'war/js/dist/app.min.js':     'war/js/src/app.js',
-          'war/js/dist/plugins.min.js': 'war/js/src/plugins.js'
+          'war/dist/app.min.js':     'war/src/app.js',
+          'war/dist/plugins.min.js': 'war/src/plugins.js'
         }
       }
     },
@@ -103,7 +103,7 @@ module.exports = function(grunt)
         'war/js/*.js'
       ],
 
-      src: ['war/js/src/*.js'],
+      src: ['war/src/*.js'],
 
       options: {
         // options here to override JSHint defaults
