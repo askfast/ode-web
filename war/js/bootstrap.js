@@ -22,7 +22,6 @@ angular.module('WebPaige')
 
     $rootScope.config.init();
 
-
     /**
      * TODO
      * Move these checks to jquery.browser
@@ -375,6 +374,7 @@ angular.module('WebPaige')
           paddingTop: '10px',
           marginBottom: '0px'
         });
+
         // $('#loading').css({
         //   //marginTop: '-160px'
         //   display: 'none'

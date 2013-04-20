@@ -1,90 +1,94 @@
+/*jslint node: true */
+/*global angular */
 'use strict';
 
 
 angular.module('WebPaige.Controllers.Timeline', [])
 
 
-.controller('timeline', 
+.controller('timeline',
 [
 	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile) 
+	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile)
 	{
-	  /**
-	   * Watch for changes in timeline range
-	   */
-	  $scope.$watch(function ()
-	  {
-	  	/**
-	  	 * If main timeline
-	  	 */
-	  	if ($scope.timeline.main)
-	  	{
-		    var range = $scope.self.timeline.getVisibleChartRange(),
-		        diff  = Dater.calculate.diff(range);
+		var range, diff;
 
-		    /**
-		     * Scope is a day
-		     * 
-		     * TODO
-		     * try later on!
-		     * new Date(range.start).toString('d') == new Date(range.end).toString('d')
-		     */
-		    if (diff <= 86400000)
-		    {
-		      $scope.timeline.scope = {
-		        day:    true,
-		        week:   false,
-		        month:  false
-		      };
-		    }
-		    /**
-		     * Scope is less than a week
-		     */
-		    else if (diff < 604800000)
-		    {
-		      $scope.timeline.scope = {
-		        day:    false,
-		        week:   true,
-		        month:  false
-		      };
-		    }
-		    /**
-		     * Scope is more than a week
-		     */
-		    else if (diff > 604800000)
-		    {
-		      $scope.timeline.scope = {
-		        day:    false,
-		        week:   false,
-		        month:  true
-		      };
-		    };
+		/**
+		 * Watch for changes in timeline range
+		 */
+		$scope.$watch(function ()
+		{
+			/**
+			 * If main timeline
+			 */
+			if ($scope.timeline.main)
+			{
+				range = $scope.self.timeline.getVisibleChartRange();
+				diff  = Dater.calculate.diff(range);
 
-		    $scope.timeline.range = {
-		      start:  new Date(range.start).toString(),
-		      end:    new Date(range.end).toString()
-		    };
+				/**
+				 * Scope is a day
+				 * 
+				 * TODO
+				 * try later on!
+				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
+				 */
+				if (diff <= 86400000)
+				{
+					$scope.timeline.scope = {
+						day:    true,
+						week:   false,
+						month:  false
+					};
+				}
+				/**
+				 * Scope is less than a week
+				 */
+				else if (diff < 604800000)
+				{
+					$scope.timeline.scope = {
+						day:    false,
+						week:   true,
+						month:  false
+					};
+				}
+				/**
+				 * Scope is more than a week
+				 */
+				else if (diff > 604800000)
+				{
+					$scope.timeline.scope = {
+						day:    false,
+						week:   false,
+						month:  true
+					};
+				}
 
-		    $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + 
-		                        ' / ' + 
-		                        Dater.readable.date($scope.timeline.range.end);
-	  	}
-	  	/**
-	  	 * User timeline
-	  	 */
-	  	else
-	  	{
-		    if ($location.hash() == 'timeline')
-		    {
-		      var range = $scope.self.timeline.getVisibleChartRange();
+				$scope.timeline.range = {
+					start:  new Date(range.start).toString(),
+					end:    new Date(range.end).toString()
+				};
 
-		      $scope.timeline.range = {
-		        start:  new Date(range.start).toString(),
-		        end:    new Date(range.end).toString()
-		      };
-		    };
-	  	}
-	  });
+				$scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
+														' / ' +
+														Dater.readable.date($scope.timeline.range.end);
+			}
+			/**
+			 * User timeline
+			 */
+			else
+			{
+				if ($location.hash() == 'timeline')
+				{
+					range = $scope.self.timeline.getVisibleChartRange();
+
+					$scope.timeline.range = {
+						start:  new Date(range.start).toString(),
+						end:    new Date(range.end).toString()
+					};
+				}
+			}
+		});
 
 
 	  /**

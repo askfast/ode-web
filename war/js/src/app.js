@@ -1,5 +1,9 @@
-// TODO
-// Language settings
+/*jslint node: true */
+'use strict';
+
+/**
+ * Localizations
+ */
 var ui = {
     en: {
       meta: {
@@ -30,7 +34,7 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..',
+        loading: 'Loading..'
       },
       dashboard: {
           thisWeek: 'This Week',
@@ -75,9 +79,9 @@ var ui = {
         skipperOutService: 'Skipper Of Service',
         notAvailable: 'Not Available', // Niet Beschikbaar
         notachieve: 'Not Achieved',
-        morePeople: 'More people',
-        enoughPeople: 'Just enough people',
-        lessPeople: 'Less people',
+        // morePeople: 'More people',
+        // enoughPeople: 'Just enough people',
+        // lessPeople: 'Less people',
         lastSyncTime: 'Last sync time:',
         dataRangeStart: 'Data range start: ',
         DataRangeEnd: 'Data range end: ',
@@ -140,7 +144,7 @@ var ui = {
             startDate + ' ' +
             startTime + ' and ' +
             endDate + ' ' +
-            endTime + '. ' + 
+            endTime + '. ' +
             'Would you please make yourself available if you are available for that period?';
         },
         removed: 'Message removed successfully.',
@@ -155,7 +159,7 @@ var ui = {
         sending: 'Sending the message...',
         sent: 'Message sent.',
         typeSubject: 'Type a subject',
-        messages: 'Messages',
+        // messages: 'Messages',
         ph_filterMessage: 'Filter messages..',
         noReceivers: 'Please select a receiver.'
       },
@@ -211,7 +215,7 @@ var ui = {
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
         searchfor: 'firstname, lastname..'
-      }, 
+      },
       profile: {
         profile: 'Profile',
         edit: 'Edit',
@@ -234,7 +238,7 @@ var ui = {
         newPassRepeat: 'New password (Repeat)',
         changePass: 'Change password',
         newAvail: 'New Availability',
-        saveProfile: 'Saving profile information..', 
+        // saveProfile: 'Saving profile information..',
         refreshing: 'Refreshing profile information..',
         dataChanged: 'Profile data is succesfully changed.',
         pleaseFill: 'Please fill all fields!',
@@ -244,7 +248,7 @@ var ui = {
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
         changingTimeslot: 'Changing a timeslot..',
-        timeslotChanged: 'Timeslot is succesfully changed.',
+        timeslotChanged: 'Timeslot is succesfully changed.'
       },
       settings: {
         settings: 'Settings',
@@ -296,7 +300,7 @@ var ui = {
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
         logout: 'Logout',
-        loading: 'Loading..',
+        loading: 'Loading..'
       },
       dashboard: {
         thisWeek: 'Deze week',
@@ -339,11 +343,11 @@ var ui = {
         northAavailable: 'Beschikbaar Noord' ,
         southAvailable: 'Beschikbaar Zuid',
         skipperOutService: 'Schipper van dienst',
-        notAvailable: 'Niet beschikbaar', 
+        notAvailable: 'Niet beschikbaar',
         notachieve: 'Niet behaald',
-        morePeople: 'Meer mensen',
-        enoughPeople: 'Precies genoeg mensen',
-        lessPeople: 'Te weinig mensen',
+        // morePeople: 'Meer mensen',
+        // enoughPeople: 'Precies genoeg mensen',
+        // lessPeople: 'Te weinig mensen',
         lastSyncTime: 'Laatste synchronisatietijd:',
         dataRangeStart: 'Begin gegevensscala: ',
         DataRangeEnd: 'Eind gegevensscala: ',
@@ -406,7 +410,7 @@ var ui = {
             startDate + ' ' +
             startTime + ' en ' +
             endDate + ' ' +
-            endTime + '. ' + 
+            endTime + '. ' +
             'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
         },
         removed: 'Bericht succesvol verwijderd.',
@@ -421,7 +425,7 @@ var ui = {
         sending: 'Bericht versturen...',
         sent: 'Bericht verstuurd.',
         typeSubject: 'Vul een onderwerp in',
-        messages: 'Berichten',
+        // messages: 'Berichten',
         ph_filterMessage: 'Berichten filteren...',
         noReceivers: 'Graag een ontvanger selecteren.'
       },
@@ -476,7 +480,7 @@ var ui = {
         deleted: 'Groep succesvol verwijderd.',
         filterMembers: 'Leden filteren...',
         searchfor: 'voornaam, achternaam..'
-      }, 
+      },
       profile: {
         profile: 'Profiel',
         edit: 'Wijzigen',
@@ -499,7 +503,7 @@ var ui = {
         newPassRepeat: 'Herhaal nieuw wachtwoord',
         changePass: 'Wachtwoord wijzigen',
         newAvail: 'Nieuwe beschikbaarheid',
-        saveProfile: 'Profielinformatie opslaan...', 
+        // saveProfile: 'Profielinformatie opslaan...',
         refreshing: 'Profielinformatie vernieuwen...',
         dataChanged: 'Profielgegevens succesvol gewijzigd.',
         pleaseFill: 'Vul a.u.b. alle velden in!',
@@ -509,7 +513,7 @@ var ui = {
         passwrong: 'Ingevoerd wachtwoord is foutief! Probeer het opnieuw.',
         newTimeslotAdded: 'Nieuw tijdslot succesvol toegevoegd.',
         changingTimeslot: 'Tijdslot wijzigen...',
-        timeslotChanged: 'Tijdslot succesvol gewijzigd.',
+        timeslotChanged: 'Tijdslot succesvol gewijzigd.'
       },
       settings: {
         settings: 'Instellingen',
@@ -532,15 +536,16 @@ var ui = {
         manual: 'Download Handleiding'
       }
     }
-}
-;'use strict';
+};;/*jslint node: true */
+/*global angular */
+/*global basket */
+'use strict';
 
 
 /**
  * Declare app level module which depends on filters, and services
  */
-angular.module('WebPaige', 
-[
+angular.module('WebPaige',[
   'ngResource',
   // modals
   'WebPaige.Modals.User',
@@ -564,7 +569,7 @@ angular.module('WebPaige',
   'WebPaige.Controllers.Help',
   // directives
   'WebPaige.Directives',
-  '$strap.directives', 
+  '$strap.directives',
   // filters
   'WebPaige.Filters',
   // services
@@ -582,7 +587,6 @@ angular.module('WebPaige',
 ]);
 
 
-
 /**
  * Fetch libraries with AMD (if they are not present) and save in localStorage
  * If a library is presnet it wont be fetched from server
@@ -597,7 +601,7 @@ basket
     { url: 'js/libs/sugar/1.3.7/sugar.min.js' },
     { url: 'js/libs/raphael/2.1.0/raphael-min.js' }
   )
-  .then(function () 
+  .then(function ()
     {
       basket
         .require(
@@ -605,11 +609,14 @@ basket
           { url: 'js/libs/g-raphael/0.5.1/g.pie-min.js' }
         )
         .then(function ()
-        { 
+        {
           // console.warn('basket parsed scripts..');
       });
     }
-  );;'use strict';
+  );;/*jslint node: true */
+/*global angular */
+/*global profile */
+'use strict';
 
 
 /**
@@ -617,7 +624,7 @@ basket
  */
 angular.module('WebPaige')
 .value(
-  '$config', 
+  '$config',
   {
     title:    'WebPaige',
     version:  '2.1.0 (snapshot)',
@@ -640,42 +647,42 @@ angular.module('WebPaige')
     },
 
     statesall: {
-      'com.ask-cs.State.Available': 
+      'com.ask-cs.State.Available':
       {
         className:'state-available',
         label:    'Beschikbaar',
         color:    '#4f824f',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.BeschikbaarNoord': 
+      'com.ask-cs.State.KNRM.BeschikbaarNoord':
       {
         className:'state-available-north',
         label:    'Beschikbaar voor Noord',
         color:    '#000',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.BeschikbaarZuid': 
+      'com.ask-cs.State.KNRM.BeschikbaarZuid':
       {
         className:'state-available-south',
         label:    'Beschikbaar voor Zuid',
         color:    '#e08a0c',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.Unavailable': 
+      'com.ask-cs.State.Unavailable':
       {
         className:'state-unavailable',
         label:    'Niet Beschikbaar',
         color:    '#a93232',
         type:     'Niet Beschikbaar'
       },
-      'com.ask-cs.State.KNRM.SchipperVanDienst': 
+      'com.ask-cs.State.KNRM.SchipperVanDienst':
       {
         className:'state-schipper-service',
         label:    'Schipper van Dienst',
         color:    '#e0c100',
         type:     'Beschikbaar'
       },
-      'com.ask-cs.State.Unreached': 
+      'com.ask-cs.State.Unreached':
       {
         className:'state-unreached',
         label:    'Niet Bereikt',
@@ -733,12 +740,7 @@ angular.module('WebPaige')
     },
 
     pie: {
-      colors: 
-      [
-        '#415e6b', 
-        '#ba6a24', 
-        '#a0a0a0'
-      ]
+      colors: ['#415e6b', '#ba6a24', '#a0a0a0']
     },
 
     defaults: {
@@ -755,7 +757,7 @@ angular.module('WebPaige')
     },
 
     cookie: {
-      expiry: 30, 
+      expiry: 30,
       path:   '/'
     },
 
@@ -776,7 +778,9 @@ angular.module('WebPaige')
       });
     }
   }
-);;'use strict';
+);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 /**
@@ -786,7 +790,7 @@ angular.module('WebPaige')
 .config(
 [
   '$locationProvider', '$routeProvider', '$httpProvider',
-  function ($locationProvider, $routeProvider, $httpProvider) 
+  function ($locationProvider, $routeProvider, $httpProvider)
   {
     /**
      * Login router
@@ -795,14 +799,14 @@ angular.module('WebPaige')
     .when('/login',
     {
       templateUrl: 'js/views/login.html',
-      controller: 'login' 
+      controller: 'login'
     })
 
     /**
      * Logout router
      */
     .when('/logout',
-    { 
+    {
       templateUrl: 'js/views/logout.html',
       controller: 'logout'
     })
@@ -810,10 +814,10 @@ angular.module('WebPaige')
     /**
      * Dashboard router
      */
-    .when('/dashboard', 
-    { 
+    .when('/dashboard',
+    {
       templateUrl: 'js/views/dashboard.html',
-      controller: 'dashboard',
+      controller: 'dashboard'
       // resolve: {
       //   timers:
       //   [
@@ -837,15 +841,15 @@ angular.module('WebPaige')
     /**
      * Planboard router
      */
-    .when('/planboard', 
-    { 
+    .when('/planboard',
+    {
       templateUrl: 'js/views/planboard.html',
       controller: 'planboard',
       resolve: {
-        data: 
+        data:
         [
           '$route', 'Slots', 'Storage', 'Dater',
-          function ($route, Slots, Storage, Dater) 
+          function ($route, Slots, Storage, Dater)
           {
             var periods = Storage.local.periods(),
                 current = Dater.current.week(),
@@ -876,19 +880,19 @@ angular.module('WebPaige')
     /**
      * Messages router
      */
-    .when('/messages', 
-    { 
-      templateUrl: 'js/views/messages.html',    
-      controller: 'messages',   
+    .when('/messages',
+    {
+      templateUrl: 'js/views/messages.html',
+      controller: 'messages',
       resolve: {
         data: [
           '$route', 'Messages',
-          function ($route, Messages) 
-          {    
+          function ($route, Messages)
+          {
             return Messages.query();
           }
         ]
-      }, 
+      },
       reloadOnSearch: false
     })
 
@@ -902,7 +906,7 @@ angular.module('WebPaige')
       resolve: {
         data: [
           'Groups',
-          function (Groups) 
+          function (Groups)
           {
             return Groups.query();
           }
@@ -914,14 +918,14 @@ angular.module('WebPaige')
     /**
      * Profile (user specific) router
      */
-    .when('/profile/:userId', 
-    { 
+    .when('/profile/:userId',
+    {
       templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
           '$rootScope', 'Profile', '$route', '$location', 'Dater',
-          function ($rootScope, Profile, $route, $location, Dater) 
+          function ($rootScope, Profile, $route, $location, Dater)
           {
             if ($route.current.params.userId != $rootScope.app.resources.uuid)
             {
@@ -929,7 +933,7 @@ angular.module('WebPaige')
                   current = Dater.current.week(),
                   ranges  = {
                     start:  periods.weeks[current].first.timeStamp / 1000,
-                    end:    periods.weeks[current].last.timeStamp / 1000,
+                    end:    periods.weeks[current].last.timeStamp / 1000
                   };
 
               return Profile.getWithSlots($route.current.params.userId, false, ranges);
@@ -937,7 +941,7 @@ angular.module('WebPaige')
             else
             {
               return Profile.get($route.current.params.userId, false);
-            };
+            }
           }
         ]
       },
@@ -947,14 +951,14 @@ angular.module('WebPaige')
     /**
      * Profile (user hiself) router
      */
-    .when('/profile', 
-    { 
-      templateUrl: 'js/views/profile.html', 
+    .when('/profile',
+    {
+      templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
           '$rootScope', '$route', '$location',
-          function ($rootScope, $route, $location) 
+          function ($rootScope, $route, $location)
           {
             if (!$route.current.params.userId || !$location.hash())
               $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
@@ -967,13 +971,13 @@ angular.module('WebPaige')
      * Settings router
      */
     .when('/settings',
-    { 
+    {
       templateUrl: 'js/views/settings.html',
       controller: 'settings',
       resolve: {
         data: [
           'Settings',
-          function (Settings) 
+          function (Settings)
           {
             return angular.fromJson(Settings.get());
           }
@@ -993,8 +997,8 @@ angular.module('WebPaige')
     /**
      * Router fallback
      */
-    .otherwise({ 
-      redirectTo: '/login' 
+    .otherwise({
+      redirectTo: '/login'
     });
 
     /**
@@ -1002,7 +1006,12 @@ angular.module('WebPaige')
      */
     $httpProvider.responseInterceptors.push('Interceptor');
   }
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+/*global $ */
+/*global ui */
+/*global screenfull */
+'use strict';
 
 
 /**
@@ -1012,7 +1021,7 @@ angular.module('WebPaige')
 .run(
 [
   '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window', 'Timer',
-  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, Timer) 
+  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, Timer)
   {
     /**
      * Pass config and init dynamic config values
@@ -1020,7 +1029,6 @@ angular.module('WebPaige')
     $rootScope.config = $config;
 
     $rootScope.config.init();
-
 
     /**
      * TODO
@@ -1047,9 +1055,9 @@ angular.module('WebPaige')
         landscape:    Math.abs($window.orientation) != 90 ? true : false,
         portrait:     Math.abs($window.orientation) == 90 ? true : false
       });
-    };
+    }
 
-    $window.onresize = function () { $rootScope.browser.screen = $window.screen };
+    $window.onresize = function () { $rootScope.browser.screen = $window.screen; };
 
     $window.onorientationchange = function ()
     {
@@ -1068,16 +1076,15 @@ angular.module('WebPaige')
             landscape:    Math.abs($window.orientation) != 90 ? true : false,
             portrait:     Math.abs($window.orientation) == 90 ? true : false
           });
-        };
+        }
       });
     };
-    
+
 
     /**
      * Default language and change language
      */
-    $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang] };
-    
+    $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang]; };
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
@@ -1108,7 +1115,7 @@ angular.module('WebPaige')
     /**
      * Show action loading messages
      */
-    $rootScope.statusBar = 
+    $rootScope.statusBar =
     {
       init: function ()
       {
@@ -1138,11 +1145,11 @@ angular.module('WebPaige')
     /**
      * Show notifications
      */
-    $rootScope.notifier = 
+    $rootScope.notifier =
     {
       init: function (status, type, message)
       {
-        if ($rootScope.browser.mobile && status == true)
+        if ($rootScope.browser.mobile && status === true)
         {
           $window.alert(message);
         }
@@ -1153,7 +1160,7 @@ angular.module('WebPaige')
             type: type,
             message: message
           };
-        };
+        }
       },
 
       success: function (message, permanent)
@@ -1241,7 +1248,7 @@ angular.module('WebPaige')
     $rootScope.$on("$routeChangeStart", function (event, next, current)
     {
       function resetLoaders ()
-      {    
+      {
         $rootScope.loaderIcons = {
           general:    false,
           dashboard:  false,
@@ -1251,7 +1258,7 @@ angular.module('WebPaige')
           profile:    false,
           settings:   false
         };
-      };
+      }
 
       resetLoaders();
 
@@ -1285,8 +1292,8 @@ angular.module('WebPaige')
           else
           {
             $rootScope.loaderIcons.general = true;
-          };
-      };
+          }
+      }
 
       if (!Session.check()) $location.path("/login");
 
@@ -1328,8 +1335,8 @@ angular.module('WebPaige')
     /**
      * Fix styles
      */
-    $rootScope.fixStyles = function () 
-    {    
+    $rootScope.fixStyles = function ()
+    {
       // var tabHeight = $('.tabs-left .nav-tabs').height();
 
       // $.each($('.tab-content').children(), function () 
@@ -1351,7 +1358,7 @@ angular.module('WebPaige')
       //   /**
       //    * Check if one is bigger than another
       //    */
-        
+
       //   if (tabHeight > contentHeight)
       //   {
       //     // console.log('tab is taller than content ->', $this);
@@ -1372,24 +1379,22 @@ angular.module('WebPaige')
       if ($.os.mac || $.os.linux)
       {
         $('.nav-tabs-app li a span').css({
-          paddingTop: '10px', 
+          paddingTop: '10px',
           marginBottom: '0px'
         });
+
         // $('#loading').css({
         //   //marginTop: '-160px'
         //   display: 'none'
         // });
-      };
+      }
     };
 
 
     /**
      * Experimental full screen ability
      */
-	  $rootScope.fullScreen = function ()
-	  {
-	  	screenfull.toggle($('html')[0]);
-	  };
+    $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]); };
 
   }
 ]);
@@ -1416,7 +1421,7 @@ angular.module('WebPaige')
     method = methods[length];
 
     if (!console[method]) console[method] = noop;
-  };
+  }
 }());
 
 
@@ -1428,7 +1433,7 @@ if ($.browser.msie)
   var ver = $.browser.version || $.browser.version[0];
 
   if (ver == '6.0' || ver == '7.0') window.location = 'browsers.html';
-};
+}
 
 
 /**
@@ -3717,7 +3722,9 @@ angular.module('WebPaige.Modals.Settings', ['ngResource'])
 
 	  return new Settings;
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Login', [])
@@ -4352,7 +4359,9 @@ angular.module('WebPaige.Controllers.Login', [])
 		};
 
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Logout', [])
@@ -4390,7 +4399,10 @@ angular.module('WebPaige.Controllers.Logout', [])
 	    };
 		});
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+/*global Raphael */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Dashboard', [])
@@ -4399,238 +4411,240 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 /**
  * Dashboard controller
  */
-.controller('dashboard', 
+.controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 
-	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile) 
+	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
+	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile)
 	{
-	  /**
-	   * Fix styles
-	   */
-	  $rootScope.fixStyles();
+		/**
+		 * Fix styles
+		 */
+		$rootScope.fixStyles();
 
 
-	  /**
-	   * Defaults for loaders
-	   */
-	  $scope.loading = {
-	    pies:   true,
-	    alerts: true
-	  };
-	  
-
-	  /**
-	   * Defaults for toggler
-	   */
-	  $scope.more = {
-	    status: false,
-	    text:   'show more' 
-	  };
+		/**
+		 * Defaults for loaders
+		 */
+		$scope.loading = {
+			pies:   true,
+			alerts: true
+		};
 
 
-	  /**
-	   * TODO
-	   * Check somewhere that user-settings widget-groups are synced with the
-	   * real groups list and if a group is missing in settings-groups add by
-	   * default!
-	   */
-	  var groups    = Storage.local.groups(),
-	      settings  = Storage.local.settings(),
-	      selection = {};
-
-	  angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
-	  {
-	    selection[group] = value;
-	  });
-
-	  $scope.popover = {
-	    groups: groups,
-	    selection: selection
-	  };
+		/**
+		 * Defaults for toggler
+		 */
+		$scope.more = {
+			status: false,
+			text:   'show more'
+		};
 
 
-	  /**
-	   * Get group overviews
-	   */
-	  function getOverviews ()
-	  {
-	    Dashboard.pies()
-	    .then(function (pies)
-	    {
-	      if (pies.error)
-	      {
-	        $rootScope.notifier.error('Error with getting group overviews.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $scope.shortageHolders = {};
+		/**
+		 * TODO
+		 * Check somewhere that user-settings widget-groups are synced with the
+		 * real groups list and if a group is missing in settings-groups add by
+		 * default!
+		 */
+		var groups    = Storage.local.groups(),
+				settings  = Storage.local.settings(),
+				selection = {};
 
-	        $scope.loading.pies = false;
+		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
+		{
+			selection[group] = value;
+		});
 
-	        $scope.periods = {
-	          start:  pies[0].weeks.current.start.date,
-	          end:    pies[0].weeks.next.end.date
-	        };
-
-	        angular.forEach(pies, function (pie, index)
-	        {
-	          if (pie.weeks.current.state.diff == null) pie.weeks.current.state.diff = 0;
-	          if (pie.weeks.current.state.wish == null) pie.weeks.current.state.wish = 0;
-	              
-	          if (pie.weeks.current.state.diff > 0)
-	          {
-	            pie.weeks.current.state.cls = 'more';
-	          }
-	          else if (pie.weeks.current.state.diff == 0)
-	          {
-	            pie.weeks.current.state.cls = 'even';
-	          }
-	          else if (pie.weeks.current.state.diff < 0)
-	          {
-	            pie.weeks.current.state.cls = 'less';
-	          };
-
-	          pie.weeks.current.state.start = (pie.weeks.current.state.start != undefined) 
-	                                          ? new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime)
-	                                          : 'undefined';
-
-	          pie.weeks.current.state.end   = (pie.weeks.current.state.end != undefined)
-	                                          ? new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime)
-	                                          : 'undefined';
-	          
-	          pie.shortages = {
-	            current:  pie.weeks.current.shortages,
-	            next:     pie.weeks.next.shortages,
-	            total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
-	          };
-
-	          pie.state = pie.weeks.current.state;
-
-	          delete(pie.weeks.current.shortages);
-	          delete(pie.weeks.current.state);
-
-	          $scope.shortageHolders['shortages-' + pie.id] = false;
-	        });
-
-	        $scope.pies = pies;
-	      };
-	    })
-	    .then( function (result)
-	    {
-	      angular.forEach($scope.pies, function (pie, index)
-	      {
-	        pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
-	        pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
-	      });
-
-	      function pieMaker ($id, id, name, _ratios)
-	      {    
-	        setTimeout( function () 
-	        {
-	          document.getElementById($id + id).innerHTML = '';
-
-	          var ratios    = [],
-	              colorMap  = {
-	                more: '#415e6b',
-	                even: '#ba6a24',
-	                less: '#a0a0a0'
-	              },
-	              colors    = [],
-	              xratios   = [];
-
-	          angular.forEach(_ratios, function (ratio, index)
-	          {
-	            if (ratio != 0)
-	            {
-	              ratios.push({
-	                ratio: ratio, 
-	                color: colorMap[index]
-	              });
-	            };
-	          });
-
-	          ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
-
-	          angular.forEach(ratios, function (ratio, index)
-	          {
-	            colors.push(ratio.color);
-	            xratios.push(ratio.ratio);
-	          });
-
-	          var r   = Raphael($id + id),
-	              pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
-
-	        }, 100);
-	      };
-	    });
-	  };
-
-	  getOverviews();
-
-	  /**
-	   * Save widget settings
-	   */
-	  $scope.saveOverviewWidget = function (selection)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.settings.saving);
-
-	    Settings.save($rootScope.app.resources.uuid, {
-	      user: Storage.local.settings().user,
-	      app: {
-	        widgets: {
-	          groups: selection
-	        }
-	      }
-	    })
-	    .then(function (result)
-	    {
-	      $rootScope.statusBar.display('Refreshing group overviews..');
-
-	      Profile.get($rootScope.app.resources.uuid, true)
-	      .then(function (resources)
-	      {
-	        getOverviews();
-	      })
-	    });
-	  };
+		$scope.popover = {
+			groups: groups,
+			selection: selection
+		};
 
 
-	  /**
-	   * P2000 annnouncements
-	   */
-	  Dashboard.p2000().
-	  then(function (result)
-	  {
-	    if (result.error)
-	    {
-	      $rootScope.notifier.error('Error with getting p2000 alarm messages.');
-	      console.warn('error ->', result);
-	    }
-	    else
-	    {
-	      $scope.loading.alerts = false;
+		/**
+		 * Get group overviews
+		 */
+		function getOverviews ()
+		{
+			Dashboard.pies()
+			.then(function (pies)
+			{
+				if (pies.error)
+				{
+					$rootScope.notifier.error('Error with getting group overviews.');
+					console.warn('error ->', pies.error);
+				}
+				else
+				{
+					$scope.shortageHolders = {};
 
-	      $scope.alarms = result;
+					$scope.loading.pies = false;
 
-	      $scope.alarms.list = $scope.alarms.short;
-	    };
-	  });
+					$scope.periods = {
+						start:  pies[0].weeks.current.start.date,
+						end:    pies[0].weeks.next.end.date
+					};
+
+					angular.forEach(pies, function (pie, index)
+					{
+						if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
+						if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
+
+						if (pie.weeks.current.state.diff > 0)
+						{
+						pie.weeks.current.state.cls = 'more';
+						}
+						else if (pie.weeks.current.state.diff === 0)
+						{
+							pie.weeks.current.state.cls = 'even';
+						}
+						else if (pie.weeks.current.state.diff < 0)
+						{
+							pie.weeks.current.state.cls = 'less';
+						}
+
+						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
+																						new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime) :
+																						'undefined';
+
+						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
+																						new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime) :
+																						'undefined';
+
+						pie.shortages = {
+							current:  pie.weeks.current.shortages,
+							next:     pie.weeks.next.shortages,
+							total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
+						};
+
+						pie.state = pie.weeks.current.state;
+
+						delete(pie.weeks.current.shortages);
+						delete(pie.weeks.current.state);
+
+						$scope.shortageHolders['shortages-' + pie.id] = false;
+					});
+
+					$scope.pies = pies;
+				}
+			})
+			.then( function (result)
+			{
+				angular.forEach($scope.pies, function (pie, index)
+				{
+					pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
+					pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
+				});
+
+				function pieMaker ($id, id, name, _ratios)
+				{
+					setTimeout( function ()
+					{
+					document.getElementById($id + id).innerHTML = '';
+
+						var ratios    = [],
+								colorMap  = {
+									more: '#415e6b',
+									even: '#ba6a24',
+									less: '#a0a0a0'
+								},
+								colors    = [],
+								xratios   = [];
+
+						angular.forEach(_ratios, function (ratio, index)
+						{
+							if (ratio !== 0)
+							{
+								ratios.push({
+									ratio: ratio,
+									color: colorMap[index]
+								});
+							}
+						});
+
+						ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
+
+						angular.forEach(ratios, function (ratio, index)
+						{
+							colors.push(ratio.color);
+							xratios.push(ratio.ratio);
+						});
+
+						var r   = new Raphael($id + id),
+								pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+
+					}, 100);
+				}
+			});
+		}
+
+		getOverviews();
+
+		/**
+		 * Save widget settings
+		 */
+		$scope.saveOverviewWidget = function (selection)
+		{
+			$rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+			Settings.save($rootScope.app.resources.uuid, {
+				user: Storage.local.settings().user,
+				app: {
+					widgets: {
+						groups: selection
+					}
+				}
+			})
+			.then(function (result)
+			{
+				$rootScope.statusBar.display('Refreshing group overviews..');
+
+				Profile.get($rootScope.app.resources.uuid, true)
+				.then(function (resources)
+				{
+					getOverviews();
+				});
+			});
+		};
 
 
-	  /**
-	   * Show more or less alarms
-	   */
-	  $scope.toggle = function (more)
-	  {
-	    $scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
+		/**
+		 * P2000 annnouncements
+		 */
+		Dashboard.p2000().
+		then(function (result)
+		{
+			if (result.error)
+			{
+				$rootScope.notifier.error('Error with getting p2000 alarm messages.');
+				console.warn('error ->', result);
+				}
+			else
+			{
+				$scope.loading.alerts = false;
 
-	    $scope.more.text = (more) ? 'show more' : 'show less';
+				$scope.alarms = result;
 
-	    $scope.more.status = !$scope.more.status;
-	  };
+				$scope.alarms.list = $scope.alarms.short;
+			}
+		});
+
+
+		/**
+		 * Show more or less alarms
+		 */
+		$scope.toggle = function (more)
+		{
+			$scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
+
+			$scope.more.text = (more) ? 'show more' : 'show less';
+
+			$scope.more.status = !$scope.more.status;
+		};
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Planboard', [])
@@ -4875,93 +4889,97 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  };
 
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Timeline', [])
 
 
-.controller('timeline', 
+.controller('timeline',
 [
 	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile) 
+	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile)
 	{
-	  /**
-	   * Watch for changes in timeline range
-	   */
-	  $scope.$watch(function ()
-	  {
-	  	/**
-	  	 * If main timeline
-	  	 */
-	  	if ($scope.timeline.main)
-	  	{
-		    var range = $scope.self.timeline.getVisibleChartRange(),
-		        diff  = Dater.calculate.diff(range);
+		var range, diff;
 
-		    /**
-		     * Scope is a day
-		     * 
-		     * TODO
-		     * try later on!
-		     * new Date(range.start).toString('d') == new Date(range.end).toString('d')
-		     */
-		    if (diff <= 86400000)
-		    {
-		      $scope.timeline.scope = {
-		        day:    true,
-		        week:   false,
-		        month:  false
-		      };
-		    }
-		    /**
-		     * Scope is less than a week
-		     */
-		    else if (diff < 604800000)
-		    {
-		      $scope.timeline.scope = {
-		        day:    false,
-		        week:   true,
-		        month:  false
-		      };
-		    }
-		    /**
-		     * Scope is more than a week
-		     */
-		    else if (diff > 604800000)
-		    {
-		      $scope.timeline.scope = {
-		        day:    false,
-		        week:   false,
-		        month:  true
-		      };
-		    };
+		/**
+		 * Watch for changes in timeline range
+		 */
+		$scope.$watch(function ()
+		{
+			/**
+			 * If main timeline
+			 */
+			if ($scope.timeline.main)
+			{
+				range = $scope.self.timeline.getVisibleChartRange();
+				diff  = Dater.calculate.diff(range);
 
-		    $scope.timeline.range = {
-		      start:  new Date(range.start).toString(),
-		      end:    new Date(range.end).toString()
-		    };
+				/**
+				 * Scope is a day
+				 * 
+				 * TODO
+				 * try later on!
+				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
+				 */
+				if (diff <= 86400000)
+				{
+					$scope.timeline.scope = {
+						day:    true,
+						week:   false,
+						month:  false
+					};
+				}
+				/**
+				 * Scope is less than a week
+				 */
+				else if (diff < 604800000)
+				{
+					$scope.timeline.scope = {
+						day:    false,
+						week:   true,
+						month:  false
+					};
+				}
+				/**
+				 * Scope is more than a week
+				 */
+				else if (diff > 604800000)
+				{
+					$scope.timeline.scope = {
+						day:    false,
+						week:   false,
+						month:  true
+					};
+				}
 
-		    $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + 
-		                        ' / ' + 
-		                        Dater.readable.date($scope.timeline.range.end);
-	  	}
-	  	/**
-	  	 * User timeline
-	  	 */
-	  	else
-	  	{
-		    if ($location.hash() == 'timeline')
-		    {
-		      var range = $scope.self.timeline.getVisibleChartRange();
+				$scope.timeline.range = {
+					start:  new Date(range.start).toString(),
+					end:    new Date(range.end).toString()
+				};
 
-		      $scope.timeline.range = {
-		        start:  new Date(range.start).toString(),
-		        end:    new Date(range.end).toString()
-		      };
-		    };
-	  	}
-	  });
+				$scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
+														' / ' +
+														Dater.readable.date($scope.timeline.range.end);
+			}
+			/**
+			 * User timeline
+			 */
+			else
+			{
+				if ($location.hash() == 'timeline')
+				{
+					range = $scope.self.timeline.getVisibleChartRange();
+
+					$scope.timeline.range = {
+						start:  new Date(range.start).toString(),
+						end:    new Date(range.end).toString()
+					};
+				}
+			}
+		});
 
 
 	  /**
@@ -5683,7 +5701,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  };
 
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Timeline.Navigation', [])
@@ -5930,7 +5950,9 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 		};
 
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Messages', [])
@@ -6532,7 +6554,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 	  };
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Groups', [])
@@ -6541,650 +6565,655 @@ angular.module('WebPaige.Controllers.Groups', [])
 /**
  * Groups controller
  */
-.controller('groups', 
+.controller('groups',
 [
-	'$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots', 
-	function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots) 
+	'$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
+	function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
 	{
-	  /**
-	   * Fix styles
-	   */
-	  $rootScope.fixStyles();
+		/**
+		 * Fix styles
+		 */
+		$rootScope.fixStyles();
 
-	  
-	  /**
-	   * Self this
-	   */
+
+		/**
+		 * Self this
+		 */
 		var self = this,
-	      params = $location.search();
+				params = $location.search();
 
 
-	  /**
-	   * Init search query
-	   */
-	  $scope.search = {
-	    query: ''
-	  };
+		/**
+		 * Init search query
+		 */
+		$scope.search = {
+			query: ''
+		};
 
 
-	  /**
-	   * Reset selection
-	   */
-	  $scope.selection = {};
+		/**
+		 * Reset selection
+		 */
+		$scope.selection = {};
 
 
-	  /**
-	   * Set groups
-	   */
-	  $scope.data = data;
-
-
-	  /**
-	   * Grab and set roles for view
-	   */
-	  $scope.roles = $rootScope.config.roles;
-
-
-	  /**
-	   * Groups for dropdown
-	   */
-	  $scope.groups = data.groups;
-
-
-	  /**
-	   * If no params or hashes given in url
-	   */
-	  if (!params.uuid && !$location.hash())
-	  {
-	    var uuid = data.groups[0].uuid,
-	        view = 'view';
-
-	    $location.search({uuid: data.groups[0].uuid}).hash('view');
-	  }
-	  else
-	  {
-	    var uuid = params.uuid,
-	        view = $location.hash();
-	  };
-
-
-	  /**
-	   * Set group
-	   */
-	  setGroupView(uuid);
-
-
-	  /**
-	   * Set view
-	   */
-	  setView(view);
-
-
-	  /**
-	   * Set given group for view
-	   */
-	  function setGroupView (id)
-	  {
-	    angular.forEach(data.groups, function (group, index)
-	    {
-	      if (group.uuid == id) $scope.group = group;
-	    });
-
-	    $scope.members = data.members[id];
-
-	    $scope.current = id;
-
-	    wisher(id);
-	  };
-
-
-	  function wisher (id)
-	  {
-	    $scope.wished = false;
-
-	    Groups.wish(id)
-	    .then(function (wish)
-	    {
-	      $scope.wished = true;
-
-	      $scope.wish = wish.count;
-
-	      $scope.popover = {
-	        id: id,
-	        wish: wish.count
-	      }
-	    });
-	  }
-
-
-	  /**
-	   * Set wish for the group
-	   */
-	  $scope.saveWish = function (id, wish)
-	  {
-	    console.warn('setting the wish:' + wish + ' for the group:', id);
-	    
-	    $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
-
-	    Slots.setWish(
-	    {
-	      id:     id,
-	      start:  255600,
-	      end:    860400,
-	      recursive:  true,
-	      wish:   wish
-	    })
-	    .then(
-	      function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error('Error with changing wish value.');
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
-	        };
-
-	        wisher(id);
-	      }
-	    );
-
-	  };
-
-
-	  /**
-	   * Request for a group
-	   */
-	  $scope.requestGroup = function (current, switched)
-	  {
-	    setGroupView(current);
-
-	    $scope.$watch($location.search(), function ()
-	    {
-	      $location.search({uuid: current});
-	    });
-
-	    if (switched)
-	    {
-	      if ($location.hash() != 'view') $location.hash('view');
-
-	      setView('view');
-	    };
-	  };
-	  
-
-	  /**
-	   * View setter
-	   */
-	  function setView (hash)
-	  {
-	    $scope.views = {
-	      view:   false,
-	      add:    false,
-	      edit:   false,
-	      search: false,
-	      member: false
-	    };
-
-	    $scope.views[hash] = true;
-	  };
-
-
-	  /**
-	   * Switch between the views and set hash accordingly
-	   */
-	  $scope.setViewTo = function (hash)
-	  {
-	    $scope.$watch(hash, function ()
-	    {
-	      $location.hash(hash);
-
-	      setView(hash);
-	    });
-	  };
-
-
-	  /**
-	   * Toggle new group button
-	   */
-	  $scope.addGroupForm = function ()
-	  {
-	    if ($scope.views.add)
-	    {
-	      $scope.closeTabs();
-	    }
-	    else
-	    {
-	      $scope.groupForm = {};
-
-	      $scope.setViewTo('add');
-	    };
-	  };
-
-
-	  /**
-	   * New member
-	   */
-	  $scope.newMemberForm = function ()
-	  {
-	    if ($scope.views.member)
-	    {
-	      $scope.closeTabs();
-	    }
-	    else
-	    {
-	      $scope.memberForm = {};
-
-	      $scope.setViewTo('member');
-	    };
-	  };
-
-
-	  /**
-	   * Edit a group
-	   */
-	  $scope.editGroup = function (group)
-	  {
-	    $scope.setViewTo('edit');
-
-	    $scope.groupForm = {
-	      id: group.uuid,
-	      name: group.name
-	    }; 
-	  };
-
-
-	  /**
-	   * Close inline form
-	   */
-	  $scope.closeTabs = function ()
-	  {
-	    $scope.groupForm = {};
-
-	    $scope.memberForm = {};
-
-	    $scope.setViewTo('view');
-	  };
-
-
-	  /**
-	   * Search for members
-	   */
-	  $scope.searchMembers = function (query)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
-
-	    Groups.search(query).
-	    then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with search.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $scope.search = {
-	          query: '',
-	          queried: query
-	        };
-
-	        $scope.candidates = result;
-
-	        $scope.setViewTo('search');
-
-	        $rootScope.statusBar.off();
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Add member to a group
-	   */
-	  $scope.addMember = function (candidate)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
-
-	    Groups.addMember(candidate).
-	    then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with adding a member.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.groups.memberAdded);
-
-	        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-	        Groups.query().
-	        then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error('Error with getting groups and users.');
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $scope.data = data;
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Remove member from a group
-	   */
-	  $scope.removeMember = function (member, group)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.groups.removingMember);
-
-	    Groups.removeMember(member, group).
-	    then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with removing a member.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-
-	        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-	        Groups.query().
-	        then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error('Error with getting groups and users.');
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $scope.data = data;
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Remove members
-	   */
-	  $scope.removeMembers = function (selection, group)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
-
-	    Groups.removeMembers(selection, group).
-	    then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with removing members.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.groups.removed);
-
-	        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-	        $scope.selection = {};
-
-	        Groups.query().
-	        then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error('Error with getting groups and users.');
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $scope.data = data;
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-	    });
-
-	    /**
-	     * TODO
-	     * not working to reset master checkbox!
-	     */
-	    //$scope.selectionMaster = {};
-	  };
-
-
-	  /**
-	   * Save a group
-	   */
-	  $scope.groupSubmit = function (group)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.groups.saving);
-
-	    Groups.save(group).
-	    then(function (returned)
-	    {
-	      if (returned.error)
-	      {
-	        $rootScope.notifier.error('Error with saving group.');
-	        console.warn('error ->', returned);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.groups.groupSaved);
-
-	        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-	        Groups.query().
-	        then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error('Error with getting groups and users.');
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $scope.closeTabs();
-
-	            $scope.data = data;
-
-	            angular.forEach(data.groups, function (group, index)
-	            {
-	              if (group.uuid == returned)
-	              {
-	                $scope.groups = data.groups;
-
-	                angular.forEach(data.groups, function (g, index)
-	                {
-	                  if (g.uuid == group.uuid) $scope.group = g;
-	                });
-
-	                $scope.members = data.members[group.uuid];
-
-	                $scope.current = group.uuid;
-
-	                $scope.$watch($location.search(), function ()
-	                {
-	                  $location.search({uuid: group.uuid});
-	                }); // end of watch
-
-	              }; // end of if
-
-	            }); // end of foreach
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Save a member
-	   */
-	  $scope.memberSubmit = function (member)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
-
-	    Profile.register(member).
-	    then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with registering a member.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
-
-	        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-	        Groups.query().
-	        then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error('Error with getting groups and users.');
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $scope.data = data;
-
-	            $location.path('/profile/' + member.username).hash('profile');
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Delete a group
-	   */
-	  $scope.deleteGroup = function (id)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.groups.deleting);
-
-	    Groups.remove(id).
-	    then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with deleting a group.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.groups.deleted);
-
-	        $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-	        Groups.query().
-	        then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error('Error with getting groups and users.');
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $scope.data = data;
-
-	            angular.forEach(data.groups, function (group, index)
-	            {
-	              $scope.groups = data.groups;
-
-	              $scope.group = data.groups[0];
-
-	              $scope.members = data.members[data.groups[0].uuid];
-
-	              $scope.current = data.groups[0].uuid;
-
-	              $scope.$watch($location.search(), function ()
-	              {
-	                $location.search({uuid: data.groups[0].uuid});
-	              }); // end of watch
-	            }); // end of foreach
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-
-	    });
-	  };
-
-
-	  /**
-	   * Selection toggler
-	   */
-	  $scope.toggleSelection = function (group, master)
-	  {
-	    var flag = (master) ? true : false,
-	        members = angular.fromJson(Storage.get(group.uuid));
-
-	    angular.forEach(members, function (member, index)
-	    {
-	      $scope.selection[member.uuid] = flag;
-	    });
-	  };
-
-
-	  /**
-	   * Not used in groups yet but login uses modal call..
-	   * 
-	   * Fetch parent groups
-	   */
-	  $scope.fetchParent = function ()
-	  {
-	    Groups.parents()
-	    .then(function (result)
-	    {
-	      console.warn('parent -> ', result);
-	    });
-	  };
-
-	  /**
-	   * Not used in groups yet..
-	   * 
-	   * Fetch parent groups
-	   */
-	  $scope.fetchContainers = function (id)
-	  {
-	    Groups.containers(id)
-	    .then(function (result)
-	    {
-	      console.warn('containers -> ', result);
-	    });
-	  };
+		/**
+		 * Set groups
+		 */
+		$scope.data = data;
+
+
+		/**
+		 * Grab and set roles for view
+		 */
+		$scope.roles = $rootScope.config.roles;
+
+
+		/**
+		 * Groups for dropdown
+		 */
+		$scope.groups = data.groups;
+
+
+		var uuid, view;
+
+		/**
+		 * If no params or hashes given in url
+		 */
+		if (!params.uuid && !$location.hash())
+		{
+			uuid = data.groups[0].uuid;
+			view = 'view';
+
+			$location.search({uuid: data.groups[0].uuid}).hash('view');
+		}
+		else
+		{
+			uuid = params.uuid;
+			view = $location.hash();
+		}
+
+
+		/**
+		 * Set group
+		 */
+		setGroupView(uuid);
+
+
+		/**
+		 * Set view
+		 */
+		setView(view);
+
+
+		/**
+		 * Set given group for view
+		 */
+		function setGroupView (id)
+		{
+			angular.forEach(data.groups, function (group, index)
+			{
+				if (group.uuid == id) $scope.group = group;
+			});
+
+			$scope.members = data.members[id];
+
+			$scope.current = id;
+
+			wisher(id);
+		}
+
+
+		function wisher (id)
+		{
+			$scope.wished = false;
+
+			Groups.wish(id)
+			.then(function (wish)
+			{
+				$scope.wished = true;
+
+				$scope.wish = wish.count;
+
+				$scope.popover = {
+					id: id,
+					wish: wish.count
+				};
+			});
+		}
+
+
+		/**
+		 * Set wish for the group
+		 */
+		$scope.saveWish = function (id, wish)
+		{
+			// console.warn('setting the wish:' + wish + ' for the group:', id);
+
+			$rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
+
+			Slots.setWish(
+			{
+				id:     id,
+				start:  255600,
+				end:    860400,
+				recursive:  true,
+				wish:   wish
+			})
+			.then(
+				function (result)
+				{
+					if (result.error)
+					{
+						$rootScope.notifier.error('Error with changing wish value.');
+						console.warn('error ->', result);
+					}
+					else
+					{
+						$rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+					}
+
+					wisher(id);
+				}
+			);
+
+		};
+
+
+		/**
+		 * Request for a group
+		 */
+		$scope.requestGroup = function (current, switched)
+		{
+			setGroupView(current);
+
+			$scope.$watch($location.search(), function ()
+			{
+				$location.search({uuid: current});
+			});
+
+			if (switched)
+			{
+				if ($location.hash() != 'view') $location.hash('view');
+
+				setView('view');
+			}
+		};
+
+
+		/**
+		 * View setter
+		 */
+		function setView (hash)
+		{
+			$scope.views = {
+				view:   false,
+				add:    false,
+				edit:   false,
+				search: false,
+				member: false
+			};
+
+			$scope.views[hash] = true;
+		}
+
+
+		/**
+		 * Switch between the views and set hash accordingly
+		 */
+		$scope.setViewTo = function (hash)
+		{
+			$scope.$watch(hash, function ()
+			{
+				$location.hash(hash);
+
+				setView(hash);
+			});
+		};
+
+
+		/**
+		 * Toggle new group button
+		 */
+		$scope.addGroupForm = function ()
+		{
+			if ($scope.views.add)
+			{
+				$scope.closeTabs();
+			}
+			else
+			{
+				$scope.groupForm = {};
+
+				$scope.setViewTo('add');
+			}
+		};
+
+
+		/**
+		 * New member
+		 */
+		$scope.newMemberForm = function ()
+		{
+			if ($scope.views.member)
+			{
+				$scope.closeTabs();
+			}
+			else
+			{
+				$scope.memberForm = {};
+
+				$scope.setViewTo('member');
+			}
+		};
+
+
+		/**
+		 * Edit a group
+		 */
+		$scope.editGroup = function (group)
+		{
+			$scope.setViewTo('edit');
+
+			$scope.groupForm = {
+				id: group.uuid,
+				name: group.name
+			};
+		};
+
+
+		/**
+		 * Close inline form
+		 */
+		$scope.closeTabs = function ()
+		{
+			$scope.groupForm = {};
+
+			$scope.memberForm = {};
+
+			$scope.setViewTo('view');
+		};
+
+
+		/**
+		 * Search for members
+		 */
+		$scope.searchMembers = function (query)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
+
+			Groups.search(query).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with search.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$scope.search = {
+						query: '',
+						queried: query
+					};
+
+					$scope.candidates = result;
+
+					$scope.setViewTo('search');
+
+					$rootScope.statusBar.off();
+				}
+			});
+		};
+
+
+		/**
+		 * Add member to a group
+		 */
+		$scope.addMember = function (candidate)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
+
+			Groups.addMember(candidate).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with adding a member.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.memberAdded);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Remove member from a group
+		 */
+		$scope.removeMember = function (member, group)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.removingMember);
+
+			Groups.removeMember(member, group).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with removing a member.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Remove members
+		 */
+		$scope.removeMembers = function (selection, group)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
+
+			Groups.removeMembers(selection, group).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with removing members.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.removed);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					$scope.selection = {};
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+
+			/**
+			 * TODO
+			 * not working to reset master checkbox!
+			 */
+			//$scope.selectionMaster = {};
+		};
+
+
+		/**
+		 * Save a group
+		 */
+		$scope.groupSubmit = function (group)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.saving);
+
+			Groups.save(group).
+			then(function (returned)
+			{
+				if (returned.error)
+				{
+					$rootScope.notifier.error('Error with saving group.');
+					console.warn('error ->', returned);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.groupSaved);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.closeTabs();
+
+							$scope.data = data;
+
+							angular.forEach(data.groups, function (group, index)
+							{
+							if (group.uuid == returned)
+							{
+								$scope.groups = data.groups;
+
+								angular.forEach(data.groups, function (g, index)
+								{
+									if (g.uuid == group.uuid) $scope.group = g;
+								});
+
+								$scope.members = data.members[group.uuid];
+
+								$scope.current = group.uuid;
+
+								$scope.$watch($location.search(), function ()
+								{
+									$location.search({uuid: group.uuid});
+								}); // end of watch
+
+							} // end of if
+
+							}); // end of foreach
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Save a member
+		 */
+		$scope.memberSubmit = function (member)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
+
+			Profile.register(member).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with registering a member.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$location.path('/profile/' + member.username).hash('profile');
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Delete a group
+		 */
+		$scope.deleteGroup = function (id)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.deleting);
+
+			Groups.remove(id).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with deleting a group.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.deleted);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							angular.forEach(data.groups, function (group, index)
+							{
+								$scope.groups = data.groups;
+
+								$scope.group = data.groups[0];
+
+								$scope.members = data.members[data.groups[0].uuid];
+
+								$scope.current = data.groups[0].uuid;
+
+								$scope.$watch($location.search(),
+									function ()
+									{
+										$location.search({uuid: data.groups[0].uuid});
+									}
+								); // end of watch
+							}); // end of foreach
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Selection toggler
+		 */
+		$scope.toggleSelection = function (group, master)
+		{
+			var flag = (master) ? true : false,
+					members = angular.fromJson(Storage.get(group.uuid));
+
+			angular.forEach(members, function (member, index)
+			{
+				$scope.selection[member.uuid] = flag;
+			});
+		};
+
+
+		/**
+		 * Not used in groups yet but login uses modal call..
+		 * 
+		 * Fetch parent groups
+		 */
+		$scope.fetchParent = function ()
+		{
+			Groups.parents()
+			.then(function (result)
+			{
+				console.warn('parent -> ', result);
+			});
+		};
+
+		/**
+		 * Not used in groups yet..
+		 * 
+		 * Fetch parent groups
+		 */
+		$scope.fetchContainers = function (id)
+		{
+			Groups.containers(id)
+			.then(function (result)
+			{
+				console.warn('containers -> ', result);
+			});
+		};
 
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Profile', [])
@@ -7513,7 +7542,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  };
 
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Settings', [])
@@ -7620,7 +7651,9 @@ angular.module('WebPaige.Controllers.Settings', [])
 	  };
 
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Controllers.Help', [])
@@ -7629,16 +7662,15 @@ angular.module('WebPaige.Controllers.Help', [])
 /**
  * Help controller
  */
-.controller('help', 
+.controller('help',
 [
-	'$rootScope', '$scope', 
-	function ($rootScope, $scope) 
+	'$rootScope', '$scope',
+	function ($rootScope, $scope)
 	{
 		/**
 		 * Fix styles
 		 */
 		$rootScope.fixStyles();
-
 	}
 ]);;'use strict';
 
