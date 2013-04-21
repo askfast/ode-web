@@ -104,6 +104,7 @@
       <!-- slot start -->
       <div class="form-elements-group" ng-show="browser.mobile">
         <label>{{ui.planboard.from}}</label>
+
         <!-- datetime -->
         <div class="control-group dater-mobile" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-start" 
@@ -117,9 +118,11 @@
                   disabled>
         </div>
         <!-- end datetime -->
+
       </div>
       <div class="form-elements-group" ng-hide="browser.mobile">
         <label>{{ui.planboard.from}}</label>
+
         <!-- date -->
         <div class="control-group dater" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-start" 
@@ -137,6 +140,7 @@
           <i class="icon-calendar"></i>
         </div>
         <!-- end date -->
+
         <!-- time -->
         <div class="control-group timer" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="time-start" 
@@ -153,6 +157,7 @@
           <i class="icon-time"></i>
         </div>
         <!-- end time -->
+        
       </div>
       <!-- end slot start -->
 

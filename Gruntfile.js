@@ -19,7 +19,7 @@ module.exports = function(grunt)
       },
       dist: {
         files: {
-          'war/src/app.js': [
+          'war/js/app.js': [
             'war/js/localization.js',
             'war/js/webpaige.js',
             'war/js/config.js',
@@ -63,7 +63,7 @@ module.exports = function(grunt)
             // filters
             'war/js/filters/filters.js'
           ],
-          'war/src/plugins.js': [
+          'war/js/plugins.js': [
             'war/js/plugins/browser.js',
             'war/js/plugins/os.js',
             'war/js/plugins/basket.js',
@@ -82,8 +82,8 @@ module.exports = function(grunt)
       },
       dist: {
         files: {
-          'war/dist/app.min.js':     'war/src/app.js',
-          'war/dist/plugins.min.js': 'war/src/plugins.js'
+          'war/dist/app.min.js':     'war/js/app.js',
+          'war/dist/plugins.min.js': 'war/js/plugins.js'
         }
       }
     },
@@ -92,6 +92,10 @@ module.exports = function(grunt)
      * sass compiler
      */
     sass: {
+      options: {
+        trace: true,
+        cacheLocation:  'sass/.sass-cache'
+      },
       dist: {
         options: {
           style: 'compressed'
@@ -106,6 +110,26 @@ module.exports = function(grunt)
         },
         files: {
           'war/css/styles.css': 'sass/**/*.scss'
+        }
+      }
+    },
+
+    htmlmin: {
+      dist: {
+        options: {
+          removeComments:     true,
+          collapseWhitespace: true
+        },
+        files: {
+          'war/dist/views/login.html':      'war/js/views/login.html',  
+          'war/dist/views/logout.html':     'war/js/views/logout.html',    
+          'war/dist/views/dashboard.html':  'war/js/views/dashboard.html',    
+          'war/dist/views/planboard.html':  'war/js/views/planboard.html',    
+          'war/dist/views/messages.html':   'war/js/views/messages.html',    
+          'war/dist/views/groups.html':     'war/js/views/groups.html',    
+          'war/dist/views/profile.html':    'war/js/views/profile.html',    
+          'war/dist/views/settings.html':   'war/js/views/settings.html',    
+          'war/dist/views/help.html':       'war/js/views/help.html' 
         }
       }
     },
@@ -131,6 +155,12 @@ module.exports = function(grunt)
           'sass/**/*.scss'
         ],
         tasks: ['sass']
+      },
+      html: {      
+        files: [
+          'war/js/views/**/*.html'
+        ],
+        tasks: ['htmlmin']
       }
     }
 
@@ -140,13 +170,18 @@ module.exports = function(grunt)
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-sass');
-
-  grunt.registerTask('sasser', ['sass']);
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
 
   grunt.registerTask('watchjs', ['watch:js']);
 
   grunt.registerTask('watchcss', ['watch:css']);
 
-  grunt.registerTask('webpaige', ['concat', 'uglify']);
+  grunt.registerTask('watchhtml', ['watch:html']);
+
+  grunt.registerTask('html', ['htmlmin']);
+
+  grunt.registerTask('sasser', ['sass']);
+
+  grunt.registerTask('webpaige', ['concat', 'uglify', 'sasser', 'htmlmin']);
 
 };
