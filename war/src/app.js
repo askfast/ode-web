@@ -798,34 +798,37 @@ angular.module('WebPaige')
     $routeProvider
     .when('/login',
     {
-      templateUrl: 'js/views/login.html',
+      templateUrl: 'dist/views/login.html',
       controller: 'login'
     })
+
 
     /**
      * Logout router
      */
     .when('/logout',
     {
-      templateUrl: 'js/views/logout.html',
+      templateUrl: 'dist/views/logout.html',
       controller: 'logout'
     })
+
 
     /**
      * Dashboard router
      */
     .when('/dashboard',
     {
-      templateUrl: 'js/views/dashboard.html',
+      templateUrl: 'dist/views/dashboard.html',
       controller: 'dashboard'
     })
+
 
     /**
      * Planboard router
      */
     .when('/planboard',
     {
-      templateUrl: 'js/views/planboard.html',
+      templateUrl: 'dist/views/planboard.html',
       controller: 'planboard',
       resolve: {
         data:
@@ -859,12 +862,13 @@ angular.module('WebPaige')
       reloadOnSearch: false
     })
 
+
     /**
      * Messages router
      */
     .when('/messages',
     {
-      templateUrl: 'js/views/messages.html',
+      templateUrl: 'dist/views/messages.html',
       controller: 'messages',
       resolve: {
         data: [
@@ -878,12 +882,13 @@ angular.module('WebPaige')
       reloadOnSearch: false
     })
 
+
     /**
      * Groups router
      */
     .when('/groups',
     {
-      templateUrl: 'js/views/groups.html',
+      templateUrl: 'dist/views/groups.html',
       controller: 'groups',
       resolve: {
         data: [
@@ -897,12 +902,13 @@ angular.module('WebPaige')
       reloadOnSearch: false
     })
 
+
     /**
      * Profile (user specific) router
      */
     .when('/profile/:userId',
     {
-      templateUrl: 'js/views/profile.html',
+      templateUrl: 'dist/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
@@ -930,12 +936,13 @@ angular.module('WebPaige')
       reloadOnSearch: false
     })
 
+
     /**
      * Profile (user hiself) router
      */
     .when('/profile',
     {
-      templateUrl: 'js/views/profile.html',
+      templateUrl: 'dist/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
@@ -949,12 +956,13 @@ angular.module('WebPaige')
       }
     })
 
+
     /**
      * Settings router
      */
     .when('/settings',
     {
-      templateUrl: 'js/views/settings.html',
+      templateUrl: 'dist/views/settings.html',
       controller: 'settings',
       resolve: {
         data: [
@@ -967,14 +975,16 @@ angular.module('WebPaige')
       }
     })
 
+
     /**
      * Help router
      */
     .when('/help',
     {
-      templateUrl: 'js/views/help.html',
+      templateUrl: 'dist/views/help.html',
       controller: 'help'
     })
+
 
     /**
      * Router fallback
@@ -982,6 +992,7 @@ angular.module('WebPaige')
     .otherwise({
       redirectTo: '/login'
     });
+
 
     /**
      * Define interceptor

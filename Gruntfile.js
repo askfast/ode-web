@@ -19,7 +19,7 @@ module.exports = function(grunt)
       },
       dist: {
         files: {
-          'war/js/app.js': [
+          'war/src/app.js': [
             'war/js/localization.js',
             'war/js/webpaige.js',
             'war/js/config.js',
@@ -63,7 +63,7 @@ module.exports = function(grunt)
             // filters
             'war/js/filters/filters.js'
           ],
-          'war/js/plugins.js': [
+          'war/src/plugins.js': [
             'war/js/plugins/browser.js',
             'war/js/plugins/os.js',
             'war/js/plugins/basket.js',
@@ -82,8 +82,8 @@ module.exports = function(grunt)
       },
       dist: {
         files: {
-          'war/dist/app.min.js':     'war/js/app.js',
-          'war/dist/plugins.min.js': 'war/js/plugins.js'
+          'war/dist/app.min.js':     'war/src/app.js',
+          'war/dist/plugins.min.js': 'war/src/plugins.js'
         }
       }
     },
@@ -123,10 +123,12 @@ module.exports = function(grunt)
         files: {
           'war/dist/views/login.html':      'war/js/views/login.html',  
           'war/dist/views/logout.html':     'war/js/views/logout.html',    
-          'war/dist/views/dashboard.html':  'war/js/views/dashboard.html',    
+          'war/dist/views/dashboard.html':  'war/js/views/dashboard.html', 
+          'war/dist/views/dashboard-pies.html':  'war/js/views/dashboard-pies.html',    
           'war/dist/views/planboard.html':  'war/js/views/planboard.html',    
           'war/dist/views/messages.html':   'war/js/views/messages.html',    
-          'war/dist/views/groups.html':     'war/js/views/groups.html',    
+          'war/dist/views/groups.html':     'war/js/views/groups.html',     
+          'war/dist/views/groups-wish.html':     'war/js/views/groups-wish.html',    
           'war/dist/views/profile.html':    'war/js/views/profile.html',    
           'war/dist/views/settings.html':   'war/js/views/settings.html',    
           'war/dist/views/help.html':       'war/js/views/help.html' 
