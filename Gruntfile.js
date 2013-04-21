@@ -10,12 +10,13 @@ module.exports = function(grunt)
   {
     pkg: grunt.file.readJSON('package.json'),
 
+    /**
+     * concat
+     */
     concat: {
-
       options: {
         separator: ';'
       },
-
       dist: {
         files: {
           'war/src/app.js': [
@@ -72,6 +73,9 @@ module.exports = function(grunt)
       }
     },
 
+    /**
+     * minify concated sources
+     */
     uglify: {
       options: {
         banner: '/*!\n * WebPaige v2.0.2 (snapshot)\n * Ask Community Systems\n * Authors: Cengiz Ulusoy\n * <%= grunt.template.today("dd-mm-yyyy hh:mm") %>\n */\n'
@@ -84,6 +88,9 @@ module.exports = function(grunt)
       }
     },
 
+    /**
+     * sass compiler
+     */
     sass: {
       dist: {
         options: {
@@ -103,49 +110,27 @@ module.exports = function(grunt)
       }
     },
 
+    /**
+     * watch for changes
+     */
     watch: {
-      files: [
-        'war/js/controllers/*.js',
-        'war/js/directives/*.js',
-        'war/js/filters/*.js',
-        'war/js/modals/*.js',
-        'war/js/plugins/*.js',
-        'war/js/services/*.js',
-        'war/js/*.js'
-      ],
-      tasks: ['concat', 'uglify']
-    },
-
-    qunit: {
-      files: [
-        'war/js/controllers/*.js',
-        'war/js/directives/*.js',
-        'war/js/filters/*.js',
-        'war/js/modals/*.js',
-        'war/js/plugins/*.js',
-        'war/js/services/**/*.js',
-        'war/js/*.js'
-      ]
-    },
-
-    jshint: {
-      files: [
-        'war/js/controllers/*.js',
-        'war/js/directives/*.js',
-        'war/js/filters/*.js',
-        'war/js/modals/*.js',
-        'war/js/plugins/*.js',
-        'war/js/services/**/*.js',
-        'war/js/*.js'
-      ],
-      src: ['war/src/*.js'],
-      options: {
-        globals: {
-          jQuery:   true,
-          console:  true,
-          module:   true,
-          document: true
-        }
+      js: {      
+        files: [
+          'war/js/controllers/*.js',
+          'war/js/directives/*.js',
+          'war/js/filters/*.js',
+          'war/js/modals/*.js',
+          'war/js/plugins/*.js',
+          'war/js/services/*.js',
+          'war/js/*.js'
+        ],
+        tasks: ['concat', 'uglify']
+      },
+      css: {      
+        files: [
+          'sass/**/*.scss'
+        ],
+        tasks: ['sass']
       }
     }
 
@@ -155,15 +140,13 @@ module.exports = function(grunt)
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-sass');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
 
   grunt.registerTask('sasser', ['sass']);
 
-  grunt.registerTask('jshint', ['jshint']);
+  grunt.registerTask('watchjs', ['watch:js']);
 
-  grunt.registerTask('test', ['qunit']);
+  grunt.registerTask('watchcss', ['watch:css']);
 
-  grunt.registerTask('webpaige', ['concat', 'uglify', 'watch']);
+  grunt.registerTask('webpaige', ['concat', 'uglify']);
 
 };
