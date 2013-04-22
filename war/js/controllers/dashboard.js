@@ -124,6 +124,26 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						$scope.shortageHolders['shortages-' + pie.id] = false;
 					});
 
+
+					// angular.forEach(pies, function (pie, index)
+					// {
+					// 	console.log('pie ->', pie);
+
+					// 	angular.forEach(pie.shortages.current, function (slot, index)
+					// 	{
+					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+
+					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+					// 	});
+
+					// 	angular.forEach(pie.shortages.next, function (slot, index)
+					// 	{
+					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+
+					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+					// 	});
+					// });
+
 					$scope.pies = pies;
 				}
 			})

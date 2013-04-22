@@ -102,7 +102,9 @@ module.exports = function (grunt)
           style: 'compressed'
         },
         files: {
-          'war/dist/styles.css': 'sass/**/*.scss'
+          'war/dist/bootstrap.css':   'sass/bootstrap.scss',
+          'war/dist/responsive.css':  'sass/responsive.scss',
+          'war/dist/app.css':         'sass/app.scss'
         }
       },
       dev: {
@@ -110,7 +112,9 @@ module.exports = function (grunt)
           style: 'expanded' // nested (default), compact, compressed, or expanded
         },
         files: {
-          'war/css/styles.css': 'sass/**/*.scss'
+          'war/css/bootstrap.css':   'sass/bootstrap.scss',
+          'war/css/responsive.css':  'sass/responsive.scss',
+          'war/css/app.css':         'sass/app.scss'
         }
       }
     },
@@ -151,7 +155,7 @@ module.exports = function (grunt)
           'war/js/services/*.js',
           'war/js/*.js'
         ],
-        tasks: ['concat', 'uglify']
+        tasks: ['concat']
       },
       css: {
         files: [

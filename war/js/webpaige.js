@@ -29,11 +29,6 @@ angular.module('WebPaige',[
   'WebPaige.Controllers.Profile',
   'WebPaige.Controllers.Settings',
   'WebPaige.Controllers.Help',
-  // directives
-  'WebPaige.Directives',
-  '$strap.directives',
-  // filters
-  'WebPaige.Filters',
   // services
   'WebPaige.Services.Timer',
   'WebPaige.Services.Session',
@@ -45,7 +40,12 @@ angular.module('WebPaige',[
   'WebPaige.Services.Strings',
   'WebPaige.Services.Announcer',
   'WebPaige.Services.Sloter',
-  'WebPaige.Services.Stats'
+  'WebPaige.Services.Stats',
+  // directives
+  'WebPaige.Directives',
+  '$strap.directives',
+  // filters
+  'WebPaige.Filters'
 ]);
 
 
