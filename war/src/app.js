@@ -4905,7 +4905,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			/**
 			 * If main timeline
 			 */
-			if ($scope.timeline.main)
+			if ($scope.timeline && $scope.timeline.main)
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 				diff  = Dater.calculate.diff(range);
@@ -5172,7 +5172,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Init timeline
 	   */
-	  $scope.timeliner.init();
+	  if ($scope.timeline) $scope.timeliner.init();
 
 
 	  /**
@@ -7246,12 +7246,12 @@ angular.module('WebPaige.Controllers.Profile', [])
       week:   new Date().getWeek(),
       month:  new Date().getMonth() + 1
     };
-
+    
 
 	  /**
 	   * Set data for view
 	   */
-	  data.user 	= data.slots.data;
+	  if (data.user) data.user 	= data.slots.data;
 	  $scope.data = data;
 
 

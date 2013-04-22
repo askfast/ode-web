@@ -1,10 +1,11 @@
+/*jslint node: true */
 'use strict';
 
 
 /**
  * Main compiler for app
  */
-module.exports = function(grunt)
+module.exports = function (grunt)
 {
   grunt.initConfig(
   {
@@ -69,7 +70,7 @@ module.exports = function(grunt)
             'war/js/plugins/basket.js',
             'war/js/plugins/screenfull.js'
           ]
-        } 
+        }
       }
     },
 
@@ -121,17 +122,17 @@ module.exports = function(grunt)
           collapseWhitespace: true
         },
         files: {
-          'war/dist/views/login.html':      'war/js/views/login.html',  
-          'war/dist/views/logout.html':     'war/js/views/logout.html',    
-          'war/dist/views/dashboard.html':  'war/js/views/dashboard.html', 
-          'war/dist/views/dashboard-pies.html':  'war/js/views/dashboard-pies.html',    
-          'war/dist/views/planboard.html':  'war/js/views/planboard.html',    
-          'war/dist/views/messages.html':   'war/js/views/messages.html',    
-          'war/dist/views/groups.html':     'war/js/views/groups.html',     
-          'war/dist/views/groups-wish.html':     'war/js/views/groups-wish.html',    
-          'war/dist/views/profile.html':    'war/js/views/profile.html',    
-          'war/dist/views/settings.html':   'war/js/views/settings.html',    
-          'war/dist/views/help.html':       'war/js/views/help.html' 
+          'war/dist/views/login.html':          'war/js/views/login.html',
+          'war/dist/views/logout.html':         'war/js/views/logout.html',
+          'war/dist/views/dashboard.html':      'war/js/views/dashboard.html',
+          'war/dist/views/dashboard-pies.html': 'war/js/views/dashboard-pies.html',
+          'war/dist/views/planboard.html':      'war/js/views/planboard.html',
+          'war/dist/views/messages.html':       'war/js/views/messages.html',
+          'war/dist/views/groups.html':         'war/js/views/groups.html',
+          'war/dist/views/groups-wish.html':    'war/js/views/groups-wish.html',
+          'war/dist/views/profile.html':        'war/js/views/profile.html',
+          'war/dist/views/settings.html':       'war/js/views/settings.html',
+          'war/dist/views/help.html':           'war/js/views/help.html'
         }
       }
     },
@@ -140,7 +141,7 @@ module.exports = function(grunt)
      * watch for changes
      */
     watch: {
-      js: {      
+      js: {
         files: [
           'war/js/controllers/*.js',
           'war/js/directives/*.js',
@@ -152,13 +153,13 @@ module.exports = function(grunt)
         ],
         tasks: ['concat', 'uglify']
       },
-      css: {      
+      css: {
         files: [
           'sass/**/*.scss'
         ],
         tasks: ['sass']
       },
-      html: {      
+      html: {
         files: [
           'war/js/views/**/*.html'
         ],
@@ -174,16 +175,11 @@ module.exports = function(grunt)
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
 
-  grunt.registerTask('watchjs', ['watch:js']);
-
-  grunt.registerTask('watchcss', ['watch:css']);
-
+  grunt.registerTask('watchjs',   ['watch:js']);
+  grunt.registerTask('watchcss',  ['watch:css']);
   grunt.registerTask('watchhtml', ['watch:html']);
-
-  grunt.registerTask('html', ['htmlmin']);
-
-  grunt.registerTask('sasser', ['sass']);
-
-  grunt.registerTask('webpaige', ['concat', 'uglify', 'sasser', 'htmlmin']);
+  grunt.registerTask('html',      ['htmlmin']);
+  grunt.registerTask('sasser',    ['sass']);
+  grunt.registerTask('webpaige',  ['concat', 'uglify', 'sasser', 'htmlmin']);
 
 };

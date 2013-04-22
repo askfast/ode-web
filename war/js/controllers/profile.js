@@ -40,12 +40,12 @@ angular.module('WebPaige.Controllers.Profile', [])
       week:   new Date().getWeek(),
       month:  new Date().getMonth() + 1
     };
-
+    
 
 	  /**
 	   * Set data for view
 	   */
-	  data.user 	= data.slots.data;
+	  if (data.user) data.user 	= data.slots.data;
 	  $scope.data = data;
 
 

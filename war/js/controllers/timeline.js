@@ -21,7 +21,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			/**
 			 * If main timeline
 			 */
-			if ($scope.timeline.main)
+			if ($scope.timeline && $scope.timeline.main)
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 				diff  = Dater.calculate.diff(range);
@@ -288,7 +288,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Init timeline
 	   */
-	  $scope.timeliner.init();
+	  if ($scope.timeline) $scope.timeliner.init();
 
 
 	  /**
