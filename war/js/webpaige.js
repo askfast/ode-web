@@ -76,3 +76,5 @@ basket
       });
     }
   );
+
+  console.warn('reload is working');

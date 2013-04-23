@@ -7685,7 +7685,10 @@ angular.module('WebPaige.Controllers.Help', [])
 		 */
 		$rootScope.fixStyles();
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+/*global $ */
+'use strict';
 
 
 angular.module('WebPaige.Directives', ['ngResource'])
@@ -7694,28 +7697,28 @@ angular.module('WebPaige.Directives', ['ngResource'])
 /**
  * Chosen
  */
-.directive('chosen', 
+.directive('chosen',
   function ()
   {
     var linker = function (scope,element,attr)
     {
       scope.$watch('receviersList', function ()
-      {   
+      {
          element.trigger('liszt:updated');
       });
-      
+
       scope.$watch('message.receviers', function ()
-      {   
-         $(element[0]).trigger('liszt:updated');
+      {
+        $(element[0]).trigger('liszt:updated');
       });
-      
+
       element.chosen();
     };
 
     return {
       restrict: 'A',
       link:     linker
-    }
+    };
   }
 )
 
@@ -7723,9 +7726,9 @@ angular.module('WebPaige.Directives', ['ngResource'])
 /**
  * Daterangepicker
  */
-.directive('daterangepicker', 
+.directive('daterangepicker',
 [
-  '$rootScope', 
+  '$rootScope',
   function ($rootScope)
   {
     return {
@@ -7736,16 +7739,16 @@ angular.module('WebPaige.Directives', ['ngResource'])
         // var startDate = Date.create().addDays(-6),
         //     endDate   = Date.create();       
         //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
-        
+
         element.daterangepicker({
           // startDate: startDate,
           // endDate: endDate,
           ranges: {
-            'Today': ['today', 'tomorrow'],
-            'Tomorrow': ['tomorrow', new Date.today().addDays(2)],
-            'Yesterday': ['yesterday', 'today'],
-            'Next 3 Days': ['today', new Date.create().addDays(3)],
-            'Next 7 Days': ['today', new Date.create().addDays(7)]
+            'Today':        ['today', 'tomorrow'],
+            'Tomorrow':     ['tomorrow', new Date.today().addDays(2)],
+            'Yesterday':    ['yesterday', 'today'],
+            'Next 3 Days':  ['today', new Date.create().addDays(3)],
+            'Next 7 Days':  ['today', new Date.create().addDays(7)]
           }
         },
         function (start, end)
@@ -7798,13 +7801,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
                 week: false,
                 month: true
               };
-            };
+            }
 
             $rootScope.$broadcast('timeliner', {
               start: start,
               end: end
             });
-            
+
           });
         });
 
@@ -7823,7 +7826,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
   }
-])
+]);
 
 
 /**
@@ -7855,7 +7858,6 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 //           return retName;
 //         };
-        
 //         scope.$watch(attrs.wpName, function (uid)
 //         {
 //           element.text(getmemberName(uid)); 

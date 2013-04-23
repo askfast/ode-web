@@ -155,7 +155,7 @@ module.exports = function (grunt)
           'war/js/services/*.js',
           'war/js/*.js'
         ],
-        tasks: ['concat']
+        tasks: ['concat', 'uglify']
       },
       css: {
         files: [
