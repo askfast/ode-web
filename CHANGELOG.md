@@ -4,6 +4,8 @@
 ## Versions
 
 	2.1.0 (snapshot)
+		* Fixed not displaying alarm messages in dashboard 26-402013
+		* Fixed centering styling issue for login button in login screen for IE8 26-4-2013
 		* Language corrections in planboard statistics 19-4-2013
 		* Hotfix for not displaying correct weeks by previous/future weeks in profile timeline 19-4-2013
 
