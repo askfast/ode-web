@@ -65,6 +65,7 @@ module.exports = function (grunt)
             'war/js/filters/filters.js'
           ],
           'war/src/plugins.js': [
+            'war/js/plugins/console.js',
             'war/js/plugins/browser.js',
             'war/js/plugins/os.js',
             'war/js/plugins/basket.js',

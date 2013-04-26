@@ -70,3 +70,16 @@
   jQuery.browser = browser;
 
 })(jQuery, window);
+
+
+
+
+/**
+ * Detect IE version for blocking IE6 and IE7
+ */
+if ($.browser.msie)
+{
+  var ver = $.browser.version || $.browser.version[0];
+
+  if (ver == '6.0' || ver == '7.0') window.location = 'browsers.html';
+}
