@@ -245,6 +245,5 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	  {
 		  $scope.self.timeline.redraw();
 		};
-
 	}
 ]);

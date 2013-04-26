@@ -36,7 +36,8 @@ var profile = {
   ],
 
   p2000: {
-    status: false,
-    url: ''
+    status: true,
+    url:    'http://knrmtest.myask.me/rpc/client/p2000.php',
+    codes:  '1500982'
   }
 };

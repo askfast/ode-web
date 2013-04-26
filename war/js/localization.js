@@ -37,11 +37,14 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
-          thisWeek: 'This Week',
-          welcome: 'Welcome',
-          newMessage: 'New Messages',
-          goToInbox: 'Go to inbox',
-          loadingPie: 'Loading pie charts...'
+        thisWeek: 'This Week',
+        welcome: 'Welcome',
+        newMessage: 'New Messages',
+        goToInbox: 'Go to inbox',
+        announcements: 'Announcements',
+        loadingPie: 'Loading pie charts...',
+        loadingP2000: 'Loading alarm messages',
+        noP2000: 'There are no alarm messages'
       },
       planboard: {
         planboard: 'Planboard',
@@ -307,7 +310,10 @@ var ui = {
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',
         goToInbox: 'Ga naar inbox',
-        loadingPie: 'Cirkeldiagrammen laden...'
+        loadingPie: 'Cirkeldiagrammen laden...',
+        announcements: 'Alarm berichten',
+        loadingP2000: 'Alarm berichten laden...',
+        noP2000: 'Er zijn geen alarm berichten.'
       },
       planboard : {
         planboard: 'Planboard',

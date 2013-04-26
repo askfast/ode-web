@@ -37,11 +37,14 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
-          thisWeek: 'This Week',
-          welcome: 'Welcome',
-          newMessage: 'New Messages',
-          goToInbox: 'Go to inbox',
-          loadingPie: 'Loading pie charts...'
+        thisWeek: 'This Week',
+        welcome: 'Welcome',
+        newMessage: 'New Messages',
+        goToInbox: 'Go to inbox',
+        announcements: 'Announcements',
+        loadingPie: 'Loading pie charts...',
+        loadingP2000: 'Loading alarm messages',
+        noP2000: 'There are no alarm messages'
       },
       planboard: {
         planboard: 'Planboard',
@@ -307,7 +310,10 @@ var ui = {
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',
         goToInbox: 'Ga naar inbox',
-        loadingPie: 'Cirkeldiagrammen laden...'
+        loadingPie: 'Cirkeldiagrammen laden...',
+        announcements: 'Alarm berichten',
+        loadingP2000: 'Alarm berichten laden...',
+        noP2000: 'Er zijn geen alarm berichten.'
       },
       planboard : {
         planboard: 'Planboard',
@@ -801,7 +807,7 @@ angular.module('WebPaige')
     $routeProvider
     .when('/login',
     {
-      templateUrl: 'dist/views/login.html',
+      templateUrl: 'js/views/login.html',
       controller: 'login'
     })
 
@@ -811,7 +817,7 @@ angular.module('WebPaige')
      */
     .when('/logout',
     {
-      templateUrl: 'dist/views/logout.html',
+      templateUrl: 'js/views/logout.html',
       controller: 'logout'
     })
 
@@ -821,7 +827,7 @@ angular.module('WebPaige')
      */
     .when('/dashboard',
     {
-      templateUrl: 'dist/views/dashboard.html',
+      templateUrl: 'js/views/dashboard.html',
       controller: 'dashboard'
     })
 
@@ -831,7 +837,7 @@ angular.module('WebPaige')
      */
     .when('/planboard',
     {
-      templateUrl: 'dist/views/planboard.html',
+      templateUrl: 'js/views/planboard.html',
       controller: 'planboard',
       resolve: {
         data:
@@ -871,7 +877,7 @@ angular.module('WebPaige')
      */
     .when('/messages',
     {
-      templateUrl: 'dist/views/messages.html',
+      templateUrl: 'js/views/messages.html',
       controller: 'messages',
       resolve: {
         data: [
@@ -891,7 +897,7 @@ angular.module('WebPaige')
      */
     .when('/groups',
     {
-      templateUrl: 'dist/views/groups.html',
+      templateUrl: 'js/views/groups.html',
       controller: 'groups',
       resolve: {
         data: [
@@ -911,7 +917,7 @@ angular.module('WebPaige')
      */
     .when('/profile/:userId',
     {
-      templateUrl: 'dist/views/profile.html',
+      templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
@@ -945,7 +951,7 @@ angular.module('WebPaige')
      */
     .when('/profile',
     {
-      templateUrl: 'dist/views/profile.html',
+      templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
@@ -965,7 +971,7 @@ angular.module('WebPaige')
      */
     .when('/settings',
     {
-      templateUrl: 'dist/views/settings.html',
+      templateUrl: 'js/views/settings.html',
       controller: 'settings',
       resolve: {
         data: [
@@ -984,7 +990,7 @@ angular.module('WebPaige')
      */
     .when('/help',
     {
-      templateUrl: 'dist/views/help.html',
+      templateUrl: 'js/views/help.html',
       controller: 'help'
     })
 
@@ -1621,7 +1627,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 
 	  return new User;
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+/*global $ */
+/*global error */
+'use strict';
 
 
 angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
@@ -1630,102 +1640,89 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 /**
  * Dashboard modal
  */
-.factory('Dashboard', 
+.factory('Dashboard',
 [
-	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', 
-	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer) 
+	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
+	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer)
 	{
-	  var Dashboard = $resource(
-	    'http://knrm.myask.me/rpc/client/p2000.php',
-	    {
-	    },
-	    {
-	      p2000: {
-	        method: 'GET',
-	        params: {},
-	        isArray: true
-	      }
-	    }
-	  );
+		var Dashboard = $resource(
+			'http://knrm.myask.me/rpc/client/p2000.php',
+			{
+			},
+			{
+				p2000: {
+					method: 'GET',
+					params: {},
+					isArray: true
+				}
+			}
+		);
 
 
-	  /**
-	   * Get group aggs for pie charts
-	   */
-	  Dashboard.prototype.pies = function () 
-	  {
-	    var deferred  = $q.defer(),
-	        groups    = angular.fromJson(Storage.get('groups')),
-	        settings  = Storage.local.settings().app.widgets.groups,
-	        list      = [],
-	        now       = new Date.now().getTime(),
-	        calls     = [];
+		/**
+		 * Get group aggs for pie charts
+		 */
+		Dashboard.prototype.pies = function ()
+		{
+			var deferred  = $q.defer(),
+					groups    = angular.fromJson(Storage.get('groups')),
+					settings  = Storage.local.settings().app.widgets.groups,
+					list      = [],
+					now       = new Date.now().getTime(),
+					calls     = [];
 
-	    if (settings.length == 0) console.warn('no settings');
+			if (settings.length === 0) console.warn('no settings');
 
-	    angular.forEach(groups, function(group, index)
-	    {
-	      if (settings[group.uuid]) list.push({ id: group.uuid, name: group.name});
-	    });
+			angular.forEach(groups, function(group, index)
+			{
+				if (settings[group.uuid]) list.push({ id: group.uuid, name: group.name});
+			});
 
-	    angular.forEach(list, function (group, index)
-	    {
-	      calls.push(Slots.pie({
-	        id:     group.id,
-	        name:   group.name
-	      }));
-	    });
+			angular.forEach(list, function (group, index)
+			{
+				calls.push(Slots.pie({
+					id:     group.id,
+					name:   group.name
+				}));
+			});
 
-	    $q.all(calls)
-	    .then(function (results)
-	    {
-	      $rootScope.statusBar.off();
+			$q.all(calls)
+			.then(function (results)
+			{
+				$rootScope.statusBar.off();
 
-	      deferred.resolve(results);
-	    });
+				deferred.resolve(results);
+			});
 
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get p2000 announcements
-	   */
-	  Dashboard.prototype.p2000 = function () 
-	  {
-	    var deferred = $q.defer();
-
-	    // Dashboard.p2000(null, 
-	    //    function (result) 
-	    //    {
-	    //      deferred.resolve(result);
-
-	    //      console.log('result ->', result);
-	    //    },
-	    //    function (error)
-	    //    {
-	    //      deferred.resolve({error: error});
-	    //    }
-	    //  );
-
-	    $.ajax({
-	      url: $config.profile.p2000.url,
-	      dataType: 'jsonp',
-	      success: function (results)
-	      {
-	        deferred.resolve( Announcer.process(results) );
-	      },
-	      error: function ()
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    });
-
-	    return deferred.promise;
-	  };
+			return deferred.promise;
+		};
 
 
-	  return new Dashboard;
+		/**
+		 * Get p2000 announcements
+		 */
+		Dashboard.prototype.p2000 = function ()
+		{
+			var deferred = $q.defer();
+
+			$.ajax({
+				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
+				dataType: 'jsonp',
+				success: function (results)
+				{
+					deferred.resolve( Announcer.process(results) );
+				},
+				error: function ()
+				{
+					deferred.resolve({error: error});
+				}
+			});
+
+			return deferred.promise;
+		};
+
+
+		return new Dashboard();
 	}
 ]);;'use strict';
 
@@ -5928,7 +5925,6 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	  {
 		  $scope.self.timeline.redraw();
 		};
-
 	}
 ]);;/*jslint node: true */
 /*global angular */

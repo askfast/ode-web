@@ -40,6 +40,7 @@ var profile = {
 
   p2000: {
     status: true,
-    url: 'http://knrmtest.myask.me/rpc/client/p2000.php'
+    url:    'http://knrmtest.myask.me/rpc/client/p2000.php',
+    codes:  '0104517'
   }
 };

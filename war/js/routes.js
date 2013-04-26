@@ -18,7 +18,7 @@ angular.module('WebPaige')
     $routeProvider
     .when('/login',
     {
-      templateUrl: 'dist/views/login.html',
+      templateUrl: 'js/views/login.html',
       controller: 'login'
     })
 
@@ -28,7 +28,7 @@ angular.module('WebPaige')
      */
     .when('/logout',
     {
-      templateUrl: 'dist/views/logout.html',
+      templateUrl: 'js/views/logout.html',
       controller: 'logout'
     })
 
@@ -38,7 +38,7 @@ angular.module('WebPaige')
      */
     .when('/dashboard',
     {
-      templateUrl: 'dist/views/dashboard.html',
+      templateUrl: 'js/views/dashboard.html',
       controller: 'dashboard'
     })
 
@@ -48,7 +48,7 @@ angular.module('WebPaige')
      */
     .when('/planboard',
     {
-      templateUrl: 'dist/views/planboard.html',
+      templateUrl: 'js/views/planboard.html',
       controller: 'planboard',
       resolve: {
         data:
@@ -88,7 +88,7 @@ angular.module('WebPaige')
      */
     .when('/messages',
     {
-      templateUrl: 'dist/views/messages.html',
+      templateUrl: 'js/views/messages.html',
       controller: 'messages',
       resolve: {
         data: [
@@ -108,7 +108,7 @@ angular.module('WebPaige')
      */
     .when('/groups',
     {
-      templateUrl: 'dist/views/groups.html',
+      templateUrl: 'js/views/groups.html',
       controller: 'groups',
       resolve: {
         data: [
@@ -128,7 +128,7 @@ angular.module('WebPaige')
      */
     .when('/profile/:userId',
     {
-      templateUrl: 'dist/views/profile.html',
+      templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
@@ -162,7 +162,7 @@ angular.module('WebPaige')
      */
     .when('/profile',
     {
-      templateUrl: 'dist/views/profile.html',
+      templateUrl: 'js/views/profile.html',
       controller: 'profile',
       resolve: {
         data: [
@@ -182,7 +182,7 @@ angular.module('WebPaige')
      */
     .when('/settings',
     {
-      templateUrl: 'dist/views/settings.html',
+      templateUrl: 'js/views/settings.html',
       controller: 'settings',
       resolve: {
         data: [
@@ -201,7 +201,7 @@ angular.module('WebPaige')
      */
     .when('/help',
     {
-      templateUrl: 'dist/views/help.html',
+      templateUrl: 'js/views/help.html',
       controller: 'help'
     })
 

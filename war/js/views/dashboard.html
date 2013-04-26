@@ -182,15 +182,20 @@
             ng-show="config.profile.p2000.status">
 
         <div class="head">
-          <h4>Announcements</h4>
+          <h4>{{ui.dashboard.announcements}}</h4>
           <!-- <button class="btn btn-small"><i class="icon-cog"></i></button> -->
         </div>
         <hr>
 
-        <p ng-show="loading.alerts">Loading p2000 alerts..</p>
+        <p ng-show="loading.alerts">{{ui.dashboard.loadingP2000}}</p>
 
         <!-- p2000 loop -->
         <ul id="announcements" ng-hide="loading.alerts">
+
+          <li ng-show="alarms.list.length < 1">
+            {{ui.dashboard.noP2000}}
+          </li>
+
           <li ng-repeat="alarm in alarms.list">
             <table>
               <tr>
@@ -217,7 +222,7 @@
         </ul>
         <!-- end p2000 loop -->
         <hr class="lastline">
-        <p>
+        <p ng-show="alarms.list.length > 0">
           <small>
             <a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>
           </small>

@@ -53,10 +53,10 @@ var profile = {
 
   p2000: {
     status: true,
-    url: 'http://knrm.myask.me/rpc/client/p2000.php'
+    url:    'http://knrm.myask.me/rpc/client/p2000.php',
+    codes:  '1405545, 1405546, 1735749, 1735748'
   }
 };
-
 
 
 
