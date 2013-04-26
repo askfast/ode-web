@@ -32,7 +32,7 @@
 <div class="tabbable tabs-left">
 
   <!-- tabs links -->
-  <ul class="nav nav-tabs nav-tabs-app">
+  <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
     <!-- add group tab link -->
     <li class="{{(views.add==true) && 'active'}}"
         ng-show="views.add">
@@ -354,15 +354,15 @@
                   style="margin-right:5px"
                   bs-popover="'dist/views/groups-wish.html'" 
                   data-placement="bottom"
-                  data-title="Behoefte wijzigen"><span class="badge badge-inset" ng-show="wished">{{wish}}</span> Behoefte</button>
+                  data-title="Behoefte wijzigen"><span class="badge badge-inset" ng-show="wished">{{wish}}</span>&nbsp;Behoefte</button>
 
           <button type="button" 
                   ng-click="editGroup(group)" 
                   style="margin-right:5px"
-                  class="btn"><i class="icon-edit"></i> {{ui.groups.editGroup}}</button>
+                  class="btn"><i class="icon-edit"></i>&nbsp;{{ui.groups.editGroup}}</button>
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
-                  class="btn btn-danger"><i class="icon-trash icon-white"></i> {{ui.groups.deleteGroup}}</button>
+                  class="btn btn-danger"><i class="icon-trash icon-white"></i>&nbsp;{{ui.groups.deleteGroup}}</button>
 
         </div>
       </div>

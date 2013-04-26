@@ -10,15 +10,12 @@
 .btn {
   display: inline-block;
   @include ie7-inline-block();
-  padding: 5px 12px 5px;
+  padding: 4px 12px;
   margin-bottom: 0; // For input.btn
-  font-size: ($baseFontSize - 2);
-  font-weight: lighter;
-  line-height: ($baseLineHeight - 2);
+  font-size: $baseFontSize;
+  line-height: $baseLineHeight;
   text-align: center;
-
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
-
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.95);
   vertical-align: middle;
   cursor: pointer;
 
@@ -105,6 +102,12 @@
   font-size: $fontSizeMini;
   @include border-radius($borderRadiusSmall);
 }
+
+// Badges in buttons
+// .btn [class^="badge"],
+// .btn [class*="badge"] {
+//   margin-top: 2px;
+// }
 
 
 // Block button

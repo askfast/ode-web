@@ -613,7 +613,9 @@ basket
           // console.warn('basket parsed scripts..');
       });
     }
-  );;/*jslint node: true */
+  );
+
+  console.warn('reload is working');;/*jslint node: true */
 /*global angular */
 /*global profile */
 'use strict';

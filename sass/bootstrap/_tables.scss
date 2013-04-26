@@ -34,6 +34,13 @@ table {
   // Bottom align for column headings
   thead th {
     vertical-align: bottom;
+    a {
+      color: $linkColor;
+      &:hover {
+        color: $linkColorHover;
+        // text-decoration: underline;
+      }
+    }
   }
   // Remove top border from thead by default
   caption + thead tr:first-child th,
