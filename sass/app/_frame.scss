@@ -112,7 +112,7 @@
     height: 100%;
 
     p {
-      display:  table-cell;
+      display: table-cell;
       vertical-align: middle;
     }
   }
@@ -196,6 +196,7 @@
 .page-header {
   overflow: hidden;
   min-height: 40px;
+  border-bottom: 1px solid $hrBorder;
 
   h2 {
     display: inline;

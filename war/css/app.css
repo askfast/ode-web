@@ -865,6 +865,7 @@ label {
 .page-header {
   overflow: hidden;
   min-height: 40px;
+  border-bottom: 1px solid #c6c3b6;
 }
 .page-header h2 {
   display: inline;

@@ -9,8 +9,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
  */
 .factory('Profile', 
 [
-	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Groups', 'Slots',
-	function ($rootScope, $config, $resource, $q, Storage, Groups, Slots) 
+	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Groups', 'Slots', 'MD5',
+	function ($rootScope, $config, $resource, $q, Storage, Groups, Slots, MD5) 
 	{
 	  var Profile = $resource(
 	    $config.host + '/node/:id/:section',
@@ -79,41 +79,41 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 	    Register.profile(
 	      {
-	        uuid: profile.username,
-	        pass: MD5(profile.password),
-	        name: profile.name,
-	        phone: profile.PhoneAddress
+	        uuid: 	profile.username,
+	        pass: 	MD5(profile.password),
+	        name: 	profile.name,
+	        phone: 	profile.PhoneAddress
 	      }, 
 	      function (registered) 
 	      {
 	        Profile.prototype.role(profile.username, profile.role.id)
-	        .then(function(roled)
+	        .then(function (roled)
 	        {
 	          Profile.prototype.save(profile.username, {
 	            EmailAddress: profile.EmailAddress,
-	            PostAddress: profile.PostAddress,
-	            PostZip: profile.PostZip,
-	            PostCity: profile.PostCity
-	          }).then(function(resourced)
+	            PostAddress: 	profile.PostAddress,
+	            PostZip: 			profile.PostZip,
+	            PostCity: 		profile.PostCity
+	          }).then(function (resourced)
 	          {
 	            var calls = [];
 
 	            angular.forEach(profile.groups, function (group, index)
 	            {
 	              calls.push(Groups.addMember({
-	                id: profile.username,
-	                group: group
+	                id: 		profile.username,
+	                group: 	group
 	              }));
 	            });
 
 	            $q.all(calls)
-	            .then(function(grouped)
+	            .then(function (grouped)
 	            {
 	              deferred.resolve({
 	                registered: registered,
-	                roled: roled,
-	                resourced: resourced,
-	                grouped: grouped
+	                roled: 			roled,
+	                resourced: 	resourced,
+	                grouped: 		grouped
 	              });
 	            });
 

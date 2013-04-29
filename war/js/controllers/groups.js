@@ -521,7 +521,19 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with registering a member.');
+					if (result.error.status === 409)
+					{
+						$rootScope.notifier.error('Username is already registered.');
+
+						// $scope.memberForm = {};
+
+						$rootScope.statusBar.off();
+					}
+					else
+					{
+						$rootScope.notifier.error('Error with registering a member.');
+					}
+					
 					console.warn('error ->', result);
 				}
 				else

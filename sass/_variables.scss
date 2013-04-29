@@ -174,7 +174,7 @@ $placeholderText:         $grayLight !default;
 
 // Hr border color
 // -------------------------
-$hrBorder:                $grayLighter !default;
+$hrBorder:                #c6c3b6 !default; // $grayLighter !default;
 
 
 // Horizontal forms & lists
@@ -259,19 +259,19 @@ $heroUnitLeadColor:               inherit !default;
 
 // Form states and alerts
 // -------------------------
-$warningText:             #231f16 !default; // #c09853 !default;
+$warningText:             #c09853 !default;
 $warningBackground:       #e6e4da !default; // #fcf8e3 !default;
 $warningBorder:           darken(adjust-hue($warningBackground, -10), 3%) !default;
 
-$errorText:               #f7f5eb !default; // #b94a48 !default;
+$errorText:               #ba5855 !default; // #b94a48 !default;
 $errorBackground:         #ba5855 !default; // #f2dede !default;
 $errorBorder:             darken(adjust-hue($errorBackground, -10), 3%) !default;
 
-$successText:             #f7f5eb !default; // #468847 !default;
+$successText:             #6f9a6d !default; // #468847 !default;
 $successBackground:       #6f9a6d !default; // #dff0d8 !default;
 $successBorder:           darken(adjust-hue($successBackground, -10), 5%) !default;
 
-$infoText:                #f7f5eb !default; // #3a87ad !default;
+$infoText:                #35a8c9 !default; // #3a87ad !default;
 $infoBackground:          #57a9bf !default; // #d9edf7 !default;
 $infoBorder:              darken(adjust-hue($infoBackground, -10), 7%) !default;
 
