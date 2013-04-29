@@ -27,3 +27,14 @@
   jQuery.os = os;
 
 })(jQuery, window);
+
+
+
+
+/**
+ * Detect OS for some specific styling issues
+ */
+if ($.os.win === true)
+{
+  console.log('it is windows.');
+}

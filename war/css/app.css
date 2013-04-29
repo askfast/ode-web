@@ -894,6 +894,8 @@ label {
   text-align: center;
 }
 #loading p {
+  padding-top: 65px;
+  text-align: center;
   color: #a19781;
   text-shadow: 1px 1px 1px white;
   font-size: 18px;
