@@ -22,7 +22,7 @@
               class="span2 search-query" 
               placeholder="{{ui.groups.searchfor}}" 
               ng-model="search.query">
-      <button type="submit" class="btn"><i class="icon-search"></i> {{ui.groups.serach}}</button>
+      <button type="submit" class="btn"><i class="icon-search"></i>&nbsp;{{ui.groups.serach}}</button>
     </div>
   </form>
   <!-- end search members -->
@@ -398,7 +398,7 @@
               <td>
                 <div class="pull-right">
                   <a href="#/profile/{{member.uuid}}#edit" 
-                    class="btn btn-mini"><i class="icon-edit"></i></a>
+                    class="btn btn-mini"><i class="icon-edit"></i></a>&nbsp;
                   <button type="submit" 
                           ng-click="removeMember(member.uuid, group.uuid)" 
                           class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
@@ -410,7 +410,7 @@
         <button type="button" 
                 ng-click="removeMembers(selection, group)" 
                 class="btn btn-small btn-danger pull-left">
-                <i class="icon-trash icon-white"></i>{{ui.groups.removeSelectedMembers}}</button>
+                <i class="icon-trash icon-white"></i>&nbsp;{{ui.groups.removeSelectedMembers}}</button>
         <span class="muted pull-right">
           <small><i>{{(data.members[group.uuid]|filter:filtered).length | i18n_spec:'groups.memberCount'}}</i></small>
         </span>
