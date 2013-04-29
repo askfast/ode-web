@@ -22,11 +22,11 @@
     <script src="profiles/test/profile.js"></script>
     
     <!-- favicons -->
-    <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144"  ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114"  ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72"    ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="57x57"    ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="57x57" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
 
     <!-- styles -->
     <link rel="stylesheet" href="dist/bootstrap.css">
@@ -34,14 +34,20 @@
     <link rel="stylesheet" href="dist/app.css">
 
     <!--[if IE 8]>
-    <link rel="stylesheet" href="css/ie8.css">
+      <link rel="stylesheet" href="css/ie8.css">
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!--[if gt IE 7]>
+      <script src="libs/angular-ui/0.4.0/angular-ui-ieshiv.min.js"></script>
     <![endif]-->
     
     <!-- compability tests and css fixers -->
     <script src="libs/modernizr/2.6.2/modernizr-2.6.2.min.js"></script>
     <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script>
-
-    <!--[if gt IE 7]><script src="js/libs/angular-ui/0.4.0/angular-ui-ieshiv.min.js"></script><![endif]-->
     
   </head>
   <body>
