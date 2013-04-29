@@ -4,6 +4,7 @@
 ## Versions
 
 	2.1.0 (snapshot)
+		* Instruct user with email adres placeholder when remembering account info at login 29-4-2013
 		* Conflict error message by registering same username 29-4-2013
 		* Fixed not displaying alarm messages in dashboard 26-4-2013
 		* Fixed centering styling issue for login button in login screen for IE8 26-4-2013
