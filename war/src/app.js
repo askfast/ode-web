@@ -2358,7 +2358,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 	  return new Slots;
 	}
-]);;'use strict';
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
 angular.module('WebPaige.Modals.Messages', ['ngResource'])
@@ -2367,10 +2369,10 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 /**
  * Messages model
  */
-.factory('Messages', 
+.factory('Messages',
 [
 	'$rootScope', '$config', '$resource', '$q', 'Storage',
-	function ($rootScope, $config, $resource, $q, Storage) 
+	function ($rootScope, $config, $resource, $q, Storage)
 	{
 	  var Messages = $resource(
 	    $config.host + '/question/:action',
@@ -2430,6 +2432,32 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
+	  
+
+
+
+	  /**
+	   * Query messages from back-end
+	   */
+	  Messages.prototype.queryTest = function () 
+	  {
+	    var deferred = $q.defer();
+
+	    setTimeout(function ()
+	  	{
+        Storage.add('messages', angular.toJson(messagesLocal));
+
+        Messages.prototype.unreadCount();
+
+        deferred.resolve(Messages.prototype.filter(messagesLocal));
+	  		
+	  	}, 100);
+
+	    return deferred.promise;
+	  };
+
+
+
 
 
 	  /**
@@ -2463,6 +2491,28 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        filtered.trash.push(message);
 	      };
 	    });
+
+
+	    var butcher = function (box)
+	    {
+		    var limit 	= 50,
+		    		total 	= box.length,
+		  			offset 	= 0,
+		  			newarr 	= [];
+
+		  	while (offset * limit < total)
+		  	{
+					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
+
+					offset ++;
+		  	};
+
+		  	return newarr;
+	    };
+
+	    filtered.inbox 	= butcher(filtered.inbox);
+	    filtered.outbox = butcher(filtered.outbox);
+	    filtered.trash 	= butcher(filtered.trash);
 
 	    return filtered;
 	  };
@@ -5968,12 +6018,40 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+	   * Pagination
+	   */
+	  $scope.page = {
+	  	inbox: 	0,
+	  	outbox: 0,
+	  	trash: 	0
+	  };
+
+	  $scope.paginate = {
+
+	  	set: function (page, box)
+	  	{
+	  		$scope.page[box] = page;
+	  	},
+
+	  	next: function (box)
+	  	{
+	  		if ($scope.page[box] + 1 != box.length) $scope.page[box]++;
+	  	},
+
+	  	before: function (box)
+	  	{
+	  		if ($scope.page[box] != 0) $scope.page[box]--;
+	  	}
+	  };
+
+
+	  /**
 	   * Selections
 	   */
 	  $scope.selection = {
-	    inbox: {},
+	    inbox: 	{},
 	    outbox: {},
-	    trash: {}
+	    trash: 	{}
 	  };
 
 
@@ -5981,9 +6059,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Selection masters
 	   */
 	  $scope.selectionMaster = {
-	    inbox: '',
+	    inbox: 	'',
 	    outbox: '',
-	    trash: ''
+	    trash: 	''
 	  };
 
 
@@ -5991,8 +6069,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Initial value for broadcasting
 	   */
 	  $scope.broadcast = {
-	    sms: false,
-	    email: false
+	    sms: 		false,
+	    email: 	false
 	  };
 
 
@@ -6152,7 +6230,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      $scope.setViewTo('inbox');
 	    };
-
 	  };
 
 
@@ -6364,7 +6441,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }
 	      else
 	      {
-	        $rootScope.notifier.success($rootScope.ui.message.empited);
+	        $rootScope.notifier.success($rootScope.ui.message.emptied);
 
 	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
@@ -7199,6 +7276,104 @@ angular.module('WebPaige.Controllers.Groups', [])
 				console.warn('containers -> ', result);
 			});
 		};
+
+
+
+
+
+
+
+
+
+
+      // var filesTreeGrid;
+      // var foldersTreeGrid;
+
+      // // Called when the page is loaded
+      // function draw() {
+      //   // randomly generate some files
+      //   var files = [];
+      //   for (var i = 0; i < 50; i++) {
+      //     files.push({
+      //       'name': 'File ' + i,
+      //       'size': (Math.round(Math.random() * 50) * 10 + 100) + ' kB',
+      //       'date': (new Date()).toDateString(),
+      //       '_id': i     // this is a hidden field, as it starts with an underscore
+      //     });
+      //   }
+        
+      //   // randomly generate folders, containing a dataconnector which supports
+      //   // drag and drop
+      //   var folders = [];
+      //   var chars = 'ABCDE';
+      //   for (var i in chars) {
+      //     var c = chars[i];
+      //     var options = {
+      //       'dataTransfer' : {
+      //         'allowedEffect': 'move',
+      //         'dropEffect': 'move'
+      //       }
+      //     };
+      //     var dataConnector = new links.DataTable([], options);
+      //     var item = {
+      //       'name': 'Folder ' + c, 
+      //       'files': dataConnector, 
+      //       '_id': c
+      //     };
+      //     folders.push(item);
+      //   }
+      //   folders.push({'name': 'File X', '_id': 'X'});
+      //   folders.push({'name': 'File Y', '_id': 'Y'});
+      //   folders.push({'name': 'File Z', '_id': 'Z'});
+
+      //   // specify options
+      //   var treeGridOptions = {
+      //     'width': '350px',
+      //     'height': '400px'
+      //   };  
+
+      //   // Instantiate treegrid object with files
+      //   var filesContainer = document.getElementById('files');
+      //   var filesOptions = {
+      //     'columns': [
+      //       {'name': 'name', 'text': 'Name', 'title': 'Name of the files'},
+      //       {'name': 'size', 'text': 'Size', 'title': 'Size of the files in kB (kilo bytes)'},
+      //       {'name': 'date', 'text': 'Date', 'title': 'Date the file is last updated'}
+      //     ],
+      //     'dataTransfer' : {
+      //       'allowedEffect': 'move',
+      //       'dropEffect': 'none'
+      //     }
+      //   };
+      //   filesTreeGrid = new links.TreeGrid(filesContainer, treeGridOptions);
+      //   var filesDataConnector = new links.DataTable(files, filesOptions);
+      //   /*
+      //   filesDataConnector.setFilters([{
+      //     'field': 'size',
+      //     'order': 'ASC'
+      //     //'startValue': '300 kB',
+      //     //'endValue': '500 kB',
+      //   }]);
+      //   //*/
+      //   filesTreeGrid.draw(filesDataConnector);    
+
+      //   // Instantiate treegrid object with folders
+      //   var foldersOptions = {};
+      //   //* TDOO: cleanup temporary foldersOptions
+      //   var foldersOptions = {
+      //     'dataTransfer' : {
+      //       'allowedEffect': 'move',
+      //       'dropEffect': 'move'
+      //     }
+      //   };
+      //   //*/
+      //   var foldersContainer = document.getElementById('folders');
+      //   var foldersDataConnector = new links.DataTable(folders, foldersOptions);
+      //   foldersTreeGrid = new links.TreeGrid(foldersContainer, treeGridOptions);
+      //   foldersTreeGrid.draw(foldersDataConnector);
+      // }
+
+      // draw();
 
 	}
 ]);;/*jslint node: true */
@@ -10432,4 +10607,30 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	     return Strings.truncate(title, 20, true);
 	  }
 	}
-]);
+])
+
+
+
+
+
+
+
+/**
+ * Count messages in box
+ */
+.filter('countBox',
+	function () 
+	{
+		return function (box)
+		{
+			var total = 0;
+
+			angular.forEach(box, function (bulk, index)
+			{
+				total = total + bulk.length;
+			});
+
+	    return total;
+	  }
+	}
+);

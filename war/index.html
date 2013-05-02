@@ -31,7 +31,8 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/test/profile.js"></script>
+    <script src="profiles/isparaat/profile.js"></script>
+    <!-- <script src="messages.js"></script> -->
 
     <!--[if IE 8]>
       <link rel="stylesheet" href="css/ie8.css">
@@ -48,6 +49,9 @@
     <!-- compability tests and css fixers -->
     <script src="libs/modernizr/2.6.2/modernizr-2.6.2.min.js"></script>
     <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+    <!-- <script type="text/javascript" src="treegrid.js"></script>
+    <link rel="stylesheet" type="text/css" href="treegrid.css"> -->
     
   </head>
   <body>
@@ -260,9 +264,7 @@
     
     <script>
       if (location.host.split(':')[0] == 'localhost')
-      {
         document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
-      }
     </script>
     
 

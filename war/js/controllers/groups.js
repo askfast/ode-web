@@ -666,5 +666,103 @@ angular.module('WebPaige.Controllers.Groups', [])
 			});
 		};
 
+
+
+
+
+
+
+
+
+
+      // var filesTreeGrid;
+      // var foldersTreeGrid;
+
+      // // Called when the page is loaded
+      // function draw() {
+      //   // randomly generate some files
+      //   var files = [];
+      //   for (var i = 0; i < 50; i++) {
+      //     files.push({
+      //       'name': 'File ' + i,
+      //       'size': (Math.round(Math.random() * 50) * 10 + 100) + ' kB',
+      //       'date': (new Date()).toDateString(),
+      //       '_id': i     // this is a hidden field, as it starts with an underscore
+      //     });
+      //   }
+        
+      //   // randomly generate folders, containing a dataconnector which supports
+      //   // drag and drop
+      //   var folders = [];
+      //   var chars = 'ABCDE';
+      //   for (var i in chars) {
+      //     var c = chars[i];
+      //     var options = {
+      //       'dataTransfer' : {
+      //         'allowedEffect': 'move',
+      //         'dropEffect': 'move'
+      //       }
+      //     };
+      //     var dataConnector = new links.DataTable([], options);
+      //     var item = {
+      //       'name': 'Folder ' + c, 
+      //       'files': dataConnector, 
+      //       '_id': c
+      //     };
+      //     folders.push(item);
+      //   }
+      //   folders.push({'name': 'File X', '_id': 'X'});
+      //   folders.push({'name': 'File Y', '_id': 'Y'});
+      //   folders.push({'name': 'File Z', '_id': 'Z'});
+
+      //   // specify options
+      //   var treeGridOptions = {
+      //     'width': '350px',
+      //     'height': '400px'
+      //   };  
+
+      //   // Instantiate treegrid object with files
+      //   var filesContainer = document.getElementById('files');
+      //   var filesOptions = {
+      //     'columns': [
+      //       {'name': 'name', 'text': 'Name', 'title': 'Name of the files'},
+      //       {'name': 'size', 'text': 'Size', 'title': 'Size of the files in kB (kilo bytes)'},
+      //       {'name': 'date', 'text': 'Date', 'title': 'Date the file is last updated'}
+      //     ],
+      //     'dataTransfer' : {
+      //       'allowedEffect': 'move',
+      //       'dropEffect': 'none'
+      //     }
+      //   };
+      //   filesTreeGrid = new links.TreeGrid(filesContainer, treeGridOptions);
+      //   var filesDataConnector = new links.DataTable(files, filesOptions);
+      //   /*
+      //   filesDataConnector.setFilters([{
+      //     'field': 'size',
+      //     'order': 'ASC'
+      //     //'startValue': '300 kB',
+      //     //'endValue': '500 kB',
+      //   }]);
+      //   //*/
+      //   filesTreeGrid.draw(filesDataConnector);    
+
+      //   // Instantiate treegrid object with folders
+      //   var foldersOptions = {};
+      //   //* TDOO: cleanup temporary foldersOptions
+      //   var foldersOptions = {
+      //     'dataTransfer' : {
+      //       'allowedEffect': 'move',
+      //       'dropEffect': 'move'
+      //     }
+      //   };
+      //   //*/
+      //   var foldersContainer = document.getElementById('folders');
+      //   var foldersDataConnector = new links.DataTable(folders, foldersOptions);
+      //   foldersTreeGrid = new links.TreeGrid(foldersContainer, treeGridOptions);
+      //   foldersTreeGrid.draw(foldersDataConnector);
+      // }
+
+      // draw();
+
 	}
 ]);

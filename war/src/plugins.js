@@ -157,7 +157,7 @@ if ($.browser.msie)
  */
 if ($.os.win === true)
 {
-  console.log('it is windows.')
+  console.log('it is windows.');
 }
 ;/*!
 * basket.js

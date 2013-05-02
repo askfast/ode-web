@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global angular */
 'use strict';
 
 
@@ -7,10 +9,10 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 /**
  * Messages model
  */
-.factory('Messages', 
+.factory('Messages',
 [
 	'$rootScope', '$config', '$resource', '$q', 'Storage',
-	function ($rootScope, $config, $resource, $q, Storage) 
+	function ($rootScope, $config, $resource, $q, Storage)
 	{
 	  var Messages = $resource(
 	    $config.host + '/question/:action',
@@ -70,6 +72,32 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
+	  
+
+
+
+	  /**
+	   * Query messages from back-end
+	   */
+	  Messages.prototype.queryTest = function () 
+	  {
+	    var deferred = $q.defer();
+
+	    setTimeout(function ()
+	  	{
+        Storage.add('messages', angular.toJson(messagesLocal));
+
+        Messages.prototype.unreadCount();
+
+        deferred.resolve(Messages.prototype.filter(messagesLocal));
+	  		
+	  	}, 100);
+
+	    return deferred.promise;
+	  };
+
+
+
 
 
 	  /**
@@ -103,6 +131,28 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        filtered.trash.push(message);
 	      };
 	    });
+
+
+	    var butcher = function (box)
+	    {
+		    var limit 	= 50,
+		    		total 	= box.length,
+		  			offset 	= 0,
+		  			newarr 	= [];
+
+		  	while (offset * limit < total)
+		  	{
+					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
+
+					offset ++;
+		  	};
+
+		  	return newarr;
+	    };
+
+	    filtered.inbox 	= butcher(filtered.inbox);
+	    filtered.outbox = butcher(filtered.outbox);
+	    filtered.trash 	= butcher(filtered.trash);
 
 	    return filtered;
 	  };
