@@ -31,8 +31,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/isparaat/profile.js"></script>
-    <!-- <script src="messages.js"></script> -->
+    <script src="profiles/test/profile.js"></script>
 
     <!--[if IE 8]>
       <link rel="stylesheet" href="css/ie8.css">
@@ -166,31 +165,31 @@
     <div id="loading" ng-show="loadingBig">
       <div ng-show="loaderIcons.general">
         <span class="entypo">&#9203;</span>
-        <p>Loading..</p>
+        <p>{{ui.loading.general}}...</p>
       </div>
       <div ng-show="loaderIcons.dashboard">
         <span class="entypo">&#9716;</span>
-        <p>Loading<br>dashboard</p>
+        <p>{{ui.loading.general}}<br>{{ui.loading.dashboard}}</p>
       </div>
       <div ng-show="loaderIcons.planboard">
         <span class="entypo">&#128340;</span>
-        <p>Loading<br>planboard</p>
+        <p>{{ui.loading.general}}<br>{{ui.loading.planboard}}</p>
       </div>
       <div ng-show="loaderIcons.messages">
         <span class="entypo">&#59255;</span>
-        <p>Loading<br>messages</p>
+        <p>{{ui.loading.general}}<br>{{ui.loading.messages}}</p>
       </div>
       <div ng-show="loaderIcons.groups">
         <span class="entypo">&#128101;</span>
-        <p>Loading<br>groups</p>
+        <p>{{ui.loading.general}}<br>{{ui.loading.groups}}</p>
       </div>
       <div ng-show="loaderIcons.profile">
         <span class="entypo">&#128100;</span>
-        <p>Loading<br>profile</p>
+        <p>{{ui.loading.general}}<br>{{ui.loading.profile}}e</p>
       </div>
       <div ng-show="loaderIcons.settings">
         <span class="entypo">&#9874;</span>
-        <p>Loading<br>settings</p>
+        <p>{{ui.loading.general}}<br>{{ui.loading.settings}}</p>
       </div>
     </div>
     <!-- end loading -->

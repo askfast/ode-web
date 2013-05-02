@@ -273,6 +273,15 @@ var ui = {
       downloads: {
         app: 'Soon it will be downloadable.<br>',
         manual: 'Download Manual'
+      },
+      loading: {
+        general:    'Loading',
+        dashboard:  'dashboard',
+        planboard:  'planboard',
+        messages:   'messages',
+        groups:     'groups',
+        profile:    'profile',
+        settings:   'settings'
       }
     },
     nl: {
@@ -542,6 +551,15 @@ var ui = {
       downloads: {
         app: 'Binnenkort te downloaden.',
         manual: 'Download Handleiding'
+      },
+      loading: {
+        general:    'Laden',
+        dashboard:  'dashboard',
+        planboard:  'planboard',
+        messages:   'berichten',
+        groups:     'groepen',
+        profile:    'profiel',
+        settings:   'instellingen'
       }
     }
 };

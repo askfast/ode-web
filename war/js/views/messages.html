@@ -245,7 +245,7 @@
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
-              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')"></button>
+              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')">« Vorige</button>
               <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" ng-click="paginate.next('inbox')">Volgende »</button>
             </div>
           </div>
