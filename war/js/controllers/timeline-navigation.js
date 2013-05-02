@@ -245,5 +245,12 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	  {
 		  $scope.self.timeline.redraw();
 		};
+		
+		$scope.fullWidth = function ()
+		{
+			console.log('ok!');
+
+			$scope.self.timeline.redraw();
+		}
 	}
 ]);

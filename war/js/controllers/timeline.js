@@ -725,7 +725,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   * Timeline on remove
 	   */
 	  $scope.timelineOnRemove = function ()
-	  {	      
+	  {
 	    if ($scope.timeliner.isAdded() > 0)
 	    {
 	      $scope.self.timeline.cancelAdd();
@@ -808,6 +808,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      }
 	    );
 	  };
+
+
+    setTimeout( function() 
+    {
+      $scope.self.timeline.redraw();
+    }, 100);
 
 	}
 ]);

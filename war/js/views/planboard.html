@@ -1,5 +1,11 @@
 <section id="planboard" ng-controller="timeline">
 
+
+
+
+
+
+
   <!-- page header -->
   <div class="page-header">
     <h2>Planboard</h2>
@@ -12,8 +18,14 @@
   <!-- end page header -->
 
 
+
+
+
+
+
   <!-- timeline controls -->
   <div class="row-fluid" id="timeline-controls" ng-controller="timeline-navigation">
+  
 
     <!-- core timeline controls -->
     <div class="pull-left" style="margin-top: 10px">
@@ -81,6 +93,13 @@
 
   </div>
   <!-- end timeline controls -->
+
+
+
+
+
+
+
 
 
   <!-- slot controls -->
@@ -164,6 +183,7 @@
       <!-- slot end -->
       <div class="form-elements-group" ng-show="browser.mobile">
         <label>{{ui.planboard.from}}</label>
+
         <!-- datetime -->
         <div class="control-group dater-mobile" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-start" 
@@ -177,9 +197,11 @@
                   disabled>
         </div>
         <!-- end datetime -->
+
       </div>
       <div class="form-elements-group" ng-hide="browser.mobile">
         <label>{{ui.planboard.till}}</label>
+
         <!-- date -->
         <div class="control-group dater" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-end" 
@@ -197,6 +219,7 @@
           <i class="icon-calendar"></i>
         </div>
         <!-- end date -->
+
         <!-- time -->
         <div class="control-group timer" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="time-end" 
@@ -213,6 +236,7 @@
           <i class="icon-time"></i>
         </div>
         <!-- end time -->
+
       </div>
       <!-- end slot end -->
 
@@ -310,10 +334,17 @@
   
 
 
+
+
+
+
+
   <!-- timelines & statistics -->
   <div class="row-fluid">
     <div class="tabbable tabs-left">
       
+
+
       <!-- tabs -->
       <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
         <li class="active">
@@ -329,21 +360,30 @@
       </ul>
       <!-- end tabs -->
 
+
+
+
+
+
       <!-- tabs content -->
       <div class="tab-content">
 
 
 
 
+
         <!-- timelines -->
         <div class="tab-pane active" id="timelineTab">
+
           <!-- timeline -->
           <div id="timeline">
+
             <!-- timeline-toolbar -->
             <div id="timeline-toolbar">
 
               <!-- groups members controls -->
               <div class="pull-left">
+
                 <!-- groups list -->
                 <select ng-model="timeline.current.group" 
                         ng-options="group.uuid as group.name for group in groups"
@@ -351,6 +391,7 @@
                         ng-change="requestTimeline()">
                 </select>
                 <!-- end groups list -->
+
                 <!-- divisions list -->
                 <select ng-model="timeline.current.division" 
                         ng-options="division.id as division.label for division in divisions"
@@ -359,10 +400,12 @@
                         ng-show="divisions.length > 0">
                 </select>
                 <!-- end divisions list -->
+
               </div>
 
               <!-- groups members controls -->
               <div class="pull-right">
+
                 <!-- timeline bar charts -->
                 <div  class="btn-group">
                   <button type="button" 
@@ -371,6 +414,7 @@
                           ng-model="timeline.config.bar">{{ui.planboard.barCharts}}</button>
                 </div>
                 <!-- end timeline bar charts -->
+
                 <!-- group wishes -->
                 <div  class="btn-group">
                   <button type="button" 
@@ -379,6 +423,7 @@
                           ng-model="timeline.config.wishes">{{ui.planboard.wishes}}</button>
                 </div>
                 <!-- end group wishes -->
+
                 <!-- legenda -->
                 <div  class="btn-group">
                   <button type="button" 
@@ -387,6 +432,7 @@
                           ng-model="timeline.config.legendarer">{{ui.planboard.legenda}}</button>
                 </div>
                 <!-- end legenda -->
+
                 <!-- timeline layout manager -->
                 <div  class="btn-group">
                   <button type="button" 
@@ -399,11 +445,15 @@
                           ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
                 </div>
                 <!-- end timeline layout manager -->
+
               </div>
               <!--end groups members controls -->
+
             </div>
             <!-- end timeline-toolbar -->
+
             <hr>
+
             <!-- timeline legenda content -->
             <div class="legenda" ng-show="timeline.config.legendarer">
 
@@ -461,7 +511,9 @@
 
           </div>
           <!-- end timeline -->
+
           <hr>
+
           <!-- planbaord footer -->
           <p>
             <small class="pull-left">
@@ -477,8 +529,13 @@
             </small>
           </p>
           <!-- end planbaord footer -->
+
         </div>
         <!-- end timelines -->
+
+
+
+
 
 
 
@@ -491,6 +548,7 @@
 
             <!-- groups members controls -->
             <div class="pull-left">
+
               <!-- groups list -->
               <select ng-model="timeline.current.group" 
                       ng-options="group.uuid as group.name for group in groups"
@@ -498,6 +556,7 @@
                       ng-change="requestTimeline()">
               </select>
               <!-- end groups list -->
+
               <!-- divisions list -->
               <select ng-model="timeline.current.division" 
                       ng-options="division.id as division.label for division in divisions"
@@ -511,6 +570,7 @@
 
             <!-- groups members controls -->
             <div class="pull-right">
+
               <!-- timeline layout manager -->
               <div  class="btn-group">
                 <button type="button" 
@@ -523,12 +583,15 @@
                         ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
               </div>
               <!-- end timeline layout manager -->
+
             </div>
             <!--end groups members controls -->
 
           </div>
           <!-- end timeline toolbar -->
+
           <hr>
+
           <!-- timeline legenda content -->
           <div class="legenda">
             <div class="legenda-row">
@@ -619,9 +682,6 @@
             </div>
             <!-- end group charts -->
 
-
-
-
             <!-- member bars -->
             <div id="memberBars">
               <ul>
@@ -640,7 +700,9 @@
 
           </div>
           <!-- end statistics -->
+
           <hr>
+
           <!-- planbaord footer -->
           <p>
             <small class="pull-left">
@@ -656,18 +718,21 @@
             </small>
           </p>
           <!-- end planbaord footer -->
+
         </div>
         <!-- end statistics -->
-
-
 
 
 
       </div>
       <!-- end tabs content -->
 
+
+
     </div>
   </div>
   <!-- end timelines & statistics -->
+
+
 
 </section>

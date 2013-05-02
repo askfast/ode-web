@@ -244,5 +244,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
 
+
+	  // $scope.self.timeline.redraw();
+
 	}
 ]);

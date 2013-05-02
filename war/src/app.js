@@ -4948,6 +4948,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
 
+
+	  // $scope.self.timeline.redraw();
+
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -5676,7 +5679,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   * Timeline on remove
 	   */
 	  $scope.timelineOnRemove = function ()
-	  {	      
+	  {
 	    if ($scope.timeliner.isAdded() > 0)
 	    {
 	      $scope.self.timeline.cancelAdd();
@@ -5759,6 +5762,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      }
 	    );
 	  };
+
+
+    setTimeout( function() 
+    {
+      $scope.self.timeline.redraw();
+    }, 100);
 
 	}
 ]);;/*jslint node: true */
@@ -6008,6 +6017,13 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	  {
 		  $scope.self.timeline.redraw();
 		};
+		
+		$scope.fullWidth = function ()
+		{
+			console.log('ok!');
+
+			$scope.self.timeline.redraw();
+		}
 	}
 ]);;/*jslint node: true */
 /*global angular */
