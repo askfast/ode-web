@@ -388,6 +388,19 @@ angular.module('WebPaige')
      */
     $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]); };
 
+
+    /**
+     * Detect OS for some specific styling issues
+     */
+    if ($.os.windows)
+    {
+      console.log('coming to here');
+      
+      $('#loading p').css({
+        paddingTop: '130px'
+      });
+    }
+
   }
 ]);
 

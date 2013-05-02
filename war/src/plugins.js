@@ -147,19 +147,7 @@ if ($.browser.msie)
    */
   jQuery.os = os;
 
-})(jQuery, window);
-
-
-
-
-/**
- * Detect OS for some specific styling issues
- */
-if ($.os.win === true)
-{
-  console.log('it is windows.');
-}
-;/*!
+})(jQuery, window);;/*!
 * basket.js
 * v0.3.0 - 2012-12-28
 * http://addyosmani.github.com/basket.js
