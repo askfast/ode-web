@@ -229,7 +229,7 @@
                 <td>
                   <div class="pull-right">
                     <button class="btn btn-mini"
-                            ng-click="reply(message)"><i class="icon-share-alt"></i></button>
+                            ng-click="reply(message)"><i class="icon-share-alt"></i></button>&nbsp;
                     <button type="submit" 
                             ng-click="removeMessage(message.uuid)" 
                             class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
@@ -245,8 +245,8 @@
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
-              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')">« Previous</button>
-              <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" ng-click="paginate.next('inbox')">Next »</button>
+              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')"></button>
+              <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" ng-click="paginate.next('inbox')">Volgende »</button>
             </div>
           </div>
 
@@ -333,8 +333,8 @@
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
-              <button class="btn btn-small {{(page.outbox == 0) && 'disabled'}}" ng-click="paginate.before('outbox')">« Previous</button>
-              <button class="btn btn-small {{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}" ng-click="paginate.next('outbox')">Next »</button>
+              <button class="btn btn-small {{(page.outbox == 0) && 'disabled'}}" ng-click="paginate.before('outbox')">« Vorige</button>
+              <button class="btn btn-small {{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}" ng-click="paginate.next('outbox')">Volgende »</button>
             </div>
           </div>
 
@@ -430,8 +430,8 @@
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
-              <button class="btn btn-small {{(page.trash == 0) && 'disabled'}}" ng-click="paginate.before('trash')">« Previous</button>
-              <button class="btn btn-small {{(page.trash + 1 == messages.trash.length) && 'disabled'}}" ng-click="paginate.next('trash')">Next »</button>
+              <button class="btn btn-small {{(page.trash == 0) && 'disabled'}}" ng-click="paginate.before('trash')">« Vorige</button>
+              <button class="btn btn-small {{(page.trash + 1 == messages.trash.length) && 'disabled'}}" ng-click="paginate.next('trash')">Volgende »</button>
             </div>
           </div>
 
