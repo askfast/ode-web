@@ -49,6 +49,7 @@ public class Pipe extends javax.servlet.http.HttpServlet
 		try{
 			url = new java.net.URL( destination_host + path );
 			connection = (java.net.HttpURLConnection) url.openConnection();
+			connection.setConnectTimeout( 60*1000 ); // might not work on GAE?
 			connection.setRequestMethod( req.getMethod() );
 
 			//TODO: copy ALL headers?
@@ -98,7 +99,7 @@ public class Pipe extends javax.servlet.http.HttpServlet
 		}
 		catch( java.io.IOException ioe)
 		{
-			System.out.println("# connection to "+ destination_host + path +" failed");
+			System.out.println("# connection to `"+ destination_host +"` `"+ path +"` failed "+ioe.toString() );
 			res.setStatus( 503 );
 			res.sendError( 503 );
 			return;
