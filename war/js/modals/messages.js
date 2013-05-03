@@ -21,7 +21,13 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        params: {action: '', 0: 'dm'},
+	        params: {
+		        action: '', 
+		        0: 'dm', 
+		        // state: 'SEEN',
+		        // limit: 1,
+		        // offset: 0
+		      },
 	        isArray: true
 	      },
 	      get: {
@@ -58,6 +64,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    Messages.query(
 	      function (result) 
 	      {
+	      	console.warn('coming to here');
+
+	        Storage.add('TEST', 'TESTING');
 	        Storage.add('messages', angular.toJson(result));
 
 	        Messages.prototype.unreadCount();
@@ -154,6 +163,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    filtered.outbox = butcher(filtered.outbox);
 	    filtered.trash 	= butcher(filtered.trash);
 
+	    console.warn('filtered ->', filtered);
+
 	    return filtered;
 	  };
 
@@ -170,6 +181,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  Messages.prototype.find = function (id)
 	  {
 	    var gem;
+
+	    console.warn('asked for ->', id, Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message, index)
 	    {
@@ -431,6 +444,30 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
+
+
+
+
+	  Messages.prototype.clean = function (box)
+	  {
+	    var deferred = $q.defer(),
+	        calls = [];
+
+	    angular.forEach(box, function (bulk, id)
+	    {
+	    	console.log('bulk ->', bulk);
+
+	      // if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	    });
+
+	    // $q.all(calls)
+	    // .then(function (result)
+	    // {
+	    //   deferred.resolve(result);
+	    // });
+
+	    return deferred.promise;
+	  }
 
 
 	  return new Messages;

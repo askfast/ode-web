@@ -175,6 +175,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.message = Messages.find(id);
 
+
+	    console.warn('found message ->', $scope.message);
+
+
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
@@ -224,6 +228,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $scope.requestMessage = function (current, origin)
 	  {
+	  	console.log('msg ->', current, origin);
+
 	    $scope.origin = origin;
 
 	    setMessageView(current);
@@ -628,5 +634,25 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      sms: true
 	    };
 	  };
+
+
+
+
+
+	  // $scope.clean = {
+	  // 	inbox: function ()
+	  // 	{
+	  // 		console.log('inbox clean');
+	  // 	},
+	  // 	outbox: function ()
+	  // 	{
+	  // 		Messages.clean($scope.messages.outbox);
+	  // 	},
+	  // 	trash: function ()
+	  // 	{
+	  // 		console.log('trash clean');	  		
+	  // 	}
+	  // }
+
 	}
 ]);

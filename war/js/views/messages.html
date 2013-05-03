@@ -191,6 +191,13 @@
                     ng-model="query.inbox">
           </form>
           <!-- end filter messages -->
+
+          <!-- <div class="btn-group pull-right">
+            <button class="btn btn-danger" ng-click="clean.inbox()">Inbox</button>
+            <button class="btn btn-danger" ng-click="clean.outbox()">Outbox</button>
+            <button class="btn btn-danger" ng-click="clean.trash()">Trash</button>
+          </div> -->
+
         </div>
 
         <hr>
@@ -223,7 +230,7 @@
                           <!-- ng-checked="selectionMaster.inbox"> -->
                 </td>
                 <td><span class="label label-warning" ng-show="(message.state=='NEW')">{{ui.message.newMsg}}</span></td>
-                <td>{{message.requester|convertEve|convertUserIdToName}}</td>
+                <td>{{message.requester | convertEve | convertUserIdToName}}</td>
                 <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime | nicelyDate}}</td>
                 <td>
