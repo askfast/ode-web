@@ -4865,7 +4865,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    $scope.views = {
 	      slot: {
 	        add:  false,
-	        edit: true
+	        edit: false
 	      },
 	      group:  false,
 	      wish:   false,

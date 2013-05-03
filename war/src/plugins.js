@@ -103,7 +103,7 @@ if ($.browser.msie)
 {
   var ver = $.browser.version || $.browser.version[0];
 
-  if (ver == '6.0' || ver == '7.0') window.location = 'browsers.html';
+  if (ver == '6.0' || ver == '7.0' || ver == '8.0') window.location = 'browsers.html';
 
   // Reload stylesheet on document ready if IE8
   // if (ver == '8.0')
