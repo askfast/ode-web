@@ -3,6 +3,9 @@
 
 ## Versions
 
+	2.2.0
+		* Deployed for live, test, gvrb and isparaat 3-5-2013
+
 	2.1.0
 		* IE9 & IE10 support, IE8 (temporarily) and less are blocked 3-5-2013
 		* Google Analytics impelemented 3-5-2013
