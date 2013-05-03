@@ -57,6 +57,7 @@
                 <h4>2.1.0 (snapshot)</h4>
                 <p>
                   <ul>
+                    <li>Google Anlaytics implemented <i class="text-info">3-5-2013</i></li>
                     <li>Pagination in messages center <i class="text-info">2-5-2013</i></li>
                     <li>Instruct user with email adres placeholder when remembering account info at login <i class="text-info">29-4-2013</i></li>
                     <li>Conflict error message by registering same username <i class="text-info">29-4-2013</i></li>
@@ -118,6 +119,20 @@
 
     <!-- bootstrap -->
     <script src="js/libs/bootstrap/bootstrap.js"></script>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36532309-1']);
+      _gaq.push(['_setDomainName', 'ask-cs.com']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 
   </body>
 </html>

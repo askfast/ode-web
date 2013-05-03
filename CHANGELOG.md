@@ -4,6 +4,7 @@
 ## Versions
 
 	2.1.0 (snapshot)
+		* Google Analytics impelemented 3-5-2013
 		* Pagination in messages center 2-5-2013
 		* Instruct user with email adres placeholder when remembering account info at login 29-4-2013
 		* Conflict error message by registering same username 29-4-2013
