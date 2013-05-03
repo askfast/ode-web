@@ -1140,24 +1140,25 @@ ul.nav-tabs-app li span.entypo {
   padding-top: 10px;
   margin-top: -20px;
 }
-.legenda .legenda-row {
+
+.legenda-row {
   overflow: hidden;
   display: block;
   margin: 10px 20px;
 }
-.legenda .legenda-row strong {
+.legenda-row strong {
   width: 90px;
   display: inline;
   float: left;
   text-shadow: 1px 1px 0 white;
   margin-top: 5px;
 }
-.legenda .legenda-row ul {
+.legenda-row ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-.legenda .legenda-row ul li {
+.legenda-row ul li {
   float: left;
   margin-right: 15px;
   border-right: 1px solid #ddd;
@@ -1165,28 +1166,29 @@ ul.nav-tabs-app li span.entypo {
   min-width: 135px;
   font-size: 11px;
 }
-.legenda .legenda-row ul li:last-child {
+.legenda-row ul li:last-child {
   margin-right: 0;
   border-right: none;
   padding-right: 0;
 }
-.legenda .legenda-row ul li label {
+.legenda-row ul li label {
   font-size: 11px;
 }
-.legenda .legenda-row ul li label:hover {
+.legenda-row ul li label:hover {
   cursor: pointer;
   color: #65619b;
 }
-.legenda .legenda-row ul li input {
+.legenda-row ul li input {
   margin: -2px 4px 0 0;
 }
-.legenda .legenda-row .square {
+.legenda-row .square {
   display: block;
   height: 12px;
   width: 12px;
   margin-top: 4px;
 }
-.legenda .last-legenda-row {
+
+.last-legenda-row {
   margin-bottom: -5px;
 }
 

@@ -3,7 +3,8 @@
 
 ## Versions
 
-	2.1.0 (snapshot)
+	2.1.0
+		* IE9 & IE10 support, IE8 (temporarily) and less are blocked 3-5-2013
 		* Google Analytics impelemented 3-5-2013
 		* Pagination in messages center 2-5-2013
 		* Instruct user with email adres placeholder when remembering account info at login 29-4-2013
