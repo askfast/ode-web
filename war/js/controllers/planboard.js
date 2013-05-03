@@ -126,8 +126,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Prepeare timeline range for dateranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + 
-	                      ' / ' + 
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
 	                      Dater.readable.date($scope.timeline.range.end);
 
 

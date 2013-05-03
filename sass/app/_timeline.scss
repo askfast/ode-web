@@ -228,10 +228,13 @@
       display: inline;
       float: left;
       text-shadow: 1px 1px 0 rgba(255, 255, 255, 1);
+      margin-top: 5px;
     }
 
     ul {
       list-style-type: none;
+      margin: 0;
+      padding: 0;
 
       li {
         float: left;
@@ -239,6 +242,7 @@
         border-right: 1px solid #ddd;
         padding-right: 15px;
         min-width: 135px;
+        font-size: 11px;
 
         &:last-child {
           margin-right: 0;
@@ -253,10 +257,10 @@
             cursor: pointer;
             color: #65619b;
           }
+        }
 
-          input[type=checkbox] {
-            margin: -2px 4px 0 0;
-          }
+        input {
+          margin: -2px 4px 0 0;
         }
       }
     }

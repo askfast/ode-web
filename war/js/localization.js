@@ -83,9 +83,11 @@ var ui = {
         skipperOutService: 'Skipper Of Service',
         notAvailable: 'Not Available', // Niet Beschikbaar
         notachieve: 'Not Achieved',
-        // morePeople: 'More people',
-        // enoughPeople: 'Just enough people',
-        // lessPeople: 'Less people',
+        legendaLabels: {
+          morePeople: 'More people',
+          enoughPeople: 'Just enough people',
+          lessPeople: 'Less people'
+        },
         lastSyncTime: 'Last sync time:',
         dataRangeStart: 'Data range start: ',
         DataRangeEnd: 'Data range end: ',
@@ -362,9 +364,11 @@ var ui = {
         skipperOutService: 'Schipper van dienst',
         notAvailable: 'Niet beschikbaar',
         notachieve: 'Niet behaald',
-        // morePeople: 'Meer mensen',
-        // enoughPeople: 'Precies genoeg mensen',
-        // lessPeople: 'Te weinig mensen',
+        legendaLabels: {
+          morePeople: 'Meer mensen',
+          enoughPeople: 'Precies genoeg mensen',
+          lessPeople: 'Te weinig mensen'
+        },
         lastSyncTime: 'Laatste synchronisatietijd:',
         dataRangeStart: 'Begin gegevensscala: ',
         DataRangeEnd: 'Eind gegevensscala: ',

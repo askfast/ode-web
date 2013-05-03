@@ -107,7 +107,9 @@ angular.module('WebPaige')
         bar:        false,
         wishes:     false,
         legenda:    {},
-        legendarer: false,
+
+        legendarer: true,
+        
         states:     {},
         divisions:  profile.divisions,
         densities: {

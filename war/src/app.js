@@ -83,9 +83,11 @@ var ui = {
         skipperOutService: 'Skipper Of Service',
         notAvailable: 'Not Available', // Niet Beschikbaar
         notachieve: 'Not Achieved',
-        // morePeople: 'More people',
-        // enoughPeople: 'Just enough people',
-        // lessPeople: 'Less people',
+        legendaLabels: {
+          morePeople: 'More people',
+          enoughPeople: 'Just enough people',
+          lessPeople: 'Less people'
+        },
         lastSyncTime: 'Last sync time:',
         dataRangeStart: 'Data range start: ',
         DataRangeEnd: 'Data range end: ',
@@ -362,9 +364,11 @@ var ui = {
         skipperOutService: 'Schipper van dienst',
         notAvailable: 'Niet beschikbaar',
         notachieve: 'Niet behaald',
-        // morePeople: 'Meer mensen',
-        // enoughPeople: 'Precies genoeg mensen',
-        // lessPeople: 'Te weinig mensen',
+        legendaLabels: {
+          morePeople: 'Meer mensen',
+          enoughPeople: 'Precies genoeg mensen',
+          lessPeople: 'Te weinig mensen'
+        },
         lastSyncTime: 'Laatste synchronisatietijd:',
         dataRangeStart: 'Begin gegevensscala: ',
         DataRangeEnd: 'Eind gegevensscala: ',
@@ -751,7 +755,9 @@ angular.module('WebPaige')
         bar:        false,
         wishes:     false,
         legenda:    {},
-        legendarer: false,
+
+        legendarer: true,
+        
         states:     {},
         divisions:  profile.divisions,
         densities: {
@@ -4830,8 +4836,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Prepeare timeline range for dateranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + 
-	                      ' / ' + 
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
 	                      Dater.readable.date($scope.timeline.range.end);
 
 

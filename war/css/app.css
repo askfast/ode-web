@@ -1150,9 +1150,12 @@ ul.nav-tabs-app li span.entypo {
   display: inline;
   float: left;
   text-shadow: 1px 1px 0 white;
+  margin-top: 5px;
 }
 .legenda .legenda-row ul {
   list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 .legenda .legenda-row ul li {
   float: left;
@@ -1160,6 +1163,7 @@ ul.nav-tabs-app li span.entypo {
   border-right: 1px solid #ddd;
   padding-right: 15px;
   min-width: 135px;
+  font-size: 11px;
 }
 .legenda .legenda-row ul li:last-child {
   margin-right: 0;
@@ -1173,7 +1177,7 @@ ul.nav-tabs-app li span.entypo {
   cursor: pointer;
   color: #65619b;
 }
-.legenda .legenda-row ul li label input[type=checkbox] {
+.legenda .legenda-row ul li input {
   margin: -2px 4px 0 0;
 }
 .legenda .legenda-row .square {
