@@ -9,8 +9,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
  */
 .factory('Profile', 
 [
-	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Groups', 'Slots',
-	function ($rootScope, $config, $resource, $q, Storage, Groups, Slots) 
+	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Groups', 'Slots', 'MD5',
+	function ($rootScope, $config, $resource, $q, Storage, Groups, Slots, MD5) 
 	{
 	  var Profile = $resource(
 	    $config.host + '/node/:id/:section',
@@ -79,41 +79,41 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 	    Register.profile(
 	      {
-	        uuid: profile.username,
-	        pass: MD5(profile.password),
-	        name: profile.name,
-	        phone: profile.PhoneAddress
+	        uuid: 	profile.username,
+	        pass: 	MD5(profile.password),
+	        name: 	profile.name,
+	        phone: 	profile.PhoneAddress
 	      }, 
 	      function (registered) 
 	      {
 	        Profile.prototype.role(profile.username, profile.role.id)
-	        .then(function(roled)
+	        .then(function (roled)
 	        {
 	          Profile.prototype.save(profile.username, {
 	            EmailAddress: profile.EmailAddress,
-	            PostAddress: profile.PostAddress,
-	            PostZip: profile.PostZip,
-	            PostCity: profile.PostCity
-	          }).then(function(resourced)
+	            PostAddress: 	profile.PostAddress,
+	            PostZip: 			profile.PostZip,
+	            PostCity: 		profile.PostCity
+	          }).then(function (resourced)
 	          {
 	            var calls = [];
 
 	            angular.forEach(profile.groups, function (group, index)
 	            {
 	              calls.push(Groups.addMember({
-	                id: profile.username,
-	                group: group
+	                id: 		profile.username,
+	                group: 	group
 	              }));
 	            });
 
 	            $q.all(calls)
-	            .then(function(grouped)
+	            .then(function (grouped)
 	            {
 	              deferred.resolve({
 	                registered: registered,
-	                roled: roled,
-	                resourced: resourced,
-	                grouped: grouped
+	                roled: 			roled,
+	                resourced: 	resourced,
+	                grouped: 		grouped
 	              });
 	            });
 
@@ -210,17 +210,17 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    .then(function (resources)
 	    {
 	      Slots.user({
-	        user: id,
-	        start: params.start,
-	        end: params.end
+	        user: 	id,
+	        start: 	params.start,
+	        end: 		params.end
 	      }).then(function (slots)
 	      {
 	        deferred.resolve(angular.extend(resources, {
-	          slots: slots,
-	          synced: new Date().getTime(),
+	          slots: 		slots,
+	          synced: 	new Date().getTime(),
 	          periods: {
-	            start: params.start,
-	            end: params.end
+	            start: 	params.start * 1000,
+	            end: 		params.end * 1000
 	          }
 	        }));        
 	      }); // user slots
@@ -240,18 +240,18 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    Slots.user(
 	    {
 	      user:   id,
-	      // start: params.start / 1000,
-	      // end: params.end / 1000
-	      start:  params.start,
-	      end:    params.end
+	      start: 	params.start / 1000,
+	      end: 		params.end / 1000
+	      // start:  params.start,
+	      // end:    params.end
 	    }).then(function (slots)
 	    {
 	      deferred.resolve({
-	        slots: slots,
+	        slots: 	slots,
 	        synced: new Date().getTime(),
 	        periods: {
-	          start: params.start,
-	          end: params.end
+	          start: 	params.start,
+	          end: 		params.end
 	        }
 	      });        
 	    });

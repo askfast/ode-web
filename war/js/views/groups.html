@@ -1,3 +1,21 @@
+
+      
+    <!-- <h1>TreeGrid Demo - drag and drop</h1>
+    <p>Assign files to folders by dragging them to a folder.
+    Keep Ctrl down to select multiple files, 
+    or Shift to select a range of files.</p>
+    <table id="main">
+      <tr>
+        <th>Uncategorized files</th>
+        <th>Folders</th>
+      </tr>      
+      <tr>
+        <td id="files"></td>
+        <td id="folders"></td>
+      </tr>
+    </table> -->
+
+
 <div class="page-header">
   <h2 ng-hide="views.add || views.member">{{group.name}}</h2>
   <h2 ng-show="views.add">{{ui.groups.newGroup}}</h2>
@@ -22,7 +40,7 @@
               class="span2 search-query" 
               placeholder="{{ui.groups.searchfor}}" 
               ng-model="search.query">
-      <button type="submit" class="btn"><i class="icon-search"></i> {{ui.groups.serach}}</button>
+      <button type="submit" class="btn"><i class="icon-search"></i>&nbsp;{{ui.groups.serach}}</button>
     </div>
   </form>
   <!-- end search members -->
@@ -32,7 +50,7 @@
 <div class="tabbable tabs-left">
 
   <!-- tabs links -->
-  <ul class="nav nav-tabs nav-tabs-app">
+  <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
     <!-- add group tab link -->
     <li class="{{(views.add==true) && 'active'}}"
         ng-show="views.add">
@@ -352,21 +370,22 @@
           <button type="button"
                   class="btn"
                   style="margin-right:5px"
-                  bs-popover="'js/views/elements/groups-wish.html'" 
+                  bs-popover="'dist/views/groups-wish.html'" 
                   data-placement="bottom"
-                  data-title="Behoefte wijzigen"><span class="badge badge-inset" ng-show="wished">{{wish}}</span> Behoefte</button>
+                  data-title="Behoefte wijzigen"><span class="badge badge-inset" ng-show="wished">{{wish}}</span>&nbsp;Behoefte</button>
 
           <button type="button" 
                   ng-click="editGroup(group)" 
                   style="margin-right:5px"
-                  class="btn"><i class="icon-edit"></i> {{ui.groups.editGroup}}</button>
+                  class="btn"><i class="icon-edit"></i>&nbsp;{{ui.groups.editGroup}}</button>
           <button type="button" 
                   ng-click="deleteGroup(group.uuid)" 
-                  class="btn btn-danger"><i class="icon-trash icon-white"></i> {{ui.groups.deleteGroup}}</button>
+                  class="btn btn-danger"><i class="icon-trash icon-white"></i>&nbsp;{{ui.groups.deleteGroup}}</button>
 
         </div>
       </div>
       <hr>
+
       <p ng-hide="(data.members[group.uuid]|filter:filtered).length > 0">
         {{ui.groups.noMembers}}
       </p>
@@ -398,7 +417,7 @@
               <td>
                 <div class="pull-right">
                   <a href="#/profile/{{member.uuid}}#edit" 
-                    class="btn btn-mini"><i class="icon-edit"></i></a>
+                    class="btn btn-mini"><i class="icon-edit"></i></a>&nbsp;
                   <button type="submit" 
                           ng-click="removeMember(member.uuid, group.uuid)" 
                           class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
@@ -410,7 +429,7 @@
         <button type="button" 
                 ng-click="removeMembers(selection, group)" 
                 class="btn btn-small btn-danger pull-left">
-                <i class="icon-trash icon-white"></i>{{ui.groups.removeSelectedMembers}}</button>
+                <i class="icon-trash icon-white"></i>&nbsp;{{ui.groups.removeSelectedMembers}}</button>
         <span class="muted pull-right">
           <small><i>{{(data.members[group.uuid]|filter:filtered).length | i18n_spec:'groups.memberCount'}}</i></small>
         </span>

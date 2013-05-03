@@ -112,7 +112,7 @@
     height: 100%;
 
     p {
-      display:  table-cell;
+      display: table-cell;
       vertical-align: middle;
     }
   }
@@ -137,7 +137,7 @@
     span.muted {
       position: absolute;
       top: 5px;
-      right: 205px;
+      right: 255px;
       float: right;
       width: 200px;
 
@@ -157,7 +157,7 @@
     float: right;
     /* padding-top: 10px; */
     /* padding-bottom: 8px; */
-    width: 190px;
+    width: 240px;
 
     span.entypo {
       margin-right: 5px;
@@ -196,6 +196,7 @@
 .page-header {
   overflow: hidden;
   min-height: 40px;
+  border-bottom: 1px solid $hrBorder;
 
   h2 {
     display: inline;

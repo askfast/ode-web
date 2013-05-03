@@ -6,84 +6,48 @@
 // Body reset
 // -------------------------
 
-
-
 body {
   margin: 0;
-  background-color: #f5f4ee;
-  color: #433c2d;
-  font-size: 14px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  line-height: 20px;
+  font-family: $baseFontFamily;
+  font-size: $baseFontSize;
+  line-height: $baseLineHeight;
+  color: $textColor;
+  background-color: $bodyBackground;
 }
+
+
+// Links
+// -------------------------
+
 a {
-  color: #65619b;
+  color: $linkColor;
   text-decoration: none;
 }
-a:hover {
-  color: #53507c;
+a:hover,
+a:focus {
+  color: $linkColorHover;
   text-decoration: underline;
 }
+
+
+// Images
+// -------------------------
+
+// Rounded corners
 .img-rounded {
-  border-radius: 6px;
+  @include border-radius(6px);
 }
+
+// Add polaroid-esque trim
 .img-polaroid {
   padding: 4px;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,.2);
+  @include box-shadow(0 1px 3px rgba(0,0,0,.1));
 }
+
+// Perfect circle
 .img-circle {
-  border-radius: 500px;
+  @include border-radius(500px); // crank the border-radius so it works with most reasonably sized images
 }
-
-
-
-
-
-
-// body {
-//   margin: 0;
-//   font-family: $baseFontFamily;
-//   font-size: $baseFontSize;
-//   line-height: $baseLineHeight;
-//   color: $textColor;
-//   background-color: $bodyBackground;
-// }
-
-
-// // Links
-// // -------------------------
-
-// a {
-//   color: $linkColor;
-//   text-decoration: none;
-// }
-// a:hover {
-//   color: $linkColorHover;
-//   text-decoration: underline;
-// }
-
-
-// // Images
-// // -------------------------
-
-// // Rounded corners
-// .img-rounded {
-//   @include border-radius(6px);
-// }
-
-// // Add polaroid-esque trim
-// .img-polaroid {
-//   padding: 4px;
-//   background-color: #fff;
-//   border: 1px solid #ccc;
-//   border: 1px solid rgba(0,0,0,.2);
-//   @include box-shadow(0 1px 3px rgba(0,0,0,.1));
-// }
-
-// // Perfect circle
-// .img-circle {
-//   @include border-radius(500px); // crank the border-radius so it works with most reasonably sized images
-// }

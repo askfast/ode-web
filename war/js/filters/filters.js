@@ -569,4 +569,30 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	     return Strings.truncate(title, 20, true);
 	  }
 	}
-]);
+])
+
+
+
+
+
+
+
+/**
+ * Count messages in box
+ */
+.filter('countBox',
+	function () 
+	{
+		return function (box)
+		{
+			var total = 0;
+
+			angular.forEach(box, function (bulk, index)
+			{
+				total = total + bulk.length;
+			});
+
+	    return total;
+	  }
+	}
+);

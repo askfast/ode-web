@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global angular */
 'use strict';
 
 
@@ -36,12 +38,40 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+	   * Pagination
+	   */
+	  $scope.page = {
+	  	inbox: 	0,
+	  	outbox: 0,
+	  	trash: 	0
+	  };
+
+	  $scope.paginate = {
+
+	  	set: function (page, box)
+	  	{
+	  		$scope.page[box] = page;
+	  	},
+
+	  	next: function (box)
+	  	{
+	  		if ($scope.page[box] + 1 != box.length) $scope.page[box]++;
+	  	},
+
+	  	before: function (box)
+	  	{
+	  		if ($scope.page[box] != 0) $scope.page[box]--;
+	  	}
+	  };
+
+
+	  /**
 	   * Selections
 	   */
 	  $scope.selection = {
-	    inbox: {},
+	    inbox: 	{},
 	    outbox: {},
-	    trash: {}
+	    trash: 	{}
 	  };
 
 
@@ -49,9 +79,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Selection masters
 	   */
 	  $scope.selectionMaster = {
-	    inbox: '',
+	    inbox: 	'',
 	    outbox: '',
-	    trash: ''
+	    trash: 	''
 	  };
 
 
@@ -59,8 +89,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Initial value for broadcasting
 	   */
 	  $scope.broadcast = {
-	    sms: false,
-	    email: false
+	    sms: 		false,
+	    email: 	false
 	  };
 
 
@@ -145,6 +175,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.message = Messages.find(id);
 
+
+	    console.warn('found message ->', $scope.message);
+
+
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
@@ -194,6 +228,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $scope.requestMessage = function (current, origin)
 	  {
+	  	console.log('msg ->', current, origin);
+
 	    $scope.origin = origin;
 
 	    setMessageView(current);
@@ -220,7 +256,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      $scope.setViewTo('inbox');
 	    };
-
 	  };
 
 
@@ -432,7 +467,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }
 	      else
 	      {
-	        $rootScope.notifier.success($rootScope.ui.message.empited);
+	        $rootScope.notifier.success($rootScope.ui.message.emptied);
 
 	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
@@ -599,5 +634,25 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      sms: true
 	    };
 	  };
+
+
+
+
+
+	  // $scope.clean = {
+	  // 	inbox: function ()
+	  // 	{
+	  // 		console.log('inbox clean');
+	  // 	},
+	  // 	outbox: function ()
+	  // 	{
+	  // 		Messages.clean($scope.messages.outbox);
+	  // 	},
+	  // 	trash: function ()
+	  // 	{
+	  // 		console.log('trash clean');	  		
+	  // 	}
+	  // }
+
 	}
 ]);

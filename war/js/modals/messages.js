@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global angular */
 'use strict';
 
 
@@ -7,10 +9,10 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 /**
  * Messages model
  */
-.factory('Messages', 
+.factory('Messages',
 [
 	'$rootScope', '$config', '$resource', '$q', 'Storage',
-	function ($rootScope, $config, $resource, $q, Storage) 
+	function ($rootScope, $config, $resource, $q, Storage)
 	{
 	  var Messages = $resource(
 	    $config.host + '/question/:action',
@@ -19,7 +21,13 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        params: {action: '', 0: 'dm'},
+	        params: {
+		        action: '', 
+		        0: 'dm', 
+		        // state: 'SEEN',
+		        // limit: 1,
+		        // offset: 0
+		      },
 	        isArray: true
 	      },
 	      get: {
@@ -56,6 +64,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    Messages.query(
 	      function (result) 
 	      {
+	      	console.warn('coming to here');
+
+	        Storage.add('TEST', 'TESTING');
 	        Storage.add('messages', angular.toJson(result));
 
 	        Messages.prototype.unreadCount();
@@ -70,6 +81,32 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
+	  
+
+
+
+	  /**
+	   * Query messages from back-end
+	   */
+	  Messages.prototype.queryTest = function () 
+	  {
+	    var deferred = $q.defer();
+
+	    setTimeout(function ()
+	  	{
+        Storage.add('messages', angular.toJson(messagesLocal));
+
+        Messages.prototype.unreadCount();
+
+        deferred.resolve(Messages.prototype.filter(messagesLocal));
+	  		
+	  	}, 100);
+
+	    return deferred.promise;
+	  };
+
+
+
 
 
 	  /**
@@ -104,6 +141,30 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      };
 	    });
 
+
+	    var butcher = function (box)
+	    {
+		    var limit 	= 50,
+		    		total 	= box.length,
+		  			offset 	= 0,
+		  			newarr 	= [];
+
+		  	while (offset * limit < total)
+		  	{
+					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
+
+					offset ++;
+		  	};
+
+		  	return newarr;
+	    };
+
+	    filtered.inbox 	= butcher(filtered.inbox);
+	    filtered.outbox = butcher(filtered.outbox);
+	    filtered.trash 	= butcher(filtered.trash);
+
+	    console.warn('filtered ->', filtered);
+
 	    return filtered;
 	  };
 
@@ -120,6 +181,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  Messages.prototype.find = function (id)
 	  {
 	    var gem;
+
+	    console.warn('asked for ->', id, Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message, index)
 	    {
@@ -381,6 +444,30 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
+
+
+
+
+	  Messages.prototype.clean = function (box)
+	  {
+	    var deferred = $q.defer(),
+	        calls = [];
+
+	    angular.forEach(box, function (bulk, id)
+	    {
+	    	console.log('bulk ->', bulk);
+
+	      // if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	    });
+
+	    // $q.all(calls)
+	    // .then(function (result)
+	    // {
+	    //   deferred.resolve(result);
+	    // });
+
+	    return deferred.promise;
+	  }
 
 
 	  return new Messages;

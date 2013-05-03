@@ -19,7 +19,7 @@
         <div class="head">
           <h4>Overzicht</h4>
           <button class="btn btn-small" 
-                  bs-popover="'js/views/elements/widget-pies.html'" 
+                  bs-popover="'dist/views/dashboard-pies.html'" 
                   data-placement="{{(browser.mobile) && 'left' || 'bottom'}}"
                   data-title="Overzicht instellingen"><i class="icon-cog"></i></button>
         </div>
@@ -49,11 +49,11 @@
                   <div class="body">
                     <h3>Huidige status</h3>
                     <hr>
-                    <h5>{{pie.state.start}}</h5> 
-                    <small class="muted"> van</small>
+                    <h5>{{pie.state.start}}</h5>&nbsp;
+                    <small class="muted">van</small>
                     <br>
-                    <h5>{{pie.state.end}}</h5> 
-                    <small class="muted"> tot</small>
+                    <h5>{{pie.state.end}}</h5>&nbsp;
+                    <small class="muted">tot</small>
                   </div>
                 </div>
               </div>
@@ -68,11 +68,11 @@
                     <hr>
                     <small class="muted">{{pie.weeks.current.start.date}} / {{pie.weeks.current.end.date}}</small>
                     <br>
-                    <h5>{{pie.weeks.current.ratios.more}}%</h5> 
-                    <small class="muted">more</small>, 
-                    <h5>{{pie.weeks.current.ratios.even}}%</h5> 
-                    <small class="muted">even</small>, 
-                    <h5>{{pie.weeks.current.ratios.less}}%</h5> 
+                    <h5>{{pie.weeks.current.ratios.more}}%</h5>&nbsp;
+                    <small class="muted">more</small>,&nbsp;
+                    <h5>{{pie.weeks.current.ratios.even}}%</h5>&nbsp;
+                    <small class="muted">even</small>,&nbsp;
+                    <h5>{{pie.weeks.current.ratios.less}}%</h5>&nbsp;
                     <small class="muted">less</small>
                   </div>
                 </div>
@@ -88,11 +88,11 @@
                     <hr>
                     <small class="muted">{{pie.weeks.next.start.date}} / {{pie.weeks.next.end.date}}</small>
                     <br>
-                    <h5>{{pie.weeks.next.ratios.more}}%</h5> 
-                    <small class="muted">more</small>, 
-                    <h5>{{pie.weeks.next.ratios.even}}%</h5> 
-                    <small class="muted">even</small>, 
-                    <h5>{{pie.weeks.next.ratios.less}}%</h5> 
+                    <h5>{{pie.weeks.next.ratios.more}}%</h5>&nbsp;
+                    <small class="muted">more</small>,&nbsp;
+                    <h5>{{pie.weeks.next.ratios.even}}%</h5>&nbsp;
+                    <small class="muted">even</small>,&nbsp;
+                    <h5>{{pie.weeks.next.ratios.less}}%</h5>&nbsp;
                     <small class="muted">less</small>
                   </div>
                 </div>
@@ -104,7 +104,7 @@
 
               <div class="shorter" ng-show="pie.shortages.current.length > 0 || pie.shortages.next.length > 0">
                 <div class="btn-group">
-                  <button class="btn btn-mini"
+                  <!-- <button class="btn btn-mini"
                           ng-click="shortageHolders['shortages-' + pie.id] = true"
                           ng-hide="shortageHolders['shortages-' + pie.id]">
                           Tekorten ({{pie.shortages.total}}) <i class="icon-chevron-down"></i>
@@ -113,7 +113,7 @@
                           ng-click="shortageHolders['shortages-' + pie.id] = false"
                           ng-show="shortageHolders['shortages-' + pie.id]">
                           Tekorten ({{pie.shortages.total}}) <i class="icon-chevron-up"></i>
-                  </button>
+                  </button> -->
                 </div>
               </div>
 
@@ -133,7 +133,7 @@
                       <small class="muted">van</small>, 
                       <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
                       <small class="muted">tot</small>
-                      <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
+                      <!-- <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button> -->
                     </li>
                   </ul>
                 </div>
@@ -147,7 +147,7 @@
                       <small class="muted">van</small>, 
                       <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
                       <small class="muted">tot</small>
-                      <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
+                      <!-- <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button> -->
                     </li>
                   </ul>
                 </div>
@@ -182,15 +182,20 @@
             ng-show="config.profile.p2000.status">
 
         <div class="head">
-          <h4>Announcements</h4>
+          <h4>{{ui.dashboard.announcements}}</h4>
           <!-- <button class="btn btn-small"><i class="icon-cog"></i></button> -->
         </div>
         <hr>
 
-        <p ng-show="loading.alerts">Loading p2000 alerts..</p>
+        <p ng-show="loading.alerts">{{ui.dashboard.loadingP2000}}</p>
 
         <!-- p2000 loop -->
         <ul id="announcements" ng-hide="loading.alerts">
+
+          <li ng-show="alarms.list.length < 1">
+            {{ui.dashboard.noP2000}}
+          </li>
+
           <li ng-repeat="alarm in alarms.list">
             <table>
               <tr>
@@ -217,7 +222,7 @@
         </ul>
         <!-- end p2000 loop -->
         <hr class="lastline">
-        <p>
+        <p ng-show="alarms.list.length > 4">
           <small>
             <a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>
           </small>

@@ -1,5 +1,9 @@
-// TODO
-// Language settings
+/*jslint node: true */
+'use strict';
+
+/**
+ * Localizations
+ */
 var ui = {
     en: {
       meta: {
@@ -15,6 +19,7 @@ var ui = {
         button_loggingIn: "Logging...",
         forgot_password: "forgot your password?",
         forgetPassword: "Forgot password",
+        emailAddress: "Email address",
         resetPassword: "Reset Password",
         returnLogin: "return back to login",
         changePassword: "change password",
@@ -30,14 +35,17 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..',
+        loading: 'Loading..'
       },
       dashboard: {
-          thisWeek: 'This Week',
-          welcome: 'Welcome',
-          newMessage: 'New Messages',
-          goToInbox: 'Go to inbox',
-          loadingPie: 'Loading pie charts...'
+        thisWeek: 'This Week',
+        welcome: 'Welcome',
+        newMessage: 'New Messages',
+        goToInbox: 'Go to inbox',
+        announcements: 'Announcements',
+        loadingPie: 'Loading pie charts...',
+        loadingP2000: 'Loading alarm messages',
+        noP2000: 'There are no alarm messages'
       },
       planboard: {
         planboard: 'Planboard',
@@ -75,9 +83,11 @@ var ui = {
         skipperOutService: 'Skipper Of Service',
         notAvailable: 'Not Available', // Niet Beschikbaar
         notachieve: 'Not Achieved',
-        morePeople: 'More people',
-        enoughPeople: 'Just enough people',
-        lessPeople: 'Less people',
+        legendaLabels: {
+          morePeople: 'More people',
+          enoughPeople: 'Just enough people',
+          lessPeople: 'Less people'
+        },
         lastSyncTime: 'Last sync time:',
         dataRangeStart: 'Data range start: ',
         DataRangeEnd: 'Data range end: ',
@@ -140,7 +150,7 @@ var ui = {
             startDate + ' ' +
             startTime + ' and ' +
             endDate + ' ' +
-            endTime + '. ' + 
+            endTime + '. ' +
             'Would you please make yourself available if you are available for that period?';
         },
         removed: 'Message removed successfully.',
@@ -155,7 +165,7 @@ var ui = {
         sending: 'Sending the message...',
         sent: 'Message sent.',
         typeSubject: 'Type a subject',
-        messages: 'Messages',
+        // messages: 'Messages',
         ph_filterMessage: 'Filter messages..',
         noReceivers: 'Please select a receiver.'
       },
@@ -211,7 +221,7 @@ var ui = {
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
         searchfor: 'firstname, lastname..'
-      }, 
+      },
       profile: {
         profile: 'Profile',
         edit: 'Edit',
@@ -234,7 +244,7 @@ var ui = {
         newPassRepeat: 'New password (Repeat)',
         changePass: 'Change password',
         newAvail: 'New Availability',
-        saveProfile: 'Saving profile information..', 
+        // saveProfile: 'Saving profile information..',
         refreshing: 'Refreshing profile information..',
         dataChanged: 'Profile data is succesfully changed.',
         pleaseFill: 'Please fill all fields!',
@@ -244,7 +254,7 @@ var ui = {
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
         changingTimeslot: 'Changing a timeslot..',
-        timeslotChanged: 'Timeslot is succesfully changed.',
+        timeslotChanged: 'Timeslot is succesfully changed.'
       },
       settings: {
         settings: 'Settings',
@@ -265,6 +275,15 @@ var ui = {
       downloads: {
         app: 'Soon it will be downloadable.<br>',
         manual: 'Download Manual'
+      },
+      loading: {
+        general:    'Loading',
+        dashboard:  'dashboard',
+        planboard:  'planboard',
+        messages:   'messages',
+        groups:     'groups',
+        profile:    'profile',
+        settings:   'settings'
       }
     },
     nl: {
@@ -281,6 +300,7 @@ var ui = {
         button_loggingIn: "Inloggen...",
         forgot_password: "Wachtwoord vergeten?",
         forgetPassword: "Wachtwoord vergeten",
+        emailAddress: "Email adres",
         resetPassword: "Wachtwoord opnieuw instellen",
         returnLogin: "Terugkeren om in te loggen",
         changePassword: "Wachtwoord wijzigen",
@@ -296,14 +316,17 @@ var ui = {
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
         logout: 'Logout',
-        loading: 'Loading..',
+        loading: 'Loading..'
       },
       dashboard: {
         thisWeek: 'Deze week',
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',
         goToInbox: 'Ga naar inbox',
-        loadingPie: 'Cirkeldiagrammen laden...'
+        loadingPie: 'Cirkeldiagrammen laden...',
+        announcements: 'Alarm berichten',
+        loadingP2000: 'Alarm berichten laden...',
+        noP2000: 'Er zijn geen alarm berichten.'
       },
       planboard : {
         planboard: 'Planboard',
@@ -339,11 +362,13 @@ var ui = {
         northAavailable: 'Beschikbaar Noord' ,
         southAvailable: 'Beschikbaar Zuid',
         skipperOutService: 'Schipper van dienst',
-        notAvailable: 'Niet beschikbaar', 
+        notAvailable: 'Niet beschikbaar',
         notachieve: 'Niet behaald',
-        morePeople: 'Meer mensen',
-        enoughPeople: 'Precies genoeg mensen',
-        lessPeople: 'Te weinig mensen',
+        legendaLabels: {
+          morePeople: 'Meer mensen',
+          enoughPeople: 'Precies genoeg mensen',
+          lessPeople: 'Te weinig mensen'
+        },
         lastSyncTime: 'Laatste synchronisatietijd:',
         dataRangeStart: 'Begin gegevensscala: ',
         DataRangeEnd: 'Eind gegevensscala: ',
@@ -406,7 +431,7 @@ var ui = {
             startDate + ' ' +
             startTime + ' en ' +
             endDate + ' ' +
-            endTime + '. ' + 
+            endTime + '. ' +
             'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
         },
         removed: 'Bericht succesvol verwijderd.',
@@ -421,7 +446,7 @@ var ui = {
         sending: 'Bericht versturen...',
         sent: 'Bericht verstuurd.',
         typeSubject: 'Vul een onderwerp in',
-        messages: 'Berichten',
+        // messages: 'Berichten',
         ph_filterMessage: 'Berichten filteren...',
         noReceivers: 'Graag een ontvanger selecteren.'
       },
@@ -476,7 +501,7 @@ var ui = {
         deleted: 'Groep succesvol verwijderd.',
         filterMembers: 'Leden filteren...',
         searchfor: 'voornaam, achternaam..'
-      }, 
+      },
       profile: {
         profile: 'Profiel',
         edit: 'Wijzigen',
@@ -499,7 +524,7 @@ var ui = {
         newPassRepeat: 'Herhaal nieuw wachtwoord',
         changePass: 'Wachtwoord wijzigen',
         newAvail: 'Nieuwe beschikbaarheid',
-        saveProfile: 'Profielinformatie opslaan...', 
+        // saveProfile: 'Profielinformatie opslaan...',
         refreshing: 'Profielinformatie vernieuwen...',
         dataChanged: 'Profielgegevens succesvol gewijzigd.',
         pleaseFill: 'Vul a.u.b. alle velden in!',
@@ -509,7 +534,7 @@ var ui = {
         passwrong: 'Ingevoerd wachtwoord is foutief! Probeer het opnieuw.',
         newTimeslotAdded: 'Nieuw tijdslot succesvol toegevoegd.',
         changingTimeslot: 'Tijdslot wijzigen...',
-        timeslotChanged: 'Tijdslot succesvol gewijzigd.',
+        timeslotChanged: 'Tijdslot succesvol gewijzigd.'
       },
       settings: {
         settings: 'Instellingen',
@@ -530,6 +555,15 @@ var ui = {
       downloads: {
         app: 'Binnenkort te downloaden.',
         manual: 'Download Handleiding'
+      },
+      loading: {
+        general:    'Laden',
+        dashboard:  'dashboard',
+        planboard:  'planboard',
+        messages:   'berichten',
+        groups:     'groepen',
+        profile:    'profiel',
+        settings:   'instellingen'
       }
     }
-}
+};

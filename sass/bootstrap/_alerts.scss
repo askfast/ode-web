@@ -3,65 +3,69 @@
 // --------------------------------------------------
 
 
-
-
-
-/* @group alerts */
+// Base styles
+// -------------------------
 
 .alert {
-  margin-bottom: 20px;
   padding: 8px 35px 8px 14px;
-  border: 1px solid #d4d2c8;
-  border-radius: 4px;
-  background-color: #e6e4da;
-  color: #231f16;
-  font-weight: lighter;  
+  margin-bottom: $baseLineHeight;
+  // text-shadow: 0 1px 0 rgba(0,0,0,.5);
+  background-color: $warningBackground;
+  border: 1px solid $warningBorder;
+  @include border-radius($baseBorderRadius);
+}
+.alert,
+.alert h4 {
+  // Specified for the h4 to prevent conflicts of changing $headingsColor
+  color: $textColor; // $warningText;
 }
 .alert h4 {
   margin: 0;
-  color: #231f16;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
-  font-weight: normal;
-  font-weight: lighter;
 }
-.alert strong {
-  color: #231f16;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
-  font-weight: normal;
-  font-weight: lighter;
-  font-size: 18px;
-}
+
+// Adjust close link position
 .alert .close {
   position: relative;
   top: -2px;
   right: -21px;
-  line-height: 20px;
+  line-height: $baseLineHeight;
 }
-.alert-warning {
-  border: none;
-  background-color: #d38811;
-  color: #f7f5eb;
-  text-shadow: 1px -1px 0 rgba(0, 0, 0, 0.15);
-}
+
+
+// Alternate styles
+// -------------------------
+
 .alert-success {
-  border: none;
-  background-color: #6f9a6d;
-  color: #f7f5eb;
-  text-shadow: 1px -1px 0 rgba(0, 0, 0, 0.15); 
+  background-color: $successBackground;
+  border-color: $successBorder;
+  color: white; // $successText;
+}
+.alert-success h4 {
+  color: $successText;
 }
 .alert-danger,
 .alert-error {
-  border: none;
-  background-color: #ba5855;
-  color: #f7f5eb;
-  text-shadow: 1px -1px 0 rgba(0, 0, 0, 0.15);
+  background-color: $errorBackground;
+  border-color: $errorBorder;
+  color: white; // $errorText;
+}
+.alert-danger h4,
+.alert-error h4 {
+  color: white; // $errorText;
 }
 .alert-info {
-  border: none;
-  background-color: #57a9bf;
-  color: #f7f5eb;
-  text-shadow: 1px -1px 0 rgba(0, 0, 0, 0.15);
+  background-color: $infoBackground;
+  border-color: $infoBorder;
+  color: white; // $infoText;
 }
+.alert-info h4 {
+  color: white; // $infoText;
+}
+
+
+// Block alerts
+// -------------------------
+
 .alert-block {
   padding-top: 14px;
   padding-bottom: 14px;
@@ -73,88 +77,3 @@
 .alert-block p + p {
   margin-top: 5px;
 }
-.alert code,
-.alert a {
-  text-shadow: none;
-}
-.alert code {
-  background-color: #f5f4ee;
-}
-
-/* @end */
-
-
-// // Base styles
-// // -------------------------
-
-// .alert {
-//   padding: 8px 35px 8px 14px;
-//   margin-bottom: $baseLineHeight;
-//   text-shadow: 0 1px 0 rgba(255,255,255,.5);
-//   background-color: $warningBackground;
-//   border: 1px solid $warningBorder;
-//   @include border-radius($baseBorderRadius);
-// }
-// .alert,
-// .alert h4 {
-//   // Specified for the h4 to prevent conflicts of changing $headingsColor
-//   color: $warningText;
-// }
-// .alert h4 {
-//   margin: 0;
-// }
-
-// // Adjust close link position
-// .alert .close {
-//   position: relative;
-//   top: -2px;
-//   right: -21px;
-//   line-height: $baseLineHeight;
-// }
-
-
-// // Alternate styles
-// // -------------------------
-
-// .alert-success {
-//   background-color: $successBackground;
-//   border-color: $successBorder;
-//   color: $successText;
-// }
-// .alert-success h4 {
-//   color: $successText;
-// }
-// .alert-danger,
-// .alert-error {
-//   background-color: $errorBackground;
-//   border-color: $errorBorder;
-//   color: $errorText;
-// }
-// .alert-danger h4,
-// .alert-error h4 {
-//   color: $errorText;
-// }
-// .alert-info {
-//   background-color: $infoBackground;
-//   border-color: $infoBorder;
-//   color: $infoText;
-// }
-// .alert-info h4 {
-//   color: $infoText;
-// }
-
-
-// // Block alerts
-// // -------------------------
-
-// .alert-block {
-//   padding-top: 14px;
-//   padding-bottom: 14px;
-// }
-// .alert-block > p,
-// .alert-block > ul {
-//   margin-bottom: 0;
-// }
-// .alert-block p + p {
-//   margin-top: 5px;
-// }

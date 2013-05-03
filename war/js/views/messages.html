@@ -10,8 +10,12 @@
 <!-- inboxes -->
 <div class="row-fluid">
   <div class="tabbable tabs-left">
+
+
+
+
     <!-- tabs -->
-    <ul class="nav nav-tabs nav-tabs-app">
+    <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
       <li class="{{(views.compose==true) && 'active'}}" ng-show="views.compose">
         <a href="#composeTab" 
             data-toggle="tab"
@@ -50,8 +54,14 @@
     </ul>
     <!-- end tabs -->
 
+
+
+
     <!-- tabs content -->
     <div class="tab-content">
+
+
+
       
       <!-- composeTab -->
       <div class="tab-pane {{(views.compose==true) && 'active'}}" id="composeTab" ng-show="views.compose">
@@ -120,6 +130,9 @@
       </div>
       <!-- end composeTab -->
 
+
+
+
       <!-- viewTab -->
       <div class="tab-pane {{(views.message==true) && 'active'}}" id="viewTab" ng-show="views.message">
         <div class="tab-header">
@@ -162,8 +175,12 @@
       </div>
       <!-- end viewTab -->
 
+
+
+
       <!-- inboxTab -->
       <div class="tab-pane {{(views.inbox==true) && 'active'}}" id="inboxTab">
+
         <div class="tab-header">
           <h3 class="pull-left">{{ui.message.inbox}}</h3>
           <!-- filter messages -->
@@ -174,20 +191,28 @@
                     ng-model="query.inbox">
           </form>
           <!-- end filter messages -->
+
+          <!-- <div class="btn-group pull-right">
+            <button class="btn btn-danger" ng-click="clean.inbox()">Inbox</button>
+            <button class="btn btn-danger" ng-click="clean.outbox()">Outbox</button>
+            <button class="btn btn-danger" ng-click="clean.trash()">Trash</button>
+          </div> -->
+
         </div>
+
         <hr>
 
-        <p ng-hide="(messages.inbox|filter:query.inbox).length > 0">{{ui.message.noMessage}}</p>
+        <p ng-hide="(messages.inbox[page.inbox] | filter:query.inbox).length > 0">{{ui.message.noMessage}}</p>
         
         <!-- inbox listing -->
-        <div ng-show="(messages.inbox|filter:query.inbox).length > 0">
+        <div ng-show="(messages.inbox[page.inbox] | filter:query.inbox).length > 0">
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>
                   <input type="checkbox"
                           ng-model="selectionMaster.inbox"
-                          ng-click="toggleSelection(messages.inbox, 'inbox', selectionMaster.inbox)">
+                          ng-click="toggleSelection(messages.inbox[page.inbox], 'inbox', selectionMaster.inbox)">
                 </th>
                 <th></th>
                 <th>{{ui.message.from}}</th>
@@ -197,20 +222,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="message in messages.inbox | filter:query.inbox | orderBy:'creationTime':true">
+              <tr ng-repeat="message in messages.inbox[page.inbox] | filter:query.inbox | orderBy:'creationTime':true">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.inbox[message.uuid]"
-                          ng-checked="selectionMaster.inbox">
+                          ng-checked="selection.inbox[message.uuid]">
+                          <!-- ng-checked="selectionMaster.inbox"> -->
                 </td>
                 <td><span class="label label-warning" ng-show="(message.state=='NEW')">{{ui.message.newMsg}}</span></td>
-                <td>{{message.requester|convertEve|convertUserIdToName}}</td>
+                <td>{{message.requester | convertEve | convertUserIdToName}}</td>
                 <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime | nicelyDate}}</td>
                 <td>
                   <div class="pull-right">
                     <button class="btn btn-mini"
-                            ng-click="reply(message)"><i class="icon-share-alt"></i></button>
+                            ng-click="reply(message)"><i class="icon-share-alt"></i></button>&nbsp;
                     <button type="submit" 
                             ng-click="removeMessage(message.uuid)" 
                             class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
@@ -223,16 +249,33 @@
                   ng-click="removeMessages(selection.inbox)" 
                   class="btn btn-small btn-danger pull-left">
                   <i class="icon-trash icon-white"></i> {{ui.message.deleteSelected}}</button>
+
+          <div class="btn-toolbar pull-right" style="margin: 0;">
+            <div class="btn-group">
+              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')">« Vorige</button>
+              <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" ng-click="paginate.next('inbox')">Volgende »</button>
+            </div>
+          </div>
+
+          <br><br>
+
           <span class="muted pull-right">
-            <small><i>{{(messages.inbox|filter:query.inbox).length | i18n_spec:'message.someMessage'}} </i></small>
+            <!-- <small><i>Page: {{page.inbox + 1}} of {{messages.inbox.length}}, {{(messages.inbox | filter:query.inbox).length | i18n_spec:'message.someMessage'}} </i></small> -->
+            <small><i>Pagina: {{page.inbox + 1}} of {{messages.inbox.length}}, in totaal: {{messages.inbox | countBox}} </i></small>
           </span>
+
         </div>
         <!-- end inbox listing -->
+
       </div>
       <!-- end inboxTab -->
 
+
+
+
       <!-- outboxTab -->
       <div class="tab-pane {{(views.outbox==true) && 'active'}}" id="outboxTab">
+
         <div class="tab-header">
           <h3 class="pull-left">{{ui.message.outbox}}</h3>
           <!-- filter messages -->
@@ -244,17 +287,21 @@
           </form>
           <!-- end filter messages -->
         </div>
+
         <hr>
-        <p ng-hide="(messages.outbox|filter:query.outbox).length > 0">{{ui.message.noMessage}}</p>
+
+        <p ng-hide="(messages.outbox[page.outbox] | filter:query.outbox).length > 0">{{ui.message.noMessage}}</p>
+
         <!-- outbox listing -->
-        <div ng-show="(messages.outbox|filter:query.outbox).length > 0">
+        <div ng-show="(messages.outbox[page.outbox] | filter:query.outbox).length > 0">
+
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>
                   <input type="checkbox"
                           ng-model="selectionMaster.outbox"
-                          ng-click="toggleSelection(messages.outbox, 'outbox', selectionMaster.outbox)">
+                          ng-click="toggleSelection(messages.outbox[page.outbox], 'outbox', selectionMaster.outbox)">
                 </th>
                 <th style="max-width: 400px;">{{ui.message.receviers}}</th>
                 <th>{{ui.message.subject}}</th>
@@ -263,16 +310,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="message in messages.outbox | filter:query.outbox | orderBy:'creationTime':true">
+              <tr ng-repeat="message in messages.outbox[page.outbox] | filter:query.outbox | orderBy:'creationTime':true">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.outbox[message.uuid]"
-                          ng-checked="selectionMaster.outbox">
+                          ng-checked="selection.outbox[message.uuid]">
+                          <!-- ng-checked="selectionMaster.outbox"> -->
                 </td>
                 <td>
-                  <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
+                  <span ng-repeat="receiver in message.responder">{{receiver | convertEve | convertUserIdToName}}, </span>
                 </td>
-                <td><a ng-click="requestMessage(message.uuid,'outbox')">{{message.subject}}</a></td>
+                <td><a ng-click="requestMessage(message.uuid, 'outbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime | nicelyDate}}</td>
                 <td>
                   <div class="pull-right">
@@ -284,20 +332,37 @@
               </tr>
             </tbody>
           </table>
+
           <button type="button" 
                   ng-click="removeMessages(selection.outbox)" 
                   class="btn btn-small btn-danger pull-left">
                   <i class="icon-trash icon-white"></i>{{ui.message.deleteSelected}}</button>
+
+          <div class="btn-toolbar pull-right" style="margin: 0;">
+            <div class="btn-group">
+              <button class="btn btn-small {{(page.outbox == 0) && 'disabled'}}" ng-click="paginate.before('outbox')">« Vorige</button>
+              <button class="btn btn-small {{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}" ng-click="paginate.next('outbox')">Volgende »</button>
+            </div>
+          </div>
+
+          <br><br>
+
           <span class="muted pull-right">
-            <small><i>{{(messages.outbox|filter:query.outbox).length | i18n_spec:'message.someMessage'}}</i></small>
+            <small><i>Pagina: {{page.outbox + 1}} of {{messages.outbox.length}}, in totaal: {{messages.outbox | countBox}}</i></small>
           </span>
+
         </div>
         <!-- end outbox listing -->
+
       </div>
       <!-- end outboxTab -->
 
+
+
+
       <!-- trashTab -->
       <div class="tab-pane {{(views.trash==true) && 'active'}}" id="trashTab">
+
         <div class="tab-header">
           <h3 class="pull-left">{{ui.message.trash}}</h3>
           <!-- empty trash button -->
@@ -317,17 +382,21 @@
           </form>
           <!-- end filter messages -->
         </div>
+
         <hr>
-        <p ng-hide="(messages.trash|filter:query.trash).length > 0">{{ui.message.noMsgInTrash}}</p>
+
+        <p ng-hide="(messages.trash[page.trash] | filter:query.trash).length > 0">{{ui.message.noMsgInTrash}}</p>
+
         <!-- trash listing -->
-        <div ng-show="(messages.trash|filter:query.trash).length > 0">
+        <div ng-show="(messages.trash[page.trash] | filter:query.trash).length > 0">
+
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>
                   <input type="checkbox"
                           ng-model="selectionMaster.trash"
-                          ng-click="toggleSelection(messages.trash, 'trash', selectionMaster.trash)">
+                          ng-click="toggleSelection(messages.trash[page.trash], 'trash', selectionMaster.trash)">
                 </th>
                 <th>{{ui.message.box}}</th>
                 <th>{{ui.message.persons}}</th>
@@ -337,15 +406,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="message in messages.trash | filter:query.trash | orderBy:'creationTime':true">
+              <tr ng-repeat="message in messages.trash[page.trash] | filter:query.trash | orderBy:'creationTime':true">
                 <td>
                   <input type="checkbox"
                           ng-model="selection.trash[message.uuid]"
-                          ng-checked="selectionMaster.trash">
+                          ng-checked="selection.trash[message.uuid]">
+                          <!-- ng-checked="selectionMaster.trash"> -->
                 </td>
                 <td><span class="label">{{message.box}}</span></td>
                 <td>
-                  <span ng-repeat="receiver in message.responder">{{receiver|convertEve|convertUserIdToName}}, </span>
+                  <span ng-repeat="receiver in message.responder">{{receiver | convertEve | convertUserIdToName}}, </span>
                 </td>
                 <td><a ng-click="requestMessage(message.uuid, 'trash')">{{message.subject}}</a></td>
                 <td>{{message.creationTime | nicelyDate}}</td>
@@ -359,21 +429,39 @@
               </tr>
             </tbody>
           </table>
+
           <button type="button" 
                   ng-click="restoreMessages(selection.trash)" 
                   class="btn btn-small btn-success pull-left">
                   <i class="icon-thumbs-up icon-white"></i>{{ui.message.restoreSelected}}</button>
 
+          <div class="btn-toolbar pull-right" style="margin: 0;">
+            <div class="btn-group">
+              <button class="btn btn-small {{(page.trash == 0) && 'disabled'}}" ng-click="paginate.before('trash')">« Vorige</button>
+              <button class="btn btn-small {{(page.trash + 1 == messages.trash.length) && 'disabled'}}" ng-click="paginate.next('trash')">Volgende »</button>
+            </div>
+          </div>
+
+          <br><br>
+
           <span class="muted pull-right">
-            <small><i>{{(messages.trash|filter:query.trash).length | i18n_spec:'message.someMessage'}}</i></small>
+            <small><i>Pagina: {{page.trash + 1}} of {{messages.trash.length}}, in totaal: {{messages.trash | countBox}}</i></small>
           </span>
+
         </div>
         <!-- end trash listing -->
+
       </div>
       <!-- end trashTab -->
 
+
+
+
     </div>
     <!-- end tabs content -->
+
+
+
   </div>
 </div>
-<!-- end inboxes
+<!-- end inboxes -->
