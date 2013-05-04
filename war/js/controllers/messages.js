@@ -55,12 +55,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	  	next: function (box)
 	  	{
-	  		if ($scope.page[box] + 1 != box.length) $scope.page[box]++;
+	  		if ($scope.page[box] + 1 != $scope.messages[box].length)
+	  			$scope.page[box]++;
 	  	},
 
 	  	before: function (box)
 	  	{
-	  		if ($scope.page[box] != 0) $scope.page[box]--;
+	  		if ($scope.page[box] != 0)
+	  			$scope.page[box]--;
 	  	}
 	  };
 

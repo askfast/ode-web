@@ -5929,7 +5929,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	      /**
 	       * Total days in a month can change so get it start periods cache
 	       */
-	      if ($scope.timeline.current.day != periods.days.total)
+	      if ($scope.timeline.current.day != $scope.periods.days.total)
 	      {
 	        $scope.timeline.current.day++;
 
@@ -6121,12 +6121,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	  	next: function (box)
 	  	{
-	  		if ($scope.page[box] + 1 != box.length) $scope.page[box]++;
+	  		if ($scope.page[box] + 1 != $scope.messages[box].length)
+	  			$scope.page[box]++;
 	  	},
 
 	  	before: function (box)
 	  	{
-	  		if ($scope.page[box] != 0) $scope.page[box]--;
+	  		if ($scope.page[box] != 0)
+	  			$scope.page[box]--;
 	  	}
 	  };
 
