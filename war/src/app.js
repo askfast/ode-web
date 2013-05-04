@@ -2418,10 +2418,10 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'GET',
 	        params: {
 		        action: '', 
-		        0: 'dm', 
-		        // state: 'SEEN',
-		        // limit: 1,
-		        // offset: 0
+		        0: 'all', 
+		        state: 'NEW',
+		        limit: 10,
+		        offset: 0
 		      },
 	        isArray: true
 	      },
@@ -4772,6 +4772,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
+	  console.log('data ->', angular.toJson(data.periods));
+
 	  
 	  /**
 	   * Get groups and settings
@@ -4987,9 +4989,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
-
-
-	  // $scope.self.timeline.redraw();
 
 	}
 ]);;/*jslint node: true */
