@@ -4,6 +4,7 @@
 ## Versions
 
 	2.2.0
+		* Hotfix for not going further than 6th page in pagination in messages 4-5-2013
 		* Deployed for live, test, gvrb and isparaat 3-5-2013
 
 	2.1.0
