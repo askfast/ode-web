@@ -27,7 +27,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-	  console.log('data ->', angular.toJson(data.periods));
+	  console.log('data ->', data);
 
 	  
 	  /**
