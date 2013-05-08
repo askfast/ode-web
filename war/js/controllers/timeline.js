@@ -168,6 +168,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      }, 100);
 		    };
 
+		  //   console.log('ranges for ie8 ->', $scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime(), $rootScope.browser);
+
+		  //   if ($.browser.msie)
+				// {
+				//   var ver = $.browser.version || $.browser.version[0];
+
+				//   if (ver == '8.0')
+				//   {
+	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime());
+				//   }
+				//   else
+				//   {
+	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+				//   }
+				// }
+	      
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	    },
 

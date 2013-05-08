@@ -11,7 +11,7 @@
 
 ## Versions
 
-	2.2.0
+	2.2.0 (snapshot)
 		* Hotfix for not going further than 6th page in pagination in messages 4-5-2013
 		* Deployed for 100, 110, 120 and 130 3-5-2013
 

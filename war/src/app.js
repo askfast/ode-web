@@ -660,7 +660,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.2.0',
+    version:  '2.2.0 (snapshot)',
     lang:     'nl',
 
     fullscreen: true,
@@ -2418,10 +2418,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'GET',
 	        params: {
 		        action: '', 
-		        0: 'all', 
-		        state: 'NEW',
-		        limit: 10,
-		        offset: 0
+		        0: 'dm'
+		        // 0: 'all', 
+		        // state: 'NEW',
+		        // limit: 10,
+		        // offset: 0
 		      },
 	        isArray: true
 	      },
@@ -4850,6 +4851,16 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    }
 	  };
 
+	  if ($.browser.msie && $.browser.version == '8.0')
+	  {
+		  $scope.timeline.options = {
+	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
+	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
+	    }
+	  }
+
 
 	  /**
 	   * Legenda defaults
@@ -5161,6 +5172,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      }, 100);
 		    };
 
+		  //   console.log('ranges for ie8 ->', $scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime(), $rootScope.browser);
+
+		  //   if ($.browser.msie)
+				// {
+				//   var ver = $.browser.version || $.browser.version[0];
+
+				//   if (ver == '8.0')
+				//   {
+	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime());
+				//   }
+				//   else
+				//   {
+	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+				//   }
+				// }
+	      
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	    },
 

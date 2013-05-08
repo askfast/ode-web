@@ -105,6 +105,16 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    }
 	  };
 
+	  if ($.browser.msie && $.browser.version == '8.0')
+	  {
+		  $scope.timeline.options = {
+	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
+	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
+	    }
+	  }
+
 
 	  /**
 	   * Legenda defaults
