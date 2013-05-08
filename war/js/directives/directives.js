@@ -37,6 +37,46 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 
 /**
+ * Scheadule item
+ */
+.directive('scheaduleItem',
+  function ($compile)
+  {
+    var templateMain = '<span>offset: {{offset}}'+
+                        '</span>';
+
+    var getTemplate = function() {
+        var template = '';
+
+        template = templateMain;
+
+        return template;
+    }
+
+    var linker = function(scope, element, attrs) {
+
+      console.log('scope ->', scope.scheadule);
+
+      scope.offset = scope.scheadule;
+
+        element.html(getTemplate()).show();
+
+        $compile(element.contents())(scope);
+    }
+
+    return {
+        restrict: "E",
+        rep1ace: true,
+        link: linker,
+        scope: {
+            scheadule:'='
+        }
+    };
+  }
+)
+
+
+/**
  * Daterangepicker
  */
 .directive('daterangepicker',

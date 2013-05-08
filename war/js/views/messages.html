@@ -176,6 +176,9 @@
 
 
 
+              <!-- <scheadule-item ng-repeat="offset in notification.offsets" scheadule="offset"></scheadule-item> -->
+
+              <!-- <span ng-repeat="offset in notification.offsets">{{offset}}&nbsp;/&nbsp;</span> -->
 
               <div class="control-group">
                 <label class="control-label">Scheadules</label>
@@ -183,7 +186,7 @@
                 <div class="timer" style="float: left; margin-right: 10px;">
                   <input  name="time-start" 
                           type="text" 
-                          ng-model="slot.start.time" 
+                          ng-model="scheadule.time" 
                           bs-timepicker>
                   <i class="icon-time" style="margin-top: -3px;"></i>
                 </div>
@@ -193,44 +196,44 @@
                       data-toggle="buttons-checkbox">
 
                   <button type="button" 
-                          class="btn" 
-                          ng-model="scheadule.day1" 
+                          class="btn {{(scheadule.days.mon) && 'active'}}" 
+                          ng-model="scheadule.days.mon" 
                           ng-click=""
                           bs-button="">Ma</button>
 
                   <button type="button" 
-                          class="btn" 
-                          ng-model="scheadule.day2" 
+                          class="btn {{(scheadule.days.tue) && 'active'}}" 
+                          ng-model="scheadule.days.tue" 
                           ng-click=""
                           bs-button="">Di</button>
 
                   <button type="button" 
-                          class="btn" 
-                          ng-model="scheadule.day3" 
+                          class="btn {{(scheadule.days.wed) && 'active'}}" 
+                          ng-model="scheadule.days.wed" 
                           ng-click=""
                           bs-button="">Wo</button>
 
                   <button type="button" 
-                          class="btn" 
-                          ng-model="scheadule.day4" 
+                          class="btn {{(scheadule.days.thu) && 'active'}}" 
+                          ng-model="scheadule.days.thu" 
                           ng-click=""
                           bs-button="">Do</button>
 
                   <button type="button" 
-                          class="btn" 
-                          ng-model="scheadule.day5" 
+                          class="btn {{(scheadule.days.fri) && 'active'}}" 
+                          ng-model="scheadule.days.fri" 
                           ng-click=""
                           bs-button="">Vr</button>
 
                   <button type="button" 
-                          class="btn" 
-                          ng-model="scheadule.day6" 
+                          class="btn {{(scheadule.days.sat) && 'active'}}" 
+                          ng-model="scheadule.days.sat" 
                           ng-click=""
                           bs-button="">Za</button>
 
                   <button type="button" 
-                          class="btn" 
-                          ng-model="scheadule.day7" 
+                          class="btn {{(scheadule.days.sun) && 'active'}}" 
+                          ng-model="scheadule.days.sun" 
                           ng-click=""
                           bs-button="">Zo</button>
 
@@ -713,7 +716,7 @@
 <!-- end inboxes -->
 
 
-<br><br>
+<!-- <br><br>
 <button type="submit" 
         ng-click="createNotification()" 
         class="btn btn-success">Create Notification</button>
@@ -725,4 +728,4 @@
         class="btn btn-warning">Edit Notification</button>
 <button type="submit" 
         ng-click="getNotification()" 
-        class="btn">Get Notification</button>
+        class="btn">Get Notification</button> -->

@@ -4630,7 +4630,7 @@ angular.module('WebPaige.Controllers.Logout', [])
 	    }
 	    else
 	    {
-	      Storage.clearAll();
+	      // Storage.clearAll();
 
 	      Storage.session.clearAll();
 
@@ -6869,13 +6869,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-
-
-
-
-
-
 	  /**
 	   * Bulk cleaners for mailboxes
 	   */
@@ -6895,14 +6888,16 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
+	  /**
+	   * REMOVE
+	   */
+    $scope.scheaduler = true;
 
 
-
-
-
-
-
-
+	  /**
+	   * Notifications API
+	   */
+	  /*
     Messages.notification.list()
     .then(function (result)
     {
@@ -6916,13 +6911,12 @@ angular.module('WebPaige.Controllers.Messages', [])
         console.log('notifications ->', result);
       };
     });
+    */
 
 
-    $scope.scheaduler = true;
-
-
-
-
+    /**
+     * Create notification
+     */
     $scope.createNotification = function ()
     {
     	var notification = {
@@ -6953,8 +6947,9 @@ angular.module('WebPaige.Controllers.Messages', [])
     };
 
 
-
-
+    /**
+     * Edit notification
+     */
     $scope.editNotification = function ()
     {
     	var notification = {
@@ -6985,8 +6980,9 @@ angular.module('WebPaige.Controllers.Messages', [])
     };
 
 
-
-
+    /**
+     * Get notification
+     */
     $scope.getNotification = function ()
     {
 	    Messages.notification.get('271d820b-8ec4-41d1-a5f6-0845751e0a44')
@@ -7000,13 +6996,17 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      else
 	      {
 	        console.log('notification fetched ->', result);
+
+	        $scope.notification = result;
 	      };
 	    });
     };
 
+    $scope.getNotification();
 
-
-
+    /**
+     * Delete notification
+     */
     $scope.deleteNotification = function ()
     {
 	    Messages.notification.remove('36a8fedc-ed7b-495d-b642-8ea1bfbc8c65')
@@ -7023,6 +7023,66 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      };
 	    });
     };
+
+
+
+
+
+    var offset = 89309999; // 204800000 // 604800000
+
+
+		var max 		= 1000 * 60 * 60 * 24 * 7,
+				day 		= 1000 * 60 * 60 * 24,
+				hour		=	1000 * 60 * 60,
+				minute 	= 1000 * 60,
+				days 		= 0,
+				hours 	= 0,
+				minutes = 0,
+				stamp 	= offset * 1000,
+				hours 	= offset % day,
+				days 		= offset - hours,
+				minutes = offset % hour,
+				total 	= {
+					days: 		Math.floor(days / day),
+					hours: 		Math.floor(hours / hour),
+					minutes: 	Math.floor(minutes / minute)
+				};
+
+				if (total.hours < 10) total.hours = '0' + total.hours;
+				if (total.minutes < 10) total.minutes = '0' + total.minutes;
+
+		$scope.scheadule = {};
+
+		$scope.scheadule = {
+			days: {
+				mon: false,
+				tue: false,
+				wed: false,
+				thu: false,
+				fri: false,
+				sat: false,
+				sun: false
+			},
+			time: total.hours + ':' + total.minutes
+		};
+
+		switch (total.days)
+		{
+			case 0: 	$scope.scheadule.days.mon = true; 	break;
+			case 1: 	$scope.scheadule.days.tue = true; 	break;
+			case 2: 	$scope.scheadule.days.wed = true; 	break;
+			case 3: 	$scope.scheadule.days.thu = true; 	break;
+			case 4: 	$scope.scheadule.days.fri = true; 	break;
+			case 5: 	$scope.scheadule.days.sat = true; 	break;
+			case 6: 	$scope.scheadule.days.sun = true; 	break;
+		}
+
+
+		console.log('offset ->', offset, 'max ->', max);
+
+		console.warn('days ->', 		Math.floor(days / day));
+		console.warn('hours ->', 		Math.floor(hours / hour));
+		console.warn('minutes ->', 	Math.floor(minutes / minute));
 
 
 	}
@@ -8287,6 +8347,46 @@ angular.module('WebPaige.Directives', ['ngResource'])
     return {
       restrict: 'A',
       link:     linker
+    };
+  }
+)
+
+
+/**
+ * Scheadule item
+ */
+.directive('scheaduleItem',
+  function ($compile)
+  {
+    var templateMain = '<span>offset: {{offset}}'+
+                        '</span>';
+
+    var getTemplate = function() {
+        var template = '';
+
+        template = templateMain;
+
+        return template;
+    }
+
+    var linker = function(scope, element, attrs) {
+
+      console.log('scope ->', scope.scheadule);
+
+      scope.offset = scope.scheadule;
+
+        element.html(getTemplate()).show();
+
+        $compile(element.contents())(scope);
+    }
+
+    return {
+        restrict: "E",
+        rep1ace: true,
+        link: linker,
+        scope: {
+            scheadule:'='
+        }
     };
   }
 )

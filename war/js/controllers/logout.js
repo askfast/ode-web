@@ -28,7 +28,7 @@ angular.module('WebPaige.Controllers.Logout', [])
 	    }
 	    else
 	    {
-	      Storage.clearAll();
+	      // Storage.clearAll();
 
 	      Storage.session.clearAll();
 
