@@ -2774,7 +2774,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 
 
-
 	  /**
 	   * Delete message(s)
 	   */
@@ -2790,7 +2789,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
-
 
 
 	  /**
@@ -2846,21 +2844,28 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	  Messages.prototype.clean = function (box)
 	  {
-	    var deferred = $q.defer(),
-	        calls = [];
+	    var deferred 	= $q.defer(),
+	        calls 		= [];
 
 	    angular.forEach(box, function (bulk, id)
 	    {
-	    	console.log('bulk ->', bulk);
+	    	var ids = [];
 
-	      // if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	    	angular.forEach(bulk, function (message, index)
+	    	{
+	    		ids.push(message.uuid);
+	    	});
+
+	      calls.push(Messages.remove(null, {
+	      	members: ids
+	      }));
 	    });
 
-	    // $q.all(calls)
-	    // .then(function (result)
-	    // {
-	    //   deferred.resolve(result);
-	    // });
+	    $q.all(calls)
+	    .then(function (result)
+	    {
+	      deferred.resolve(result);
+	    });
 
 	    return deferred.promise;
 	  }
@@ -4851,6 +4856,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    }
 	  };
 
+	  /**
+	   * IE8 fix for inability of - signs in date object
+	   */
 	  if ($.browser.msie && $.browser.version == '8.0')
 	  {
 		  $scope.timeline.options = {
@@ -5171,22 +5179,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          ), $scope.timeline.options);
 		      }, 100);
 		    };
-
-		  //   console.log('ranges for ie8 ->', $scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime(), $rootScope.browser);
-
-		  //   if ($.browser.msie)
-				// {
-				//   var ver = $.browser.version || $.browser.version[0];
-
-				//   if (ver == '8.0')
-				//   {
-	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime());
-				//   }
-				//   else
-				//   {
-	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-				//   }
-				// }
 	      
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	    },
@@ -6734,20 +6726,20 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-	  // $scope.clean = {
-	  // 	inbox: function ()
-	  // 	{
-	  // 		console.log('inbox clean');
-	  // 	},
-	  // 	outbox: function ()
-	  // 	{
-	  // 		Messages.clean($scope.messages.outbox);
-	  // 	},
-	  // 	trash: function ()
-	  // 	{
-	  // 		console.log('trash clean');	  		
-	  // 	}
-	  // }
+	  $scope.clean = {
+	  	inbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.inbox);
+	  	},
+	  	outbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.outbox);
+	  	},
+	  	trash: function ()
+	  	{
+	  		Messages.clean($scope.messages.trash); 		
+	  	}
+	  }
 
 	}
 ]);;/*jslint node: true */

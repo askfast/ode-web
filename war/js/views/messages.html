@@ -75,6 +75,7 @@
         <!-- compose form -->
         <form>
           <fieldset>
+          
             <div class="control-group">
               <label class="control-label">{{ui.message.broadcast}}</label>
               <div  class="btn-group"  
@@ -93,6 +94,7 @@
                         bs-button="">{{ui.message.email}}</button>
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.message.receviers}}</label>
               <!-- {{ui.message.chooseRecept}} -->
@@ -106,6 +108,7 @@
               </select>
               <!-- <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.message.subject}}</label>
               <input type="text" 
@@ -113,12 +116,21 @@
                       ng-model="message.subject"
                       placeholder="{{ui.message.typeSubject}}">
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.message.message}}</label>
               <textarea rows="7" 
                         class="span7"
                         ng-model="message.body"></textarea>
             </div>
+
+            <div class="control-group">
+              <label class="control-label">{{ui.message.message}}</label>
+              <textarea rows="7" 
+                        class="span7"
+                        ng-model="message.body"></textarea>
+            </div>
+
             <div class="form-actions">
               <button type="submit" 
                       ng-click="send(message, broadcast)" 

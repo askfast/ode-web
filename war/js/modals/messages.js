@@ -379,7 +379,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 
 
-
 	  /**
 	   * Delete message(s)
 	   */
@@ -395,7 +394,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
-
 
 
 	  /**
@@ -451,21 +449,28 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	  Messages.prototype.clean = function (box)
 	  {
-	    var deferred = $q.defer(),
-	        calls = [];
+	    var deferred 	= $q.defer(),
+	        calls 		= [];
 
 	    angular.forEach(box, function (bulk, id)
 	    {
-	    	console.log('bulk ->', bulk);
+	    	var ids = [];
 
-	      // if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	    	angular.forEach(bulk, function (message, index)
+	    	{
+	    		ids.push(message.uuid);
+	    	});
+
+	      calls.push(Messages.remove(null, {
+	      	members: ids
+	      }));
 	    });
 
-	    // $q.all(calls)
-	    // .then(function (result)
-	    // {
-	    //   deferred.resolve(result);
-	    // });
+	    $q.all(calls)
+	    .then(function (result)
+	    {
+	      deferred.resolve(result);
+	    });
 
 	    return deferred.promise;
 	  }

@@ -641,20 +641,20 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-	  // $scope.clean = {
-	  // 	inbox: function ()
-	  // 	{
-	  // 		console.log('inbox clean');
-	  // 	},
-	  // 	outbox: function ()
-	  // 	{
-	  // 		Messages.clean($scope.messages.outbox);
-	  // 	},
-	  // 	trash: function ()
-	  // 	{
-	  // 		console.log('trash clean');	  		
-	  // 	}
-	  // }
+	  $scope.clean = {
+	  	inbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.inbox);
+	  	},
+	  	outbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.outbox);
+	  	},
+	  	trash: function ()
+	  	{
+	  		Messages.clean($scope.messages.trash); 		
+	  	}
+	  }
 
 	}
 ]);
