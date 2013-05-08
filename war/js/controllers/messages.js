@@ -108,11 +108,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  function setView (hash)
 	  {
 	    $scope.views = {
-	      compose: false,
-	      message: false,
-	      inbox:   false,
-	      outbox:  false,
-	      trash:   false
+	      compose: 				false,
+	      message: 				false,
+	      inbox:   				false,
+	      outbox:  				false,
+	      trash:   				false,
+	      notifications: 	false
 	    };
 
 	    $scope.views[hash] = true;
@@ -177,10 +178,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.message = Messages.find(id);
 
-
-	    console.warn('found message ->', $scope.message);
-
-
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
@@ -208,10 +205,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      angular.forEach($scope.messages.inbox, function (message, index)
 	      {
-	        if (message.uuid == $scope.message.uuid)
-	        {
-	          message.state = "READ";
-	        };
+	        if (message.uuid == $scope.message.uuid) message.state = "READ";
 
 	        _inbox.push(message);
 	      });
@@ -230,9 +224,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $scope.requestMessage = function (current, origin)
 	  {
-	  	console.log('msg ->', current, origin);
-
-	    $scope.origin = origin;
+		  $scope.origin = origin;
 
 	    setMessageView(current);
 
@@ -505,9 +497,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	  		var name = $(li).html();
 
-	  		$.each($("div#composeTab select.chzn-select option"), function (j,opt)
+	  		$.each($("div#composeTab select.chzn-select option"), function (j, opt)
 	      {
-		      if(opt.innerHTML == name) opt.selected = true;
+		      if (opt.innerHTML == name) opt.selected = true;
 		    });
 	  	});
 	  });
@@ -522,16 +514,16 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('compose');
 
-	    var members = angular.fromJson(Storage.get('members')),
-	        senderId = message.requester.split('personalagent/')[1].split('/')[0],
-	        name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+	    var members 	= angular.fromJson(Storage.get('members')),
+	        senderId 	= message.requester.split('personalagent/')[1].split('/')[0],
+	        name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
 
 	    $scope.message = {
-	      subject: 'RE: ' + message.subject,
-	      receivers: [{
-	        group: 'Users', 
-	        id: senderId , 
-	        name: name
+	      subject: 		'RE: ' + message.subject,
+	      receivers: 	[{
+	        group: 		'Users', 
+	        id: 			senderId , 
+	        name: 		name
 	      }]
 	    };
 
@@ -641,6 +633,13 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+
+
+
+
+	  /**
+	   * Bulk cleaners for mailboxes
+	   */
 	  $scope.clean = {
 	  	inbox: function ()
 	  	{
@@ -654,7 +653,138 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		Messages.clean($scope.messages.trash); 		
 	  	}
-	  }
+	  };
+
+
+
+
+
+
+
+
+
+
+    Messages.notification.list()
+    .then(function (result)
+    {
+      if (result.error)
+      {
+        $rootScope.notifier.error('Error with getting notifications..');
+        console.warn('error ->', result);
+      }
+      else
+      {
+        console.log('notifications ->', result);
+      };
+    });
+
+
+    $scope.scheaduler = true;
+
+
+
+
+    $scope.createNotification = function ()
+    {
+    	var notification = {
+			 "sender" : 		"apptestknrm",
+			 "recipients": 	["apptestknrm", "person1", "person2"],
+			 "label": 			"mysubject xxxxxxx label",
+			 "subject": 		"mysubject xxxxxx",
+			 "message": 		"mymessage xxxxxx",
+			 "offsets": 		[100100, 200200, 300300, 400400, 500500],
+			 "repeat" : 		"week",
+			 "types": 			["sms", "email", "paige"],
+			 "active" : 		true
+			};
+
+	    Messages.notification.create(notification)
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with getting notifications..');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        console.log('notification made ->', result);
+	      };
+	    });
+    };
+
+
+
+
+    $scope.editNotification = function ()
+    {
+    	var notification = {
+			 "sender" : 		"apptestknrm",
+			 "recipients": 	["apptestknrm", "culusoy@ask-cs.com"],
+			 "label": 			"mysubject [modified] label",
+			 "subject": 		"mysubject [modified]",
+			 "message": 		"mymessage [modified]",
+			 "offsets": 		[10000, 20000, 30000, 40000],
+			 "repeat" : 		"week",
+			 "types": 			["sms"],
+			 "active" : 		false
+			};
+
+	    Messages.notification.edit('271d820b-8ec4-41d1-a5f6-0845751e0a44', notification)
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with getting notifications..');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        console.log('notification edited ->', result);
+	      };
+	    });
+    };
+
+
+
+
+    $scope.getNotification = function ()
+    {
+	    Messages.notification.get('271d820b-8ec4-41d1-a5f6-0845751e0a44')
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with getting notifications..');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        console.log('notification fetched ->', result);
+	      };
+	    });
+    };
+
+
+
+
+    $scope.deleteNotification = function ()
+    {
+	    Messages.notification.remove('36a8fedc-ed7b-495d-b642-8ea1bfbc8c65')
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with getting notifications..');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        console.log('notification deleted ->', result);
+	      };
+	    });
+    };
+
 
 	}
 ]);

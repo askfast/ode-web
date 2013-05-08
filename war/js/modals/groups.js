@@ -82,7 +82,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
+	        // params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
+	        params: {id:'', fields: '[role, settingsWebPaige]'},
 	        isArray: true
 	      },
 	      get: {

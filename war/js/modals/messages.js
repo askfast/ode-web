@@ -47,9 +47,39 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'POST',
 	        params: {action: 'changeState'}
 	      },
-	      remove : {
+	      remove: {
 	        method: 'POST',
 	        params: {action: 'deleteQuestions'}
+	      }
+	    }
+	  );
+
+
+	  var Notifications = $resource(
+	    $config.host + '/notification/:uuid',
+	    {
+	    },
+	    {
+	      query: {
+	        method: 'GET',
+	        params: {},
+	        isArray: true
+	      },
+	      get: {
+	        method: 'GET',
+	        params: {uuid: ''}
+	      },
+	      save: {
+	        method: 'POST',
+	        params: {}
+	      },
+	      edit: {
+	        method: 'PUT',
+	        params: {uuid: ''}
+	      },
+	      remove: {
+	        method: 'DELETE',
+	        params: {uuid: ''}
 	      }
 	    }
 	  );
@@ -84,27 +114,149 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 	  
 
-
-
 	  /**
-	   * Query messages from back-end
+	   * Notifications
 	   */
-	  Messages.prototype.queryTest = function () 
-	  {
-	    var deferred = $q.defer();
+	  Messages.prototype.notification = {
 
-	    setTimeout(function ()
-	  	{
-        Storage.add('messages', angular.toJson(messagesLocal));
+	  	/**
+	  	 * List of the notifications
+	  	 */
+	  	list: function () 
+		  {
+		    var deferred = $q.defer();
 
-        Messages.prototype.unreadCount();
+		    Notifications.query(
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
 
-        deferred.resolve(Messages.prototype.filter(messagesLocal));
-	  		
-	  	}, 100);
+		    return deferred.promise;
+		  },
 
-	    return deferred.promise;
+		  /**
+		   * Create notifications
+		   */
+		  create: function (notification)
+		  {
+		  	console.log('not ->', notification);
+		  	
+		    var deferred = $q.defer();
+
+		    Notifications.save(null, angular.toJson(notification),
+		      function (result) 
+		      {
+		        var returned = '';
+
+		        angular.forEach(result, function (chr, i)
+		        {
+		          returned += chr;
+		        });
+
+		        deferred.resolve(returned);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Edit notification
+		   */
+		  edit: function (uuid, notification)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.edit({uuid: uuid}, angular.toJson(notification),
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Get notification
+		   */
+		  get: function (uuid)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.get({uuid: uuid},
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Delete notifications
+		   */
+		  remove: function (uuid)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.remove({uuid: uuid},
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  }
+
 	  };
+	  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -445,8 +597,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 
 
-
-
+	  /**
+	   * Clean the mailboxes
+	   */
 	  Messages.prototype.clean = function (box)
 	  {
 	    var deferred 	= $q.defer(),
