@@ -36,145 +36,92 @@ angular.module('WebPaige.Directives', ['ngResource'])
 )
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Scheadule item
  */
 .directive('scheaduleItem',
   function ($compile)
   {
-    var templateMain =  '<div class="control-group">' +
-                          '<label class="control-label">Scheadules</label>' +
-                          '<div class="timer" style="float: left; margin-right: 10px;">' +
-                            '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
-                            '<i class="icon-time" style="margin-top: -3px;"></i>' +
-                          '</div>' +
-
-                          '<ul id="scheadule-days">' +
-                            '<li>' +
-                              '<label for="monday-{{s.value}}">' +
-                                '<input type="checkbox" id="monday-{{s.value}}" ng-model="s.days.mon">&nbsp;Monday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="tuesday-{{s.value}}">' +
-                                '<input type="checkbox" id="tuesday-{{s.value}}" ng-model="s.days.tue">&nbsp;Tuesday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="wednesday-{{s.value}}">' +
-                                '<input type="checkbox" id="wednesday-{{s.value}}" ng-model="s.days.wed">&nbsp;Wednesday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="thursday-{{s.value}}">' +
-                                '<input type="checkbox" id="thursday-{{s.value}}" ng-model="s.days.thu">&nbsp;Thursday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="friday-{{s.value}}">' +
-                                '<input type="checkbox" id="friday-{{s.value}}" ng-model="s.days.fri">&nbsp;Friday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="saturday-{{s.value}}">' +
-                                '<input type="checkbox" id="saturday-{{s.value}}" ng-model="s.days.sat">&nbsp;Saturday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="sunday-{{s.value}}">' +
-                                '<input type="checkbox" id="sunday-{{s.value}}" ng-model="s.days.sun">&nbsp;Sunday' +
-                              '</label>' +
-                            '</li>' +
-                          '</ul>' +
-
-                          // '<div class="btn-group" data-toggle="buttons-radio">' +
-                          //   '<button type="button" class="btn {{(s.days.mon) && \'active\'}}" ng-model="s.days.mon" ng-click="s.days.mon == !s.days.mon">Ma</button>' +
-                          //   '<button type="button" class="btn {{(s.days.tue) && \'active\'}}" ng-model="s.days.tue" ng-click="s.days.tue == !s.days.tue">Di</button>' +
-                          //   '<button type="button" class="btn {{(s.days.wed) && \'active\'}}" ng-model="s.days.wed" ng-click="s.days.wed == !s.days.wed">Wo</button>' +
-                          //   '<button type="button" class="btn {{(s.days.thu) && \'active\'}}" ng-model="s.days.thu" ng-click="s.days.thu == !s.days.thu">Do</button>' +
-                          //   '<button type="button" class="btn {{(s.days.fri) && \'active\'}}" ng-model="s.days.fri" ng-click="s.days.fri == !s.days.fri">Vr</button>' +
-                          //   '<button type="button" class="btn {{(s.days.sat) && \'active\'}}" ng-model="s.days.sat" ng-click="s.days.sat == !s.days.sat">Za</button>' +
-                          //   '<button type="button" class="btn {{(s.days.sun) && \'active\'}}" ng-model="s.days.sun" ng-click="s.days.sun == !s.days.sun">Zo</button>' +
-                          // '</div>' +
-
-                        '</div>';
-
-
-    var getTemplate = function ()
-    {
-      var template = '';
-
-      template = templateMain;
-
-      return template;
-    };
-
     var linker = function (scope, element, attrs)
     {
       scope.s = scope.scheadule;
 
+      var template =  '<div class="control-group">' +
+                        '<label class="control-label">Scheadules</label>' +
+                        '<div class="timer" style="float: left; margin-right: 10px;">' +
+                          '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
+                          '<i class="icon-time" style="margin-top: -3px;"></i>' +
+                        '</div>' +
+                        '<ul id="scheadule-days">' +
+                          '<li>' +
+                            '<label for="monday-{{s.value}}">' +
+                              '<input type="checkbox" id="monday-{{s.value}}" ng-model="s.days.mon">&nbsp;Monday' +
+                            '</label>' +
+                          '</li>' +
+                          '<li>' +
+                            '<label for="tuesday-{{s.value}}">' +
+                              '<input type="checkbox" id="tuesday-{{s.value}}" ng-model="s.days.tue">&nbsp;Tuesday' +
+                            '</label>' +
+                          '</li>' +
+                          '<li>' +
+                            '<label for="wednesday-{{s.value}}">' +
+                              '<input type="checkbox" id="wednesday-{{s.value}}" ng-model="s.days.wed">&nbsp;Wednesday' +
+                            '</label>' +
+                          '</li>' +
+                          '<li>' +
+                            '<label for="thursday-{{s.value}}">' +
+                              '<input type="checkbox" id="thursday-{{s.value}}" ng-model="s.days.thu">&nbsp;Thursday' +
+                            '</label>' +
+                          '</li>' +
+                          '<li>' +
+                            '<label for="friday-{{s.value}}">' +
+                              '<input type="checkbox" id="friday-{{s.value}}" ng-model="s.days.fri">&nbsp;Friday' +
+                            '</label>' +
+                          '</li>' +
+                          '<li>' +
+                            '<label for="saturday-{{s.value}}">' +
+                              '<input type="checkbox" id="saturday-{{s.value}}" ng-model="s.days.sat">&nbsp;Saturday' +
+                            '</label>' +
+                          '</li>' +
+                          '<li>' +
+                            '<label for="sunday-{{s.value}}">' +
+                              '<input type="checkbox" id="sunday-{{s.value}}" ng-model="s.days.sun">&nbsp;Sunday' +
+                            '</label>' +
+                          '</li>' +
+                        '</ul>' +
+                        // '<div class="btn-group" data-toggle="buttons-radio">' +
+                        //   '<button type="button" class="btn {{(s.days.mon) && \'active\'}}" ng-model="s.days.mon" ng-click="s.days.mon == !s.days.mon">Ma</button>' +
+                        //   '<button type="button" class="btn {{(s.days.tue) && \'active\'}}" ng-model="s.days.tue" ng-click="s.days.tue == !s.days.tue">Di</button>' +
+                        //   '<button type="button" class="btn {{(s.days.wed) && \'active\'}}" ng-model="s.days.wed" ng-click="s.days.wed == !s.days.wed">Wo</button>' +
+                        //   '<button type="button" class="btn {{(s.days.thu) && \'active\'}}" ng-model="s.days.thu" ng-click="s.days.thu == !s.days.thu">Do</button>' +
+                        //   '<button type="button" class="btn {{(s.days.fri) && \'active\'}}" ng-model="s.days.fri" ng-click="s.days.fri == !s.days.fri">Vr</button>' +
+                        //   '<button type="button" class="btn {{(s.days.sat) && \'active\'}}" ng-model="s.days.sat" ng-click="s.days.sat == !s.days.sat">Za</button>' +
+                        //   '<button type="button" class="btn {{(s.days.sun) && \'active\'}}" ng-model="s.days.sun" ng-click="s.days.sun == !s.days.sun">Zo</button>' +
+                        // '</div>' +
+                      '</div>';
 
-      // console.log('offset ->', offset, 'max ->', max);
-      // console.warn('days ->',     Math.floor(days / day));
-      // console.warn('hours ->',    hours, Math.floor(hours / hour));
-      // console.warn('minutes ->',  Math.floor(minutes / minute));
-
-      element.html(getTemplate()).show();
+      element.html(template).show();
 
       $compile(element.contents())(scope);
-
-      // // scope.s.real = offset;
-
-      scope.$watch(function ()
-      {
-        var time    = scope.s.time.split(':'),
-            hours   = time[0],
-            hour    = 1000 * 60 * 60,
-            minutes = time[1],
-            minute  = 1000 * 60,
-            day     = 1000 * 60 * 60 * 24,
-            days;
-
-        if (scope.s.days.mon)
-        {
-          days = 0;
-          scope.s.days.mon = true;
-        }
-        else if (scope.s.days.tue)
-        {
-          days = 1;
-          scope.s.days.tue = true;
-        }
-        else if (scope.s.days.wed)
-        {
-          days = 2;
-        }
-        else if (scope.s.days.thu)
-        {
-          days = 3;
-        }
-        else if (scope.s.days.fri)
-        {
-          days = 4;
-        }
-        else if (scope.s.days.sat)
-        {
-          days = 5;
-        }
-        else if (scope.s.days.sun)
-        {
-          days = 6;
-        }
-
-        // scope.$apply(function ()
-        // {
-          // scope.scheadule_ = (days * day) + (hours * hour) + (minutes * minute);
-        // })
-        
-      });
-
-
-
     };
 
     return {
@@ -188,6 +135,37 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
   }
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**

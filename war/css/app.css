@@ -197,11 +197,22 @@ dl dd {
 
 #scheadule-days {
   list-style: none;
+  display: block;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-left: 15px;
 }
 #scheadule-days li {
   display: inline;
   float: left;
-  margin-right: 10px;
+  margin-right: 15px;
+}
+#scheadule-days li label {
+  font-weight: normal;
+  font-size: 12px;
+}
+#scheadule-days li input[type=checkbox] {
+  margin-top: -3px;
 }
 
 /**

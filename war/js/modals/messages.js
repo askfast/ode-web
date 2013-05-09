@@ -95,9 +95,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    Messages.query(
 	      function (result) 
 	      {
-	      	console.warn('coming to here');
-
-	        Storage.add('TEST', 'TESTING');
 	        Storage.add('messages', angular.toJson(result));
 
 	        Messages.prototype.unreadCount();
@@ -315,8 +312,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    filtered.inbox 	= butcher(filtered.inbox);
 	    filtered.outbox = butcher(filtered.outbox);
 	    filtered.trash 	= butcher(filtered.trash);
-
-	    console.warn('filtered ->', filtered);
 
 	    return filtered;
 	  };

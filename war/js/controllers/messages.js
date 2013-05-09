@@ -756,14 +756,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }
 	      else
 	      {
-	        console.log('notification fetched ->', result);
+	        // console.log('notification fetched ->', result);
 
 	        $scope.notification = result;
 	      };
 	    });
     };
 
-    $scope.getNotification();
+    // $scope.getNotification();
 
     /**
      * Delete notification
@@ -786,6 +786,35 @@ angular.module('WebPaige.Controllers.Messages', [])
     };
 
 
+
+
+
+
+
+
+
+
+    $scope.addNewOffset = function ()
+    {
+    	var newOffset = {
+	    	value: 0,
+	      days: {
+	        mon: true,
+	        tue: false,
+	        wed: false,
+	        thu: false,
+	        fri: false,
+	        sat: false,
+	        sun: false
+	      },
+	      hour: 	0,
+	      minute: 0
+    	}
+
+    	newOffset.time = '00:00';
+
+    	$scope.offsets.push(newOffset);
+    };
 
 
 
