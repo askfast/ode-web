@@ -794,38 +794,36 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+
+
+
     $scope.addNewOffset = function ()
     {
-    	var newOffset = {
-	    	value: 0,
-	      days: {
-	        mon: true,
-	        tue: false,
-	        wed: false,
-	        thu: false,
-	        fri: false,
-	        sat: false,
-	        sun: false
-	      },
+    	$scope.offsets[0] = {
+        mon: 		true,
+        tue: 		false,
+        wed: 		false,
+        thu: 		false,
+        fri: 		false,
+        sat: 		false,
+        sun: 		false,
 	      hour: 	0,
-	      minute: 0
-    	}
-
-    	newOffset.time = '00:00';
-
-    	$scope.offsets.push(newOffset);
+	      minute: 0,
+	      time: 	'00:00'
+    	};
     };
 
 
 
-    // var offset = 89309999; // 204800000 // 604800000
 
-    var offsets_ = [89309999, 204800000],
-    		offsets = [];
+    var offsets_ 	= [89309999, (89309999 + (1000 * 60 * 60 * 24 * 2)), (89309999 + (1000 * 60 * 60 * 24 * 5)), 204800000],
+    		offsets 	= [];
+
+
 
     angular.forEach(offsets_, function (offset, index)
   	{
-	    var max     = 1000 * 60 * 60 * 24 * 7,
+  		var max     = 1000 * 60 * 60 * 24 * 7,
 	        day     = 1000 * 60 * 60 * 24,
 	        hour    = 1000 * 60 * 60,
 	        minute  = 1000 * 60,
@@ -843,19 +841,16 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        },
 	        offset_tmp;
 
-	    // scope.s = {};
-
 	    offset_tmp = {
 	    	value: offset,
-	      days: {
-	        mon: false,
-	        tue: false,
-	        wed: false,
-	        thu: false,
-	        fri: false,
-	        sat: false,
-	        sun: false
-	      },
+	    	exact: offset % day,
+        mon: false,
+        tue: false,
+        wed: false,
+        thu: false,
+        fri: false,
+        sat: false,
+        sun: false,
 	      hour: 	total.hours,
 	      minute: total.minutes
 	    };
@@ -867,29 +862,54 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    switch (total.days)
 	    {
-	      case 0:   offset_tmp.days.mon = true;   break;
-	      case 1:   offset_tmp.days.tue = true;   break;
-	      case 2:   offset_tmp.days.wed = true;   break;
-	      case 3:   offset_tmp.days.thu = true;   break;
-	      case 4:   offset_tmp.days.fri = true;   break;
-	      case 5:   offset_tmp.days.sat = true;   break;
-	      case 6:   offset_tmp.days.sun = true;   break;
+	      case 0:   offset_tmp.mon = true;   break;
+	      case 1:   offset_tmp.tue = true;   break;
+	      case 2:   offset_tmp.wed = true;   break;
+	      case 3:   offset_tmp.thu = true;   break;
+	      case 4:   offset_tmp.fri = true;   break;
+	      case 5:   offset_tmp.sat = true;   break;
+	      case 6:   offset_tmp.sun = true;   break;
 	    }
 
 	    offsets.push(offset_tmp);
-
-	    // console.log('offset ->', offset);
   	});
 
-  	$scope.offsets = offsets;
 
-  	// $scope.$watch(function ()
-  	// {
-  	// 	angular.forEach($scope.offsets, function (offset, index)
-  	// 	{
-  	// 		console.log('offsets changed ->', offset.days);
-  	// 	})
-  	// });
+  	var noffs = {};
+
+  	angular.forEach(offsets, function (offset, index)
+  	{
+  		noffs[offset.exact] = noffs[offset.exact] || {};
+
+  		noffs[offset.exact].hour 		=	offset.hour;
+  		noffs[offset.exact].minute 	= offset.minute;
+  		noffs[offset.exact].time 		= offset.time;
+
+  		noffs[offset.exact].exact 	= offset.exact;
+
+  		noffs[offset.exact].mon 		= (noffs[offset.exact].mon) ? noffs[offset.exact].mon : offset.mon;
+  		noffs[offset.exact].tue 		= (noffs[offset.exact].tue) ? noffs[offset.exact].tue : offset.tue;
+  		noffs[offset.exact].wed 		= (noffs[offset.exact].wed) ? noffs[offset.exact].wed : offset.wed;
+  		noffs[offset.exact].thu 		= (noffs[offset.exact].thu) ? noffs[offset.exact].thu : offset.thu;
+  		noffs[offset.exact].fri 		= (noffs[offset.exact].fri) ? noffs[offset.exact].fri : offset.fri;
+  		noffs[offset.exact].sat 		= (noffs[offset.exact].sat) ? noffs[offset.exact].sat : offset.sat;
+  		noffs[offset.exact].sun 		= (noffs[offset.exact].sun) ? noffs[offset.exact].sun : offset.sun;
+
+  	});
+
+
+  	console.warn('noffs ->', noffs);
+
+  	$scope.offsets = noffs;
+
+
+  	$scope.remover = function (key)
+  	{
+  		console.log('this scheadule has been asked to remove ->', key);
+
+  		delete $scope.offsets[key];
+  	}
+
 
 	}
 ]);

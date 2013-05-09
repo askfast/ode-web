@@ -46,19 +46,19 @@
         </a>
       </li>
 
-      <li class="{{(views.notifications==true) && 'active'}}">
-        <a href="#notificationsTab" 
-            data-toggle="tab"
-            ng-click="resetViews(); setViewTo('notifications')">
-          <span class="entypo">&#128276;</span> Herinneringen
-        </a>
-      </li>
-
       <li class="{{(views.outbox==true ) && 'active'}}">
         <a href="#outboxTab"   
             data-toggle="tab"
             ng-click="resetViews(); setViewTo('outbox')">
           <span class="entypo">&#128228;</span> {{ui.message.outbox}}
+        </a>
+      </li>
+
+      <li class="{{(views.notifications==true) && 'active'}}">
+        <a href="#notificationsTab" 
+            data-toggle="tab"
+            ng-click="resetViews(); setViewTo('notifications')">
+          <span class="entypo">&#128276;</span> Herinneringen
         </a>
       </li>
 
@@ -166,7 +166,7 @@
 
 
 
-            <section ng-show="scheaduler" style="margin-top: 15px; padding: 15px; background-color: #f5f5f5; border: 1px solid #e5e5e5;">
+            <section id="scheaduler" ng-show="scheaduler">
               <div class="control-group">
                 <label class="control-label">Scheadule title</label>
                 <input type="text" 
@@ -174,12 +174,15 @@
                       ng-model="scheadule.title"
                       placeholder="Scheadule title">
                 
+
                 <button class="btn btn-success" ng-click="addNewOffset()">Add New</button>
 
+
               </div>
-              <span ng-repeat="o in offsets">{{o}}<br><br></span>
-              <scheadule-item ng-repeat="offset in offsets" scheadule="offset"></scheadule-item>
-              <hr>
+              <!-- <span style="font-size:11px" ng-repeat="o in offsets">{{o}}<br></span> -->
+
+              <scheadule-item ng-repeat="offset in offsets" scheadule="offset" remover="remover()"></scheadule-item>
+
             </section>
 
 
@@ -355,91 +358,6 @@
 
 
 
-      <!-- notificationsTab -->
-      <div class="tab-pane {{(views.notifications==true) && 'active'}}" id="notificationsTab">
-
-        <div class="tab-header">
-          <h3 class="pull-left">Herinneringen</h3>
-
-        </div>
-
-        <hr>
-
-        <p>Notifications listing</p>
-
-        <!-- <p ng-hide="(messages.inbox[page.inbox] | filter:query.inbox).length > 0">{{ui.message.noMessage}}</p> -->
-        
-        <!-- inbox listing -->
-        <!-- <div ng-show="(messages.inbox[page.inbox] | filter:query.inbox).length > 0">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>
-                  <input type="checkbox"
-                          ng-model="selectionMaster.inbox"
-                          ng-click="toggleSelection(messages.inbox[page.inbox], 'inbox', selectionMaster.inbox)">
-                </th>
-                <th></th>
-                <th>{{ui.message.from}}</th>
-                <th>{{ui.message.subject}}</th>
-                <th>{{ui.message.date}}</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="message in messages.inbox[page.inbox] | filter:query.inbox | orderBy:'creationTime':true">
-                <td>
-                  <input type="checkbox"
-                          ng-model="selection.inbox[message.uuid]"
-                          ng-checked="selection.inbox[message.uuid]">
-                </td>
-                <td><span class="label label-warning" ng-show="(message.state=='NEW')">{{ui.message.newMsg}}</span></td>
-                <td>{{message.requester | convertEve | convertUserIdToName}}</td>
-                <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
-                <td>{{message.creationTime | nicelyDate}}</td>
-                <td>
-                  <div class="pull-right">
-                    <button class="btn btn-mini"
-                            ng-click="reply(message)"><i class="icon-share-alt"></i></button>&nbsp;
-                    <button type="submit" 
-                            ng-click="removeMessage(message.uuid)" 
-                            class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="button" 
-                  ng-click="removeMessages(selection.inbox)" 
-                  class="btn btn-small btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i> {{ui.message.deleteSelected}}</button>
-
-          <div class="btn-toolbar pull-right" style="margin: 0;">
-            <div class="btn-group">
-              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')">« Vorige</button>
-              <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" ng-click="paginate.next('inbox')">Volgende »</button>
-            </div>
-          </div>
-
-          <br><br>
-
-          <span class="muted pull-right">
-            <small><i>Pagina: {{page.inbox + 1}} of {{messages.inbox.length}}, in totaal: {{messages.inbox | countBox}} </i></small>
-          </span>
-
-        </div> -->
-        <!-- end inbox listing -->
-
-      </div>
-      <!-- end notificationsTab -->
-
-
-
-
-
-
-
-
 
 
       <!-- outboxTab -->
@@ -525,6 +443,91 @@
 
       </div>
       <!-- end outboxTab -->
+
+
+
+
+
+
+
+
+      <!-- notificationsTab -->
+      <div class="tab-pane {{(views.notifications==true) && 'active'}}" id="notificationsTab">
+
+        <div class="tab-header">
+          <h3 class="pull-left">Herinneringen</h3>
+
+        </div>
+
+        <hr>
+
+        <p>Notifications listing</p>
+
+        <!-- <p ng-hide="(messages.inbox[page.inbox] | filter:query.inbox).length > 0">{{ui.message.noMessage}}</p> -->
+        
+        <!-- inbox listing -->
+        <!-- <div ng-show="(messages.inbox[page.inbox] | filter:query.inbox).length > 0">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>
+                  <input type="checkbox"
+                          ng-model="selectionMaster.inbox"
+                          ng-click="toggleSelection(messages.inbox[page.inbox], 'inbox', selectionMaster.inbox)">
+                </th>
+                <th></th>
+                <th>{{ui.message.from}}</th>
+                <th>{{ui.message.subject}}</th>
+                <th>{{ui.message.date}}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="message in messages.inbox[page.inbox] | filter:query.inbox | orderBy:'creationTime':true">
+                <td>
+                  <input type="checkbox"
+                          ng-model="selection.inbox[message.uuid]"
+                          ng-checked="selection.inbox[message.uuid]">
+                </td>
+                <td><span class="label label-warning" ng-show="(message.state=='NEW')">{{ui.message.newMsg}}</span></td>
+                <td>{{message.requester | convertEve | convertUserIdToName}}</td>
+                <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
+                <td>{{message.creationTime | nicelyDate}}</td>
+                <td>
+                  <div class="pull-right">
+                    <button class="btn btn-mini"
+                            ng-click="reply(message)"><i class="icon-share-alt"></i></button>&nbsp;
+                    <button type="submit" 
+                            ng-click="removeMessage(message.uuid)" 
+                            class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" 
+                  ng-click="removeMessages(selection.inbox)" 
+                  class="btn btn-small btn-danger pull-left">
+                  <i class="icon-trash icon-white"></i> {{ui.message.deleteSelected}}</button>
+
+          <div class="btn-toolbar pull-right" style="margin: 0;">
+            <div class="btn-group">
+              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')">« Vorige</button>
+              <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" ng-click="paginate.next('inbox')">Volgende »</button>
+            </div>
+          </div>
+
+          <br><br>
+
+          <span class="muted pull-right">
+            <small><i>Pagina: {{page.inbox + 1}} of {{messages.inbox.length}}, in totaal: {{messages.inbox | countBox}} </i></small>
+          </span>
+
+        </div> -->
+        <!-- end inbox listing -->
+
+      </div>
+      <!-- end notificationsTab -->
 
 
 
