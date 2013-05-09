@@ -789,62 +789,78 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-    var offset = 89309999; // 204800000 // 604800000
+    // var offset = 89309999; // 204800000 // 604800000
 
+    var offsets_ = [89309999, 204800000],
+    		offsets = [];
 
-		var max 		= 1000 * 60 * 60 * 24 * 7,
-				day 		= 1000 * 60 * 60 * 24,
-				hour		=	1000 * 60 * 60,
-				minute 	= 1000 * 60,
-				days 		= 0,
-				hours 	= 0,
-				minutes = 0,
-				stamp 	= offset * 1000,
-				hours 	= offset % day,
-				days 		= offset - hours,
-				minutes = offset % hour,
-				total 	= {
-					days: 		Math.floor(days / day),
-					hours: 		Math.floor(hours / hour),
-					minutes: 	Math.floor(minutes / minute)
-				};
+    angular.forEach(offsets_, function (offset, index)
+  	{
+	    var max     = 1000 * 60 * 60 * 24 * 7,
+	        day     = 1000 * 60 * 60 * 24,
+	        hour    = 1000 * 60 * 60,
+	        minute  = 1000 * 60,
+	        days    = 0,
+	        hours   = 0,
+	        minutes = 0,
+	        stamp   = offset * 1000,
+	        hours   = offset % day,
+	        days    = offset - hours,
+	        minutes = offset % hour,
+	        total   = {
+	          days:     Math.floor(days / day),
+	          hours:    Math.floor(hours / hour),
+	          minutes:  Math.floor(minutes / minute)
+	        },
+	        offset_tmp;
 
-				if (total.hours < 10) total.hours = '0' + total.hours;
-				if (total.minutes < 10) total.minutes = '0' + total.minutes;
+	    // scope.s = {};
 
-		$scope.scheadule = {};
+	    offset_tmp = {
+	    	value: offset,
+	      days: {
+	        mon: false,
+	        tue: false,
+	        wed: false,
+	        thu: false,
+	        fri: false,
+	        sat: false,
+	        sun: false
+	      },
+	      hour: 	total.hours,
+	      minute: total.minutes
+	    };
 
-		$scope.scheadule = {
-			days: {
-				mon: false,
-				tue: false,
-				wed: false,
-				thu: false,
-				fri: false,
-				sat: false,
-				sun: false
-			},
-			time: total.hours + ':' + total.minutes
-		};
+      if (total.hours < 10) total.hours = '0' + total.hours;
+      if (total.minutes < 10) total.minutes = '0' + total.minutes;
 
-		switch (total.days)
-		{
-			case 0: 	$scope.scheadule.days.mon = true; 	break;
-			case 1: 	$scope.scheadule.days.tue = true; 	break;
-			case 2: 	$scope.scheadule.days.wed = true; 	break;
-			case 3: 	$scope.scheadule.days.thu = true; 	break;
-			case 4: 	$scope.scheadule.days.fri = true; 	break;
-			case 5: 	$scope.scheadule.days.sat = true; 	break;
-			case 6: 	$scope.scheadule.days.sun = true; 	break;
-		}
+      offset_tmp.time = total.hours + ':' + total.minutes;
 
+	    switch (total.days)
+	    {
+	      case 0:   offset_tmp.days.mon = true;   break;
+	      case 1:   offset_tmp.days.tue = true;   break;
+	      case 2:   offset_tmp.days.wed = true;   break;
+	      case 3:   offset_tmp.days.thu = true;   break;
+	      case 4:   offset_tmp.days.fri = true;   break;
+	      case 5:   offset_tmp.days.sat = true;   break;
+	      case 6:   offset_tmp.days.sun = true;   break;
+	    }
 
-		console.log('offset ->', offset, 'max ->', max);
+	    offsets.push(offset_tmp);
 
-		console.warn('days ->', 		Math.floor(days / day));
-		console.warn('hours ->', 		Math.floor(hours / hour));
-		console.warn('minutes ->', 	Math.floor(minutes / minute));
+	    // console.log('offset ->', offset);
+  	});
 
+  	$scope.offsets = offsets;
+
+  	// $scope.$watch(function ()
+  	// {
+  	// 	angular.forEach($scope.offsets, function (offset, index)
+  	// 	{
+  	// 		console.log('offsets changed ->', offset.days);
+  	// 	})
+  	// });
 
 	}
 ]);

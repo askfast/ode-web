@@ -195,6 +195,15 @@ dl dd {
   font-size: 11px;
 }
 
+#scheadule-days {
+  list-style: none;
+}
+#scheadule-days li {
+  display: inline;
+  float: left;
+  margin-right: 10px;
+}
+
 /**
  * Welcoming page styles
  */

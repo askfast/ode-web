@@ -176,11 +176,15 @@
 
 
 
-              <!-- <scheadule-item ng-repeat="offset in notification.offsets" scheadule="offset"></scheadule-item> -->
+              <hr>
+              
+              <span ng-repeat="o in offsets">{{o}}<br><br></span>
 
-              <!-- <span ng-repeat="offset in notification.offsets">{{offset}}&nbsp;/&nbsp;</span> -->
+              <scheadule-item ng-repeat="offset in offsets" scheadule="offset"></scheadule-item>
 
-              <div class="control-group">
+              <!-- {{scheadule}} -->
+
+              <!-- <div class="control-group">
                 <label class="control-label">Scheadules</label>
 
                 <div class="timer" style="float: left; margin-right: 10px;">
@@ -189,57 +193,87 @@
                           ng-model="scheadule.time" 
                           bs-timepicker>
                   <i class="icon-time" style="margin-top: -3px;"></i>
-                </div>
+                </div> -->
 
-                <div  class="btn-group"  
-                      bs-buttons-checkbox="" 
-                      data-toggle="buttons-checkbox">
+                <!-- <ul id="scheadule-days">
+                  <li>
+                    <label for="monday">
+                      <input type="checkbox" id="monday" ng-model="scheadule.days.mon">&nbsp;Monday
+                    </label>
+                  </li>
+                  <li>
+                    <label for="tuesday">
+                      <input type="checkbox" id="tuesday" ng-model="scheadule.days.tue">&nbsp;Tuesday
+                    </label>
+                  </li>
+                  <li>
+                    <label for="wednesday">
+                      <input type="checkbox" id="wednesday" ng-model="scheadule.days.wed">&nbsp;Wednesday
+                    </label>
+                  </li>
+                  <li>
+                    <label for="thursday">
+                      <input type="checkbox" id="thursday" ng-model="scheadule.days.thu">&nbsp;Thursday
+                    </label>
+                  </li>
+                  <li>
+                    <label for="friday">
+                      <input type="checkbox" id="friday" ng-model="scheadule.days.fri">&nbsp;Friday
+                    </label>
+                  </li>
+                  <li>
+                    <label for="saturday">
+                      <input type="checkbox" id="saturday" ng-model="scheadule.days.sat">&nbsp;Saturday
+                    </label>
+                  </li>
+                  <li>
+                    <label for="sunday">
+                      <input type="checkbox" id="sunday" ng-model="scheadule.days.sun">&nbsp;Sunday
+                    </label>
+                  </li>
+                </ul> -->
+
+                <!-- <div  class="btn-group" 
+                      data-toggle="buttons-radio">
 
                   <button type="button" 
                           class="btn {{(scheadule.days.mon) && 'active'}}" 
                           ng-model="scheadule.days.mon" 
-                          ng-click=""
-                          bs-button="">Ma</button>
+                          ng-click="scheadule.days.mon == !scheadule.days.mon">Ma</button>
 
                   <button type="button" 
                           class="btn {{(scheadule.days.tue) && 'active'}}" 
                           ng-model="scheadule.days.tue" 
-                          ng-click=""
-                          bs-button="">Di</button>
+                          ng-click="scheadule.days.tue == !scheadule.days.tue">Di</button>
 
                   <button type="button" 
                           class="btn {{(scheadule.days.wed) && 'active'}}" 
                           ng-model="scheadule.days.wed" 
-                          ng-click=""
-                          bs-button="">Wo</button>
+                          ng-click="scheadule.days.wed == !scheadule.days.wed">Wo</button>
 
                   <button type="button" 
                           class="btn {{(scheadule.days.thu) && 'active'}}" 
                           ng-model="scheadule.days.thu" 
-                          ng-click=""
-                          bs-button="">Do</button>
+                          ng-click="scheadule.days.thu == !scheadule.days.thu">Do</button>
 
                   <button type="button" 
                           class="btn {{(scheadule.days.fri) && 'active'}}" 
                           ng-model="scheadule.days.fri" 
-                          ng-click=""
-                          bs-button="">Vr</button>
+                          ng-click="scheadule.days.fri == !scheadule.days.fri">Vr</button>
 
                   <button type="button" 
                           class="btn {{(scheadule.days.sat) && 'active'}}" 
                           ng-model="scheadule.days.sat" 
-                          ng-click=""
-                          bs-button="">Za</button>
+                          ng-click="scheadule.days.sat == !scheadule.days.sat">Za</button>
 
                   <button type="button" 
                           class="btn {{(scheadule.days.sun) && 'active'}}" 
                           ng-model="scheadule.days.sun" 
-                          ng-click=""
-                          bs-button="">Zo</button>
+                          ng-click="scheadule.days.sun == !scheadule.days.sun">Zo</button>
 
-                </div>
+                </div> -->
 
-              </div>
+              <!-- </div> -->
 
 
 
