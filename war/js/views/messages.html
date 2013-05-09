@@ -216,16 +216,22 @@
             <!-- compose form actions -->
             <div class="form-actions">
 
-              <button type="submit" 
-                      ng-click="send(message, broadcast)" 
-                      ng-show="scheaduler"
-                      class="btn btn-success">Save</button>
+              <div ng-show="scheaduler">
+                <button type="submit" 
+                        ng-hide="scheaduleCount > 0"
+                        class="btn btn-success disabled">Save</button>
+
+                <button type="submit" 
+                        ng-click="send(message, broadcast)" 
+                        ng-show="scheaduleCount > 0"
+                        class="btn btn-success">Save</button>
+              </div>
 
               <button type="submit" 
                       ng-hide="scheaduler" 
                       ng-click="send(message, broadcast)" 
                       class="btn btn-success">{{ui.message.sendMessage}}</button>
-                      
+
             </div>
             <!-- end compose form actions -->
 
