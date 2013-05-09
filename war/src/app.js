@@ -7027,34 +7027,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
-
-
-
-	  /**
-	   * Toggle scheaduler
-	   */
-	  // $scope.toggleScheaduler = function ()
-	  // {
-	  // 	console.log('coming to toggler');
-
-	  // 	$scope.$watch(this, function ()
-	  // 	{
-	  // 		$scope.scheaduler = !$scope.scheaduler;
-	  // 	});
-	  // }
-
     $scope.scheaduler = true;
 
 
 
 
-
-
-
+    /**
+     * Add a new offset
+     */
     $scope.addNewOffset = function ()
     {
     	$scope.offsets[0] = {
@@ -7158,30 +7138,54 @@ angular.module('WebPaige.Controllers.Messages', [])
 
   	});
 
+
   	$scope.offsets = noffs;
 
 
+  	/**
+  	 * Remove a scheadule
+  	 */
   	$scope.remover = function (key)
   	{
   		delete $scope.offsets[key];
 
   		scheaduleCount();
-  	}
+  	};
 
 
+  	/**
+  	 * Count the scheadules
+  	 */
   	function scheaduleCount ()
   	{
   		var count = 0;
 
-  		angular.forEach($scope.offsets, function (offset, index)
-	  	{
-	  		count++;
-	  	});
+  		angular.forEach($scope.offsets, function (offset, index) { count++; });
 
 	  	$scope.scheaduleCount = count;
   	}
 		
 		scheaduleCount();
+
+		/**
+		 * If all the days are unchecked make monday checked as default
+		 */
+		$scope.$watch(function ()
+		{
+  		angular.forEach($scope.offsets, function (offset, index)
+	  	{
+	  		if (offset.mon == false && 
+	  				offset.tue == false && 
+	  				offset.wed == false && 
+	  				offset.thu == false && 
+	  				offset.fri == false && 
+	  				offset.sat == false && 
+	  				offset.sun == false)
+	  		{
+	  			offset.mon = true;
+	  		}
+	  	});
+		})
 
 	}
 ]);;/*jslint node: true */
@@ -8450,25 +8454,6 @@ angular.module('WebPaige.Directives', ['ngResource'])
 )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Scheadule item
  */
@@ -8480,6 +8465,9 @@ angular.module('WebPaige.Directives', ['ngResource'])
       rep1ace:  true,
       link: function (scope, element, attrs)
       {
+        /**
+         * Pass the scheadule data
+         */
         scope.s = scope.scheadule;
 
         var template =  '<div class="scheadule">' + 
@@ -8528,10 +8516,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
                           '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
                         '</div>';
 
+        /**
+         * Showtime
+         */
         element.html(template).show();
 
+        /**
+         * Compile the hottie
+         */
         $compile(element.contents())(scope);
 
+        /**
+         * Serve to the controller
+         */
         scope.remover = function (key)
         {
           scope.$parent.$parent.remover(key);
@@ -8540,51 +8537,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
       },
       scope: {
         scheadule: '='
-      },
-      // controller: function ($scope, $http, $attrs)
-      // {
-      //   console.log('remover ->', $scope.remover);
-
-      //   // $scope.remover = function ()
-      //   // {
-      //   //   $attrs.remover()
-      //   // }
-      // }
+      }
     };
 
   }
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**

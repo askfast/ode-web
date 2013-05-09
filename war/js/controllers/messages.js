@@ -792,34 +792,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
-
-
-
-	  /**
-	   * Toggle scheaduler
-	   */
-	  // $scope.toggleScheaduler = function ()
-	  // {
-	  // 	console.log('coming to toggler');
-
-	  // 	$scope.$watch(this, function ()
-	  // 	{
-	  // 		$scope.scheaduler = !$scope.scheaduler;
-	  // 	});
-	  // }
-
     $scope.scheaduler = true;
 
 
 
 
-
-
-
+    /**
+     * Add a new offset
+     */
     $scope.addNewOffset = function ()
     {
     	$scope.offsets[0] = {
@@ -923,30 +903,54 @@ angular.module('WebPaige.Controllers.Messages', [])
 
   	});
 
+
   	$scope.offsets = noffs;
 
 
+  	/**
+  	 * Remove a scheadule
+  	 */
   	$scope.remover = function (key)
   	{
   		delete $scope.offsets[key];
 
   		scheaduleCount();
-  	}
+  	};
 
 
+  	/**
+  	 * Count the scheadules
+  	 */
   	function scheaduleCount ()
   	{
   		var count = 0;
 
-  		angular.forEach($scope.offsets, function (offset, index)
-	  	{
-	  		count++;
-	  	});
+  		angular.forEach($scope.offsets, function (offset, index) { count++; });
 
 	  	$scope.scheaduleCount = count;
   	}
 		
 		scheaduleCount();
+
+		/**
+		 * If all the days are unchecked make monday checked as default
+		 */
+		$scope.$watch(function ()
+		{
+  		angular.forEach($scope.offsets, function (offset, index)
+	  	{
+	  		if (offset.mon == false && 
+	  				offset.tue == false && 
+	  				offset.wed == false && 
+	  				offset.thu == false && 
+	  				offset.fri == false && 
+	  				offset.sat == false && 
+	  				offset.sun == false)
+	  		{
+	  			offset.mon = true;
+	  		}
+	  	});
+		})
 
 	}
 ]);

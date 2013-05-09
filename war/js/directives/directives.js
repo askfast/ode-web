@@ -36,25 +36,6 @@ angular.module('WebPaige.Directives', ['ngResource'])
 )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Scheadule item
  */
@@ -66,6 +47,9 @@ angular.module('WebPaige.Directives', ['ngResource'])
       rep1ace:  true,
       link: function (scope, element, attrs)
       {
+        /**
+         * Pass the scheadule data
+         */
         scope.s = scope.scheadule;
 
         var template =  '<div class="scheadule">' + 
@@ -114,10 +98,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
                           '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
                         '</div>';
 
+        /**
+         * Showtime
+         */
         element.html(template).show();
 
+        /**
+         * Compile the hottie
+         */
         $compile(element.contents())(scope);
 
+        /**
+         * Serve to the controller
+         */
         scope.remover = function (key)
         {
           scope.$parent.$parent.remover(key);
@@ -126,51 +119,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
       },
       scope: {
         scheadule: '='
-      },
-      // controller: function ($scope, $http, $attrs)
-      // {
-      //   console.log('remover ->', $scope.remover);
-
-      //   // $scope.remover = function ()
-      //   // {
-      //   //   $attrs.remover()
-      //   // }
-      // }
+      }
     };
 
   }
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**
