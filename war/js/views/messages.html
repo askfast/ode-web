@@ -140,17 +140,17 @@
                       placeholder="{{ui.message.typeSubject}}">
             </div>
 
-            <!-- <div class="control-group">
+            <div class="control-group">
               <label class="control-label">{{ui.message.message}}</label>
               <textarea rows="7" 
                         class="span7"
                         ng-model="message.body"></textarea>
-            </div> -->
+            </div>
 
 
 
 
-            <div class="control-group">
+            <div class="control-group" ng-hide="scheaduler">
               <label class="control-label">Scheaduling</label>
               <div  class="btn-group"  
                     bs-buttons-checkbox="" 
@@ -159,29 +159,44 @@
                         class="btn btn-small" 
                         ng-model="scheaduler" 
                         ng-click="scheaduler == !scheaduler"
-                        bs-button=""
-                        ng-hide="app.resources.role > 2">Turn On</button>
+                        bs-button="">Turn On</button>
               </div>
             </div>
 
 
 
             <section id="scheaduler" ng-show="scheaduler">
+
+              <header>
+                <h4>Scheadules</h4>
+
+                <div class="pull-right">
+                  <button type="button" class="btn btn-small" ng-click="scheaduler = false">Turn Off</button>
+                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">Add New</button>
+                </div>
+                
+              </header>
+              <hr>
+
               <div class="control-group">
                 <label class="control-label">Scheadule title</label>
                 <input type="text" 
-                      class="span5"
+                      class="span6"
                       ng-model="scheadule.title"
                       placeholder="Scheadule title">
-                
-
-                <button class="btn btn-success" ng-click="addNewOffset()">Add New</button>
-
-
               </div>
-              <!-- <span style="font-size:11px" ng-repeat="o in offsets">{{o}}<br></span> -->
 
-              <scheadule-item ng-repeat="offset in offsets" scheadule="offset" remover="remover()"></scheadule-item>
+              <div class="control-group" ng-hide="scheaduleCount > 0">
+                <label class="control-label">Scheadules</label>
+                <p class="muted"><small><i>There are no scheaduled tasks.</i></small></p>
+              </div>
+
+              <div class="control-group" ng-show="scheaduleCount > 0">
+                <label class="control-label">Scheadules</label>
+                <!-- <span style="font-size:11px" ng-repeat="o in offsets">{{o}}<br></span> -->
+                <scheadule-item ng-repeat="offset in offsets" scheadule="offset" remover="remover()"></scheadule-item>
+              </div>
+              
 
             </section>
 

@@ -630,6 +630,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
+
+
+
+
+
 	  /**
 	   * Bulk cleaners for mailboxes
 	   */
@@ -649,10 +654,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-	  /**
-	   * REMOVE
-	   */
-    $scope.scheaduler = true;
+
+
+
 
 
 	  /**
@@ -795,6 +799,25 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+	  /**
+	   * Toggle scheaduler
+	   */
+	  // $scope.toggleScheaduler = function ()
+	  // {
+	  // 	console.log('coming to toggler');
+
+	  // 	$scope.$watch(this, function ()
+	  // 	{
+	  // 		$scope.scheaduler = !$scope.scheaduler;
+	  // 	});
+	  // }
+
+    $scope.scheaduler = true;
+
+
+
+
+
 
 
     $scope.addNewOffset = function ()
@@ -809,8 +832,11 @@ angular.module('WebPaige.Controllers.Messages', [])
         sun: 		false,
 	      hour: 	0,
 	      minute: 0,
-	      time: 	'00:00'
+	      time: 	'00:00',
+	      exact: 	0
     	};
+
+    	scheaduleCount();
     };
 
 
@@ -897,19 +923,30 @@ angular.module('WebPaige.Controllers.Messages', [])
 
   	});
 
-
-  	console.warn('noffs ->', noffs);
-
   	$scope.offsets = noffs;
 
 
   	$scope.remover = function (key)
   	{
-  		console.log('this scheadule has been asked to remove ->', key);
-
   		delete $scope.offsets[key];
+
+  		scheaduleCount();
   	}
 
+
+  	function scheaduleCount ()
+  	{
+  		var count = 0;
+
+  		angular.forEach($scope.offsets, function (offset, index)
+	  	{
+	  		count++;
+	  	});
+
+	  	$scope.scheaduleCount = count;
+  	}
+		
+		scheaduleCount();
 
 	}
 ]);

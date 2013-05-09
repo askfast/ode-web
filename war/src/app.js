@@ -6865,6 +6865,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
+
+
+
+
+
 	  /**
 	   * Bulk cleaners for mailboxes
 	   */
@@ -6884,10 +6889,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-	  /**
-	   * REMOVE
-	   */
-    $scope.scheaduler = true;
+
+
+
 
 
 	  /**
@@ -7030,6 +7034,25 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+	  /**
+	   * Toggle scheaduler
+	   */
+	  // $scope.toggleScheaduler = function ()
+	  // {
+	  // 	console.log('coming to toggler');
+
+	  // 	$scope.$watch(this, function ()
+	  // 	{
+	  // 		$scope.scheaduler = !$scope.scheaduler;
+	  // 	});
+	  // }
+
+    $scope.scheaduler = true;
+
+
+
+
+
 
 
     $scope.addNewOffset = function ()
@@ -7044,8 +7067,11 @@ angular.module('WebPaige.Controllers.Messages', [])
         sun: 		false,
 	      hour: 	0,
 	      minute: 0,
-	      time: 	'00:00'
+	      time: 	'00:00',
+	      exact: 	0
     	};
+
+    	scheaduleCount();
     };
 
 
@@ -7132,19 +7158,30 @@ angular.module('WebPaige.Controllers.Messages', [])
 
   	});
 
-
-  	console.warn('noffs ->', noffs);
-
   	$scope.offsets = noffs;
 
 
   	$scope.remover = function (key)
   	{
-  		console.log('this scheadule has been asked to remove ->', key);
-
   		delete $scope.offsets[key];
+
+  		scheaduleCount();
   	}
 
+
+  	function scheaduleCount ()
+  	{
+  		var count = 0;
+
+  		angular.forEach($scope.offsets, function (offset, index)
+	  	{
+	  		count++;
+	  	});
+
+	  	$scope.scheaduleCount = count;
+  	}
+		
+		scheaduleCount();
 
 	}
 ]);;/*jslint node: true */
@@ -8445,9 +8482,8 @@ angular.module('WebPaige.Directives', ['ngResource'])
       {
         scope.s = scope.scheadule;
 
-        var template =  '<div class="control-group">' +
-                          '<label class="control-label">Scheadules</label>' +
-                          '<div class="timer" style="float: left; margin-right: 10px;">' +
+        var template =  '<div class="scheadule">' + 
+                          '<div class="timer">' +
                             '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
                             '<i class="icon-time" style="margin-top: -3px;"></i>' +
                           '</div>' +
@@ -8489,7 +8525,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
                             '</li>' +
                             '<li><i class="icon-calendar"></i></li>' + 
                           '</ul>' +
-                          '<button class="btn btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' +
+                          '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
                         '</div>';
 
         element.html(template).show();

@@ -68,9 +68,8 @@ angular.module('WebPaige.Directives', ['ngResource'])
       {
         scope.s = scope.scheadule;
 
-        var template =  '<div class="control-group">' +
-                          '<label class="control-label">Scheadules</label>' +
-                          '<div class="timer" style="float: left; margin-right: 10px;">' +
+        var template =  '<div class="scheadule">' + 
+                          '<div class="timer">' +
                             '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
                             '<i class="icon-time" style="margin-top: -3px;"></i>' +
                           '</div>' +
@@ -112,7 +111,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
                             '</li>' +
                             '<li><i class="icon-calendar"></i></li>' + 
                           '</ul>' +
-                          '<button class="btn btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' +
+                          '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
                         '</div>';
 
         element.html(template).show();
