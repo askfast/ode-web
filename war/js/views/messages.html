@@ -208,7 +208,31 @@
                 <!-- <span style="font-size:11px" ng-repeat="o in offsets">{{o}}<br></span> -->
                 <scheadule-item ng-repeat="offset in offsets" scheadule="offset" remover="remover()"></scheadule-item>
               </div>
-              <!-- end scheadulars list -->              
+              <!-- end scheadulars list -->
+
+              <!-- scheaduler status -->
+              <div class="control-group">
+                <label class="control-label">Scheadule status</label>
+                
+                <div  class="btn-group" 
+                      data-toggle="buttons-radio">
+                  <button type="button" 
+                          class="btn btn-small {{(scheadule.status) && 'active'}}" 
+                          ng-model="scheadule.status" 
+                          ng-click="scheadule.status = true">On</button>
+                  <button type="button" 
+                          class="btn btn-small {{(!scheadule.status) && 'active'}}" 
+                          ng-model="scheadule.status" 
+                          ng-click="scheadule.status = false">Off</button>
+                </div>
+
+                <div style="margin-left: 10px; display: inline;">
+                  <span class="label label-success" ng-show="scheadule.status">Running</span>
+                  <span class="label" ng-hide="scheadule.status">Stopped</span>
+                </div>
+
+              </div>
+              <!-- end scheaduler status -->
 
             </section>
             <!-- end scheaduler -->

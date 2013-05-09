@@ -7185,7 +7185,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  			offset.mon = true;
 	  		}
 	  	});
-		})
+		});
+
+		$scope.scheadule = {
+			status: true
+		}
 
 	}
 ]);;/*jslint node: true */
