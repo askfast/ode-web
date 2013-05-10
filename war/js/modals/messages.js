@@ -126,6 +126,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		    Notifications.query(
 		      function (result) 
 		      {
+		      	Storage.add('notifications', angular.toJson(result));
+
 		        deferred.resolve(result);
 		      },
 		      function (error)
@@ -208,6 +210,26 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 		    return deferred.promise;		  	
 		  },
+
+		  /**
+		   * Get a local notification
+		   */
+		  find: function (id)
+		  {
+		    var gem;
+
+		    angular.forEach(this.local(), function (notification, index)
+		    {
+		      if (notification.uuid == id) gem = notification;
+		    });
+
+		    return gem;	  	
+		  },
+
+		  /**
+		   * Get local cache of notifications
+		   */
+		  local: function () { return angular.fromJson(Storage.get('notifications')); },
 
 		  /**
 		   * Delete notifications

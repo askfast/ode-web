@@ -114,7 +114,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         scope.remover = function (key)
         {
           scope.$parent.$parent.remover(key);
-        }
+        };
 
       },
       scope: {

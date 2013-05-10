@@ -95,8 +95,7 @@ angular.module('WebPaige')
           '$route', 'Messages',
           function ($route, Messages)
           {
-            // return Messages.query();
-            return '';
+            return Messages.query();
           }
         ]
       },

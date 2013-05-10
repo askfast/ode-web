@@ -908,8 +908,7 @@ angular.module('WebPaige')
           '$route', 'Messages',
           function ($route, Messages)
           {
-            // return Messages.query();
-            return '';
+            return Messages.query();
           }
         ]
       },
@@ -2522,6 +2521,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		    Notifications.query(
 		      function (result) 
 		      {
+		      	Storage.add('notifications', angular.toJson(result));
+
 		        deferred.resolve(result);
 		      },
 		      function (error)
@@ -2604,6 +2605,26 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 		    return deferred.promise;		  	
 		  },
+
+		  /**
+		   * Get a local notification
+		   */
+		  find: function (id)
+		  {
+		    var gem;
+
+		    angular.forEach(this.local(), function (notification, index)
+		    {
+		      if (notification.uuid == id) gem = notification;
+		    });
+
+		    return gem;	  	
+		  },
+
+		  /**
+		   * Get local cache of notifications
+		   */
+		  local: function () { return angular.fromJson(Storage.get('notifications')); },
 
 		  /**
 		   * Delete notifications
@@ -6348,7 +6369,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      inbox:   				false,
 	      outbox:  				false,
 	      trash:   				false,
-	      notifications: 	false
+	      notifications: 	false,
+	      scheaduler: 		false
 	    };
 
 	    $scope.views[hash] = true;
@@ -6389,11 +6411,34 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  setView(view);
 
-	    
+
+
+
+
+
+
 	  /**
 	   * Extract view action from url and set message view
 	   */
-	  if ($location.search().uuid) setMessageView($location.search().uuid);
+	  if ($location.search().uuid)
+	  {
+	  	if ($location.hash() == 'scheaduler')
+	  	{
+		    $scope.notification = Messages.notification.find($location.search().uuid);
+
+		    console.log('notification for the view ->', $scope.notification);
+	  	}
+	  	else
+	  	{
+	  		setMessageView($location.search().uuid);
+	  	}
+	  }
+
+
+
+
+
+
 
 
 	  /**
@@ -6468,6 +6513,42 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $location.search({uuid: current});
 	    });
 	  };
+
+
+
+
+
+
+
+	  /**
+	   * Request for a notification
+	   */
+	  $scope.requestNotification = function (id)
+	  {
+	    $rootScope.statusBar.display('Getting notification..');
+
+	    setView('scheaduler');
+
+	    $scope.setViewTo('scheaduler');
+
+
+	    $scope.notification = Messages.notification.find(id);
+
+	    console.log('notification for the view ->', $scope.notification);
+
+
+	    $scope.$watch($location.search(), function ()
+	    {
+	      $location.search({uuid: id});
+	    });
+
+	    $rootScope.statusBar.off();
+	  };
+
+
+
+
+
 
 
 	  /**
@@ -6674,7 +6755,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };      
+	      };
 	    });
 	  };
 
@@ -6718,7 +6799,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      };
 	    });    
 	  };
-
 
 
 		/**
@@ -6870,6 +6950,20 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	  /**
 	   * Bulk cleaners for mailboxes
 	   */
@@ -6894,10 +6988,20 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 	  /**
 	   * Notifications API
 	   */
-	  /*
     Messages.notification.list()
     .then(function (result)
     {
@@ -6909,9 +7013,10 @@ angular.module('WebPaige.Controllers.Messages', [])
       else
       {
         console.log('notifications ->', result);
+
+        $scope.notifications = result;
       };
     });
-    */
 
 
     /**
@@ -7027,7 +7132,24 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-    $scope.scheaduler = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $scope.scheaduler = false;
 
 
 
@@ -7037,6 +7159,18 @@ angular.module('WebPaige.Controllers.Messages', [])
      */
     $scope.addNewOffset = function ()
     {
+    	if ($scope.offsets[0])
+    	{
+	  		var hour    = 1000 * 60 * 60,
+		        minute  = 1000 * 60,
+		        time 		= $scope.offsets[0].time.split(':'),
+		        exact 	= (time[0] * hour) + (time[1] * minute);
+
+		   	$scope.offsets[exact] = $scope.offsets[0];
+
+		   	$scope.offsets[exact].exact = exact;
+    	}
+
     	$scope.offsets[0] = {
         mon: 		true,
         tue: 		false,
@@ -7055,10 +7189,8 @@ angular.module('WebPaige.Controllers.Messages', [])
     };
 
 
-
-
-    var offsets_ 	= [89309999, (89309999 + (1000 * 60 * 60 * 24 * 2)), (89309999 + (1000 * 60 * 60 * 24 * 5)), 204800000],
-    		offsets 	= [];
+    var offsets_ 		= [300000, (300000 + (1000 * 60 * 60 * 24 * 2)), (300000 + (1000 * 60 * 60 * 24 * 5)), 900000],
+    		offsets 		= [];
 
 
 
@@ -7138,7 +7270,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
   	});
 
-
   	$scope.offsets = noffs;
 
 
@@ -7168,12 +7299,15 @@ angular.module('WebPaige.Controllers.Messages', [])
 		scheaduleCount();
 
 		/**
-		 * If all the days are unchecked make monday checked as default
+		 * Watch offsets
 		 */
 		$scope.$watch(function ()
 		{
   		angular.forEach($scope.offsets, function (offset, index)
 	  	{
+				/**
+				 * If all the days are unchecked make monday checked as default
+				 */
 	  		if (offset.mon == false && 
 	  				offset.tue == false && 
 	  				offset.wed == false && 
@@ -7184,6 +7318,17 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  		{
 	  			offset.mon = true;
 	  		}
+
+	  		var hour    = 1000 * 60 * 60,
+		        minute  = 1000 * 60,
+		        time 		= offset.time.split(':'),
+		        exact 	= (time[0] * hour) + (time[1] * minute);
+
+	  		if (time[0] != offset.hour) offset.hour = time[0];
+	  		if (time[1] != offset.minute) offset.minute = time[1];
+
+	  		if (offset.exact != exact) { offset.exact = exact; }
+
 	  	});
 		});
 
@@ -8536,7 +8681,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         scope.remover = function (key)
         {
           scope.$parent.$parent.remover(key);
-        }
+        };
 
       },
       scope: {
@@ -9870,6 +10015,7 @@ angular.module('WebPaige.Services.Strings', ['ngResource'])
   function ()
   {
     return {
+
       /**
        * Truncate string from words with ..
        */
@@ -9880,6 +10026,14 @@ angular.module('WebPaige.Services.Strings', ['ngResource'])
              s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
 
          return toLong ? s_ + '..' : s_;
+      },
+
+      /**
+       * To title case
+       */
+      toTitleCase: function (str)
+      {
+        return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
       }
     }
   }
@@ -11278,6 +11432,27 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		return function (title)
 		{
 	     return Strings.truncate(title, 20, true);
+	  }
+	}
+])
+
+
+
+
+
+
+
+/**
+ * Make first letter capital
+ */
+.filter('toTitleCase', 
+[
+	'Strings', 
+	function (Strings) 
+	{
+		return function (txt)
+		{
+	     return Strings.toTitleCase(txt);
 	  }
 	}
 ])

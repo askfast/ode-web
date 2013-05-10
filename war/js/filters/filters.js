@@ -578,6 +578,27 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 /**
+ * Make first letter capital
+ */
+.filter('toTitleCase', 
+[
+	'Strings', 
+	function (Strings) 
+	{
+		return function (txt)
+		{
+	     return Strings.toTitleCase(txt);
+	  }
+	}
+])
+
+
+
+
+
+
+
+/**
  * Count messages in box
  */
 .filter('countBox',
