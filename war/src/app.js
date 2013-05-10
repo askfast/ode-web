@@ -1184,9 +1184,9 @@ angular.module('WebPaige')
         else
         {
           $rootScope.notification = {
-            status: status,
-            type: type,
-            message: message
+            status:   status,
+            type:     type,
+            message:  message
           };
         }
       },
@@ -2496,12 +2496,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        Messages.prototype.notification.list()
-	        .then(function (notifications)
+	        Messages.prototype.scheaduled.list()
+	        .then(function (scheadules)
 	      	{
 	        	deferred.resolve({
 	        		messages: 			Messages.prototype.filter(result),
-	        		notifications: 	notifications
+	        		scheadules: 		scheadules
 	        	});
 	      	});
 	      },
@@ -2518,7 +2518,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  /**
 	   * Notifications
 	   */
-	  Messages.prototype.notification = {
+	  Messages.prototype.scheaduled = {
 
 	  	/**
 	  	 * List of the notifications
@@ -4028,9 +4028,9 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 
 /**
- * Scheadule item
+ * Notification item
  */
-.directive('scheaduleItem',
+.directive('notificationItem',
   function ($compile)
   {
     return {
@@ -6298,101 +6298,184 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 /**
  * Offsetter Service
  */
-.factory('Offsetter', 
+.factory('Offsetter',
 [
-  '$rootScope', 
+  '$rootScope',
   function ($rootScope)
   {
-    var constructor = {
-	    factory: function (data)
-	    {
-		    var offsets = [];
+		/**
+		 * General offset constructor
+		 */
+		var constructor = {
+			/**
+			 * Produce offsets for the view
+			 */
+			factory: function (data)
+			{
+				/**
+				 * Defaults
+				 */
+				var max     = 1000 * 60 * 60 * 24 * 7,
+						day     = 1000 * 60 * 60 * 24,
+						hour    = 1000 * 60 * 60,
+						minute  = 1000 * 60,
+						offsets = [];
 
-		    angular.forEach(data, function (offset, index)
-		  	{
-		  		var max     = 1000 * 60 * 60 * 24 * 7,
-			        day     = 1000 * 60 * 60 * 24,
-			        hour    = 1000 * 60 * 60,
-			        minute  = 1000 * 60,
-			        days    = 0,
-			        hours   = 0,
-			        minutes = 0,
-			        stamp   = offset * 1000,
-			        hours   = offset % day,
-			        days    = offset - hours,
-			        minutes = offset % hour,
-			        total   = {
-			          days:     Math.floor(days / day),
-			          hours:    Math.floor(hours / hour),
-			          minutes:  Math.floor(minutes / minute)
-			        },
-			        offset_tmp;
+				/**
+				 * Loop through array of offsets
+				 */
+				angular.forEach(data, function (offset, index)
+				{
+					/**
+					 * Reset and calculate
+					 */
+					var days    = 0,
+							hours   = 0,
+							minutes = 0,
+							offset_tmp;
 
-			    offset_tmp = {
-			    	value: offset,
-			    	exact: offset % day,
-		        mon: false,
-		        tue: false,
-		        wed: false,
-		        thu: false,
-		        fri: false,
-		        sat: false,
-		        sun: false,
-			      hour: 	total.hours,
-			      minute: total.minutes
-			    };
+					hours   = offset % day;
+					days    = offset - hours;
+					minutes = offset % hour;
 
-		      if (total.hours < 10) total.hours = '0' + total.hours;
-		      if (total.minutes < 10) total.minutes = '0' + total.minutes;
+					var total   = {
+								days:     Math.floor(days / day),
+								hours:    Math.floor(hours / hour),
+								minutes:  Math.floor(minutes / minute)
+							};
 
-		      offset_tmp.time = total.hours + ':' + total.minutes;
+					/**
+					 * Buffer offset container
+					 */
+					offset_tmp = {
+						value:	offset,
+						exact:	offset % day,
+						mon:		false,
+						tue:		false,
+						wed:		false,
+						thu:		false,
+						fri:		false,
+						sat:		false,
+						sun:		false,
+						hour:		total.hours,
+						minute: total.minutes
+					};
 
-			    switch (total.days)
-			    {
-			      case 0:   offset_tmp.mon = true;   break;
-			      case 1:   offset_tmp.tue = true;   break;
-			      case 2:   offset_tmp.wed = true;   break;
-			      case 3:   offset_tmp.thu = true;   break;
-			      case 4:   offset_tmp.fri = true;   break;
-			      case 5:   offset_tmp.sat = true;   break;
-			      case 6:   offset_tmp.sun = true;   break;
-			    }
+					/**
+					 * If one digit zero's
+					 */
+					if (total.hours < 10)	total.hours	= '0' + total.hours;
+					if (total.minutes < 10) total.minutes = '0' + total.minutes;
 
-			    offsets.push(offset_tmp);
-		  	});
+					/**
+					 * Construct time
+					 */
+					offset_tmp.time = total.hours + ':' + total.minutes;
+
+					/**
+					 * Day togglers
+					 */
+					switch (total.days)
+					{
+						case 0:   offset_tmp.mon = true;   break;
+						case 1:   offset_tmp.tue = true;   break;
+						case 2:   offset_tmp.wed = true;   break;
+						case 3:   offset_tmp.thu = true;   break;
+						case 4:   offset_tmp.fri = true;   break;
+						case 5:   offset_tmp.sat = true;   break;
+						case 6:   offset_tmp.sun = true;   break;
+					}
+
+					/**
+					 * Push the temp offset
+					 */
+					offsets.push(offset_tmp);
+				});
+
+				/**
+				 * New offsets in onbject form
+				 */
+				var noffs = {};
+
+				/**
+				 * Loop through the offsets array for contrcuting the new offsets object
+				 */
+				angular.forEach(offsets, function (offset, index)
+				{
+					/**
+					 * Check whether key(exact) is defined in the obejct otherwise create it
+					 */
+					noffs[offset.exact]					= noffs[offset.exact] || {};
+
+					/**
+					 * Pass time's
+					 */
+					noffs[offset.exact].hour		=	offset.hour;
+					noffs[offset.exact].minute	= offset.minute;
+					noffs[offset.exact].time		= offset.time;
+
+					/**
+					 * If no exact value is defined
+					 */
+					noffs[offset.exact].exact		= offset.exact;
+
+					/**
+					 * Pass day togglers if they exist or overwrite or create
+					 */
+					noffs[offset.exact].mon			= (noffs[offset.exact].mon) ? noffs[offset.exact].mon : offset.mon;
+					noffs[offset.exact].tue			= (noffs[offset.exact].tue) ? noffs[offset.exact].tue : offset.tue;
+					noffs[offset.exact].wed			= (noffs[offset.exact].wed) ? noffs[offset.exact].wed : offset.wed;
+					noffs[offset.exact].thu			= (noffs[offset.exact].thu) ? noffs[offset.exact].thu : offset.thu;
+					noffs[offset.exact].fri			= (noffs[offset.exact].fri) ? noffs[offset.exact].fri : offset.fri;
+					noffs[offset.exact].sat			= (noffs[offset.exact].sat) ? noffs[offset.exact].sat : offset.sat;
+					noffs[offset.exact].sun			= (noffs[offset.exact].sun) ? noffs[offset.exact].sun : offset.sun;
+				});
+
+				/**
+				 * Return the beauty
+				 */
+				return noffs;
+			},
 
 
-		  	var noffs = {};
+			/**
+			 * Convert to back-end friendly array
+			 */
+			arrayed: function (offsets)
+			{
+				/**
+				 * Defaults
+				 */
+				var day     = 1000 * 60 * 60 * 24,
+						hour    = 1000 * 60 * 60,
+						minute  = 1000 * 60,
+						arrayed = [];
 
-		  	angular.forEach(offsets, function (offset, index)
-		  	{
-		  		noffs[offset.exact] = noffs[offset.exact] || {};
+				/**
+				 * Loop through array of offsets
+				 */
+				angular.forEach(offsets, function (offset, index)
+				{
+					var hours		= Number(offset.hour) * hour,
+							minutes	= Number(offset.minute) * minute,
+							diff		= hours + minutes;
 
-		  		noffs[offset.exact].hour 		=	offset.hour;
-		  		noffs[offset.exact].minute 	= offset.minute;
-		  		noffs[offset.exact].time 		= offset.time;
+					if (offset.tue) { arrayed.push(diff + day); }
+					if (offset.wed) { arrayed.push(diff + (day * 2)); }
+					if (offset.thu) { arrayed.push(diff + (day * 3)); }
+					if (offset.wed) { arrayed.push(diff + (day * 4)); }
+					if (offset.wed) { arrayed.push(diff + (day * 5)); }
+					if (offset.wed) { arrayed.push(diff + (day * 6)); }
+				});
 
-		  		noffs[offset.exact].exact 	= offset.exact;
+				return arrayed;
+			}
+		};
 
-		  		noffs[offset.exact].mon 		= (noffs[offset.exact].mon) ? noffs[offset.exact].mon : offset.mon;
-		  		noffs[offset.exact].tue 		= (noffs[offset.exact].tue) ? noffs[offset.exact].tue : offset.tue;
-		  		noffs[offset.exact].wed 		= (noffs[offset.exact].wed) ? noffs[offset.exact].wed : offset.wed;
-		  		noffs[offset.exact].thu 		= (noffs[offset.exact].thu) ? noffs[offset.exact].thu : offset.thu;
-		  		noffs[offset.exact].fri 		= (noffs[offset.exact].fri) ? noffs[offset.exact].fri : offset.fri;
-		  		noffs[offset.exact].sat 		= (noffs[offset.exact].sat) ? noffs[offset.exact].sat : offset.sat;
-		  		noffs[offset.exact].sun 		= (noffs[offset.exact].sun) ? noffs[offset.exact].sun : offset.sun;
-
-		  	});
-
-		  	// console.log('produced offsets -->', noffs);
-
-		  	return noffs;    	
-	    }
-	  };
-
-	  return {
-	  	factory: constructor.factory
-	  }
+		return {
+			factory: constructor.factory,
+			arrayed: constructor.arrayed
+		};
   }
 ]);;'use strict';
 
@@ -9323,7 +9406,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Set messages
 	   */
 	  $scope.messages 			= data.messages;
-	  $scope.notifications 	= data.notifications;
+
+	  $scope.scheadules 		= data.scheadules;
 
 
 	  /**
@@ -9386,6 +9470,16 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+	   * Default scheaduled config
+	   */
+		$scope.scheaduled = {
+			title: 		'',
+			offsets: 	{},
+			status: 	false
+		};
+
+
+		/**
 	   * Set origin container for returning back to origin box
 	   */
 	  $scope.origin = 'inbox';
@@ -9436,7 +9530,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  else
 	  {
 	    var view = $location.hash();
-	  };
+	  }
 
 
 	  /**
@@ -9445,13 +9539,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  setView(view);
 
 
-
-
-
-    $scope.scheaduler = false;
-
-
-
+	  /**
+	   * Default toggle for scheaduler pane
+	   */
+    $scope.scheadulerPane = false;
 
 
 	  /**
@@ -9468,12 +9559,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  		setMessageView($location.search().uuid);
 	  	}
 	  }
-
-
-
-
-
-
 
 
 	  /**
@@ -9550,60 +9635,61 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
+  	/**
+  	 * Count the scheadules
+  	 */
+  	$scope.scheaduleCounter = function ()
+  	{
+  		var count = 0;
+
+  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+
+	  	$scope.scheaduleCount = count;
+  	}
 
 
-
+	  /**
+	   * Set view for notification
+	   */
 	  function setNotificationView (id)
 	  {
 	  	$scope.origin = 'notifications';
 
-    	$scope.scheaduler = true;
+    	$scope.scheadulerPane = true;
 
-	    $scope.notification = Messages.notification.find(id);
+	    var scheaduled = Messages.scheaduled.find(id);
 
-	    // console.log('notification ->', $scope.notification);
-
-	    angular.forEach($scope.notification.types, function (type, index)
+	    angular.forEach(scheaduled.types, function (type, index)
 	  	{
-	  		if (type == 'sms') $scope.broadcast.sms = true;
-	  		if (type == 'email') $scope.broadcast.email = true;
+	  		if (type == 'sms') 		$scope.broadcast.sms 		= true;
+	  		if (type == 'email') 	$scope.broadcast.email 	= true;
 	  	});
 
 	    var members 	= angular.fromJson(Storage.get('members')),
-	        name 			= members[$scope.notification.recipients[0]].name;
+	        name 			= members[scheaduled.recipients[0]].name;
 
 	    $scope.message = {
-	      subject: 		$scope.notification.subject,
-	      body: 			$scope.notification.message,
+	      subject: 		scheaduled.subject,
+	      body: 			scheaduled.message,
 	      receivers: 	[{
 	        group: 		'Users', 
-	        id: 			$scope.notification.recipients[0], 
+	        id: 			scheaduled.recipients[0], 
 	        name: 		name
 	      }]
 	    };
 
-	    $scope.scheadule = {
-	    	title: 	$scope.notification.label,
-	    	status: $scope.notification.active
-	    }
+	    $scope.scheaduled = {
+	    	uuid: 		scheaduled.uuid,
+	    	sender: 	scheaduled.sender,
+	    	title: 		scheaduled.label,
+	    	status: 	scheaduled.active,
+	    	offsets: 	Offsetter.factory(scheaduled.offsets)
+	    };
 
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
+	    $scope.scheaduleCounter();
 
-	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
-
-	   //  console.warn('offsets --->', $scope.notification.offsets, 'Offsets ->', Offsetter);
-
-	   //  setTimeout(function ()
-	  	// {
-	  	// 	$scope.offsets = Offsetter.factory($scope.notification.offsets);
-	  	// }, 100);
-	  	
-	  	$scope.offsets = Offsetter.factory($scope.notification.offsets);
+	    rerenderReceiversList();
 	  }
-
 
 
 	  /**
@@ -9628,23 +9714,39 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-
-
-
-
 	  /**
 	   * Compose message view toggler
 	   */
 	  $scope.composeMessage = function ()
 	  {
+	  	/**
+	  	 * Close composer
+	  	 */
 	    if ($scope.views.compose)
 	    {
 	      $scope.closeTabs();
 	    }
+	    /**
+	     * Open composer
+	     */
 	    else
 	    {
+	    	/**
+	    	 * TODO
+	    	 * Why not working properly? Look into this one
+	    	 * 
+	    	 * Reset'em
+	    	 */
+	    	$location.search({});
+
 	      $scope.message = {};
+
+	      $scope.broadcast.sms 		= false;
+	      $scope.broadcast.email 	= false;
+
+	      $scope.scheadulerPane = false;
+
+	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');
 	    };
@@ -9883,25 +9985,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-		/**
-	   * Fix for not displaying original sender in multiple receivers selector
-	   * in the case that user wants to add more receivers to the list  
-	   */
-	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function (item)
-	  {
-	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
-	    {
-	  		var name = $(li).html();
-
-	  		$.each($("div#composeTab select.chzn-select option"), function (j, opt)
-	      {
-		      if (opt.innerHTML == name) opt.selected = true;
-		    });
-	  	});
-	  });
-
-
 	  /**
 	   * Reply a amessage
 	   */
@@ -9924,15 +10007,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }]
 	    };
 
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
-
-	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+	    rerenderReceiversList();
 	  };
 
-	  
+
 	  /**
 	   * Send message
 	   */
@@ -9986,6 +10064,39 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 	  };
 
+
+		/**
+	   * Fix for not displaying original sender in multiple receivers selector
+	   * in the case that user wants to add more receivers to the list  
+	   */
+	  $("div#composeTab select.chzn-select").chosen()
+	  .change(function (item)
+	  {
+	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
+	    {
+	  		var name = $(li).html();
+
+	  		$.each($("div#composeTab select.chzn-select option"), function (j, opt)
+	      {
+		      if (opt.innerHTML == name) opt.selected = true;
+		    });
+	  	});
+	  });
+
+	  
+	  /**
+	   * Re-render receivers list
+	   */
+	  function rerenderReceiversList ()
+	  {
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	      if (option.innerHTML == name) option.selected = true;
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+	  }
+
 	    
 	  /**
 	   * Extract escalation information
@@ -10027,16 +10138,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-
-
-
-
-
-
-
-
-
 	  /**
 	   * Bulk cleaners for mailboxes
 	   */
@@ -10060,152 +10161,185 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
-
-
-
-
 	  /**
-	   * Notifications API
+	   * Scheaduler jobs manager
 	   */
-	  /*
-    Messages.notification.list()
-    .then(function (result)
-    {
-      if (result.error)
-      {
-        $rootScope.notifier.error('Error with getting notifications..');
-        console.warn('error ->', result);
-      }
-      else
-      {
-        console.log('notifications ->', result);
+	  $scope.scheaduler = {
 
-        $scope.notifications = result;
-      };
-    });
-    */
+	  	/**
+	  	 * Make data ready for insertion
+	  	 */
+	  	job: function (message, broadcast, scheaduled)
+	  	{
+		    var members = [],
+		        types 	= [];
 
+		    angular.forEach(message.receivers, function (receiver, index) { members.push(receiver.id); });
 
-    /**
-     * Create notification
-     */
-    $scope.createNotification = function ()
-    {
-    	var notification = {
-			 "sender" : 		"apptestknrm",
-			 "recipients": 	["apptestknrm", "person1", "person2"],
-			 "label": 			"mysubject xxxxxxx label",
-			 "subject": 		"mysubject xxxxxx",
-			 "message": 		"mymessage xxxxxx",
-			 "offsets": 		[100100, 200200, 300300, 400400, 500500],
-			 "repeat" : 		"week",
-			 "types": 			["sms", "email", "paige"],
-			 "active" : 		true
-			};
+		    types.push('paige');
+		    if (broadcast.sms) types.push('sms');
+		    if (broadcast.email) types.push('email');
 
-	    Messages.notification.create(notification)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with getting notifications..');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        console.log('notification made ->', result);
-	      };
-	    });
-    };
+		    var job = {
+		    	sender: 		$rootScope.app.resources.uuid,
+		      recipients: members,
+		      label: 			scheaduled.title,
+		      subject: 		message.subject,
+		      message: 		message.body,
+		      offsets: 		Offsetter.arrayed(scheaduled.offsets),
+		      repeat: 		'week',
+		      types: 			types,
+		      active: 		scheaduled.status
+		    };
+		  },
 
 
-    /**
-     * Edit notification
-     */
-    $scope.editNotification = function ()
-    {
-    	var notification = {
-			 "sender" : 		"apptestknrm",
-			 "recipients": 	["apptestknrm", "culusoy@ask-cs.com"],
-			 "label": 			"mysubject [modified] label",
-			 "subject": 		"mysubject [modified]",
-			 "message": 		"mymessage [modified]",
-			 "offsets": 		[10000, 20000, 30000, 40000],
-			 "repeat" : 		"week",
-			 "types": 			["sms"],
-			 "active" : 		false
-			};
+	  	/**
+	  	 * Scheaduler jobs lister
+	  	 */
+	  	list: function ()
+	  	{
+				$rootScope.statusBar.display('Refreshing scheaduled jobs...');
 
-	    Messages.notification.edit('271d820b-8ec4-41d1-a5f6-0845751e0a44', notification)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with getting notifications..');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        console.log('notification edited ->', result);
-	      };
-	    });
-    };
+				Messages.scheaduled.list()
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with getting scheadules..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+				    $scope.scheadules = result;
+
+				    $rootScope.statusBar.off();
+				  };
+				});
+	  	},
 
 
-    /**
-     * Get notification
-     */
-    $scope.getNotification = function ()
-    {
-	    Messages.notification.get('271d820b-8ec4-41d1-a5f6-0845751e0a44')
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with getting notifications..');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        // console.log('notification fetched ->', result);
+	  	/**
+	  	 * NOT IN USE
+	  	 * 
+	  	 * Get a scheaduler job
+	  	 */
+	  	get: function (uuid)
+	  	{
+				Messages.scheaduled.get(uuid)
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with getting the scheadule..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+				    // console.log('notification fetched ->', result);
 
-	        $scope.notification = result;
-	      };
-	    });
-    };
-
-    // $scope.getNotification();
-
-    /**
-     * Delete notification
-     */
-    $scope.deleteNotification = function ()
-    {
-	    Messages.notification.remove('36a8fedc-ed7b-495d-b642-8ea1bfbc8c65')
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with getting notifications..');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        console.log('notification deleted ->', result);
-	      };
-	    });
-    };
+				    $scope.scheaduled = result;
+				  };
+				});
+	  	},
 
 
+	  	/**
+	  	 * Save a scheadule job
+	  	 */
+	  	save: function (message, broadcast, scheaduled)
+	  	{
+	  		if (scheaduled.uuid)
+	  		{
+	  			this.edit(message, broadcast, scheaduled);
+	  		}
+	  		else
+	  		{
+	  			this.add(message, broadcast, scheaduled)
+	  		}
+	  	},
 
+
+	  	/**
+	  	 * Add a scheadule job
+	  	 */
+	  	add: function (message, broadcast, scheaduled)
+	  	{
+	  		console.log(message, broadcast, scheaduled);
+
+	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
+
+	  		Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with creating the notification...');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+	          $rootScope.notifier.success('Scheaduled job is saved successfully.');
+
+	          this.list();
+				  };
+				});
+	  	},
+
+
+	  	/**
+	  	 * Edit a schedule job
+	  	 */
+	  	edit: function (message, broadcast, scheaduled)
+	  	{
+	    	$rootScope.statusBar.display('Editing scheaduled job...');
+
+				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with editing scheadule..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+	          $rootScope.notifier.success('Scheaduled job is edited successfully.');
+
+	          this.list();
+				  };
+				});	
+	  	},
+
+
+	  	/**
+	  	 * Remove a scheadule job
+	  	 */
+	  	remove: function (uuid)
+	  	{
+	    	$rootScope.statusBar.display('Deleting a scheaduled job...');
+
+		    Messages.scheaduled.remove(uuid)
+		    .then(function (result)
+		    {
+		      if (result.error)
+		      {
+		        $rootScope.notifier.error('Error with deleting the scheadule..');
+		        console.warn('error ->', result);
+		      }
+		      else
+		      {
+	          $rootScope.notifier.success('Scheaduled job is deleted successfully.');
+
+	          this.list();
+		      };
+		    });
+	  	}
+
+	  };
 
 	}
-]);
-;/*jslint node: true */
+]);/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -10218,27 +10352,65 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
  */
 .controller('scheaduler', 
 [
-	'$scope', '$rootScope', '$q', '$location', '$route', 'Messages', 'Storage', 'Timer',
-	function ($scope, $rootScope, $q, $location, $route, Messages, Storage, Timer) 
+	'$scope', '$rootScope',
+	function ($scope, $rootScope) 
 	{
+		/**
+		 * Watch offsets
+		 */
+		$scope.$watch(function ()
+		{
+			if ($scope.scheaduled)
+			{
+				angular.forEach($scope.scheaduled.offsets, function (offset, index)
+				{
+					/**
+					 * If all the days are unchecked make monday checked as default
+					 */
+					if (offset.mon == false && 
+							offset.tue == false && 
+							offset.wed == false && 
+							offset.thu == false && 
+							offset.fri == false && 
+							offset.sat == false && 
+							offset.sun == false)
+					{
+						offset.mon = true;
+					}
+
+					var hour    = 1000 * 60 * 60,
+				      minute  = 1000 * 60,
+				      time 		= offset.time.split(':'),
+				      exact 	= (time[0] * hour) + (time[1] * minute);
+
+					if (time[0] != offset.hour) 	offset.hour 	= time[0];
+					if (time[1] != offset.minute) offset.minute = time[1];
+
+					if (offset.exact != exact) { offset.exact = exact; }
+
+				});	
+			}
+		});
+
+
     /**
      * Add a new offset
      */
     $scope.addNewOffset = function ()
     {
-    	if ($scope.offsets[0])
+    	if ($scope.scheaduled.offsets[0])
     	{
 	  		var hour    = 1000 * 60 * 60,
 		        minute  = 1000 * 60,
-		        time 		= $scope.offsets[0].time.split(':'),
+		        time 		= $scope.scheaduled.offsets[0].time.split(':'),
 		        exact 	= (time[0] * hour) + (time[1] * minute);
 
-		   	$scope.offsets[exact] = $scope.offsets[0];
+		   	$scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
 
-		   	$scope.offsets[exact].exact = exact;
+		   	$scope.scheaduled.offsets[exact].exact = exact;
     	}
 
-    	$scope.offsets[0] = {
+    	$scope.scheaduled.offsets[0] = {
         mon: 		true,
         tue: 		false,
         wed: 		false,
@@ -10252,7 +10424,7 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 	      exact: 	0
     	};
 
-    	$scope.scheaduleCount();
+    	$scope.scheaduleCounter();
     };
 
 
@@ -10261,59 +10433,11 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
   	 */
   	$scope.remover = function (key)
   	{
-  		delete $scope.offsets[key];
+  		delete $scope.scheaduled.offsets[key];
 
-  		$scope.scheaduleCount();
+  		$scope.scheaduleCounter();
   	};
 
-
-  	/**
-  	 * Count the scheadules
-  	 */
-  	$scope.scheaduleCount = function ()
-  	{
-  		var count = 0;
-
-  		angular.forEach($scope.offsets, function (offset, index) { count++; });
-
-	  	$scope.scheaduleCount = count;
-  	}
-		
-		$scope.scheaduleCount();
-
-		/**
-		 * Watch offsets
-		 */
-		$scope.$watch(function ()
-		{
-  		angular.forEach($scope.offsets, function (offset, index)
-	  	{
-				/**
-				 * If all the days are unchecked make monday checked as default
-				 */
-	  		if (offset.mon == false && 
-	  				offset.tue == false && 
-	  				offset.wed == false && 
-	  				offset.thu == false && 
-	  				offset.fri == false && 
-	  				offset.sat == false && 
-	  				offset.sun == false)
-	  		{
-	  			offset.mon = true;
-	  		}
-
-	  		var hour    = 1000 * 60 * 60,
-		        minute  = 1000 * 60,
-		        time 		= offset.time.split(':'),
-		        exact 	= (time[0] * hour) + (time[1] * minute);
-
-	  		if (time[0] != offset.hour) offset.hour = time[0];
-	  		if (time[1] != offset.minute) offset.minute = time[1];
-
-	  		if (offset.exact != exact) { offset.exact = exact; }
-
-	  	});
-		});
 	}
 ]);;/*jslint node: true */
 /*global angular */

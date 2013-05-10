@@ -37,9 +37,9 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 
 /**
- * Scheadule item
+ * Notification item
  */
-.directive('scheaduleItem',
+.directive('notificationItem',
   function ($compile)
   {
     return {

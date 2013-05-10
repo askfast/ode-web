@@ -99,12 +99,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        Messages.prototype.notification.list()
-	        .then(function (notifications)
+	        Messages.prototype.scheaduled.list()
+	        .then(function (scheadules)
 	      	{
 	        	deferred.resolve({
 	        		messages: 			Messages.prototype.filter(result),
-	        		notifications: 	notifications
+	        		scheadules: 		scheadules
 	        	});
 	      	});
 	      },
@@ -121,7 +121,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  /**
 	   * Notifications
 	   */
-	  Messages.prototype.notification = {
+	  Messages.prototype.scheaduled = {
 
 	  	/**
 	  	 * List of the notifications
