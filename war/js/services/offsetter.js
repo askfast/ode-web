@@ -95,7 +95,7 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 
 		  	});
 
-		  	console.log('produced offsets -->', noffs);
+		  	// console.log('produced offsets -->', noffs);
 
 		  	return noffs;    	
 	    }

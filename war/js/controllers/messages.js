@@ -273,7 +273,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.notification = Messages.notification.find(id);
 
-	    console.log('notification ->', $scope.notification);
+	    // console.log('notification ->', $scope.notification);
 
 	    angular.forEach($scope.notification.types, function (type, index)
 	  	{
@@ -306,15 +306,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
+	   //  console.warn('offsets --->', $scope.notification.offsets, 'Offsets ->', Offsetter);
 
-
-
-	    console.warn('offsets --->', $scope.notification.offsets, 'Offsets ->', Offsetter);
-
-	    setTimeout(function ()
-	  	{
-	  		$scope.offsets = Offsetter.factory($scope.notification.offsets);
-	  	}, 100);
+	   //  setTimeout(function ()
+	  	// {
+	  	// 	$scope.offsets = Offsetter.factory($scope.notification.offsets);
+	  	// }, 100);
+	  	
+	  	$scope.offsets = Offsetter.factory($scope.notification.offsets);
 	  }
 
 
@@ -324,7 +323,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $scope.requestNotification = function (id)
 	  {
-	    $rootScope.statusBar.display('Getting notification..');
+	  	$rootScope.statusBar.display('Getting notification..');
 
 	    setView('scheaduler');
 
