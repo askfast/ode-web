@@ -11,8 +11,8 @@ angular.module('WebPaige.Controllers.Messages', [])
  */
 .controller('messages', 
 [
-	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer',
-	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer) 
+	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
+	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) 
 	{
 	  /**
 	   * Fix styles
@@ -34,7 +34,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Set messages
 	   */
-	  $scope.messages = data;
+	  $scope.messages 			= data.messages;
+	  $scope.notifications 	= data.notifications;
 
 
 	  /**
@@ -159,6 +160,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+    $scope.scheaduler = false;
+
+
+
 
 
 	  /**
@@ -168,9 +173,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  {
 	  	if ($location.hash() == 'scheaduler')
 	  	{
-		    $scope.notification = Messages.notification.find($location.search().uuid);
-
-		    console.log('notification for the view ->', $scope.notification);
+		    setNotificationView($location.search().uuid);
 	  	}
 	  	else
 	  	{
@@ -262,6 +265,58 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+	  function setNotificationView (id)
+	  {
+	  	$scope.origin = 'notifications';
+
+    	$scope.scheaduler = true;
+
+	    $scope.notification = Messages.notification.find(id);
+
+	    console.log('notification ->', $scope.notification);
+
+	    angular.forEach($scope.notification.types, function (type, index)
+	  	{
+	  		if (type == 'sms') $scope.broadcast.sms = true;
+	  		if (type == 'email') $scope.broadcast.email = true;
+	  	});
+
+	    var members 	= angular.fromJson(Storage.get('members')),
+	        name 			= members[$scope.notification.recipients[0]].name;
+
+	    $scope.message = {
+	      subject: 		$scope.notification.subject,
+	      body: 			$scope.notification.message,
+	      receivers: 	[{
+	        group: 		'Users', 
+	        id: 			$scope.notification.recipients[0], 
+	        name: 		name
+	      }]
+	    };
+
+	    $scope.scheadule = {
+	    	title: 	$scope.notification.label,
+	    	status: $scope.notification.active
+	    }
+
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	      if (option.innerHTML == name) option.selected = true;
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+
+
+
+	    console.warn('offsets --->', $scope.notification.offsets, 'Offsets ->', Offsetter);
+
+	    setTimeout(function ()
+	  	{
+	  		$scope.offsets = Offsetter.factory($scope.notification.offsets);
+	  	}, 100);
+	  }
+
 
 
 	  /**
@@ -275,11 +330,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('scheaduler');
 
-
-	    $scope.notification = Messages.notification.find(id);
-
-	    console.log('notification for the view ->', $scope.notification);
-
+	    setNotificationView(id);
 
 	    $scope.$watch($location.search(), function ()
 	    {
@@ -699,15 +750,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
-
-
-
-
-
 	  /**
 	   * Bulk cleaners for mailboxes
 	   */
@@ -739,13 +781,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
 	  /**
 	   * Notifications API
 	   */
+	  /*
     Messages.notification.list()
     .then(function (result)
     {
@@ -761,6 +800,7 @@ angular.module('WebPaige.Controllers.Messages', [])
         $scope.notifications = result;
       };
     });
+    */
 
 
     /**
@@ -875,210 +915,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $scope.scheaduler = false;
-
-
-
-
-    /**
-     * Add a new offset
-     */
-    $scope.addNewOffset = function ()
-    {
-    	if ($scope.offsets[0])
-    	{
-	  		var hour    = 1000 * 60 * 60,
-		        minute  = 1000 * 60,
-		        time 		= $scope.offsets[0].time.split(':'),
-		        exact 	= (time[0] * hour) + (time[1] * minute);
-
-		   	$scope.offsets[exact] = $scope.offsets[0];
-
-		   	$scope.offsets[exact].exact = exact;
-    	}
-
-    	$scope.offsets[0] = {
-        mon: 		true,
-        tue: 		false,
-        wed: 		false,
-        thu: 		false,
-        fri: 		false,
-        sat: 		false,
-        sun: 		false,
-	      hour: 	0,
-	      minute: 0,
-	      time: 	'00:00',
-	      exact: 	0
-    	};
-
-    	scheaduleCount();
-    };
-
-
-    var offsets_ 		= [300000, (300000 + (1000 * 60 * 60 * 24 * 2)), (300000 + (1000 * 60 * 60 * 24 * 5)), 900000],
-    		offsets 		= [];
-
-
-
-    angular.forEach(offsets_, function (offset, index)
-  	{
-  		var max     = 1000 * 60 * 60 * 24 * 7,
-	        day     = 1000 * 60 * 60 * 24,
-	        hour    = 1000 * 60 * 60,
-	        minute  = 1000 * 60,
-	        days    = 0,
-	        hours   = 0,
-	        minutes = 0,
-	        stamp   = offset * 1000,
-	        hours   = offset % day,
-	        days    = offset - hours,
-	        minutes = offset % hour,
-	        total   = {
-	          days:     Math.floor(days / day),
-	          hours:    Math.floor(hours / hour),
-	          minutes:  Math.floor(minutes / minute)
-	        },
-	        offset_tmp;
-
-	    offset_tmp = {
-	    	value: offset,
-	    	exact: offset % day,
-        mon: false,
-        tue: false,
-        wed: false,
-        thu: false,
-        fri: false,
-        sat: false,
-        sun: false,
-	      hour: 	total.hours,
-	      minute: total.minutes
-	    };
-
-      if (total.hours < 10) total.hours = '0' + total.hours;
-      if (total.minutes < 10) total.minutes = '0' + total.minutes;
-
-      offset_tmp.time = total.hours + ':' + total.minutes;
-
-	    switch (total.days)
-	    {
-	      case 0:   offset_tmp.mon = true;   break;
-	      case 1:   offset_tmp.tue = true;   break;
-	      case 2:   offset_tmp.wed = true;   break;
-	      case 3:   offset_tmp.thu = true;   break;
-	      case 4:   offset_tmp.fri = true;   break;
-	      case 5:   offset_tmp.sat = true;   break;
-	      case 6:   offset_tmp.sun = true;   break;
-	    }
-
-	    offsets.push(offset_tmp);
-  	});
-
-
-  	var noffs = {};
-
-  	angular.forEach(offsets, function (offset, index)
-  	{
-  		noffs[offset.exact] = noffs[offset.exact] || {};
-
-  		noffs[offset.exact].hour 		=	offset.hour;
-  		noffs[offset.exact].minute 	= offset.minute;
-  		noffs[offset.exact].time 		= offset.time;
-
-  		noffs[offset.exact].exact 	= offset.exact;
-
-  		noffs[offset.exact].mon 		= (noffs[offset.exact].mon) ? noffs[offset.exact].mon : offset.mon;
-  		noffs[offset.exact].tue 		= (noffs[offset.exact].tue) ? noffs[offset.exact].tue : offset.tue;
-  		noffs[offset.exact].wed 		= (noffs[offset.exact].wed) ? noffs[offset.exact].wed : offset.wed;
-  		noffs[offset.exact].thu 		= (noffs[offset.exact].thu) ? noffs[offset.exact].thu : offset.thu;
-  		noffs[offset.exact].fri 		= (noffs[offset.exact].fri) ? noffs[offset.exact].fri : offset.fri;
-  		noffs[offset.exact].sat 		= (noffs[offset.exact].sat) ? noffs[offset.exact].sat : offset.sat;
-  		noffs[offset.exact].sun 		= (noffs[offset.exact].sun) ? noffs[offset.exact].sun : offset.sun;
-
-  	});
-
-  	$scope.offsets = noffs;
-
-
-  	/**
-  	 * Remove a scheadule
-  	 */
-  	$scope.remover = function (key)
-  	{
-  		delete $scope.offsets[key];
-
-  		scheaduleCount();
-  	};
-
-
-  	/**
-  	 * Count the scheadules
-  	 */
-  	function scheaduleCount ()
-  	{
-  		var count = 0;
-
-  		angular.forEach($scope.offsets, function (offset, index) { count++; });
-
-	  	$scope.scheaduleCount = count;
-  	}
-		
-		scheaduleCount();
-
-		/**
-		 * Watch offsets
-		 */
-		$scope.$watch(function ()
-		{
-  		angular.forEach($scope.offsets, function (offset, index)
-	  	{
-				/**
-				 * If all the days are unchecked make monday checked as default
-				 */
-	  		if (offset.mon == false && 
-	  				offset.tue == false && 
-	  				offset.wed == false && 
-	  				offset.thu == false && 
-	  				offset.fri == false && 
-	  				offset.sat == false && 
-	  				offset.sun == false)
-	  		{
-	  			offset.mon = true;
-	  		}
-
-	  		var hour    = 1000 * 60 * 60,
-		        minute  = 1000 * 60,
-		        time 		= offset.time.split(':'),
-		        exact 	= (time[0] * hour) + (time[1] * minute);
-
-	  		if (time[0] != offset.hour) offset.hour = time[0];
-	  		if (time[1] != offset.minute) offset.minute = time[1];
-
-	  		if (offset.exact != exact) { offset.exact = exact; }
-
-	  	});
-		});
-
-		$scope.scheadule = {
-			status: true
-		}
 
 	}
 ]);

@@ -99,7 +99,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        deferred.resolve(Messages.prototype.filter(result));
+	        Messages.prototype.notification.list()
+	        .then(function (notifications)
+	      	{
+	        	deferred.resolve({
+	        		messages: 			Messages.prototype.filter(result),
+	        		notifications: 	notifications
+	        	});
+	      	});
 	      },
 	      function (error)
 	      {

@@ -593,6 +593,7 @@ angular.module('WebPaige',[
   'WebPaige.Controllers.Timeline',
   'WebPaige.Controllers.Timeline.Navigation',
   'WebPaige.Controllers.Messages',
+  'WebPaige.Controllers.Scheaduler',
   'WebPaige.Controllers.Groups',
   'WebPaige.Controllers.Profile',
   'WebPaige.Controllers.Settings',
@@ -609,6 +610,7 @@ angular.module('WebPaige',[
   'WebPaige.Services.Announcer',
   'WebPaige.Services.Sloter',
   'WebPaige.Services.Stats',
+  'WebPaige.Services.Offsetter',
   // directives
   'WebPaige.Directives',
   '$strap.directives',
@@ -2494,7 +2496,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        deferred.resolve(Messages.prototype.filter(result));
+	        Messages.prototype.notification.list()
+	        .then(function (notifications)
+	      	{
+	        	deferred.resolve({
+	        		messages: 			Messages.prototype.filter(result),
+	        		notifications: 	notifications
+	        	});
+	      	});
 	      },
 	      function (error)
 	      {
@@ -3981,6 +3990,3029 @@ angular.module('WebPaige.Modals.Settings', ['ngResource'])
 	  return new Settings;
 	}
 ]);;/*jslint node: true */
+/*global angular */
+/*global $ */
+'use strict';
+
+
+angular.module('WebPaige.Directives', ['ngResource'])
+
+
+/**
+ * Chosen
+ */
+.directive('chosen',
+  function ()
+  {
+    var linker = function (scope,element,attr)
+    {
+      scope.$watch('receviersList', function ()
+      {
+         element.trigger('liszt:updated');
+      });
+
+      scope.$watch('message.receviers', function ()
+      {
+        $(element[0]).trigger('liszt:updated');
+      });
+
+      element.chosen();
+    };
+
+    return {
+      restrict: 'A',
+      link:     linker
+    };
+  }
+)
+
+
+/**
+ * Scheadule item
+ */
+.directive('scheaduleItem',
+  function ($compile)
+  {
+    return {
+      restrict: 'E',
+      rep1ace:  true,
+      link: function (scope, element, attrs)
+      {
+        /**
+         * Pass the scheadule data
+         */
+        scope.s = scope.scheadule;
+
+        var template =  '<div class="scheadule">' + 
+                          '<div class="timer">' +
+                            '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
+                            '<i class="icon-time" style="margin-top: -3px;"></i>' +
+                          '</div>' +
+                          '<ul>' +
+                            '<li>' +
+                              '<label for="monday-{{s.exact}}">' +
+                                '<input type="checkbox" id="monday-{{s.exact}}" ng-model="s.mon">&nbsp;Monday' +
+                              '</label>' +
+                            '</li>' +
+                            '<li>' +
+                              '<label for="tuesday-{{s.exact}}">' +
+                                '<input type="checkbox" id="tuesday-{{s.exact}}" ng-model="s.tue">&nbsp;Tuesday' +
+                              '</label>' +
+                            '</li>' +
+                            '<li>' +
+                              '<label for="wednesday-{{s.exact}}">' +
+                                '<input type="checkbox" id="wednesday-{{s.exact}}" ng-model="s.wed">&nbsp;Wednesday' +
+                              '</label>' +
+                            '</li>' +
+                            '<li>' +
+                              '<label for="thursday-{{s.exact}}">' +
+                                '<input type="checkbox" id="thursday-{{s.exact}}" ng-model="s.thu">&nbsp;Thursday' +
+                              '</label>' +
+                            '</li>' +
+                            '<li>' +
+                              '<label for="friday-{{s.exact}}">' +
+                                '<input type="checkbox" id="friday-{{s.exact}}" ng-model="s.fri">&nbsp;Friday' +
+                              '</label>' +
+                            '</li>' +
+                            '<li>' +
+                              '<label for="saturday-{{s.exact}}">' +
+                                '<input type="checkbox" id="saturday-{{s.exact}}" ng-model="s.sat">&nbsp;Saturday' +
+                              '</label>' +
+                            '</li>' +
+                            '<li>' +
+                              '<label for="sunday-{{s.exact}}">' +
+                                '<input type="checkbox" id="sunday-{{s.exact}}" ng-model="s.sun">&nbsp;Sunday' +
+                              '</label>' +
+                            '</li>' +
+                            '<li><i class="icon-calendar"></i></li>' + 
+                          '</ul>' +
+                          '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
+                        '</div>';
+
+        /**
+         * Showtime
+         */
+        element.html(template).show();
+
+        /**
+         * Compile the hottie
+         */
+        $compile(element.contents())(scope);
+
+        /**
+         * Serve to the controller
+         */
+        scope.remover = function (key)
+        {
+          scope.$parent.$parent.remover(key);
+        };
+      },
+      scope: {
+        scheadule: '='
+      }
+    };
+
+  }
+)
+
+
+/**
+ * Daterangepicker
+ */
+.directive('daterangepicker',
+[
+  '$rootScope',
+  function ($rootScope)
+  {
+    return {
+      restrict: 'A',
+
+      link: function postLink(scope, element, attrs, controller)
+      {
+        // var startDate = Date.create().addDays(-6),
+        //     endDate   = Date.create();       
+        //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
+
+        element.daterangepicker({
+          // startDate: startDate,
+          // endDate: endDate,
+          ranges: {
+            'Today':        ['today',     'tomorrow'],
+            'Tomorrow':     ['tomorrow',  new Date.today().addDays(2)],
+            'Yesterday':    ['yesterday', 'today'],
+            'Next 3 Days':  ['today',     new Date.create().addDays(3)],
+            'Next 7 Days':  ['today',     new Date.create().addDays(7)]
+          }
+        },
+        function (start, end)
+        {
+          scope.$apply(function ()
+          {
+            var diff = end.getTime() - start.getTime();
+
+            /**
+             * Scope is a day
+             */
+            if (diff <= 86400000)
+            {
+              scope.timeline.range = {
+                start:  start,
+                end:    start
+              };
+              scope.timeline.scope = {
+                day:    true,
+                week:   false,
+                month:  false
+              };
+            }
+            /**
+             * Scope is less than a week
+             */
+            else if (diff < 604800000)
+            {
+              scope.timeline.range = {
+                start:  start,
+                end:    end
+              };
+              scope.timeline.scope = {
+                day:    false,
+                week:   true,
+                month:  false
+              };
+            }
+            /**
+             * Scope is more than a week
+             */
+            else if (diff > 604800000)
+            {
+              scope.timeline.range = {
+                start:  start,
+                end:    end
+              };
+              scope.timeline.scope = {
+                day:    false,
+                week:   false,
+                month:  true
+              };
+            }
+
+            $rootScope.$broadcast('timeliner', {
+              start:  start,
+              end:    end
+            });
+
+          });
+        });
+
+        /**
+         * Set data toggle
+         */
+        element.attr('data-toggle', 'daterangepicker');
+
+        /**
+         * TODO
+         * Investigate if its really needed!!
+         */
+        element.daterangepicker({
+          autoclose: true
+        });
+      }
+    };
+  }
+]);
+
+
+/**
+ * ???
+ */
+// .directive('wpName', 
+// [
+//   'Storage', 
+//   function (Storage)
+//   {
+//     return {
+//       restrict : 'A',
+//       link : function linkfn(scope, element, attrs)
+//       {
+//         var getmemberName = function (uid)
+//         {
+//           var members = angular.fromJson(Storage.get('members')),
+//               retName = uid;
+
+//           angular.forEach(members , function (mem, i)
+//           {
+//             if (mem.uuid == uid)
+//             {
+//               retName = mem.name;
+
+//               return false;
+//             };
+//           });
+
+//           return retName;
+//         };
+//         scope.$watch(attrs.wpName, function (uid)
+//         {
+//           element.text(getmemberName(uid)); 
+//         });
+//       }
+//     }
+//   }
+// ]);
+
+
+/**
+ * 
+ */
+// .directive('shortcuts', 
+// [
+//   '$rootScope', 
+//   function ($rootScope)
+//   {
+//     return {
+//       restrict: 'E',
+//       template: '<link rel="shortcut icon" ng-href="js/profiles/{{profile}}/img/ico/favicon.ico">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-144-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-114-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="72x72"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-72-precomposed.png">' +
+//                 '<link rel="apple-touch-icon-precomposed" sizes="57x57"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-57-precomposed.png">',
+//       replace: true,
+//       scope: {
+//         profile: '@profile'
+//       },
+//       link: function (scope, element, attrs)
+//       {
+//       }
+//     }
+//   }
+// ]);
+
+;/**
+ * AngularStrap - Twitter Bootstrap directives for AngularJS
+ * @version v0.7.0 - 2013-03-11
+ * @link http://mgcrea.github.com/angular-strap
+ * @author Olivier Louvignes <olivier@mg-crea.com>
+ * @license MIT License, http://www.opensource.org/licenses/MIT
+ */
+angular.module("$strap.config",[]).value("$strap.config",{}),angular.module("$strap.filters",["$strap.config"]),angular.module("$strap.directives",["$strap.config"]),angular.module("$strap",["$strap.filters","$strap.directives","$strap.config"]),angular.module("$strap.directives").directive("bsAlert",["$parse","$timeout","$compile",function(t,e,n){"use strict";return{restrict:"A",link:function(e,i,a){var o=t(a.bsAlert),r=(o.assign,o(e));a.bsAlert?e.$watch(a.bsAlert,function(t,o){r=t,i.html((t.title?"<strong>"+t.title+"</strong>&nbsp;":"")+t.content||""),t.closed&&i.hide(),n(i.contents())(e),(t.type||o.type)&&(o.type&&i.removeClass("alert-"+o.type),t.type&&i.addClass("alert-"+t.type)),(angular.isUndefined(a.closeButton)||"0"!==a.closeButton&&"false"!==a.closeButton)&&i.prepend('<button type="button" class="close" data-dismiss="alert">&times;</button>')},!0):(angular.isUndefined(a.closeButton)||"0"!==a.closeButton&&"false"!==a.closeButton)&&i.prepend('<button type="button" class="close" data-dismiss="alert">&times;</button>'),i.addClass("alert").alert(),i.hasClass("fade")&&(i.removeClass("in"),setTimeout(function(){i.addClass("in")}));var s=a.ngRepeat&&a.ngRepeat.split(" in ").pop();i.on("close",function(t){var n;s?(t.preventDefault(),i.removeClass("in"),n=function(){i.trigger("closed"),e.$parent&&e.$parent.$apply(function(){for(var t=s.split("."),n=e.$parent,i=0;t.length>i;++i)n&&(n=n[t[i]]);n&&n.splice(e.$index,1)})},$.support.transition&&i.hasClass("fade")?i.on($.support.transition.end,n):n()):r&&(t.preventDefault(),i.removeClass("in"),n=function(){i.trigger("closed"),e.$apply(function(){r.closed=!0})},$.support.transition&&i.hasClass("fade")?i.on($.support.transition.end,n):n())})}}}]),angular.module("$strap.directives").directive("bsButton",["$parse","$timeout",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){if(a){n.parent('[data-toggle="buttons-checkbox"], [data-toggle="buttons-radio"]').length||n.attr("data-toggle","button");var o=!!e.$eval(i.ngModel);o&&n.addClass("active"),e.$watch(i.ngModel,function(t,e){var i=!!t,a=!!e;i!==a?$.fn.button.Constructor.prototype.toggle.call(r):i&&!o&&n.addClass("active")})}n.hasClass("btn")||n.on("click.button.data-api",function(){n.button("toggle")}),n.button();var r=n.data("button");r.toggle=function(){if(!a)return $.fn.button.Constructor.prototype.toggle.call(this);var i=n.parent('[data-toggle="buttons-radio"]');i.length?(n.siblings("[ng-model]").each(function(n,i){t($(i).attr("ng-model")).assign(e,!1)}),e.$digest(),a.$modelValue||(a.$setViewValue(!a.$modelValue),e.$digest())):e.$apply(function(){a.$setViewValue(!a.$modelValue)})}}}}]).directive("bsButtonsCheckbox",["$parse",function(){"use strict";return{restrict:"A",require:"?ngModel",compile:function(t){t.attr("data-toggle","buttons-checkbox").find("a, button").each(function(t,e){$(e).attr("bs-button","")})}}}]).directive("bsButtonsRadio",["$parse",function(){"use strict";return{restrict:"A",require:"?ngModel",compile:function(t,e){return t.attr("data-toggle","buttons-radio"),e.ngModel||t.find("a, button").each(function(t,e){$(e).attr("bs-button","")}),function(t,e,n,i){i&&(e.find("[value]").button().filter('[value="'+t.$eval(n.ngModel)+'"]').addClass("active"),e.on("click.button.data-api",function(e){t.$apply(function(){i.$setViewValue($(e.target).closest("button").attr("value"))})}),t.$watch(n.ngModel,function(i,a){if(i!==a){var o=e.find('[value="'+t.$eval(n.ngModel)+'"]');o.length&&$.fn.button.Constructor.prototype.toggle.call(o.data("button"))}}))}}}}]),angular.module("$strap.directives").directive("bsButtonSelect",["$parse","$timeout",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){var o=t(i.bsButtonSelect);o.assign,a&&(n.text(e.$eval(i.ngModel)),e.$watch(i.ngModel,function(t){n.text(t)}));var r,s,l,u;n.bind("click",function(){r=o(e),s=a?e.$eval(i.ngModel):n.text(),l=r.indexOf(s),u=l>r.length-2?r[0]:r[l+1],console.warn(r,u),e.$apply(function(){n.text(u),a&&a.$setViewValue(u)})})}}}]),angular.module("$strap.directives").directive("bsDatepicker",["$timeout",function(){"use strict";var t="ontouchstart"in window&&!window.navigator.userAgent.match(/PhantomJS/i),e={"/":"[\\/]","-":"[-]",".":"[.]",dd:"(?:(?:[0-2]?[0-9]{1})|(?:[3][01]{1}))",d:"(?:(?:[0-2]?[0-9]{1})|(?:[3][01]{1}))",mm:"(?:[0]?[1-9]|[1][012])",m:"(?:[0]?[1-9]|[1][012])",yyyy:"(?:(?:[1]{1}[0-9]{1}[0-9]{1}[0-9]{1})|(?:[2]{1}[0-9]{3}))(?![[0-9]])",yy:"(?:(?:[0-9]{1}[0-9]{1}))(?![[0-9]])"};return{restrict:"A",require:"?ngModel",link:function(n,i,a,o){var r=function(t,n){n||(n={});var i=t,a=e;return angular.forEach(a,function(t,e){i=i.split(e).join(t)}),RegExp("^"+i+"$",["i"])},s=t?"yyyy/mm/dd":r(a.dateFormat||"mm/dd/yyyy");o&&o.$parsers.unshift(function(t){return!t||s.test(t)?(o.$setValidity("date",!0),t):(o.$setValidity("date",!1),void 0)});var l=i.next('[data-toggle="datepicker"]');if(l.length&&l.on("click",function(){t?i.trigger("focus"):i.datepicker("show")}),t&&"text"===i.prop("type"))i.prop("type","date"),i.on("change",function(){n.$apply(function(){o.$setViewValue(i.val())})});else{o&&i.on("changeDate",function(){n.$apply(function(){o.$setViewValue(i.val())})});var u=i.closest(".popover");u&&u.on("hide",function(){var t=i.data("datepicker");t&&(t.picker.remove(),i.data("datepicker",null))}),i.attr("data-toggle","datepicker"),i.datepicker({autoclose:!0,forceParse:a.forceParse||!1,language:a.language||"en"})}}}}]),angular.module("$strap.directives").directive("bsDropdown",["$parse","$compile",function(t,e){"use strict";var n=Array.prototype.slice,i='<ul class="dropdown-menu" role="menu" aria-labelledby="drop1"><li ng-repeat="item in items" ng-class="{divider: !!item.divider, \'dropdown-submenu\': !!item.submenu && item.submenu.length}"><a ng-hide="!!item.divider" tabindex="-1" ng-href="{{item.href}}" ng-click="{{item.click}}" target="{{item.target}}" ng-bind-html-unsafe="item.text"></a></li></ul>',a=function(t,n,a){for(var r,s,l,u=0,c=t.length;c>u;u++)(r=t[u].submenu)&&(l=a.$new(),l.items=r,s=e(i)(l),s=s.appendTo(n.children("li:nth-child("+(u+1)+")")),o(r,s,l))},o=function(){var t=n.call(arguments);setTimeout(function(){a.apply(null,t)})};return{restrict:"EA",scope:!0,link:function(n,a,r){var s=t(r.bsDropdown);n.items=s(n);var l=e(i)(n);o(n.items,l,n),l.insertAfter(a),a.addClass("dropdown-toggle").attr("data-toggle","dropdown")}}}]),angular.module("$strap.directives").directive("bsModal",["$parse","$compile","$http","$timeout","$q","$templateCache",function(t,e,n,i,a,o){"use strict";return{restrict:"A",scope:!0,link:function(r,s,l){var u=t(l.bsModal),c=(u.assign,u(r));a.when(o.get(c)||n.get(c,{cache:!0})).then(function(t){angular.isObject(t)&&(t=t.data);var n=u(r).replace(".html","").replace(/[\/|\.|:]/g,"-")+"-"+r.$id,a=$('<div class="modal hide" tabindex="-1"></div>').attr("id",n).attr("data-backdrop",l.backdrop||!0).attr("data-keyboard",l.keyboard||!0).addClass(l.modalClass?"fade "+l.modalClass:"fade").html(t);$("body").append(a),s.attr("href","#"+n).attr("data-toggle","modal"),i(function(){e(a)(r)}),r._modal=function(t){a.modal(t)},r.hide=function(){a.modal("hide")},r.show=function(){a.modal("show")},r.dismiss=r.hide})}}}]),angular.module("$strap.directives").directive("bsNavbar",["$location",function(t){"use strict";return{restrict:"A",link:function(e,n){e.$watch(function(){return t.path()},function(t){n.find("li[data-match-route]").each(function(e,n){var i=angular.element(n),a=i.attr("data-match-route"),o=RegExp("^"+a+"$",["i"]);o.test(t)?i.addClass("active"):i.removeClass("active")})})}}}]),angular.module("$strap.directives").directive("bsPopover",["$parse","$compile","$http","$timeout","$q","$templateCache",function(t,e,n,i,a,o){"use strict";return $("body").on("keyup",function(t){27===t.keyCode&&$(".popover.in").each(function(){$(this).popover("hide")})}),{restrict:"A",scope:!0,link:function(i,r,s){var l=t(s.bsPopover),u=(l.assign,l(i)),c={};angular.isObject(u)&&(c=u),a.when(c.content||o.get(u)||n.get(u,{cache:!0})).then(function(t){angular.isObject(t)&&(t=t.data),s.unique&&r.on("show",function(){$(".popover.in").each(function(){var t=$(this),e=t.data("popover");e&&!e.$element.is(r)&&t.popover("hide")})}),s.hide&&i.$watch(s.hide,function(t,e){t?n.hide():t!==e&&n.show()}),r.popover(angular.extend({},c,{content:t,html:!0}));var n=r.data("popover");n.hasContent=function(){return this.getTitle()||t},n.getPosition=function(){var t=$.fn.popover.Constructor.prototype.getPosition.apply(this,arguments);return e(this.$tip)(i),i.$digest(),this.$tip.data("popover",this),t},i._popover=function(t){r.popover(t)},i.hide=function(){r.popover("hide")},i.show=function(){r.popover("show")},i.dismiss=i.hide})}}}]),angular.module("$strap.directives").directive("bsTabs",["$parse","$compile",function(t,e){"use strict";return{restrict:"A",link:function(t,n){var i=['<ul class="nav nav-tabs">',"</ul>"],a=['<div class="tab-content">',"</div>"];n.find("[data-tab]").each(function(e){var n=angular.element(this),o="tab-"+t.$id+"-"+e,r=n.hasClass("active"),s=n.hasClass("fade"),l=t.$eval(n.data("tab"));i.splice(e+1,0,"<li"+(r?' class="active"':"")+'><a href="#'+o+'" data-toggle="tab">'+l+"</a></li>"),a.splice(e+1,0,'<div class="tab-pane '+n.attr("class")+(s&&r?" in":"")+'" id="'+o+'">'+this.innerHTML+"</div>")}),n.html(i.join("")+a.join("")),e(n.children("div.tab-content"))(t)}}}]),angular.module("$strap.directives").directive("bsTimepicker",["$timeout",function(){"use strict";var t="((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){a&&n.on("change",function(){e.$apply(function(){a.$setViewValue(n.val())})});var o=RegExp("^"+t+"$",["i"]);a.$parsers.unshift(function(t){return!t||o.test(t)?(a.$setValidity("time",!0),t):(a.$setValidity("time",!1),void 0)});var r=n.closest(".popover");r&&r.on("hide",function(){var t=n.data("timepicker");t&&(t.$widget.remove(),n.data("timepicker",null))}),n.attr("data-toggle","timepicker"),n.timepicker()}}}]),angular.module("$strap.directives").directive("bsTooltip",["$parse","$compile",function(t){"use strict";return{restrict:"A",scope:!0,link:function(e,n,i){var a=t(i.bsTooltip),o=(a.assign,a(e));e.$watch(i.bsTooltip,function(t,e){t!==e&&(o=t)}),i.unique&&n.on("show",function(){$(".tooltip.in").each(function(){var t=$(this),e=t.data("tooltip");e&&!e.$element.is(n)&&t.tooltip("hide")})}),n.tooltip({title:function(){return angular.isFunction(o)?o.apply(null,arguments):o},html:!0});var r=n.data("tooltip");r.show=function(){var t=$.Event("show");if(this.$element.trigger(t),!t.isDefaultPrevented()){var e=$.fn.tooltip.Constructor.prototype.show.apply(this,arguments);return this.tip().data("tooltip",this),e}},r.hide=function(){var t=$.Event("hide");return this.$element.trigger(t),t.isDefaultPrevented()?void 0:$.fn.tooltip.Constructor.prototype.hide.apply(this,arguments)},e._tooltip=function(t){n.tooltip(t)},e.hide=function(){n.tooltip("hide")},e.show=function(){n.tooltip("show")},e.dismiss=e.hide}}}]),angular.module("$strap.directives").directive("bsTypeahead",["$parse",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){var o=t(i.bsTypeahead),r=(o.assign,o(e));e.$watch(i.bsTypeahead,function(t,e){t!==e&&(r=t)}),n.attr("data-provide","typeahead"),n.typeahead({source:function(){return angular.isFunction(r)?r.apply(null,arguments):r},minLength:i.minLength||1,items:i.items,updater:function(t){return a&&e.$apply(function(){a.$setViewValue(t)}),t}});var s=n.data("typeahead");s.lookup=function(){var t;return this.query=this.$element.val()||"",this.query.length<this.options.minLength?this.shown?this.hide():this:(t=$.isFunction(this.source)?this.source(this.query,$.proxy(this.process,this)):this.source,t?this.process(t):this)},"0"===i.minLength&&setTimeout(function(){n.on("focus",function(){0===n.val().length&&setTimeout(n.typeahead.bind(n,"lookup"),200)})})}}}]);;'use strict';
+
+
+angular.module('WebPaige.Services.Timer', ['ngResource'])
+
+/**
+ * Timer service
+ *
+ * Timer.start('timerExample', function () { console.warn('timer started') }, 5);
+ * $scope.stopTimer = function () { Timer.stop('timerExample') };
+ */
+.factory('Timer', 
+[
+  '$rootScope', '$timeout',
+  function ($rootScope, $timeout)
+  {
+    var initer = 0,
+        timers = [];
+
+    var addTimer = function (id, event, delay)
+    {
+      timers[id] = {
+        event: event, 
+        delay: delay, 
+        counter: 0
+      };
+
+      var onTimeout = function ()
+      {
+        timers[id].counter++;
+
+        timers[id].mytimeout = $timeout(onTimeout, delay * 1000);
+
+        if (timers[id].delay == timers[id].counter)
+        {
+          // if (id == 'unreadCount')
+          // {            
+          //   $rootScope.$broadcast('unreadCount');
+          // }
+          // else
+          // {
+            timers[id].event.call();
+          // }
+
+          timers[id].counter = 0;
+        };
+      };
+
+      timers[id].mytimeout = $timeout(onTimeout, delay * 1000);  
+    };
+
+    var stopTimer = function (id)
+    {
+      $timeout.cancel(timers[id].mytimeout);
+    };
+
+    return {
+      start:  addTimer,
+      stop:   stopTimer
+    };
+  }
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Session', ['ngResource'])
+
+
+/**
+ * Session Service
+ */
+.factory('Session', 
+[
+  '$rootScope', '$http', 'Storage', 
+  function ($rootScope, $http, Storage)
+  {
+    return {
+      /**
+       * Check session
+       */
+      check: function()
+      {
+        var session = angular.fromJson(Storage.cookie.get('session'));
+
+        if (session)
+        {
+          this.set(session.id);
+
+          return true;
+        }
+        else
+        {
+          return false;
+        };
+      },
+
+      /**
+       * Read cookie value
+       */
+      cookie: function(session)
+      {
+        var values,
+            pairs = document.cookie.split(";");
+
+        for (var i=0; i < pairs.length; i++)
+        {
+          values = pairs[i].split("=");
+
+          if (values[0].trim() == "WebPaige.session") return angular.fromJson(values[1]);
+        };
+
+      },
+
+      /**
+       * Get session
+       * Prolong session time by every check
+       */
+      get: function(session)
+      {
+        this.check(session);
+
+        this.set(session.id);
+
+        return session.id;
+      },
+
+      /**
+       * Set session
+       */
+      set: function(sessionId)
+      {
+        var session = {
+          id: sessionId,
+          time: new Date()
+        };
+
+        Storage.cookie.add('session', angular.toJson(session));
+
+        $rootScope.session = session;
+
+        $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
+
+        return session;
+      },
+
+      /**
+       * Clear session
+       */
+      clear: function()
+      {
+        $rootScope.session = null;
+
+        $http.defaults.headers.common['X-SESSION_ID'] = null;
+      }
+    }
+  }
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Dater', ['ngResource'])
+
+
+/**
+ * Dater service (Wrapper on Date)
+ */
+.factory('Dater', 
+[
+  '$rootScope', 'Storage', 
+  function ($rootScope, Storage)
+  {
+    return {
+
+      current:
+      {
+        today: function ()
+        {
+          return Date.today().getDayOfYear() + 1;
+        },
+
+        week: function ()
+        {
+          return new Date().getWeek();
+        },
+
+        month: function ()
+        {
+          return new Date().getMonth() + 1;
+        }
+      },
+
+      readable: 
+      {
+        date: function (date)
+        {
+          return  new Date(date).toString($rootScope.config.formats.date);
+        }
+      },
+
+      convert:
+      {
+        absolute: function (date, time, flag)
+        {
+          var dates   = date.split('-'),
+              result  = new Date(Date.parse(dates[2] + 
+                                      '-' + 
+                                      dates[1] + 
+                                      '-' + 
+                                      dates[0] + 
+                                      ' ' + 
+                                      time)).getTime();
+          
+          return (flag) ? result / 1000 : result;
+        }
+      },
+
+      calculate:
+      {
+        diff: function (range)
+        {
+          return new Date(range.end).getTime() - new Date(range.start).getTime()
+        }
+      },
+
+      /**
+       * Get the current month
+       */
+      getThisMonth: function ()
+      {
+        return new Date().toString('M');
+      },
+
+      /**
+       * Get the current year
+       */
+      getThisYear: function ()
+      {
+        return new Date().toString('yyyy');
+      },
+
+      /**
+       * Get begin and end timestamps of months
+       * in the current year
+       */
+      getMonthTimeStamps: function ()
+      {
+        var months  = {}, 
+            year    = this.getThisYear();
+
+        for (var i = 0; i < 12; i++)
+        {
+          var firstDay  = new Date(year, i).moveToFirstDayOfMonth(),
+              lastDay   = new Date(year, i).moveToLastDayOfMonth(),
+              month     = {
+                first: {
+                  day: firstDay,
+                  timeStamp: firstDay.getTime()
+                },
+                last: { 
+                  day: lastDay,
+                  timeStamp: lastDay.getTime() 
+                },
+                totalDays: Date.getDaysInMonth(year, i)
+              };
+
+          months[i+1] = month;
+        };
+
+        return months;
+      },
+
+      /**
+       * Get begin and end timestamps of weeks
+       */
+      getWeekTimeStamps: function()
+      {
+        var nweeks    = [],
+            weeks     = {},
+            nextMonday,
+            year      = this.getThisYear(), 
+            firstDayInYear    = new Date(year, 0).moveToFirstDayOfMonth(),
+            firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
+            firstMonday       = new Date(firstMondayOfYear);
+
+        for (var i = 0; i < 53; i++)
+        {
+          if (i == 0)
+          {
+            nextMonday = firstMondayOfYear.addWeeks(1);
+          }
+          else
+          {
+            nextMonday = new Date(nweeks[i-1]).addWeeks(1);
+          };
+
+          nweeks.push(new Date(nextMonday));
+        };
+
+        nweeks.unshift(firstMonday);
+
+        var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
+
+        for (var i = 0; i < 55; i++)
+        {
+          weeks[i+1] = {
+            first: {
+              day: nweeks[i],
+              timeStamp: new Date(nweeks[i]).getTime()
+            },
+            last: {
+              day: nweeks[i+1],
+              timeStamp: new Date(nweeks[i+1]).getTime()
+            }
+          }
+        };
+
+        /**
+         * Remove unneccessary periods
+         */
+        delete weeks[54];
+        delete weeks[55];
+
+        return weeks;
+      },
+
+      /**
+       */
+      getDayTimeStamps: function()
+      {
+        var nextDay,
+            ndays = [],
+            days = {},
+            year = this.getThisYear(),
+            firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
+        
+        for (var i = 0; i < 366; i++)
+        {
+          if (i == 0)
+          {
+            nextDay = firstDayInYear;
+          }
+          else
+          {
+            nextDay = new Date(ndays[i-1]).addDays(1);
+          };
+
+          ndays.push(new Date(nextDay));
+        };
+
+        for (var i = 0; i < 366; i++)
+        {
+          days[i+1] = {
+            first: {
+              day: ndays[i],
+              timeStamp: new Date(ndays[i]).getTime()
+            },
+            last: {
+              day: ndays[i+1],
+              timeStamp: new Date(ndays[i+1]).getTime()
+            }
+          };
+        };
+
+        /**
+         * Remove not existing date
+         */
+        if (!days[366].timeStamp)
+        {
+          delete days[366];
+
+          days.total = 365;
+        }
+        else
+        {
+          days.total = 366;
+        };
+
+        return days;
+      },
+
+      registerPeriods: function ()
+      {
+        var periods = angular.fromJson(Storage.get('periods') || '{}');
+
+        Storage.add('periods', angular.toJson({
+          months: this.getMonthTimeStamps(),
+          weeks: this.getWeekTimeStamps(),
+          days: this.getDayTimeStamps()
+        }));      
+      },
+
+      getPeriods: function ()
+      {
+        return angular.fromJson(Storage.get('periods'));
+      }
+    }
+  }
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.EventBus', ['ngResource'])
+
+
+/**
+ * EventBus Service
+ */
+.factory('EventBus', 
+[
+  '$rootScope', 
+  function ($rootScope)
+  {
+    var self      = this,
+        listeners = {},
+        history   = {};
+   
+    self.emit = function (eventName) 
+    {
+      var args = Array.prototype.slice.call(arguments, 1);
+
+      angular.forEach(listeners, function(fns, eventName) 
+      {
+        angular.forEach(fns, function(fn, key)
+        {
+          if (!args.length)
+          {
+            $rootScope.$emit(eventName, fn());
+          }
+          else
+          {
+            $rootScope.$emit(eventName, fn(args));
+          };
+        });
+      });
+    };
+   
+    self.on = function (eventName, fn) 
+    {
+      if (!(listeners[eventName] instanceof Array)) listeners[eventName] = [];
+
+      listeners[eventName].push(fn);
+
+      $rootScope.$on(listeners[eventName], fn);
+    };
+   
+    self.remove = function (eventName, fn) 
+    {
+      var lsnrs = listeners[eventName],
+          ind   = lsnrs instanceof Array ? lsnrs.indexOf(fn) : -1;
+
+      if (ind > -1) listeners[eventName].splice(ind,1);
+    };
+   
+    self.removeAll = function (eventName) 
+    {
+      if (eventName)
+      {
+        listeners[eventName] = [];
+      }
+      else
+      {
+        listeners = {};
+      }
+    };
+  }
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Interceptor', ['ngResource'])
+
+
+/**
+ * TODO
+ * Implement a call registering system with general error handling
+ * 
+ * Intercepts *all* angular ajax http calls
+ */
+.factory('Interceptor', 
+[
+  '$q', '$location', 
+  function ($q, $location)
+  {
+    return function (promise)
+    {
+      return promise.then(
+      /**
+       * Succeded
+       */
+      function (response) 
+      {
+        // console.log('call ->', arguments[0].config.url, 'method ->', arguments[0].config.method, arguments);
+        return response;
+      },
+      /**
+       * Failed
+       */
+      function (response) 
+      {
+        /**
+         * TODO
+         * Possible bug !
+         */
+        // if (response.status == 403)
+        // {
+        //   alert("Session timeout , please re-login");
+        //   $location.path("/login");
+        // };
+
+        return $q.reject(response);
+      });
+    }
+  }
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.MD5', ['ngResource'])
+
+
+/**
+ * MD5
+ */
+.factory('MD5', 
+  function ()
+  {
+    return function (string)
+    {
+      function RotateLeft(lValue, iShiftBits)
+      {
+        return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
+      }
+     
+      function AddUnsigned(lX,lY)
+      {
+        var lX4,lY4,lX8,lY8,lResult;
+        lX8 = (lX & 0x80000000);
+        lY8 = (lY & 0x80000000);
+        lX4 = (lX & 0x40000000);
+        lY4 = (lY & 0x40000000);
+        lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
+
+        if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+
+        if (lX4 | lY4)
+        {
+          if (lResult & 0x40000000)
+          {
+            return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
+          }
+          else
+          {
+            return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+          }
+        }
+        else
+        {
+          return (lResult ^ lX8 ^ lY8);
+        }
+      }
+     
+      function F(x,y,z) { return (x & y) | ((~x) & z) }
+      function G(x,y,z) { return (x & z) | (y & (~z)) }
+      function H(x,y,z) { return (x ^ y ^ z) }
+      function I(x,y,z) { return (y ^ (x | (~z))) }
+     
+      function FF(a,b,c,d,x,s,ac)
+      {
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
+
+        return AddUnsigned(RotateLeft(a, s), b);
+      }
+     
+      function GG(a,b,c,d,x,s,ac)
+      {
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
+
+        return AddUnsigned(RotateLeft(a, s), b);
+      }
+     
+      function HH(a,b,c,d,x,s,ac)
+      {
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
+
+        return AddUnsigned(RotateLeft(a, s), b);
+      }
+     
+      function II(a,b,c,d,x,s,ac)
+      {
+        a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
+
+        return AddUnsigned(RotateLeft(a, s), b);
+      }
+     
+      function ConvertToWordArray(string)
+      {
+        var lWordCount,
+            lMessageLength = string.length,
+            lNumberOfWords_temp1 = lMessageLength + 8,
+            lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64,
+            lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16,
+            lWordArray = Array(lNumberOfWords - 1),
+            lBytePosition = 0,
+            lByteCount = 0;
+
+        while ( lByteCount < lMessageLength )
+        {
+          lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+          lBytePosition = (lByteCount % 4)*8;
+          lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
+          lByteCount++;
+        }
+
+        lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+        lBytePosition = (lByteCount % 4) * 8;
+        lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
+        lWordArray[lNumberOfWords-2] = lMessageLength<<3;
+        lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
+        return lWordArray;
+      }
+     
+      function WordToHex(lValue)
+      {
+        var WordToHexValue = "", 
+            WordToHexValue_temp = "",
+            lByte,
+            lCount;
+
+        for (lCount = 0; lCount<=3; lCount++)
+        {
+          lByte = (lValue>>>(lCount*8)) & 255;
+          WordToHexValue_temp = "0" + lByte.toString(16);
+          WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
+        }
+
+        return WordToHexValue;
+      };
+     
+      function Utf8Encode(string)
+      {
+        string = string.replace(/\r\n/g, "\n");
+
+        var utftext = "";
+     
+        for (var n = 0; n < string.length; n++)
+        {
+          var c = string.charCodeAt(n);
+     
+          if (c < 128)
+          {
+            utftext += String.fromCharCode(c);
+          }
+          else if((c > 127) && (c < 2048))
+          {
+            utftext += String.fromCharCode((c >> 6) | 192);
+            utftext += String.fromCharCode((c & 63) | 128);
+          }
+          else
+          {
+            utftext += String.fromCharCode((c >> 12) | 224);
+            utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+            utftext += String.fromCharCode((c & 63) | 128);
+          }
+        }
+     
+        return utftext;
+      };
+     
+      var x = Array();
+      var k,AA,BB,CC,DD,a,b,c,d;
+      var S11=7, S12=12, S13=17, S14=22;
+      var S21=5, S22=9 , S23=14, S24=20;
+      var S31=4, S32=11, S33=16, S34=23;
+      var S41=6, S42=10, S43=15, S44=21;
+     
+      string = Utf8Encode(string);
+     
+      x = ConvertToWordArray(string);
+     
+      a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
+     
+      for (k=0; k<x.length; k+=16)
+      {
+        AA=a; BB=b; CC=c; DD=d;
+        a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
+        d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
+        c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
+        b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
+        a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
+        d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
+        c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
+        b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
+        a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
+        d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
+        c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
+        b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
+        a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
+        d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
+        c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
+        b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
+        a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
+        d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
+        c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
+        b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
+        a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
+        d=GG(d,a,b,c,x[k+10],S22,0x2441453);
+        c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
+        b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
+        a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
+        d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
+        c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
+        b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
+        a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
+        d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
+        c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
+        b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
+        a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
+        d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
+        c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
+        b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
+        a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
+        d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
+        c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
+        b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
+        a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
+        d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
+        c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
+        b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
+        a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
+        d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
+        c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
+        b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
+        a=II(a,b,c,d,x[k+0], S41,0xF4292244);
+        d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
+        c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
+        b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
+        a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
+        d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
+        c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
+        b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
+        a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
+        d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
+        c=II(c,d,a,b,x[k+6], S43,0xA3014314);
+        b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
+        a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
+        d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
+        c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
+        b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
+        a=AddUnsigned(a,AA);
+        b=AddUnsigned(b,BB);
+        c=AddUnsigned(c,CC);
+        d=AddUnsigned(d,DD);
+      }
+     
+      var temp = WordToHex(a) + WordToHex(b) + WordToHex(c) + WordToHex(d);
+     
+      return temp.toLowerCase();
+    }
+  }
+);;'use strict';
+
+
+angular.module('WebPaige.Services.Storage', ['ngResource'])
+
+
+/**
+ * Storage service for localStorage, Session and cookies management
+ */
+.factory('Storage', ['$rootScope', '$config', function ($rootScope, $config)
+{
+  // If there is a prefix set in the config lets use that with an appended 
+  // period for readability
+  // var prefix = angularLocalStorage.constant;
+  
+  if ($config.title.substr(-1) !== '.') $config.title = !!$config.title ? $config.title + '.' : '';
+
+  // Checks the browser to see if local storage is supported
+  var browserSupportsLocalStorage = function ()
+  {
+    try {
+      return ('localStorage' in window && window['localStorage'] !== null);           
+    }
+    catch (e) {
+      return false;
+    }
+  };
+
+  // Directly adds a value to local storage
+  // If local storage is not available in the browser use cookies
+  // Example use: Storage.add('library','angular');
+  var addToLocalStorage = function (key, value)
+  {
+    if (!browserSupportsLocalStorage()) return false;
+
+    // 0 and "" is allowed as a value but let's limit other falsey values like "undefined"
+    if (!value && value !== 0 && value !== "") return false;
+
+    try {
+      localStorage.setItem($config.title + key, value);
+    }
+    catch (e) {
+      return false;
+    };
+
+    return true;
+  };
+
+
+  // Directly get a value from local storage
+  // Example use: Storage.get('library'); // returns 'angular'
+  var getFromLocalStorage = function (key)
+  {
+    if (!browserSupportsLocalStorage()) return false;
+
+    var item = localStorage.getItem($config.title + key);
+
+    if (!item) return null;
+
+    return item;
+  };
+
+
+  // Remove an item from local storage
+  // Example use: Storage.remove('library'); // removes the key/value pair of library='angular'
+  var removeFromLocalStorage = function (key) 
+  {
+    if (!browserSupportsLocalStorage()) return false;
+
+    try {
+      localStorage.removeItem($config.title + key);
+    } 
+    catch (e) {
+      return false;
+    };
+
+    return true;
+  };
+
+
+  // Remove all data for this app from local storage
+  // Example use: Storage.clearAll();
+  // Should be used mostly for development purposes
+  var clearAllFromLocalStorage = function () 
+  {
+    if (!browserSupportsLocalStorage()) return false;
+
+    var prefixLength = $config.title.length;
+
+    for (var key in localStorage) 
+    {
+      // Only remove items that are for this app
+      if (key.substr(0, prefixLength) === $config.title) 
+      {
+        try {
+          removeFromLocalStorage(key.substr(prefixLength));
+        } 
+        catch (e) {
+          return false;
+        };
+      };
+    };
+
+    return true;
+  };
+
+
+  /**
+   * Checks the browser to see if session storage is supported
+   */
+  var browserSupportsSessionStorage = function ()
+  {
+    try {
+      return ('sessionStorage' in window && window['sessionStorage'] !== null);           
+    }
+    catch (e) {
+      return false;
+    }
+  };
+
+
+  /**
+   * Directly adds a value to session storage
+   */
+  var addToSessionStorage = function (key, value)
+  {
+    if (!browserSupportsSessionStorage()) return false;
+
+    if (!value && value !== 0 && value !== "") return false;
+
+    try {
+      sessionStorage.setItem($config.title + key, value);
+    }
+    catch (e) {
+      return false;
+    };
+
+    return true;
+  };
+
+
+  /**
+   * Get value from session storage
+   */
+  var getFromSessionStorage = function (key)
+  {
+    if (!browserSupportsSessionStorage()) return false;
+
+    var item = sessionStorage.getItem($config.title + key);
+
+    if (!item) return null;
+
+    return item;
+  };
+
+
+  /**
+   * Remove item from session storage
+   */
+  var removeFromSessionStorage = function (key) 
+  {
+    if (!browserSupportsSessionStorage()) return false;
+
+    try {
+      sessionStorage.removeItem($config.title + key);
+    } 
+    catch (e) {
+      return false;
+    };
+
+    return true;
+  };
+
+
+  /**
+   * Remove all data from session storage
+   */
+  var clearAllFromSessionStorage = function () 
+  {
+    if (!browserSupportsSessionStorage()) return false;
+
+    var prefixLength = $config.title.length;
+
+    for (var key in sessionStorage) 
+    {
+      // Only remove items that are for this app
+      if (key.substr(0, prefixLength) === $config.title) 
+      {
+        try {
+          removeFromSessionStorage(key.substr(prefixLength));
+        } 
+        catch (e) {
+          return false;
+        };
+      };
+    };
+
+    return true;
+  };
+
+
+  // Checks the browser to see if cookies are supported
+  var browserSupportsCookies = function () 
+  {
+    try {
+      return navigator.cookieEnabled ||
+        ("cookie" in document && (document.cookie.length > 0 ||
+        (document.cookie = "test").indexOf.call(document.cookie, "test") > -1));
+    } 
+    catch (e) {
+      return false;
+    }
+  };
+
+
+  // Directly adds a value to cookies
+  // Typically used as a fallback is local storage is not available in the browser
+  // Example use: Storage.cookie.add('library','angular');
+  var addToCookies = function (key, value) 
+  {
+    if (typeof value == "undefined") return false;
+
+    if (!browserSupportsCookies())  return false;
+
+    try {
+      var expiry      = '', 
+          expiryDate  = new Date();
+
+      if (value === null) 
+      {
+        $config.cookie.expiry = -1;
+
+        value = '';
+      };
+
+      if ($config.cookie.expiry !== 0) 
+      {
+        expiryDate.setTime(expiryDate.getTime() + ($config.cookie.expiry * 60 * 60 * 1000));
+
+        expiry = "; expires=" + expiryDate.toGMTString();
+      };
+
+      document.cookie = $config.title + 
+                        key + 
+                        "=" + 
+                        //encodeURIComponent(value) + 
+                        value + 
+                        expiry + 
+                        "; path=" + 
+                        $config.cookie.path;
+    } 
+    catch (e) {
+      return false;
+    };
+
+    return true;
+  };
+
+
+  // Directly get a value from a cookie
+  // Example use: Storage.cookie.get('library'); // returns 'angular'
+  var getFromCookies = function (key) 
+  {
+    if (!browserSupportsCookies()) 
+    {
+      $rootScope.$broadcast('StorageModule.notification.error', 'COOKIES_NOT_SUPPORTED');
+      return false;
+    }
+
+    var cookies = document.cookie.split(';');
+    
+    for (var i=0; i < cookies.length; i++) 
+    {
+      var thisCookie = cookies[i];
+      
+      while (thisCookie.charAt(0)==' ')
+        thisCookie = thisCookie.substring(1, thisCookie.length);
+
+      if (thisCookie.indexOf($config.title + key + '=') == 0)
+        return decodeURIComponent(thisCookie.substring($config.title.length + key.length + 1, thisCookie.length));
+    };
+
+    return null;
+  };
+
+
+  var removeFromCookies = function (key) 
+  {
+    addToCookies(key, null);
+  };
+
+
+  var clearAllFromCookies = function () 
+  {
+    var thisCookie    = null, 
+        thisKey       = null,
+        prefixLength  = $config.title.length,
+        cookies       = document.cookie.split(';');
+    
+    for (var i=0; i < cookies.length; i++) 
+    {
+      thisCookie = cookies[i];
+      
+      while (thisCookie.charAt(0) == ' ') 
+        thisCookie = thisCookie.substring(1, thisCookie.length);
+
+      key = thisCookie.substring(prefixLength, thisCookie.indexOf('='));
+
+      removeFromCookies(key);
+    };
+  };
+
+
+  var storageSize = function (key)
+  {
+    var item = (key) ? localStorage.key : localStorage;
+
+    return ((3 + ((item.length * 16) / (8 * 1024))) * 0.0009765625).toPrecision(2) + ' MB';
+  }
+
+
+  var getPeriods = function ()
+  {
+    return angular.fromJson(getFromLocalStorage('periods'));
+  };
+
+
+  var getGroups = function ()
+  {
+    return angular.fromJson(getFromLocalStorage('groups'));
+  };
+
+
+  var getMembers = function ()
+  {
+    return angular.fromJson(getFromLocalStorage('members'));
+  };
+
+
+  var getSettings = function ()
+  {
+    var settings = angular.fromJson(getFromLocalStorage('resources'));
+
+    return (!settings.settingsWebPaige) ? $rootScope.config.defaults.settingsWebPaige : angular.fromJson(settings.settingsWebPaige);
+  };
+
+
+  return {
+    isSupported: browserSupportsLocalStorage,
+    add:        addToLocalStorage,
+    get:        getFromLocalStorage,
+    remove:     removeFromLocalStorage,
+    clearAll:   clearAllFromLocalStorage,
+    session: {
+      add:      addToSessionStorage,
+      get:      getFromSessionStorage,
+      remove:   removeFromSessionStorage,
+      clearAll: clearAllFromSessionStorage
+    },
+    cookie: {
+      add:      addToCookies,
+      get:      getFromCookies,
+      remove:   removeFromCookies,
+      clearAll: clearAllFromCookies
+    },
+    size: storageSize,
+    local: {
+      periods:  getPeriods,
+      groups:   getGroups,
+      members:  getMembers,
+      settings: getSettings
+    }
+  }
+
+}]);;'use strict';
+
+
+angular.module('WebPaige.Services.Strings', ['ngResource'])
+
+
+/**
+ * TODO
+ * Add example usage!
+ * 
+ * String manupulators
+ */
+.factory('Strings', 
+  function ()
+  {
+    return {
+
+      /**
+       * Truncate string from words with ..
+       */
+      truncate: function (txt, n, useWordBoundary)
+      {
+         var toLong = txt.length > n,
+             s_ = toLong ? txt.substr(0, n-1) : txt,
+             s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+
+         return toLong ? s_ + '..' : s_;
+      },
+
+      /**
+       * To title case
+       */
+      toTitleCase: function (str)
+      {
+        if (str)
+          return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+      }
+    }
+  }
+);;'use strict';
+
+
+angular.module('WebPaige.Services.Announcer', ['ngResource'])
+
+
+/**
+ * Announcer
+ */
+.factory('Announcer', 
+  function ()
+  {
+    return {
+      /**
+       * TODO
+       * Modify p2000 script in ask70 for date conversions!!
+       *
+       * p2000 messages processor
+       */
+      process: function (results)
+      {
+        var alarms  = {
+              short:  [],
+              long:   [] 
+            },
+            limit   = 4,
+            count   = 0;
+
+        angular.forEach(results, function (alarm, index)
+        {
+          if (alarm.body)
+          {
+            if (alarm.body.match(/Prio 1/) || alarm.body.match(/PRIO 1/))
+            {
+              alarm.body = alarm.body.replace('Prio 1 ', '');
+              alarm.prio = {
+                1:    true,
+                test: false
+              };
+            };
+
+            if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
+            {
+              alarm.body = alarm.body.replace('Prio 2 ', '');
+              alarm.prio = {
+                2:    true,
+                test: false
+              };
+            };
+
+            if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
+            {
+              alarm.body = alarm.body.replace('Prio 3 ', '');
+              alarm.prio = {
+                3:    true,
+                test: false
+              }
+            };
+
+            if (alarm.body.match(/PROEFALARM/))
+            {
+              alarm.prio = {
+                test: true
+              };
+            };
+
+            // var dates     = alarm.day.split('-'),
+            //     swap      = dates[0] + 
+            //                 '-' + 
+            //                 dates[1] + 
+            //                 '-' + 
+            //                 dates[2],
+            //     dstr      = swap + ' ' + alarm.time,
+            //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
+            //     timeStamp = new Date(datetime).getTime();
+            // alarm.datetime = datetime;
+            // alarm.timeStamp = timeStamp;
+
+            if (count < 4) alarms.short.push(alarm);
+
+            alarms.long.push(alarm);
+
+            count++;
+          }
+        });
+
+        return alarms;
+      }
+    }
+  }
+);;'use strict';
+
+
+angular.module('WebPaige.Services.Sloter', ['ngResource'])
+
+
+/**
+ * Planboard data processors
+ */
+.factory('Sloter', 
+[
+  '$rootScope', 'Storage', 
+  function ($rootScope, Storage) 
+  {
+    return {
+
+      /**
+       * Getters
+       */
+      get: {
+        groups: function ()
+        {
+          var groups = {};
+
+          angular.forEach(Storage.local.groups(), function (group, index)
+          {
+            groups[group.uuid] = group.name;
+          });
+
+          return groups;
+        },
+
+        members: function ()
+        {
+          var members = {};
+
+          angular.forEach(Storage.local.members(), function (member, index)
+          {
+            members[member.uuid] = member.name;
+          });
+
+          return members;
+        }
+      },
+
+      /**
+       * Wrap for sorting in list
+       */
+      wrapper: function (rank) { return '<span style="display:none;">' + rank + '</span>' },
+
+      /**
+       * Wrap secrets in slot contents
+       */
+      secret: function (content) { return '<span class="secret">' + content + '</span>' },
+
+      /**
+       * Add loading bars on both ends
+       */
+      addLoading: function (data, timedata, rows)
+      {
+        angular.forEach(rows, function(row, index)
+        {
+          timedata.push({
+            start:  data.periods.end,
+            end:    1577836800000,
+            group:  row,
+            content:    'loading',
+            className:  'state-loading-right',
+            editable:   false
+          });
+
+          timedata.push({
+            start:  0,
+            end:    data.periods.start,
+            group:  row,
+            content:    'loading',
+            className:  'state-loading-left',
+            editable:   false
+          });
+        });
+
+        return timedata;
+      },
+
+      /**
+       * Handle user slots
+       */
+      user: function (data, timedata, config)
+      {
+        var _this = this;
+
+        angular.forEach(data.user, function (slot, index)
+        {
+          angular.forEach(config.legenda, function (value, legenda)
+          {
+            if (slot.text == legenda && value)
+            {
+              timedata.push({
+                start:  Math.round(slot.start * 1000),
+                end:    Math.round(slot.end * 1000),
+                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
+                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                content:  _this.secret(angular.toJson({
+                  type:   'slot',
+                  id:     slot.id, 
+                  recursive: slot.recursive, 
+                  state:  slot.text 
+                  })),
+                className:  config.states[slot.text].className,
+                editable:   true
+              });
+            };
+          });       
+        });
+
+        timedata = _this.addLoading(data, timedata, [
+          _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+          _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning')
+        ]);
+
+        return timedata;
+      },
+    
+      /**
+       * TODO
+       * Look for ways to combine with user
+       * 
+       * Profile timeline data processing
+       */
+      profile: function (data, config)
+      {
+        var _this = this,
+            timedata = [];
+
+        angular.forEach(data, function (slot, index)
+        {
+          angular.forEach(config.legenda, function (value, legenda)
+          {
+            if (slot.text == legenda && value)
+            {
+              timedata.push({
+                start:  Math.round(slot.start * 1000),
+                end:    Math.round(slot.end * 1000),
+                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
+                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                content: _this.secret(angular.toJson({
+                  type: 'slot',
+                  id:   slot.id, 
+                  recursive:  slot.recursive, 
+                  state:      slot.text 
+                  })),
+                className:  config.states[slot.text].className,
+                editable:   true
+              });  
+            };
+          });       
+        });
+
+        timedata.push({
+          start:  0,
+          end:    1,
+          group:  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+          content:    '',
+          className:  null,
+          editable:   false
+        });
+
+        timedata.push({
+          start:  0,
+          end:    1,
+          group:  _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+          content:    '',
+          className:  null,
+          editable:   false
+        });
+
+        return timedata;
+      },
+
+      /**
+       * Handle group name whether divisions selected
+       */
+      namer: function (data, divisions, privilage)
+      {
+        var groups  = this.get.groups(),
+            name    = groups[data.aggs.id],
+            link    = '<a href="#/groups?uuid=' + 
+                      data.aggs.id + 
+                      '#view">' +
+                      name +
+                      '</a>',
+                      title;
+
+        if (data.aggs.division == 'all' || data.aggs.division == undefined)
+        {
+          title = (privilage == 1) ? link : '<span>' + name + '</span>';
+        }
+        else
+        {
+          var label;
+
+          angular.forEach(divisions, function (division, index) { if (division.id == data.aggs.division) label = division.label; });
+
+          title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+          title += ' <span class="label">' + label + '</span>';
+        };
+
+        return title;
+      },
+
+      /**
+       * Handle group aggs (with divisions) with bars
+       */
+      bars: function (data, timedata, config, name)
+      {
+        var _this = this,
+            maxh = 0;
+
+        angular.forEach(data.aggs.data, function (slot, index) { if (slot.wish > maxh)  maxh = slot.wish; });
+
+        angular.forEach(data.aggs.data, function (slot, index)
+        {
+          var maxNum      = maxh,
+              num         = slot.wish,
+              xwish       = num,
+              height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
+              minHeight   = height,
+              style       = 'height:' + height + 'px;',
+              requirement = '<div class="requirement" style="' + 
+                            style + 
+                            '" ' + 
+
+                            'title="'+'Minimum aantal benodigden'+': ' + 
+
+                            num + 
+                            ' personen"></div>';
+
+          num = slot.wish + slot.diff;
+
+          var xcurrent = num;
+
+          height = Math.round(num / maxNum * 80 + 20);
+
+          if (slot.diff >= 0 && slot.diff < 7)
+          {
+            switch (slot.diff)
+            {
+              case 0:
+                var color = config.densities.even;
+              break
+              case 1:
+                var color = config.densities.one;
+              break;
+              case 2:
+                var color = config.densities.two;
+              break;
+              case 3:
+                var color = config.densities.three;
+              break;
+              case 4:
+                var color = config.densities.four;
+              break;
+              case 5:
+                var color = config.densities.five;
+              break;
+              case 6:
+                var color = config.densities.six;
+              break;
+            }
+          }
+          else if (slot.diff >= 7)
+          {
+            var color = config.densities.more;
+          }
+          else
+          {
+            var color = config.densities.less;
+          };
+
+          var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+
+          if (xcurrent > xwish) height = minHeight;
+
+          style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+
+          var actual = '<div class="bar" style="' + 
+                        style + 
+                        '" ' + 
+
+                        ' title="Huidig aantal beschikbaar: ' + 
+
+                        num + 
+                        ' personen">' + 
+                        span + 
+                        '</div>';
+
+          if (  (slot.diff > 0  && config.legenda.groups.more) ||
+                (slot.diff == 0 && config.legenda.groups.even) || 
+                (slot.diff < 0  && config.legenda.groups.less) )
+          {
+            timedata.push({
+              start:    Math.round(slot.start * 1000),
+              end:      Math.round(slot.end * 1000),
+              group:    _this.wrapper('c') + name,
+              content:  requirement + 
+                        actual +
+                        _this.secret(angular.toJson({
+                          type: 'group',
+                          diff: slot.diff,
+                          group: name
+                        })),
+              className: 'group-aggs',
+              editable: false
+            });
+          };
+
+          timedata = _this.addLoading(data, timedata, [
+            _this.wrapper('c') + name
+          ]);
+        });
+
+        return timedata;
+      },
+
+      /**
+       * Process plain group aggs
+       */
+      aggs: function (data, timedata, config, name)
+      {
+        var _this = this;
+
+        angular.forEach(data.aggs.data, function (slot, index)
+        {
+          var cn;
+
+          if (slot.diff >= 0 && slot.diff < 7)
+          {
+            switch (slot.diff)
+            {
+              case 0: cn = 'even';  break
+              case 1: cn = 1;       break
+              case 2: cn = 2;       break
+              case 3: cn = 3;       break
+              case 4: cn = 4;       break
+              case 5: cn = 5;       break
+              case 6: cn = 6;       break
+            }
+          }
+          else if (slot.diff >= 7)
+          {
+            cn = 'more';
+          }
+          else
+          {
+            cn = 'less'
+          };
+
+          if (  (slot.diff > 0  && config.legenda.groups.more) ||
+                (slot.diff == 0 && config.legenda.groups.even) || 
+                (slot.diff < 0  && config.legenda.groups.less) )
+          {
+            timedata.push({
+              start:  Math.round(slot.start * 1000),
+              end:    Math.round(slot.end * 1000),
+              group: _this.wrapper('c') + name,
+              content:  cn +
+                        _this.secret(angular.toJson({
+                          type: 'group',
+                          diff: slot.diff,
+                          group: name
+                        })),
+              className:  'agg-' + cn,
+              editable:   false
+            });
+          };
+
+          timedata = _this.addLoading(data, timedata, [
+            _this.wrapper('c') + name
+          ]);
+        });
+
+        return timedata;
+      },
+
+      /**
+       * Wish slots
+       */
+      wishes: function (data, timedata, name)
+      {
+        var _this = this;
+
+        angular.forEach(data.aggs.wishes, function (wish, index)
+        {
+          if ( wish.count >= 7 )
+          {
+            var cn = 'wishes-more';
+          }
+          else if ( wish.count == 0 )
+          {
+            var cn = 'wishes-even';
+          }
+          else
+          {
+            var cn = 'wishes-' + wish.count;
+          };
+
+          timedata.push({
+            start:  Math.round(wish.start * 1000),
+            end:    Math.round(wish.end * 1000),
+            group:  _this.wrapper('c') + name + ' (Wishes)',
+            content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
+                      _this.secret(angular.toJson({
+                        type: 'wish',
+                        wish: wish.count,
+                        group: name,
+                        groupId: data.aggs.id
+                      })),
+            className:  cn,
+            editable:   false
+          });
+
+          timedata = _this.addLoading(data, timedata, [
+            _this.wrapper('c') + name + ' (Wishes)'
+          ]);
+        });
+
+        return timedata;
+      },
+
+      /**
+       * Process members
+       */
+      members: function (data, timedata, config, privilage)
+      {
+        var _this   = this,
+            members = this.get.members();          
+
+        angular.forEach(data.members, function (member, index)
+        {
+          var link = (privilage == 1) ? 
+                        _this.wrapper('d') + 
+                        '<a href="#/profile/' + 
+                        member.id + 
+                        '#timeline">' + 
+                        members[member.id] + 
+                        '</a>' :
+                        _this.wrapper('d') + 
+                        members[member.id];
+
+          angular.forEach(member.data, function (slot, i)
+          {
+            angular.forEach(config.legenda, function (value, legenda)
+            {
+              if (slot.text == legenda && value)
+              {
+                timedata.push({
+                  start:  Math.round(slot.start * 1000),
+                  end:    Math.round(slot.end * 1000),
+                  group:  link,
+                  content: _this.secret(angular.toJson({ 
+                    type: 'member',
+                    id:   slot.id, 
+                    mid:  member.id,
+                    recursive: slot.recursive, 
+                    state: slot.text 
+                    })),
+                  className:  config.states[slot.text].className,
+                  editable:   false
+                });
+              };
+            });
+          });
+
+          timedata.push({
+            start:    0,
+            end:      0,
+            group:    link,
+            content:  null,
+            className:null,
+            editable: false
+          });
+
+          timedata = _this.addLoading(data, timedata, [ link ]);
+
+          /**
+           * TODO
+           * Good place to host this here?
+           */
+          angular.forEach(member.stats, function (stat, index)
+          {
+            var state = stat.state.split('.');
+            state.reverse();
+            stat.state = 'bar-' + state[0];
+          });
+        });
+
+        return timedata;
+      },
+
+      /**
+       * Produce pie charts
+       */
+      pies: function (data)
+      {
+        document.getElementById("groupPie").innerHTML = '';
+
+        var ratios    = [],
+            colorMap  = {
+              more: '#415e6b',
+              even: '#ba6a24',
+              less: '#a0a0a0'
+            },
+            colors    = [],
+            xratios   = [];
+
+        angular.forEach(data.aggs.ratios, function (ratio, index)
+        {
+          if (ratio != 0)
+          {
+            ratios.push({
+              ratio: ratio, 
+              color: colorMap[index]
+            });
+          };
+        });
+
+        ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+        angular.forEach(ratios, function (ratio, index)
+        {
+          colors.push(ratio.color);
+          xratios.push(ratio.ratio);
+        });
+
+        var r   = Raphael("groupPie"),
+            pie = r.piechart(120, 120, 100, xratios, { colors: colors });
+      },
+      
+      /**
+       * Timeline data processing
+       */
+      process: function (data, config, divisions, privilage)
+      {
+        var _this     = this,
+            timedata  = [];
+
+        if (data.user) timedata = _this.user(data, timedata, config);
+
+        if (data.aggs)
+        {
+          var name = _this.namer(data, divisions, privilage);
+
+          if (config.bar) 
+          {
+            timedata = _this.bars(data, timedata, config, name);
+          }
+          else
+          {
+            timedata = _this.aggs(data, timedata, config, name);
+          };
+        };
+
+        if (config.wishes) timedata = _this.wishes(data, timedata, name);
+
+        if (data.members) timedata = _this.members(data, timedata, config, privilage);
+
+        if (data.aggs && data.aggs.ratios) _this.pies(data);
+
+        return timedata;
+      }
+
+    }
+  }
+]);;'use strict';
+
+
+angular.module('WebPaige.Services.Stats', ['ngResource'])
+
+
+/**
+ * Planboard stats processors
+ */
+.factory('Stats', 
+[
+  '$rootScope', 'Storage', 
+  function ($rootScope, Storage) 
+  {
+    return {
+      /**
+       * Group agg stats
+       */
+      aggs: function (data)
+      {
+        var stats = {
+              less: 0,
+              even: 0,
+              more: 0        
+            },
+            durations = {
+              less: 0,
+              even: 0,
+              more: 0,
+              total: 0
+            },
+            total = data.length;
+
+        angular.forEach(data, function (slot, index)
+        {
+          if (slot.diff < 0)
+          {
+            stats.less++;
+          }
+          else if (slot.diff == 0)
+          {
+            stats.even++;
+          }
+          else
+          {
+            stats.more++;
+          };
+
+          var slotDiff = slot.end - slot.start;
+
+          if (slot.diff < 0)
+          {
+            durations.less = durations.less + slotDiff;
+          }
+          else if (slot.diff == 0)
+          {
+            durations.even = durations.even + slotDiff;
+          }
+          else
+          {
+            durations.more = durations.more + slotDiff;
+          };
+
+          durations.total = durations.total + slotDiff;
+        });
+
+        return {
+          ratios: {
+            less: Math.round((stats.less / total) * 100),
+            even: Math.round((stats.even / total) * 100),
+            more: Math.round((stats.more / total) * 100)
+          },
+          durations: durations
+        }
+      },
+
+      /**
+       * Group pie stats
+       */
+      pies: function (data)
+      {
+        var stats = {
+              less: 0,
+              even: 0,
+              more: 0        
+            },
+            total = data.length;
+
+        angular.forEach(data, function (slot, index)
+        {
+          if (slot.diff < 0)
+          {
+            stats.less++;
+          }
+          else if (slot.diff == 0)
+          {
+            stats.even++;
+          }
+          else
+          {
+            stats.more++;
+          };
+        });
+
+        return {
+          less: Math.round((stats.less / total) * 100),
+          even: Math.round((stats.even / total) * 100),
+          more: Math.round((stats.more / total) * 100)
+        };
+      },
+
+      /**
+       * Member stats
+       */
+      member: function (data)
+      {
+        var stats = {},
+            total = 0;
+
+        angular.forEach(data, function (slot, index)
+        {
+          if (stats[slot.text])
+          {
+            stats[slot.text]++;
+          }
+          else
+          {
+            stats[slot.text] = 1;
+          };
+
+          total++;
+        });
+
+        //console.warn('stats ->', stats, total);
+
+        var ratios = [];
+
+        angular.forEach(stats, function (stat, index)
+        {
+          ratios.push({
+            state: index,
+            ratio: (stat / total) * 100
+          });
+
+          //console.warn(stat, index);
+          //ratios[index] = (stat / total) * 100;
+        });
+
+        //console.warn('ratios ->', ratios);
+
+        // var confirm = 0;
+        // angular.forEach(ratios, function(ratio, index)
+        // {
+        //   confirm = confirm + ratio;
+        // });
+        // console.warn('confirm ->', confirm);
+        
+        return ratios;
+      }
+
+    }
+  }
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Services.Offsetter', ['ngResource'])
+
+
+/**
+ * Offsetter Service
+ */
+.factory('Offsetter', 
+[
+  '$rootScope', 
+  function ($rootScope)
+  {
+    var constructor = {
+	    factory: function (data)
+	    {
+		    var offsets = [];
+
+		    angular.forEach(data, function (offset, index)
+		  	{
+		  		var max     = 1000 * 60 * 60 * 24 * 7,
+			        day     = 1000 * 60 * 60 * 24,
+			        hour    = 1000 * 60 * 60,
+			        minute  = 1000 * 60,
+			        days    = 0,
+			        hours   = 0,
+			        minutes = 0,
+			        stamp   = offset * 1000,
+			        hours   = offset % day,
+			        days    = offset - hours,
+			        minutes = offset % hour,
+			        total   = {
+			          days:     Math.floor(days / day),
+			          hours:    Math.floor(hours / hour),
+			          minutes:  Math.floor(minutes / minute)
+			        },
+			        offset_tmp;
+
+			    offset_tmp = {
+			    	value: offset,
+			    	exact: offset % day,
+		        mon: false,
+		        tue: false,
+		        wed: false,
+		        thu: false,
+		        fri: false,
+		        sat: false,
+		        sun: false,
+			      hour: 	total.hours,
+			      minute: total.minutes
+			    };
+
+		      if (total.hours < 10) total.hours = '0' + total.hours;
+		      if (total.minutes < 10) total.minutes = '0' + total.minutes;
+
+		      offset_tmp.time = total.hours + ':' + total.minutes;
+
+			    switch (total.days)
+			    {
+			      case 0:   offset_tmp.mon = true;   break;
+			      case 1:   offset_tmp.tue = true;   break;
+			      case 2:   offset_tmp.wed = true;   break;
+			      case 3:   offset_tmp.thu = true;   break;
+			      case 4:   offset_tmp.fri = true;   break;
+			      case 5:   offset_tmp.sat = true;   break;
+			      case 6:   offset_tmp.sun = true;   break;
+			    }
+
+			    offsets.push(offset_tmp);
+		  	});
+
+
+		  	var noffs = {};
+
+		  	angular.forEach(offsets, function (offset, index)
+		  	{
+		  		noffs[offset.exact] = noffs[offset.exact] || {};
+
+		  		noffs[offset.exact].hour 		=	offset.hour;
+		  		noffs[offset.exact].minute 	= offset.minute;
+		  		noffs[offset.exact].time 		= offset.time;
+
+		  		noffs[offset.exact].exact 	= offset.exact;
+
+		  		noffs[offset.exact].mon 		= (noffs[offset.exact].mon) ? noffs[offset.exact].mon : offset.mon;
+		  		noffs[offset.exact].tue 		= (noffs[offset.exact].tue) ? noffs[offset.exact].tue : offset.tue;
+		  		noffs[offset.exact].wed 		= (noffs[offset.exact].wed) ? noffs[offset.exact].wed : offset.wed;
+		  		noffs[offset.exact].thu 		= (noffs[offset.exact].thu) ? noffs[offset.exact].thu : offset.thu;
+		  		noffs[offset.exact].fri 		= (noffs[offset.exact].fri) ? noffs[offset.exact].fri : offset.fri;
+		  		noffs[offset.exact].sat 		= (noffs[offset.exact].sat) ? noffs[offset.exact].sat : offset.sat;
+		  		noffs[offset.exact].sun 		= (noffs[offset.exact].sun) ? noffs[offset.exact].sun : offset.sun;
+
+		  	});
+
+		  	console.log('produced offsets -->', noffs);
+
+		  	return noffs;    	
+	    }
+	  };
+
+	  return {
+	  	factory: constructor.factory
+	  }
+  }
+]);;'use strict';
+
+
+angular.module('WebPaige.Filters', ['ngResource'])
+
+
+/**
+ * Translate roles
+ */
+.filter('translateRole', 
+[
+	'$config', 
+	function ($config)
+	{
+		return function (role)
+		{
+			var urole;
+
+			angular.forEach($config.roles, function (prole, index)
+			{
+				if (prole.id == role) urole = prole.label;
+			});
+
+			return urole;
+		}
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * Main range filter
+ */
+.filter('rangeMainFilter', 
+[
+	'Dater', 'Storage', 
+	function (Dater, Storage)
+	{
+		var periods = Dater.getPeriods();
+
+		return function (dates)
+		{
+			if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+				dates.start = new Date(dates.end).addDays(-1);
+
+			var dates = {
+						start: {
+							real: new Date(dates.start).toString('dddd, MMMM d'),
+							month: new Date(dates.start).toString('MMMM'),
+							day: new Date(dates.start).toString('d')
+						},
+						end: {
+							real: new Date(dates.end).toString('dddd, MMMM d'),
+							month: new Date(dates.end).toString('MMMM'),
+							day: new Date(dates.end).toString('d')
+						}
+					},
+					monthNumber = Date.getMonthNumberFromName(dates.start.month);
+
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && 
+							dates.start.hour == dates.end.hour) || 
+							dates.start.day == dates.end.day) && 
+							dates.start.month == dates.end.month)
+			{
+				return 	dates.start.real + 
+								', ' + 
+								Dater.getThisYear();
+			}
+			else if(dates.start.day == 1 && 
+							dates.end.day == periods.months[monthNumber + 1].totalDays)
+			{
+				return 	dates.start.month + 
+								', ' + 
+								Dater.getThisYear();
+			}
+			else
+			{
+				return 	dates.start.real + 
+								' / ' + 
+								dates.end.real + 
+								', ' + 
+								Dater.getThisYear();
+			};
+
+		}
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * Main range week filter
+ */
+.filter('rangeMainWeekFilter', 
+[
+	'Dater', 'Storage', 
+	function (Dater, Storage)
+	{
+		var periods = Dater.getPeriods();
+
+		return function (dates)
+		{
+			if (dates)
+			{
+				var dates = {
+					start: 	new Date(dates.start).toString('dddd, MMMM d'),
+					end: 		new Date(dates.end).toString('dddd, MMMM d')
+				};
+
+				return 	dates.start + 
+								' / ' + 
+								dates.end + 
+								', ' + 
+								Dater.getThisYear();
+			};
+		}
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * Range info filter
+ */
+.filter('rangeInfoFilter', 
+[
+	'Dater', 'Storage', 
+	function (Dater, Storage)
+	{
+		var periods = Dater.getPeriods();
+
+		return function (timeline)
+		{
+			var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
+
+			if (diff > (2419200000 + 259200000))
+			{
+				return 'Total selected days: ' + Math.round(diff / 86400000);
+			}
+			else
+			{
+				if (timeline.scope.day)
+				{
+					var hours = {
+						start: new Date(timeline.range.start).toString('HH:mm'),
+						end: new Date(timeline.range.end).toString('HH:mm')
+					};
+
+					/**
+					 *  00:00 fix => 24:00
+					 */
+					if (hours.end == '00:00') hours.end = '24:00';
+
+					return 	'Time: ' + 
+									hours.start + 
+									' / ' + 
+									hours.end;
+				}
+				else if (timeline.scope.week)
+				{
+					return 	'Week number: ' + 
+									timeline.current.week;
+				}
+				else if (timeline.scope.month)
+				{
+					return 	'Month number: ' + 
+									timeline.current.month + 
+									', Total days: ' + 
+									periods.months[timeline.current.month].totalDays;
+				};
+			};
+		};
+	}
+])
+
+
+
+
+
+
+
+/**
+ * Range info week filter
+ */
+.filter('rangeInfoWeekFilter', 
+[
+	'Dater', 'Storage', 
+	function (Dater, Storage)
+	{
+		var periods = Dater.getPeriods();
+
+		return function (timeline)
+		{
+			if (timeline) return 'Week number: ' + timeline.current.week;
+		};
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * BUG!
+ * Maybe not replace bar- ?
+ * 
+ * TODO
+ * Implement state conversion from config later on!
+ * 
+ * Convert ratios to readable formats
+ */
+.filter('convertRatios', 
+[
+	'$config', 
+	function ($config)
+	{
+		return function (stats)
+		{
+			var ratios = '';
+
+			angular.forEach(stats, function (stat, index)
+			{
+				ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
+			});
+
+			return ratios.substring(0, ratios.length - 2);
+		};
+	}
+])
+
+
+
+
+
+
+
+
+/** 
+ * Calculate time in days
+ */
+.filter('calculateTimeInDays', 
+	function ()
+	{
+		return function (stamp)
+		{
+			var day 		= 1000 * 60 * 60 * 24,
+					hour		=	1000 * 60 * 60,
+					days 		= 0,
+					hours 	= 0,
+					stamp 	= stamp * 1000,
+					hours 	= stamp % day,
+					days 		= stamp - hours;
+
+			return 	Math.floor(days / day);
+		};
+	}
+)
+
+
+
+
+
+
+
+
+/**
+ * Calculate time in hours
+ */
+.filter('calculateTimeInHours', 
+	function ()
+	{
+		return function (stamp)
+		{
+			var day 		= 1000 * 60 * 60 * 24,
+					hour		=	1000 * 60 * 60,
+					days 		= 0,
+					hours 	= 0,
+					stamp 	= stamp * 1000,
+					hours 	= stamp % day,
+					days 		= stamp - hours;
+
+			return 	Math.floor(hours / hour);
+		};
+	}
+)
+
+
+
+
+
+
+
+/**
+ * Calculate time in minutes
+ */
+.filter('calculateTimeInMinutes', 
+	function ()
+	{
+		return function (stamp)
+		{
+			var day 		= 1000 * 60 * 60 * 24,
+					hour		=	1000 * 60 * 60,
+					minute 	= 1000 * 60,
+					days 		= 0,
+					hours 	= 0,
+					minutes = 0,
+					stamp 	= stamp * 1000,
+					hours 	= stamp % day,
+					days 		= stamp - hours,
+					minutes = stamp % hour;
+
+			return 	Math.floor(minutes / minute);
+		};
+	}
+)
+
+
+
+
+
+
+
+/**
+ * Convert eve urls to ids
+ */
+.filter('convertEve', 
+	function ()
+	{
+	  return function (url)
+	  {
+	  	var eve = url;
+
+	  	eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
+
+	    return eve[eve.length-2];
+	  };
+	}
+)
+
+
+
+
+
+
+
+/** 
+ * Convert user uuid to name
+ */
+.filter('convertUserIdToName', 
+[
+	'Storage', 
+	function (Storage)
+	{
+		var members = angular.fromJson(Storage.get('members'));
+
+		return function (id)
+		{	
+	    if (members == null || typeof members[id] == "undefined")
+	    {
+	      return id;
+	    }
+	    else
+	    {
+	      return members[id].name;
+	    };
+		};
+	}
+])
+
+
+
+
+
+
+
+/**
+ * Convert timeStamps to dates
+ */
+.filter('nicelyDate', 
+[
+	'$rootScope', 
+	function ($rootScope)
+	{
+	 	return function (date)
+	 	{
+	 		if (typeof date == 'string') date = Number(date);
+
+	 		return new Date(date).toString($rootScope.config.formats.datetime);
+	 	};
+	}
+])
+
+
+
+
+
+
+
+/**
+ * TODO
+ * Not used probably!
+ *
+ * Combine this either with nicelyDate or terminate!
+ * 
+ * Convert timeStamp to readable date and time
+ */
+.filter('convertTimeStamp', 
+	function ()
+	{
+		return function (stamp)
+		{
+			console.warn(typeof stamp);
+
+			return new Date(stamp).toString('dd-MM-yyyy HH:mm');
+		};
+	}
+)
+
+
+
+
+
+
+
+/**
+ * TODO
+ * Still used?
+ * 
+ * No title filter
+ */
+.filter('noTitle',
+	function ()
+	{
+		return function (title)
+		{
+			return (title == "") ? "- No Title -" : title;
+		}
+	}
+)
+
+
+
+
+
+
+
+/**
+ * TODO
+ * Finish it!
+ * 
+ * Strip span tags
+ */
+.filter('stripSpan', 
+	function ()
+	{
+	  return function (string)
+	  {
+	    return string.match(/<span class="label">(.*)<\/span>/);
+	  }
+	}
+)
+
+
+
+
+
+
+
+/**
+ * Strip html tags
+ */
+.filter('stripHtml', 
+	function ()
+	{
+	  return function (string)
+	  {
+	  	if (string) return string.split('>')[1].split('<')[0];
+	  }
+	}
+)
+
+
+
+
+
+
+
+/**
+ * Convert group id to name
+ */
+.filter('groupIdToName', 
+[
+	'Storage', 
+	function (Storage)
+	{
+	  return function (id)
+	  {
+	  	var groups = angular.fromJson(Storage.get('groups'));
+
+	  	for (var i in groups)
+	  	{
+	  		if (groups[i].uuid == id) return groups[i].name;
+	  	};
+	  }
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * TODO
+ * Unknown filter
+ */
+.filter('i18n_spec',
+[
+	'$rootScope', 
+	function ($rootScope)
+	{
+		return function (string, type)
+		{
+			var types = type.split("."),
+					ret 	= $rootScope.ui[types[0]][types[1]],
+					ret 	= ret.replace('$v',string);
+			
+			return ret;
+		}
+	}
+])
+
+
+
+
+
+
+
+/**
+ * Truncate group titles for dashboard pie widget
+ */
+.filter('truncateGroupTitle', 
+[
+	'Strings', 
+	function (Strings) 
+	{
+		return function (title)
+		{
+	     return Strings.truncate(title, 20, true);
+	  }
+	}
+])
+
+
+
+
+
+
+
+/**
+ * Make first letter capital
+ */
+.filter('toTitleCase', 
+[
+	'Strings', 
+	function (Strings) 
+	{
+		return function (txt)
+		{
+	     return Strings.toTitleCase(txt);
+	  }
+	}
+])
+
+
+
+
+
+
+
+/**
+ * Count messages in box
+ */
+.filter('countBox',
+	function () 
+	{
+		return function (box)
+		{
+			var total = 0;
+
+			angular.forEach(box, function (bulk, index)
+			{
+				total = total + bulk.length;
+			});
+
+	    return total;
+	  }
+	}
+);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -6267,8 +9299,8 @@ angular.module('WebPaige.Controllers.Messages', [])
  */
 .controller('messages', 
 [
-	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer',
-	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer) 
+	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
+	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) 
 	{
 	  /**
 	   * Fix styles
@@ -6290,7 +9322,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Set messages
 	   */
-	  $scope.messages = data;
+	  $scope.messages 			= data.messages;
+	  $scope.notifications 	= data.notifications;
 
 
 	  /**
@@ -6415,6 +9448,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+    $scope.scheaduler = false;
+
+
+
 
 
 	  /**
@@ -6424,9 +9461,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  {
 	  	if ($location.hash() == 'scheaduler')
 	  	{
-		    $scope.notification = Messages.notification.find($location.search().uuid);
-
-		    console.log('notification for the view ->', $scope.notification);
+		    setNotificationView($location.search().uuid);
 	  	}
 	  	else
 	  	{
@@ -6518,6 +9553,58 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+	  function setNotificationView (id)
+	  {
+	  	$scope.origin = 'notifications';
+
+    	$scope.scheaduler = true;
+
+	    $scope.notification = Messages.notification.find(id);
+
+	    console.log('notification ->', $scope.notification);
+
+	    angular.forEach($scope.notification.types, function (type, index)
+	  	{
+	  		if (type == 'sms') $scope.broadcast.sms = true;
+	  		if (type == 'email') $scope.broadcast.email = true;
+	  	});
+
+	    var members 	= angular.fromJson(Storage.get('members')),
+	        name 			= members[$scope.notification.recipients[0]].name;
+
+	    $scope.message = {
+	      subject: 		$scope.notification.subject,
+	      body: 			$scope.notification.message,
+	      receivers: 	[{
+	        group: 		'Users', 
+	        id: 			$scope.notification.recipients[0], 
+	        name: 		name
+	      }]
+	    };
+
+	    $scope.scheadule = {
+	    	title: 	$scope.notification.label,
+	    	status: $scope.notification.active
+	    }
+
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	      if (option.innerHTML == name) option.selected = true;
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+
+
+
+	    console.warn('offsets --->', $scope.notification.offsets, 'Offsets ->', Offsetter);
+
+	    setTimeout(function ()
+	  	{
+	  		$scope.offsets = Offsetter.factory($scope.notification.offsets);
+	  	}, 100);
+	  }
+
 
 
 	  /**
@@ -6531,11 +9618,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('scheaduler');
 
-
-	    $scope.notification = Messages.notification.find(id);
-
-	    console.log('notification for the view ->', $scope.notification);
-
+	    setNotificationView(id);
 
 	    $scope.$watch($location.search(), function ()
 	    {
@@ -6955,15 +10038,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
-
-
-
-
-
 	  /**
 	   * Bulk cleaners for mailboxes
 	   */
@@ -6995,13 +10069,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
-
-
-
-
 	  /**
 	   * Notifications API
 	   */
+	  /*
     Messages.notification.list()
     .then(function (result)
     {
@@ -7017,6 +10088,7 @@ angular.module('WebPaige.Controllers.Messages', [])
         $scope.notifications = result;
       };
     });
+    */
 
 
     /**
@@ -7132,28 +10204,24 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 
+	}
+]);
+;/*jslint node: true */
+/*global angular */
+'use strict';
 
 
+angular.module('WebPaige.Controllers.Scheaduler', [])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $scope.scheaduler = false;
-
-
-
-
+/**
+ * Scheadule controller
+ */
+.controller('scheaduler', 
+[
+	'$scope', '$rootScope', '$q', '$location', '$route', 'Messages', 'Storage', 'Timer',
+	function ($scope, $rootScope, $q, $location, $route, Messages, Storage, Timer) 
+	{
     /**
      * Add a new offset
      */
@@ -7185,92 +10253,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      exact: 	0
     	};
 
-    	scheaduleCount();
+    	$scope.scheaduleCount();
     };
-
-
-    var offsets_ 		= [300000, (300000 + (1000 * 60 * 60 * 24 * 2)), (300000 + (1000 * 60 * 60 * 24 * 5)), 900000],
-    		offsets 		= [];
-
-
-
-    angular.forEach(offsets_, function (offset, index)
-  	{
-  		var max     = 1000 * 60 * 60 * 24 * 7,
-	        day     = 1000 * 60 * 60 * 24,
-	        hour    = 1000 * 60 * 60,
-	        minute  = 1000 * 60,
-	        days    = 0,
-	        hours   = 0,
-	        minutes = 0,
-	        stamp   = offset * 1000,
-	        hours   = offset % day,
-	        days    = offset - hours,
-	        minutes = offset % hour,
-	        total   = {
-	          days:     Math.floor(days / day),
-	          hours:    Math.floor(hours / hour),
-	          minutes:  Math.floor(minutes / minute)
-	        },
-	        offset_tmp;
-
-	    offset_tmp = {
-	    	value: offset,
-	    	exact: offset % day,
-        mon: false,
-        tue: false,
-        wed: false,
-        thu: false,
-        fri: false,
-        sat: false,
-        sun: false,
-	      hour: 	total.hours,
-	      minute: total.minutes
-	    };
-
-      if (total.hours < 10) total.hours = '0' + total.hours;
-      if (total.minutes < 10) total.minutes = '0' + total.minutes;
-
-      offset_tmp.time = total.hours + ':' + total.minutes;
-
-	    switch (total.days)
-	    {
-	      case 0:   offset_tmp.mon = true;   break;
-	      case 1:   offset_tmp.tue = true;   break;
-	      case 2:   offset_tmp.wed = true;   break;
-	      case 3:   offset_tmp.thu = true;   break;
-	      case 4:   offset_tmp.fri = true;   break;
-	      case 5:   offset_tmp.sat = true;   break;
-	      case 6:   offset_tmp.sun = true;   break;
-	    }
-
-	    offsets.push(offset_tmp);
-  	});
-
-
-  	var noffs = {};
-
-  	angular.forEach(offsets, function (offset, index)
-  	{
-  		noffs[offset.exact] = noffs[offset.exact] || {};
-
-  		noffs[offset.exact].hour 		=	offset.hour;
-  		noffs[offset.exact].minute 	= offset.minute;
-  		noffs[offset.exact].time 		= offset.time;
-
-  		noffs[offset.exact].exact 	= offset.exact;
-
-  		noffs[offset.exact].mon 		= (noffs[offset.exact].mon) ? noffs[offset.exact].mon : offset.mon;
-  		noffs[offset.exact].tue 		= (noffs[offset.exact].tue) ? noffs[offset.exact].tue : offset.tue;
-  		noffs[offset.exact].wed 		= (noffs[offset.exact].wed) ? noffs[offset.exact].wed : offset.wed;
-  		noffs[offset.exact].thu 		= (noffs[offset.exact].thu) ? noffs[offset.exact].thu : offset.thu;
-  		noffs[offset.exact].fri 		= (noffs[offset.exact].fri) ? noffs[offset.exact].fri : offset.fri;
-  		noffs[offset.exact].sat 		= (noffs[offset.exact].sat) ? noffs[offset.exact].sat : offset.sat;
-  		noffs[offset.exact].sun 		= (noffs[offset.exact].sun) ? noffs[offset.exact].sun : offset.sun;
-
-  	});
-
-  	$scope.offsets = noffs;
 
 
   	/**
@@ -7280,14 +10264,14 @@ angular.module('WebPaige.Controllers.Messages', [])
   	{
   		delete $scope.offsets[key];
 
-  		scheaduleCount();
+  		$scope.scheaduleCount();
   	};
 
 
   	/**
   	 * Count the scheadules
   	 */
-  	function scheaduleCount ()
+  	$scope.scheaduleCount = function ()
   	{
   		var count = 0;
 
@@ -7296,7 +10280,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	$scope.scheaduleCount = count;
   	}
 		
-		scheaduleCount();
+		$scope.scheaduleCount();
 
 		/**
 		 * Watch offsets
@@ -7331,11 +10315,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	  	});
 		});
-
-		$scope.scheadule = {
-			status: true
-		}
-
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -8565,2920 +11544,4 @@ angular.module('WebPaige.Controllers.Help', [])
 		 */
 		$rootScope.fixStyles();
 	}
-]);;/*jslint node: true */
-/*global angular */
-/*global $ */
-'use strict';
-
-
-angular.module('WebPaige.Directives', ['ngResource'])
-
-
-/**
- * Chosen
- */
-.directive('chosen',
-  function ()
-  {
-    var linker = function (scope,element,attr)
-    {
-      scope.$watch('receviersList', function ()
-      {
-         element.trigger('liszt:updated');
-      });
-
-      scope.$watch('message.receviers', function ()
-      {
-        $(element[0]).trigger('liszt:updated');
-      });
-
-      element.chosen();
-    };
-
-    return {
-      restrict: 'A',
-      link:     linker
-    };
-  }
-)
-
-
-/**
- * Scheadule item
- */
-.directive('scheaduleItem',
-  function ($compile)
-  {
-    return {
-      restrict: 'E',
-      rep1ace:  true,
-      link: function (scope, element, attrs)
-      {
-        /**
-         * Pass the scheadule data
-         */
-        scope.s = scope.scheadule;
-
-        var template =  '<div class="scheadule">' + 
-                          '<div class="timer">' +
-                            '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
-                            '<i class="icon-time" style="margin-top: -3px;"></i>' +
-                          '</div>' +
-                          '<ul>' +
-                            '<li>' +
-                              '<label for="monday-{{s.exact}}">' +
-                                '<input type="checkbox" id="monday-{{s.exact}}" ng-model="s.mon">&nbsp;Monday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="tuesday-{{s.exact}}">' +
-                                '<input type="checkbox" id="tuesday-{{s.exact}}" ng-model="s.tue">&nbsp;Tuesday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="wednesday-{{s.exact}}">' +
-                                '<input type="checkbox" id="wednesday-{{s.exact}}" ng-model="s.wed">&nbsp;Wednesday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="thursday-{{s.exact}}">' +
-                                '<input type="checkbox" id="thursday-{{s.exact}}" ng-model="s.thu">&nbsp;Thursday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="friday-{{s.exact}}">' +
-                                '<input type="checkbox" id="friday-{{s.exact}}" ng-model="s.fri">&nbsp;Friday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="saturday-{{s.exact}}">' +
-                                '<input type="checkbox" id="saturday-{{s.exact}}" ng-model="s.sat">&nbsp;Saturday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="sunday-{{s.exact}}">' +
-                                '<input type="checkbox" id="sunday-{{s.exact}}" ng-model="s.sun">&nbsp;Sunday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li><i class="icon-calendar"></i></li>' + 
-                          '</ul>' +
-                          '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
-                        '</div>';
-
-        /**
-         * Showtime
-         */
-        element.html(template).show();
-
-        /**
-         * Compile the hottie
-         */
-        $compile(element.contents())(scope);
-
-        /**
-         * Serve to the controller
-         */
-        scope.remover = function (key)
-        {
-          scope.$parent.$parent.remover(key);
-        };
-
-      },
-      scope: {
-        scheadule: '='
-      }
-    };
-
-  }
-)
-
-
-/**
- * Daterangepicker
- */
-.directive('daterangepicker',
-[
-  '$rootScope',
-  function ($rootScope)
-  {
-    return {
-      restrict: 'A',
-
-      link: function postLink(scope, element, attrs, controller)
-      {
-        // var startDate = Date.create().addDays(-6),
-        //     endDate   = Date.create();       
-        //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
-
-        element.daterangepicker({
-          // startDate: startDate,
-          // endDate: endDate,
-          ranges: {
-            'Today':        ['today', 'tomorrow'],
-            'Tomorrow':     ['tomorrow', new Date.today().addDays(2)],
-            'Yesterday':    ['yesterday', 'today'],
-            'Next 3 Days':  ['today', new Date.create().addDays(3)],
-            'Next 7 Days':  ['today', new Date.create().addDays(7)]
-          }
-        },
-        function (start, end)
-        {
-          scope.$apply(function ()
-          {
-            var diff = end.getTime() - start.getTime();
-
-            /**
-             * Scope is a day
-             */
-            if (diff <= 86400000)
-            {
-              scope.timeline.range = {
-                start: start,
-                end: start
-              };
-              scope.timeline.scope = {
-                day: true,
-                week: false,
-                month: false
-              };
-            }
-            /**
-             * Scope is less than a week
-             */
-            else if (diff < 604800000)
-            {
-              scope.timeline.range = {
-                start: start,
-                end: end
-              };
-              scope.timeline.scope = {
-                day: false,
-                week: true,
-                month: false
-              };
-            }
-            /**
-             * Scope is more than a week
-             */
-            else if (diff > 604800000)
-            {
-              scope.timeline.range = {
-                start: start,
-                end: end
-              };
-              scope.timeline.scope = {
-                day: false,
-                week: false,
-                month: true
-              };
-            }
-
-            $rootScope.$broadcast('timeliner', {
-              start: start,
-              end: end
-            });
-
-          });
-        });
-
-        /**
-         * Set data toggle
-         */
-        element.attr('data-toggle', 'daterangepicker');
-
-        /**
-         * TODO
-         * Investigate if its really needed!!
-         */
-        element.daterangepicker({
-          autoclose: true
-        });
-      }
-    };
-  }
 ]);
-
-
-/**
- * ???
- */
-// .directive('wpName', 
-// [
-//   'Storage', 
-//   function (Storage)
-//   {
-//     return {
-//       restrict : 'A',
-//       link : function linkfn(scope, element, attrs)
-//       {
-//         var getmemberName = function (uid)
-//         {
-//           var members = angular.fromJson(Storage.get('members')),
-//               retName = uid;
-
-//           angular.forEach(members , function (mem, i)
-//           {
-//             if (mem.uuid == uid)
-//             {
-//               retName = mem.name;
-
-//               return false;
-//             };
-//           });
-
-//           return retName;
-//         };
-//         scope.$watch(attrs.wpName, function (uid)
-//         {
-//           element.text(getmemberName(uid)); 
-//         });
-//       }
-//     }
-//   }
-// ]);
-
-
-/**
- * 
- */
-// .directive('shortcuts', 
-// [
-//   '$rootScope', 
-//   function ($rootScope)
-//   {
-//     return {
-//       restrict: 'E',
-//       template: '<link rel="shortcut icon" ng-href="js/profiles/{{profile}}/img/ico/favicon.ico">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-144-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-114-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="72x72"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-72-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="57x57"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-57-precomposed.png">',
-//       replace: true,
-//       scope: {
-//         profile: '@profile'
-//       },
-//       link: function (scope, element, attrs)
-//       {
-//       }
-//     }
-//   }
-// ]);
-
-;/**
- * AngularStrap - Twitter Bootstrap directives for AngularJS
- * @version v0.7.0 - 2013-03-11
- * @link http://mgcrea.github.com/angular-strap
- * @author Olivier Louvignes <olivier@mg-crea.com>
- * @license MIT License, http://www.opensource.org/licenses/MIT
- */
-angular.module("$strap.config",[]).value("$strap.config",{}),angular.module("$strap.filters",["$strap.config"]),angular.module("$strap.directives",["$strap.config"]),angular.module("$strap",["$strap.filters","$strap.directives","$strap.config"]),angular.module("$strap.directives").directive("bsAlert",["$parse","$timeout","$compile",function(t,e,n){"use strict";return{restrict:"A",link:function(e,i,a){var o=t(a.bsAlert),r=(o.assign,o(e));a.bsAlert?e.$watch(a.bsAlert,function(t,o){r=t,i.html((t.title?"<strong>"+t.title+"</strong>&nbsp;":"")+t.content||""),t.closed&&i.hide(),n(i.contents())(e),(t.type||o.type)&&(o.type&&i.removeClass("alert-"+o.type),t.type&&i.addClass("alert-"+t.type)),(angular.isUndefined(a.closeButton)||"0"!==a.closeButton&&"false"!==a.closeButton)&&i.prepend('<button type="button" class="close" data-dismiss="alert">&times;</button>')},!0):(angular.isUndefined(a.closeButton)||"0"!==a.closeButton&&"false"!==a.closeButton)&&i.prepend('<button type="button" class="close" data-dismiss="alert">&times;</button>'),i.addClass("alert").alert(),i.hasClass("fade")&&(i.removeClass("in"),setTimeout(function(){i.addClass("in")}));var s=a.ngRepeat&&a.ngRepeat.split(" in ").pop();i.on("close",function(t){var n;s?(t.preventDefault(),i.removeClass("in"),n=function(){i.trigger("closed"),e.$parent&&e.$parent.$apply(function(){for(var t=s.split("."),n=e.$parent,i=0;t.length>i;++i)n&&(n=n[t[i]]);n&&n.splice(e.$index,1)})},$.support.transition&&i.hasClass("fade")?i.on($.support.transition.end,n):n()):r&&(t.preventDefault(),i.removeClass("in"),n=function(){i.trigger("closed"),e.$apply(function(){r.closed=!0})},$.support.transition&&i.hasClass("fade")?i.on($.support.transition.end,n):n())})}}}]),angular.module("$strap.directives").directive("bsButton",["$parse","$timeout",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){if(a){n.parent('[data-toggle="buttons-checkbox"], [data-toggle="buttons-radio"]').length||n.attr("data-toggle","button");var o=!!e.$eval(i.ngModel);o&&n.addClass("active"),e.$watch(i.ngModel,function(t,e){var i=!!t,a=!!e;i!==a?$.fn.button.Constructor.prototype.toggle.call(r):i&&!o&&n.addClass("active")})}n.hasClass("btn")||n.on("click.button.data-api",function(){n.button("toggle")}),n.button();var r=n.data("button");r.toggle=function(){if(!a)return $.fn.button.Constructor.prototype.toggle.call(this);var i=n.parent('[data-toggle="buttons-radio"]');i.length?(n.siblings("[ng-model]").each(function(n,i){t($(i).attr("ng-model")).assign(e,!1)}),e.$digest(),a.$modelValue||(a.$setViewValue(!a.$modelValue),e.$digest())):e.$apply(function(){a.$setViewValue(!a.$modelValue)})}}}}]).directive("bsButtonsCheckbox",["$parse",function(){"use strict";return{restrict:"A",require:"?ngModel",compile:function(t){t.attr("data-toggle","buttons-checkbox").find("a, button").each(function(t,e){$(e).attr("bs-button","")})}}}]).directive("bsButtonsRadio",["$parse",function(){"use strict";return{restrict:"A",require:"?ngModel",compile:function(t,e){return t.attr("data-toggle","buttons-radio"),e.ngModel||t.find("a, button").each(function(t,e){$(e).attr("bs-button","")}),function(t,e,n,i){i&&(e.find("[value]").button().filter('[value="'+t.$eval(n.ngModel)+'"]').addClass("active"),e.on("click.button.data-api",function(e){t.$apply(function(){i.$setViewValue($(e.target).closest("button").attr("value"))})}),t.$watch(n.ngModel,function(i,a){if(i!==a){var o=e.find('[value="'+t.$eval(n.ngModel)+'"]');o.length&&$.fn.button.Constructor.prototype.toggle.call(o.data("button"))}}))}}}}]),angular.module("$strap.directives").directive("bsButtonSelect",["$parse","$timeout",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){var o=t(i.bsButtonSelect);o.assign,a&&(n.text(e.$eval(i.ngModel)),e.$watch(i.ngModel,function(t){n.text(t)}));var r,s,l,u;n.bind("click",function(){r=o(e),s=a?e.$eval(i.ngModel):n.text(),l=r.indexOf(s),u=l>r.length-2?r[0]:r[l+1],console.warn(r,u),e.$apply(function(){n.text(u),a&&a.$setViewValue(u)})})}}}]),angular.module("$strap.directives").directive("bsDatepicker",["$timeout",function(){"use strict";var t="ontouchstart"in window&&!window.navigator.userAgent.match(/PhantomJS/i),e={"/":"[\\/]","-":"[-]",".":"[.]",dd:"(?:(?:[0-2]?[0-9]{1})|(?:[3][01]{1}))",d:"(?:(?:[0-2]?[0-9]{1})|(?:[3][01]{1}))",mm:"(?:[0]?[1-9]|[1][012])",m:"(?:[0]?[1-9]|[1][012])",yyyy:"(?:(?:[1]{1}[0-9]{1}[0-9]{1}[0-9]{1})|(?:[2]{1}[0-9]{3}))(?![[0-9]])",yy:"(?:(?:[0-9]{1}[0-9]{1}))(?![[0-9]])"};return{restrict:"A",require:"?ngModel",link:function(n,i,a,o){var r=function(t,n){n||(n={});var i=t,a=e;return angular.forEach(a,function(t,e){i=i.split(e).join(t)}),RegExp("^"+i+"$",["i"])},s=t?"yyyy/mm/dd":r(a.dateFormat||"mm/dd/yyyy");o&&o.$parsers.unshift(function(t){return!t||s.test(t)?(o.$setValidity("date",!0),t):(o.$setValidity("date",!1),void 0)});var l=i.next('[data-toggle="datepicker"]');if(l.length&&l.on("click",function(){t?i.trigger("focus"):i.datepicker("show")}),t&&"text"===i.prop("type"))i.prop("type","date"),i.on("change",function(){n.$apply(function(){o.$setViewValue(i.val())})});else{o&&i.on("changeDate",function(){n.$apply(function(){o.$setViewValue(i.val())})});var u=i.closest(".popover");u&&u.on("hide",function(){var t=i.data("datepicker");t&&(t.picker.remove(),i.data("datepicker",null))}),i.attr("data-toggle","datepicker"),i.datepicker({autoclose:!0,forceParse:a.forceParse||!1,language:a.language||"en"})}}}}]),angular.module("$strap.directives").directive("bsDropdown",["$parse","$compile",function(t,e){"use strict";var n=Array.prototype.slice,i='<ul class="dropdown-menu" role="menu" aria-labelledby="drop1"><li ng-repeat="item in items" ng-class="{divider: !!item.divider, \'dropdown-submenu\': !!item.submenu && item.submenu.length}"><a ng-hide="!!item.divider" tabindex="-1" ng-href="{{item.href}}" ng-click="{{item.click}}" target="{{item.target}}" ng-bind-html-unsafe="item.text"></a></li></ul>',a=function(t,n,a){for(var r,s,l,u=0,c=t.length;c>u;u++)(r=t[u].submenu)&&(l=a.$new(),l.items=r,s=e(i)(l),s=s.appendTo(n.children("li:nth-child("+(u+1)+")")),o(r,s,l))},o=function(){var t=n.call(arguments);setTimeout(function(){a.apply(null,t)})};return{restrict:"EA",scope:!0,link:function(n,a,r){var s=t(r.bsDropdown);n.items=s(n);var l=e(i)(n);o(n.items,l,n),l.insertAfter(a),a.addClass("dropdown-toggle").attr("data-toggle","dropdown")}}}]),angular.module("$strap.directives").directive("bsModal",["$parse","$compile","$http","$timeout","$q","$templateCache",function(t,e,n,i,a,o){"use strict";return{restrict:"A",scope:!0,link:function(r,s,l){var u=t(l.bsModal),c=(u.assign,u(r));a.when(o.get(c)||n.get(c,{cache:!0})).then(function(t){angular.isObject(t)&&(t=t.data);var n=u(r).replace(".html","").replace(/[\/|\.|:]/g,"-")+"-"+r.$id,a=$('<div class="modal hide" tabindex="-1"></div>').attr("id",n).attr("data-backdrop",l.backdrop||!0).attr("data-keyboard",l.keyboard||!0).addClass(l.modalClass?"fade "+l.modalClass:"fade").html(t);$("body").append(a),s.attr("href","#"+n).attr("data-toggle","modal"),i(function(){e(a)(r)}),r._modal=function(t){a.modal(t)},r.hide=function(){a.modal("hide")},r.show=function(){a.modal("show")},r.dismiss=r.hide})}}}]),angular.module("$strap.directives").directive("bsNavbar",["$location",function(t){"use strict";return{restrict:"A",link:function(e,n){e.$watch(function(){return t.path()},function(t){n.find("li[data-match-route]").each(function(e,n){var i=angular.element(n),a=i.attr("data-match-route"),o=RegExp("^"+a+"$",["i"]);o.test(t)?i.addClass("active"):i.removeClass("active")})})}}}]),angular.module("$strap.directives").directive("bsPopover",["$parse","$compile","$http","$timeout","$q","$templateCache",function(t,e,n,i,a,o){"use strict";return $("body").on("keyup",function(t){27===t.keyCode&&$(".popover.in").each(function(){$(this).popover("hide")})}),{restrict:"A",scope:!0,link:function(i,r,s){var l=t(s.bsPopover),u=(l.assign,l(i)),c={};angular.isObject(u)&&(c=u),a.when(c.content||o.get(u)||n.get(u,{cache:!0})).then(function(t){angular.isObject(t)&&(t=t.data),s.unique&&r.on("show",function(){$(".popover.in").each(function(){var t=$(this),e=t.data("popover");e&&!e.$element.is(r)&&t.popover("hide")})}),s.hide&&i.$watch(s.hide,function(t,e){t?n.hide():t!==e&&n.show()}),r.popover(angular.extend({},c,{content:t,html:!0}));var n=r.data("popover");n.hasContent=function(){return this.getTitle()||t},n.getPosition=function(){var t=$.fn.popover.Constructor.prototype.getPosition.apply(this,arguments);return e(this.$tip)(i),i.$digest(),this.$tip.data("popover",this),t},i._popover=function(t){r.popover(t)},i.hide=function(){r.popover("hide")},i.show=function(){r.popover("show")},i.dismiss=i.hide})}}}]),angular.module("$strap.directives").directive("bsTabs",["$parse","$compile",function(t,e){"use strict";return{restrict:"A",link:function(t,n){var i=['<ul class="nav nav-tabs">',"</ul>"],a=['<div class="tab-content">',"</div>"];n.find("[data-tab]").each(function(e){var n=angular.element(this),o="tab-"+t.$id+"-"+e,r=n.hasClass("active"),s=n.hasClass("fade"),l=t.$eval(n.data("tab"));i.splice(e+1,0,"<li"+(r?' class="active"':"")+'><a href="#'+o+'" data-toggle="tab">'+l+"</a></li>"),a.splice(e+1,0,'<div class="tab-pane '+n.attr("class")+(s&&r?" in":"")+'" id="'+o+'">'+this.innerHTML+"</div>")}),n.html(i.join("")+a.join("")),e(n.children("div.tab-content"))(t)}}}]),angular.module("$strap.directives").directive("bsTimepicker",["$timeout",function(){"use strict";var t="((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){a&&n.on("change",function(){e.$apply(function(){a.$setViewValue(n.val())})});var o=RegExp("^"+t+"$",["i"]);a.$parsers.unshift(function(t){return!t||o.test(t)?(a.$setValidity("time",!0),t):(a.$setValidity("time",!1),void 0)});var r=n.closest(".popover");r&&r.on("hide",function(){var t=n.data("timepicker");t&&(t.$widget.remove(),n.data("timepicker",null))}),n.attr("data-toggle","timepicker"),n.timepicker()}}}]),angular.module("$strap.directives").directive("bsTooltip",["$parse","$compile",function(t){"use strict";return{restrict:"A",scope:!0,link:function(e,n,i){var a=t(i.bsTooltip),o=(a.assign,a(e));e.$watch(i.bsTooltip,function(t,e){t!==e&&(o=t)}),i.unique&&n.on("show",function(){$(".tooltip.in").each(function(){var t=$(this),e=t.data("tooltip");e&&!e.$element.is(n)&&t.tooltip("hide")})}),n.tooltip({title:function(){return angular.isFunction(o)?o.apply(null,arguments):o},html:!0});var r=n.data("tooltip");r.show=function(){var t=$.Event("show");if(this.$element.trigger(t),!t.isDefaultPrevented()){var e=$.fn.tooltip.Constructor.prototype.show.apply(this,arguments);return this.tip().data("tooltip",this),e}},r.hide=function(){var t=$.Event("hide");return this.$element.trigger(t),t.isDefaultPrevented()?void 0:$.fn.tooltip.Constructor.prototype.hide.apply(this,arguments)},e._tooltip=function(t){n.tooltip(t)},e.hide=function(){n.tooltip("hide")},e.show=function(){n.tooltip("show")},e.dismiss=e.hide}}}]),angular.module("$strap.directives").directive("bsTypeahead",["$parse",function(t){"use strict";return{restrict:"A",require:"?ngModel",link:function(e,n,i,a){var o=t(i.bsTypeahead),r=(o.assign,o(e));e.$watch(i.bsTypeahead,function(t,e){t!==e&&(r=t)}),n.attr("data-provide","typeahead"),n.typeahead({source:function(){return angular.isFunction(r)?r.apply(null,arguments):r},minLength:i.minLength||1,items:i.items,updater:function(t){return a&&e.$apply(function(){a.$setViewValue(t)}),t}});var s=n.data("typeahead");s.lookup=function(){var t;return this.query=this.$element.val()||"",this.query.length<this.options.minLength?this.shown?this.hide():this:(t=$.isFunction(this.source)?this.source(this.query,$.proxy(this.process,this)):this.source,t?this.process(t):this)},"0"===i.minLength&&setTimeout(function(){n.on("focus",function(){0===n.val().length&&setTimeout(n.typeahead.bind(n,"lookup"),200)})})}}}]);;'use strict';
-
-
-angular.module('WebPaige.Services.Timer', ['ngResource'])
-
-/**
- * Timer service
- *
- * Timer.start('timerExample', function () { console.warn('timer started') }, 5);
- * $scope.stopTimer = function () { Timer.stop('timerExample') };
- */
-.factory('Timer', 
-[
-  '$rootScope', '$timeout',
-  function ($rootScope, $timeout)
-  {
-    var initer = 0,
-        timers = [];
-
-    var addTimer = function (id, event, delay)
-    {
-      timers[id] = {
-        event: event, 
-        delay: delay, 
-        counter: 0
-      };
-
-      var onTimeout = function ()
-      {
-        timers[id].counter++;
-
-        timers[id].mytimeout = $timeout(onTimeout, delay * 1000);
-
-        if (timers[id].delay == timers[id].counter)
-        {
-          // if (id == 'unreadCount')
-          // {            
-          //   $rootScope.$broadcast('unreadCount');
-          // }
-          // else
-          // {
-            timers[id].event.call();
-          // }
-
-          timers[id].counter = 0;
-        };
-      };
-
-      timers[id].mytimeout = $timeout(onTimeout, delay * 1000);  
-    };
-
-    var stopTimer = function (id)
-    {
-      $timeout.cancel(timers[id].mytimeout);
-    };
-
-    return {
-      start:  addTimer,
-      stop:   stopTimer
-    };
-  }
-]);;'use strict';
-
-
-angular.module('WebPaige.Services.Session', ['ngResource'])
-
-
-/**
- * Session Service
- */
-.factory('Session', 
-[
-  '$rootScope', '$http', 'Storage', 
-  function ($rootScope, $http, Storage)
-  {
-    return {
-      /**
-       * Check session
-       */
-      check: function()
-      {
-        var session = angular.fromJson(Storage.cookie.get('session'));
-
-        if (session)
-        {
-          this.set(session.id);
-
-          return true;
-        }
-        else
-        {
-          return false;
-        };
-      },
-
-      /**
-       * Read cookie value
-       */
-      cookie: function(session)
-      {
-        var values,
-            pairs = document.cookie.split(";");
-
-        for (var i=0; i < pairs.length; i++)
-        {
-          values = pairs[i].split("=");
-
-          if (values[0].trim() == "WebPaige.session") return angular.fromJson(values[1]);
-        };
-
-      },
-
-      /**
-       * Get session
-       * Prolong session time by every check
-       */
-      get: function(session)
-      {
-        this.check(session);
-
-        this.set(session.id);
-
-        return session.id;
-      },
-
-      /**
-       * Set session
-       */
-      set: function(sessionId)
-      {
-        var session = {
-          id: sessionId,
-          time: new Date()
-        };
-
-        Storage.cookie.add('session', angular.toJson(session));
-
-        $rootScope.session = session;
-
-        $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
-
-        return session;
-      },
-
-      /**
-       * Clear session
-       */
-      clear: function()
-      {
-        $rootScope.session = null;
-
-        $http.defaults.headers.common['X-SESSION_ID'] = null;
-      }
-    }
-  }
-]);;'use strict';
-
-
-angular.module('WebPaige.Services.Dater', ['ngResource'])
-
-
-/**
- * Dater service (Wrapper on Date)
- */
-.factory('Dater', 
-[
-  '$rootScope', 'Storage', 
-  function ($rootScope, Storage)
-  {
-    return {
-
-      current:
-      {
-        today: function ()
-        {
-          return Date.today().getDayOfYear() + 1;
-        },
-
-        week: function ()
-        {
-          return new Date().getWeek();
-        },
-
-        month: function ()
-        {
-          return new Date().getMonth() + 1;
-        }
-      },
-
-      readable: 
-      {
-        date: function (date)
-        {
-          return  new Date(date).toString($rootScope.config.formats.date);
-        }
-      },
-
-      convert:
-      {
-        absolute: function (date, time, flag)
-        {
-          var dates   = date.split('-'),
-              result  = new Date(Date.parse(dates[2] + 
-                                      '-' + 
-                                      dates[1] + 
-                                      '-' + 
-                                      dates[0] + 
-                                      ' ' + 
-                                      time)).getTime();
-          
-          return (flag) ? result / 1000 : result;
-        }
-      },
-
-      calculate:
-      {
-        diff: function (range)
-        {
-          return new Date(range.end).getTime() - new Date(range.start).getTime()
-        }
-      },
-
-      /**
-       * Get the current month
-       */
-      getThisMonth: function ()
-      {
-        return new Date().toString('M');
-      },
-
-      /**
-       * Get the current year
-       */
-      getThisYear: function ()
-      {
-        return new Date().toString('yyyy');
-      },
-
-      /**
-       * Get begin and end timestamps of months
-       * in the current year
-       */
-      getMonthTimeStamps: function ()
-      {
-        var months  = {}, 
-            year    = this.getThisYear();
-
-        for (var i = 0; i < 12; i++)
-        {
-          var firstDay  = new Date(year, i).moveToFirstDayOfMonth(),
-              lastDay   = new Date(year, i).moveToLastDayOfMonth(),
-              month     = {
-                first: {
-                  day: firstDay,
-                  timeStamp: firstDay.getTime()
-                },
-                last: { 
-                  day: lastDay,
-                  timeStamp: lastDay.getTime() 
-                },
-                totalDays: Date.getDaysInMonth(year, i)
-              };
-
-          months[i+1] = month;
-        };
-
-        return months;
-      },
-
-      /**
-       * Get begin and end timestamps of weeks
-       */
-      getWeekTimeStamps: function()
-      {
-        var nweeks    = [],
-            weeks     = {},
-            nextMonday,
-            year      = this.getThisYear(), 
-            firstDayInYear    = new Date(year, 0).moveToFirstDayOfMonth(),
-            firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
-            firstMonday       = new Date(firstMondayOfYear);
-
-        for (var i = 0; i < 53; i++)
-        {
-          if (i == 0)
-          {
-            nextMonday = firstMondayOfYear.addWeeks(1);
-          }
-          else
-          {
-            nextMonday = new Date(nweeks[i-1]).addWeeks(1);
-          };
-
-          nweeks.push(new Date(nextMonday));
-        };
-
-        nweeks.unshift(firstMonday);
-
-        var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
-
-        for (var i = 0; i < 55; i++)
-        {
-          weeks[i+1] = {
-            first: {
-              day: nweeks[i],
-              timeStamp: new Date(nweeks[i]).getTime()
-            },
-            last: {
-              day: nweeks[i+1],
-              timeStamp: new Date(nweeks[i+1]).getTime()
-            }
-          }
-        };
-
-        /**
-         * Remove unneccessary periods
-         */
-        delete weeks[54];
-        delete weeks[55];
-
-        return weeks;
-      },
-
-      /**
-       */
-      getDayTimeStamps: function()
-      {
-        var nextDay,
-            ndays = [],
-            days = {},
-            year = this.getThisYear(),
-            firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
-        
-        for (var i = 0; i < 366; i++)
-        {
-          if (i == 0)
-          {
-            nextDay = firstDayInYear;
-          }
-          else
-          {
-            nextDay = new Date(ndays[i-1]).addDays(1);
-          };
-
-          ndays.push(new Date(nextDay));
-        };
-
-        for (var i = 0; i < 366; i++)
-        {
-          days[i+1] = {
-            first: {
-              day: ndays[i],
-              timeStamp: new Date(ndays[i]).getTime()
-            },
-            last: {
-              day: ndays[i+1],
-              timeStamp: new Date(ndays[i+1]).getTime()
-            }
-          };
-        };
-
-        /**
-         * Remove not existing date
-         */
-        if (!days[366].timeStamp)
-        {
-          delete days[366];
-
-          days.total = 365;
-        }
-        else
-        {
-          days.total = 366;
-        };
-
-        return days;
-      },
-
-      registerPeriods: function ()
-      {
-        var periods = angular.fromJson(Storage.get('periods') || '{}');
-
-        Storage.add('periods', angular.toJson({
-          months: this.getMonthTimeStamps(),
-          weeks: this.getWeekTimeStamps(),
-          days: this.getDayTimeStamps()
-        }));      
-      },
-
-      getPeriods: function ()
-      {
-        return angular.fromJson(Storage.get('periods'));
-      }
-    }
-  }
-]);;'use strict';
-
-
-angular.module('WebPaige.Services.EventBus', ['ngResource'])
-
-
-/**
- * EventBus Service
- */
-.factory('EventBus', 
-[
-  '$rootScope', 
-  function ($rootScope)
-  {
-    var self      = this,
-        listeners = {},
-        history   = {};
-   
-    self.emit = function (eventName) 
-    {
-      var args = Array.prototype.slice.call(arguments, 1);
-
-      angular.forEach(listeners, function(fns, eventName) 
-      {
-        angular.forEach(fns, function(fn, key)
-        {
-          if (!args.length)
-          {
-            $rootScope.$emit(eventName, fn());
-          }
-          else
-          {
-            $rootScope.$emit(eventName, fn(args));
-          };
-        });
-      });
-    };
-   
-    self.on = function (eventName, fn) 
-    {
-      if (!(listeners[eventName] instanceof Array)) listeners[eventName] = [];
-
-      listeners[eventName].push(fn);
-
-      $rootScope.$on(listeners[eventName], fn);
-    };
-   
-    self.remove = function (eventName, fn) 
-    {
-      var lsnrs = listeners[eventName],
-          ind   = lsnrs instanceof Array ? lsnrs.indexOf(fn) : -1;
-
-      if (ind > -1) listeners[eventName].splice(ind,1);
-    };
-   
-    self.removeAll = function (eventName) 
-    {
-      if (eventName)
-      {
-        listeners[eventName] = [];
-      }
-      else
-      {
-        listeners = {};
-      }
-    };
-  }
-]);;'use strict';
-
-
-angular.module('WebPaige.Services.Interceptor', ['ngResource'])
-
-
-/**
- * TODO
- * Implement a call registering system with general error handling
- * 
- * Intercepts *all* angular ajax http calls
- */
-.factory('Interceptor', 
-[
-  '$q', '$location', 
-  function ($q, $location)
-  {
-    return function (promise)
-    {
-      return promise.then(
-      /**
-       * Succeded
-       */
-      function (response) 
-      {
-        // console.log('call ->', arguments[0].config.url, 'method ->', arguments[0].config.method, arguments);
-        return response;
-      },
-      /**
-       * Failed
-       */
-      function (response) 
-      {
-        /**
-         * TODO
-         * Possible bug !
-         */
-        // if (response.status == 403)
-        // {
-        //   alert("Session timeout , please re-login");
-        //   $location.path("/login");
-        // };
-
-        return $q.reject(response);
-      });
-    }
-  }
-]);;'use strict';
-
-
-angular.module('WebPaige.Services.MD5', ['ngResource'])
-
-
-/**
- * MD5
- */
-.factory('MD5', 
-  function ()
-  {
-    return function (string)
-    {
-      function RotateLeft(lValue, iShiftBits)
-      {
-        return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
-      }
-     
-      function AddUnsigned(lX,lY)
-      {
-        var lX4,lY4,lX8,lY8,lResult;
-        lX8 = (lX & 0x80000000);
-        lY8 = (lY & 0x80000000);
-        lX4 = (lX & 0x40000000);
-        lY4 = (lY & 0x40000000);
-        lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
-
-        if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
-
-        if (lX4 | lY4)
-        {
-          if (lResult & 0x40000000)
-          {
-            return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-          }
-          else
-          {
-            return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
-          }
-        }
-        else
-        {
-          return (lResult ^ lX8 ^ lY8);
-        }
-      }
-     
-      function F(x,y,z) { return (x & y) | ((~x) & z) }
-      function G(x,y,z) { return (x & z) | (y & (~z)) }
-      function H(x,y,z) { return (x ^ y ^ z) }
-      function I(x,y,z) { return (y ^ (x | (~z))) }
-     
-      function FF(a,b,c,d,x,s,ac)
-      {
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
-
-        return AddUnsigned(RotateLeft(a, s), b);
-      }
-     
-      function GG(a,b,c,d,x,s,ac)
-      {
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
-
-        return AddUnsigned(RotateLeft(a, s), b);
-      }
-     
-      function HH(a,b,c,d,x,s,ac)
-      {
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
-
-        return AddUnsigned(RotateLeft(a, s), b);
-      }
-     
-      function II(a,b,c,d,x,s,ac)
-      {
-        a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
-
-        return AddUnsigned(RotateLeft(a, s), b);
-      }
-     
-      function ConvertToWordArray(string)
-      {
-        var lWordCount,
-            lMessageLength = string.length,
-            lNumberOfWords_temp1 = lMessageLength + 8,
-            lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64,
-            lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16,
-            lWordArray = Array(lNumberOfWords - 1),
-            lBytePosition = 0,
-            lByteCount = 0;
-
-        while ( lByteCount < lMessageLength )
-        {
-          lWordCount = (lByteCount - (lByteCount % 4)) / 4;
-          lBytePosition = (lByteCount % 4)*8;
-          lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
-          lByteCount++;
-        }
-
-        lWordCount = (lByteCount - (lByteCount % 4)) / 4;
-        lBytePosition = (lByteCount % 4) * 8;
-        lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
-        lWordArray[lNumberOfWords-2] = lMessageLength<<3;
-        lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
-        return lWordArray;
-      }
-     
-      function WordToHex(lValue)
-      {
-        var WordToHexValue = "", 
-            WordToHexValue_temp = "",
-            lByte,
-            lCount;
-
-        for (lCount = 0; lCount<=3; lCount++)
-        {
-          lByte = (lValue>>>(lCount*8)) & 255;
-          WordToHexValue_temp = "0" + lByte.toString(16);
-          WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
-        }
-
-        return WordToHexValue;
-      };
-     
-      function Utf8Encode(string)
-      {
-        string = string.replace(/\r\n/g, "\n");
-
-        var utftext = "";
-     
-        for (var n = 0; n < string.length; n++)
-        {
-          var c = string.charCodeAt(n);
-     
-          if (c < 128)
-          {
-            utftext += String.fromCharCode(c);
-          }
-          else if((c > 127) && (c < 2048))
-          {
-            utftext += String.fromCharCode((c >> 6) | 192);
-            utftext += String.fromCharCode((c & 63) | 128);
-          }
-          else
-          {
-            utftext += String.fromCharCode((c >> 12) | 224);
-            utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-            utftext += String.fromCharCode((c & 63) | 128);
-          }
-        }
-     
-        return utftext;
-      };
-     
-      var x = Array();
-      var k,AA,BB,CC,DD,a,b,c,d;
-      var S11=7, S12=12, S13=17, S14=22;
-      var S21=5, S22=9 , S23=14, S24=20;
-      var S31=4, S32=11, S33=16, S34=23;
-      var S41=6, S42=10, S43=15, S44=21;
-     
-      string = Utf8Encode(string);
-     
-      x = ConvertToWordArray(string);
-     
-      a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
-     
-      for (k=0; k<x.length; k+=16)
-      {
-        AA=a; BB=b; CC=c; DD=d;
-        a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
-        d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
-        c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
-        b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
-        a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
-        d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
-        c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
-        b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
-        a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
-        d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
-        c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
-        b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
-        a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
-        d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
-        c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
-        b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
-        a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
-        d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
-        c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
-        b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
-        a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
-        d=GG(d,a,b,c,x[k+10],S22,0x2441453);
-        c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
-        b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
-        a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
-        d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
-        c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
-        b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
-        a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
-        d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
-        c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
-        b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
-        a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
-        d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
-        c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
-        b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
-        a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
-        d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
-        c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
-        b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
-        a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
-        d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
-        c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
-        b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
-        a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
-        d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
-        c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
-        b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
-        a=II(a,b,c,d,x[k+0], S41,0xF4292244);
-        d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
-        c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
-        b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
-        a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
-        d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
-        c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
-        b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
-        a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
-        d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
-        c=II(c,d,a,b,x[k+6], S43,0xA3014314);
-        b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
-        a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
-        d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
-        c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
-        b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
-        a=AddUnsigned(a,AA);
-        b=AddUnsigned(b,BB);
-        c=AddUnsigned(c,CC);
-        d=AddUnsigned(d,DD);
-      }
-     
-      var temp = WordToHex(a) + WordToHex(b) + WordToHex(c) + WordToHex(d);
-     
-      return temp.toLowerCase();
-    }
-  }
-);;'use strict';
-
-
-angular.module('WebPaige.Services.Storage', ['ngResource'])
-
-
-/**
- * Storage service for localStorage, Session and cookies management
- */
-.factory('Storage', ['$rootScope', '$config', function ($rootScope, $config)
-{
-  // If there is a prefix set in the config lets use that with an appended 
-  // period for readability
-  // var prefix = angularLocalStorage.constant;
-  
-  if ($config.title.substr(-1) !== '.') $config.title = !!$config.title ? $config.title + '.' : '';
-
-  // Checks the browser to see if local storage is supported
-  var browserSupportsLocalStorage = function ()
-  {
-    try {
-      return ('localStorage' in window && window['localStorage'] !== null);           
-    }
-    catch (e) {
-      return false;
-    }
-  };
-
-  // Directly adds a value to local storage
-  // If local storage is not available in the browser use cookies
-  // Example use: Storage.add('library','angular');
-  var addToLocalStorage = function (key, value)
-  {
-    if (!browserSupportsLocalStorage()) return false;
-
-    // 0 and "" is allowed as a value but let's limit other falsey values like "undefined"
-    if (!value && value !== 0 && value !== "") return false;
-
-    try {
-      localStorage.setItem($config.title + key, value);
-    }
-    catch (e) {
-      return false;
-    };
-
-    return true;
-  };
-
-
-  // Directly get a value from local storage
-  // Example use: Storage.get('library'); // returns 'angular'
-  var getFromLocalStorage = function (key)
-  {
-    if (!browserSupportsLocalStorage()) return false;
-
-    var item = localStorage.getItem($config.title + key);
-
-    if (!item) return null;
-
-    return item;
-  };
-
-
-  // Remove an item from local storage
-  // Example use: Storage.remove('library'); // removes the key/value pair of library='angular'
-  var removeFromLocalStorage = function (key) 
-  {
-    if (!browserSupportsLocalStorage()) return false;
-
-    try {
-      localStorage.removeItem($config.title + key);
-    } 
-    catch (e) {
-      return false;
-    };
-
-    return true;
-  };
-
-
-  // Remove all data for this app from local storage
-  // Example use: Storage.clearAll();
-  // Should be used mostly for development purposes
-  var clearAllFromLocalStorage = function () 
-  {
-    if (!browserSupportsLocalStorage()) return false;
-
-    var prefixLength = $config.title.length;
-
-    for (var key in localStorage) 
-    {
-      // Only remove items that are for this app
-      if (key.substr(0, prefixLength) === $config.title) 
-      {
-        try {
-          removeFromLocalStorage(key.substr(prefixLength));
-        } 
-        catch (e) {
-          return false;
-        };
-      };
-    };
-
-    return true;
-  };
-
-
-  /**
-   * Checks the browser to see if session storage is supported
-   */
-  var browserSupportsSessionStorage = function ()
-  {
-    try {
-      return ('sessionStorage' in window && window['sessionStorage'] !== null);           
-    }
-    catch (e) {
-      return false;
-    }
-  };
-
-
-  /**
-   * Directly adds a value to session storage
-   */
-  var addToSessionStorage = function (key, value)
-  {
-    if (!browserSupportsSessionStorage()) return false;
-
-    if (!value && value !== 0 && value !== "") return false;
-
-    try {
-      sessionStorage.setItem($config.title + key, value);
-    }
-    catch (e) {
-      return false;
-    };
-
-    return true;
-  };
-
-
-  /**
-   * Get value from session storage
-   */
-  var getFromSessionStorage = function (key)
-  {
-    if (!browserSupportsSessionStorage()) return false;
-
-    var item = sessionStorage.getItem($config.title + key);
-
-    if (!item) return null;
-
-    return item;
-  };
-
-
-  /**
-   * Remove item from session storage
-   */
-  var removeFromSessionStorage = function (key) 
-  {
-    if (!browserSupportsSessionStorage()) return false;
-
-    try {
-      sessionStorage.removeItem($config.title + key);
-    } 
-    catch (e) {
-      return false;
-    };
-
-    return true;
-  };
-
-
-  /**
-   * Remove all data from session storage
-   */
-  var clearAllFromSessionStorage = function () 
-  {
-    if (!browserSupportsSessionStorage()) return false;
-
-    var prefixLength = $config.title.length;
-
-    for (var key in sessionStorage) 
-    {
-      // Only remove items that are for this app
-      if (key.substr(0, prefixLength) === $config.title) 
-      {
-        try {
-          removeFromSessionStorage(key.substr(prefixLength));
-        } 
-        catch (e) {
-          return false;
-        };
-      };
-    };
-
-    return true;
-  };
-
-
-  // Checks the browser to see if cookies are supported
-  var browserSupportsCookies = function () 
-  {
-    try {
-      return navigator.cookieEnabled ||
-        ("cookie" in document && (document.cookie.length > 0 ||
-        (document.cookie = "test").indexOf.call(document.cookie, "test") > -1));
-    } 
-    catch (e) {
-      return false;
-    }
-  };
-
-
-  // Directly adds a value to cookies
-  // Typically used as a fallback is local storage is not available in the browser
-  // Example use: Storage.cookie.add('library','angular');
-  var addToCookies = function (key, value) 
-  {
-    if (typeof value == "undefined") return false;
-
-    if (!browserSupportsCookies())  return false;
-
-    try {
-      var expiry      = '', 
-          expiryDate  = new Date();
-
-      if (value === null) 
-      {
-        $config.cookie.expiry = -1;
-
-        value = '';
-      };
-
-      if ($config.cookie.expiry !== 0) 
-      {
-        expiryDate.setTime(expiryDate.getTime() + ($config.cookie.expiry * 60 * 60 * 1000));
-
-        expiry = "; expires=" + expiryDate.toGMTString();
-      };
-
-      document.cookie = $config.title + 
-                        key + 
-                        "=" + 
-                        //encodeURIComponent(value) + 
-                        value + 
-                        expiry + 
-                        "; path=" + 
-                        $config.cookie.path;
-    } 
-    catch (e) {
-      return false;
-    };
-
-    return true;
-  };
-
-
-  // Directly get a value from a cookie
-  // Example use: Storage.cookie.get('library'); // returns 'angular'
-  var getFromCookies = function (key) 
-  {
-    if (!browserSupportsCookies()) 
-    {
-      $rootScope.$broadcast('StorageModule.notification.error', 'COOKIES_NOT_SUPPORTED');
-      return false;
-    }
-
-    var cookies = document.cookie.split(';');
-    
-    for (var i=0; i < cookies.length; i++) 
-    {
-      var thisCookie = cookies[i];
-      
-      while (thisCookie.charAt(0)==' ')
-        thisCookie = thisCookie.substring(1, thisCookie.length);
-
-      if (thisCookie.indexOf($config.title + key + '=') == 0)
-        return decodeURIComponent(thisCookie.substring($config.title.length + key.length + 1, thisCookie.length));
-    };
-
-    return null;
-  };
-
-
-  var removeFromCookies = function (key) 
-  {
-    addToCookies(key, null);
-  };
-
-
-  var clearAllFromCookies = function () 
-  {
-    var thisCookie    = null, 
-        thisKey       = null,
-        prefixLength  = $config.title.length,
-        cookies       = document.cookie.split(';');
-    
-    for (var i=0; i < cookies.length; i++) 
-    {
-      thisCookie = cookies[i];
-      
-      while (thisCookie.charAt(0) == ' ') 
-        thisCookie = thisCookie.substring(1, thisCookie.length);
-
-      key = thisCookie.substring(prefixLength, thisCookie.indexOf('='));
-
-      removeFromCookies(key);
-    };
-  };
-
-
-  var storageSize = function (key)
-  {
-    var item = (key) ? localStorage.key : localStorage;
-
-    return ((3 + ((item.length * 16) / (8 * 1024))) * 0.0009765625).toPrecision(2) + ' MB';
-  }
-
-
-  var getPeriods = function ()
-  {
-    return angular.fromJson(getFromLocalStorage('periods'));
-  };
-
-
-  var getGroups = function ()
-  {
-    return angular.fromJson(getFromLocalStorage('groups'));
-  };
-
-
-  var getMembers = function ()
-  {
-    return angular.fromJson(getFromLocalStorage('members'));
-  };
-
-
-  var getSettings = function ()
-  {
-    var settings = angular.fromJson(getFromLocalStorage('resources'));
-
-    return (!settings.settingsWebPaige) ? $rootScope.config.defaults.settingsWebPaige : angular.fromJson(settings.settingsWebPaige);
-  };
-
-
-  return {
-    isSupported: browserSupportsLocalStorage,
-    add:        addToLocalStorage,
-    get:        getFromLocalStorage,
-    remove:     removeFromLocalStorage,
-    clearAll:   clearAllFromLocalStorage,
-    session: {
-      add:      addToSessionStorage,
-      get:      getFromSessionStorage,
-      remove:   removeFromSessionStorage,
-      clearAll: clearAllFromSessionStorage
-    },
-    cookie: {
-      add:      addToCookies,
-      get:      getFromCookies,
-      remove:   removeFromCookies,
-      clearAll: clearAllFromCookies
-    },
-    size: storageSize,
-    local: {
-      periods:  getPeriods,
-      groups:   getGroups,
-      members:  getMembers,
-      settings: getSettings
-    }
-  }
-
-}]);;'use strict';
-
-
-angular.module('WebPaige.Services.Strings', ['ngResource'])
-
-
-/**
- * TODO
- * Add example usage!
- * 
- * String manupulators
- */
-.factory('Strings', 
-  function ()
-  {
-    return {
-
-      /**
-       * Truncate string from words with ..
-       */
-      truncate: function (txt, n, useWordBoundary)
-      {
-         var toLong = txt.length > n,
-             s_ = toLong ? txt.substr(0, n-1) : txt,
-             s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
-
-         return toLong ? s_ + '..' : s_;
-      },
-
-      /**
-       * To title case
-       */
-      toTitleCase: function (str)
-      {
-        return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-      }
-    }
-  }
-);;'use strict';
-
-
-angular.module('WebPaige.Services.Announcer', ['ngResource'])
-
-
-/**
- * Announcer
- */
-.factory('Announcer', 
-  function ()
-  {
-    return {
-      /**
-       * TODO
-       * Modify p2000 script in ask70 for date conversions!!
-       *
-       * p2000 messages processor
-       */
-      process: function (results)
-      {
-        var alarms  = {
-              short:  [],
-              long:   [] 
-            },
-            limit   = 4,
-            count   = 0;
-
-        angular.forEach(results, function (alarm, index)
-        {
-          if (alarm.body)
-          {
-            if (alarm.body.match(/Prio 1/) || alarm.body.match(/PRIO 1/))
-            {
-              alarm.body = alarm.body.replace('Prio 1 ', '');
-              alarm.prio = {
-                1:    true,
-                test: false
-              };
-            };
-
-            if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
-            {
-              alarm.body = alarm.body.replace('Prio 2 ', '');
-              alarm.prio = {
-                2:    true,
-                test: false
-              };
-            };
-
-            if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
-            {
-              alarm.body = alarm.body.replace('Prio 3 ', '');
-              alarm.prio = {
-                3:    true,
-                test: false
-              }
-            };
-
-            if (alarm.body.match(/PROEFALARM/))
-            {
-              alarm.prio = {
-                test: true
-              };
-            };
-
-            // var dates     = alarm.day.split('-'),
-            //     swap      = dates[0] + 
-            //                 '-' + 
-            //                 dates[1] + 
-            //                 '-' + 
-            //                 dates[2],
-            //     dstr      = swap + ' ' + alarm.time,
-            //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
-            //     timeStamp = new Date(datetime).getTime();
-            // alarm.datetime = datetime;
-            // alarm.timeStamp = timeStamp;
-
-            if (count < 4) alarms.short.push(alarm);
-
-            alarms.long.push(alarm);
-
-            count++;
-          }
-        });
-
-        return alarms;
-      }
-    }
-  }
-);;'use strict';
-
-
-angular.module('WebPaige.Services.Sloter', ['ngResource'])
-
-
-/**
- * Planboard data processors
- */
-.factory('Sloter', 
-[
-  '$rootScope', 'Storage', 
-  function ($rootScope, Storage) 
-  {
-    return {
-
-      /**
-       * Getters
-       */
-      get: {
-        groups: function ()
-        {
-          var groups = {};
-
-          angular.forEach(Storage.local.groups(), function (group, index)
-          {
-            groups[group.uuid] = group.name;
-          });
-
-          return groups;
-        },
-
-        members: function ()
-        {
-          var members = {};
-
-          angular.forEach(Storage.local.members(), function (member, index)
-          {
-            members[member.uuid] = member.name;
-          });
-
-          return members;
-        }
-      },
-
-      /**
-       * Wrap for sorting in list
-       */
-      wrapper: function (rank) { return '<span style="display:none;">' + rank + '</span>' },
-
-      /**
-       * Wrap secrets in slot contents
-       */
-      secret: function (content) { return '<span class="secret">' + content + '</span>' },
-
-      /**
-       * Add loading bars on both ends
-       */
-      addLoading: function (data, timedata, rows)
-      {
-        angular.forEach(rows, function(row, index)
-        {
-          timedata.push({
-            start:  data.periods.end,
-            end:    1577836800000,
-            group:  row,
-            content:    'loading',
-            className:  'state-loading-right',
-            editable:   false
-          });
-
-          timedata.push({
-            start:  0,
-            end:    data.periods.start,
-            group:  row,
-            content:    'loading',
-            className:  'state-loading-left',
-            editable:   false
-          });
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Handle user slots
-       */
-      user: function (data, timedata, config)
-      {
-        var _this = this;
-
-        angular.forEach(data.user, function (slot, index)
-        {
-          angular.forEach(config.legenda, function (value, legenda)
-          {
-            if (slot.text == legenda && value)
-            {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-                content:  _this.secret(angular.toJson({
-                  type:   'slot',
-                  id:     slot.id, 
-                  recursive: slot.recursive, 
-                  state:  slot.text 
-                  })),
-                className:  config.states[slot.text].className,
-                editable:   true
-              });
-            };
-          });       
-        });
-
-        timedata = _this.addLoading(data, timedata, [
-          _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
-          _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning')
-        ]);
-
-        return timedata;
-      },
-    
-      /**
-       * TODO
-       * Look for ways to combine with user
-       * 
-       * Profile timeline data processing
-       */
-      profile: function (data, config)
-      {
-        var _this = this,
-            timedata = [];
-
-        angular.forEach(data, function (slot, index)
-        {
-          angular.forEach(config.legenda, function (value, legenda)
-          {
-            if (slot.text == legenda && value)
-            {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-                content: _this.secret(angular.toJson({
-                  type: 'slot',
-                  id:   slot.id, 
-                  recursive:  slot.recursive, 
-                  state:      slot.text 
-                  })),
-                className:  config.states[slot.text].className,
-                editable:   true
-              });  
-            };
-          });       
-        });
-
-        timedata.push({
-          start:  0,
-          end:    1,
-          group:  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
-          content:    '',
-          className:  null,
-          editable:   false
-        });
-
-        timedata.push({
-          start:  0,
-          end:    1,
-          group:  _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-          content:    '',
-          className:  null,
-          editable:   false
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Handle group name whether divisions selected
-       */
-      namer: function (data, divisions, privilage)
-      {
-        var groups  = this.get.groups(),
-            name    = groups[data.aggs.id],
-            link    = '<a href="#/groups?uuid=' + 
-                      data.aggs.id + 
-                      '#view">' +
-                      name +
-                      '</a>',
-                      title;
-
-        if (data.aggs.division == 'all' || data.aggs.division == undefined)
-        {
-          title = (privilage == 1) ? link : '<span>' + name + '</span>';
-        }
-        else
-        {
-          var label;
-
-          angular.forEach(divisions, function (division, index) { if (division.id == data.aggs.division) label = division.label; });
-
-          title = (privilage == 1) ? link : '<span>' + name + '</span>';
-
-          title += ' <span class="label">' + label + '</span>';
-        };
-
-        return title;
-      },
-
-      /**
-       * Handle group aggs (with divisions) with bars
-       */
-      bars: function (data, timedata, config, name)
-      {
-        var _this = this,
-            maxh = 0;
-
-        angular.forEach(data.aggs.data, function (slot, index) { if (slot.wish > maxh)  maxh = slot.wish; });
-
-        angular.forEach(data.aggs.data, function (slot, index)
-        {
-          var maxNum      = maxh,
-              num         = slot.wish,
-              xwish       = num,
-              height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
-              minHeight   = height,
-              style       = 'height:' + height + 'px;',
-              requirement = '<div class="requirement" style="' + 
-                            style + 
-                            '" ' + 
-
-                            'title="'+'Minimum aantal benodigden'+': ' + 
-
-                            num + 
-                            ' personen"></div>';
-
-          num = slot.wish + slot.diff;
-
-          var xcurrent = num;
-
-          height = Math.round(num / maxNum * 80 + 20);
-
-          if (slot.diff >= 0 && slot.diff < 7)
-          {
-            switch (slot.diff)
-            {
-              case 0:
-                var color = config.densities.even;
-              break
-              case 1:
-                var color = config.densities.one;
-              break;
-              case 2:
-                var color = config.densities.two;
-              break;
-              case 3:
-                var color = config.densities.three;
-              break;
-              case 4:
-                var color = config.densities.four;
-              break;
-              case 5:
-                var color = config.densities.five;
-              break;
-              case 6:
-                var color = config.densities.six;
-              break;
-            }
-          }
-          else if (slot.diff >= 7)
-          {
-            var color = config.densities.more;
-          }
-          else
-          {
-            var color = config.densities.less;
-          };
-
-          var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
-
-          if (xcurrent > xwish) height = minHeight;
-
-          style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
-
-          var actual = '<div class="bar" style="' + 
-                        style + 
-                        '" ' + 
-
-                        ' title="Huidig aantal beschikbaar: ' + 
-
-                        num + 
-                        ' personen">' + 
-                        span + 
-                        '</div>';
-
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:    Math.round(slot.start * 1000),
-              end:      Math.round(slot.end * 1000),
-              group:    _this.wrapper('c') + name,
-              content:  requirement + 
-                        actual +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className: 'group-aggs',
-              editable: false
-            });
-          };
-
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Process plain group aggs
-       */
-      aggs: function (data, timedata, config, name)
-      {
-        var _this = this;
-
-        angular.forEach(data.aggs.data, function (slot, index)
-        {
-          var cn;
-
-          if (slot.diff >= 0 && slot.diff < 7)
-          {
-            switch (slot.diff)
-            {
-              case 0: cn = 'even';  break
-              case 1: cn = 1;       break
-              case 2: cn = 2;       break
-              case 3: cn = 3;       break
-              case 4: cn = 4;       break
-              case 5: cn = 5;       break
-              case 6: cn = 6;       break
-            }
-          }
-          else if (slot.diff >= 7)
-          {
-            cn = 'more';
-          }
-          else
-          {
-            cn = 'less'
-          };
-
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:  Math.round(slot.start * 1000),
-              end:    Math.round(slot.end * 1000),
-              group: _this.wrapper('c') + name,
-              content:  cn +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className:  'agg-' + cn,
-              editable:   false
-            });
-          };
-
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Wish slots
-       */
-      wishes: function (data, timedata, name)
-      {
-        var _this = this;
-
-        angular.forEach(data.aggs.wishes, function (wish, index)
-        {
-          if ( wish.count >= 7 )
-          {
-            var cn = 'wishes-more';
-          }
-          else if ( wish.count == 0 )
-          {
-            var cn = 'wishes-even';
-          }
-          else
-          {
-            var cn = 'wishes-' + wish.count;
-          };
-
-          timedata.push({
-            start:  Math.round(wish.start * 1000),
-            end:    Math.round(wish.end * 1000),
-            group:  _this.wrapper('c') + name + ' (Wishes)',
-            content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
-                      _this.secret(angular.toJson({
-                        type: 'wish',
-                        wish: wish.count,
-                        group: name,
-                        groupId: data.aggs.id
-                      })),
-            className:  cn,
-            editable:   false
-          });
-
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name + ' (Wishes)'
-          ]);
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Process members
-       */
-      members: function (data, timedata, config, privilage)
-      {
-        var _this   = this,
-            members = this.get.members();          
-
-        angular.forEach(data.members, function (member, index)
-        {
-          var link = (privilage == 1) ? 
-                        _this.wrapper('d') + 
-                        '<a href="#/profile/' + 
-                        member.id + 
-                        '#timeline">' + 
-                        members[member.id] + 
-                        '</a>' :
-                        _this.wrapper('d') + 
-                        members[member.id];
-
-          angular.forEach(member.data, function (slot, i)
-          {
-            angular.forEach(config.legenda, function (value, legenda)
-            {
-              if (slot.text == legenda && value)
-              {
-                timedata.push({
-                  start:  Math.round(slot.start * 1000),
-                  end:    Math.round(slot.end * 1000),
-                  group:  link,
-                  content: _this.secret(angular.toJson({ 
-                    type: 'member',
-                    id:   slot.id, 
-                    mid:  member.id,
-                    recursive: slot.recursive, 
-                    state: slot.text 
-                    })),
-                  className:  config.states[slot.text].className,
-                  editable:   false
-                });
-              };
-            });
-          });
-
-          timedata.push({
-            start:    0,
-            end:      0,
-            group:    link,
-            content:  null,
-            className:null,
-            editable: false
-          });
-
-          timedata = _this.addLoading(data, timedata, [ link ]);
-
-          /**
-           * TODO
-           * Good place to host this here?
-           */
-          angular.forEach(member.stats, function (stat, index)
-          {
-            var state = stat.state.split('.');
-            state.reverse();
-            stat.state = 'bar-' + state[0];
-          });
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Produce pie charts
-       */
-      pies: function (data)
-      {
-        document.getElementById("groupPie").innerHTML = '';
-
-        var ratios    = [],
-            colorMap  = {
-              more: '#415e6b',
-              even: '#ba6a24',
-              less: '#a0a0a0'
-            },
-            colors    = [],
-            xratios   = [];
-
-        angular.forEach(data.aggs.ratios, function (ratio, index)
-        {
-          if (ratio != 0)
-          {
-            ratios.push({
-              ratio: ratio, 
-              color: colorMap[index]
-            });
-          };
-        });
-
-        ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
-
-        angular.forEach(ratios, function (ratio, index)
-        {
-          colors.push(ratio.color);
-          xratios.push(ratio.ratio);
-        });
-
-        var r   = Raphael("groupPie"),
-            pie = r.piechart(120, 120, 100, xratios, { colors: colors });
-      },
-      
-      /**
-       * Timeline data processing
-       */
-      process: function (data, config, divisions, privilage)
-      {
-        var _this     = this,
-            timedata  = [];
-
-        if (data.user) timedata = _this.user(data, timedata, config);
-
-        if (data.aggs)
-        {
-          var name = _this.namer(data, divisions, privilage);
-
-          if (config.bar) 
-          {
-            timedata = _this.bars(data, timedata, config, name);
-          }
-          else
-          {
-            timedata = _this.aggs(data, timedata, config, name);
-          };
-        };
-
-        if (config.wishes) timedata = _this.wishes(data, timedata, name);
-
-        if (data.members) timedata = _this.members(data, timedata, config, privilage);
-
-        if (data.aggs && data.aggs.ratios) _this.pies(data);
-
-        return timedata;
-      }
-
-    }
-  }
-]);;'use strict';
-
-
-angular.module('WebPaige.Services.Stats', ['ngResource'])
-
-
-/**
- * Planboard stats processors
- */
-.factory('Stats', 
-[
-  '$rootScope', 'Storage', 
-  function ($rootScope, Storage) 
-  {
-    return {
-      /**
-       * Group agg stats
-       */
-      aggs: function (data)
-      {
-        var stats = {
-              less: 0,
-              even: 0,
-              more: 0        
-            },
-            durations = {
-              less: 0,
-              even: 0,
-              more: 0,
-              total: 0
-            },
-            total = data.length;
-
-        angular.forEach(data, function (slot, index)
-        {
-          if (slot.diff < 0)
-          {
-            stats.less++;
-          }
-          else if (slot.diff == 0)
-          {
-            stats.even++;
-          }
-          else
-          {
-            stats.more++;
-          };
-
-          var slotDiff = slot.end - slot.start;
-
-          if (slot.diff < 0)
-          {
-            durations.less = durations.less + slotDiff;
-          }
-          else if (slot.diff == 0)
-          {
-            durations.even = durations.even + slotDiff;
-          }
-          else
-          {
-            durations.more = durations.more + slotDiff;
-          };
-
-          durations.total = durations.total + slotDiff;
-        });
-
-        return {
-          ratios: {
-            less: Math.round((stats.less / total) * 100),
-            even: Math.round((stats.even / total) * 100),
-            more: Math.round((stats.more / total) * 100)
-          },
-          durations: durations
-        }
-      },
-
-      /**
-       * Group pie stats
-       */
-      pies: function (data)
-      {
-        var stats = {
-              less: 0,
-              even: 0,
-              more: 0        
-            },
-            total = data.length;
-
-        angular.forEach(data, function (slot, index)
-        {
-          if (slot.diff < 0)
-          {
-            stats.less++;
-          }
-          else if (slot.diff == 0)
-          {
-            stats.even++;
-          }
-          else
-          {
-            stats.more++;
-          };
-        });
-
-        return {
-          less: Math.round((stats.less / total) * 100),
-          even: Math.round((stats.even / total) * 100),
-          more: Math.round((stats.more / total) * 100)
-        };
-      },
-
-      /**
-       * Member stats
-       */
-      member: function (data)
-      {
-        var stats = {},
-            total = 0;
-
-        angular.forEach(data, function (slot, index)
-        {
-          if (stats[slot.text])
-          {
-            stats[slot.text]++;
-          }
-          else
-          {
-            stats[slot.text] = 1;
-          };
-
-          total++;
-        });
-
-        //console.warn('stats ->', stats, total);
-
-        var ratios = [];
-
-        angular.forEach(stats, function (stat, index)
-        {
-          ratios.push({
-            state: index,
-            ratio: (stat / total) * 100
-          });
-
-          //console.warn(stat, index);
-          //ratios[index] = (stat / total) * 100;
-        });
-
-        //console.warn('ratios ->', ratios);
-
-        // var confirm = 0;
-        // angular.forEach(ratios, function(ratio, index)
-        // {
-        //   confirm = confirm + ratio;
-        // });
-        // console.warn('confirm ->', confirm);
-        
-        return ratios;
-      }
-
-    }
-  }
-]);;'use strict';
-
-
-angular.module('WebPaige.Filters', ['ngResource'])
-
-
-/**
- * Translate roles
- */
-.filter('translateRole', 
-[
-	'$config', 
-	function ($config)
-	{
-		return function (role)
-		{
-			var urole;
-
-			angular.forEach($config.roles, function (prole, index)
-			{
-				if (prole.id == role) urole = prole.label;
-			});
-
-			return urole;
-		}
-	}
-])
-
-
-
-
-
-
-
-
-/**
- * Main range filter
- */
-.filter('rangeMainFilter', 
-[
-	'Dater', 'Storage', 
-	function (Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
-
-		return function (dates)
-		{
-			if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
-				dates.start = new Date(dates.end).addDays(-1);
-
-			var dates = {
-						start: {
-							real: new Date(dates.start).toString('dddd, MMMM d'),
-							month: new Date(dates.start).toString('MMMM'),
-							day: new Date(dates.start).toString('d')
-						},
-						end: {
-							real: new Date(dates.end).toString('dddd, MMMM d'),
-							month: new Date(dates.end).toString('MMMM'),
-							day: new Date(dates.end).toString('d')
-						}
-					},
-					monthNumber = Date.getMonthNumberFromName(dates.start.month);
-
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && 
-							dates.start.hour == dates.end.hour) || 
-							dates.start.day == dates.end.day) && 
-							dates.start.month == dates.end.month)
-			{
-				return 	dates.start.real + 
-								', ' + 
-								Dater.getThisYear();
-			}
-			else if(dates.start.day == 1 && 
-							dates.end.day == periods.months[monthNumber + 1].totalDays)
-			{
-				return 	dates.start.month + 
-								', ' + 
-								Dater.getThisYear();
-			}
-			else
-			{
-				return 	dates.start.real + 
-								' / ' + 
-								dates.end.real + 
-								', ' + 
-								Dater.getThisYear();
-			};
-
-		}
-	}
-])
-
-
-
-
-
-
-
-
-/**
- * Main range week filter
- */
-.filter('rangeMainWeekFilter', 
-[
-	'Dater', 'Storage', 
-	function (Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
-
-		return function (dates)
-		{
-			if (dates)
-			{
-				var dates = {
-					start: 	new Date(dates.start).toString('dddd, MMMM d'),
-					end: 		new Date(dates.end).toString('dddd, MMMM d')
-				};
-
-				return 	dates.start + 
-								' / ' + 
-								dates.end + 
-								', ' + 
-								Dater.getThisYear();
-			};
-		}
-	}
-])
-
-
-
-
-
-
-
-
-/**
- * Range info filter
- */
-.filter('rangeInfoFilter', 
-[
-	'Dater', 'Storage', 
-	function (Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
-
-		return function (timeline)
-		{
-			var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
-
-			if (diff > (2419200000 + 259200000))
-			{
-				return 'Total selected days: ' + Math.round(diff / 86400000);
-			}
-			else
-			{
-				if (timeline.scope.day)
-				{
-					var hours = {
-						start: new Date(timeline.range.start).toString('HH:mm'),
-						end: new Date(timeline.range.end).toString('HH:mm')
-					};
-
-					/**
-					 *  00:00 fix => 24:00
-					 */
-					if (hours.end == '00:00') hours.end = '24:00';
-
-					return 	'Time: ' + 
-									hours.start + 
-									' / ' + 
-									hours.end;
-				}
-				else if (timeline.scope.week)
-				{
-					return 	'Week number: ' + 
-									timeline.current.week;
-				}
-				else if (timeline.scope.month)
-				{
-					return 	'Month number: ' + 
-									timeline.current.month + 
-									', Total days: ' + 
-									periods.months[timeline.current.month].totalDays;
-				};
-			};
-		};
-	}
-])
-
-
-
-
-
-
-
-/**
- * Range info week filter
- */
-.filter('rangeInfoWeekFilter', 
-[
-	'Dater', 'Storage', 
-	function (Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
-
-		return function (timeline)
-		{
-			if (timeline) return 'Week number: ' + timeline.current.week;
-		};
-	}
-])
-
-
-
-
-
-
-
-
-/**
- * BUG!
- * Maybe not replace bar- ?
- * 
- * TODO
- * Implement state conversion from config later on!
- * 
- * Convert ratios to readable formats
- */
-.filter('convertRatios', 
-[
-	'$config', 
-	function ($config)
-	{
-		return function (stats)
-		{
-			var ratios = '';
-
-			angular.forEach(stats, function (stat, index)
-			{
-				ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
-			});
-
-			return ratios.substring(0, ratios.length - 2);
-		};
-	}
-])
-
-
-
-
-
-
-
-
-/** 
- * Calculate time in days
- */
-.filter('calculateTimeInDays', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					days 		= 0,
-					hours 	= 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours;
-
-			return 	Math.floor(days / day);
-		};
-	}
-)
-
-
-
-
-
-
-
-
-/**
- * Calculate time in hours
- */
-.filter('calculateTimeInHours', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					days 		= 0,
-					hours 	= 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours;
-
-			return 	Math.floor(hours / hour);
-		};
-	}
-)
-
-
-
-
-
-
-
-/**
- * Calculate time in minutes
- */
-.filter('calculateTimeInMinutes', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					minute 	= 1000 * 60,
-					days 		= 0,
-					hours 	= 0,
-					minutes = 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours,
-					minutes = stamp % hour;
-
-			return 	Math.floor(minutes / minute);
-		};
-	}
-)
-
-
-
-
-
-
-
-/**
- * Convert eve urls to ids
- */
-.filter('convertEve', 
-	function ()
-	{
-	  return function (url)
-	  {
-	  	var eve = url;
-
-	  	eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
-
-	    return eve[eve.length-2];
-	  };
-	}
-)
-
-
-
-
-
-
-
-/** 
- * Convert user uuid to name
- */
-.filter('convertUserIdToName', 
-[
-	'Storage', 
-	function (Storage)
-	{
-		var members = angular.fromJson(Storage.get('members'));
-
-		return function (id)
-		{	
-	    if (members == null || typeof members[id] == "undefined")
-	    {
-	      return id;
-	    }
-	    else
-	    {
-	      return members[id].name;
-	    };
-		};
-	}
-])
-
-
-
-
-
-
-
-/**
- * Convert timeStamps to dates
- */
-.filter('nicelyDate', 
-[
-	'$rootScope', 
-	function ($rootScope)
-	{
-	 	return function (date)
-	 	{
-	 		if (typeof date == 'string') date = Number(date);
-
-	 		return new Date(date).toString($rootScope.config.formats.datetime);
-	 	};
-	}
-])
-
-
-
-
-
-
-
-/**
- * TODO
- * Not used probably!
- *
- * Combine this either with nicelyDate or terminate!
- * 
- * Convert timeStamp to readable date and time
- */
-.filter('convertTimeStamp', 
-	function ()
-	{
-		return function (stamp)
-		{
-			console.warn(typeof stamp);
-
-			return new Date(stamp).toString('dd-MM-yyyy HH:mm');
-		};
-	}
-)
-
-
-
-
-
-
-
-/**
- * TODO
- * Still used?
- * 
- * No title filter
- */
-.filter('noTitle',
-	function ()
-	{
-		return function (title)
-		{
-			return (title == "") ? "- No Title -" : title;
-		}
-	}
-)
-
-
-
-
-
-
-
-/**
- * TODO
- * Finish it!
- * 
- * Strip span tags
- */
-.filter('stripSpan', 
-	function ()
-	{
-	  return function (string)
-	  {
-	    return string.match(/<span class="label">(.*)<\/span>/);
-	  }
-	}
-)
-
-
-
-
-
-
-
-/**
- * Strip html tags
- */
-.filter('stripHtml', 
-	function ()
-	{
-	  return function (string)
-	  {
-	  	if (string) return string.split('>')[1].split('<')[0];
-	  }
-	}
-)
-
-
-
-
-
-
-
-/**
- * Convert group id to name
- */
-.filter('groupIdToName', 
-[
-	'Storage', 
-	function (Storage)
-	{
-	  return function (id)
-	  {
-	  	var groups = angular.fromJson(Storage.get('groups'));
-
-	  	for (var i in groups)
-	  	{
-	  		if (groups[i].uuid == id) return groups[i].name;
-	  	};
-	  }
-	}
-])
-
-
-
-
-
-
-
-
-/**
- * TODO
- * Unknown filter
- */
-.filter('i18n_spec',
-[
-	'$rootScope', 
-	function ($rootScope)
-	{
-		return function (string, type)
-		{
-			var types = type.split("."),
-					ret 	= $rootScope.ui[types[0]][types[1]],
-					ret 	= ret.replace('$v',string);
-			
-			return ret;
-		}
-	}
-])
-
-
-
-
-
-
-
-/**
- * Truncate group titles for dashboard pie widget
- */
-.filter('truncateGroupTitle', 
-[
-	'Strings', 
-	function (Strings) 
-	{
-		return function (title)
-		{
-	     return Strings.truncate(title, 20, true);
-	  }
-	}
-])
-
-
-
-
-
-
-
-/**
- * Make first letter capital
- */
-.filter('toTitleCase', 
-[
-	'Strings', 
-	function (Strings) 
-	{
-		return function (txt)
-		{
-	     return Strings.toTitleCase(txt);
-	  }
-	}
-])
-
-
-
-
-
-
-
-/**
- * Count messages in box
- */
-.filter('countBox',
-	function () 
-	{
-		return function (box)
-		{
-			var total = 0;
-
-			angular.forEach(box, function (bulk, index)
-			{
-				total = total + bulk.length;
-			});
-
-	    return total;
-	  }
-	}
-);

@@ -34,18 +34,6 @@ module.exports = function (grunt)
             'war/js/modals/groups.js',
             'war/js/modals/profile.js',
             'war/js/modals/settings.js',
-            // controllers
-            'war/js/controllers/login.js',
-            'war/js/controllers/logout.js',
-            'war/js/controllers/dashboard.js',
-            'war/js/controllers/planboard.js',
-            'war/js/controllers/timeline.js',
-            'war/js/controllers/timeline-navigation.js',
-            'war/js/controllers/messages.js',
-            'war/js/controllers/groups.js',
-            'war/js/controllers/profile.js',
-            'war/js/controllers/settings.js',
-            'war/js/controllers/help.js',
             // directives
             'war/js/directives/directives.js',
             'war/libs/angular-strap/0.7.0/angular-strap.min.js',
@@ -61,8 +49,22 @@ module.exports = function (grunt)
             'war/js/services/announcer.js',
             'war/js/services/sloter.js',
             'war/js/services/stats.js',
+            'war/js/services/offsetter.js',
             // filters
-            'war/js/filters/filters.js'
+            'war/js/filters/filters.js',
+            // controllers
+            'war/js/controllers/login.js',
+            'war/js/controllers/logout.js',
+            'war/js/controllers/dashboard.js',
+            'war/js/controllers/planboard.js',
+            'war/js/controllers/timeline.js',
+            'war/js/controllers/timeline-navigation.js',
+            'war/js/controllers/messages.js',
+            'war/js/controllers/scheaduler.js',
+            'war/js/controllers/groups.js',
+            'war/js/controllers/profile.js',
+            'war/js/controllers/settings.js',
+            'war/js/controllers/help.js'
           ],
           'war/src/plugins.js': [
             'war/js/plugins/console.js',

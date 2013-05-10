@@ -90,13 +90,17 @@
 
       
       <!-- composeTab -->
-      <div class="tab-pane {{(views.compose==true || views.scheaduler==true) && 'active'}}" id="composeTab" ng-show="views.compose || views.scheaduler">
+      <div class="tab-pane {{(views.compose == true || views.scheaduler == true) && 'active'}}" id="composeTab" ng-show="views.compose || views.scheaduler">
         
         <div class="tab-header">
 
           <h3 class="pull-left">
+
             <span ng-hide="views.scheaduler">{{ui.message.composeMessage}}</span>
+
             <span ng-show="views.scheaduler">{{notification.label | toTitleCase}}</span>
+            <!-- <span ng-show="views.scheaduler">{{notification.label}}</span> -->
+
           </h3>
 
           <button type="submit" 
@@ -191,13 +195,13 @@
             <!-- end scheaduler toggle -->
 
             <!-- scheaduler -->
-            <section id="scheaduler" ng-show="scheaduler">
+            <section id="scheaduler-pane" ng-show="scheaduler" ng-controller="scheaduler">
 
               <!-- scheaduler header -->
               <header>
                 <h4>Scheadules</h4>
                 <div class="pull-right">
-                  <button type="button" class="btn btn-small" ng-click="scheaduler = false">Turn Off</button>
+                  <button type="button" class="btn btn-small" ng-click="scheaduler = false" ng-hide="views.scheaduler">Turn Off</button>
                   <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">Add New</button>
                 </div>
               </header>
@@ -217,15 +221,18 @@
               </div>
               <!-- end scheaduler title -->
 
+              <!-- {{scheaduleCount}} -->
+
               <!-- no scheadulers -->
-              <div class="control-group" ng-hide="scheaduleCount > 0">
+              <!-- <div class="control-group" ng-hide="scheaduleCount > 0">
                 <label class="control-label">Scheadules</label>
                 <p class="muted"><small><i>There are no scheaduled tasks.</i></small></p>
-              </div>
+              </div> -->
               <!-- end no scheadulers -->
 
               <!-- scheadulars list -->
-              <div class="control-group" ng-show="scheaduleCount > 0">
+              <!-- <div class="control-group" ng-show="scheaduleCount > 0"> -->
+              <div class="control-group">
                 <label class="control-label">Scheadules</label>
 
                 <!-- <span style="font-size:11px" ng-repeat="o in offsets"> {{o}}<br></span> -->
