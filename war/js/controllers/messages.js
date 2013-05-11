@@ -441,6 +441,13 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      $scope.scheadulerPane = false;
 
+		    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+		    {
+		    	option.selected = false;
+		    });
+
+		    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
 	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');

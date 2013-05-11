@@ -7139,7 +7139,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			angular.forEach(offsets, function (offset, index)
 			{
-				compiled += '&nbsp;&nbsp;<span class="badge">' + offset.time + '</span>&nbsp;';
+				compiled += '<div style="display:block; margin-bottom: 5px;">';
+
+				compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
 
 				if (offset.mon) compiled += '<span class="muted"><small><i>maandag,</i></small></span>';
 				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
@@ -7152,9 +7154,56 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				compiled = compiled.substring(0, compiled.length - 20);
 
 				compiled = compiled += '</i></small></span>';
+
+				compiled += '</div>';
 			});
 
 			return compiled;
+		}
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * Convert array of audience to a nice list
+ */
+.filter('nicelyAudience', 
+[
+	'Storage',
+	function (Storage)
+	{
+		return function (data)
+		{
+			var members 	= angular.fromJson(Storage.get('members')),
+	    		groups 		= angular.fromJson(Storage.get('groups')),
+	    		audience 	= [];
+
+			angular.forEach(data, function (recipient, index)
+			{
+	  		var name;
+
+	  		if (members[recipient])
+	  		{
+		  		name = members[recipient].name;
+	  		}
+	  		else
+	  		{
+	  			angular.forEach(groups, function (group, index)
+	  			{
+	  				if (group.uuid == recipient) name = group.name;
+	  			});
+	  		}
+
+		  	audience += name + ', ';
+			});
+
+			return audience.substring(0, audience.length - 2);
 		}
 	}
 ]);;/*jslint node: true */
@@ -9873,6 +9922,13 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $scope.broadcast.email 	= false;
 
 	      $scope.scheadulerPane = false;
+
+		    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+		    {
+		    	option.selected = false;
+		    });
+
+		    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
 	      $scope.scheaduleCounter();
 
