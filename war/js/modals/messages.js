@@ -135,6 +135,15 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		      {
 		      	Storage.add('notifications', angular.toJson(result));
 
+		      	angular.forEach(result, function (scheadule, index)
+		      	{
+		      		angular.forEach(scheadule.types, function (type, ind)
+		      		{
+		      			if (type == 'sms') scheadule.sms = true;
+		      			if (type == 'email') scheadule.mail = true;
+		      		});
+		      	});
+
 		        deferred.resolve(result);
 		      },
 		      function (error)
@@ -260,32 +269,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  }
 
 	  };
-	  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	  /**
@@ -358,8 +341,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  Messages.prototype.find = function (id)
 	  {
 	    var gem;
-
-	    console.warn('asked for ->', id, Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message, index)
 	    {

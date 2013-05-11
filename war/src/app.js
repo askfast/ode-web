@@ -2532,6 +2532,15 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		      {
 		      	Storage.add('notifications', angular.toJson(result));
 
+		      	angular.forEach(result, function (scheadule, index)
+		      	{
+		      		angular.forEach(scheadule.types, function (type, ind)
+		      		{
+		      			if (type == 'sms') scheadule.sms = true;
+		      			if (type == 'email') scheadule.mail = true;
+		      		});
+		      	});
+
 		        deferred.resolve(result);
 		      },
 		      function (error)
@@ -2657,32 +2666,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  }
 
 	  };
-	  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	  /**
@@ -2755,8 +2738,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  Messages.prototype.find = function (id)
 	  {
 	    var gem;
-
-	    console.warn('asked for ->', id, Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message, index)
 	    {
@@ -4036,6 +4017,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
     return {
       restrict: 'E',
       rep1ace:  true,
+      templateUrl: 'dist/views/messages-scheadule-item.html',
       link: function (scope, element, attrs)
       {
         /**
@@ -4043,67 +4025,16 @@ angular.module('WebPaige.Directives', ['ngResource'])
          */
         scope.s = scope.scheadule;
 
-        var template =  '<div class="scheadule">' + 
-                          '<div class="timer">' +
-                            '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
-                            '<i class="icon-time" style="margin-top: -3px;"></i>' +
-                          '</div>' +
-                          '<ul>' +
-                            '<li>' +
-                              '<label for="monday-{{s.exact}}">' +
-                                '<input type="checkbox" id="monday-{{s.exact}}" ng-model="s.mon">&nbsp;Monday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="tuesday-{{s.exact}}">' +
-                                '<input type="checkbox" id="tuesday-{{s.exact}}" ng-model="s.tue">&nbsp;Tuesday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="wednesday-{{s.exact}}">' +
-                                '<input type="checkbox" id="wednesday-{{s.exact}}" ng-model="s.wed">&nbsp;Wednesday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="thursday-{{s.exact}}">' +
-                                '<input type="checkbox" id="thursday-{{s.exact}}" ng-model="s.thu">&nbsp;Thursday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="friday-{{s.exact}}">' +
-                                '<input type="checkbox" id="friday-{{s.exact}}" ng-model="s.fri">&nbsp;Friday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="saturday-{{s.exact}}">' +
-                                '<input type="checkbox" id="saturday-{{s.exact}}" ng-model="s.sat">&nbsp;Saturday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li>' +
-                              '<label for="sunday-{{s.exact}}">' +
-                                '<input type="checkbox" id="sunday-{{s.exact}}" ng-model="s.sun">&nbsp;Sunday' +
-                              '</label>' +
-                            '</li>' +
-                            '<li><i class="icon-calendar"></i></li>' + 
-                          '</ul>' +
-                          '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
-                        '</div>';
-
-        /**
-         * Showtime
-         */
-        element.html(template).show();
-
-        /**
-         * Compile the hottie
-         */
-        $compile(element.contents())(scope);
+        // element.html(template).show();
+        // $compile(element.contents())(scope);
 
         /**
          * Serve to the controller
          */
         scope.remover = function (key)
         {
+          console.log('coming to remover');
+
           scope.$parent.$parent.remover(key);
         };
       },
@@ -4114,6 +4045,95 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
   }
 )
+
+
+// *
+//  * Notification item
+ 
+// .directive('notificationItem',
+//   function ($compile)
+//   {
+//     return {
+//       restrict: 'E',
+//       rep1ace:  true,
+//       link: function (scope, element, attrs)
+//       {
+//         /**
+//          * Pass the scheadule data
+//          */
+//         scope.s = scope.scheadule;
+
+//         var template =  '<div class="scheadule">' + 
+//                           '<div class="timer">' +
+//                             '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
+//                             '<i class="icon-time" style="margin-top: -3px;"></i>' +
+//                           '</div>' +
+//                           '<ul>' +
+//                             '<li>' +
+//                               '<label for="monday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="monday-{{s.exact}}" ng-model="s.mon">&nbsp;Monday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="tuesday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="tuesday-{{s.exact}}" ng-model="s.tue">&nbsp;Tuesday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="wednesday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="wednesday-{{s.exact}}" ng-model="s.wed">&nbsp;Wednesday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="thursday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="thursday-{{s.exact}}" ng-model="s.thu">&nbsp;Thursday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="friday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="friday-{{s.exact}}" ng-model="s.fri">&nbsp;Friday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="saturday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="saturday-{{s.exact}}" ng-model="s.sat">&nbsp;Saturday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="sunday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="sunday-{{s.exact}}" ng-model="s.sun">&nbsp;Sunday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li><i class="icon-calendar"></i></li>' + 
+//                           '</ul>' +
+//                           '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
+//                         '</div>';
+
+//         /**
+//          * Showtime
+//          */
+//         element.html(template).show();
+
+//         /**
+//          * Compile the hottie
+//          */
+//         $compile(element.contents())(scope);
+
+//         /**
+//          * Serve to the controller
+//          */
+//         scope.remover = function (key)
+//         {
+//           scope.$parent.$parent.remover(key);
+//         };
+//       },
+//       scope: {
+//         scheadule: '='
+//       }
+//     };
+
+//   }
+// )
 
 
 /**
@@ -7095,7 +7115,49 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    return total;
 	  }
 	}
-);;/*jslint node: true */
+)
+
+
+
+
+
+
+
+
+/**
+ * Convert offsets array to nicely format in scheaduled jobs
+ */
+.filter('nicelyOffsets', 
+[
+	'Dater', 'Storage', 'Offsetter',
+	function (Dater, Storage, Offsetter)
+	{
+		return function (data)
+		{
+			var offsets 	= Offsetter.factory(data),
+					compiled 	= '';
+
+			angular.forEach(offsets, function (offset, index)
+			{
+				compiled += '&nbsp;&nbsp;<span class="badge">' + offset.time + '</span>&nbsp;';
+
+				if (offset.mon) compiled += '<span class="muted"><small><i>maandag,</i></small></span>';
+				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
+				if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
+				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
+				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
+				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
+				if (offset.zon) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+
+				compiled = compiled.substring(0, compiled.length - 20);
+
+				compiled = compiled += '</i></small></span>';
+			});
+
+			return compiled;
+		}
+	}
+]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -9666,17 +9728,70 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	});
 
 	    var members 	= angular.fromJson(Storage.get('members')),
-	        name 			= members[scheaduled.recipients[0]].name;
+	    		groups 		= angular.fromJson(Storage.get('groups')),
+	    		receivers = [];
+
+	    angular.forEach(scheaduled.recipients, function (recipient, index)
+	  	{
+	  		var name;
+
+	  		if (members[recipient])
+	  		{
+		  		name = members[recipient].name;
+
+		  		receivers.push({
+		  			group: 	'Users',
+		  			id: 		recipient,
+		  			name: 	name
+		  		});
+	  		}
+	  		else
+	  		{
+	  			angular.forEach(groups, function (group, index)
+	  			{
+	  				if (group.uuid == recipient)
+	  				{  					
+			  			name = group.name;
+
+				  		receivers.push({
+				  			group: 	'Groups',
+				  			id: 		recipient,
+				  			name: 	name
+				  		});
+	  				}
+	  			});
+	  		}
+	  	});
 
 	    $scope.message = {
 	      subject: 		scheaduled.subject,
 	      body: 			scheaduled.message,
-	      receivers: 	[{
-	        group: 		'Users', 
-	        id: 			scheaduled.recipients[0], 
-	        name: 		name
-	      }]
+	      receivers: 	receivers
 	    };
+
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	    	angular.forEach(scheaduled.recipients, function (recipient, ind)
+	    	{
+		  		if (members[recipient])
+		  		{
+		    		if (option.innerHTML == members[recipient].name) option.selected = true;
+		    	}
+		    	else
+		    	{
+		  			angular.forEach(groups, function (group, index)
+		  			{
+		  				if (group.uuid == recipient)
+		  				{
+		    				if (option.innerHTML == group.name) option.selected = true;
+		  				}
+		  			});
+		    	}
+	    	});
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
 
 	    $scope.scheaduled = {
 	    	uuid: 		scheaduled.uuid,
@@ -9686,9 +9801,22 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    	offsets: 	Offsetter.factory(scheaduled.offsets)
 	    };
 
-	    $scope.scheaduleCounter();
+	    /**
+	     * FIX
+	     * Counter is hard coded because calling counter script is not working!
+	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
+	     * when console log is produced at the time of compilation it is observable that $scope object
+	     * did not include all the functions in the controller
+	     */
+	    // $scope.scheaduleCounter();
 
-	    rerenderReceiversList();
+  		var count = 0;
+
+  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+
+	  	$scope.scheaduleCount = count;
+
+	    // rerenderReceiversList();
 	  }
 
 
@@ -10177,10 +10305,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 		    angular.forEach(message.receivers, function (receiver, index) { members.push(receiver.id); });
 
 		    types.push('paige');
+
 		    if (broadcast.sms) types.push('sms');
 		    if (broadcast.email) types.push('email');
 
-		    var job = {
+		    return {
 		    	sender: 		$rootScope.app.resources.uuid,
 		      recipients: members,
 		      label: 			scheaduled.title,
@@ -10197,7 +10326,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	/**
 	  	 * Scheaduler jobs lister
 	  	 */
-	  	list: function ()
+	  	list: function (callback)
 	  	{
 				$rootScope.statusBar.display('Refreshing scheaduled jobs...');
 
@@ -10214,6 +10343,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    $scope.scheadules = result;
 
 				    $rootScope.statusBar.off();
+
+				    callback();
 				  };
 				});
 	  	},
@@ -10265,7 +10396,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	add: function (message, broadcast, scheaduled)
 	  	{
-	  		console.log(message, broadcast, scheaduled);
+	  		var self = this;
 
 	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
 
@@ -10281,7 +10412,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  {
 	          $rootScope.notifier.success('Scheaduled job is saved successfully.');
 
-	          this.list();
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
 				  };
 				});
 	  	},
@@ -10292,6 +10426,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	edit: function (message, broadcast, scheaduled)
 	  	{
+	  		var self = this;
+
 	    	$rootScope.statusBar.display('Editing scheaduled job...');
 
 				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
@@ -10306,7 +10442,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  {
 	          $rootScope.notifier.success('Scheaduled job is edited successfully.');
 
-	          this.list();
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
+	        	});
 				  };
 				});	
 	  	},
@@ -10317,6 +10457,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	remove: function (uuid)
 	  	{
+	  		var self = this;
+
 	    	$rootScope.statusBar.display('Deleting a scheaduled job...');
 
 		    Messages.scheaduled.remove(uuid)
@@ -10331,7 +10473,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 		      {
 	          $rootScope.notifier.success('Scheaduled job is deleted successfully.');
 
-	          this.list();
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
 		      };
 		    });
 	  	}

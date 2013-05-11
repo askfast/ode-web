@@ -254,7 +254,11 @@ dl {
   .timer {
     float: left;
     display: inline;
-    margin-right: 10px;  
+    margin-right: 10px;
+
+    .icon-time {
+      margin-top: -3px;
+    }
   }
 
   ul {
@@ -298,3 +302,30 @@ dl {
   }
 }
 
+
+
+.scheadule-icons {
+  width: 48px; 
+  height: 24px; 
+  overflow: hidden;
+
+  div {
+    float: left;
+    display:inline;
+    width: 24px;
+    height: 24px;
+
+    .entypo {
+      line-height: 24px;
+      font-size: 32px;
+    }
+
+    .sms {
+      margin-left: 5px;
+    }
+
+    .mail {
+      margin-left: 2px;
+    }
+  }
+}

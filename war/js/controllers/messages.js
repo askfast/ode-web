@@ -295,17 +295,70 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	});
 
 	    var members 	= angular.fromJson(Storage.get('members')),
-	        name 			= members[scheaduled.recipients[0]].name;
+	    		groups 		= angular.fromJson(Storage.get('groups')),
+	    		receivers = [];
+
+	    angular.forEach(scheaduled.recipients, function (recipient, index)
+	  	{
+	  		var name;
+
+	  		if (members[recipient])
+	  		{
+		  		name = members[recipient].name;
+
+		  		receivers.push({
+		  			group: 	'Users',
+		  			id: 		recipient,
+		  			name: 	name
+		  		});
+	  		}
+	  		else
+	  		{
+	  			angular.forEach(groups, function (group, index)
+	  			{
+	  				if (group.uuid == recipient)
+	  				{  					
+			  			name = group.name;
+
+				  		receivers.push({
+				  			group: 	'Groups',
+				  			id: 		recipient,
+				  			name: 	name
+				  		});
+	  				}
+	  			});
+	  		}
+	  	});
 
 	    $scope.message = {
 	      subject: 		scheaduled.subject,
 	      body: 			scheaduled.message,
-	      receivers: 	[{
-	        group: 		'Users', 
-	        id: 			scheaduled.recipients[0], 
-	        name: 		name
-	      }]
+	      receivers: 	receivers
 	    };
+
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	    	angular.forEach(scheaduled.recipients, function (recipient, ind)
+	    	{
+		  		if (members[recipient])
+		  		{
+		    		if (option.innerHTML == members[recipient].name) option.selected = true;
+		    	}
+		    	else
+		    	{
+		  			angular.forEach(groups, function (group, index)
+		  			{
+		  				if (group.uuid == recipient)
+		  				{
+		    				if (option.innerHTML == group.name) option.selected = true;
+		  				}
+		  			});
+		    	}
+	    	});
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
 
 	    $scope.scheaduled = {
 	    	uuid: 		scheaduled.uuid,
@@ -315,9 +368,22 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    	offsets: 	Offsetter.factory(scheaduled.offsets)
 	    };
 
-	    $scope.scheaduleCounter();
+	    /**
+	     * FIX
+	     * Counter is hard coded because calling counter script is not working!
+	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
+	     * when console log is produced at the time of compilation it is observable that $scope object
+	     * did not include all the functions in the controller
+	     */
+	    // $scope.scheaduleCounter();
 
-	    rerenderReceiversList();
+  		var count = 0;
+
+  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+
+	  	$scope.scheaduleCount = count;
+
+	    // rerenderReceiversList();
 	  }
 
 
@@ -806,10 +872,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 		    angular.forEach(message.receivers, function (receiver, index) { members.push(receiver.id); });
 
 		    types.push('paige');
+
 		    if (broadcast.sms) types.push('sms');
 		    if (broadcast.email) types.push('email');
 
-		    var job = {
+		    return {
 		    	sender: 		$rootScope.app.resources.uuid,
 		      recipients: members,
 		      label: 			scheaduled.title,
@@ -826,7 +893,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	/**
 	  	 * Scheaduler jobs lister
 	  	 */
-	  	list: function ()
+	  	list: function (callback)
 	  	{
 				$rootScope.statusBar.display('Refreshing scheaduled jobs...');
 
@@ -843,6 +910,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    $scope.scheadules = result;
 
 				    $rootScope.statusBar.off();
+
+				    callback();
 				  };
 				});
 	  	},
@@ -894,7 +963,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	add: function (message, broadcast, scheaduled)
 	  	{
-	  		console.log(message, broadcast, scheaduled);
+	  		var self = this;
 
 	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
 
@@ -910,7 +979,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  {
 	          $rootScope.notifier.success('Scheaduled job is saved successfully.');
 
-	          this.list();
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
 				  };
 				});
 	  	},
@@ -921,6 +993,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	edit: function (message, broadcast, scheaduled)
 	  	{
+	  		var self = this;
+
 	    	$rootScope.statusBar.display('Editing scheaduled job...');
 
 				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
@@ -935,7 +1009,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  {
 	          $rootScope.notifier.success('Scheaduled job is edited successfully.');
 
-	          this.list();
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
+	        	});
 				  };
 				});	
 	  	},
@@ -946,6 +1024,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	remove: function (uuid)
 	  	{
+	  		var self = this;
+
 	    	$rootScope.statusBar.display('Deleting a scheaduled job...');
 
 		    Messages.scheaduled.remove(uuid)
@@ -960,7 +1040,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 		      {
 	          $rootScope.notifier.success('Scheaduled job is deleted successfully.');
 
-	          this.list();
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
 		      };
 		    });
 	  	}

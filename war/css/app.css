@@ -216,6 +216,9 @@ dl dd {
   display: inline;
   margin-right: 10px;
 }
+#scheaduler-pane .timer .icon-time {
+  margin-top: -3px;
+}
 #scheaduler-pane ul {
   list-style: none;
   overflow: hidden;
@@ -252,6 +255,28 @@ dl dd {
 }
 #scheaduler-pane button.btn-danger {
   margin-top: 2px;
+}
+
+.scheadule-icons {
+  width: 48px;
+  height: 24px;
+  overflow: hidden;
+}
+.scheadule-icons div {
+  float: left;
+  display: inline;
+  width: 24px;
+  height: 24px;
+}
+.scheadule-icons div .entypo {
+  line-height: 24px;
+  font-size: 32px;
+}
+.scheadule-icons div .sms {
+  margin-left: 5px;
+}
+.scheadule-icons div .mail {
+  margin-left: 2px;
 }
 
 /**

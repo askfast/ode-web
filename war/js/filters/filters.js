@@ -616,4 +616,46 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    return total;
 	  }
 	}
-);
+)
+
+
+
+
+
+
+
+
+/**
+ * Convert offsets array to nicely format in scheaduled jobs
+ */
+.filter('nicelyOffsets', 
+[
+	'Dater', 'Storage', 'Offsetter',
+	function (Dater, Storage, Offsetter)
+	{
+		return function (data)
+		{
+			var offsets 	= Offsetter.factory(data),
+					compiled 	= '';
+
+			angular.forEach(offsets, function (offset, index)
+			{
+				compiled += '&nbsp;&nbsp;<span class="badge">' + offset.time + '</span>&nbsp;';
+
+				if (offset.mon) compiled += '<span class="muted"><small><i>maandag,</i></small></span>';
+				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
+				if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
+				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
+				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
+				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
+				if (offset.zon) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+
+				compiled = compiled.substring(0, compiled.length - 20);
+
+				compiled = compiled += '</i></small></span>';
+			});
+
+			return compiled;
+		}
+	}
+]);

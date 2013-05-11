@@ -151,8 +151,8 @@
                       ng-model="message.receivers" 
                       ng-options="receiver.name group by receiver.group for receiver in receviersList">
               </select>
-              <!-- <p ng-repeat="receiver in message.receivers"><strong>{{receiver.id}}</strong></p> -->
-
+              <!-- <p ng-repeat="receiver in message.receivers"><strong>Chosen: {{receiver.id}}</strong></p> -->
+              <!-- <p ng-repeat="receiver in recipients"><strong>Recipients: {{receiver}}</strong></p> -->
             </div>
             <!-- end receivers -->
 
@@ -351,6 +351,7 @@
               <button type="button" 
                       ng-click="reply(message)"
                       class="btn btn-success">{{ui.message.reply}}</button>
+              &nbsp;
               <button type="button" 
                       ng-click="removeMessage(message.uuid)"
                       class="btn btn-danger">{{ui.message.del}}</button>
@@ -409,7 +410,7 @@
                           ng-model="selectionMaster.inbox"
                           ng-click="toggleSelection(messages.inbox[page.inbox], 'inbox', selectionMaster.inbox)">
                 </th>
-                <th></th>
+                <th width="60"></th>
                 <th>{{ui.message.from}}</th>
                 <th>{{ui.message.subject}}</th>
                 <th>{{ui.message.date}}</th>
@@ -595,7 +596,8 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Status</th>
+                <th width="60"><!-- Status --></th>
+                <th width="50"><!-- Types --></th>
                 <th>Label</th>
                 <th>Frequency</th>
                 <th></th>
@@ -607,8 +609,12 @@
                   <span class="label label-success" ng-show="scheadule.active">Enabled</span>
                   <span class="label" ng-hide="scheadule.active">Disabled</span>
                 </td>
+                <td class="scheadule-icons">
+                  <div><span class="entypo sms" ng-show="scheadule.sms">&#128241;</span></div>
+                  <div><span class="entypo mail" ng-show="scheadule.mail">&#128319;</span></div>
+                </td>
                 <td><a ng-click="requestNotification(scheadule.uuid)">{{scheadule.label}}</a></td>
-                <td>{{scheadule.offsets}}</td>
+                <td><span ng-bind-html-unsafe="scheadule.offsets | nicelyOffsets"></span></td>
                 <td>
                   <div class="pull-right">
                     <button class="btn btn-mini"
@@ -685,7 +691,7 @@
                           ng-model="selectionMaster.trash"
                           ng-click="toggleSelection(messages.trash[page.trash], 'trash', selectionMaster.trash)">
                 </th>
-                <th>{{ui.message.box}}</th>
+                <th width="60">{{ui.message.box}}</th>
                 <th>{{ui.message.persons}}</th>
                 <th>{{ui.message.subject}}</th>
                 <th>{{ui.message.date}}</th>

@@ -129,17 +129,18 @@ module.exports = function (grunt)
           collapseWhitespace: true
         },
         files: {
-          'war/dist/views/login.html':          'war/js/views/login.html',
-          'war/dist/views/logout.html':         'war/js/views/logout.html',
-          'war/dist/views/dashboard.html':      'war/js/views/dashboard.html',
-          'war/dist/views/dashboard-pies.html': 'war/js/views/dashboard-pies.html',
-          'war/dist/views/planboard.html':      'war/js/views/planboard.html',
-          'war/dist/views/messages.html':       'war/js/views/messages.html',
-          'war/dist/views/groups.html':         'war/js/views/groups.html',
-          'war/dist/views/groups-wish.html':    'war/js/views/groups-wish.html',
-          'war/dist/views/profile.html':        'war/js/views/profile.html',
-          'war/dist/views/settings.html':       'war/js/views/settings.html',
-          'war/dist/views/help.html':           'war/js/views/help.html'
+          'war/dist/views/login.html':                    'war/js/views/login.html',
+          'war/dist/views/logout.html':                   'war/js/views/logout.html',
+          'war/dist/views/dashboard.html':                'war/js/views/dashboard.html',
+          'war/dist/views/dashboard-pies.html':           'war/js/views/dashboard-pies.html',
+          'war/dist/views/planboard.html':                'war/js/views/planboard.html',
+          'war/dist/views/messages.html':                 'war/js/views/messages.html',
+          'war/dist/views/messages-scheadule-item.html':  'war/js/views/messages-scheadule-item.html',
+          'war/dist/views/groups.html':                   'war/js/views/groups.html',
+          'war/dist/views/groups-wish.html':              'war/js/views/groups-wish.html',
+          'war/dist/views/profile.html':                  'war/js/views/profile.html',
+          'war/dist/views/settings.html':                 'war/js/views/settings.html',
+          'war/dist/views/help.html':                     'war/js/views/help.html'
         }
       }
     },
