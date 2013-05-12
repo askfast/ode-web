@@ -2420,11 +2420,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'GET',
 	        params: {
 		        action: '', 
-		        0: 'dm'
-		        // 0: 'all', 
-		        // state: 'NEW',
-		        // limit: 10,
-		        // offset: 0
+		        // 0: 'dm'
+		        0: 'all', 
+		        state: 'READ',
+		        limit: 50,
+		        offset: 0
 		      },
 	        isArray: true
 	      },
@@ -8068,7 +8068,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 .controller('planboard', 
 [
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter', 
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter',
 	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
 	{
 	  /**
@@ -8087,7 +8087,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-	  console.log('data ->', data);
+	  // console.log('data ->', data);
 
 	  
 	  /**
@@ -8329,8 +8329,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile)
+	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
+	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile, Timer)
 	{
 		var range, diff;
 
@@ -9131,10 +9131,32 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  };
 
 
-    setTimeout( function() 
+	  /**
+	   * hotfix against not-dom-ready problem for timeline
+	   */
+    setTimeout(function() 
     {
       $scope.self.timeline.redraw();
     }, 100);
+
+
+
+	  /**
+	   * Background sync
+	   */
+	  Timer.start('timerExample', 
+	  function ()
+	  {
+      $scope.slot = {};
+
+      $scope.resetViews();
+
+      $scope.timeliner.load({
+        start:  $scope.data.periods.start,
+        end:    $scope.data.periods.end
+      });
+
+		}, 60);
 
 	}
 ]);;/*jslint node: true */

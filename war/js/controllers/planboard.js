@@ -8,7 +8,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 .controller('planboard', 
 [
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter', 
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter',
 	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
 	{
 	  /**
@@ -27,7 +27,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-	  console.log('data ->', data);
+	  // console.log('data ->', data);
 
 	  
 	  /**

@@ -8,8 +8,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile)
+	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
+	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile, Timer)
 	{
 		var range, diff;
 
@@ -810,10 +810,32 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  };
 
 
-    setTimeout( function() 
+	  /**
+	   * hotfix against not-dom-ready problem for timeline
+	   */
+    setTimeout(function() 
     {
       $scope.self.timeline.redraw();
     }, 100);
+
+
+
+	  /**
+	   * Background sync
+	   */
+	  Timer.start('timerExample', 
+	  function ()
+	  {
+      $scope.slot = {};
+
+      $scope.resetViews();
+
+      $scope.timeliner.load({
+        start:  $scope.data.periods.start,
+        end:    $scope.data.periods.end
+      });
+
+		}, 60);
 
 	}
 ]);
