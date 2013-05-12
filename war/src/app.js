@@ -2557,7 +2557,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		   */
 		  create: function (notification)
 		  {
-		  	console.log('not ->', notification);
+		  	// console.log('not ->', notification);
 		  	
 		    var deferred = $q.defer();
 
@@ -6480,12 +6480,40 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 							minutes	= Number(offset.minute) * minute,
 							diff		= hours + minutes;
 
-					if (offset.tue) { arrayed.push(diff + day); }
-					if (offset.wed) { arrayed.push(diff + (day * 2)); }
-					if (offset.thu) { arrayed.push(diff + (day * 3)); }
-					if (offset.wed) { arrayed.push(diff + (day * 4)); }
-					if (offset.wed) { arrayed.push(diff + (day * 5)); }
-					if (offset.wed) { arrayed.push(diff + (day * 6)); }
+					if (offset.mon)
+					{
+						arrayed.push(diff);
+					}
+
+					if (offset.tue)
+					{
+						arrayed.push(diff + day);
+					}
+
+					if (offset.wed)
+					{
+						arrayed.push(diff + (day * 2));
+					}
+
+					if (offset.thu)
+					{
+						arrayed.push(diff + (day * 3));
+					}
+
+					if (offset.fri)
+					{
+						arrayed.push(diff + (day * 4));
+					}
+
+					if (offset.sat)
+					{
+						arrayed.push(diff + (day * 5));
+					}
+
+					if (offset.sun)
+					{
+						arrayed.push(diff + (day * 6));
+					}
 				});
 
 				return arrayed;
@@ -7149,7 +7177,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
 				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
 				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
-				if (offset.zon) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+				if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
 
 				compiled = compiled.substring(0, compiled.length - 20);
 
@@ -9930,6 +9958,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 		    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
+				$scope.scheaduled = {
+					title: 		'',
+					offsets: 	{},
+					status: 	false
+				};
+
 	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');
@@ -10453,6 +10487,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	add: function (message, broadcast, scheaduled)
 	  	{
 	  		var self = this;
+
+	  		// console.log('passed ones ->', message, broadcast, scheaduled);
+	  		
+	  		// console.warn('processed ->', this.job(message, broadcast, scheaduled));
 
 	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
 

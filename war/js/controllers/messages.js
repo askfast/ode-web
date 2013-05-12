@@ -448,6 +448,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 		    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
+				$scope.scheaduled = {
+					title: 		'',
+					offsets: 	{},
+					status: 	false
+				};
+
 	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');
@@ -971,6 +977,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	add: function (message, broadcast, scheaduled)
 	  	{
 	  		var self = this;
+
+	  		// console.log('passed ones ->', message, broadcast, scheaduled);
+	  		
+	  		// console.warn('processed ->', this.job(message, broadcast, scheaduled));
 
 	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
 

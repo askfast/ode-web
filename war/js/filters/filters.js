@@ -650,7 +650,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
 				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
 				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
-				if (offset.zon) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+				if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
 
 				compiled = compiled.substring(0, compiled.length - 20);
 

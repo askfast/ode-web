@@ -160,7 +160,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		   */
 		  create: function (notification)
 		  {
-		  	console.log('not ->', notification);
+		  	// console.log('not ->', notification);
 		  	
 		    var deferred = $q.defer();
 
