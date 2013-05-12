@@ -593,6 +593,7 @@ angular.module('WebPaige',[
   'WebPaige.Controllers.Timeline',
   'WebPaige.Controllers.Timeline.Navigation',
   'WebPaige.Controllers.Messages',
+  'WebPaige.Controllers.Scheaduler',
   'WebPaige.Controllers.Groups',
   'WebPaige.Controllers.Profile',
   'WebPaige.Controllers.Settings',
@@ -609,6 +610,7 @@ angular.module('WebPaige',[
   'WebPaige.Services.Announcer',
   'WebPaige.Services.Sloter',
   'WebPaige.Services.Stats',
+  'WebPaige.Services.Offsetter',
   // directives
   'WebPaige.Directives',
   '$strap.directives',
@@ -1182,9 +1184,9 @@ angular.module('WebPaige')
         else
         {
           $rootScope.notification = {
-            status: status,
-            type: type,
-            message: message
+            status:   status,
+            type:     type,
+            message:  message
           };
         }
       },
@@ -2442,9 +2444,39 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'POST',
 	        params: {action: 'changeState'}
 	      },
-	      remove : {
+	      remove: {
 	        method: 'POST',
 	        params: {action: 'deleteQuestions'}
+	      }
+	    }
+	  );
+
+
+	  var Notifications = $resource(
+	    $config.host + '/notification/:uuid',
+	    {
+	    },
+	    {
+	      query: {
+	        method: 'GET',
+	        params: {},
+	        isArray: true
+	      },
+	      get: {
+	        method: 'GET',
+	        params: {uuid: ''}
+	      },
+	      save: {
+	        method: 'POST',
+	        params: {}
+	      },
+	      edit: {
+	        method: 'PUT',
+	        params: {uuid: ''}
+	      },
+	      remove: {
+	        method: 'DELETE',
+	        params: {uuid: ''}
 	      }
 	    }
 	  );
@@ -2460,14 +2492,18 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    Messages.query(
 	      function (result) 
 	      {
-	      	console.warn('coming to here');
-
-	        Storage.add('TEST', 'TESTING');
 	        Storage.add('messages', angular.toJson(result));
 
 	        Messages.prototype.unreadCount();
 
-	        deferred.resolve(Messages.prototype.filter(result));
+	        Messages.prototype.scheaduled.list()
+	        .then(function (scheadules)
+	      	{
+	        	deferred.resolve({
+	        		messages: 			Messages.prototype.filter(result),
+	        		scheadules: 		scheadules
+	        	});
+	      	});
 	      },
 	      function (error)
 	      {
@@ -2479,30 +2515,157 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 	  
 
-
-
 	  /**
-	   * Query messages from back-end
+	   * Notifications
 	   */
-	  Messages.prototype.queryTest = function () 
-	  {
-	    var deferred = $q.defer();
+	  Messages.prototype.scheaduled = {
 
-	    setTimeout(function ()
-	  	{
-        Storage.add('messages', angular.toJson(messagesLocal));
+	  	/**
+	  	 * List of the notifications
+	  	 */
+	  	list: function () 
+		  {
+		    var deferred = $q.defer();
 
-        Messages.prototype.unreadCount();
+		    Notifications.query(
+		      function (result) 
+		      {
+		      	Storage.add('notifications', angular.toJson(result));
 
-        deferred.resolve(Messages.prototype.filter(messagesLocal));
-	  		
-	  	}, 100);
+		      	angular.forEach(result, function (scheadule, index)
+		      	{
+		      		angular.forEach(scheadule.types, function (type, ind)
+		      		{
+		      			if (type == 'sms') scheadule.sms = true;
+		      			if (type == 'email') scheadule.mail = true;
+		      		});
+		      	});
 
-	    return deferred.promise;
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;
+		  },
+
+		  /**
+		   * Create notifications
+		   */
+		  create: function (notification)
+		  {
+		  	// console.log('not ->', notification);
+		  	
+		    var deferred = $q.defer();
+
+		    Notifications.save(null, angular.toJson(notification),
+		      function (result) 
+		      {
+		        var returned = '';
+
+		        angular.forEach(result, function (chr, i)
+		        {
+		          returned += chr;
+		        });
+
+		        deferred.resolve(returned);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Edit notification
+		   */
+		  edit: function (uuid, notification)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.edit({uuid: uuid}, angular.toJson(notification),
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Get notification
+		   */
+		  get: function (uuid)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.get({uuid: uuid},
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Get a local notification
+		   */
+		  find: function (id)
+		  {
+		    var gem;
+
+		    angular.forEach(this.local(), function (notification, index)
+		    {
+		      if (notification.uuid == id) gem = notification;
+		    });
+
+		    return gem;	  	
+		  },
+
+		  /**
+		   * Get local cache of notifications
+		   */
+		  local: function () { return angular.fromJson(Storage.get('notifications')); },
+
+		  /**
+		   * Delete notifications
+		   */
+		  remove: function (uuid)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.remove({uuid: uuid},
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  }
+
 	  };
-
-
-
 
 
 	  /**
@@ -2559,8 +2722,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    filtered.outbox = butcher(filtered.outbox);
 	    filtered.trash 	= butcher(filtered.trash);
 
-	    console.warn('filtered ->', filtered);
-
 	    return filtered;
 	  };
 
@@ -2577,8 +2738,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  Messages.prototype.find = function (id)
 	  {
 	    var gem;
-
-	    console.warn('asked for ->', id, Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message, index)
 	    {
@@ -2774,7 +2933,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 
 
-
 	  /**
 	   * Delete message(s)
 	   */
@@ -2790,7 +2948,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
-
 
 
 	  /**
@@ -2842,25 +2999,33 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 
 
-
-
+	  /**
+	   * Clean the mailboxes
+	   */
 	  Messages.prototype.clean = function (box)
 	  {
-	    var deferred = $q.defer(),
-	        calls = [];
+	    var deferred 	= $q.defer(),
+	        calls 		= [];
 
 	    angular.forEach(box, function (bulk, id)
 	    {
-	    	console.log('bulk ->', bulk);
+	    	var ids = [];
 
-	      // if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	    	angular.forEach(bulk, function (message, index)
+	    	{
+	    		ids.push(message.uuid);
+	    	});
+
+	      calls.push(Messages.remove(null, {
+	      	members: ids
+	      }));
 	    });
 
-	    // $q.all(calls)
-	    // .then(function (result)
-	    // {
-	    //   deferred.resolve(result);
-	    // });
+	    $q.all(calls)
+	    .then(function (result)
+	    {
+	      deferred.resolve(result);
+	    });
 
 	    return deferred.promise;
 	  }
@@ -2952,7 +3117,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
+	        // params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
+	        params: {id:'', fields: '[role, settingsWebPaige]'},
 	        isArray: true
 	      },
 	      get: {
@@ -3806,4180 +3972,6 @@ angular.module('WebPaige.Modals.Settings', ['ngResource'])
 	}
 ]);;/*jslint node: true */
 /*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Login', [])
-
-
-/**
- * Login controller
- */
-.controller('login', 
-[
-	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5', 
-	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) 
-	{
-	  /**
-	   * Self this
-	   */
-		var self = this;
-
-	  /**
-	   * Redirect to dashboard if logged in
-	   */
-	  // if (Session.check()) redirectToDashboard();
-
-
-	  /**
-	   * Set default views
-	   */
-		if ($routeParams.uuid && $routeParams.key)
-	  {
-			$scope.views = {
-				changePass: true,
-			};
-
-			$scope.changepass = {
-				uuid: $routeParams.uuid,
-				key:  $routeParams.key,
-			}
-		}
-	  else
-	  {
-			$scope.views = {
-				login: true,
-				forgot: false
-			};
-		};
-
-
-	  /**
-	   * KNRM users for testing
-	   */
-	  if ($rootScope.config.demo_users) $scope.demo_users = demo_users;
-
-
-	  /**
-	   * Real KNRM users for testing
-	   */
-	   $scope.knrmLogin = function (user)
-	   {
-	     $('#login button[type=submit]')
-	       .text('Login..')
-	       .attr('disabled', 'disabled');
-
-	    self.auth(user.uuid, user.resources.askPass);
-	   };
-
-	  
-	  /**
-	   * Set default alerts
-	   */
-	  $scope.alert = {
-	    login: {
-	      display: false,
-	      type: '',
-	      message: ''
-	    },
-	    forgot: {
-	      display: false,
-	      type: '',
-	      message: ''
-	    }
-	  };
-
-
-	  /**
-	   * Init rootScope app info container
-	   */
-	  if (!Storage.session.get('app')) Storage.session.add('app', '{}');
-
-
-	  /**
-	   * TODO
-	   * Lose this jQuery stuff later on!
-	   * 
-	   * Jquery solution of toggling between login and app view
-	   */
-	  $('.navbar').hide();
-	  $('#footer').hide();
-	  $('#watermark').hide();
-	  $('body').css({
-	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-	    'backgroundSize': 'cover'
-	  });
-
-
-	  /**
-	   * TODO
-	   * use native JSON functions of angular and Store service
-	   */
-	  var logindata = angular.fromJson(Storage.get('logindata'));
-
-	  if (logindata && logindata.remember) $scope.logindata = logindata;
-
-
-	  /**
-	   * TODO
-	   * Remove unneccessary DOM manipulation
-	   * Use cookies for user credentials
-	   * 
-	   * Login trigger
-	   */
-	  $scope.login = function()
-	  {
-	    $('#alertDiv').hide();
-
-	    if (!$scope.logindata ||
-	        !$scope.logindata.username || 
-	        !$scope.logindata.password)
-	    {
-	      $scope.alert = {
-	        login: {
-	          display: true,
-	          type: 'alert-error',
-	          message: $rootScope.ui.login.alert_fillfiled
-	        }
-	      };
-
-	      $('#login button[type=submit]')
-	        .text('Login')
-	        .removeAttr('disabled');
-
-	      return false;     
-	    };
-
-	    $('#login button[type=submit]')
-	      .text('Login..')
-	      .attr('disabled', 'disabled');
-
-	    Storage.add('logindata', angular.toJson({
-	      username: $scope.logindata.username,
-	      password: $scope.logindata.password,
-	      remember: $scope.logindata.remember
-	    }));
-
-	    self.auth( $scope.logindata.username, MD5($scope.logindata.password ));
-	  };
-
-
-	  /**
-	   * Authorize user
-	   */
-	  self.auth = function (uuid, pass)
-	  {
-	    User.login(uuid.toLowerCase(), pass)
-	    .then(function (result)
-		  {
-	      if (result.status == 400)
-	      {
-	        $scope.alert = {
-	          login: {
-	            display: true,
-	            type: 'alert-error',
-	            message: $rootScope.ui.login.alert_wrongUserPass
-	          }
-	        };
-
-	        $('#login button[type=submit]')
-	          .text('Login')
-	          .removeAttr('disabled');
-
-	        return false;
-	      }
-	      else
-	      {
-	        Session.set(result["X-SESSION_ID"]);
-
-	        self.preloader();
-	      };
-		  });
-	  };
-
-
-	  /**
-	   * TODO
-	   * What happens if preloader stucks?
-	   * Optimize preloader and messages
-	   * 
-	   * Initialize preloader
-	   */
-	  self.preloader = function()
-	  {
-	    $('#login').hide();
-	    $('#download').hide();
-	    $('#preloader').show();
-
-	    self.progress(30, $rootScope.ui.login.loading_User);
-
-	    User.resources()
-	    .then(function (resources)
-	    {
-	      if (resources.error)
-	      {
-	        console.warn('error ->', resources);
-	      }
-	      else
-	      {
-	        $rootScope.app.resources = resources;
-
-	        self.progress(70, $rootScope.ui.login.loading_Group);
-
-	        Groups.query(true)
-	        .then(function (groups)
-	        {
-	          if (groups.error)
-	          {
-	            console.warn('error ->', groups);
-	          }
-	          else
-	          {
-	            var settings  = angular.fromJson(resources.settingsWebPaige) || {},
-	                sync      = false,
-	                parenting = false,
-	                defaults  = $rootScope.config.defaults.settingsWebPaige,
-	                _groups   = function (groups)
-	                {
-	                  var _groups = {};
-	                  angular.forEach(groups, function (group, index) { _groups[group.uuid] = true; });
-	                  return _groups;
-	                };
-
-	            // Check if there is any settings at all
-	            if (settings != null || settings != undefined)
-	            {
-	              // check for user settigns-all
-	              if (settings.user)
-	              {
-	                // check for user-language settings
-	                if (settings.user.language)
-	                {
-	                  // console.warn('user HAS language settings');
-	                  $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
-	                  defaults.user.language = settings.user.language;
-	                }
-	                else
-	                {
-	                  // console.warn('user has NO language!!');
-	                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
-	                  sync = true;
-	                };             
-	              }
-	              else
-	              {
-	                // console.log('NO user settings at all !!');
-	                sync = true;
-	              };
-
-	              // check for app settings-all
-	              if (settings.app)
-	              {
-	                // check for app-widget settings
-	                if (settings.app.widgets)
-	                {
-	                  // check for app-widget-groups setting
-	                  if (settings.app.widgets.groups)
-	                  {
-	                    // console.warn('user HAS app widgets groups settings');
-	                    defaults.app.widgets.groups = settings.app.widgets.groups;
-	                  }
-	                  else
-	                  {
-	                    // console.warn('user has NO app widgets groups!!');
-	                    defaults.app.widgets.groups = _groups(groups);
-	                    sync = true;
-	                  }
-	                }
-	                else
-	                {
-	                  // console.warn('user has NO widget settings!!');
-	                  defaults.app.widgets = { groups: _groups(groups) };
-	                  sync = true;
-	                };
-
-	                // check for app group setting
-	                if (settings.app.group && settings.app.group != undefined)
-	                {
-	                  // console.warn('user HAS app first group setting');
-	                  defaults.app.group = settings.app.group;
-	                }
-	                else
-	                {
-	                  // console.warn('user has NO first group setting!!');
-	                  parenting = true;
-	                  sync      = true;
-	                };          
-	              }
-	              else
-	              {
-	                // console.log('NO app settings!!');
-	                defaults.app = { widgets: { groups: _groups(groups) } };
-	                sync = true;
-	              };
-	            }
-	            else
-	            {
-	              // console.log('NO SETTINGS AT ALL!!');
-	              defaults = {
-	                user: $rootScope.config.defaults.settingsWebPaige.user,
-	                app: {
-	                  widgets: {
-	                    groups: _groups(groups)
-	                  },
-	                  group: groups[0].uuid
-	                }
-	              };
-	              sync = true;
-	            };
-
-	            // sync settings with missing parts also parenting check
-	            if (sync)
-	            {
-	              if (parenting)
-	              {
-	                // console.warn('setting up parent group for the user');
-
-	                Groups.parents()
-	                .then(function (_parent)
-	                {
-	                  // console.warn('parent group been fetched ->', _parent);
-
-	                  if (_parent != null)
-	                  {
-	                    // console.warn('found parent parent -> ', _parent);
-
-	                    defaults.app.group = _parent;
-	                  }
-	                  else
-	                  {
-	                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
-
-	                    defaults.app.group = groups[0].uuid;
-	                  };
-	                                
-	                  // console.warn('SAVE ME (with parenting) ->', defaults);
-
-	                  Settings.save(resources.uuid, defaults)
-	                  .then(function (setted)
-	                  {
-	                    User.resources()
-	                    .then(function (got)
-	                    {
-	                      // console.log('gotted (with setting parent group) ->', got);
-	                      $rootScope.app.resources = got;
-
-	                      finalize();
-	                    })
-	                  });
-
-	                });
-	              }
-	              else
-	              {              
-	                // console.warn('SAVE ME ->', defaults);
-	                
-	                defaults.app.group = groups[0].uuid;
-
-	                Settings.save(resources.uuid, defaults)
-	                .then(function (setted)
-	                {
-	                  User.resources()
-	                  .then(function (got)
-	                  {
-	                    // console.log('gotted ->', got);
-	                    $rootScope.app.resources = got;
-
-	                    finalize();
-	                  })
-	                });
-	              }
-	            }
-	            else
-	            {
-	              finalize();
-	            }
-	          };
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Finalize the preloading
-	   */
-	  function finalize ()
-	  {
-	    // console.warn( 'settings ->',
-	    //               'user ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).user,
-	    //               'widgets ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.widgets,
-	    //               'group ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.group);
-
-	    self.progress(100, $rootScope.ui.login.loading_everything);
-
-	    self.redirectToDashboard();
-
-	    self.getMessages();
-
-	    self.getMembers();    
-	  }
-
-	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
-	   * Get members list (SILENTLY)
-	   */
-	  self.getMembers = function ()
-	  {
-	    var groups = Storage.local.groups();
-
-	    Groups.query()
-	    .then(function (groups)
-	    {
-	      var calls = [];
-
-	      angular.forEach(groups, function (group, index)
-	      {
-	        calls.push(Groups.get(group.uuid));
-	      });
-
-	      $q.all(calls)
-	      .then(function (result)
-	      {
-	        // console.warn('members ->', result);
-	        Groups.uniqueMembers();
-	      });
-	    });
-	  };
-
-
-	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
-	   * Get messages (SILENTLY)
-	   */
-	  self.getMessages = function ()
-	  {
-	    Messages.query()
-	    .then(function (messages)
-	    {
-	      if (messages.error)
-	      {
-	        console.warn('error ->', messages);
-	      }
-	      else
-	      {
-	        $rootScope.app.unreadMessages = Messages.unreadCount();
-
-	        Storage.session.unreadMessages = Messages.unreadCount();
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Redirect to dashboard
-	   */
-	  self.redirectToDashboard = function ()
-	  {
-	    $location.path('/dashboard');
-
-	    setTimeout(function ()
-	    {
-	      $('body').css({ 'background': 'none' });
-	      $('.navbar').show();
-	      // $('#mobile-status-bar').show();
-	      // $('#notification').show();
-	      if (!$rootScope.browser.mobile) $('#footer').show();
-	      $('#watermark').show();
-	      $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
-	    }, 100);
-	  };
-
-
-	  /**
-	   * Progress bar
-	   */
-	  self.progress = function (ratio, message)
-	  {
-	    $('#preloader .progress .bar').css({ width: ratio + '%' }); 
-	    $('#preloader span').text(message);    
-	  };
-
-
-	  /**
-	   * RE-FACTORY
-	   * TODO
-	   * Make button state change!
-	   * Finish it!
-	   * 
-	   * Forgot password
-	   */
-		$scope.forgot = function ()
-	  {
-			$('#forgot button[type=submit]').text('setting ...').attr('disabled', 'disabled');
-
-			User.password($scope.remember.id)
-	    .then(function (result)
-			{
-				if (result == "ok")
-	      {
-					$scope.alert = {
-						forget : {
-							display : true,
-							type : 'alert-success',
-							message : 'Please check your email to reset your password!'
-						}
-					};
-				}
-	      else 
-	      {
-					$scope.alert = {
-						forget : {
-							display : true,
-							type : 'alert-error',
-							message : 'Error, we can not find this account !'
-						}
-					};
-				};
-
-				$('#forgot button[type=submit]')
-	        .text('change password')
-	        .removeAttr('disabled');
-			});
-		};
-
-
-	  /**
-	   * RE-FACTORY
-	   * Change password
-	   */
-		self.changePass =  function (uuid, newpass, key)
-	  {
-			User.changePass(uuid, newpass, key)
-	    .then(function (result)
-	    {
-				if(result.status == 400 || result.status == 500 || result.status == 409)
-	      {
-					$scope.alert = {
-						changePass : {
-							display : true,
-							type : 'alert-error',
-							message : 'Something wrong with password changing!'
-						}
-					};
-				}
-	      else
-	      { // successfully changed
-					$scope.alert = {
-						changePass : {
-							display : true,
-							type : 'alert-success',
-							message : 'Password changed!'
-						}
-					}; 
-					
-					$location.path( "/message" );
-				};
-
-				$('#changePass button[type=submit]')
-	        .text('change password')
-	        .removeAttr('disabled');
-			})
-		};
-
-
-	  /**
-	   * RE-FACTORY
-	   * Change password
-	   */
-		$scope.changePass = function ()
-	  {
-			$('#alertDiv').hide();
-
-			if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
-	    {
-				$scope.alert = {
-					changePass : {
-						display : true,
-						type : 'alert-error',
-						message : 'Please fill all fields!'
-					}
-				};
-
-				$('#changePass button[type=submit]')
-	        .text('change password')
-	        .removeAttr('disabled');
-
-				return false;
-			}
-	    else if ($scope.changeData.newPass != $scope.changeData.retypePass)
-	    {
-				$scope.alert = {
-					changePass : {
-						display : true,
-						type : 'alert-error',
-						message : 'Please make the reType password is indentical !'
-					}
-				};
-
-				$('#changePass button[type=submit]')
-	        .text('change password')
-	        .removeAttr('disabled');
-
-				return false;
-			};
-
-			$('#changePass button[type=submit]')
-	      .text('changing ...')
-	      .attr('disabled', 'disabled');
-
-			self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
-		};
-
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Logout', [])
-
-
-/**
- * Logout controller
- */
-.controller('logout', 
-[
-	'$rootScope', '$scope', '$window', 'Session', 'User', 'Storage', 
-	function ($rootScope, $scope, $window, Session, User, Storage) 
-	{
-	  $('.navbar').hide();
-	  $('#footer').hide();
-
-	  var logindata = angular.fromJson(Storage.get('logindata'));
-
-		User.logout()
-		.then(function (result)
-		{
-	    if (result.error)
-	    {
-	      console.warn('error ->', result);
-	    }
-	    else
-	    {
-	      Storage.clearAll();
-
-	      Storage.session.clearAll();
-
-	      Storage.add('logindata', angular.toJson(logindata));
-
-	      $window.location.href = 'logout.html';
-	    };
-		});
-	}
-]);;/*jslint node: true */
-/*global angular */
-/*global Raphael */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Dashboard', [])
-
-
-/**
- * Dashboard controller
- */
-.controller('dashboard',
-[
-	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
-	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile)
-	{
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
-
-
-		/**
-		 * Defaults for loaders
-		 */
-		$scope.loading = {
-			pies:   true,
-			alerts: true
-		};
-
-
-		/**
-		 * Defaults for toggler
-		 */
-		$scope.more = {
-			status: false,
-			text:   'show more'
-		};
-
-
-		/**
-		 * TODO
-		 * Check somewhere that user-settings widget-groups are synced with the
-		 * real groups list and if a group is missing in settings-groups add by
-		 * default!
-		 */
-		var groups    = Storage.local.groups(),
-				settings  = Storage.local.settings(),
-				selection = {};
-
-		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
-		{
-			selection[group] = value;
-		});
-
-		$scope.popover = {
-			groups: groups,
-			selection: selection
-		};
-
-
-		/**
-		 * Get group overviews
-		 */
-		function getOverviews ()
-		{
-			Dashboard.pies()
-			.then(function (pies)
-			{
-				if (pies.error)
-				{
-					$rootScope.notifier.error('Error with getting group overviews.');
-					console.warn('error ->', pies.error);
-				}
-				else
-				{
-					$scope.shortageHolders = {};
-
-					$scope.loading.pies = false;
-
-					$scope.periods = {
-						start:  pies[0].weeks.current.start.date,
-						end:    pies[0].weeks.next.end.date
-					};
-
-					angular.forEach(pies, function (pie, index)
-					{
-						if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
-						if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
-
-						if (pie.weeks.current.state.diff > 0)
-						{
-						pie.weeks.current.state.cls = 'more';
-						}
-						else if (pie.weeks.current.state.diff === 0)
-						{
-							pie.weeks.current.state.cls = 'even';
-						}
-						else if (pie.weeks.current.state.diff < 0)
-						{
-							pie.weeks.current.state.cls = 'less';
-						}
-
-						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-																						new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime) :
-																						'undefined';
-
-						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-																						new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime) :
-																						'undefined';
-
-						pie.shortages = {
-							current:  pie.weeks.current.shortages,
-							next:     pie.weeks.next.shortages,
-							total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
-						};
-
-						pie.state = pie.weeks.current.state;
-
-						delete(pie.weeks.current.shortages);
-						delete(pie.weeks.current.state);
-
-						$scope.shortageHolders['shortages-' + pie.id] = false;
-					});
-
-
-					// angular.forEach(pies, function (pie, index)
-					// {
-					// 	console.log('pie ->', pie);
-
-					// 	angular.forEach(pie.shortages.current, function (slot, index)
-					// 	{
-					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
-
-					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-					// 	});
-
-					// 	angular.forEach(pie.shortages.next, function (slot, index)
-					// 	{
-					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
-
-					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-					// 	});
-					// });
-
-					$scope.pies = pies;
-				}
-			})
-			.then( function (result)
-			{
-				angular.forEach($scope.pies, function (pie, index)
-				{
-					pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
-					pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
-				});
-
-				function pieMaker ($id, id, name, _ratios)
-				{
-					setTimeout( function ()
-					{
-					document.getElementById($id + id).innerHTML = '';
-
-						var ratios    = [],
-								colorMap  = {
-									more: '#415e6b',
-									even: '#ba6a24',
-									less: '#a0a0a0'
-								},
-								colors    = [],
-								xratios   = [];
-
-						angular.forEach(_ratios, function (ratio, index)
-						{
-							if (ratio !== 0)
-							{
-								ratios.push({
-									ratio: ratio,
-									color: colorMap[index]
-								});
-							}
-						});
-
-						ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
-
-						angular.forEach(ratios, function (ratio, index)
-						{
-							colors.push(ratio.color);
-							xratios.push(ratio.ratio);
-						});
-
-						var r   = new Raphael($id + id),
-								pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
-
-					}, 100);
-				}
-			});
-		}
-
-		getOverviews();
-
-		/**
-		 * Save widget settings
-		 */
-		$scope.saveOverviewWidget = function (selection)
-		{
-			$rootScope.statusBar.display($rootScope.ui.settings.saving);
-
-			Settings.save($rootScope.app.resources.uuid, {
-				user: Storage.local.settings().user,
-				app: {
-					widgets: {
-						groups: selection
-					}
-				}
-			})
-			.then(function (result)
-			{
-				$rootScope.statusBar.display('Refreshing group overviews..');
-
-				Profile.get($rootScope.app.resources.uuid, true)
-				.then(function (resources)
-				{
-					getOverviews();
-				});
-			});
-		};
-
-
-		/**
-		 * P2000 annnouncements
-		 */
-		Dashboard.p2000().
-		then(function (result)
-		{
-			if (result.error)
-			{
-				$rootScope.notifier.error('Error with getting p2000 alarm messages.');
-				console.warn('error ->', result);
-				}
-			else
-			{
-				$scope.loading.alerts = false;
-
-				$scope.alarms = result;
-
-				$scope.alarms.list = $scope.alarms.short;
-			}
-		});
-
-
-		/**
-		 * Show more or less alarms
-		 */
-		$scope.toggle = function (more)
-		{
-			$scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
-
-			$scope.more.text = (more) ? 'show more' : 'show less';
-
-			$scope.more.status = !$scope.more.status;
-		};
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Planboard', [])
-
-
-.controller('planboard', 
-[
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter', 
-	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
-	{
-	  /**
-	   * Fix styles
-	   */
-		$rootScope.fixStyles();
-
-	  /**
-	   * Pass the self
-	   */
-		$scope.self = this;
-
-
-	  /**
-	   * Pass time slots data
-	   */
-	  $scope.data = data;
-
-	  console.log('data ->', data);
-
-	  
-	  /**
-	   * Get groups and settings
-	   */
-	  var groups  	= Storage.local.groups(),
-	      settings 	= Storage.local.settings();
-
-
-	  /**
-	   * Pass current
-	   */
-	  $scope.current = {
-      layouts: {
-        user:     true,
-        group:    true,
-        members:  false
-      },
-      day:      Dater.current.today(),
-      week:     Dater.current.week(),
-      month:    Dater.current.month(),
-      group:    settings.app.group,
-      // group:    groups[0].uuid,
-      division: 'all'
-    };
-
-
-	  /**
-	   * Pass periods
-	   */
-	  $scope.periods = Dater.getPeriods();
-
-
-	  /**
-	   * Reset and init slot container which
-	   * is used for adding or changing slots
-	   */
-	  $scope.slot = {};
-
-
-	  /**
-	   * Set defaults for timeline
-	   */
-	  $scope.timeline = {
-	  	id: 'mainTimeline',
-	  	main: true,
-	  	user: {
-	  		id: 	$rootScope.app.resources.uuid,
-	  		role: $rootScope.app.resources.role
-	  	},
-	    current: $scope.current,
-	    options: {
-	      start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
-	      min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
-	    },
-	    range: {
-	      start:  $scope.periods.weeks[$scope.current.week].first.day,
-	      end:    $scope.periods.weeks[$scope.current.week].last.day
-	    },
-	    scope: {
-	      day:    false,
-	      week:   true,
-	      month:  false
-	    },
-	    config: {
-	      bar:        $rootScope.config.timeline.config.bar,
-	      wishes:     $rootScope.config.timeline.config.wishes,
-	      legenda:    {},
-	      legendarer: $rootScope.config.timeline.config.legendarer,
-	      states:     $rootScope.config.timeline.config.states,
-	      divisions:  $rootScope.config.timeline.config.divisions,
-	      densities:  $rootScope.config.timeline.config.densities
-	    }
-	  };
-
-	  if ($.browser.msie && $.browser.version == '8.0')
-	  {
-		  $scope.timeline.options = {
-	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
-	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
-	    }
-	  }
-
-
-	  /**
-	   * Legenda defaults
-	   */
-	  angular.forEach($rootScope.config.timeline.config.states, function (state, index)
-	  {
-	    $scope.timeline.config.legenda[index] = true;
-	  });
-
-
-	  /**
-	   * Timeline group legenda default configuration
-	   */
-	  $scope.timeline.config.legenda.groups = {
-	    more: true,
-	    even: true,
-	    less: true
-	  };
-
-
-	  /**
-	   * Prepeare timeline range for dateranger widget
-	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
-	                      Dater.readable.date($scope.timeline.range.end);
-
-
-	  /**
-	   * States for dropdown
-	   */
-	  var states = {};
-
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
-
-	  $scope.states = states;
-
-
-	  /**
-	   * Groups for dropdown
-	   */
-	  $scope.groups = groups;
-
-
-	  /**
-	   * Groups for dropdown
-	   */
-	  $scope.divisions = $scope.timeline.config.divisions;
-
-
-	  /**
-	   * Reset views for default views
-	   */
-	  $scope.resetViews = function ()
-	  {
-	    $scope.views = {
-	      slot: {
-	        add:  false,
-	        edit: false
-	      },
-	      group:  false,
-	      wish:   false,
-	      member: false
-	    };
-	  };
-
-	  $scope.resetViews();
-
-
-	  /**
-	   * Slot form toggler
-	   */
-	  $scope.toggleSlotForm = function ()
-	  {
-	    if ($scope.views.slot.add)
-	    {
-	      $scope.resetInlineForms();
-	    }
-	    else
-	    {
-	      $scope.slot = {};
-
-	      $scope.slot = {
-	        start: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        end: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        state:      '',
-	        recursive:  false,
-	        id:         ''
-	      };
-
-	      $scope.resetViews();
-
-	      $scope.views.slot.add = true;
-	    };
-	  };
-
-
-	  /**
-	   * Reset inline forms
-	   */
-	  $scope.resetInlineForms = function ()
-	  {
-	    $scope.slot = {};
-
-	    $scope.original = {};
-
-	    $scope.resetViews();
-	  };
-
-
-	  /**
-	   * Send shortage message
-	   */
-	  $scope.sendShortageMessage = function (slot)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.planboard.preCompilingStortageMessage);
-
-	    Storage.session.add('escalation', angular.toJson({
-	      group: slot.group,
-	      start: {
-	        date: slot.start.date,
-	        time: slot.start.time
-	      },
-	      end: {
-	        date: slot.end.date,
-	        time: slot.end.time
-	      },
-	      diff: slot.diff
-	    }));
-
-	    $location.path('/messages').search({ escalate: true }).hash('compose');
-	  };
-
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Timeline', [])
-
-
-.controller('timeline',
-[
-	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile)
-	{
-		var range, diff;
-
-		/**
-		 * Watch for changes in timeline range
-		 */
-		$scope.$watch(function ()
-		{
-			/**
-			 * If main timeline
-			 */
-			if ($scope.timeline && $scope.timeline.main)
-			{
-				range = $scope.self.timeline.getVisibleChartRange();
-				diff  = Dater.calculate.diff(range);
-
-				/**
-				 * Scope is a day
-				 * 
-				 * TODO
-				 * try later on!
-				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
-				 */
-				if (diff <= 86400000)
-				{
-					$scope.timeline.scope = {
-						day:    true,
-						week:   false,
-						month:  false
-					};
-				}
-				/**
-				 * Scope is less than a week
-				 */
-				else if (diff < 604800000)
-				{
-					$scope.timeline.scope = {
-						day:    false,
-						week:   true,
-						month:  false
-					};
-				}
-				/**
-				 * Scope is more than a week
-				 */
-				else if (diff > 604800000)
-				{
-					$scope.timeline.scope = {
-						day:    false,
-						week:   false,
-						month:  true
-					};
-				}
-
-				$scope.timeline.range = {
-					start:  new Date(range.start).toString(),
-					end:    new Date(range.end).toString()
-				};
-
-				$scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
-														' / ' +
-														Dater.readable.date($scope.timeline.range.end);
-			}
-			/**
-			 * User timeline
-			 */
-			else
-			{
-				if ($location.hash() == 'timeline')
-				{
-					range = $scope.self.timeline.getVisibleChartRange();
-
-					$scope.timeline.range = {
-						start:  new Date(range.start).toString(),
-						end:    new Date(range.end).toString()
-					};
-				}
-			}
-		});
-
-
-	  /**
-	   * Timeline (The big boy)
-	   */
-	  $scope.timeliner = {
-
-	    /**
-	     * Init timeline
-	     */
-	    init: function ()
-	    {
-	      $scope.self.timeline = new links.Timeline(document.getElementById($scope.timeline.id));
-
-	      links.events.addListener($scope.self.timeline, 'rangechanged',  this.getRange);
-	      links.events.addListener($scope.self.timeline, 'add',           this.onAdd);
-	      links.events.addListener($scope.self.timeline, 'delete',        this.onRemove);
-	      links.events.addListener($scope.self.timeline, 'change',        this.onChange);
-	      links.events.addListener($scope.self.timeline, 'select',        this.onSelect);
-
-	      this.render($scope.timeline.options);      
-	    },
-
-	    getRange: function () { $scope.timelineGetRange() },
-
-	    onAdd: 		function () { $scope.timelineOnAdd() },
-
-	    onRemove: function () { $scope.timelineOnRemove() },
-
-	    onChange: function () { $scope.timelineOnChange() },
-
-	    onSelect: function () { $scope.timelineOnSelect() },
-
-	    /**
-	     * (Re-)Render timeline
-	     */
-	    render: function (options)
-	    {		
-	      $scope.timeline = {
-	      	id: 			$scope.timeline.id,
-	      	main: 		$scope.timeline.main,
-	      	user: 		$scope.timeline.user,
-	        current:  $scope.timeline.current,
-	        scope: 		$scope.timeline.scope,
-	        config:   $scope.timeline.config,
-	        options: {
-	          start:  new Date(options.start),
-	          end:    new Date(options.end),
-	          min:    new Date(options.start),
-	          max:    new Date(options.end)
-	        }
-	      };
-
-	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
-
-	      if ($scope.timeline.main)
-	      {
-		      $scope.self.timeline.draw(
-		        Sloter.process(
-		          $scope.data,
-		          $scope.timeline.config,
-		          $scope.divisions,
-		          $scope.timeline.user.role
-		        ), 
-		        $scope.timeline.options
-		      );
-		    }
-		    else
-		    {
-			    setTimeout( function() 
-		      {
-		        $scope.self.timeline.draw(
-		          Sloter.profile(
-		            $scope.data.slots.data, 
-		            $scope.timeline.config
-		          ), $scope.timeline.options);
-		      }, 100);
-		    };
-
-		  //   console.log('ranges for ie8 ->', $scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime(), $rootScope.browser);
-
-		  //   if ($.browser.msie)
-				// {
-				//   var ver = $.browser.version || $.browser.version[0];
-
-				//   if (ver == '8.0')
-				//   {
-	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start.getTime(), $scope.timeline.options.end.getTime());
-				//   }
-				//   else
-				//   {
-	   //    		$scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-				//   }
-				// }
-	      
-	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-	    },
-
-	    /**
-	     * Grab new timeline data from backend and render timeline again
-	     */
-	    load: function (stamps)
-	    {
-	      var _this = this;
-
-	      $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
-
-	      if ($scope.timeline.main)
-	      {
-		      Slots.all({
-		        groupId:  $scope.timeline.current.group,
-		        division: $scope.timeline.current.division,
-		        layouts:  $scope.timeline.current.layouts,
-		        month:    $scope.timeline.current.month,
-		        stamps:   stamps
-		      })
-		      .then(function (data)
-		      {
-		        if (data.error)
-		        {
-		          $rootScope.notifier.error('Error with gettings timeslots.');
-		          console.warn('error ->', result);
-		        }
-		        else
-		        {
-		          $scope.data = data;
-
-		          _this.render(stamps);
-		        };
-
-		        $rootScope.statusBar.off();
-		      });
-		    }
-	      else
-	      {
-	      	Profile.getSlots($scope.timeline.user.id, stamps)
-		      .then(function (data)
-		      {
-		        if (data.error)
-		        {
-		          $rootScope.notifier.error('Error with gettings timeslots.');
-		          console.warn('error ->', result);
-		        }
-		        else
-		        {
-			      	data.user 	= data.slots.data;
-
-			        $scope.data = data;
-
-			        _this.render(stamps);
-
-			        $rootScope.statusBar.off();
-		        };
-		      });
-		    };
-	    },
-
-	    /**
-	     * Refresh timeline as it is
-	     */
-	    refresh: function ()
-	    {
-	      $scope.slot = {};
-
-	      if ($scope.timeline.main)
-	      {
-		      $scope.resetViews();
-
-		      $scope.views.slot.add = true;
-	      }
-	      else
-	      {
-		      $scope.forms = {
-		        add:  true,
-		        edit: false
-		      };
-		    };
-
-	      this.load({
-	        start:  $scope.data.periods.start,
-	        end:    $scope.data.periods.end
-	      });
-	    },
-
-	    /**
-	     * Redraw timeline
-	     */
-	    redraw: function ()
-	    {
-	      $scope.self.timeline.redraw();
-	    },
-
-	    isAdded: function ()
-	    {
-	    	return $('.timeline-event-content')
-	                .contents()
-	                .filter(function ()
-	                { 
-	                  return this.nodeValue == 'New' 
-	                }).length;
-	    },
-
-	    /**
-	     * Cancel add
-	     */
-	    cancelAdd: function ()
-	    {
-	      $scope.self.timeline.cancelAdd();
-	    }
-	  };
-	 
-
-	  /**
-	   * Init timeline
-	   */
-	  if ($scope.timeline) $scope.timeliner.init();
-
-
-	  /**
-	   * Timeliner listener
-	   */
-	  $rootScope.$on('timeliner', function () 
-	  {
-	    $scope.timeliner.load({
-	      start:  new Date(arguments[1].start).getTime(),
-	      end:    new Date(arguments[1].end).getTime()
-	    });
-	  });
-
-
-	  /**
-	   * Handle new requests for timeline
-	   */
-	  $scope.requestTimeline = function (section)
-	  {
-	    switch (section)
-	    {
-	      case 'group':
-	        $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
-
-	        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
-	          $scope.timeline.current.layouts.members = false;
-	      break;
-
-	      case 'members':
-	        $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
-
-	        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
-	          $scope.timeline.current.layouts.group = true;
-	      break;
-	    };
-
-	    $scope.timeliner.load({
-	      start:  $scope.data.periods.start,
-	      end:    $scope.data.periods.end
-	    });
-	  };
-
-
-	  /**
-	   * Timeline get ranges
-	   */
-	  $scope.timelineGetRange = function ()
-	  {
-	    var range = $scope.self.timeline.getVisibleChartRange();
-
-	    $scope.$apply(function ()
-	    {
-	      $scope.timeline.range = {
-	        start:  new Date(range.from).toString(),
-	        end:    new Date(range.till).toString()
-	      };
-
-	      if ($scope.timeline.main)
-	      {
-		      $scope.daterange = {
-		        start:  Dater.readable.date(new Date(range.start).getTime()),
-		        end:    Dater.readable.date(new Date(range.end).getTime())
-		      };
-	      };
-
-	    });
-	  };
-
-
-	  /**
-	   * Get information of the selected slot
-	   */
-	  $scope.selectedSlot = function ()
-	  {
-	    var selection;
-
-	    /**
-	     * TODO
-	     * 
-	     * Not working!!
-	     */
-	    $scope.timeliner.cancelAdd();
-
-	    if (selection = $scope.self.timeline.getSelection()[0])
-	    {
-	      var values  = $scope.self.timeline.getItem(selection.row),
-	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
-
-	      $scope.original = {
-	        start:        values.start,
-	        end:          values.end,
-	        content: {
-	          recursive:  content.recursive,
-	          state:      content.state,
-	          id:         content.id
-	        }
-	      };
-
-	      if ($scope.timeline.main)
-	      {
-		      $scope.resetViews();
-		    }
-		    else
-		    {
-		      /**
-		       * TODO
-		       * Convert to resetview?
-		       */
-		      $scope.forms = {
-		        add:  false,
-		        edit: true
-		      };
-		    };
-
-	      if (content.type)
-	      {
-	      	if ($scope.timeline.main)
-	      	{
-			      switch (content.type)
-			      {
-			        case 'slot':
-			          $scope.views.slot.edit = true;
-			        break;
-
-			        case 'group':
-			          $scope.views.group = true;
-			        break;
-
-			        case 'wish':
-			          $scope.views.wish = true;
-			        break;
-
-			        case 'member':
-			          $scope.views.member = true;
-			        break;
-			      };
-	      	};
-
-		      $scope.slot = {
-		        start: {
-		          date: new Date(values.start).toString($rootScope.config.formats.date),
-		          time: new Date(values.start).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.start).toISOString()
-		        },
-		        end: {
-		          date: new Date(values.end).toString($rootScope.config.formats.date),
-		          time: new Date(values.end).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.end).toISOString()
-		        },
-		        state:      content.state,
-		        recursive:  content.recursive,
-		        id:         content.id
-		      };
-
-		      /**
-		       * TODO
-		       * Check if this can be combined with switch later on!
-		       * Set extra data based slot type for inline form
-		       */
-		      if ($scope.timeline.main)
-		      {
-			      switch (content.type)
-			      {
-			        case 'group':
-			          $scope.slot.diff  = content.diff;
-			          $scope.slot.group = content.group;
-			        break;
-
-			        case 'wish':
-			          $scope.slot.wish    = content.wish;
-			          $scope.slot.group   = content.group;
-			          $scope.slot.groupId = content.groupId;
-			        break;
-
-			        case 'member':
-			          $scope.slot.member = content.mid;
-			        break;
-			      };
-		      };
-	      };
-
-	      return values;
-	    };
-	  };
-
-
-	  /**
-	   * Timeline on select
-	   */
-	  $scope.timelineOnSelect = function ()
-	  {
-	    $scope.$apply(function ()
-	    {
-	      $scope.selectedOriginal = $scope.selectedSlot();
-	    });
-	  };
-
-
-	  /**
-	   * Prevent re-rendering issues with timeline
-	   */
-	  $scope.destroy = {
-	    timeline: function ()
-	    {
-	      // Not working !! :(
-	      // Sloter.pies($scope.data);
-	    },
-	    statistics: function ()
-	    {
-	      setTimeout(function ()
-	      {
-	        $scope.timeliner.redraw();
-	      }, 10);
-	    }
-	  };
-
-
-	  /**
-	   * Group aggs barCharts toggler
-	   */
-	  $scope.barCharts = function ()
-	  {
-	    $scope.timeline.config.bar = !$scope.timeline.config.bar;
-
-	    $scope.timeliner.render({
-	      start:  $scope.timeline.range.start,
-	      end:    $scope.timeline.range.end
-	    });
-	  };
-	  
-
-	  /**
-	   * Group wishes toggler
-	   */
-	  $scope.groupWishes = function ()
-	  {
-	    $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
-
-	    $scope.timeliner.render({
-	      start:  $scope.timeline.range.start,
-	      end:    $scope.timeline.range.end
-	    });
-	  };
-	  
-
-	  /**
-	   * Timeline legenda toggler
-	   */
-	  $scope.showLegenda = function ()
-	  {
-		  $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
-		};
-
-
-	  /**
-	   * Alter legenda settings
-	   */
-	  $scope.alterLegenda = function (legenda)
-	  {
-	    $scope.timeline.config.legenda = legenda;
-
-	    $scope.timeliner.render({
-	      start:  $scope.timeline.range.start,
-	      end:    $scope.timeline.range.end
-	    });
-	  };
-
-
-	  /**
-	   * Add slot trigger start view
-	   */
-	  $scope.timelineOnAdd = function (form, slot)
-	  {
-	  	/**
-	  	 * Make view for new slot
-	  	 */
-	  	if (!form)
-	  	{
-		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-		      
-		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
-
-		    $scope.$apply(function ()
-		    {
-		    	if ($scope.timeline.main)
-		    	{
-			      $scope.resetViews();
-
-			      $scope.views.slot.add = true;
-		    	}
-		    	else
-		    	{
-			      $scope.forms = {
-			        add:  true,
-			        edit: false
-			      };
-			    };
-
-		      $scope.slot = {
-		        start: {
-		          date: new Date(values.start).toString($rootScope.config.formats.date),
-		          time: new Date(values.start).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.start).toISOString()
-		        },
-		        end: {
-		          date: new Date(values.end).toString($rootScope.config.formats.date),
-		          time: new Date(values.end).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.end).toISOString()
-		        },
-		        recursive: (values.group.match(/recursive/)) ? true : false,
-		        /**
-		         * INFO
-		         * First state is hard-coded
-		         * Maybe use the first one from array later on?
-		         */
-		        state: 'com.ask-cs.State.Available'
-		      };
-		    });
-	  	}
-	  	/**
-	  	 * Add new slot
-	  	 */
-	  	else
-	  	{
-		    var now     = Date.now().getTime(),
-		        values  = {
-		                    start:      ($rootScope.browser.mobile) ? 
-		                                  new Date(slot.start.datetime).getTime() / 1000 :
-		                                  Dater.convert.absolute(slot.start.date, slot.start.time, true),
-		                    end:        ($rootScope.browser.mobile) ? 
-		                                  new Date(slot.end.datetime).getTime() / 1000 : 
-		                                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
-		                    recursive:  (slot.recursive) ? true : false,
-		                    text:       slot.state
-		                  };
-
-		    if (values.end * 1000 <= now && values.recursive == false)
-		    {
-		      $rootScope.notifier.error('You can not input timeslots in past.');
-
-		      // timeliner.cancelAdd();
-		      $scope.timeliner.refresh();
-		    }
-		    else
-		    {
-		      $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
-
-		      Slots.add(values, $scope.timeline.user.id)
-		      .then(
-		        function (result)
-		        {
-		          if (result.error)
-		          {
-		            $rootScope.notifier.error('Error with adding a new timeslot.');
-		            console.warn('error ->', result);
-		          }
-		          else
-		          {
-		            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
-		          };
-
-		          $scope.timeliner.refresh();
-		        }
-		      );
-		    };
-	  	}
-	  };
-
-
-	  /**
-	   * Timeline on change
-	   */
-	  $scope.timelineOnChange = function (direct, original, slot, options)
-	  {
-	    if (!direct)
-	    {
-	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
-	          options = {
-	            start:    values.start,
-	            end:      values.end,
-	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
-	          };
-	    }
-	    else
-	    {
-	    	var options = {
-		      start:  ($rootScope.browser.mobile) ?
-		                new Date(slot.start.datetime).getTime() : 
-		                Dater.convert.absolute(slot.start.date, slot.start.time, false),
-		      end:    ($rootScope.browser.mobile) ? 
-		                new Date(slot.end.datetime).getTime() :
-		                Dater.convert.absolute(slot.end.date, slot.end.time, false),
-		      content: angular.toJson({
-		        recursive:  slot.recursive, 
-		        state:      slot.state 
-		      })
-		    };
-	    }
-
-	    var now = Date.now().getTime();
-
-	    if (options.end <= now && options.content.recursive == false)
-	    {
-	      $rootScope.notifier.error('You can not change timeslots in past.');
-
-	      $scope.timeliner.refresh();
-	    }
-	    else
-	    {
-	      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
-
-	      Slots.change($scope.original, options, $scope.timeline.user.id)
-	      .then(
-	        function (result)
-	        {
-	          if (result.error)
-	          {
-	            $rootScope.notifier.error('Error with changing timeslot.');
-	            console.warn('error ->', result);
-	          }
-	          else
-	          {
-	            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-	          };
-
-	          $scope.timeliner.refresh();
-	        }
-	      );
-	    };
-	  };
-
-
-	  /**
-	   * Timeline on remove
-	   */
-	  $scope.timelineOnRemove = function ()
-	  {
-	    if ($scope.timeliner.isAdded() > 0)
-	    {
-	      $scope.self.timeline.cancelAdd();
-
-	      $scope.$apply(function ()
-	      {
-	        $scope.resetInlineForms();
-	      });
-	    }
-	    else
-	    {
-	      var now = Date.now().getTime();
-
-	      if ($scope.original.end.getTime() <= now && $scope.original.recursive == false)
-	      {
-	        $rootScope.notifier.error('You can not delete timeslots in past.');
-
-	        $scope.timeliner.refresh();
-	      }
-	      else
-	      {
-	        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
-
-	        Slots.remove($scope.original, $scope.timeline.user.id)
-	        .then(
-	          function (result)
-	          {
-	            if (result.error)
-	            {
-	              $rootScope.notifier.error('Error with removing timeslot.');
-	              console.warn('error ->', result);
-	            }
-	            else
-	            {
-	              $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
-	            };
-
-	            $scope.timeliner.refresh();
-	          }
-	        );
-	      };
-	    };
-	  };
-
-
-	  /**
-	   * Set wish
-	   */
-	  $scope.wisher = function (slot)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
-
-	    Slots.setWish(
-	    {
-	      id:     slot.groupId,
-	      start:  ($rootScope.browser.mobile) ? 
-	                new Date(slot.start.datetime).getTime() / 1000 : 
-	                Dater.convert.absolute(slot.start.date, slot.start.time, true),
-	      end:    ($rootScope.browser.mobile) ? 
-	                new Date(slot.end.datetime).getTime() / 1000 : 
-	                Dater.convert.absolute(slot.end.date, slot.end.time, true),
-	      recursive:  false,
-	      // recursive:  slot.recursive,
-	      wish:       slot.wish
-	    })
-	    .then(
-	      function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error('Error with changing wish value.');
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
-	        };
-
-	        $scope.timeliner.refresh();
-	      }
-	    );
-	  };
-
-
-    setTimeout( function() 
-    {
-      $scope.self.timeline.redraw();
-    }, 100);
-
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Timeline.Navigation', [])
-
-
-.controller('timeline-navigation', 
-[
-	'$rootScope', '$scope', '$window', 
-	function ($rootScope, $scope, $window) 
-	{
-	  /**
-	   * Day & Week & Month toggle actions
-	   */
-	  $scope.timelineScoper = function (period)
-	  {
-	    $scope.timeline.current.day   = $scope.current.day;
-	    $scope.timeline.current.week  = $scope.current.week;
-	    $scope.timeline.current.month = $scope.current.month;
-
-	    switch (period)
-	    {
-	      case 'day':
-	        $scope.timeline.scope = {
-	          day:    true,
-	          week:   false,
-	          month:  false
-	        };
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
-	        });
-	      break;
-
-	      case 'week':
-	        $scope.timeline.scope = {
-	          day:    false,
-	          week:   true,
-	          month:  false
-	        };
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	        });
-	      break;
-
-	      case 'month':
-	        $scope.timeline.scope = {
-	          day:    false,
-	          week:   false,
-	          month:  true
-	        };
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
-	        });
-	      break;
-	    };
-	  };
-
-
-	  /**
-	   * Go one period in past
-	   */
-	  $scope.timelineBefore = function (timelineScope)
-	  {
-	    if ($scope.timeline.scope.day)
-	    {
-	      if ($scope.timeline.current.day != 1)
-	      {
-	        $scope.timeline.current.day--;
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
-	        });
-	      };
-	    }
-	    else if ($scope.timeline.scope.week)
-	    {
-	      if ($scope.timeline.current.week != 1)
-	      {
-	        $scope.timeline.current.week--;
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	        });
-	      };
-	    }
-	    else if ($scope.timeline.scope.month)
-	    {
-	      if ($scope.timeline.current.month != 1)
-	      {
-	        $scope.timeline.current.month--;
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
-	        });
-	      };
-	    };
-	  };
-
-
-	  /**
-	   * Go one period in future
-	   */
-	  $scope.timelineAfter = function (timelineScope)
-	  {
-	    if ($scope.timeline.scope.day)
-	    {
-	      /**
-	       * Total days in a month can change so get it start periods cache
-	       */
-	      if ($scope.timeline.current.day != $scope.periods.days.total)
-	      {
-	        $scope.timeline.current.day++;
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
-	        });
-	      };
-	    }
-	    else if ($scope.timeline.scope.week)
-	    {
-	      if ($scope.timeline.current.week != 53)
-	      {
-	        $scope.timeline.current.week++;
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	        });
-	      };
-	    }
-	    else if ($scope.timeline.scope.month)
-	    {
-	      if ($scope.timeline.current.month != 12)
-	      {
-	        $scope.timeline.current.month++;
-
-	        $scope.timeliner.load({
-	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
-	        });
-	      };
-	    };
-	  };
-
-
-
-	  /**
-	   * Go to this week
-	   */
-	  $scope.timelineThisWeek = function ()
-	  {
-	    if ($scope.timeline.current.week != new Date().getWeek())
-	    {
-	      $scope.timeliner.load({
-	        start:  $scope.periods.weeks[new Date().getWeek()].first.timeStamp,
-	        end:    $scope.periods.weeks[new Date().getWeek()].last.timeStamp
-	      });
-
-	      $scope.timeline.range = {
-	        start:  $scope.periods.weeks[new Date().getWeek()].first.day,
-	        end:    $scope.periods.weeks[new Date().getWeek()].last.day
-	      };
-	    }
-	  };
-
-
-	  /**
-	   * Go one week in past
-	   */
-	  $scope.timelineWeekBefore = function ()
-	  {
-	    if ($scope.timeline.current.week != 1)
-	    {
-	      $scope.timeline.current.week--;
-
-	      $scope.timeliner.load({
-	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	      });
-	    };
-
-	    $scope.timeline.range = {
-	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
-	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
-	    };
-	  };
-
-
-	  /**
-	   * Go one week in future
-	   */
-	  $scope.timelineWeekAfter = function ()
-	  {
-	  	if ($scope.timeline.current.week != 53)
-	    {
-	      $scope.timeline.current.week++;
-
-	      $scope.timeliner.load({
-	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	      });
-	    };
-
-  		$scope.timeline.range = {
-	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
-	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
-	    };
-	  };
-
-
-	  /**
-	   * Timeline zoom in
-	   */
-	  $scope.timelineZoomIn = function ()
-	  {
-		  $scope.self.timeline.zoom($rootScope.config.timeline.config.zoom, Date.now());
-		};
-
-
-	  /**
-	   * Timeline zoom out
-	   */
-	  $scope.timelineZoomOut = function ()
-	  {
-		  $scope.self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now());
-		};
-
-
-	  /**
-	   * Redraw timeline on window resize
-	   */
-	  $window.onresize = function ()
-	  {
-		  $scope.self.timeline.redraw();
-		};
-		
-		$scope.fullWidth = function ()
-		{
-			console.log('ok!');
-
-			$scope.self.timeline.redraw();
-		}
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Messages', [])
-
-
-/**
- * Messages controller
- */
-.controller('messages', 
-[
-	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer',
-	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer) 
-	{
-	  /**
-	   * Fix styles
-	   */
-	  $rootScope.fixStyles();
-
-	  /**
-	   * Self this
-	   */
-	  var self = this;
-
-
-	  /**
-	   * Receivers list
-	   */
-	  $scope.receviersList = Messages.receviers();
-
-
-	  /**
-	   * Set messages
-	   */
-	  $scope.messages = data;
-
-
-	  /**
-	   * Pagination
-	   */
-	  $scope.page = {
-	  	inbox: 	0,
-	  	outbox: 0,
-	  	trash: 	0
-	  };
-
-	  $scope.paginate = {
-
-	  	set: function (page, box)
-	  	{
-	  		$scope.page[box] = page;
-	  	},
-
-	  	next: function (box)
-	  	{
-	  		if ($scope.page[box] + 1 != $scope.messages[box].length)
-	  			$scope.page[box]++;
-	  	},
-
-	  	before: function (box)
-	  	{
-	  		if ($scope.page[box] != 0)
-	  			$scope.page[box]--;
-	  	}
-	  };
-
-
-	  /**
-	   * Selections
-	   */
-	  $scope.selection = {
-	    inbox: 	{},
-	    outbox: {},
-	    trash: 	{}
-	  };
-
-
-	  /**
-	   * Selection masters
-	   */
-	  $scope.selectionMaster = {
-	    inbox: 	'',
-	    outbox: '',
-	    trash: 	''
-	  };
-
-
-	  /**
-	   * Initial value for broadcasting
-	   */
-	  $scope.broadcast = {
-	    sms: 		false,
-	    email: 	false
-	  };
-
-
-	  /**
-	   * Set origin container for returning back to origin box
-	   */
-	  $scope.origin = 'inbox';
-
-
-	  /**
-	   * View setter
-	   */
-	  function setView (hash)
-	  {
-	    $scope.views = {
-	      compose: false,
-	      message: false,
-	      inbox:   false,
-	      outbox:  false,
-	      trash:   false
-	    };
-
-	    $scope.views[hash] = true;
-	  };
-
-
-	  /**
-	   * Switch between the views and set hash accordingly
-	   */
-	  $scope.setViewTo = function (hash)
-	  {
-	    $scope.$watch(hash, function ()
-	    {
-	      $location.hash(hash);
-
-	      setView(hash);
-	    });
-	  };
-
-
-	  /**
-	   * If no params or hashes given in url
-	   */
-	  if (!$location.hash())
-	  {
-	    var view = 'inbox';
-
-	    $location.hash('inbox');
-	  }
-	  else
-	  {
-	    var view = $location.hash();
-	  };
-
-
-	  /**
-	   * Set view
-	   */
-	  setView(view);
-
-	    
-	  /**
-	   * Extract view action from url and set message view
-	   */
-	  if ($location.search().uuid) setMessageView($location.search().uuid);
-
-
-	  /**
-	   * TODO
-	   * Possible bug..
-	   * Still issues with changing state of the message
-	   * 
-	   * Set given group for view
-	   */
-	  function setMessageView (id)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.loadingMessage);
-
-	    setView('message');
-
-	    $scope.setViewTo('message');
-
-	    $scope.message = Messages.find(id);
-
-
-	    console.warn('found message ->', $scope.message);
-
-
-	    /**
-	     * Change to read if message not seen yet
-	     * Check only in inbox because other box messages
-	     * can have 'NEW' state as well but those states are not shown
-	     *
-	     * Maybe only for 'trash' box to show state in later stages
-	     */
-	    if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
-	    {
-	      Messages.changeState([id], 'READ')
-	      .then(function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error('Error with changing message state.');
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          // console.log('state changed');
-	        };
-	      });
-
-	      var _inbox = [];
-
-	      angular.forEach($scope.messages.inbox, function (message, index)
-	      {
-	        if (message.uuid == $scope.message.uuid)
-	        {
-	          message.state = "READ";
-	        };
-
-	        _inbox.push(message);
-	      });
-
-	  	  $scope.messages.inbox = _inbox;
-
-	      Messages.unreadCount(); 
-	    };
-
-	    $rootScope.statusBar.off();
-	  };
-
-
-	  /**
-	   * Request for a message
-	   */
-	  $scope.requestMessage = function (current, origin)
-	  {
-	  	console.log('msg ->', current, origin);
-
-	    $scope.origin = origin;
-
-	    setMessageView(current);
-
-	    $scope.$watch($location.search(), function ()
-	    {
-	      $location.search({uuid: current});
-	    });
-	  };
-
-
-	  /**
-	   * Compose message view toggler
-	   */
-	  $scope.composeMessage = function ()
-	  {
-	    if ($scope.views.compose)
-	    {
-	      $scope.closeTabs();
-	    }
-	    else
-	    {
-	      $scope.message = {};
-
-	      $scope.setViewTo('inbox');
-	    };
-	  };
-
-
-	  /**
-	   * Reset views
-	   */
-	  $scope.closeTabs = function ()
-	  {
-	    $scope.message = {};
-
-	    $location.search({});
-
-	    setView($scope.origin);
-
-	    $scope.setViewTo($scope.origin);
-
-	    Storage.session.remove('escalation');
-	  };
-
-
-	  /**
-	   * Toggle selections
-	   */
-	  $scope.toggleSelection = function (messages, inbox, master)
-	  {
-	    var flag = (master) ? true : false;
-
-	    angular.forEach(messages, function (message, index)
-	    {
-	      $scope.selection[inbox][message.uuid] = flag;
-	    });
-	  };
-
-
-	  /**
-	   * Remove message
-	   */
-	  $scope.removeMessage = function (id)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.removing);
-
-	    var bulk = [];
-
-	    bulk.push(id);
-
-	    Messages.remove(bulk)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with removing message.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.removed);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function (messages)
-	        {
-	          $scope.messages = messages;
-
-	          $rootScope.loading = false;
-
-	          $scope.closeTabs();
-
-	          $rootScope.statusBar.off();
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Remove messages
-	   */
-	  $scope.removeMessages = function (selection)
-	  {
-	    // console.log('it is coming to bulk remove ->', selection.length);
-
-	    $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
-
-	    var ids = [];
-
-	    angular.forEach(selection, function (flag, id)
-	    {
-	      if (flag) ids.push(id);
-	    });
-
-	    Messages.remove(ids)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with removing messages.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.removed);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function (messages)
-	        {
-	          $scope.messages = messages;
-
-	          $rootScope.statusBar.off();
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Restore a message
-	   */
-	  $scope.restoreMessage = function (id)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.restoring);
-
-	    var bulk = [];
-
-	    bulk.push(id);
-
-	    Messages.restore(bulk)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with restoring message.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.restored);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function(messages)
-	        {
-	          $scope.messages = messages;
-
-	          $rootScope.statusBar.off();
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Restore messages
-	   */
-	  $scope.restoreMessages = function (selection)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.restoringSelected);
-
-	    var ids = [];
-
-	    angular.forEach(selection, function (flag, id)
-	    {
-	      if (flag) ids.push(id);
-	    });
-
-	    Messages.restore(ids)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with restoring message.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.removed);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function(messages)
-	        {
-	          $scope.messages = messages;
-
-	          $rootScope.statusBar.off();
-	        });
-	      };      
-	    });
-	  };
-
-
-	  /**
-	   * Empty trash
-	   */
-	  $scope.emptyTrash = function ()
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.emptying);
-
-	    Messages.emptyTrash()
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with emting trash.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.emptied);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function (messages)
-	        {
-	          if (messages.error)
-	          {
-	            $rootScope.notifier.error('Error with getting messages.');
-	            console.warn('error ->', messages);
-	          }
-	          else
-	          {
-	            $scope.messages = messages;
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-	    });    
-	  };
-
-
-
-		/**
-	   * Fix for not displaying original sender in multiple receivers selector
-	   * in the case that user wants to add more receivers to the list  
-	   */
-	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function (item)
-	  {
-	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
-	    {
-	  		var name = $(li).html();
-
-	  		$.each($("div#composeTab select.chzn-select option"), function (j,opt)
-	      {
-		      if(opt.innerHTML == name) opt.selected = true;
-		    });
-	  	});
-	  });
-
-
-	  /**
-	   * Reply a amessage
-	   */
-	  $scope.reply = function(message)
-	  {
-	    setView('compose');
-
-	    $scope.setViewTo('compose');
-
-	    var members = angular.fromJson(Storage.get('members')),
-	        senderId = message.requester.split('personalagent/')[1].split('/')[0],
-	        name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
-
-	    $scope.message = {
-	      subject: 'RE: ' + message.subject,
-	      receivers: [{
-	        group: 'Users', 
-	        id: senderId , 
-	        name: name
-	      }]
-	    };
-
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
-
-	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
-	  };
-
-	  
-	  /**
-	   * Send message
-	   */
-	  $scope.send = function (message, broadcast)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.sending);
-
-	    if (message.receivers)
-	    {
-	      Messages.send(message, broadcast)
-	      .then(function (uuid)
-	      {
-	        if (uuid.error)
-	        {
-	          $rootScope.notifier.error('Error with sending message.');
-	          console.warn('error ->', uuid);
-	        }
-	        else
-	        {
-	          $rootScope.notifier.success($rootScope.ui.message.sent);
-
-	          $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	          Messages.query()
-	          .then(function (messages)
-	          {
-	            if (messages.error)
-	            {
-	              $rootScope.notifier.error('Error with getting messages.');
-	              console.warn('error ->', messages);
-	            }
-	            else
-	            {
-	              $scope.messages = messages;
-
-	              $scope.closeTabs();
-
-	              $scope.requestMessage(uuid, $scope.origin);
-
-	              $rootScope.statusBar.off();
-	            };
-	          });
-	        };
-	      });
-	    }
-	    else
-	    {
-	      $rootScope.notifier.error($rootScope.ui.message.noReceivers);
-
-	      $rootScope.statusBar.off();
-	    };
-	  };
-
-	    
-	  /**
-	   * Extract escalation information
-	   */
-	  if ($location.search().escalate)
-	  {
-	    var escalation = angular.fromJson(Storage.session.get('escalation')),
-	        name = escalation.group.split('>')[1].split('<')[0],
-	        uuid = escalation.group.split('uuid=')[1].split('#view')[0];
-
-	    setTimeout (function ()
-	    {
-	      angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
-	      {
-	        if (option.innerHTML == name) option.selected = true;
-	      });
-
-	      $("div#composeTab select.chzn-select").trigger("liszt:updated");
-	    }, 100);
-
-	    $scope.message = {
-	      subject: $rootScope.ui.message.escalation,
-	      receivers: [{
-	        group: 'Groups', 
-	        id: uuid, 
-	        name: name
-	      }],
-	      body: $rootScope.ui.message.escalationBody(
-	        escalation.diff, 
-	        escalation.start.date, 
-	        escalation.start.time,
-	        escalation.end.date,
-	        escalation.end.time)
-	    };
-
-	    $scope.broadcast = {
-	      sms: true
-	    };
-	  };
-
-
-
-
-
-	  // $scope.clean = {
-	  // 	inbox: function ()
-	  // 	{
-	  // 		console.log('inbox clean');
-	  // 	},
-	  // 	outbox: function ()
-	  // 	{
-	  // 		Messages.clean($scope.messages.outbox);
-	  // 	},
-	  // 	trash: function ()
-	  // 	{
-	  // 		console.log('trash clean');	  		
-	  // 	}
-	  // }
-
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Groups', [])
-
-
-/**
- * Groups controller
- */
-.controller('groups',
-[
-	'$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
-	function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
-	{
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
-
-
-		/**
-		 * Self this
-		 */
-		var self = this,
-				params = $location.search();
-
-
-		/**
-		 * Init search query
-		 */
-		$scope.search = {
-			query: ''
-		};
-
-
-		/**
-		 * Reset selection
-		 */
-		$scope.selection = {};
-
-
-		/**
-		 * Set groups
-		 */
-		$scope.data = data;
-
-
-		/**
-		 * Grab and set roles for view
-		 */
-		$scope.roles = $rootScope.config.roles;
-
-
-		/**
-		 * Groups for dropdown
-		 */
-		$scope.groups = data.groups;
-
-
-		var uuid, view;
-
-		/**
-		 * If no params or hashes given in url
-		 */
-		if (!params.uuid && !$location.hash())
-		{
-			uuid = data.groups[0].uuid;
-			view = 'view';
-
-			$location.search({uuid: data.groups[0].uuid}).hash('view');
-		}
-		else
-		{
-			uuid = params.uuid;
-			view = $location.hash();
-		}
-
-
-		/**
-		 * Set group
-		 */
-		setGroupView(uuid);
-
-
-		/**
-		 * Set view
-		 */
-		setView(view);
-
-
-		/**
-		 * Set given group for view
-		 */
-		function setGroupView (id)
-		{
-			angular.forEach(data.groups, function (group, index)
-			{
-				if (group.uuid == id) $scope.group = group;
-			});
-
-			$scope.members = data.members[id];
-
-			$scope.current = id;
-
-			wisher(id);
-		}
-
-
-		function wisher (id)
-		{
-			$scope.wished = false;
-
-			Groups.wish(id)
-			.then(function (wish)
-			{
-				$scope.wished = true;
-
-				$scope.wish = wish.count;
-
-				$scope.popover = {
-					id: id,
-					wish: wish.count
-				};
-			});
-		}
-
-
-		/**
-		 * Set wish for the group
-		 */
-		$scope.saveWish = function (id, wish)
-		{
-			// console.warn('setting the wish:' + wish + ' for the group:', id);
-
-			$rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
-
-			Slots.setWish(
-			{
-				id:     id,
-				start:  255600,
-				end:    860400,
-				recursive:  true,
-				wish:   wish
-			})
-			.then(
-				function (result)
-				{
-					if (result.error)
-					{
-						$rootScope.notifier.error('Error with changing wish value.');
-						console.warn('error ->', result);
-					}
-					else
-					{
-						$rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
-					}
-
-					wisher(id);
-				}
-			);
-
-		};
-
-
-		/**
-		 * Request for a group
-		 */
-		$scope.requestGroup = function (current, switched)
-		{
-			setGroupView(current);
-
-			$scope.$watch($location.search(), function ()
-			{
-				$location.search({uuid: current});
-			});
-
-			if (switched)
-			{
-				if ($location.hash() != 'view') $location.hash('view');
-
-				setView('view');
-			}
-		};
-
-
-		/**
-		 * View setter
-		 */
-		function setView (hash)
-		{
-			$scope.views = {
-				view:   false,
-				add:    false,
-				edit:   false,
-				search: false,
-				member: false
-			};
-
-			$scope.views[hash] = true;
-		}
-
-
-		/**
-		 * Switch between the views and set hash accordingly
-		 */
-		$scope.setViewTo = function (hash)
-		{
-			$scope.$watch(hash, function ()
-			{
-				$location.hash(hash);
-
-				setView(hash);
-			});
-		};
-
-
-		/**
-		 * Toggle new group button
-		 */
-		$scope.addGroupForm = function ()
-		{
-			if ($scope.views.add)
-			{
-				$scope.closeTabs();
-			}
-			else
-			{
-				$scope.groupForm = {};
-
-				$scope.setViewTo('add');
-			}
-		};
-
-
-		/**
-		 * New member
-		 */
-		$scope.newMemberForm = function ()
-		{
-			if ($scope.views.member)
-			{
-				$scope.closeTabs();
-			}
-			else
-			{
-				$scope.memberForm = {};
-
-				$scope.setViewTo('member');
-			}
-		};
-
-
-		/**
-		 * Edit a group
-		 */
-		$scope.editGroup = function (group)
-		{
-			$scope.setViewTo('edit');
-
-			$scope.groupForm = {
-				id: group.uuid,
-				name: group.name
-			};
-		};
-
-
-		/**
-		 * Close inline form
-		 */
-		$scope.closeTabs = function ()
-		{
-			$scope.groupForm = {};
-
-			$scope.memberForm = {};
-
-			$scope.setViewTo('view');
-		};
-
-
-		/**
-		 * Search for members
-		 */
-		$scope.searchMembers = function (query)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
-
-			Groups.search(query).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error('Error with search.');
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$scope.search = {
-						query: '',
-						queried: query
-					};
-
-					$scope.candidates = result;
-
-					$scope.setViewTo('search');
-
-					$rootScope.statusBar.off();
-				}
-			});
-		};
-
-
-		/**
-		 * Add member to a group
-		 */
-		$scope.addMember = function (candidate)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
-
-			Groups.addMember(candidate).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error('Error with adding a member.');
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.memberAdded);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error('Error with getting groups and users.');
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Remove member from a group
-		 */
-		$scope.removeMember = function (member, group)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.removingMember);
-
-			Groups.removeMember(member, group).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error('Error with removing a member.');
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error('Error with getting groups and users.');
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Remove members
-		 */
-		$scope.removeMembers = function (selection, group)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
-
-			Groups.removeMembers(selection, group).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error('Error with removing members.');
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.removed);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					$scope.selection = {};
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error('Error with getting groups and users.');
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-
-			/**
-			 * TODO
-			 * not working to reset master checkbox!
-			 */
-			//$scope.selectionMaster = {};
-		};
-
-
-		/**
-		 * Save a group
-		 */
-		$scope.groupSubmit = function (group)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.saving);
-
-			Groups.save(group).
-			then(function (returned)
-			{
-				if (returned.error)
-				{
-					$rootScope.notifier.error('Error with saving group.');
-					console.warn('error ->', returned);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.groupSaved);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error('Error with getting groups and users.');
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.closeTabs();
-
-							$scope.data = data;
-
-							angular.forEach(data.groups, function (group, index)
-							{
-							if (group.uuid == returned)
-							{
-								$scope.groups = data.groups;
-
-								angular.forEach(data.groups, function (g, index)
-								{
-									if (g.uuid == group.uuid) $scope.group = g;
-								});
-
-								$scope.members = data.members[group.uuid];
-
-								$scope.current = group.uuid;
-
-								$scope.$watch($location.search(), function ()
-								{
-									$location.search({uuid: group.uuid});
-								}); // end of watch
-
-							} // end of if
-
-							}); // end of foreach
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Save a member
-		 */
-		$scope.memberSubmit = function (member)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
-
-			Profile.register(member).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					if (result.error.status === 409)
-					{
-						$rootScope.notifier.error('Username is already registered.');
-
-						// $scope.memberForm = {};
-
-						$rootScope.statusBar.off();
-					}
-					else
-					{
-						$rootScope.notifier.error('Error with registering a member.');
-					}
-					
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error('Error with getting groups and users.');
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$location.path('/profile/' + member.username).hash('profile');
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Delete a group
-		 */
-		$scope.deleteGroup = function (id)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.deleting);
-
-			Groups.remove(id).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error('Error with deleting a group.');
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.deleted);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error('Error with getting groups and users.');
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							angular.forEach(data.groups, function (group, index)
-							{
-								$scope.groups = data.groups;
-
-								$scope.group = data.groups[0];
-
-								$scope.members = data.members[data.groups[0].uuid];
-
-								$scope.current = data.groups[0].uuid;
-
-								$scope.$watch($location.search(),
-									function ()
-									{
-										$location.search({uuid: data.groups[0].uuid});
-									}
-								); // end of watch
-							}); // end of foreach
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Selection toggler
-		 */
-		$scope.toggleSelection = function (group, master)
-		{
-			var flag = (master) ? true : false,
-					members = angular.fromJson(Storage.get(group.uuid));
-
-			angular.forEach(members, function (member, index)
-			{
-				$scope.selection[member.uuid] = flag;
-			});
-		};
-
-
-		/**
-		 * Not used in groups yet but login uses modal call..
-		 * 
-		 * Fetch parent groups
-		 */
-		$scope.fetchParent = function ()
-		{
-			Groups.parents()
-			.then(function (result)
-			{
-				console.warn('parent -> ', result);
-			});
-		};
-
-		/**
-		 * Not used in groups yet..
-		 * 
-		 * Fetch parent groups
-		 */
-		$scope.fetchContainers = function (id)
-		{
-			Groups.containers(id)
-			.then(function (result)
-			{
-				console.warn('containers -> ', result);
-			});
-		};
-
-
-
-
-
-
-
-
-
-
-      // var filesTreeGrid;
-      // var foldersTreeGrid;
-
-      // // Called when the page is loaded
-      // function draw() {
-      //   // randomly generate some files
-      //   var files = [];
-      //   for (var i = 0; i < 50; i++) {
-      //     files.push({
-      //       'name': 'File ' + i,
-      //       'size': (Math.round(Math.random() * 50) * 10 + 100) + ' kB',
-      //       'date': (new Date()).toDateString(),
-      //       '_id': i     // this is a hidden field, as it starts with an underscore
-      //     });
-      //   }
-        
-      //   // randomly generate folders, containing a dataconnector which supports
-      //   // drag and drop
-      //   var folders = [];
-      //   var chars = 'ABCDE';
-      //   for (var i in chars) {
-      //     var c = chars[i];
-      //     var options = {
-      //       'dataTransfer' : {
-      //         'allowedEffect': 'move',
-      //         'dropEffect': 'move'
-      //       }
-      //     };
-      //     var dataConnector = new links.DataTable([], options);
-      //     var item = {
-      //       'name': 'Folder ' + c, 
-      //       'files': dataConnector, 
-      //       '_id': c
-      //     };
-      //     folders.push(item);
-      //   }
-      //   folders.push({'name': 'File X', '_id': 'X'});
-      //   folders.push({'name': 'File Y', '_id': 'Y'});
-      //   folders.push({'name': 'File Z', '_id': 'Z'});
-
-      //   // specify options
-      //   var treeGridOptions = {
-      //     'width': '350px',
-      //     'height': '400px'
-      //   };  
-
-      //   // Instantiate treegrid object with files
-      //   var filesContainer = document.getElementById('files');
-      //   var filesOptions = {
-      //     'columns': [
-      //       {'name': 'name', 'text': 'Name', 'title': 'Name of the files'},
-      //       {'name': 'size', 'text': 'Size', 'title': 'Size of the files in kB (kilo bytes)'},
-      //       {'name': 'date', 'text': 'Date', 'title': 'Date the file is last updated'}
-      //     ],
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'none'
-      //     }
-      //   };
-      //   filesTreeGrid = new links.TreeGrid(filesContainer, treeGridOptions);
-      //   var filesDataConnector = new links.DataTable(files, filesOptions);
-      //   /*
-      //   filesDataConnector.setFilters([{
-      //     'field': 'size',
-      //     'order': 'ASC'
-      //     //'startValue': '300 kB',
-      //     //'endValue': '500 kB',
-      //   }]);
-      //   //*/
-      //   filesTreeGrid.draw(filesDataConnector);    
-
-      //   // Instantiate treegrid object with folders
-      //   var foldersOptions = {};
-      //   //* TDOO: cleanup temporary foldersOptions
-      //   var foldersOptions = {
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'move'
-      //     }
-      //   };
-      //   //*/
-      //   var foldersContainer = document.getElementById('folders');
-      //   var foldersDataConnector = new links.DataTable(folders, foldersOptions);
-      //   foldersTreeGrid = new links.TreeGrid(foldersContainer, treeGridOptions);
-      //   foldersTreeGrid.draw(foldersDataConnector);
-      // }
-
-      // draw();
-
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Profile', [])
-
-
-/**
- * Profile controller
- */
-.controller('profile', 
-[
-	'$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'MD5', 
-	function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5) 
-	{
-	  /**
-	   * Fix styles
-	   */
-	  $rootScope.fixStyles();
-
-
-	  /**
-	   * Pass the self
-	   */
-		$scope.self = this;
-
-
-	  /**
-	   * Pass periods
-	   */
-	  $scope.periods = Dater.getPeriods();
-
-
-	  /**
-	   * Pass current
-	   */
-	  $scope.current = {
-      day:    Date.today().getDayOfYear() + 1,
-      week:   new Date().getWeek(),
-      month:  new Date().getMonth() + 1
-    };
-
-
-	  /**
-	   * Set data for view
-	   */
-	  if (data.user) data.user 	= data.slots.data;
-	  $scope.data = data;
-
-
-	  /**
-	   * Get groups of user
-	   */
-	  $scope.groups = Groups.getMemberGroups($route.current.params.userId);
-
-
-	  /**
-	   * Default values for passwords
-	   */
-	  $scope.passwords = {
-	    current: 	'',
-	    new1: 		'',
-	    new2: 		''
-	  };
-
-
-	  /**
-	   * Default form views
-	   */
-	  $scope.forms = {
-	    add:  false,
-	    edit: false
-	  };
-
-
-	  /**
-	   * Slot form toggler
-	   */
-	  $scope.toggleSlotForm = function ()
-	  {
-	    if ($scope.forms.add)
-	    {
-	      $scope.resetInlineForms();
-	    }
-	    else
-	    {
-	      $scope.slot = {};
-
-	      $scope.slot = {
-	        start: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        end: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        state:      '',
-	        recursive:  false,
-	        id:         ''
-	      };
-
-	      $scope.forms = {
-	        add: 	true,
-	        edit: false
-	      };
-	    }
-	  };
-
-
-	  /**
-	   * Reset inline forms
-	   */
-	  $scope.resetInlineForms = function ()
-	  {
-	    $scope.slot = {};
-
-	    $scope.original = {};
-
-	    $scope.forms = {
-	      add:  false,
-	      edit: false
-	    };
-	  };
-
-
-	  /**
-	   * Extract view action from url and set view
-	   */
-	  setView($location.hash());
-
-
-	  /**
-	   * View setter
-	   */
-	  function setView (hash)
-	  {
-	    $scope.views = {
-	      profile:  false,
-	      edit:     false,
-	      password: false,
-	      timeline: false
-	    };
-
-	    $scope.views[hash] = true;
-
-	    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
-	  };
-
-
-	  /**
-	   * Switch between the views and set hash ccordingly
-	   */
-	  $scope.setViewTo = function (hash)
-	  {
-	    $scope.$watch($location.hash(), function ()
-	    {
-	      $location.hash(hash);
-
-	      setView(hash);
-	    });
-	  };
-
-
-	  /**
-	   * Save user
-	   */
-	  $scope.save = function (resources)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
-
-	    Profile.save($route.current.params.userId, resources)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error('Error with saving profile information.');
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
-
-	        var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
-
-	        Profile.get($route.current.params.userId, flag)
-	        .then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error('Error with getting profile data.');
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
-
-	            $scope.data = data;
-
-	            $rootScope.statusBar.off();
-	          };
-	        });
-	      };
-	    });
-	  };
-
-
-	  /**
-	   * Change passwords
-	   */
-	  $scope.change = function (passwords)
-	  {
-	    if (passwords.new1 == '' || passwords.new2 == '')
-	    {
-	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
-
-	      return false;
-	    };
-
-	    if (passwords.new1 != passwords.new2)
-	    {
-	      $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
-
-	      return false;
-	    }
-	    else if ($rootScope.app.resources.askPass == MD5(passwords.current))
-	    {
-	      $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
-
-	      Profile.changePassword(passwords)
-	      .then(function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error('Error with changing password.');
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
-
-	          Profile.get($rootScope.app.resources.uuid, true)
-	          .then(function (data)
-	          {
-	            if (data.error)
-	            {
-	              $rootScope.notifier.error('Error with getting profile data.');
-	              console.warn('error ->', data);
-	            }
-	            else
-	            {
-	              $rootScope.notifier.success($rootScope.ui.profile.passChanged);
-
-	              $scope.data = data;
-
-	              $rootScope.statusBar.off();
-	            };
-	          });
-	        };
-	      });
-	    }
-	    else
-	    {
-	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
-	    };
-	  };
-	  
-
-	  /**
-	   * Render timeline if hash is timeline
-	   */
-	  if ($location.hash() == 'timeline')
-	  {
-	  	timelinebooter();
-	  };
-
-
-	  /**
-	   * Redraw timeline
-	   */
-	  $scope.redraw = function ()
-	  {
-	  	timelinebooter();
-	  };
-
-
-	  function timelinebooter ()
-	  {
-      $scope.timeline = {
-      	id: 'userTimeline',
-      	main: false,
-      	user: {
-      		id: 	$route.current.params.userId
-      	},
-        current: $scope.current,
-        options: {
-          start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
-          end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
-          min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
-          max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
-        },
-        range: {
-          start: 	$scope.periods.weeks[$scope.current.week].first.day,
-          end: 		$scope.periods.weeks[$scope.current.week].last.day
-        },
-        config: {
-          legenda:    {},
-          legendarer: $rootScope.config.timeline.config.legendarer,
-          states:     $rootScope.config.timeline.config.states
-        }
-      };
-
-      var states = {};
-
-      angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
-
-      $scope.states = states;
-
-      angular.forEach($rootScope.config.timeline.config.states, function (state, index)
-      {
-        $scope.timeline.config.legenda[index] = true;
-      });
-
-      $('#timeline').html('');
-      $('#timeline').append('<div id="userTimeline"></div>');
-	  };
-
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Settings', [])
-
-
-/**
- * Settings controller
- */
-.controller('settings', 
-[
-	'$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile', 'Storage', 
-	function ($rootScope, $scope, $window, data, Settings, Profile, Storage) 
-	{
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
-
-
-	  /**
-	   * Pass the settings
-	   */
-	  $scope.settings = angular.fromJson(data);
-
-
-	  /**
-	   * User settings: Languages
-	   */
-	  var languages = {};
-
-	  angular.forEach(ui, function (lang, index) { languages[lang.meta.name] = lang.meta.label; });
-
-	  $scope.languages = languages;
-
-
-	  /**
-	   * Pass the groups
-	   */
-	   var groups = {};
-
-	   angular.forEach(Storage.local.groups(), function (group, index)
-	   {
-	     groups[group.uuid] = group.name;
-	   });
-
-	   $scope.groups = groups;
-
-
-	  /**
-	   * Save user settings
-	   */
-	  $scope.save = function (settings)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.settings.saving);
-
-	    Settings.save($rootScope.app.resources.uuid, settings)
-	    .then(function (saved)
-	    {
-	      $rootScope.notifier.success($rootScope.ui.settings.saved);
-
-	      $rootScope.statusBar.display($rootScope.ui.settings.refreshing);
-
-	      Profile.get($rootScope.app.resources.uuid, true)
-	      .then(function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error('Error with saving settings.');
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
-
-	          $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
-
-	          $rootScope.statusBar.off();
-	        };
-	      })
-	    });
-	  };
-
-
-	  /**
-	   * Google authorization
-	   */
-	  $scope.authGoogle = function ()
-	  {               
-	    window.location = 'http://3rc2.ask-services.appspot.com/auth/google' + 
-	                      '?agentUrl=http://3rc2.ask-services.appspot.com/eveagents/personalagent/' + 
-	                      $rootScope.app.resources.uuid + 
-	                      '/' + 
-	                      '&agentMethod=createGoogleAgents' +
-	                      '&applicationCallback=' + 
-	                      location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
-	                      '/index.html' + 
-	                      /**
-	                       * Fix a return value
-	                       */
-	                      '?account=' +
-	                      $rootScope.app.resources.uuid +
-	                      encodeURIComponent('#') + 
-	                      '/settings';
-	  };
-
-	}
-]);;/*jslint node: true */
-/*global angular */
-'use strict';
-
-
-angular.module('WebPaige.Controllers.Help', [])
-
-
-/**
- * Help controller
- */
-.controller('help',
-[
-	'$rootScope', '$scope',
-	function ($rootScope, $scope)
-	{
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
-	}
-]);;/*jslint node: true */
-/*global angular */
 /*global $ */
 'use strict';
 
@@ -8017,6 +4009,134 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 
 /**
+ * Notification item
+ */
+.directive('notificationItem',
+  function ($compile)
+  {
+    return {
+      restrict: 'E',
+      rep1ace:  true,
+      templateUrl: 'dist/views/messages-scheadule-item.html',
+      link: function (scope, element, attrs)
+      {
+        /**
+         * Pass the scheadule data
+         */
+        scope.s = scope.scheadule;
+
+        // element.html(template).show();
+        // $compile(element.contents())(scope);
+
+        /**
+         * Serve to the controller
+         */
+        scope.remover = function (key)
+        {
+          console.log('coming to remover');
+
+          scope.$parent.$parent.remover(key);
+        };
+      },
+      scope: {
+        scheadule: '='
+      }
+    };
+
+  }
+)
+
+
+// *
+//  * Notification item
+ 
+// .directive('notificationItem',
+//   function ($compile)
+//   {
+//     return {
+//       restrict: 'E',
+//       rep1ace:  true,
+//       link: function (scope, element, attrs)
+//       {
+//         /**
+//          * Pass the scheadule data
+//          */
+//         scope.s = scope.scheadule;
+
+//         var template =  '<div class="scheadule">' + 
+//                           '<div class="timer">' +
+//                             '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
+//                             '<i class="icon-time" style="margin-top: -3px;"></i>' +
+//                           '</div>' +
+//                           '<ul>' +
+//                             '<li>' +
+//                               '<label for="monday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="monday-{{s.exact}}" ng-model="s.mon">&nbsp;Monday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="tuesday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="tuesday-{{s.exact}}" ng-model="s.tue">&nbsp;Tuesday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="wednesday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="wednesday-{{s.exact}}" ng-model="s.wed">&nbsp;Wednesday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="thursday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="thursday-{{s.exact}}" ng-model="s.thu">&nbsp;Thursday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="friday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="friday-{{s.exact}}" ng-model="s.fri">&nbsp;Friday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="saturday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="saturday-{{s.exact}}" ng-model="s.sat">&nbsp;Saturday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li>' +
+//                               '<label for="sunday-{{s.exact}}">' +
+//                                 '<input type="checkbox" id="sunday-{{s.exact}}" ng-model="s.sun">&nbsp;Sunday' +
+//                               '</label>' +
+//                             '</li>' +
+//                             '<li><i class="icon-calendar"></i></li>' + 
+//                           '</ul>' +
+//                           '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
+//                         '</div>';
+
+//         /**
+//          * Showtime
+//          */
+//         element.html(template).show();
+
+//         /**
+//          * Compile the hottie
+//          */
+//         $compile(element.contents())(scope);
+
+//         /**
+//          * Serve to the controller
+//          */
+//         scope.remover = function (key)
+//         {
+//           scope.$parent.$parent.remover(key);
+//         };
+//       },
+//       scope: {
+//         scheadule: '='
+//       }
+//     };
+
+//   }
+// )
+
+
+/**
  * Daterangepicker
  */
 .directive('daterangepicker',
@@ -8037,11 +4157,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
           // startDate: startDate,
           // endDate: endDate,
           ranges: {
-            'Today':        ['today', 'tomorrow'],
-            'Tomorrow':     ['tomorrow', new Date.today().addDays(2)],
+            'Today':        ['today',     'tomorrow'],
+            'Tomorrow':     ['tomorrow',  new Date.today().addDays(2)],
             'Yesterday':    ['yesterday', 'today'],
-            'Next 3 Days':  ['today', new Date.create().addDays(3)],
-            'Next 7 Days':  ['today', new Date.create().addDays(7)]
+            'Next 3 Days':  ['today',     new Date.create().addDays(3)],
+            'Next 7 Days':  ['today',     new Date.create().addDays(7)]
           }
         },
         function (start, end)
@@ -8056,13 +4176,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
             if (diff <= 86400000)
             {
               scope.timeline.range = {
-                start: start,
-                end: start
+                start:  start,
+                end:    start
               };
               scope.timeline.scope = {
-                day: true,
-                week: false,
-                month: false
+                day:    true,
+                week:   false,
+                month:  false
               };
             }
             /**
@@ -8071,13 +4191,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
             else if (diff < 604800000)
             {
               scope.timeline.range = {
-                start: start,
-                end: end
+                start:  start,
+                end:    end
               };
               scope.timeline.scope = {
-                day: false,
-                week: true,
-                month: false
+                day:    false,
+                week:   true,
+                month:  false
               };
             }
             /**
@@ -8086,19 +4206,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
             else if (diff > 604800000)
             {
               scope.timeline.range = {
-                start: start,
-                end: end
+                start:  start,
+                end:    end
               };
               scope.timeline.scope = {
-                day: false,
-                week: false,
-                month: true
+                day:    false,
+                week:   false,
+                month:  true
               };
             }
 
             $rootScope.$broadcast('timeliner', {
-              start: start,
-              end: end
+              start:  start,
+              end:    end
             });
 
           });
@@ -9338,6 +5458,7 @@ angular.module('WebPaige.Services.Strings', ['ngResource'])
   function ()
   {
     return {
+
       /**
        * Truncate string from words with ..
        */
@@ -9348,6 +5469,15 @@ angular.module('WebPaige.Services.Strings', ['ngResource'])
              s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
 
          return toLong ? s_ + '..' : s_;
+      },
+
+      /**
+       * To title case
+       */
+      toTitleCase: function (str)
+      {
+        if (str)
+          return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
       }
     }
   }
@@ -10177,6 +6307,224 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
 
     }
   }
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Services.Offsetter', ['ngResource'])
+
+
+/**
+ * Offsetter Service
+ */
+.factory('Offsetter',
+[
+  '$rootScope',
+  function ($rootScope)
+  {
+		/**
+		 * General offset constructor
+		 */
+		var constructor = {
+			/**
+			 * Produce offsets for the view
+			 */
+			factory: function (data)
+			{
+				/**
+				 * Defaults
+				 */
+				var max     = 1000 * 60 * 60 * 24 * 7,
+						day     = 1000 * 60 * 60 * 24,
+						hour    = 1000 * 60 * 60,
+						minute  = 1000 * 60,
+						offsets = [];
+
+				/**
+				 * Loop through array of offsets
+				 */
+				angular.forEach(data, function (offset, index)
+				{
+					/**
+					 * Reset and calculate
+					 */
+					var days    = 0,
+							hours   = 0,
+							minutes = 0,
+							offset_tmp;
+
+					hours   = offset % day;
+					days    = offset - hours;
+					minutes = offset % hour;
+
+					var total   = {
+								days:     Math.floor(days / day),
+								hours:    Math.floor(hours / hour),
+								minutes:  Math.floor(minutes / minute)
+							};
+
+					/**
+					 * Buffer offset container
+					 */
+					offset_tmp = {
+						value:	offset,
+						exact:	offset % day,
+						mon:		false,
+						tue:		false,
+						wed:		false,
+						thu:		false,
+						fri:		false,
+						sat:		false,
+						sun:		false,
+						hour:		total.hours,
+						minute: total.minutes
+					};
+
+					/**
+					 * If one digit zero's
+					 */
+					if (total.hours < 10)	total.hours	= '0' + total.hours;
+					if (total.minutes < 10) total.minutes = '0' + total.minutes;
+
+					/**
+					 * Construct time
+					 */
+					offset_tmp.time = total.hours + ':' + total.minutes;
+
+					/**
+					 * Day togglers
+					 */
+					switch (total.days)
+					{
+						case 0:   offset_tmp.mon = true;   break;
+						case 1:   offset_tmp.tue = true;   break;
+						case 2:   offset_tmp.wed = true;   break;
+						case 3:   offset_tmp.thu = true;   break;
+						case 4:   offset_tmp.fri = true;   break;
+						case 5:   offset_tmp.sat = true;   break;
+						case 6:   offset_tmp.sun = true;   break;
+					}
+
+					/**
+					 * Push the temp offset
+					 */
+					offsets.push(offset_tmp);
+				});
+
+				/**
+				 * New offsets in onbject form
+				 */
+				var noffs = {};
+
+				/**
+				 * Loop through the offsets array for contrcuting the new offsets object
+				 */
+				angular.forEach(offsets, function (offset, index)
+				{
+					/**
+					 * Check whether key(exact) is defined in the obejct otherwise create it
+					 */
+					noffs[offset.exact]					= noffs[offset.exact] || {};
+
+					/**
+					 * Pass time's
+					 */
+					noffs[offset.exact].hour		=	offset.hour;
+					noffs[offset.exact].minute	= offset.minute;
+					noffs[offset.exact].time		= offset.time;
+
+					/**
+					 * If no exact value is defined
+					 */
+					noffs[offset.exact].exact		= offset.exact;
+
+					/**
+					 * Pass day togglers if they exist or overwrite or create
+					 */
+					noffs[offset.exact].mon			= (noffs[offset.exact].mon) ? noffs[offset.exact].mon : offset.mon;
+					noffs[offset.exact].tue			= (noffs[offset.exact].tue) ? noffs[offset.exact].tue : offset.tue;
+					noffs[offset.exact].wed			= (noffs[offset.exact].wed) ? noffs[offset.exact].wed : offset.wed;
+					noffs[offset.exact].thu			= (noffs[offset.exact].thu) ? noffs[offset.exact].thu : offset.thu;
+					noffs[offset.exact].fri			= (noffs[offset.exact].fri) ? noffs[offset.exact].fri : offset.fri;
+					noffs[offset.exact].sat			= (noffs[offset.exact].sat) ? noffs[offset.exact].sat : offset.sat;
+					noffs[offset.exact].sun			= (noffs[offset.exact].sun) ? noffs[offset.exact].sun : offset.sun;
+				});
+
+				/**
+				 * Return the beauty
+				 */
+				return noffs;
+			},
+
+
+			/**
+			 * Convert to back-end friendly array
+			 */
+			arrayed: function (offsets)
+			{
+				/**
+				 * Defaults
+				 */
+				var day     = 1000 * 60 * 60 * 24,
+						hour    = 1000 * 60 * 60,
+						minute  = 1000 * 60,
+						arrayed = [];
+
+				/**
+				 * Loop through array of offsets
+				 */
+				angular.forEach(offsets, function (offset, index)
+				{
+					var hours		= Number(offset.hour) * hour,
+							minutes	= Number(offset.minute) * minute,
+							diff		= hours + minutes;
+
+					if (offset.mon)
+					{
+						arrayed.push(diff);
+					}
+
+					if (offset.tue)
+					{
+						arrayed.push(diff + day);
+					}
+
+					if (offset.wed)
+					{
+						arrayed.push(diff + (day * 2));
+					}
+
+					if (offset.thu)
+					{
+						arrayed.push(diff + (day * 3));
+					}
+
+					if (offset.fri)
+					{
+						arrayed.push(diff + (day * 4));
+					}
+
+					if (offset.sat)
+					{
+						arrayed.push(diff + (day * 5));
+					}
+
+					if (offset.sun)
+					{
+						arrayed.push(diff + (day * 6));
+					}
+				});
+
+				return arrayed;
+			}
+		};
+
+		return {
+			factory: constructor.factory,
+			arrayed: constructor.arrayed
+		};
+  }
 ]);;'use strict';
 
 
@@ -10757,6 +7105,27 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 /**
+ * Make first letter capital
+ */
+.filter('toTitleCase', 
+[
+	'Strings', 
+	function (Strings) 
+	{
+		return function (txt)
+		{
+	     return Strings.toTitleCase(txt);
+	  }
+	}
+])
+
+
+
+
+
+
+
+/**
  * Count messages in box
  */
 .filter('countBox',
@@ -10774,4 +7143,4767 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    return total;
 	  }
 	}
-);
+)
+
+
+
+
+
+
+
+
+/**
+ * Convert offsets array to nicely format in scheaduled jobs
+ */
+.filter('nicelyOffsets', 
+[
+	'Dater', 'Storage', 'Offsetter',
+	function (Dater, Storage, Offsetter)
+	{
+		return function (data)
+		{
+			var offsets 	= Offsetter.factory(data),
+					compiled 	= '';
+
+			angular.forEach(offsets, function (offset, index)
+			{
+				compiled += '<div style="display:block; margin-bottom: 5px;">';
+
+				compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
+
+				if (offset.mon) compiled += '<span class="muted"><small><i>maandag,</i></small></span>';
+				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
+				if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
+				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
+				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
+				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
+				if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+
+				compiled = compiled.substring(0, compiled.length - 20);
+
+				compiled = compiled += '</i></small></span>';
+
+				compiled += '</div>';
+			});
+
+			return compiled;
+		}
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * Convert array of audience to a nice list
+ */
+.filter('nicelyAudience', 
+[
+	'Storage',
+	function (Storage)
+	{
+		return function (data)
+		{
+			var members 	= angular.fromJson(Storage.get('members')),
+	    		groups 		= angular.fromJson(Storage.get('groups')),
+	    		audience 	= [];
+
+			angular.forEach(data, function (recipient, index)
+			{
+	  		var name;
+
+	  		if (members[recipient])
+	  		{
+		  		name = members[recipient].name;
+	  		}
+	  		else
+	  		{
+	  			angular.forEach(groups, function (group, index)
+	  			{
+	  				if (group.uuid == recipient) name = group.name;
+	  			});
+	  		}
+
+		  	audience += name + ', ';
+			});
+
+			return audience.substring(0, audience.length - 2);
+		}
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Login', [])
+
+
+/**
+ * Login controller
+ */
+.controller('login', 
+[
+	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5', 
+	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) 
+	{
+	  /**
+	   * Self this
+	   */
+		var self = this;
+
+	  /**
+	   * Redirect to dashboard if logged in
+	   */
+	  // if (Session.check()) redirectToDashboard();
+
+
+	  /**
+	   * Set default views
+	   */
+		if ($routeParams.uuid && $routeParams.key)
+	  {
+			$scope.views = {
+				changePass: true,
+			};
+
+			$scope.changepass = {
+				uuid: $routeParams.uuid,
+				key:  $routeParams.key,
+			}
+		}
+	  else
+	  {
+			$scope.views = {
+				login: true,
+				forgot: false
+			};
+		};
+
+
+	  /**
+	   * KNRM users for testing
+	   */
+	  if ($rootScope.config.demo_users) $scope.demo_users = demo_users;
+
+
+	  /**
+	   * Real KNRM users for testing
+	   */
+	   $scope.knrmLogin = function (user)
+	   {
+	     $('#login button[type=submit]')
+	       .text('Login..')
+	       .attr('disabled', 'disabled');
+
+	    self.auth(user.uuid, user.resources.askPass);
+	   };
+
+	  
+	  /**
+	   * Set default alerts
+	   */
+	  $scope.alert = {
+	    login: {
+	      display: false,
+	      type: '',
+	      message: ''
+	    },
+	    forgot: {
+	      display: false,
+	      type: '',
+	      message: ''
+	    }
+	  };
+
+
+	  /**
+	   * Init rootScope app info container
+	   */
+	  if (!Storage.session.get('app')) Storage.session.add('app', '{}');
+
+
+	  /**
+	   * TODO
+	   * Lose this jQuery stuff later on!
+	   * 
+	   * Jquery solution of toggling between login and app view
+	   */
+	  $('.navbar').hide();
+	  $('#footer').hide();
+	  $('#watermark').hide();
+	  $('body').css({
+	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+	    'backgroundSize': 'cover'
+	  });
+
+
+	  /**
+	   * TODO
+	   * use native JSON functions of angular and Store service
+	   */
+	  var logindata = angular.fromJson(Storage.get('logindata'));
+
+	  if (logindata && logindata.remember) $scope.logindata = logindata;
+
+
+	  /**
+	   * TODO
+	   * Remove unneccessary DOM manipulation
+	   * Use cookies for user credentials
+	   * 
+	   * Login trigger
+	   */
+	  $scope.login = function()
+	  {
+	    $('#alertDiv').hide();
+
+	    if (!$scope.logindata ||
+	        !$scope.logindata.username || 
+	        !$scope.logindata.password)
+	    {
+	      $scope.alert = {
+	        login: {
+	          display: true,
+	          type: 'alert-error',
+	          message: $rootScope.ui.login.alert_fillfiled
+	        }
+	      };
+
+	      $('#login button[type=submit]')
+	        .text('Login')
+	        .removeAttr('disabled');
+
+	      return false;     
+	    };
+
+	    $('#login button[type=submit]')
+	      .text('Login..')
+	      .attr('disabled', 'disabled');
+
+	    Storage.add('logindata', angular.toJson({
+	      username: $scope.logindata.username,
+	      password: $scope.logindata.password,
+	      remember: $scope.logindata.remember
+	    }));
+
+	    self.auth( $scope.logindata.username, MD5($scope.logindata.password ));
+	  };
+
+
+	  /**
+	   * Authorize user
+	   */
+	  self.auth = function (uuid, pass)
+	  {
+	    User.login(uuid.toLowerCase(), pass)
+	    .then(function (result)
+		  {
+	      if (result.status == 400)
+	      {
+	        $scope.alert = {
+	          login: {
+	            display: true,
+	            type: 'alert-error',
+	            message: $rootScope.ui.login.alert_wrongUserPass
+	          }
+	        };
+
+	        $('#login button[type=submit]')
+	          .text('Login')
+	          .removeAttr('disabled');
+
+	        return false;
+	      }
+	      else
+	      {
+	        Session.set(result["X-SESSION_ID"]);
+
+	        self.preloader();
+	      };
+		  });
+	  };
+
+
+	  /**
+	   * TODO
+	   * What happens if preloader stucks?
+	   * Optimize preloader and messages
+	   * 
+	   * Initialize preloader
+	   */
+	  self.preloader = function()
+	  {
+	    $('#login').hide();
+	    $('#download').hide();
+	    $('#preloader').show();
+
+	    self.progress(30, $rootScope.ui.login.loading_User);
+
+	    User.resources()
+	    .then(function (resources)
+	    {
+	      if (resources.error)
+	      {
+	        console.warn('error ->', resources);
+	      }
+	      else
+	      {
+	        $rootScope.app.resources = resources;
+
+	        self.progress(70, $rootScope.ui.login.loading_Group);
+
+	        Groups.query(true)
+	        .then(function (groups)
+	        {
+	          if (groups.error)
+	          {
+	            console.warn('error ->', groups);
+	          }
+	          else
+	          {
+	            var settings  = angular.fromJson(resources.settingsWebPaige) || {},
+	                sync      = false,
+	                parenting = false,
+	                defaults  = $rootScope.config.defaults.settingsWebPaige,
+	                _groups   = function (groups)
+	                {
+	                  var _groups = {};
+	                  angular.forEach(groups, function (group, index) { _groups[group.uuid] = true; });
+	                  return _groups;
+	                };
+
+	            // Check if there is any settings at all
+	            if (settings != null || settings != undefined)
+	            {
+	              // check for user settigns-all
+	              if (settings.user)
+	              {
+	                // check for user-language settings
+	                if (settings.user.language)
+	                {
+	                  // console.warn('user HAS language settings');
+	                  $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+	                  defaults.user.language = settings.user.language;
+	                }
+	                else
+	                {
+	                  // console.warn('user has NO language!!');
+	                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+	                  sync = true;
+	                };             
+	              }
+	              else
+	              {
+	                // console.log('NO user settings at all !!');
+	                sync = true;
+	              };
+
+	              // check for app settings-all
+	              if (settings.app)
+	              {
+	                // check for app-widget settings
+	                if (settings.app.widgets)
+	                {
+	                  // check for app-widget-groups setting
+	                  if (settings.app.widgets.groups)
+	                  {
+	                    // console.warn('user HAS app widgets groups settings');
+	                    defaults.app.widgets.groups = settings.app.widgets.groups;
+	                  }
+	                  else
+	                  {
+	                    // console.warn('user has NO app widgets groups!!');
+	                    defaults.app.widgets.groups = _groups(groups);
+	                    sync = true;
+	                  }
+	                }
+	                else
+	                {
+	                  // console.warn('user has NO widget settings!!');
+	                  defaults.app.widgets = { groups: _groups(groups) };
+	                  sync = true;
+	                };
+
+	                // check for app group setting
+	                if (settings.app.group && settings.app.group != undefined)
+	                {
+	                  // console.warn('user HAS app first group setting');
+	                  defaults.app.group = settings.app.group;
+	                }
+	                else
+	                {
+	                  // console.warn('user has NO first group setting!!');
+	                  parenting = true;
+	                  sync      = true;
+	                };          
+	              }
+	              else
+	              {
+	                // console.log('NO app settings!!');
+	                defaults.app = { widgets: { groups: _groups(groups) } };
+	                sync = true;
+	              };
+	            }
+	            else
+	            {
+	              // console.log('NO SETTINGS AT ALL!!');
+	              defaults = {
+	                user: $rootScope.config.defaults.settingsWebPaige.user,
+	                app: {
+	                  widgets: {
+	                    groups: _groups(groups)
+	                  },
+	                  group: groups[0].uuid
+	                }
+	              };
+	              sync = true;
+	            };
+
+	            // sync settings with missing parts also parenting check
+	            if (sync)
+	            {
+	              if (parenting)
+	              {
+	                // console.warn('setting up parent group for the user');
+
+	                Groups.parents()
+	                .then(function (_parent)
+	                {
+	                  // console.warn('parent group been fetched ->', _parent);
+
+	                  if (_parent != null)
+	                  {
+	                    // console.warn('found parent parent -> ', _parent);
+
+	                    defaults.app.group = _parent;
+	                  }
+	                  else
+	                  {
+	                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
+
+	                    defaults.app.group = groups[0].uuid;
+	                  };
+	                                
+	                  // console.warn('SAVE ME (with parenting) ->', defaults);
+
+	                  Settings.save(resources.uuid, defaults)
+	                  .then(function (setted)
+	                  {
+	                    User.resources()
+	                    .then(function (got)
+	                    {
+	                      // console.log('gotted (with setting parent group) ->', got);
+	                      $rootScope.app.resources = got;
+
+	                      finalize();
+	                    })
+	                  });
+
+	                });
+	              }
+	              else
+	              {              
+	                // console.warn('SAVE ME ->', defaults);
+	                
+	                defaults.app.group = groups[0].uuid;
+
+	                Settings.save(resources.uuid, defaults)
+	                .then(function (setted)
+	                {
+	                  User.resources()
+	                  .then(function (got)
+	                  {
+	                    // console.log('gotted ->', got);
+	                    $rootScope.app.resources = got;
+
+	                    finalize();
+	                  })
+	                });
+	              }
+	            }
+	            else
+	            {
+	              finalize();
+	            }
+	          };
+	        });
+	      };
+	    });
+	  };
+
+
+	  /**
+	   * Finalize the preloading
+	   */
+	  function finalize ()
+	  {
+	    // console.warn( 'settings ->',
+	    //               'user ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).user,
+	    //               'widgets ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.widgets,
+	    //               'group ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.group);
+
+	    self.progress(100, $rootScope.ui.login.loading_everything);
+
+	    self.redirectToDashboard();
+
+	    self.getMessages();
+
+	    self.getMembers();    
+	  }
+
+	  /**
+	   * TODO
+	   * Implement an error handling
+	   *
+	   * Get members list (SILENTLY)
+	   */
+	  self.getMembers = function ()
+	  {
+	    var groups = Storage.local.groups();
+
+	    Groups.query()
+	    .then(function (groups)
+	    {
+	      var calls = [];
+
+	      angular.forEach(groups, function (group, index)
+	      {
+	        calls.push(Groups.get(group.uuid));
+	      });
+
+	      $q.all(calls)
+	      .then(function (result)
+	      {
+	        // console.warn('members ->', result);
+	        Groups.uniqueMembers();
+	      });
+	    });
+	  };
+
+
+	  /**
+	   * TODO
+	   * Implement an error handling
+	   *
+	   * Get messages (SILENTLY)
+	   */
+	  self.getMessages = function ()
+	  {
+	    Messages.query()
+	    .then(function (messages)
+	    {
+	      if (messages.error)
+	      {
+	        console.warn('error ->', messages);
+	      }
+	      else
+	      {
+	        $rootScope.app.unreadMessages = Messages.unreadCount();
+
+	        Storage.session.unreadMessages = Messages.unreadCount();
+	      };
+	    });
+	  };
+
+
+	  /**
+	   * Redirect to dashboard
+	   */
+	  self.redirectToDashboard = function ()
+	  {
+	    $location.path('/dashboard');
+
+	    setTimeout(function ()
+	    {
+	      $('body').css({ 'background': 'none' });
+	      $('.navbar').show();
+	      // $('#mobile-status-bar').show();
+	      // $('#notification').show();
+	      if (!$rootScope.browser.mobile) $('#footer').show();
+	      $('#watermark').show();
+	      $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
+	    }, 100);
+	  };
+
+
+	  /**
+	   * Progress bar
+	   */
+	  self.progress = function (ratio, message)
+	  {
+	    $('#preloader .progress .bar').css({ width: ratio + '%' }); 
+	    $('#preloader span').text(message);    
+	  };
+
+
+	  /**
+	   * RE-FACTORY
+	   * TODO
+	   * Make button state change!
+	   * Finish it!
+	   * 
+	   * Forgot password
+	   */
+		$scope.forgot = function ()
+	  {
+			$('#forgot button[type=submit]').text('setting ...').attr('disabled', 'disabled');
+
+			User.password($scope.remember.id)
+	    .then(function (result)
+			{
+				if (result == "ok")
+	      {
+					$scope.alert = {
+						forget : {
+							display : true,
+							type : 'alert-success',
+							message : 'Please check your email to reset your password!'
+						}
+					};
+				}
+	      else 
+	      {
+					$scope.alert = {
+						forget : {
+							display : true,
+							type : 'alert-error',
+							message : 'Error, we can not find this account !'
+						}
+					};
+				};
+
+				$('#forgot button[type=submit]')
+	        .text('change password')
+	        .removeAttr('disabled');
+			});
+		};
+
+
+	  /**
+	   * RE-FACTORY
+	   * Change password
+	   */
+		self.changePass =  function (uuid, newpass, key)
+	  {
+			User.changePass(uuid, newpass, key)
+	    .then(function (result)
+	    {
+				if(result.status == 400 || result.status == 500 || result.status == 409)
+	      {
+					$scope.alert = {
+						changePass : {
+							display : true,
+							type : 'alert-error',
+							message : 'Something wrong with password changing!'
+						}
+					};
+				}
+	      else
+	      { // successfully changed
+					$scope.alert = {
+						changePass : {
+							display : true,
+							type : 'alert-success',
+							message : 'Password changed!'
+						}
+					}; 
+					
+					$location.path( "/message" );
+				};
+
+				$('#changePass button[type=submit]')
+	        .text('change password')
+	        .removeAttr('disabled');
+			})
+		};
+
+
+	  /**
+	   * RE-FACTORY
+	   * Change password
+	   */
+		$scope.changePass = function ()
+	  {
+			$('#alertDiv').hide();
+
+			if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
+	    {
+				$scope.alert = {
+					changePass : {
+						display : true,
+						type : 'alert-error',
+						message : 'Please fill all fields!'
+					}
+				};
+
+				$('#changePass button[type=submit]')
+	        .text('change password')
+	        .removeAttr('disabled');
+
+				return false;
+			}
+	    else if ($scope.changeData.newPass != $scope.changeData.retypePass)
+	    {
+				$scope.alert = {
+					changePass : {
+						display : true,
+						type : 'alert-error',
+						message : 'Please make the reType password is indentical !'
+					}
+				};
+
+				$('#changePass button[type=submit]')
+	        .text('change password')
+	        .removeAttr('disabled');
+
+				return false;
+			};
+
+			$('#changePass button[type=submit]')
+	      .text('changing ...')
+	      .attr('disabled', 'disabled');
+
+			self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
+		};
+
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Logout', [])
+
+
+/**
+ * Logout controller
+ */
+.controller('logout', 
+[
+	'$rootScope', '$scope', '$window', 'Session', 'User', 'Storage', 
+	function ($rootScope, $scope, $window, Session, User, Storage) 
+	{
+	  $('.navbar').hide();
+	  $('#footer').hide();
+
+	  var logindata = angular.fromJson(Storage.get('logindata'));
+
+		User.logout()
+		.then(function (result)
+		{
+	    if (result.error)
+	    {
+	      console.warn('error ->', result);
+	    }
+	    else
+	    {
+	      // Storage.clearAll();
+
+	      Storage.session.clearAll();
+
+	      Storage.add('logindata', angular.toJson(logindata));
+
+	      $window.location.href = 'logout.html';
+	    };
+		});
+	}
+]);;/*jslint node: true */
+/*global angular */
+/*global Raphael */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Dashboard', [])
+
+
+/**
+ * Dashboard controller
+ */
+.controller('dashboard',
+[
+	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
+	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile)
+	{
+		/**
+		 * Fix styles
+		 */
+		$rootScope.fixStyles();
+
+
+		/**
+		 * Defaults for loaders
+		 */
+		$scope.loading = {
+			pies:   true,
+			alerts: true
+		};
+
+
+		/**
+		 * Defaults for toggler
+		 */
+		$scope.more = {
+			status: false,
+			text:   'show more'
+		};
+
+
+		/**
+		 * TODO
+		 * Check somewhere that user-settings widget-groups are synced with the
+		 * real groups list and if a group is missing in settings-groups add by
+		 * default!
+		 */
+		var groups    = Storage.local.groups(),
+				settings  = Storage.local.settings(),
+				selection = {};
+
+		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
+		{
+			selection[group] = value;
+		});
+
+		$scope.popover = {
+			groups: groups,
+			selection: selection
+		};
+
+
+		/**
+		 * Get group overviews
+		 */
+		function getOverviews ()
+		{
+			Dashboard.pies()
+			.then(function (pies)
+			{
+				if (pies.error)
+				{
+					$rootScope.notifier.error('Error with getting group overviews.');
+					console.warn('error ->', pies.error);
+				}
+				else
+				{
+					$scope.shortageHolders = {};
+
+					$scope.loading.pies = false;
+
+					$scope.periods = {
+						start:  pies[0].weeks.current.start.date,
+						end:    pies[0].weeks.next.end.date
+					};
+
+					angular.forEach(pies, function (pie, index)
+					{
+						if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
+						if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
+
+						if (pie.weeks.current.state.diff > 0)
+						{
+						pie.weeks.current.state.cls = 'more';
+						}
+						else if (pie.weeks.current.state.diff === 0)
+						{
+							pie.weeks.current.state.cls = 'even';
+						}
+						else if (pie.weeks.current.state.diff < 0)
+						{
+							pie.weeks.current.state.cls = 'less';
+						}
+
+						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
+																						new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime) :
+																						'undefined';
+
+						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
+																						new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime) :
+																						'undefined';
+
+						pie.shortages = {
+							current:  pie.weeks.current.shortages,
+							next:     pie.weeks.next.shortages,
+							total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
+						};
+
+						pie.state = pie.weeks.current.state;
+
+						delete(pie.weeks.current.shortages);
+						delete(pie.weeks.current.state);
+
+						$scope.shortageHolders['shortages-' + pie.id] = false;
+					});
+
+
+					// angular.forEach(pies, function (pie, index)
+					// {
+					// 	console.log('pie ->', pie);
+
+					// 	angular.forEach(pie.shortages.current, function (slot, index)
+					// 	{
+					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+
+					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+					// 	});
+
+					// 	angular.forEach(pie.shortages.next, function (slot, index)
+					// 	{
+					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+
+					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+					// 	});
+					// });
+
+					$scope.pies = pies;
+				}
+			})
+			.then( function (result)
+			{
+				angular.forEach($scope.pies, function (pie, index)
+				{
+					pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
+					pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
+				});
+
+				function pieMaker ($id, id, name, _ratios)
+				{
+					setTimeout( function ()
+					{
+					document.getElementById($id + id).innerHTML = '';
+
+						var ratios    = [],
+								colorMap  = {
+									more: '#415e6b',
+									even: '#ba6a24',
+									less: '#a0a0a0'
+								},
+								colors    = [],
+								xratios   = [];
+
+						angular.forEach(_ratios, function (ratio, index)
+						{
+							if (ratio !== 0)
+							{
+								ratios.push({
+									ratio: ratio,
+									color: colorMap[index]
+								});
+							}
+						});
+
+						ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
+
+						angular.forEach(ratios, function (ratio, index)
+						{
+							colors.push(ratio.color);
+							xratios.push(ratio.ratio);
+						});
+
+						var r   = new Raphael($id + id),
+								pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+
+					}, 100);
+				}
+			});
+		}
+
+		getOverviews();
+
+		/**
+		 * Save widget settings
+		 */
+		$scope.saveOverviewWidget = function (selection)
+		{
+			$rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+			Settings.save($rootScope.app.resources.uuid, {
+				user: Storage.local.settings().user,
+				app: {
+					widgets: {
+						groups: selection
+					}
+				}
+			})
+			.then(function (result)
+			{
+				$rootScope.statusBar.display('Refreshing group overviews..');
+
+				Profile.get($rootScope.app.resources.uuid, true)
+				.then(function (resources)
+				{
+					getOverviews();
+				});
+			});
+		};
+
+
+		/**
+		 * P2000 annnouncements
+		 */
+		Dashboard.p2000().
+		then(function (result)
+		{
+			if (result.error)
+			{
+				$rootScope.notifier.error('Error with getting p2000 alarm messages.');
+				console.warn('error ->', result);
+				}
+			else
+			{
+				$scope.loading.alerts = false;
+
+				$scope.alarms = result;
+
+				$scope.alarms.list = $scope.alarms.short;
+			}
+		});
+
+
+		/**
+		 * Show more or less alarms
+		 */
+		$scope.toggle = function (more)
+		{
+			$scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
+
+			$scope.more.text = (more) ? 'show more' : 'show less';
+
+			$scope.more.status = !$scope.more.status;
+		};
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Planboard', [])
+
+
+.controller('planboard', 
+[
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter', 
+	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
+	{
+	  /**
+	   * Fix styles
+	   */
+		$rootScope.fixStyles();
+
+	  /**
+	   * Pass the self
+	   */
+		$scope.self = this;
+
+
+	  /**
+	   * Pass time slots data
+	   */
+	  $scope.data = data;
+
+	  console.log('data ->', data);
+
+	  
+	  /**
+	   * Get groups and settings
+	   */
+	  var groups  	= Storage.local.groups(),
+	      settings 	= Storage.local.settings();
+
+
+	  /**
+	   * Pass current
+	   */
+	  $scope.current = {
+      layouts: {
+        user:     true,
+        group:    true,
+        members:  false
+      },
+      day:      Dater.current.today(),
+      week:     Dater.current.week(),
+      month:    Dater.current.month(),
+      group:    settings.app.group,
+      // group:    groups[0].uuid,
+      division: 'all'
+    };
+
+
+	  /**
+	   * Pass periods
+	   */
+	  $scope.periods = Dater.getPeriods();
+
+
+	  /**
+	   * Reset and init slot container which
+	   * is used for adding or changing slots
+	   */
+	  $scope.slot = {};
+
+
+	  /**
+	   * Set defaults for timeline
+	   */
+	  $scope.timeline = {
+	  	id: 'mainTimeline',
+	  	main: true,
+	  	user: {
+	  		id: 	$rootScope.app.resources.uuid,
+	  		role: $rootScope.app.resources.role
+	  	},
+	    current: $scope.current,
+	    options: {
+	      start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
+	      end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
+	      min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
+	      max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
+	    },
+	    range: {
+	      start:  $scope.periods.weeks[$scope.current.week].first.day,
+	      end:    $scope.periods.weeks[$scope.current.week].last.day
+	    },
+	    scope: {
+	      day:    false,
+	      week:   true,
+	      month:  false
+	    },
+	    config: {
+	      bar:        $rootScope.config.timeline.config.bar,
+	      wishes:     $rootScope.config.timeline.config.wishes,
+	      legenda:    {},
+	      legendarer: $rootScope.config.timeline.config.legendarer,
+	      states:     $rootScope.config.timeline.config.states,
+	      divisions:  $rootScope.config.timeline.config.divisions,
+	      densities:  $rootScope.config.timeline.config.densities
+	    }
+	  };
+
+	  /**
+	   * IE8 fix for inability of - signs in date object
+	   */
+	  if ($.browser.msie && $.browser.version == '8.0')
+	  {
+		  $scope.timeline.options = {
+	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
+	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
+	    }
+	  }
+
+
+	  /**
+	   * Legenda defaults
+	   */
+	  angular.forEach($rootScope.config.timeline.config.states, function (state, index)
+	  {
+	    $scope.timeline.config.legenda[index] = true;
+	  });
+
+
+	  /**
+	   * Timeline group legenda default configuration
+	   */
+	  $scope.timeline.config.legenda.groups = {
+	    more: true,
+	    even: true,
+	    less: true
+	  };
+
+
+	  /**
+	   * Prepeare timeline range for dateranger widget
+	   */
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	                      Dater.readable.date($scope.timeline.range.end);
+
+
+	  /**
+	   * States for dropdown
+	   */
+	  var states = {};
+
+	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+
+	  $scope.states = states;
+
+
+	  /**
+	   * Groups for dropdown
+	   */
+	  $scope.groups = groups;
+
+
+	  /**
+	   * Groups for dropdown
+	   */
+	  $scope.divisions = $scope.timeline.config.divisions;
+
+
+	  /**
+	   * Reset views for default views
+	   */
+	  $scope.resetViews = function ()
+	  {
+	    $scope.views = {
+	      slot: {
+	        add:  false,
+	        edit: false
+	      },
+	      group:  false,
+	      wish:   false,
+	      member: false
+	    };
+	  };
+
+	  $scope.resetViews();
+
+
+	  /**
+	   * Slot form toggler
+	   */
+	  $scope.toggleSlotForm = function ()
+	  {
+	    if ($scope.views.slot.add)
+	    {
+	      $scope.resetInlineForms();
+	    }
+	    else
+	    {
+	      $scope.slot = {};
+
+	      $scope.slot = {
+	        start: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        end: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        state:      '',
+	        recursive:  false,
+	        id:         ''
+	      };
+
+	      $scope.resetViews();
+
+	      $scope.views.slot.add = true;
+	    };
+	  };
+
+
+	  /**
+	   * Reset inline forms
+	   */
+	  $scope.resetInlineForms = function ()
+	  {
+	    $scope.slot = {};
+
+	    $scope.original = {};
+
+	    $scope.resetViews();
+	  };
+
+
+	  /**
+	   * Send shortage message
+	   */
+	  $scope.sendShortageMessage = function (slot)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.planboard.preCompilingStortageMessage);
+
+	    Storage.session.add('escalation', angular.toJson({
+	      group: slot.group,
+	      start: {
+	        date: slot.start.date,
+	        time: slot.start.time
+	      },
+	      end: {
+	        date: slot.end.date,
+	        time: slot.end.time
+	      },
+	      diff: slot.diff
+	    }));
+
+	    $location.path('/messages').search({ escalate: true }).hash('compose');
+	  };
+
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Timeline', [])
+
+
+.controller('timeline',
+[
+	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
+	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile)
+	{
+		var range, diff;
+
+		/**
+		 * Watch for changes in timeline range
+		 */
+		$scope.$watch(function ()
+		{
+			/**
+			 * If main timeline
+			 */
+			if ($scope.timeline && $scope.timeline.main)
+			{
+				range = $scope.self.timeline.getVisibleChartRange();
+				diff  = Dater.calculate.diff(range);
+
+				/**
+				 * Scope is a day
+				 * 
+				 * TODO
+				 * try later on!
+				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
+				 */
+				if (diff <= 86400000)
+				{
+					$scope.timeline.scope = {
+						day:    true,
+						week:   false,
+						month:  false
+					};
+				}
+				/**
+				 * Scope is less than a week
+				 */
+				else if (diff < 604800000)
+				{
+					$scope.timeline.scope = {
+						day:    false,
+						week:   true,
+						month:  false
+					};
+				}
+				/**
+				 * Scope is more than a week
+				 */
+				else if (diff > 604800000)
+				{
+					$scope.timeline.scope = {
+						day:    false,
+						week:   false,
+						month:  true
+					};
+				}
+
+				$scope.timeline.range = {
+					start:  new Date(range.start).toString(),
+					end:    new Date(range.end).toString()
+				};
+
+				$scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
+														' / ' +
+														Dater.readable.date($scope.timeline.range.end);
+			}
+			/**
+			 * User timeline
+			 */
+			else
+			{
+				if ($location.hash() == 'timeline')
+				{
+					range = $scope.self.timeline.getVisibleChartRange();
+
+					$scope.timeline.range = {
+						start:  new Date(range.start).toString(),
+						end:    new Date(range.end).toString()
+					};
+				}
+			}
+		});
+
+
+	  /**
+	   * Timeline (The big boy)
+	   */
+	  $scope.timeliner = {
+
+	    /**
+	     * Init timeline
+	     */
+	    init: function ()
+	    {
+	      $scope.self.timeline = new links.Timeline(document.getElementById($scope.timeline.id));
+
+	      links.events.addListener($scope.self.timeline, 'rangechanged',  this.getRange);
+	      links.events.addListener($scope.self.timeline, 'add',           this.onAdd);
+	      links.events.addListener($scope.self.timeline, 'delete',        this.onRemove);
+	      links.events.addListener($scope.self.timeline, 'change',        this.onChange);
+	      links.events.addListener($scope.self.timeline, 'select',        this.onSelect);
+
+	      this.render($scope.timeline.options);      
+	    },
+
+	    getRange: function () { $scope.timelineGetRange() },
+
+	    onAdd: 		function () { $scope.timelineOnAdd() },
+
+	    onRemove: function () { $scope.timelineOnRemove() },
+
+	    onChange: function () { $scope.timelineOnChange() },
+
+	    onSelect: function () { $scope.timelineOnSelect() },
+
+	    /**
+	     * (Re-)Render timeline
+	     */
+	    render: function (options)
+	    {		
+	      $scope.timeline = {
+	      	id: 			$scope.timeline.id,
+	      	main: 		$scope.timeline.main,
+	      	user: 		$scope.timeline.user,
+	        current:  $scope.timeline.current,
+	        scope: 		$scope.timeline.scope,
+	        config:   $scope.timeline.config,
+	        options: {
+	          start:  new Date(options.start),
+	          end:    new Date(options.end),
+	          min:    new Date(options.start),
+	          max:    new Date(options.end)
+	        }
+	      };
+
+	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
+
+	      if ($scope.timeline.main)
+	      {
+		      $scope.self.timeline.draw(
+		        Sloter.process(
+		          $scope.data,
+		          $scope.timeline.config,
+		          $scope.divisions,
+		          $scope.timeline.user.role
+		        ), 
+		        $scope.timeline.options
+		      );
+		    }
+		    else
+		    {
+			    setTimeout( function() 
+		      {
+		        $scope.self.timeline.draw(
+		          Sloter.profile(
+		            $scope.data.slots.data, 
+		            $scope.timeline.config
+		          ), $scope.timeline.options);
+		      }, 100);
+		    };
+	      
+	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
+	    },
+
+	    /**
+	     * Grab new timeline data from backend and render timeline again
+	     */
+	    load: function (stamps)
+	    {
+	      var _this = this;
+
+	      $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
+
+	      if ($scope.timeline.main)
+	      {
+		      Slots.all({
+		        groupId:  $scope.timeline.current.group,
+		        division: $scope.timeline.current.division,
+		        layouts:  $scope.timeline.current.layouts,
+		        month:    $scope.timeline.current.month,
+		        stamps:   stamps
+		      })
+		      .then(function (data)
+		      {
+		        if (data.error)
+		        {
+		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          console.warn('error ->', result);
+		        }
+		        else
+		        {
+		          $scope.data = data;
+
+		          _this.render(stamps);
+		        };
+
+		        $rootScope.statusBar.off();
+		      });
+		    }
+	      else
+	      {
+	      	Profile.getSlots($scope.timeline.user.id, stamps)
+		      .then(function (data)
+		      {
+		        if (data.error)
+		        {
+		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          console.warn('error ->', result);
+		        }
+		        else
+		        {
+			      	data.user 	= data.slots.data;
+
+			        $scope.data = data;
+
+			        _this.render(stamps);
+
+			        $rootScope.statusBar.off();
+		        };
+		      });
+		    };
+	    },
+
+	    /**
+	     * Refresh timeline as it is
+	     */
+	    refresh: function ()
+	    {
+	      $scope.slot = {};
+
+	      if ($scope.timeline.main)
+	      {
+		      $scope.resetViews();
+
+		      $scope.views.slot.add = true;
+	      }
+	      else
+	      {
+		      $scope.forms = {
+		        add:  true,
+		        edit: false
+		      };
+		    };
+
+	      this.load({
+	        start:  $scope.data.periods.start,
+	        end:    $scope.data.periods.end
+	      });
+	    },
+
+	    /**
+	     * Redraw timeline
+	     */
+	    redraw: function ()
+	    {
+	      $scope.self.timeline.redraw();
+	    },
+
+	    isAdded: function ()
+	    {
+	    	return $('.timeline-event-content')
+	                .contents()
+	                .filter(function ()
+	                { 
+	                  return this.nodeValue == 'New' 
+	                }).length;
+	    },
+
+	    /**
+	     * Cancel add
+	     */
+	    cancelAdd: function ()
+	    {
+	      $scope.self.timeline.cancelAdd();
+	    }
+	  };
+	 
+
+	  /**
+	   * Init timeline
+	   */
+	  if ($scope.timeline) $scope.timeliner.init();
+
+
+	  /**
+	   * Timeliner listener
+	   */
+	  $rootScope.$on('timeliner', function () 
+	  {
+	    $scope.timeliner.load({
+	      start:  new Date(arguments[1].start).getTime(),
+	      end:    new Date(arguments[1].end).getTime()
+	    });
+	  });
+
+
+	  /**
+	   * Handle new requests for timeline
+	   */
+	  $scope.requestTimeline = function (section)
+	  {
+	    switch (section)
+	    {
+	      case 'group':
+	        $scope.timeline.current.layouts.group = !$scope.timeline.current.layouts.group;
+
+	        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
+	          $scope.timeline.current.layouts.members = false;
+	      break;
+
+	      case 'members':
+	        $scope.timeline.current.layouts.members = !$scope.timeline.current.layouts.members;
+
+	        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
+	          $scope.timeline.current.layouts.group = true;
+	      break;
+	    };
+
+	    $scope.timeliner.load({
+	      start:  $scope.data.periods.start,
+	      end:    $scope.data.periods.end
+	    });
+	  };
+
+
+	  /**
+	   * Timeline get ranges
+	   */
+	  $scope.timelineGetRange = function ()
+	  {
+	    var range = $scope.self.timeline.getVisibleChartRange();
+
+	    $scope.$apply(function ()
+	    {
+	      $scope.timeline.range = {
+	        start:  new Date(range.from).toString(),
+	        end:    new Date(range.till).toString()
+	      };
+
+	      if ($scope.timeline.main)
+	      {
+		      $scope.daterange = {
+		        start:  Dater.readable.date(new Date(range.start).getTime()),
+		        end:    Dater.readable.date(new Date(range.end).getTime())
+		      };
+	      };
+
+	    });
+	  };
+
+
+	  /**
+	   * Get information of the selected slot
+	   */
+	  $scope.selectedSlot = function ()
+	  {
+	    var selection;
+
+	    /**
+	     * TODO
+	     * 
+	     * Not working!!
+	     */
+	    $scope.timeliner.cancelAdd();
+
+	    if (selection = $scope.self.timeline.getSelection()[0])
+	    {
+	      var values  = $scope.self.timeline.getItem(selection.row),
+	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
+
+	      $scope.original = {
+	        start:        values.start,
+	        end:          values.end,
+	        content: {
+	          recursive:  content.recursive,
+	          state:      content.state,
+	          id:         content.id
+	        }
+	      };
+
+	      if ($scope.timeline.main)
+	      {
+		      $scope.resetViews();
+		    }
+		    else
+		    {
+		      /**
+		       * TODO
+		       * Convert to resetview?
+		       */
+		      $scope.forms = {
+		        add:  false,
+		        edit: true
+		      };
+		    };
+
+	      if (content.type)
+	      {
+	      	if ($scope.timeline.main)
+	      	{
+			      switch (content.type)
+			      {
+			        case 'slot':
+			          $scope.views.slot.edit = true;
+			        break;
+
+			        case 'group':
+			          $scope.views.group = true;
+			        break;
+
+			        case 'wish':
+			          $scope.views.wish = true;
+			        break;
+
+			        case 'member':
+			          $scope.views.member = true;
+			        break;
+			      };
+	      	};
+
+		      $scope.slot = {
+		        start: {
+		          date: new Date(values.start).toString($rootScope.config.formats.date),
+		          time: new Date(values.start).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.start).toISOString()
+		        },
+		        end: {
+		          date: new Date(values.end).toString($rootScope.config.formats.date),
+		          time: new Date(values.end).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.end).toISOString()
+		        },
+		        state:      content.state,
+		        recursive:  content.recursive,
+		        id:         content.id
+		      };
+
+		      /**
+		       * TODO
+		       * Check if this can be combined with switch later on!
+		       * Set extra data based slot type for inline form
+		       */
+		      if ($scope.timeline.main)
+		      {
+			      switch (content.type)
+			      {
+			        case 'group':
+			          $scope.slot.diff  = content.diff;
+			          $scope.slot.group = content.group;
+			        break;
+
+			        case 'wish':
+			          $scope.slot.wish    = content.wish;
+			          $scope.slot.group   = content.group;
+			          $scope.slot.groupId = content.groupId;
+			        break;
+
+			        case 'member':
+			          $scope.slot.member = content.mid;
+			        break;
+			      };
+		      };
+	      };
+
+	      return values;
+	    };
+	  };
+
+
+	  /**
+	   * Timeline on select
+	   */
+	  $scope.timelineOnSelect = function ()
+	  {
+	    $scope.$apply(function ()
+	    {
+	      $scope.selectedOriginal = $scope.selectedSlot();
+	    });
+	  };
+
+
+	  /**
+	   * Prevent re-rendering issues with timeline
+	   */
+	  $scope.destroy = {
+	    timeline: function ()
+	    {
+	      // Not working !! :(
+	      // Sloter.pies($scope.data);
+	    },
+	    statistics: function ()
+	    {
+	      setTimeout(function ()
+	      {
+	        $scope.timeliner.redraw();
+	      }, 10);
+	    }
+	  };
+
+
+	  /**
+	   * Group aggs barCharts toggler
+	   */
+	  $scope.barCharts = function ()
+	  {
+	    $scope.timeline.config.bar = !$scope.timeline.config.bar;
+
+	    $scope.timeliner.render({
+	      start:  $scope.timeline.range.start,
+	      end:    $scope.timeline.range.end
+	    });
+	  };
+	  
+
+	  /**
+	   * Group wishes toggler
+	   */
+	  $scope.groupWishes = function ()
+	  {
+	    $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
+
+	    $scope.timeliner.render({
+	      start:  $scope.timeline.range.start,
+	      end:    $scope.timeline.range.end
+	    });
+	  };
+	  
+
+	  /**
+	   * Timeline legenda toggler
+	   */
+	  $scope.showLegenda = function ()
+	  {
+		  $scope.timeline.config.legendarer = !$scope.timeline.config.legendarer;
+		};
+
+
+	  /**
+	   * Alter legenda settings
+	   */
+	  $scope.alterLegenda = function (legenda)
+	  {
+	    $scope.timeline.config.legenda = legenda;
+
+	    $scope.timeliner.render({
+	      start:  $scope.timeline.range.start,
+	      end:    $scope.timeline.range.end
+	    });
+	  };
+
+
+	  /**
+	   * Add slot trigger start view
+	   */
+	  $scope.timelineOnAdd = function (form, slot)
+	  {
+	  	/**
+	  	 * Make view for new slot
+	  	 */
+	  	if (!form)
+	  	{
+		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+		      
+		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
+
+		    $scope.$apply(function ()
+		    {
+		    	if ($scope.timeline.main)
+		    	{
+			      $scope.resetViews();
+
+			      $scope.views.slot.add = true;
+		    	}
+		    	else
+		    	{
+			      $scope.forms = {
+			        add:  true,
+			        edit: false
+			      };
+			    };
+
+		      $scope.slot = {
+		        start: {
+		          date: new Date(values.start).toString($rootScope.config.formats.date),
+		          time: new Date(values.start).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.start).toISOString()
+		        },
+		        end: {
+		          date: new Date(values.end).toString($rootScope.config.formats.date),
+		          time: new Date(values.end).toString($rootScope.config.formats.time),
+		          datetime: new Date(values.end).toISOString()
+		        },
+		        recursive: (values.group.match(/recursive/)) ? true : false,
+		        /**
+		         * INFO
+		         * First state is hard-coded
+		         * Maybe use the first one from array later on?
+		         */
+		        state: 'com.ask-cs.State.Available'
+		      };
+		    });
+	  	}
+	  	/**
+	  	 * Add new slot
+	  	 */
+	  	else
+	  	{
+		    var now     = Date.now().getTime(),
+		        values  = {
+		                    start:      ($rootScope.browser.mobile) ? 
+		                                  new Date(slot.start.datetime).getTime() / 1000 :
+		                                  Dater.convert.absolute(slot.start.date, slot.start.time, true),
+		                    end:        ($rootScope.browser.mobile) ? 
+		                                  new Date(slot.end.datetime).getTime() / 1000 : 
+		                                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
+		                    recursive:  (slot.recursive) ? true : false,
+		                    text:       slot.state
+		                  };
+
+		    if (values.end * 1000 <= now && values.recursive == false)
+		    {
+		      $rootScope.notifier.error('You can not input timeslots in past.');
+
+		      // timeliner.cancelAdd();
+		      $scope.timeliner.refresh();
+		    }
+		    else
+		    {
+		      $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+
+		      Slots.add(values, $scope.timeline.user.id)
+		      .then(
+		        function (result)
+		        {
+		          if (result.error)
+		          {
+		            $rootScope.notifier.error('Error with adding a new timeslot.');
+		            console.warn('error ->', result);
+		          }
+		          else
+		          {
+		            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+		          };
+
+		          $scope.timeliner.refresh();
+		        }
+		      );
+		    };
+	  	}
+	  };
+
+
+	  /**
+	   * Timeline on change
+	   */
+	  $scope.timelineOnChange = function (direct, original, slot, options)
+	  {
+	    if (!direct)
+	    {
+	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
+	          options = {
+	            start:    values.start,
+	            end:      values.end,
+	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+	          };
+	    }
+	    else
+	    {
+	    	var options = {
+		      start:  ($rootScope.browser.mobile) ?
+		                new Date(slot.start.datetime).getTime() : 
+		                Dater.convert.absolute(slot.start.date, slot.start.time, false),
+		      end:    ($rootScope.browser.mobile) ? 
+		                new Date(slot.end.datetime).getTime() :
+		                Dater.convert.absolute(slot.end.date, slot.end.time, false),
+		      content: angular.toJson({
+		        recursive:  slot.recursive, 
+		        state:      slot.state 
+		      })
+		    };
+	    }
+
+	    var now = Date.now().getTime();
+
+	    if (options.end <= now && options.content.recursive == false)
+	    {
+	      $rootScope.notifier.error('You can not change timeslots in past.');
+
+	      $scope.timeliner.refresh();
+	    }
+	    else
+	    {
+	      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
+	      Slots.change($scope.original, options, $scope.timeline.user.id)
+	      .then(
+	        function (result)
+	        {
+	          if (result.error)
+	          {
+	            $rootScope.notifier.error('Error with changing timeslot.');
+	            console.warn('error ->', result);
+	          }
+	          else
+	          {
+	            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+	          };
+
+	          $scope.timeliner.refresh();
+	        }
+	      );
+	    };
+	  };
+
+
+	  /**
+	   * Timeline on remove
+	   */
+	  $scope.timelineOnRemove = function ()
+	  {
+	    if ($scope.timeliner.isAdded() > 0)
+	    {
+	      $scope.self.timeline.cancelAdd();
+
+	      $scope.$apply(function ()
+	      {
+	        $scope.resetInlineForms();
+	      });
+	    }
+	    else
+	    {
+	      var now = Date.now().getTime();
+
+	      if ($scope.original.end.getTime() <= now && $scope.original.recursive == false)
+	      {
+	        $rootScope.notifier.error('You can not delete timeslots in past.');
+
+	        $scope.timeliner.refresh();
+	      }
+	      else
+	      {
+	        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+
+	        Slots.remove($scope.original, $scope.timeline.user.id)
+	        .then(
+	          function (result)
+	          {
+	            if (result.error)
+	            {
+	              $rootScope.notifier.error('Error with removing timeslot.');
+	              console.warn('error ->', result);
+	            }
+	            else
+	            {
+	              $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+	            };
+
+	            $scope.timeliner.refresh();
+	          }
+	        );
+	      };
+	    };
+	  };
+
+
+	  /**
+	   * Set wish
+	   */
+	  $scope.wisher = function (slot)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
+
+	    Slots.setWish(
+	    {
+	      id:     slot.groupId,
+	      start:  ($rootScope.browser.mobile) ? 
+	                new Date(slot.start.datetime).getTime() / 1000 : 
+	                Dater.convert.absolute(slot.start.date, slot.start.time, true),
+	      end:    ($rootScope.browser.mobile) ? 
+	                new Date(slot.end.datetime).getTime() / 1000 : 
+	                Dater.convert.absolute(slot.end.date, slot.end.time, true),
+	      recursive:  false,
+	      // recursive:  slot.recursive,
+	      wish:       slot.wish
+	    })
+	    .then(
+	      function (result)
+	      {
+	        if (result.error)
+	        {
+	          $rootScope.notifier.error('Error with changing wish value.');
+	          console.warn('error ->', result);
+	        }
+	        else
+	        {
+	          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+	        };
+
+	        $scope.timeliner.refresh();
+	      }
+	    );
+	  };
+
+
+    setTimeout( function() 
+    {
+      $scope.self.timeline.redraw();
+    }, 100);
+
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Timeline.Navigation', [])
+
+
+.controller('timeline-navigation', 
+[
+	'$rootScope', '$scope', '$window', 
+	function ($rootScope, $scope, $window) 
+	{
+	  /**
+	   * Day & Week & Month toggle actions
+	   */
+	  $scope.timelineScoper = function (period)
+	  {
+	    $scope.timeline.current.day   = $scope.current.day;
+	    $scope.timeline.current.week  = $scope.current.week;
+	    $scope.timeline.current.month = $scope.current.month;
+
+	    switch (period)
+	    {
+	      case 'day':
+	        $scope.timeline.scope = {
+	          day:    true,
+	          week:   false,
+	          month:  false
+	        };
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+	        });
+	      break;
+
+	      case 'week':
+	        $scope.timeline.scope = {
+	          day:    false,
+	          week:   true,
+	          month:  false
+	        };
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        });
+	      break;
+
+	      case 'month':
+	        $scope.timeline.scope = {
+	          day:    false,
+	          week:   false,
+	          month:  true
+	        };
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
+	        });
+	      break;
+	    };
+	  };
+
+
+	  /**
+	   * Go one period in past
+	   */
+	  $scope.timelineBefore = function (timelineScope)
+	  {
+	    if ($scope.timeline.scope.day)
+	    {
+	      if ($scope.timeline.current.day != 1)
+	      {
+	        $scope.timeline.current.day--;
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+	        });
+	      };
+	    }
+	    else if ($scope.timeline.scope.week)
+	    {
+	      if ($scope.timeline.current.week != 1)
+	      {
+	        $scope.timeline.current.week--;
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        });
+	      };
+	    }
+	    else if ($scope.timeline.scope.month)
+	    {
+	      if ($scope.timeline.current.month != 1)
+	      {
+	        $scope.timeline.current.month--;
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
+	        });
+	      };
+	    };
+	  };
+
+
+	  /**
+	   * Go one period in future
+	   */
+	  $scope.timelineAfter = function (timelineScope)
+	  {
+	    if ($scope.timeline.scope.day)
+	    {
+	      /**
+	       * Total days in a month can change so get it start periods cache
+	       */
+	      if ($scope.timeline.current.day != $scope.periods.days.total)
+	      {
+	        $scope.timeline.current.day++;
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+	        });
+	      };
+	    }
+	    else if ($scope.timeline.scope.week)
+	    {
+	      if ($scope.timeline.current.week != 53)
+	      {
+	        $scope.timeline.current.week++;
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        });
+	      };
+	    }
+	    else if ($scope.timeline.scope.month)
+	    {
+	      if ($scope.timeline.current.month != 12)
+	      {
+	        $scope.timeline.current.month++;
+
+	        $scope.timeliner.load({
+	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
+	        });
+	      };
+	    };
+	  };
+
+
+
+	  /**
+	   * Go to this week
+	   */
+	  $scope.timelineThisWeek = function ()
+	  {
+	    if ($scope.timeline.current.week != new Date().getWeek())
+	    {
+	      $scope.timeliner.load({
+	        start:  $scope.periods.weeks[new Date().getWeek()].first.timeStamp,
+	        end:    $scope.periods.weeks[new Date().getWeek()].last.timeStamp
+	      });
+
+	      $scope.timeline.range = {
+	        start:  $scope.periods.weeks[new Date().getWeek()].first.day,
+	        end:    $scope.periods.weeks[new Date().getWeek()].last.day
+	      };
+	    }
+	  };
+
+
+	  /**
+	   * Go one week in past
+	   */
+	  $scope.timelineWeekBefore = function ()
+	  {
+	    if ($scope.timeline.current.week != 1)
+	    {
+	      $scope.timeline.current.week--;
+
+	      $scope.timeliner.load({
+	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	      });
+	    };
+
+	    $scope.timeline.range = {
+	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
+	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
+	    };
+	  };
+
+
+	  /**
+	   * Go one week in future
+	   */
+	  $scope.timelineWeekAfter = function ()
+	  {
+	  	if ($scope.timeline.current.week != 53)
+	    {
+	      $scope.timeline.current.week++;
+
+	      $scope.timeliner.load({
+	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	      });
+	    };
+
+  		$scope.timeline.range = {
+	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
+	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
+	    };
+	  };
+
+
+	  /**
+	   * Timeline zoom in
+	   */
+	  $scope.timelineZoomIn = function ()
+	  {
+		  $scope.self.timeline.zoom($rootScope.config.timeline.config.zoom, Date.now());
+		};
+
+
+	  /**
+	   * Timeline zoom out
+	   */
+	  $scope.timelineZoomOut = function ()
+	  {
+		  $scope.self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now());
+		};
+
+
+	  /**
+	   * Redraw timeline on window resize
+	   */
+	  $window.onresize = function ()
+	  {
+		  $scope.self.timeline.redraw();
+		};
+		
+		$scope.fullWidth = function ()
+		{
+			console.log('ok!');
+
+			$scope.self.timeline.redraw();
+		}
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Messages', [])
+
+
+/**
+ * Messages controller
+ */
+.controller('messages', 
+[
+	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
+	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) 
+	{
+	  /**
+	   * Fix styles
+	   */
+	  $rootScope.fixStyles();
+
+	  /**
+	   * Self this
+	   */
+	  var self = this;
+
+
+	  /**
+	   * Receivers list
+	   */
+	  $scope.receviersList = Messages.receviers();
+
+
+	  /**
+	   * Set messages
+	   */
+	  $scope.messages 			= data.messages;
+
+	  $scope.scheadules 		= data.scheadules;
+
+
+	  /**
+	   * Pagination
+	   */
+	  $scope.page = {
+	  	inbox: 	0,
+	  	outbox: 0,
+	  	trash: 	0
+	  };
+
+	  $scope.paginate = {
+
+	  	set: function (page, box)
+	  	{
+	  		$scope.page[box] = page;
+	  	},
+
+	  	next: function (box)
+	  	{
+	  		if ($scope.page[box] + 1 != $scope.messages[box].length)
+	  			$scope.page[box]++;
+	  	},
+
+	  	before: function (box)
+	  	{
+	  		if ($scope.page[box] != 0)
+	  			$scope.page[box]--;
+	  	}
+	  };
+
+
+	  /**
+	   * Selections
+	   */
+	  $scope.selection = {
+	    inbox: 	{},
+	    outbox: {},
+	    trash: 	{}
+	  };
+
+
+	  /**
+	   * Selection masters
+	   */
+	  $scope.selectionMaster = {
+	    inbox: 	'',
+	    outbox: '',
+	    trash: 	''
+	  };
+
+
+	  /**
+	   * Initial value for broadcasting
+	   */
+	  $scope.broadcast = {
+	    sms: 		false,
+	    email: 	false
+	  };
+
+
+	  /**
+	   * Default scheaduled config
+	   */
+		$scope.scheaduled = {
+			title: 		'',
+			offsets: 	{},
+			status: 	false
+		};
+
+
+		/**
+	   * Set origin container for returning back to origin box
+	   */
+	  $scope.origin = 'inbox';
+
+
+	  /**
+	   * View setter
+	   */
+	  function setView (hash)
+	  {
+	    $scope.views = {
+	      compose: 				false,
+	      message: 				false,
+	      inbox:   				false,
+	      outbox:  				false,
+	      trash:   				false,
+	      notifications: 	false,
+	      scheaduler: 		false
+	    };
+
+	    $scope.views[hash] = true;
+	  };
+
+
+	  /**
+	   * Switch between the views and set hash accordingly
+	   */
+	  $scope.setViewTo = function (hash)
+	  {
+	    $scope.$watch(hash, function ()
+	    {
+	      $location.hash(hash);
+
+	      setView(hash);
+	    });
+	  };
+
+
+	  /**
+	   * If no params or hashes given in url
+	   */
+	  if (!$location.hash())
+	  {
+	    var view = 'inbox';
+
+	    $location.hash('inbox');
+	  }
+	  else
+	  {
+	    var view = $location.hash();
+	  }
+
+
+	  /**
+	   * Set view
+	   */
+	  setView(view);
+
+
+	  /**
+	   * Default toggle for scheaduler pane
+	   */
+    $scope.scheadulerPane = false;
+
+
+	  /**
+	   * Extract view action from url and set message view
+	   */
+	  if ($location.search().uuid)
+	  {
+	  	if ($location.hash() == 'scheaduler')
+	  	{
+		    setNotificationView($location.search().uuid);
+	  	}
+	  	else
+	  	{
+	  		setMessageView($location.search().uuid);
+	  	}
+	  }
+
+
+	  /**
+	   * TODO
+	   * Possible bug..
+	   * Still issues with changing state of the message
+	   * 
+	   * Set given group for view
+	   */
+	  function setMessageView (id)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.message.loadingMessage);
+
+	    setView('message');
+
+	    $scope.setViewTo('message');
+
+	    $scope.message = Messages.find(id);
+
+	    /**
+	     * Change to read if message not seen yet
+	     * Check only in inbox because other box messages
+	     * can have 'NEW' state as well but those states are not shown
+	     *
+	     * Maybe only for 'trash' box to show state in later stages
+	     */
+	    if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
+	    {
+	      Messages.changeState([id], 'READ')
+	      .then(function (result)
+	      {
+	        if (result.error)
+	        {
+	          $rootScope.notifier.error('Error with changing message state.');
+	          console.warn('error ->', result);
+	        }
+	        else
+	        {
+	          // console.log('state changed');
+	        };
+	      });
+
+	      var _inbox = [];
+
+	      angular.forEach($scope.messages.inbox, function (message, index)
+	      {
+	        if (message.uuid == $scope.message.uuid) message.state = "READ";
+
+	        _inbox.push(message);
+	      });
+
+	  	  $scope.messages.inbox = _inbox;
+
+	      Messages.unreadCount(); 
+	    };
+
+	    $rootScope.statusBar.off();
+	  };
+
+
+	  /**
+	   * Request for a message
+	   */
+	  $scope.requestMessage = function (current, origin)
+	  {
+		  $scope.origin = origin;
+
+	    setMessageView(current);
+
+	    $scope.$watch($location.search(), function ()
+	    {
+	      $location.search({uuid: current});
+	    });
+	  };
+
+
+  	/**
+  	 * Count the scheadules
+  	 */
+  	$scope.scheaduleCounter = function ()
+  	{
+  		var count = 0;
+
+  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+
+	  	$scope.scheaduleCount = count;
+  	}
+
+
+	  /**
+	   * Set view for notification
+	   */
+	  function setNotificationView (id)
+	  {
+	  	$scope.origin = 'notifications';
+
+    	$scope.scheadulerPane = true;
+
+	    var scheaduled = Messages.scheaduled.find(id);
+
+	    angular.forEach(scheaduled.types, function (type, index)
+	  	{
+	  		if (type == 'sms') 		$scope.broadcast.sms 		= true;
+	  		if (type == 'email') 	$scope.broadcast.email 	= true;
+	  	});
+
+	    var members 	= angular.fromJson(Storage.get('members')),
+	    		groups 		= angular.fromJson(Storage.get('groups')),
+	    		receivers = [];
+
+	    angular.forEach(scheaduled.recipients, function (recipient, index)
+	  	{
+	  		var name;
+
+	  		if (members[recipient])
+	  		{
+		  		name = members[recipient].name;
+
+		  		receivers.push({
+		  			group: 	'Users',
+		  			id: 		recipient,
+		  			name: 	name
+		  		});
+	  		}
+	  		else
+	  		{
+	  			angular.forEach(groups, function (group, index)
+	  			{
+	  				if (group.uuid == recipient)
+	  				{  					
+			  			name = group.name;
+
+				  		receivers.push({
+				  			group: 	'Groups',
+				  			id: 		recipient,
+				  			name: 	name
+				  		});
+	  				}
+	  			});
+	  		}
+	  	});
+
+	    $scope.message = {
+	      subject: 		scheaduled.subject,
+	      body: 			scheaduled.message,
+	      receivers: 	receivers
+	    };
+
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	    	angular.forEach(scheaduled.recipients, function (recipient, ind)
+	    	{
+		  		if (members[recipient])
+		  		{
+		    		if (option.innerHTML == members[recipient].name) option.selected = true;
+		    	}
+		    	else
+		    	{
+		  			angular.forEach(groups, function (group, index)
+		  			{
+		  				if (group.uuid == recipient)
+		  				{
+		    				if (option.innerHTML == group.name) option.selected = true;
+		  				}
+		  			});
+		    	}
+	    	});
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+
+	    $scope.scheaduled = {
+	    	uuid: 		scheaduled.uuid,
+	    	sender: 	scheaduled.sender,
+	    	title: 		scheaduled.label,
+	    	status: 	scheaduled.active,
+	    	offsets: 	Offsetter.factory(scheaduled.offsets)
+	    };
+
+	    /**
+	     * FIX
+	     * Counter is hard coded because calling counter script is not working!
+	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
+	     * when console log is produced at the time of compilation it is observable that $scope object
+	     * did not include all the functions in the controller
+	     */
+	    // $scope.scheaduleCounter();
+
+  		var count = 0;
+
+  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+
+	  	$scope.scheaduleCount = count;
+
+	    // rerenderReceiversList();
+	  }
+
+
+	  /**
+	   * Request for a notification
+	   */
+	  $scope.requestNotification = function (id)
+	  {
+	  	$rootScope.statusBar.display('Getting notification..');
+
+	    setView('scheaduler');
+
+	    $scope.setViewTo('scheaduler');
+
+	    setNotificationView(id);
+
+	    $scope.$watch($location.search(), function ()
+	    {
+	      $location.search({uuid: id});
+	    });
+
+	    $rootScope.statusBar.off();
+	  };
+
+
+	  /**
+	   * Compose message view toggler
+	   */
+	  $scope.composeMessage = function ()
+	  {
+	  	/**
+	  	 * Close composer
+	  	 */
+	    if ($scope.views.compose)
+	    {
+	      $scope.closeTabs();
+	    }
+	    /**
+	     * Open composer
+	     */
+	    else
+	    {
+	    	/**
+	    	 * TODO
+	    	 * Why not working properly? Look into this one
+	    	 * 
+	    	 * Reset'em
+	    	 */
+	    	$location.search({});
+
+	      $scope.message = {};
+
+	      $scope.broadcast.sms 		= false;
+	      $scope.broadcast.email 	= false;
+
+	      $scope.scheadulerPane = false;
+
+		    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+		    {
+		    	option.selected = false;
+		    });
+
+		    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+				$scope.scheaduled = {
+					title: 		'',
+					offsets: 	{},
+					status: 	false
+				};
+
+	      $scope.scheaduleCounter();
+
+	      $scope.setViewTo('inbox');
+	    };
+	  };
+
+
+	  /**
+	   * Reset views
+	   */
+	  $scope.closeTabs = function ()
+	  {
+	    $scope.message = {};
+
+	    $location.search({});
+
+	    setView($scope.origin);
+
+	    $scope.setViewTo($scope.origin);
+
+	    Storage.session.remove('escalation');
+	  };
+
+
+	  /**
+	   * Toggle selections
+	   */
+	  $scope.toggleSelection = function (messages, inbox, master)
+	  {
+	    var flag = (master) ? true : false;
+
+	    angular.forEach(messages, function (message, index)
+	    {
+	      $scope.selection[inbox][message.uuid] = flag;
+	    });
+	  };
+
+
+	  /**
+	   * Remove message
+	   */
+	  $scope.removeMessage = function (id)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.message.removing);
+
+	    var bulk = [];
+
+	    bulk.push(id);
+
+	    Messages.remove(bulk)
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with removing message.');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        $rootScope.notifier.success($rootScope.ui.message.removed);
+
+	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+	        Messages.query()
+	        .then(function (messages)
+	        {
+	          $scope.messages = messages;
+
+	          $rootScope.loading = false;
+
+	          $scope.closeTabs();
+
+	          $rootScope.statusBar.off();
+	        });
+	      };
+	    });
+	  };
+
+
+	  /**
+	   * Remove messages
+	   */
+	  $scope.removeMessages = function (selection)
+	  {
+	    // console.log('it is coming to bulk remove ->', selection.length);
+
+	    $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
+
+	    var ids = [];
+
+	    angular.forEach(selection, function (flag, id)
+	    {
+	      if (flag) ids.push(id);
+	    });
+
+	    Messages.remove(ids)
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with removing messages.');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        $rootScope.notifier.success($rootScope.ui.message.removed);
+
+	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+	        Messages.query()
+	        .then(function (messages)
+	        {
+	          $scope.messages = messages;
+
+	          $rootScope.statusBar.off();
+	        });
+	      };
+	    });
+	  };
+
+
+	  /**
+	   * Restore a message
+	   */
+	  $scope.restoreMessage = function (id)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.message.restoring);
+
+	    var bulk = [];
+
+	    bulk.push(id);
+
+	    Messages.restore(bulk)
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with restoring message.');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        $rootScope.notifier.success($rootScope.ui.message.restored);
+
+	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+	        Messages.query()
+	        .then(function(messages)
+	        {
+	          $scope.messages = messages;
+
+	          $rootScope.statusBar.off();
+	        });
+	      };
+	    });
+	  };
+
+
+	  /**
+	   * Restore messages
+	   */
+	  $scope.restoreMessages = function (selection)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.message.restoringSelected);
+
+	    var ids = [];
+
+	    angular.forEach(selection, function (flag, id)
+	    {
+	      if (flag) ids.push(id);
+	    });
+
+	    Messages.restore(ids)
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with restoring message.');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        $rootScope.notifier.success($rootScope.ui.message.removed);
+
+	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+	        Messages.query()
+	        .then(function(messages)
+	        {
+	          $scope.messages = messages;
+
+	          $rootScope.statusBar.off();
+	        });
+	      };
+	    });
+	  };
+
+
+	  /**
+	   * Empty trash
+	   */
+	  $scope.emptyTrash = function ()
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.message.emptying);
+
+	    Messages.emptyTrash()
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with emting trash.');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        $rootScope.notifier.success($rootScope.ui.message.emptied);
+
+	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+	        Messages.query()
+	        .then(function (messages)
+	        {
+	          if (messages.error)
+	          {
+	            $rootScope.notifier.error('Error with getting messages.');
+	            console.warn('error ->', messages);
+	          }
+	          else
+	          {
+	            $scope.messages = messages;
+
+	            $rootScope.statusBar.off();
+	          };
+	        });
+	      };
+	    });    
+	  };
+
+
+	  /**
+	   * Reply a amessage
+	   */
+	  $scope.reply = function(message)
+	  {
+	    setView('compose');
+
+	    $scope.setViewTo('compose');
+
+	    var members 	= angular.fromJson(Storage.get('members')),
+	        senderId 	= message.requester.split('personalagent/')[1].split('/')[0],
+	        name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+
+	    $scope.message = {
+	      subject: 		'RE: ' + message.subject,
+	      receivers: 	[{
+	        group: 		'Users', 
+	        id: 			senderId , 
+	        name: 		name
+	      }]
+	    };
+
+	    rerenderReceiversList();
+	  };
+
+
+	  /**
+	   * Send message
+	   */
+	  $scope.send = function (message, broadcast)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.message.sending);
+
+	    if (message.receivers)
+	    {
+	      Messages.send(message, broadcast)
+	      .then(function (uuid)
+	      {
+	        if (uuid.error)
+	        {
+	          $rootScope.notifier.error('Error with sending message.');
+	          console.warn('error ->', uuid);
+	        }
+	        else
+	        {
+	          $rootScope.notifier.success($rootScope.ui.message.sent);
+
+	          $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+	          Messages.query()
+	          .then(function (messages)
+	          {
+	            if (messages.error)
+	            {
+	              $rootScope.notifier.error('Error with getting messages.');
+	              console.warn('error ->', messages);
+	            }
+	            else
+	            {
+	              $scope.messages = messages;
+
+	              $scope.closeTabs();
+
+	              $scope.requestMessage(uuid, $scope.origin);
+
+	              $rootScope.statusBar.off();
+	            };
+	          });
+	        };
+	      });
+	    }
+	    else
+	    {
+	      $rootScope.notifier.error($rootScope.ui.message.noReceivers);
+
+	      $rootScope.statusBar.off();
+	    };
+	  };
+
+
+		/**
+	   * Fix for not displaying original sender in multiple receivers selector
+	   * in the case that user wants to add more receivers to the list  
+	   */
+	  $("div#composeTab select.chzn-select").chosen()
+	  .change(function (item)
+	  {
+	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
+	    {
+	  		var name = $(li).html();
+
+	  		$.each($("div#composeTab select.chzn-select option"), function (j, opt)
+	      {
+		      if (opt.innerHTML == name) opt.selected = true;
+		    });
+	  	});
+	  });
+
+	  
+	  /**
+	   * Re-render receivers list
+	   */
+	  function rerenderReceiversList ()
+	  {
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	      if (option.innerHTML == name) option.selected = true;
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+	  }
+
+	    
+	  /**
+	   * Extract escalation information
+	   */
+	  if ($location.search().escalate)
+	  {
+	    var escalation = angular.fromJson(Storage.session.get('escalation')),
+	        name = escalation.group.split('>')[1].split('<')[0],
+	        uuid = escalation.group.split('uuid=')[1].split('#view')[0];
+
+	    setTimeout (function ()
+	    {
+	      angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	      {
+	        if (option.innerHTML == name) option.selected = true;
+	      });
+
+	      $("div#composeTab select.chzn-select").trigger("liszt:updated");
+	    }, 100);
+
+	    $scope.message = {
+	      subject: $rootScope.ui.message.escalation,
+	      receivers: [{
+	        group: 'Groups', 
+	        id: uuid, 
+	        name: name
+	      }],
+	      body: $rootScope.ui.message.escalationBody(
+	        escalation.diff, 
+	        escalation.start.date, 
+	        escalation.start.time,
+	        escalation.end.date,
+	        escalation.end.time)
+	    };
+
+	    $scope.broadcast = {
+	      sms: true
+	    };
+	  };
+
+
+	  /**
+	   * Bulk cleaners for mailboxes
+	   */
+	  $scope.clean = {
+	  	inbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.inbox);
+	  	},
+	  	outbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.outbox);
+	  	},
+	  	trash: function ()
+	  	{
+	  		Messages.clean($scope.messages.trash); 		
+	  	}
+	  };
+
+
+
+
+
+
+	  /**
+	   * Scheaduler jobs manager
+	   */
+	  $scope.scheaduler = {
+
+	  	/**
+	  	 * Make data ready for insertion
+	  	 */
+	  	job: function (message, broadcast, scheaduled)
+	  	{
+		    var members = [],
+		        types 	= [];
+
+		    angular.forEach(message.receivers, function (receiver, index) { members.push(receiver.id); });
+
+		    types.push('paige');
+
+		    if (broadcast.sms) types.push('sms');
+		    if (broadcast.email) types.push('email');
+
+		    return {
+		    	sender: 		$rootScope.app.resources.uuid,
+		      recipients: members,
+		      label: 			scheaduled.title,
+		      subject: 		message.subject,
+		      message: 		message.body,
+		      offsets: 		Offsetter.arrayed(scheaduled.offsets),
+		      repeat: 		'week',
+		      types: 			types,
+		      active: 		scheaduled.status
+		    };
+		  },
+
+
+	  	/**
+	  	 * Scheaduler jobs lister
+	  	 */
+	  	list: function (callback)
+	  	{
+				$rootScope.statusBar.display('Refreshing scheaduled jobs...');
+
+				Messages.scheaduled.list()
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with getting scheadules..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+				    $scope.scheadules = result;
+
+				    $rootScope.statusBar.off();
+
+				    callback();
+				  };
+				});
+	  	},
+
+
+	  	/**
+	  	 * NOT IN USE
+	  	 * 
+	  	 * Get a scheaduler job
+	  	 */
+	  	get: function (uuid)
+	  	{
+				Messages.scheaduled.get(uuid)
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with getting the scheadule..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+				    // console.log('notification fetched ->', result);
+
+				    $scope.scheaduled = result;
+				  };
+				});
+	  	},
+
+
+	  	/**
+	  	 * Save a scheadule job
+	  	 */
+	  	save: function (message, broadcast, scheaduled)
+	  	{
+	  		if (scheaduled.uuid)
+	  		{
+	  			this.edit(message, broadcast, scheaduled);
+	  		}
+	  		else
+	  		{
+	  			this.add(message, broadcast, scheaduled)
+	  		}
+	  	},
+
+
+	  	/**
+	  	 * Add a scheadule job
+	  	 */
+	  	add: function (message, broadcast, scheaduled)
+	  	{
+	  		var self = this;
+
+	  		// console.log('passed ones ->', message, broadcast, scheaduled);
+	  		
+	  		// console.warn('processed ->', this.job(message, broadcast, scheaduled));
+
+	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
+
+	  		Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with creating the notification...');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+	          $rootScope.notifier.success('Scheaduled job is saved successfully.');
+
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
+				  };
+				});
+	  	},
+
+
+	  	/**
+	  	 * Edit a schedule job
+	  	 */
+	  	edit: function (message, broadcast, scheaduled)
+	  	{
+	  		var self = this;
+
+	    	$rootScope.statusBar.display('Editing scheaduled job...');
+
+				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with editing scheadule..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+	          $rootScope.notifier.success('Scheaduled job is edited successfully.');
+
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
+	        	});
+				  };
+				});	
+	  	},
+
+
+	  	/**
+	  	 * Remove a scheadule job
+	  	 */
+	  	remove: function (uuid)
+	  	{
+	  		var self = this;
+
+	    	$rootScope.statusBar.display('Deleting a scheaduled job...');
+
+		    Messages.scheaduled.remove(uuid)
+		    .then(function (result)
+		    {
+		      if (result.error)
+		      {
+		        $rootScope.notifier.error('Error with deleting the scheadule..');
+		        console.warn('error ->', result);
+		      }
+		      else
+		      {
+	          $rootScope.notifier.success('Scheaduled job is deleted successfully.');
+
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
+		      };
+		    });
+	  	}
+
+	  };
+
+	}
+]);/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Scheaduler', [])
+
+
+/**
+ * Scheadule controller
+ */
+.controller('scheaduler', 
+[
+	'$scope', '$rootScope',
+	function ($scope, $rootScope) 
+	{
+		/**
+		 * Watch offsets
+		 */
+		$scope.$watch(function ()
+		{
+			if ($scope.scheaduled)
+			{
+				angular.forEach($scope.scheaduled.offsets, function (offset, index)
+				{
+					/**
+					 * If all the days are unchecked make monday checked as default
+					 */
+					if (offset.mon == false && 
+							offset.tue == false && 
+							offset.wed == false && 
+							offset.thu == false && 
+							offset.fri == false && 
+							offset.sat == false && 
+							offset.sun == false)
+					{
+						offset.mon = true;
+					}
+
+					var hour    = 1000 * 60 * 60,
+				      minute  = 1000 * 60,
+				      time 		= offset.time.split(':'),
+				      exact 	= (time[0] * hour) + (time[1] * minute);
+
+					if (time[0] != offset.hour) 	offset.hour 	= time[0];
+					if (time[1] != offset.minute) offset.minute = time[1];
+
+					if (offset.exact != exact) { offset.exact = exact; }
+
+				});	
+			}
+		});
+
+
+    /**
+     * Add a new offset
+     */
+    $scope.addNewOffset = function ()
+    {
+    	if ($scope.scheaduled.offsets[0])
+    	{
+	  		var hour    = 1000 * 60 * 60,
+		        minute  = 1000 * 60,
+		        time 		= $scope.scheaduled.offsets[0].time.split(':'),
+		        exact 	= (time[0] * hour) + (time[1] * minute);
+
+		   	$scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
+
+		   	$scope.scheaduled.offsets[exact].exact = exact;
+    	}
+
+    	$scope.scheaduled.offsets[0] = {
+        mon: 		true,
+        tue: 		false,
+        wed: 		false,
+        thu: 		false,
+        fri: 		false,
+        sat: 		false,
+        sun: 		false,
+	      hour: 	0,
+	      minute: 0,
+	      time: 	'00:00',
+	      exact: 	0
+    	};
+
+    	$scope.scheaduleCounter();
+    };
+
+
+  	/**
+  	 * Remove a scheadule
+  	 */
+  	$scope.remover = function (key)
+  	{
+  		delete $scope.scheaduled.offsets[key];
+
+  		$scope.scheaduleCounter();
+  	};
+
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Groups', [])
+
+
+/**
+ * Groups controller
+ */
+.controller('groups',
+[
+	'$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
+	function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
+	{
+		/**
+		 * Fix styles
+		 */
+		$rootScope.fixStyles();
+
+
+		/**
+		 * Self this
+		 */
+		var self = this,
+				params = $location.search();
+
+
+		/**
+		 * Init search query
+		 */
+		$scope.search = {
+			query: ''
+		};
+
+
+		/**
+		 * Reset selection
+		 */
+		$scope.selection = {};
+
+
+		/**
+		 * Set groups
+		 */
+		$scope.data = data;
+
+
+		/**
+		 * Grab and set roles for view
+		 */
+		$scope.roles = $rootScope.config.roles;
+
+
+		/**
+		 * Groups for dropdown
+		 */
+		$scope.groups = data.groups;
+
+
+		var uuid, view;
+
+		/**
+		 * If no params or hashes given in url
+		 */
+		if (!params.uuid && !$location.hash())
+		{
+			uuid = data.groups[0].uuid;
+			view = 'view';
+
+			$location.search({uuid: data.groups[0].uuid}).hash('view');
+		}
+		else
+		{
+			uuid = params.uuid;
+			view = $location.hash();
+		}
+
+
+		/**
+		 * Set group
+		 */
+		setGroupView(uuid);
+
+
+		/**
+		 * Set view
+		 */
+		setView(view);
+
+
+		/**
+		 * Set given group for view
+		 */
+		function setGroupView (id)
+		{
+			angular.forEach(data.groups, function (group, index)
+			{
+				if (group.uuid == id) $scope.group = group;
+			});
+
+			$scope.members = data.members[id];
+
+			$scope.current = id;
+
+			wisher(id);
+		}
+
+
+		function wisher (id)
+		{
+			$scope.wished = false;
+
+			Groups.wish(id)
+			.then(function (wish)
+			{
+				$scope.wished = true;
+
+				$scope.wish = wish.count;
+
+				$scope.popover = {
+					id: id,
+					wish: wish.count
+				};
+			});
+		}
+
+
+		/**
+		 * Set wish for the group
+		 */
+		$scope.saveWish = function (id, wish)
+		{
+			// console.warn('setting the wish:' + wish + ' for the group:', id);
+
+			$rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
+
+			Slots.setWish(
+			{
+				id:     id,
+				start:  255600,
+				end:    860400,
+				recursive:  true,
+				wish:   wish
+			})
+			.then(
+				function (result)
+				{
+					if (result.error)
+					{
+						$rootScope.notifier.error('Error with changing wish value.');
+						console.warn('error ->', result);
+					}
+					else
+					{
+						$rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+					}
+
+					wisher(id);
+				}
+			);
+
+		};
+
+
+		/**
+		 * Request for a group
+		 */
+		$scope.requestGroup = function (current, switched)
+		{
+			setGroupView(current);
+
+			$scope.$watch($location.search(), function ()
+			{
+				$location.search({uuid: current});
+			});
+
+			if (switched)
+			{
+				if ($location.hash() != 'view') $location.hash('view');
+
+				setView('view');
+			}
+		};
+
+
+		/**
+		 * View setter
+		 */
+		function setView (hash)
+		{
+			$scope.views = {
+				view:   false,
+				add:    false,
+				edit:   false,
+				search: false,
+				member: false
+			};
+
+			$scope.views[hash] = true;
+		}
+
+
+		/**
+		 * Switch between the views and set hash accordingly
+		 */
+		$scope.setViewTo = function (hash)
+		{
+			$scope.$watch(hash, function ()
+			{
+				$location.hash(hash);
+
+				setView(hash);
+			});
+		};
+
+
+		/**
+		 * Toggle new group button
+		 */
+		$scope.addGroupForm = function ()
+		{
+			if ($scope.views.add)
+			{
+				$scope.closeTabs();
+			}
+			else
+			{
+				$scope.groupForm = {};
+
+				$scope.setViewTo('add');
+			}
+		};
+
+
+		/**
+		 * New member
+		 */
+		$scope.newMemberForm = function ()
+		{
+			if ($scope.views.member)
+			{
+				$scope.closeTabs();
+			}
+			else
+			{
+				$scope.memberForm = {};
+
+				$scope.setViewTo('member');
+			}
+		};
+
+
+		/**
+		 * Edit a group
+		 */
+		$scope.editGroup = function (group)
+		{
+			$scope.setViewTo('edit');
+
+			$scope.groupForm = {
+				id: group.uuid,
+				name: group.name
+			};
+		};
+
+
+		/**
+		 * Close inline form
+		 */
+		$scope.closeTabs = function ()
+		{
+			$scope.groupForm = {};
+
+			$scope.memberForm = {};
+
+			$scope.setViewTo('view');
+		};
+
+
+		/**
+		 * Search for members
+		 */
+		$scope.searchMembers = function (query)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
+
+			Groups.search(query).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with search.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$scope.search = {
+						query: '',
+						queried: query
+					};
+
+					$scope.candidates = result;
+
+					$scope.setViewTo('search');
+
+					$rootScope.statusBar.off();
+				}
+			});
+		};
+
+
+		/**
+		 * Add member to a group
+		 */
+		$scope.addMember = function (candidate)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
+
+			Groups.addMember(candidate).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with adding a member.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.memberAdded);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Remove member from a group
+		 */
+		$scope.removeMember = function (member, group)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.removingMember);
+
+			Groups.removeMember(member, group).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with removing a member.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Remove members
+		 */
+		$scope.removeMembers = function (selection, group)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
+
+			Groups.removeMembers(selection, group).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with removing members.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.removed);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					$scope.selection = {};
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+
+			/**
+			 * TODO
+			 * not working to reset master checkbox!
+			 */
+			//$scope.selectionMaster = {};
+		};
+
+
+		/**
+		 * Save a group
+		 */
+		$scope.groupSubmit = function (group)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.saving);
+
+			Groups.save(group).
+			then(function (returned)
+			{
+				if (returned.error)
+				{
+					$rootScope.notifier.error('Error with saving group.');
+					console.warn('error ->', returned);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.groupSaved);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.closeTabs();
+
+							$scope.data = data;
+
+							angular.forEach(data.groups, function (group, index)
+							{
+							if (group.uuid == returned)
+							{
+								$scope.groups = data.groups;
+
+								angular.forEach(data.groups, function (g, index)
+								{
+									if (g.uuid == group.uuid) $scope.group = g;
+								});
+
+								$scope.members = data.members[group.uuid];
+
+								$scope.current = group.uuid;
+
+								$scope.$watch($location.search(), function ()
+								{
+									$location.search({uuid: group.uuid});
+								}); // end of watch
+
+							} // end of if
+
+							}); // end of foreach
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Save a member
+		 */
+		$scope.memberSubmit = function (member)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
+
+			Profile.register(member).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					if (result.error.status === 409)
+					{
+						$rootScope.notifier.error('Username is already registered.');
+
+						// $scope.memberForm = {};
+
+						$rootScope.statusBar.off();
+					}
+					else
+					{
+						$rootScope.notifier.error('Error with registering a member.');
+					}
+					
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							$location.path('/profile/' + member.username).hash('profile');
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Delete a group
+		 */
+		$scope.deleteGroup = function (id)
+		{
+			$rootScope.statusBar.display($rootScope.ui.groups.deleting);
+
+			Groups.remove(id).
+			then(function (result)
+			{
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with deleting a group.');
+					console.warn('error ->', result);
+				}
+				else
+				{
+					$rootScope.notifier.success($rootScope.ui.groups.deleted);
+
+					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+					Groups.query().
+					then(function (data)
+					{
+						if (data.error)
+						{
+							$rootScope.notifier.error('Error with getting groups and users.');
+							console.warn('error ->', data);
+						}
+						else
+						{
+							$scope.data = data;
+
+							angular.forEach(data.groups, function (group, index)
+							{
+								$scope.groups = data.groups;
+
+								$scope.group = data.groups[0];
+
+								$scope.members = data.members[data.groups[0].uuid];
+
+								$scope.current = data.groups[0].uuid;
+
+								$scope.$watch($location.search(),
+									function ()
+									{
+										$location.search({uuid: data.groups[0].uuid});
+									}
+								); // end of watch
+							}); // end of foreach
+
+							$rootScope.statusBar.off();
+						}
+					});
+				}
+			});
+		};
+
+
+		/**
+		 * Selection toggler
+		 */
+		$scope.toggleSelection = function (group, master)
+		{
+			var flag = (master) ? true : false,
+					members = angular.fromJson(Storage.get(group.uuid));
+
+			angular.forEach(members, function (member, index)
+			{
+				$scope.selection[member.uuid] = flag;
+			});
+		};
+
+
+		/**
+		 * Not used in groups yet but login uses modal call..
+		 * 
+		 * Fetch parent groups
+		 */
+		$scope.fetchParent = function ()
+		{
+			Groups.parents()
+			.then(function (result)
+			{
+				console.warn('parent -> ', result);
+			});
+		};
+
+		/**
+		 * Not used in groups yet..
+		 * 
+		 * Fetch parent groups
+		 */
+		$scope.fetchContainers = function (id)
+		{
+			Groups.containers(id)
+			.then(function (result)
+			{
+				console.warn('containers -> ', result);
+			});
+		};
+
+
+
+
+
+
+
+
+
+
+      // var filesTreeGrid;
+      // var foldersTreeGrid;
+
+      // // Called when the page is loaded
+      // function draw() {
+      //   // randomly generate some files
+      //   var files = [];
+      //   for (var i = 0; i < 50; i++) {
+      //     files.push({
+      //       'name': 'File ' + i,
+      //       'size': (Math.round(Math.random() * 50) * 10 + 100) + ' kB',
+      //       'date': (new Date()).toDateString(),
+      //       '_id': i     // this is a hidden field, as it starts with an underscore
+      //     });
+      //   }
+        
+      //   // randomly generate folders, containing a dataconnector which supports
+      //   // drag and drop
+      //   var folders = [];
+      //   var chars = 'ABCDE';
+      //   for (var i in chars) {
+      //     var c = chars[i];
+      //     var options = {
+      //       'dataTransfer' : {
+      //         'allowedEffect': 'move',
+      //         'dropEffect': 'move'
+      //       }
+      //     };
+      //     var dataConnector = new links.DataTable([], options);
+      //     var item = {
+      //       'name': 'Folder ' + c, 
+      //       'files': dataConnector, 
+      //       '_id': c
+      //     };
+      //     folders.push(item);
+      //   }
+      //   folders.push({'name': 'File X', '_id': 'X'});
+      //   folders.push({'name': 'File Y', '_id': 'Y'});
+      //   folders.push({'name': 'File Z', '_id': 'Z'});
+
+      //   // specify options
+      //   var treeGridOptions = {
+      //     'width': '350px',
+      //     'height': '400px'
+      //   };  
+
+      //   // Instantiate treegrid object with files
+      //   var filesContainer = document.getElementById('files');
+      //   var filesOptions = {
+      //     'columns': [
+      //       {'name': 'name', 'text': 'Name', 'title': 'Name of the files'},
+      //       {'name': 'size', 'text': 'Size', 'title': 'Size of the files in kB (kilo bytes)'},
+      //       {'name': 'date', 'text': 'Date', 'title': 'Date the file is last updated'}
+      //     ],
+      //     'dataTransfer' : {
+      //       'allowedEffect': 'move',
+      //       'dropEffect': 'none'
+      //     }
+      //   };
+      //   filesTreeGrid = new links.TreeGrid(filesContainer, treeGridOptions);
+      //   var filesDataConnector = new links.DataTable(files, filesOptions);
+      //   /*
+      //   filesDataConnector.setFilters([{
+      //     'field': 'size',
+      //     'order': 'ASC'
+      //     //'startValue': '300 kB',
+      //     //'endValue': '500 kB',
+      //   }]);
+      //   //*/
+      //   filesTreeGrid.draw(filesDataConnector);    
+
+      //   // Instantiate treegrid object with folders
+      //   var foldersOptions = {};
+      //   //* TDOO: cleanup temporary foldersOptions
+      //   var foldersOptions = {
+      //     'dataTransfer' : {
+      //       'allowedEffect': 'move',
+      //       'dropEffect': 'move'
+      //     }
+      //   };
+      //   //*/
+      //   var foldersContainer = document.getElementById('folders');
+      //   var foldersDataConnector = new links.DataTable(folders, foldersOptions);
+      //   foldersTreeGrid = new links.TreeGrid(foldersContainer, treeGridOptions);
+      //   foldersTreeGrid.draw(foldersDataConnector);
+      // }
+
+      // draw();
+
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Profile', [])
+
+
+/**
+ * Profile controller
+ */
+.controller('profile', 
+[
+	'$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'MD5', 
+	function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5) 
+	{
+	  /**
+	   * Fix styles
+	   */
+	  $rootScope.fixStyles();
+
+
+	  /**
+	   * Pass the self
+	   */
+		$scope.self = this;
+
+
+	  /**
+	   * Pass periods
+	   */
+	  $scope.periods = Dater.getPeriods();
+
+
+	  /**
+	   * Pass current
+	   */
+	  $scope.current = {
+      day:    Date.today().getDayOfYear() + 1,
+      week:   new Date().getWeek(),
+      month:  new Date().getMonth() + 1
+    };
+
+
+	  /**
+	   * Set data for view
+	   */
+	  if (data.user) data.user 	= data.slots.data;
+	  $scope.data = data;
+
+
+	  /**
+	   * Get groups of user
+	   */
+	  $scope.groups = Groups.getMemberGroups($route.current.params.userId);
+
+
+	  /**
+	   * Default values for passwords
+	   */
+	  $scope.passwords = {
+	    current: 	'',
+	    new1: 		'',
+	    new2: 		''
+	  };
+
+
+	  /**
+	   * Default form views
+	   */
+	  $scope.forms = {
+	    add:  false,
+	    edit: false
+	  };
+
+
+	  /**
+	   * Slot form toggler
+	   */
+	  $scope.toggleSlotForm = function ()
+	  {
+	    if ($scope.forms.add)
+	    {
+	      $scope.resetInlineForms();
+	    }
+	    else
+	    {
+	      $scope.slot = {};
+
+	      $scope.slot = {
+	        start: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        end: {
+	          date: new Date().toString($rootScope.config.formats.date),
+	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
+	          datetime: new Date().toISOString()
+	        },
+	        state:      '',
+	        recursive:  false,
+	        id:         ''
+	      };
+
+	      $scope.forms = {
+	        add: 	true,
+	        edit: false
+	      };
+	    }
+	  };
+
+
+	  /**
+	   * Reset inline forms
+	   */
+	  $scope.resetInlineForms = function ()
+	  {
+	    $scope.slot = {};
+
+	    $scope.original = {};
+
+	    $scope.forms = {
+	      add:  false,
+	      edit: false
+	    };
+	  };
+
+
+	  /**
+	   * Extract view action from url and set view
+	   */
+	  setView($location.hash());
+
+
+	  /**
+	   * View setter
+	   */
+	  function setView (hash)
+	  {
+	    $scope.views = {
+	      profile:  false,
+	      edit:     false,
+	      password: false,
+	      timeline: false
+	    };
+
+	    $scope.views[hash] = true;
+
+	    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
+	  };
+
+
+	  /**
+	   * Switch between the views and set hash ccordingly
+	   */
+	  $scope.setViewTo = function (hash)
+	  {
+	    $scope.$watch($location.hash(), function ()
+	    {
+	      $location.hash(hash);
+
+	      setView(hash);
+	    });
+	  };
+
+
+	  /**
+	   * Save user
+	   */
+	  $scope.save = function (resources)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
+
+	    Profile.save($route.current.params.userId, resources)
+	    .then(function (result)
+	    {
+	      if (result.error)
+	      {
+	        $rootScope.notifier.error('Error with saving profile information.');
+	        console.warn('error ->', result);
+	      }
+	      else
+	      {
+	        $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+	        var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
+
+	        Profile.get($route.current.params.userId, flag)
+	        .then(function (data)
+	        {
+	          if (data.error)
+	          {
+	            $rootScope.notifier.error('Error with getting profile data.');
+	            console.warn('error ->', data);
+	          }
+	          else
+	          {
+	            $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
+	            $scope.data = data;
+
+	            $rootScope.statusBar.off();
+	          };
+	        });
+	      };
+	    });
+	  };
+
+
+	  /**
+	   * Change passwords
+	   */
+	  $scope.change = function (passwords)
+	  {
+	    if (passwords.new1 == '' || passwords.new2 == '')
+	    {
+	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
+
+	      return false;
+	    };
+
+	    if (passwords.new1 != passwords.new2)
+	    {
+	      $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
+
+	      return false;
+	    }
+	    else if ($rootScope.app.resources.askPass == MD5(passwords.current))
+	    {
+	      $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
+
+	      Profile.changePassword(passwords)
+	      .then(function (result)
+	      {
+	        if (result.error)
+	        {
+	          $rootScope.notifier.error('Error with changing password.');
+	          console.warn('error ->', result);
+	        }
+	        else
+	        {
+	          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+	          Profile.get($rootScope.app.resources.uuid, true)
+	          .then(function (data)
+	          {
+	            if (data.error)
+	            {
+	              $rootScope.notifier.error('Error with getting profile data.');
+	              console.warn('error ->', data);
+	            }
+	            else
+	            {
+	              $rootScope.notifier.success($rootScope.ui.profile.passChanged);
+
+	              $scope.data = data;
+
+	              $rootScope.statusBar.off();
+	            };
+	          });
+	        };
+	      });
+	    }
+	    else
+	    {
+	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
+	    };
+	  };
+	  
+
+	  /**
+	   * Render timeline if hash is timeline
+	   */
+	  if ($location.hash() == 'timeline')
+	  {
+	  	timelinebooter();
+	  };
+
+
+	  /**
+	   * Redraw timeline
+	   */
+	  $scope.redraw = function ()
+	  {
+	  	timelinebooter();
+	  };
+
+
+	  function timelinebooter ()
+	  {
+      $scope.timeline = {
+      	id: 'userTimeline',
+      	main: false,
+      	user: {
+      		id: 	$route.current.params.userId
+      	},
+        current: $scope.current,
+        options: {
+          start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
+          end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
+          min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
+          max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
+        },
+        range: {
+          start: 	$scope.periods.weeks[$scope.current.week].first.day,
+          end: 		$scope.periods.weeks[$scope.current.week].last.day
+        },
+        config: {
+          legenda:    {},
+          legendarer: $rootScope.config.timeline.config.legendarer,
+          states:     $rootScope.config.timeline.config.states
+        }
+      };
+
+      var states = {};
+
+      angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+
+      $scope.states = states;
+
+      angular.forEach($rootScope.config.timeline.config.states, function (state, index)
+      {
+        $scope.timeline.config.legenda[index] = true;
+      });
+
+      $('#timeline').html('');
+      $('#timeline').append('<div id="userTimeline"></div>');
+	  };
+
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Settings', [])
+
+
+/**
+ * Settings controller
+ */
+.controller('settings', 
+[
+	'$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile', 'Storage', 
+	function ($rootScope, $scope, $window, data, Settings, Profile, Storage) 
+	{
+		/**
+		 * Fix styles
+		 */
+		$rootScope.fixStyles();
+
+
+	  /**
+	   * Pass the settings
+	   */
+	  $scope.settings = angular.fromJson(data);
+
+
+	  /**
+	   * User settings: Languages
+	   */
+	  var languages = {};
+
+	  angular.forEach(ui, function (lang, index) { languages[lang.meta.name] = lang.meta.label; });
+
+	  $scope.languages = languages;
+
+
+	  /**
+	   * Pass the groups
+	   */
+	   var groups = {};
+
+	   angular.forEach(Storage.local.groups(), function (group, index)
+	   {
+	     groups[group.uuid] = group.name;
+	   });
+
+	   $scope.groups = groups;
+
+
+	  /**
+	   * Save user settings
+	   */
+	  $scope.save = function (settings)
+	  {
+	    $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+	    Settings.save($rootScope.app.resources.uuid, settings)
+	    .then(function (saved)
+	    {
+	      $rootScope.notifier.success($rootScope.ui.settings.saved);
+
+	      $rootScope.statusBar.display($rootScope.ui.settings.refreshing);
+
+	      Profile.get($rootScope.app.resources.uuid, true)
+	      .then(function (result)
+	      {
+	        if (result.error)
+	        {
+	          $rootScope.notifier.error('Error with saving settings.');
+	          console.warn('error ->', result);
+	        }
+	        else
+	        {
+	          $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
+
+	          $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
+
+	          $rootScope.statusBar.off();
+	        };
+	      })
+	    });
+	  };
+
+
+	  /**
+	   * Google authorization
+	   */
+	  $scope.authGoogle = function ()
+	  {               
+	    window.location = 'http://3rc2.ask-services.appspot.com/auth/google' + 
+	                      '?agentUrl=http://3rc2.ask-services.appspot.com/eveagents/personalagent/' + 
+	                      $rootScope.app.resources.uuid + 
+	                      '/' + 
+	                      '&agentMethod=createGoogleAgents' +
+	                      '&applicationCallback=' + 
+	                      location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
+	                      '/index.html' + 
+	                      /**
+	                       * Fix a return value
+	                       */
+	                      '?account=' +
+	                      $rootScope.app.resources.uuid +
+	                      encodeURIComponent('#') + 
+	                      '/settings';
+	  };
+
+	}
+]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
+angular.module('WebPaige.Controllers.Help', [])
+
+
+/**
+ * Help controller
+ */
+.controller('help',
+[
+	'$rootScope', '$scope',
+	function ($rootScope, $scope)
+	{
+		/**
+		 * Fix styles
+		 */
+		$rootScope.fixStyles();
+	}
+]);

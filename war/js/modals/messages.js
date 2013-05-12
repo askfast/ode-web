@@ -47,9 +47,39 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'POST',
 	        params: {action: 'changeState'}
 	      },
-	      remove : {
+	      remove: {
 	        method: 'POST',
 	        params: {action: 'deleteQuestions'}
+	      }
+	    }
+	  );
+
+
+	  var Notifications = $resource(
+	    $config.host + '/notification/:uuid',
+	    {
+	    },
+	    {
+	      query: {
+	        method: 'GET',
+	        params: {},
+	        isArray: true
+	      },
+	      get: {
+	        method: 'GET',
+	        params: {uuid: ''}
+	      },
+	      save: {
+	        method: 'POST',
+	        params: {}
+	      },
+	      edit: {
+	        method: 'PUT',
+	        params: {uuid: ''}
+	      },
+	      remove: {
+	        method: 'DELETE',
+	        params: {uuid: ''}
 	      }
 	    }
 	  );
@@ -65,14 +95,18 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    Messages.query(
 	      function (result) 
 	      {
-	      	console.warn('coming to here');
-
-	        Storage.add('TEST', 'TESTING');
 	        Storage.add('messages', angular.toJson(result));
 
 	        Messages.prototype.unreadCount();
 
-	        deferred.resolve(Messages.prototype.filter(result));
+	        Messages.prototype.scheaduled.list()
+	        .then(function (scheadules)
+	      	{
+	        	deferred.resolve({
+	        		messages: 			Messages.prototype.filter(result),
+	        		scheadules: 		scheadules
+	        	});
+	      	});
 	      },
 	      function (error)
 	      {
@@ -84,30 +118,157 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 	  
 
-
-
 	  /**
-	   * Query messages from back-end
+	   * Notifications
 	   */
-	  Messages.prototype.queryTest = function () 
-	  {
-	    var deferred = $q.defer();
+	  Messages.prototype.scheaduled = {
 
-	    setTimeout(function ()
-	  	{
-        Storage.add('messages', angular.toJson(messagesLocal));
+	  	/**
+	  	 * List of the notifications
+	  	 */
+	  	list: function () 
+		  {
+		    var deferred = $q.defer();
 
-        Messages.prototype.unreadCount();
+		    Notifications.query(
+		      function (result) 
+		      {
+		      	Storage.add('notifications', angular.toJson(result));
 
-        deferred.resolve(Messages.prototype.filter(messagesLocal));
-	  		
-	  	}, 100);
+		      	angular.forEach(result, function (scheadule, index)
+		      	{
+		      		angular.forEach(scheadule.types, function (type, ind)
+		      		{
+		      			if (type == 'sms') scheadule.sms = true;
+		      			if (type == 'email') scheadule.mail = true;
+		      		});
+		      	});
 
-	    return deferred.promise;
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;
+		  },
+
+		  /**
+		   * Create notifications
+		   */
+		  create: function (notification)
+		  {
+		  	// console.log('not ->', notification);
+		  	
+		    var deferred = $q.defer();
+
+		    Notifications.save(null, angular.toJson(notification),
+		      function (result) 
+		      {
+		        var returned = '';
+
+		        angular.forEach(result, function (chr, i)
+		        {
+		          returned += chr;
+		        });
+
+		        deferred.resolve(returned);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Edit notification
+		   */
+		  edit: function (uuid, notification)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.edit({uuid: uuid}, angular.toJson(notification),
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Get notification
+		   */
+		  get: function (uuid)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.get({uuid: uuid},
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  },
+
+		  /**
+		   * Get a local notification
+		   */
+		  find: function (id)
+		  {
+		    var gem;
+
+		    angular.forEach(this.local(), function (notification, index)
+		    {
+		      if (notification.uuid == id) gem = notification;
+		    });
+
+		    return gem;	  	
+		  },
+
+		  /**
+		   * Get local cache of notifications
+		   */
+		  local: function () { return angular.fromJson(Storage.get('notifications')); },
+
+		  /**
+		   * Delete notifications
+		   */
+		  remove: function (uuid)
+		  {		  	
+		    var deferred = $q.defer();
+
+		    Notifications.remove({uuid: uuid},
+		      function (result) 
+		      {
+		        deferred.resolve(result);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+
+		    return deferred.promise;		  	
+		  }
+
 	  };
-
-
-
 
 
 	  /**
@@ -164,8 +325,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    filtered.outbox = butcher(filtered.outbox);
 	    filtered.trash 	= butcher(filtered.trash);
 
-	    console.warn('filtered ->', filtered);
-
 	    return filtered;
 	  };
 
@@ -182,8 +341,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  Messages.prototype.find = function (id)
 	  {
 	    var gem;
-
-	    console.warn('asked for ->', id, Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message, index)
 	    {
@@ -379,7 +536,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 
 
-
 	  /**
 	   * Delete message(s)
 	   */
@@ -395,7 +551,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    return deferred.promise;
 	  };
-
 
 
 	  /**
@@ -447,25 +602,33 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  };
 
 
-
-
+	  /**
+	   * Clean the mailboxes
+	   */
 	  Messages.prototype.clean = function (box)
 	  {
-	    var deferred = $q.defer(),
-	        calls = [];
+	    var deferred 	= $q.defer(),
+	        calls 		= [];
 
 	    angular.forEach(box, function (bulk, id)
 	    {
-	    	console.log('bulk ->', bulk);
+	    	var ids = [];
 
-	      // if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	    	angular.forEach(bulk, function (message, index)
+	    	{
+	    		ids.push(message.uuid);
+	    	});
+
+	      calls.push(Messages.remove(null, {
+	      	members: ids
+	      }));
 	    });
 
-	    // $q.all(calls)
-	    // .then(function (result)
-	    // {
-	    //   deferred.resolve(result);
-	    // });
+	    $q.all(calls)
+	    .then(function (result)
+	    {
+	      deferred.resolve(result);
+	    });
 
 	    return deferred.promise;
 	  }

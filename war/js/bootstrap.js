@@ -148,9 +148,9 @@ angular.module('WebPaige')
         else
         {
           $rootScope.notification = {
-            status: status,
-            type: type,
-            message: message
+            status:   status,
+            type:     type,
+            message:  message
           };
         }
       },

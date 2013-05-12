@@ -105,6 +105,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    }
 	  };
 
+	  /**
+	   * IE8 fix for inability of - signs in date object
+	   */
 	  if ($.browser.msie && $.browser.version == '8.0')
 	  {
 		  $scope.timeline.options = {

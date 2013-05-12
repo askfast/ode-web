@@ -578,6 +578,27 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 /**
+ * Make first letter capital
+ */
+.filter('toTitleCase', 
+[
+	'Strings', 
+	function (Strings) 
+	{
+		return function (txt)
+		{
+	     return Strings.toTitleCase(txt);
+	  }
+	}
+])
+
+
+
+
+
+
+
+/**
  * Count messages in box
  */
 .filter('countBox',
@@ -595,4 +616,95 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    return total;
 	  }
 	}
-);
+)
+
+
+
+
+
+
+
+
+/**
+ * Convert offsets array to nicely format in scheaduled jobs
+ */
+.filter('nicelyOffsets', 
+[
+	'Dater', 'Storage', 'Offsetter',
+	function (Dater, Storage, Offsetter)
+	{
+		return function (data)
+		{
+			var offsets 	= Offsetter.factory(data),
+					compiled 	= '';
+
+			angular.forEach(offsets, function (offset, index)
+			{
+				compiled += '<div style="display:block; margin-bottom: 5px;">';
+
+				compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
+
+				if (offset.mon) compiled += '<span class="muted"><small><i>maandag,</i></small></span>';
+				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
+				if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
+				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
+				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
+				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
+				if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+
+				compiled = compiled.substring(0, compiled.length - 20);
+
+				compiled = compiled += '</i></small></span>';
+
+				compiled += '</div>';
+			});
+
+			return compiled;
+		}
+	}
+])
+
+
+
+
+
+
+
+
+/**
+ * Convert array of audience to a nice list
+ */
+.filter('nicelyAudience', 
+[
+	'Storage',
+	function (Storage)
+	{
+		return function (data)
+		{
+			var members 	= angular.fromJson(Storage.get('members')),
+	    		groups 		= angular.fromJson(Storage.get('groups')),
+	    		audience 	= [];
+
+			angular.forEach(data, function (recipient, index)
+			{
+	  		var name;
+
+	  		if (members[recipient])
+	  		{
+		  		name = members[recipient].name;
+	  		}
+	  		else
+	  		{
+	  			angular.forEach(groups, function (group, index)
+	  			{
+	  				if (group.uuid == recipient) name = group.name;
+	  			});
+	  		}
+
+		  	audience += name + ', ';
+			});
+
+			return audience.substring(0, audience.length - 2);
+		}
+	}
+]);
