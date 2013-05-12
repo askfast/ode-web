@@ -4047,95 +4047,6 @@ angular.module('WebPaige.Directives', ['ngResource'])
 )
 
 
-// *
-//  * Notification item
- 
-// .directive('notificationItem',
-//   function ($compile)
-//   {
-//     return {
-//       restrict: 'E',
-//       rep1ace:  true,
-//       link: function (scope, element, attrs)
-//       {
-//         /**
-//          * Pass the scheadule data
-//          */
-//         scope.s = scope.scheadule;
-
-//         var template =  '<div class="scheadule">' + 
-//                           '<div class="timer">' +
-//                             '<input name="time-start" type="text" ng-model="s.time" bs-timepicker>' +
-//                             '<i class="icon-time" style="margin-top: -3px;"></i>' +
-//                           '</div>' +
-//                           '<ul>' +
-//                             '<li>' +
-//                               '<label for="monday-{{s.exact}}">' +
-//                                 '<input type="checkbox" id="monday-{{s.exact}}" ng-model="s.mon">&nbsp;Monday' +
-//                               '</label>' +
-//                             '</li>' +
-//                             '<li>' +
-//                               '<label for="tuesday-{{s.exact}}">' +
-//                                 '<input type="checkbox" id="tuesday-{{s.exact}}" ng-model="s.tue">&nbsp;Tuesday' +
-//                               '</label>' +
-//                             '</li>' +
-//                             '<li>' +
-//                               '<label for="wednesday-{{s.exact}}">' +
-//                                 '<input type="checkbox" id="wednesday-{{s.exact}}" ng-model="s.wed">&nbsp;Wednesday' +
-//                               '</label>' +
-//                             '</li>' +
-//                             '<li>' +
-//                               '<label for="thursday-{{s.exact}}">' +
-//                                 '<input type="checkbox" id="thursday-{{s.exact}}" ng-model="s.thu">&nbsp;Thursday' +
-//                               '</label>' +
-//                             '</li>' +
-//                             '<li>' +
-//                               '<label for="friday-{{s.exact}}">' +
-//                                 '<input type="checkbox" id="friday-{{s.exact}}" ng-model="s.fri">&nbsp;Friday' +
-//                               '</label>' +
-//                             '</li>' +
-//                             '<li>' +
-//                               '<label for="saturday-{{s.exact}}">' +
-//                                 '<input type="checkbox" id="saturday-{{s.exact}}" ng-model="s.sat">&nbsp;Saturday' +
-//                               '</label>' +
-//                             '</li>' +
-//                             '<li>' +
-//                               '<label for="sunday-{{s.exact}}">' +
-//                                 '<input type="checkbox" id="sunday-{{s.exact}}" ng-model="s.sun">&nbsp;Sunday' +
-//                               '</label>' +
-//                             '</li>' +
-//                             '<li><i class="icon-calendar"></i></li>' + 
-//                           '</ul>' +
-//                           '<button class="btn btn-small btn-danger" type="button" ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>' + 
-//                         '</div>';
-
-//         /**
-//          * Showtime
-//          */
-//         element.html(template).show();
-
-//         /**
-//          * Compile the hottie
-//          */
-//         $compile(element.contents())(scope);
-
-//         /**
-//          * Serve to the controller
-//          */
-//         scope.remover = function (key)
-//         {
-//           scope.$parent.$parent.remover(key);
-//         };
-//       },
-//       scope: {
-//         scheadule: '='
-//       }
-//     };
-
-//   }
-// )
-
-
 /**
  * Daterangepicker
  */
@@ -6480,40 +6391,13 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 							minutes	= Number(offset.minute) * minute,
 							diff		= hours + minutes;
 
-					if (offset.mon)
-					{
-						arrayed.push(diff);
-					}
-
-					if (offset.tue)
-					{
-						arrayed.push(diff + day);
-					}
-
-					if (offset.wed)
-					{
-						arrayed.push(diff + (day * 2));
-					}
-
-					if (offset.thu)
-					{
-						arrayed.push(diff + (day * 3));
-					}
-
-					if (offset.fri)
-					{
-						arrayed.push(diff + (day * 4));
-					}
-
-					if (offset.sat)
-					{
-						arrayed.push(diff + (day * 5));
-					}
-
-					if (offset.sun)
-					{
-						arrayed.push(diff + (day * 6));
-					}
+					if (offset.mon) { arrayed.push(diff); }
+					if (offset.tue) { arrayed.push(diff + day); }
+					if (offset.wed) { arrayed.push(diff + (day * 2)); }
+					if (offset.thu) { arrayed.push(diff + (day * 3)); }
+					if (offset.fri) { arrayed.push(diff + (day * 4)); }
+					if (offset.sat) { arrayed.push(diff + (day * 5)); }
+					if (offset.sun) { arrayed.push(diff + (day * 6)); }
 				});
 
 				return arrayed;

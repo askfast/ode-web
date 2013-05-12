@@ -171,40 +171,13 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 							minutes	= Number(offset.minute) * minute,
 							diff		= hours + minutes;
 
-					if (offset.mon)
-					{
-						arrayed.push(diff);
-					}
-
-					if (offset.tue)
-					{
-						arrayed.push(diff + day);
-					}
-
-					if (offset.wed)
-					{
-						arrayed.push(diff + (day * 2));
-					}
-
-					if (offset.thu)
-					{
-						arrayed.push(diff + (day * 3));
-					}
-
-					if (offset.fri)
-					{
-						arrayed.push(diff + (day * 4));
-					}
-
-					if (offset.sat)
-					{
-						arrayed.push(diff + (day * 5));
-					}
-
-					if (offset.sun)
-					{
-						arrayed.push(diff + (day * 6));
-					}
+					if (offset.mon) { arrayed.push(diff); }
+					if (offset.tue) { arrayed.push(diff + day); }
+					if (offset.wed) { arrayed.push(diff + (day * 2)); }
+					if (offset.thu) { arrayed.push(diff + (day * 3)); }
+					if (offset.fri) { arrayed.push(diff + (day * 4)); }
+					if (offset.sat) { arrayed.push(diff + (day * 5)); }
+					if (offset.sun) { arrayed.push(diff + (day * 6)); }
 				});
 
 				return arrayed;
