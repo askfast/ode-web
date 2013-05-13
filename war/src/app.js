@@ -4246,6 +4246,8 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
 
     var addTimer = function (id, event, delay)
     {
+      console.log('adding a timer ->', id, event, delay);
+
       timers[id] = {
         event: event, 
         delay: delay, 
@@ -4256,10 +4258,14 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
       {
         timers[id].counter++;
 
+        console.log('adding one');
+
         timers[id].mytimeout = $timeout(onTimeout, delay * 1000);
 
         if (timers[id].delay == timers[id].counter)
         {
+          console.log('calling timer event');
+
           // if (id == 'unreadCount')
           // {            
           //   $rootScope.$broadcast('unreadCount');
@@ -9148,22 +9154,24 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Background sync
 	   */
-	  Timer.start('timerExample', 
+	  Timer.start('planboard', 
 	  function ()
 	  {
+	  	console.log('syncing in background');
+
       $scope.slot = {};
 
       $scope.resetViews();
 
-      if ($scope.views.slot.add) $scope.views.slot.add = true;
-      if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+      // if ($scope.views.slot.add) $scope.views.slot.add = true;
+      // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
       $scope.timeliner.load({
         start:  $scope.data.periods.start,
         end:    $scope.data.periods.end
       });
 
-		}, 60);
+		}, 10);
 
 	}
 ]);;/*jslint node: true */

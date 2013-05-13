@@ -825,22 +825,24 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Background sync
 	   */
-	  Timer.start('timerExample', 
+	  Timer.start('planboard', 
 	  function ()
 	  {
+	  	console.log('syncing in background');
+
       $scope.slot = {};
 
       $scope.resetViews();
 
-      if ($scope.views.slot.add) $scope.views.slot.add = true;
-      if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+      // if ($scope.views.slot.add) $scope.views.slot.add = true;
+      // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
       $scope.timeliner.load({
         start:  $scope.data.periods.start,
         end:    $scope.data.periods.end
       });
 
-		}, 60);
+		}, 10);
 
 	}
 ]);
