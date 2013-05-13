@@ -8411,6 +8411,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					};
 				}
 			}
+
+			// console.log('range ->', $scope.timeline.range);
+			// console.log('current ->', $scope.timeline.current);
 		});
 
 
@@ -8458,8 +8461,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
-	          start:  new Date(options.start),
-	          end:    new Date(options.end),
+	          start:  $scope.timeline.range.start,
+	          end:    $scope.timeline.range.end,
+	          // start:  new Date(options.start),
+	          // end:    new Date(options.end),
 	          min:    new Date(options.start),
 	          max:    new Date(options.end)
 	        }
@@ -9152,6 +9157,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       $scope.slot = {};
 
       $scope.resetViews();
+
+      if ($scope.views.slot.add) $scope.views.slot.add = true;
+      if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
       $scope.timeliner.load({
         start:  $scope.data.periods.start,
