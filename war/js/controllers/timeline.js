@@ -88,9 +88,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					};
 				}
 			}
-
-			// console.log('range ->', $scope.timeline.range);
-			// console.log('current ->', $scope.timeline.current);
 		});
 
 
