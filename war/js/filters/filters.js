@@ -644,7 +644,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 				compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
 
-				if (offset.mon) compiled += '<span class="muted"><small><i>maandag,</i></small></span>';
+				if (offset.mon) compiled += '<span class="muted"><small><i> maandag,</i></small></span>';
 				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
 				if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
 				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
@@ -657,6 +657,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				compiled = compiled += '</i></small></span>';
 
 				compiled += '</div>';
+
+				compiled = compiled.substring(0, compiled.length);
 			});
 
 			return compiled;
