@@ -603,6 +603,7 @@ dl dd {
 }
 #dashboard .widget ul#pies li footer .remove {
   font-size: 0;
+  text-indent: -9999px;
 }
 #dashboard .widget ul#pies li footer .shortages {
   margin-top: -30px;
