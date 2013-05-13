@@ -12,6 +12,9 @@
 ## Versions
 
 	2.2.0 (snapshot)
+		* Background planboard sync 13-5-2013
+		* Message job scheduler 13-5-2013
+		* IE 8/9/10 planboard stabilization 13-5-2013
 		* Hotfix for not going further than 6th page in pagination in messages 4-5-2013
 		* Deployed for 100, 110, 120 and 130 3-5-2013
 
