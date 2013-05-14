@@ -37,8 +37,10 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 						offset.mon = true;
 					}
 
-					var hour    = 1000 * 60 * 60,
-				      minute  = 1000 * 60,
+					// var hour    = 1000 * 60 * 60,
+				 //      minute  = 1000 * 60,
+					var hour    = 60 * 60,
+				      minute  = 60,
 				      time 		= offset.time.split(':'),
 				      exact 	= (time[0] * hour) + (time[1] * minute);
 
@@ -59,8 +61,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
     {
     	if ($scope.scheaduled.offsets[0])
     	{
-	  		var hour    = 1000 * 60 * 60,
-		        minute  = 1000 * 60,
+	  		var hour    = 60 * 60,
+		        minute  = 60,
 		        time 		= $scope.scheaduled.offsets[0].time.split(':'),
 		        exact 	= (time[0] * hour) + (time[1] * minute);
 

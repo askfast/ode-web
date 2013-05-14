@@ -125,9 +125,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    /**
 	     * (Re-)Render timeline
 	     */
-	    render: function (options)
-	    {		
-	      $scope.timeline = {
+	    render: function (options, remember)
+	    {
+	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
 	      	main: 		$scope.timeline.main,
 	      	user: 		$scope.timeline.user,
@@ -135,14 +135,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
-	          start:  $scope.timeline.range.start,
-	          end:    $scope.timeline.range.end,
-	          // start:  new Date(options.start),
-	          // end:    new Date(options.end),
+	          start:  (remember) ? $scope.timeline.range.start : new Date(options.start),
+	          end:    (remember) ? $scope.timeline.range.end : new Date(options.end),
 	          min:    new Date(options.start),
 	          max:    new Date(options.end)
 	        }
 	      };
+
+			  /**
+			   * IE8 fix for inability of - signs in date object
+			   */
+			  if ($.browser.msie && $.browser.version == '8.0')
+			  {
+			  	$scope.timeline.options.start = new Date(options.start);
+			  	$scope.timeline.options.end 	= new Date(options.end);
+			  }
+
 
 	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
 
@@ -176,7 +184,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    /**
 	     * Grab new timeline data from backend and render timeline again
 	     */
-	    load: function (stamps)
+	    load: function (stamps, remember)
 	    {
 	      var _this = this;
 
@@ -202,7 +210,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        {
 		          $scope.data = data;
 
-		          _this.render(stamps);
+		          _this.render(stamps, remember);
 		        };
 
 		        $rootScope.statusBar.off();
@@ -224,7 +232,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 			        $scope.data = data;
 
-			        _this.render(stamps);
+			        _this.render(stamps, remember);
 
 			        $rootScope.statusBar.off();
 		        };
@@ -256,7 +264,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      this.load({
 	        start:  $scope.data.periods.start,
 	        end:    $scope.data.periods.end
-	      });
+	      }, true);
 	    },
 
 	    /**
@@ -570,7 +578,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	if (!form)
 	  	{
 		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-		      
+
 		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
 		    $scope.$apply(function ()
@@ -840,9 +848,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       $scope.timeliner.load({
         start:  $scope.data.periods.start,
         end:    $scope.data.periods.end
-      });
+      }, true);
 
-		}, 10);
+		}, 4);
 
 	}
 ]);

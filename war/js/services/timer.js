@@ -19,7 +19,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
 
     var addTimer = function (id, event, delay)
     {
-      console.log('adding a timer ->', id, event, delay);
+      // console.log('adding a timer ->', id, event, delay);
 
       timers[id] = {
         event: event, 
@@ -31,7 +31,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
       {
         timers[id].counter++;
 
-        console.log('adding one');
+        console.log('counting ->', timers[id].counter);
 
         timers[id].mytimeout = $timeout(onTimeout, delay * 1000);
 

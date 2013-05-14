@@ -104,13 +104,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
+	  
 
 	  /**
 	   * IE8 fix for inability of - signs in date object
 	   */
 	  if ($.browser.msie && $.browser.version == '8.0')
 	  {
-		  $scope.timeline.options = {
+	  	$scope.timeline.options = {
 	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
 	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
 	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,

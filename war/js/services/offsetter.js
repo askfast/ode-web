@@ -26,10 +26,11 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 				/**
 				 * Defaults
 				 */
-				var max     = 1000 * 60 * 60 * 24 * 7,
-						day     = 1000 * 60 * 60 * 24,
-						hour    = 1000 * 60 * 60,
-						minute  = 1000 * 60,
+				var max     = 60 * 60 * 24 * 7,
+						day     = 60 * 60 * 24,
+						hour    = 60 * 60,
+						minute  = 60,
+						gmt 		= ((Math.abs(Number(Date.today().getUTCOffset())) * 1) / 100) * hour,
 						offsets = [];
 
 				/**
@@ -45,11 +46,13 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 							minutes = 0,
 							offset_tmp;
 
+					offset 	= offset + gmt;
+
 					hours   = offset % day;
 					days    = offset - hours;
 					minutes = offset % hour;
 
-					var total   = {
+					var total = {
 								days:     Math.floor(days / day),
 								hours:    Math.floor(hours / hour),
 								minutes:  Math.floor(minutes / minute)
@@ -88,13 +91,13 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 					 */
 					switch (total.days)
 					{
-						case 0:   offset_tmp.mon = true;   break;
-						case 1:   offset_tmp.tue = true;   break;
-						case 2:   offset_tmp.wed = true;   break;
-						case 3:   offset_tmp.thu = true;   break;
-						case 4:   offset_tmp.fri = true;   break;
-						case 5:   offset_tmp.sat = true;   break;
-						case 6:   offset_tmp.sun = true;   break;
+						case 1:   offset_tmp.mon = true;   break;
+						case 2:   offset_tmp.tue = true;   break;
+						case 3:   offset_tmp.wed = true;   break;
+						case 4:   offset_tmp.thu = true;   break;
+						case 5:   offset_tmp.fri = true;   break;
+						case 6:   offset_tmp.sat = true;   break;
+						case 7:   offset_tmp.sun = true;   break;
 					}
 
 					/**
@@ -157,9 +160,9 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 				/**
 				 * Defaults
 				 */
-				var day     = 1000 * 60 * 60 * 24,
-						hour    = 1000 * 60 * 60,
-						minute  = 1000 * 60,
+				var day     = 60 * 60 * 24,
+						hour    = 60 * 60,
+						minute  = 60,
 						arrayed = [];
 
 				/**
@@ -167,17 +170,18 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 				 */
 				angular.forEach(offsets, function (offset, index)
 				{
-					var hours		= Number(offset.hour) * hour,
+					var gmt 		= (Math.abs( Number(Date.today().getUTCOffset()) ) * -1 ) / 100,
+							hours		= (Number(offset.hour) + gmt) * hour,
 							minutes	= Number(offset.minute) * minute,
 							diff		= hours + minutes;
 
-					if (offset.mon) { arrayed.push(diff); }
-					if (offset.tue) { arrayed.push(diff + day); }
-					if (offset.wed) { arrayed.push(diff + (day * 2)); }
-					if (offset.thu) { arrayed.push(diff + (day * 3)); }
-					if (offset.fri) { arrayed.push(diff + (day * 4)); }
-					if (offset.sat) { arrayed.push(diff + (day * 5)); }
-					if (offset.sun) { arrayed.push(diff + (day * 6)); }
+					if (offset.mon) { arrayed.push(diff + day); }
+					if (offset.tue) { arrayed.push(diff + (day * 2)); }
+					if (offset.wed) { arrayed.push(diff + (day * 3)); }
+					if (offset.thu) { arrayed.push(diff + (day * 4)); }
+					if (offset.fri) { arrayed.push(diff + (day * 5)); }
+					if (offset.sat) { arrayed.push(diff + (day * 6)); }
+					if (offset.sun) { arrayed.push(diff + (day * 7)); }
 				});
 
 				return arrayed;

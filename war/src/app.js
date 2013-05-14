@@ -2420,11 +2420,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'GET',
 	        params: {
 		        action: '', 
-		        // 0: 'dm'
-		        0: 'all', 
-		        state: 'READ',
-		        limit: 50,
-		        offset: 0
+		        0: 'dm'
+		        // 0: 'all', 
+		        // state: 'READ',
+		        // limit: 50,
+		        // offset: 0
 		      },
 	        isArray: true
 	      },
@@ -4246,7 +4246,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
 
     var addTimer = function (id, event, delay)
     {
-      console.log('adding a timer ->', id, event, delay);
+      // console.log('adding a timer ->', id, event, delay);
 
       timers[id] = {
         event: event, 
@@ -4258,7 +4258,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
       {
         timers[id].counter++;
 
-        console.log('adding one');
+        console.log('counting ->', timers[id].counter);
 
         timers[id].mytimeout = $timeout(onTimeout, delay * 1000);
 
@@ -6252,10 +6252,11 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 				/**
 				 * Defaults
 				 */
-				var max     = 1000 * 60 * 60 * 24 * 7,
-						day     = 1000 * 60 * 60 * 24,
-						hour    = 1000 * 60 * 60,
-						minute  = 1000 * 60,
+				var max     = 60 * 60 * 24 * 7,
+						day     = 60 * 60 * 24,
+						hour    = 60 * 60,
+						minute  = 60,
+						gmt 		= ((Math.abs(Number(Date.today().getUTCOffset())) * 1) / 100) * hour,
 						offsets = [];
 
 				/**
@@ -6271,11 +6272,13 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 							minutes = 0,
 							offset_tmp;
 
+					offset 	= offset + gmt;
+
 					hours   = offset % day;
 					days    = offset - hours;
 					minutes = offset % hour;
 
-					var total   = {
+					var total = {
 								days:     Math.floor(days / day),
 								hours:    Math.floor(hours / hour),
 								minutes:  Math.floor(minutes / minute)
@@ -6314,13 +6317,13 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 					 */
 					switch (total.days)
 					{
-						case 0:   offset_tmp.mon = true;   break;
-						case 1:   offset_tmp.tue = true;   break;
-						case 2:   offset_tmp.wed = true;   break;
-						case 3:   offset_tmp.thu = true;   break;
-						case 4:   offset_tmp.fri = true;   break;
-						case 5:   offset_tmp.sat = true;   break;
-						case 6:   offset_tmp.sun = true;   break;
+						case 1:   offset_tmp.mon = true;   break;
+						case 2:   offset_tmp.tue = true;   break;
+						case 3:   offset_tmp.wed = true;   break;
+						case 4:   offset_tmp.thu = true;   break;
+						case 5:   offset_tmp.fri = true;   break;
+						case 6:   offset_tmp.sat = true;   break;
+						case 7:   offset_tmp.sun = true;   break;
 					}
 
 					/**
@@ -6383,9 +6386,9 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 				/**
 				 * Defaults
 				 */
-				var day     = 1000 * 60 * 60 * 24,
-						hour    = 1000 * 60 * 60,
-						minute  = 1000 * 60,
+				var day     = 60 * 60 * 24,
+						hour    = 60 * 60,
+						minute  = 60,
 						arrayed = [];
 
 				/**
@@ -6393,17 +6396,18 @@ angular.module('WebPaige.Services.Offsetter', ['ngResource'])
 				 */
 				angular.forEach(offsets, function (offset, index)
 				{
-					var hours		= Number(offset.hour) * hour,
+					var gmt 		= (Math.abs( Number(Date.today().getUTCOffset()) ) * -1 ) / 100,
+							hours		= (Number(offset.hour) + gmt) * hour,
 							minutes	= Number(offset.minute) * minute,
 							diff		= hours + minutes;
 
-					if (offset.mon) { arrayed.push(diff); }
-					if (offset.tue) { arrayed.push(diff + day); }
-					if (offset.wed) { arrayed.push(diff + (day * 2)); }
-					if (offset.thu) { arrayed.push(diff + (day * 3)); }
-					if (offset.fri) { arrayed.push(diff + (day * 4)); }
-					if (offset.sat) { arrayed.push(diff + (day * 5)); }
-					if (offset.sun) { arrayed.push(diff + (day * 6)); }
+					if (offset.mon) { arrayed.push(diff + day); }
+					if (offset.tue) { arrayed.push(diff + (day * 2)); }
+					if (offset.wed) { arrayed.push(diff + (day * 3)); }
+					if (offset.thu) { arrayed.push(diff + (day * 4)); }
+					if (offset.fri) { arrayed.push(diff + (day * 5)); }
+					if (offset.sat) { arrayed.push(diff + (day * 6)); }
+					if (offset.sun) { arrayed.push(diff + (day * 7)); }
 				});
 
 				return arrayed;
@@ -8172,13 +8176,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
+	  
 
 	  /**
 	   * IE8 fix for inability of - signs in date object
 	   */
 	  if ($.browser.msie && $.browser.version == '8.0')
 	  {
-		  $scope.timeline.options = {
+	  	$scope.timeline.options = {
 	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
 	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
 	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
@@ -8454,9 +8459,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    /**
 	     * (Re-)Render timeline
 	     */
-	    render: function (options)
-	    {		
-	      $scope.timeline = {
+	    render: function (options, remember)
+	    {
+	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
 	      	main: 		$scope.timeline.main,
 	      	user: 		$scope.timeline.user,
@@ -8464,14 +8469,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
-	          start:  $scope.timeline.range.start,
-	          end:    $scope.timeline.range.end,
-	          // start:  new Date(options.start),
-	          // end:    new Date(options.end),
+	          start:  (remember) ? $scope.timeline.range.start : new Date(options.start),
+	          end:    (remember) ? $scope.timeline.range.end : new Date(options.end),
 	          min:    new Date(options.start),
 	          max:    new Date(options.end)
 	        }
 	      };
+
+			  /**
+			   * IE8 fix for inability of - signs in date object
+			   */
+			  if ($.browser.msie && $.browser.version == '8.0')
+			  {
+			  	$scope.timeline.options.start = new Date(options.start);
+			  	$scope.timeline.options.end 	= new Date(options.end);
+			  }
+
 
 	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
 
@@ -8505,7 +8518,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    /**
 	     * Grab new timeline data from backend and render timeline again
 	     */
-	    load: function (stamps)
+	    load: function (stamps, remember)
 	    {
 	      var _this = this;
 
@@ -8531,7 +8544,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        {
 		          $scope.data = data;
 
-		          _this.render(stamps);
+		          _this.render(stamps, remember);
 		        };
 
 		        $rootScope.statusBar.off();
@@ -8553,7 +8566,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 			        $scope.data = data;
 
-			        _this.render(stamps);
+			        _this.render(stamps, remember);
 
 			        $rootScope.statusBar.off();
 		        };
@@ -8585,7 +8598,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      this.load({
 	        start:  $scope.data.periods.start,
 	        end:    $scope.data.periods.end
-	      });
+	      }, true);
 	    },
 
 	    /**
@@ -8899,7 +8912,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	if (!form)
 	  	{
 		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-		      
+
 		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
 		    $scope.$apply(function ()
@@ -9169,9 +9182,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       $scope.timeliner.load({
         start:  $scope.data.periods.start,
         end:    $scope.data.periods.end
-      });
+      }, true);
 
-		}, 10);
+		}, 4);
 
 	}
 ]);;/*jslint node: true */
@@ -10409,10 +10422,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		var self = this;
 
-	  		// console.log('passed ones ->', message, broadcast, scheaduled);
-	  		
-	  		// console.warn('processed ->', this.job(message, broadcast, scheaduled));
-
 	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
 
 	  		Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
@@ -10538,8 +10547,10 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 						offset.mon = true;
 					}
 
-					var hour    = 1000 * 60 * 60,
-				      minute  = 1000 * 60,
+					// var hour    = 1000 * 60 * 60,
+				 //      minute  = 1000 * 60,
+					var hour    = 60 * 60,
+				      minute  = 60,
 				      time 		= offset.time.split(':'),
 				      exact 	= (time[0] * hour) + (time[1] * minute);
 
@@ -10560,8 +10571,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
     {
     	if ($scope.scheaduled.offsets[0])
     	{
-	  		var hour    = 1000 * 60 * 60,
-		        minute  = 1000 * 60,
+	  		var hour    = 60 * 60,
+		        minute  = 60,
 		        time 		= $scope.scheaduled.offsets[0].time.split(':'),
 		        exact 	= (time[0] * hour) + (time[1] * minute);
 
