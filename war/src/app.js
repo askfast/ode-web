@@ -9184,7 +9184,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         end:    $scope.data.periods.end
       }, true);
 
-		}, 4);
+		}, 8);
 
 	}
 ]);;/*jslint node: true */
