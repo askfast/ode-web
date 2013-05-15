@@ -1170,6 +1170,14 @@ angular.module('WebPaige')
     $rootScope.statusBar.init();
 
 
+
+    $rootScope.notification = {
+      status:   false,
+      type:     '',
+      message:  ''
+    };
+
+
     /**
      * Show notifications
      */
@@ -1177,7 +1185,9 @@ angular.module('WebPaige')
     {
       init: function (status, type, message)
       {
-        if ($rootScope.browser.mobile && status === true)
+        $rootScope.notification.status = true;
+
+        if ($rootScope.browser.mobile && status == true)
         {
           $window.alert(message);
         }
@@ -9175,24 +9185,27 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Background sync
 	   */
-	  Timer.start('planboard', 
-	  function ()
+	  if ($location.path() == 'planboard')
 	  {
-	  	console.log('syncing in background');
+			Timer.start('planboard', 
+			function ()
+			{
+				console.log('syncing in background');
 
-      $scope.slot = {};
+			  $scope.slot = {};
 
-      $scope.resetViews();
+			  $scope.resetViews();
 
-      // if ($scope.views.slot.add) $scope.views.slot.add = true;
-      // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+			  // if ($scope.views.slot.add) $scope.views.slot.add = true;
+			  // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
-      $scope.timeliner.load({
-        start:  $scope.data.periods.start,
-        end:    $scope.data.periods.end
-      }, true);
+			  $scope.timeliner.load({
+			    start:  $scope.data.periods.start,
+			    end:    $scope.data.periods.end
+			  }, true);
 
-		}, 8);
+			}, 8);
+	  }
 
 	}
 ]);;/*jslint node: true */
@@ -11438,10 +11451,17 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  if (data.slots) 
 	  	data.user = data.slots.data;
 
+
+	  /**
+	   * PAss data container
+	   */
 	  $scope.data = data;
 
 
-	  $scope.profile = data.resources;
+	  /**
+	   * Pass profile information
+	   */
+	  $scope.profilemeta = data.resources;
 
 
 	  /**
@@ -11676,13 +11696,13 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Redraw timeline
 	   */
-		if ($route.current.params.userId += $rootScope.app.resources.uuid)
-		{
-		  $scope.redraw = function ()
-		  {
-		  	timelinebooter();
-		  };
-		}
+	  $scope.redraw = function ()
+	  {
+			if ($route.current.params.userId != $rootScope.app.resources.uuid)
+			{
+			  timelinebooter();
+			}
+		};
 
 
 	  function timelinebooter ()

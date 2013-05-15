@@ -59,6 +59,7 @@
   </head>
   <body>
 
+
     <!-- watermark for app -->
     <div id="watermark"></div>
     
@@ -71,6 +72,7 @@
       if ($.browser.mobile) $('#watermark').css({ bottom: '-10px' });
     </script>
     <!-- end watermark for app -->
+
 
     <!-- navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top ng-cloak" bs-navbar>
@@ -165,6 +167,7 @@
     </div>
     <!-- end navbar -->
 
+
     <!-- loading -->
     <div id="loading" ng-show="loadingBig" class="ng-cloak">
       <div ng-show="loaderIcons.general">
@@ -198,23 +201,28 @@
     </div>
     <!-- end loading -->
 
+
     <!-- notifications -->
-     <div id="notification" class="alert {{notification.type}} ng-cloak" ng-show="notification.status">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div id="notification" class="alert {{notification.type}}" ng-show="notification.status">
+      <button type="button" class="close" ng-click="notification.status = false">&times;</button>
       {{notification.message}}
     </div>
     <!-- end notifications -->
 
+
     <!-- wrap -->
     <div id="wrap">
+
       <!-- container-fluid -->
       <div class="container-fluid">
         <div ng-view></div>
       </div>
       <!-- end container-fluid -->
+
       <div id="push"></div>
     </div>
     <!-- end wrap -->
+
 
     <!-- mobile status bar -->
     <div id="mobile-status-bar" ng-show="loading.status && browser.mobile" class="ng-cloak">
@@ -222,12 +230,15 @@
     </div>
     <!-- end mobile status bar -->
 
+
     <!-- footer -->
     <div id="footer" ng-hide="browser.mobile" class="ng-cloak">
       <div class="container-fluid">
 
+
         <!-- copyrights -->
         <div id="copyrights">
+
           <!-- ask & version -->
           <span class="muted">
             <small>
@@ -235,6 +246,7 @@
             </small>
           </span>
           <!-- end ask & version -->
+
           <!-- download mobile app -->
           <div id="download-footer">
             <button class="btn btn-success btn-large" type="button" bs-tooltip="ui.downloads.app">
@@ -244,16 +256,20 @@
             </button>
           </div>
           <!-- end download mobile app -->
+
         </div>
         <!-- end copyrights -->
+
         <!-- general preloader -->
         <p class="muted" ng-show="loading.status">
           <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
         </p>
         <!-- end general preloader -->
+
       </div>
     </div>
     <!-- end footer -->
+
 
     <!--[if gt IE 7]><!-->
     <script src="libs/date/1.0/date.min.js"></script>

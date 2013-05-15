@@ -51,10 +51,17 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  if (data.slots) 
 	  	data.user = data.slots.data;
 
+
+	  /**
+	   * PAss data container
+	   */
 	  $scope.data = data;
 
 
-	  $scope.profile = data.resources;
+	  /**
+	   * Pass profile information
+	   */
+	  $scope.profilemeta = data.resources;
 
 
 	  /**
@@ -289,13 +296,13 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Redraw timeline
 	   */
-		if ($route.current.params.userId += $rootScope.app.resources.uuid)
-		{
-		  $scope.redraw = function ()
-		  {
-		  	timelinebooter();
-		  };
-		}
+	  $scope.redraw = function ()
+	  {
+			if ($route.current.params.userId != $rootScope.app.resources.uuid)
+			{
+			  timelinebooter();
+			}
+		};
 
 
 	  function timelinebooter ()

@@ -134,6 +134,14 @@ angular.module('WebPaige')
     $rootScope.statusBar.init();
 
 
+
+    $rootScope.notification = {
+      status:   false,
+      type:     '',
+      message:  ''
+    };
+
+
     /**
      * Show notifications
      */
@@ -141,7 +149,9 @@ angular.module('WebPaige')
     {
       init: function (status, type, message)
       {
-        if ($rootScope.browser.mobile && status === true)
+        $rootScope.notification.status = true;
+
+        if ($rootScope.browser.mobile && status == true)
         {
           $window.alert(message);
         }
