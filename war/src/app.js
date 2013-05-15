@@ -9155,12 +9155,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
+	   * TODO
+	   * Stress-test this!
+	   * 
 	   * hotfix against not-dom-ready problem for timeline
 	   */
-    setTimeout(function() 
-    {
-      $scope.self.timeline.redraw();
-    }, 100);
+	  if ($scope.timeline && $scope.timeline.main)
+		{
+			// console.log('there is any timeline');
+
+	    setTimeout(function() 
+	    {
+	      $scope.self.timeline.redraw();
+	    }, 100);
+	  }
 
 
 
@@ -11405,6 +11413,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 		$scope.self = this;
 
 
+		console.warn('data ->', data);
+
+
 	  /**
 	   * Pass periods
 	   */
@@ -11424,8 +11435,13 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Set data for view
 	   */
-	  if (data.user) data.user 	= data.slots.data;
+	  if (data.slots) 
+	  	data.user = data.slots.data;
+
 	  $scope.data = data;
+
+
+	  $scope.profile = data.resources;
 
 
 	  /**
@@ -11660,10 +11676,13 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Redraw timeline
 	   */
-	  $scope.redraw = function ()
-	  {
-	  	timelinebooter();
-	  };
+		if ($route.current.params.userId += $rootScope.app.resources.uuid)
+		{
+		  $scope.redraw = function ()
+		  {
+		  	timelinebooter();
+		  };
+		}
 
 
 	  function timelinebooter ()

@@ -821,12 +821,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
+	   * TODO
+	   * Stress-test this!
+	   * 
 	   * hotfix against not-dom-ready problem for timeline
 	   */
-    setTimeout(function() 
-    {
-      $scope.self.timeline.redraw();
-    }, 100);
+	  if ($scope.timeline && $scope.timeline.main)
+		{
+			// console.log('there is any timeline');
+
+	    setTimeout(function() 
+	    {
+	      $scope.self.timeline.redraw();
+	    }, 100);
+	  }
 
 
 
