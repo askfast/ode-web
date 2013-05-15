@@ -82,7 +82,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	// 	if ($rootScope.app.resources.uuid != $route.current.params.userId)
 				// {
 
+
 					range = $scope.self.timeline.getVisibleChartRange();
+
+					// console.log('range ->', range);
 
 					$scope.timeline.range = {
 						start:  new Date(range.start).toString(),

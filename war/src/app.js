@@ -6481,29 +6481,25 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			var dates = {
 						start: {
-							real: new Date(dates.start).toString('dddd, MMMM d'),
-							month: new Date(dates.start).toString('MMMM'),
-							day: new Date(dates.start).toString('d')
+							real: 	new Date(dates.start).toString('dddd, MMMM d'),
+							month: 	new Date(dates.start).toString('MMMM'),
+							day: 		new Date(dates.start).toString('d')
 						},
 						end: {
-							real: new Date(dates.end).toString('dddd, MMMM d'),
-							month: new Date(dates.end).toString('MMMM'),
-							day: new Date(dates.end).toString('d')
+							real: 	new Date(dates.end).toString('dddd, MMMM d'),
+							month: 	new Date(dates.end).toString('MMMM'),
+							day: 		new Date(dates.end).toString('d')
 						}
 					},
 					monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && 
-							dates.start.hour == dates.end.hour) || 
-							dates.start.day == dates.end.day) && 
-							dates.start.month == dates.end.month)
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && dates.start.month == dates.end.month)
 			{
 				return 	dates.start.real + 
 								', ' + 
 								Dater.getThisYear();
 			}
-			else if(dates.start.day == 1 && 
-							dates.end.day == periods.months[monthNumber + 1].totalDays)
+			else if(dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
 			{
 				return 	dates.start.month + 
 								', ' + 
@@ -8426,7 +8422,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	// 	if ($rootScope.app.resources.uuid != $route.current.params.userId)
 				// {
 
+
 					range = $scope.self.timeline.getVisibleChartRange();
+
+					// console.log('range ->', range);
 
 					$scope.timeline.range = {
 						start:  new Date(range.start).toString(),
@@ -9428,7 +9427,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	      });
 	    };
 
-  		$scope.timeline.range = {
+	  	$scope.timeline.range = {
 	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
 	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
 	    };
@@ -11695,18 +11694,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  // if ($location.hash() == 'timeline')
 	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
-	  	// setTimeout(function ()
-	  	// {
-	  		timelinebooter();
-	  	// }, 1000);
+	  	timelinebooter();
 	  };
-
-
-
-  	// setTimeout(function ()
-  	// {
-  	// 	timelinebooter();
-  	// }, 100);
 
 
 
@@ -11758,6 +11747,15 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         $scope.timeline.config.legenda[index] = true;
       });
+
+
+	  /**
+	   * Prepeare timeline range for dateranger widget
+	   */
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	                      Dater.readable.date($scope.timeline.range.end);
+
+	                      
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');

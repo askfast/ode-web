@@ -213,7 +213,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	      });
 	    };
 
-  		$scope.timeline.range = {
+	  	$scope.timeline.range = {
 	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
 	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
 	    };

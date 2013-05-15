@@ -50,29 +50,25 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			var dates = {
 						start: {
-							real: new Date(dates.start).toString('dddd, MMMM d'),
-							month: new Date(dates.start).toString('MMMM'),
-							day: new Date(dates.start).toString('d')
+							real: 	new Date(dates.start).toString('dddd, MMMM d'),
+							month: 	new Date(dates.start).toString('MMMM'),
+							day: 		new Date(dates.start).toString('d')
 						},
 						end: {
-							real: new Date(dates.end).toString('dddd, MMMM d'),
-							month: new Date(dates.end).toString('MMMM'),
-							day: new Date(dates.end).toString('d')
+							real: 	new Date(dates.end).toString('dddd, MMMM d'),
+							month: 	new Date(dates.end).toString('MMMM'),
+							day: 		new Date(dates.end).toString('d')
 						}
 					},
 					monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && 
-							dates.start.hour == dates.end.hour) || 
-							dates.start.day == dates.end.day) && 
-							dates.start.month == dates.end.month)
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && dates.start.month == dates.end.month)
 			{
 				return 	dates.start.real + 
 								', ' + 
 								Dater.getThisYear();
 			}
-			else if(dates.start.day == 1 && 
-							dates.end.day == periods.months[monthNumber + 1].totalDays)
+			else if(dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
 			{
 				return 	dates.start.month + 
 								', ' + 

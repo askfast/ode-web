@@ -290,18 +290,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  // if ($location.hash() == 'timeline')
 	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
-	  	// setTimeout(function ()
-	  	// {
-	  		timelinebooter();
-	  	// }, 1000);
+	  	timelinebooter();
 	  };
-
-
-
-  	// setTimeout(function ()
-  	// {
-  	// 	timelinebooter();
-  	// }, 100);
 
 
 
@@ -353,6 +343,15 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         $scope.timeline.config.legenda[index] = true;
       });
+
+
+	  /**
+	   * Prepeare timeline range for dateranger widget
+	   */
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	                      Dater.readable.date($scope.timeline.range.end);
+
+	                      
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');
