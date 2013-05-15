@@ -8,8 +8,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile, Timer)
+	'$rootScope', '$scope', '$q', '$location', '$route', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
+	function ($rootScope, $scope, $q, $location, $route, Slots, Dater, Storage, Sloter, Profile, Timer)
 	{
 		var range, diff;
 
@@ -78,15 +78,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			else
 			{
-				if ($location.hash() == 'timeline')
-				{
+				// if ($location.hash() == 'timeline')
+	  	// 	if ($rootScope.app.resources.uuid != $route.current.params.userId)
+				// {
+
 					range = $scope.self.timeline.getVisibleChartRange();
 
 					$scope.timeline.range = {
 						start:  new Date(range.start).toString(),
 						end:    new Date(range.end).toString()
 					};
-				}
+
+				// }
 			}
 		});
 
@@ -168,6 +171,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
+		    	var timeout = ($location.hash() == 'timeline') ? 100 : 1700;
+
 			    setTimeout( function() 
 		      {
 		        $scope.self.timeline.draw(
@@ -175,7 +180,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		            $scope.data.slots.data, 
 		            $scope.timeline.config
 		          ), $scope.timeline.options);
-		      }, 100);
+		      }, timeout);
 		    };
 	      
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);

@@ -287,10 +287,22 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  if ($location.hash() == 'timeline')
+	  // if ($location.hash() == 'timeline')
+	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
-	  	timelinebooter();
+	  	// setTimeout(function ()
+	  	// {
+	  		timelinebooter();
+	  	// }, 1000);
 	  };
+
+
+
+  	// setTimeout(function ()
+  	// {
+  	// 	timelinebooter();
+  	// }, 100);
+
 
 
 	  /**
@@ -298,10 +310,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 	   */
 	  $scope.redraw = function ()
 	  {
-			if ($route.current.params.userId != $rootScope.app.resources.uuid)
-			{
-			  timelinebooter();
-			}
+	  	setTimeout(function ()
+	  	{
+	  		// timelinebooter();
+	  	}, 100);
 		};
 
 
@@ -311,7 +323,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       	id: 'userTimeline',
       	main: false,
       	user: {
-      		id: 	$route.current.params.userId
+      		id: $route.current.params.userId
       	},
         current: $scope.current,
         options: {

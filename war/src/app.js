@@ -8352,8 +8352,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile, Timer)
+	'$rootScope', '$scope', '$q', '$location', '$route', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
+	function ($rootScope, $scope, $q, $location, $route, Slots, Dater, Storage, Sloter, Profile, Timer)
 	{
 		var range, diff;
 
@@ -8422,15 +8422,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			else
 			{
-				if ($location.hash() == 'timeline')
-				{
+				// if ($location.hash() == 'timeline')
+	  	// 	if ($rootScope.app.resources.uuid != $route.current.params.userId)
+				// {
+
 					range = $scope.self.timeline.getVisibleChartRange();
 
 					$scope.timeline.range = {
 						start:  new Date(range.start).toString(),
 						end:    new Date(range.end).toString()
 					};
-				}
+
+				// }
 			}
 		});
 
@@ -8512,6 +8515,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
+		    	var timeout = ($location.hash() == 'timeline') ? 100 : 1700;
+
 			    setTimeout( function() 
 		      {
 		        $scope.self.timeline.draw(
@@ -8519,7 +8524,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		            $scope.data.slots.data, 
 		            $scope.timeline.config
 		          ), $scope.timeline.options);
-		      }, 100);
+		      }, timeout);
 		    };
 	      
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
@@ -11687,10 +11692,22 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  if ($location.hash() == 'timeline')
+	  // if ($location.hash() == 'timeline')
+	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
-	  	timelinebooter();
+	  	// setTimeout(function ()
+	  	// {
+	  		timelinebooter();
+	  	// }, 1000);
 	  };
+
+
+
+  	// setTimeout(function ()
+  	// {
+  	// 	timelinebooter();
+  	// }, 100);
+
 
 
 	  /**
@@ -11698,10 +11715,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 	   */
 	  $scope.redraw = function ()
 	  {
-			if ($route.current.params.userId != $rootScope.app.resources.uuid)
-			{
-			  timelinebooter();
-			}
+	  	setTimeout(function ()
+	  	{
+	  		// timelinebooter();
+	  	}, 100);
 		};
 
 
@@ -11711,7 +11728,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       	id: 'userTimeline',
       	main: false,
       	user: {
-      		id: 	$route.current.params.userId
+      		id: $route.current.params.userId
       	},
         current: $scope.current,
         options: {
