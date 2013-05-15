@@ -3,20 +3,22 @@
 
 
 ## Installations
-	- 100	test environment
-	- 110	knrm live
-	- 120	gvrb
-	- 130	isparaat
+	- 100T	test environment
+	- 110K	knrm live
+	- 120G	gvrb
+	- 130B	isparaat
 
 
 ## Versions
 
-	2.2.0 (snapshot)
-		* Background planboard sync (100 seconds interval) 13-5-2013
+	2.2.0
+		* Hotfix for stability issues in profile timeline 15-5-2013
+		* Hotfix for not displaying user information on profile editing form 15-5-2013
+		* Background planboard sync (64 seconds interval) 13-5-2013
 		* Message job scheduler 13-5-2013
 		* IE 8/9/10 planboard stabilization 13-5-2013
 		* Hotfix for not going further than 6th page in pagination in messages 4-5-2013
-		* Deployed for 100, 110, 120 and 130 3-5-2013
+		* Deployed for 100T, 110K, 120G and 130B 3-5-2013
 
 	2.1.0
 		* IE9 & IE10 support, IE8 (temporarily) and less are blocked 3-5-2013
@@ -30,7 +32,7 @@
 		* Hotfix for not displaying correct weeks by previous/future weeks in profile timeline 19-4-2013
 
 	2.0.2
-		* Deployed for 110 17-4-2013
+		* Deployed for 110K 17-4-2013
 		* Core modules seperated 17-4-2013
 		* Background syncing for every minute and displaying webkit desktop notification for new messages (still in development, temporarily disabled) 16-4-2013
 		* By adding a new slot, slot form now opens with time of now and 1 hour later 15-4-2013
@@ -57,7 +59,7 @@
 		* CSS fix for tabs left border. (Bug with dynamic height sizing when there is no content in tab is still open!!) 3-4-2013
 	
 	2.0.0
-		* Deployed for 100, 110, 120, 130 3-4-2013
+		* Deployed for 100T, 110K, 120G, 130B 3-4-2013
 
 
 ## Changes in libraries
