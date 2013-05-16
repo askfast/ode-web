@@ -11,6 +11,9 @@
 
 ## Versions
 
+	2.3.0
+		* Deployed for 100T, 110K, 120G and 130B 16-5-2013
+
 	2.2.0
 		* Hotfix for stability issues in profile timeline 15-5-2013
 		* Hotfix for not displaying user information on profile editing form 15-5-2013
