@@ -177,7 +177,7 @@
 
             <!-- scheadulerPane toggle -->
             <div class="control-group" ng-hide="scheadulerPane">
-              <label class="control-label">Scheaduling</label>
+              <label class="control-label">Herhaling</label>
 
               <div  class="btn-group"  
                     bs-buttons-checkbox="" 
@@ -187,7 +187,7 @@
                         class="btn btn-small" 
                         ng-model="scheadulerPane" 
                         ng-click="scheadulerPane == !scheadulerPane"
-                        bs-button="">Turn On</button>
+                        bs-button="">Aan</button>
 
               </div>
             </div>
@@ -198,10 +198,10 @@
 
               <!-- scheaduler header -->
               <header>
-                <h4>Scheadules</h4>
+                <h4>Herhaling</h4>
                 <div class="pull-right">
-                  <button type="button" class="btn btn-small" ng-click="scheadulerPane = false" ng-hide="views.scheaduler">Turn Off</button>
-                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">Add New</button>
+                  <button type="button" class="btn btn-small" ng-click="scheadulerPane = false" ng-hide="views.scheaduler">Uit</button>
+                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">Nieuwe herhaling</button>
                 </div>
               </header>
               <!-- end scheaduler header -->
@@ -210,26 +210,26 @@
 
               <!-- notification title -->
               <div class="control-group">
-                <label class="control-label">Notification title</label>
+                <label class="control-label">Notificatie label</label>
 
                 <input type="text" 
                       class="span6"
                       ng-model="scheaduled.title"
-                      placeholder="Notification title">
+                      placeholder="Notificatie label">
 
               </div>
               <!-- end notification title -->
 
               <!-- no notifications -->
               <div class="control-group" ng-hide="scheaduleCount > 0">
-                <label class="control-label">Notifications</label>
-                <p class="muted"><small><i>There are no scheaduled tasks.</i></small></p>
+                <label class="control-label">Notificaties</label>
+                <p class="muted"><small><i>Er zijn (nog) geen herhalingen.</i></small></p>
               </div>
               <!-- end no notifications -->
 
               <!-- notifications list -->
               <div class="control-group" ng-show="scheaduleCount > 0">
-                <label class="control-label">Notifications</label>
+                <label class="control-label">Notificaties</label>
 
                 <!-- <span style="font-size:11px" ng-repeat="o in offsets"> {{o}}<br></span> -->
 
@@ -242,7 +242,7 @@
 
               <!-- scheaduler status -->
               <div class="control-group">
-                <label class="control-label">Notification status</label>
+                <label class="control-label">Notificatie status</label>
                 
                 <!-- status toggler -->
                 <div  class="btn-group" 
@@ -251,20 +251,20 @@
                   <button type="button" 
                           class="btn btn-small {{(scheaduled.status) && 'active'}}" 
                           ng-model="scheaduled.status" 
-                          ng-click="scheaduled.status = true">On</button>
+                          ng-click="scheaduled.status = true">Aan</button>
 
                   <button type="button" 
                           class="btn btn-small {{(!scheaduled.status) && 'active'}}" 
                           ng-model="scheaduled.status" 
-                          ng-click="scheaduled.status = false">Off</button>
+                          ng-click="scheaduled.status = false">Uit</button>
 
                 </div>
                 <!-- end status toggler -->
 
                 <!-- status indicator -->
                 <div style="margin-left: 10px; display: inline;">
-                  <span class="label label-success" ng-show="scheaduled.status">Enabled</span>
-                  <span class="label" ng-hide="scheaduled.status">Disabled</span>
+                  <span class="label label-success" ng-show="scheaduled.status">Ingeschakeld</span>
+                  <span class="label" ng-hide="scheaduled.status">Uitgeschakeld</span>
                 </div>
                 <!-- end status indicator -->
 
@@ -281,12 +281,12 @@
               <div ng-show="scheadulerPane">
                 <button type="submit" 
                         ng-hide="scheaduleCount > 0"
-                        class="btn btn-success disabled">Save</button>
+                        class="btn btn-success disabled">Opslaan</button>
 
                 <button type="submit" 
                         ng-click="scheaduler.save(message, broadcast, scheaduled)" 
                         ng-show="scheaduleCount > 0"
-                        class="btn btn-success">Save</button>
+                        class="btn btn-success">Opslaan</button>
               </div>
               <!-- end scheadular action buttons -->
 
