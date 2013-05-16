@@ -103,19 +103,7 @@ if ($.browser.msie)
 {
   var ver = $.browser.version || $.browser.version[0];
 
-  if (ver == '6.0' || ver == '7.0' || ver == '8.0') window.location = 'browsers.html';
-
-  // Reload stylesheet on document ready if IE8
-  // if (ver == '8.0')
-  // {
-  //   $(function ()
-  //   {
-  //     alert('here it comes..');
-
-  //     var $ss = $('#base-css');
-  //     $ss[0].href = $ss[0].href;
-  //   });
-  // }
+  if (ver == '6.0' || ver == '7.0') window.location = 'browsers.html';
 }
 
 

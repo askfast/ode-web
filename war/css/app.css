@@ -195,6 +195,90 @@ dl dd {
   font-size: 11px;
 }
 
+#scheaduler-pane {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #e5e5e5;
+}
+#scheaduler-pane header h4 {
+  display: inline;
+}
+#scheaduler-pane header div.pull-right button {
+  margin-left: 10px;
+}
+#scheaduler-pane .scheadule {
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+#scheaduler-pane .timer {
+  float: left;
+  display: inline;
+  margin-right: 10px;
+}
+#scheaduler-pane .timer .icon-time {
+  margin-top: -3px;
+}
+#scheaduler-pane ul {
+  list-style: none;
+  overflow: hidden;
+  margin: 0 10px 0 0;
+  padding: 4px 0 4px 10px;
+  display: inline;
+  float: left;
+  background-color: white;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.07451) 0px 1px 1px 0px inset;
+  box-shadow: rgba(0, 0, 0, 0.07451) 0px 1px 1px 0px inset;
+  box-sizing: border-box;
+  color: #555555;
+  height: 30px;
+  line-height: 20px;
+  min-height: 30px;
+  vertical-align: middle;
+}
+#scheaduler-pane ul li {
+  display: inline;
+  float: left;
+  margin-right: 15px;
+}
+#scheaduler-pane ul li label {
+  font-weight: normal;
+  font-size: 11px;
+}
+#scheaduler-pane ul li input[type=checkbox] {
+  margin-top: -3px;
+}
+#scheaduler-pane ul li i.icon-calendar {
+  margin-right: -6px;
+}
+#scheaduler-pane button.btn-danger {
+  margin-top: 2px;
+}
+
+.scheadule-icons {
+  width: 48px;
+  height: 24px;
+  overflow: hidden;
+}
+.scheadule-icons div {
+  float: left;
+  display: inline;
+  width: 24px;
+  height: 24px;
+}
+.scheadule-icons div .entypo {
+  line-height: 24px;
+  font-size: 32px;
+}
+.scheadule-icons div .sms {
+  margin-left: 5px;
+}
+.scheadule-icons div .mail {
+  margin-left: 2px;
+}
+
 /**
  * Welcoming page styles
  */
@@ -519,6 +603,7 @@ dl dd {
 }
 #dashboard .widget ul#pies li footer .remove {
   font-size: 0;
+  text-indent: -9999px;
 }
 #dashboard .widget ul#pies li footer .shortages {
   margin-top: -30px;

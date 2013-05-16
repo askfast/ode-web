@@ -8,8 +8,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
-	function ($rootScope, $scope, $q, $location, Slots, Dater, Storage, Sloter, Profile)
+	'$rootScope', '$scope', '$q', '$location', '$route', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
+	function ($rootScope, $scope, $q, $location, $route, Slots, Dater, Storage, Sloter, Profile, Timer)
 	{
 		var range, diff;
 
@@ -78,15 +78,21 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			else
 			{
-				if ($location.hash() == 'timeline')
-				{
+				// if ($location.hash() == 'timeline')
+	  	// 	if ($rootScope.app.resources.uuid != $route.current.params.userId)
+				// {
+
+
 					range = $scope.self.timeline.getVisibleChartRange();
+
+					// console.log('range ->', range);
 
 					$scope.timeline.range = {
 						start:  new Date(range.start).toString(),
 						end:    new Date(range.end).toString()
 					};
-				}
+
+				// }
 			}
 		});
 
@@ -125,9 +131,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    /**
 	     * (Re-)Render timeline
 	     */
-	    render: function (options)
-	    {		
-	      $scope.timeline = {
+	    render: function (options, remember)
+	    {
+	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
 	      	main: 		$scope.timeline.main,
 	      	user: 		$scope.timeline.user,
@@ -135,12 +141,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
-	          start:  new Date(options.start),
-	          end:    new Date(options.end),
+	          start:  (remember) ? $scope.timeline.range.start : new Date(options.start),
+	          end:    (remember) ? $scope.timeline.range.end : new Date(options.end),
 	          min:    new Date(options.start),
 	          max:    new Date(options.end)
 	        }
 	      };
+
+			  /**
+			   * IE8 fix for inability of - signs in date object
+			   */
+			  if ($.browser.msie && $.browser.version == '8.0')
+			  {
+			  	$scope.timeline.options.start = new Date(options.start);
+			  	$scope.timeline.options.end 	= new Date(options.end);
+			  }
+
 
 	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
 
@@ -158,6 +174,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
+		    	var timeout = ($location.hash() == 'timeline') ? 100 : 1700;
+
 			    setTimeout( function() 
 		      {
 		        $scope.self.timeline.draw(
@@ -165,16 +183,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		            $scope.data.slots.data, 
 		            $scope.timeline.config
 		          ), $scope.timeline.options);
-		      }, 100);
+		      }, timeout);
 		    };
-
+	      
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	    },
 
 	    /**
 	     * Grab new timeline data from backend and render timeline again
 	     */
-	    load: function (stamps)
+	    load: function (stamps, remember)
 	    {
 	      var _this = this;
 
@@ -200,7 +218,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        {
 		          $scope.data = data;
 
-		          _this.render(stamps);
+		          _this.render(stamps, remember);
 		        };
 
 		        $rootScope.statusBar.off();
@@ -222,7 +240,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 			        $scope.data = data;
 
-			        _this.render(stamps);
+			        _this.render(stamps, remember);
 
 			        $rootScope.statusBar.off();
 		        };
@@ -254,7 +272,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      this.load({
 	        start:  $scope.data.periods.start,
 	        end:    $scope.data.periods.end
-	      });
+	      }, true);
 	    },
 
 	    /**
@@ -568,7 +586,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	if (!form)
 	  	{
 		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-		      
+
 		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
 		    $scope.$apply(function ()
@@ -810,10 +828,48 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  };
 
 
-    setTimeout( function() 
-    {
-      $scope.self.timeline.redraw();
-    }, 100);
+	  /**
+	   * TODO
+	   * Stress-test this!
+	   * 
+	   * hotfix against not-dom-ready problem for timeline
+	   */
+	  if ($scope.timeline && $scope.timeline.main)
+		{
+			// console.log('there is any timeline');
+
+	    setTimeout(function() 
+	    {
+	      $scope.self.timeline.redraw();
+	    }, 100);
+	  }
+
+
+
+	  /**
+	   * Background sync
+	   */
+	  if ($location.path() == 'planboard')
+	  {
+			Timer.start('planboard', 
+			function ()
+			{
+				console.log('syncing in background');
+
+			  $scope.slot = {};
+
+			  $scope.resetViews();
+
+			  // if ($scope.views.slot.add) $scope.views.slot.add = true;
+			  // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+
+			  $scope.timeliner.load({
+			    start:  $scope.data.periods.start,
+			    end:    $scope.data.periods.end
+			  }, true);
+
+			}, 8);
+	  }
 
 	}
 ]);

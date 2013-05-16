@@ -37,6 +37,45 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 
 /**
+ * Notification item
+ */
+.directive('notificationItem',
+  function ($compile)
+  {
+    return {
+      restrict: 'E',
+      rep1ace:  true,
+      templateUrl: 'dist/views/messages-scheadule-item.html',
+      link: function (scope, element, attrs)
+      {
+        /**
+         * Pass the scheadule data
+         */
+        scope.s = scope.scheadule;
+
+        // element.html(template).show();
+        // $compile(element.contents())(scope);
+
+        /**
+         * Serve to the controller
+         */
+        scope.remover = function (key)
+        {
+          console.log('coming to remover');
+
+          scope.$parent.$parent.remover(key);
+        };
+      },
+      scope: {
+        scheadule: '='
+      }
+    };
+
+  }
+)
+
+
+/**
  * Daterangepicker
  */
 .directive('daterangepicker',
@@ -57,11 +96,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
           // startDate: startDate,
           // endDate: endDate,
           ranges: {
-            'Today':        ['today', 'tomorrow'],
-            'Tomorrow':     ['tomorrow', new Date.today().addDays(2)],
+            'Today':        ['today',     'tomorrow'],
+            'Tomorrow':     ['tomorrow',  new Date.today().addDays(2)],
             'Yesterday':    ['yesterday', 'today'],
-            'Next 3 Days':  ['today', new Date.create().addDays(3)],
-            'Next 7 Days':  ['today', new Date.create().addDays(7)]
+            'Next 3 Days':  ['today',     new Date.create().addDays(3)],
+            'Next 7 Days':  ['today',     new Date.create().addDays(7)]
           }
         },
         function (start, end)
@@ -76,13 +115,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
             if (diff <= 86400000)
             {
               scope.timeline.range = {
-                start: start,
-                end: start
+                start:  start,
+                end:    start
               };
               scope.timeline.scope = {
-                day: true,
-                week: false,
-                month: false
+                day:    true,
+                week:   false,
+                month:  false
               };
             }
             /**
@@ -91,13 +130,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
             else if (diff < 604800000)
             {
               scope.timeline.range = {
-                start: start,
-                end: end
+                start:  start,
+                end:    end
               };
               scope.timeline.scope = {
-                day: false,
-                week: true,
-                month: false
+                day:    false,
+                week:   true,
+                month:  false
               };
             }
             /**
@@ -106,19 +145,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
             else if (diff > 604800000)
             {
               scope.timeline.range = {
-                start: start,
-                end: end
+                start:  start,
+                end:    end
               };
               scope.timeline.scope = {
-                day: false,
-                week: false,
-                month: true
+                day:    false,
+                week:   false,
+                month:  true
               };
             }
 
             $rootScope.$broadcast('timeliner', {
-              start: start,
-              end: end
+              start:  start,
+              end:    end
             });
 
           });

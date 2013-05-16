@@ -118,7 +118,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	      /**
 	       * Total days in a month can change so get it start periods cache
 	       */
-	      if ($scope.timeline.current.day != periods.days.total)
+	      if ($scope.timeline.current.day != $scope.periods.days.total)
 	      {
 	        $scope.timeline.current.day++;
 
@@ -213,7 +213,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	      });
 	    };
 
-  		$scope.timeline.range = {
+	  	$scope.timeline.range = {
 	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
 	      end:    $scope.periods.weeks[$scope.timeline.current.week].last.day
 	    };

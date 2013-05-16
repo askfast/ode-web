@@ -25,6 +25,7 @@ angular.module('WebPaige',[
   'WebPaige.Controllers.Timeline',
   'WebPaige.Controllers.Timeline.Navigation',
   'WebPaige.Controllers.Messages',
+  'WebPaige.Controllers.Scheaduler',
   'WebPaige.Controllers.Groups',
   'WebPaige.Controllers.Profile',
   'WebPaige.Controllers.Settings',
@@ -41,6 +42,7 @@ angular.module('WebPaige',[
   'WebPaige.Services.Announcer',
   'WebPaige.Services.Sloter',
   'WebPaige.Services.Stats',
+  'WebPaige.Services.Offsetter',
   // directives
   'WebPaige.Directives',
   '$strap.directives',

@@ -209,3 +209,123 @@ dl {
 // .navbar, #footer, #notification, #mobile-status-bar {
 //   display: none;
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#scheaduler-pane {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #e5e5e5;
+
+  header {
+    h4 {
+      display: inline;
+    }
+
+    div.pull-right {
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .scheadule {
+    overflow: hidden;
+    margin-bottom: 5px;
+  }
+
+  .timer {
+    float: left;
+    display: inline;
+    margin-right: 10px;
+
+    .icon-time {
+      margin-top: -3px;
+    }
+  }
+
+  ul {
+    list-style: none;
+    overflow: hidden;
+    margin: 0 10px 0 0;
+    padding: 4px 0 4px 10px;
+    display: inline;
+    float: left;
+    background-color: white;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+    box-sizing: border-box;
+    color: rgb(85, 85, 85);
+    height: 30px;
+    line-height: 20px;
+    min-height: 30px;
+    vertical-align: middle;
+
+    li {
+      display: inline;
+      float: left;
+      margin-right: 15px;
+      label {
+        font-weight: normal;
+        font-size: 11px;
+      }
+      input[type=checkbox] {
+        margin-top: -3px;
+      }
+      i.icon-calendar {
+        margin-right: -6px;
+      }
+    }
+  }
+
+  button.btn-danger {
+    margin-top: 2px;
+  }
+}
+
+
+
+.scheadule-icons {
+  width: 48px; 
+  height: 24px; 
+  overflow: hidden;
+
+  div {
+    float: left;
+    display:inline;
+    width: 24px;
+    height: 24px;
+
+    .entypo {
+      line-height: 24px;
+      font-size: 32px;
+    }
+
+    .sms {
+      margin-left: 5px;
+    }
+
+    .mail {
+      margin-left: 2px;
+    }
+  }
+}

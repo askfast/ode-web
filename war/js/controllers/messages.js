@@ -11,8 +11,8 @@ angular.module('WebPaige.Controllers.Messages', [])
  */
 .controller('messages', 
 [
-	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer',
-	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer) 
+	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
+	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) 
 	{
 	  /**
 	   * Fix styles
@@ -34,7 +34,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Set messages
 	   */
-	  $scope.messages = data;
+	  $scope.messages 			= data.messages;
+
+	  $scope.scheadules 		= data.scheadules;
 
 
 	  /**
@@ -55,12 +57,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	  	next: function (box)
 	  	{
-	  		if ($scope.page[box] + 1 != box.length) $scope.page[box]++;
+	  		if ($scope.page[box] + 1 != $scope.messages[box].length)
+	  			$scope.page[box]++;
 	  	},
 
 	  	before: function (box)
 	  	{
-	  		if ($scope.page[box] != 0) $scope.page[box]--;
+	  		if ($scope.page[box] != 0)
+	  			$scope.page[box]--;
 	  	}
 	  };
 
@@ -95,6 +99,16 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+	   * Default scheaduled config
+	   */
+		$scope.scheaduled = {
+			title: 		'',
+			offsets: 	{},
+			status: 	false
+		};
+
+
+		/**
 	   * Set origin container for returning back to origin box
 	   */
 	  $scope.origin = 'inbox';
@@ -106,11 +120,13 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  function setView (hash)
 	  {
 	    $scope.views = {
-	      compose: false,
-	      message: false,
-	      inbox:   false,
-	      outbox:  false,
-	      trash:   false
+	      compose: 				false,
+	      message: 				false,
+	      inbox:   				false,
+	      outbox:  				false,
+	      trash:   				false,
+	      notifications: 	false,
+	      scheaduler: 		false
 	    };
 
 	    $scope.views[hash] = true;
@@ -143,7 +159,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  else
 	  {
 	    var view = $location.hash();
-	  };
+	  }
 
 
 	  /**
@@ -151,11 +167,27 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  setView(view);
 
-	    
+
+	  /**
+	   * Default toggle for scheaduler pane
+	   */
+    $scope.scheadulerPane = false;
+
+
 	  /**
 	   * Extract view action from url and set message view
 	   */
-	  if ($location.search().uuid) setMessageView($location.search().uuid);
+	  if ($location.search().uuid)
+	  {
+	  	if ($location.hash() == 'scheaduler')
+	  	{
+		    setNotificationView($location.search().uuid);
+	  	}
+	  	else
+	  	{
+	  		setMessageView($location.search().uuid);
+	  	}
+	  }
 
 
 	  /**
@@ -174,10 +206,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    $scope.setViewTo('message');
 
 	    $scope.message = Messages.find(id);
-
-
-	    console.warn('found message ->', $scope.message);
-
 
 	    /**
 	     * Change to read if message not seen yet
@@ -206,10 +234,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      angular.forEach($scope.messages.inbox, function (message, index)
 	      {
-	        if (message.uuid == $scope.message.uuid)
-	        {
-	          message.state = "READ";
-	        };
+	        if (message.uuid == $scope.message.uuid) message.state = "READ";
 
 	        _inbox.push(message);
 	      });
@@ -228,9 +253,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $scope.requestMessage = function (current, origin)
 	  {
-	  	console.log('msg ->', current, origin);
-
-	    $scope.origin = origin;
+		  $scope.origin = origin;
 
 	    setMessageView(current);
 
@@ -241,18 +264,197 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
+  	/**
+  	 * Count the scheadules
+  	 */
+  	$scope.scheaduleCounter = function ()
+  	{
+  		var count = 0;
+
+  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+
+	  	$scope.scheaduleCount = count;
+  	}
+
+
+	  /**
+	   * Set view for notification
+	   */
+	  function setNotificationView (id)
+	  {
+	  	$scope.origin = 'notifications';
+
+    	$scope.scheadulerPane = true;
+
+	    var scheaduled = Messages.scheaduled.find(id);
+
+	    angular.forEach(scheaduled.types, function (type, index)
+	  	{
+	  		if (type == 'sms') 		$scope.broadcast.sms 		= true;
+	  		if (type == 'email') 	$scope.broadcast.email 	= true;
+	  	});
+
+	    var members 	= angular.fromJson(Storage.get('members')),
+	    		groups 		= angular.fromJson(Storage.get('groups')),
+	    		receivers = [];
+
+	    angular.forEach(scheaduled.recipients, function (recipient, index)
+	  	{
+	  		var name;
+
+	  		if (members[recipient])
+	  		{
+		  		name = members[recipient].name;
+
+		  		receivers.push({
+		  			group: 	'Users',
+		  			id: 		recipient,
+		  			name: 	name
+		  		});
+	  		}
+	  		else
+	  		{
+	  			angular.forEach(groups, function (group, index)
+	  			{
+	  				if (group.uuid == recipient)
+	  				{  					
+			  			name = group.name;
+
+				  		receivers.push({
+				  			group: 	'Groups',
+				  			id: 		recipient,
+				  			name: 	name
+				  		});
+	  				}
+	  			});
+	  		}
+	  	});
+
+	    $scope.message = {
+	      subject: 		scheaduled.subject,
+	      body: 			scheaduled.message,
+	      receivers: 	receivers
+	    };
+
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	    	angular.forEach(scheaduled.recipients, function (recipient, ind)
+	    	{
+		  		if (members[recipient])
+		  		{
+		    		if (option.innerHTML == members[recipient].name) option.selected = true;
+		    	}
+		    	else
+		    	{
+		  			angular.forEach(groups, function (group, index)
+		  			{
+		  				if (group.uuid == recipient)
+		  				{
+		    				if (option.innerHTML == group.name) option.selected = true;
+		  				}
+		  			});
+		    	}
+	    	});
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+
+	    $scope.scheaduled = {
+	    	uuid: 		scheaduled.uuid,
+	    	sender: 	scheaduled.sender,
+	    	title: 		scheaduled.label,
+	    	status: 	scheaduled.active,
+	    	offsets: 	Offsetter.factory(scheaduled.offsets)
+	    };
+
+	    /**
+	     * FIX
+	     * Counter is hard coded because calling counter script is not working!
+	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
+	     * when console log is produced at the time of compilation it is observable that $scope object
+	     * did not include all the functions in the controller
+	     */
+	    // $scope.scheaduleCounter();
+
+  		var count = 0;
+
+  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+
+	  	$scope.scheaduleCount = count;
+
+	    // rerenderReceiversList();
+	  }
+
+
+	  /**
+	   * Request for a notification
+	   */
+	  $scope.requestNotification = function (id)
+	  {
+	  	$rootScope.statusBar.display('Getting notification..');
+
+	    setView('scheaduler');
+
+	    $scope.setViewTo('scheaduler');
+
+	    setNotificationView(id);
+
+	    $scope.$watch($location.search(), function ()
+	    {
+	      $location.search({uuid: id});
+	    });
+
+	    $rootScope.statusBar.off();
+	  };
+
+
 	  /**
 	   * Compose message view toggler
 	   */
 	  $scope.composeMessage = function ()
 	  {
+	  	/**
+	  	 * Close composer
+	  	 */
 	    if ($scope.views.compose)
 	    {
 	      $scope.closeTabs();
 	    }
+	    /**
+	     * Open composer
+	     */
 	    else
 	    {
+	    	/**
+	    	 * TODO
+	    	 * Why not working properly? Look into this one
+	    	 * 
+	    	 * Reset'em
+	    	 */
+	    	$location.search({});
+
 	      $scope.message = {};
+
+	      $scope.broadcast.sms 		= false;
+	      $scope.broadcast.email 	= false;
+
+	      $scope.scheadulerPane = false;
+
+		    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+		    {
+		    	option.selected = false;
+		    });
+
+		    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+				$scope.scheaduled = {
+					title: 		'',
+					offsets: 	{},
+					status: 	false
+				};
+
+	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');
 	    };
@@ -445,7 +647,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };      
+	      };
 	    });
 	  };
 
@@ -491,26 +693,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-		/**
-	   * Fix for not displaying original sender in multiple receivers selector
-	   * in the case that user wants to add more receivers to the list  
-	   */
-	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function (item)
-	  {
-	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
-	    {
-	  		var name = $(li).html();
-
-	  		$.each($("div#composeTab select.chzn-select option"), function (j,opt)
-	      {
-		      if(opt.innerHTML == name) opt.selected = true;
-		    });
-	  	});
-	  });
-
-
 	  /**
 	   * Reply a amessage
 	   */
@@ -520,28 +702,23 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('compose');
 
-	    var members = angular.fromJson(Storage.get('members')),
-	        senderId = message.requester.split('personalagent/')[1].split('/')[0],
-	        name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+	    var members 	= angular.fromJson(Storage.get('members')),
+	        senderId 	= message.requester.split('personalagent/')[1].split('/')[0],
+	        name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
 
 	    $scope.message = {
-	      subject: 'RE: ' + message.subject,
-	      receivers: [{
-	        group: 'Users', 
-	        id: senderId , 
-	        name: name
+	      subject: 		'RE: ' + message.subject,
+	      receivers: 	[{
+	        group: 		'Users', 
+	        id: 			senderId , 
+	        name: 		name
 	      }]
 	    };
 
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
-
-	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+	    rerenderReceiversList();
 	  };
 
-	  
+
 	  /**
 	   * Send message
 	   */
@@ -595,6 +772,39 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 	  };
 
+
+		/**
+	   * Fix for not displaying original sender in multiple receivers selector
+	   * in the case that user wants to add more receivers to the list  
+	   */
+	  $("div#composeTab select.chzn-select").chosen()
+	  .change(function (item)
+	  {
+	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
+	    {
+	  		var name = $(li).html();
+
+	  		$.each($("div#composeTab select.chzn-select option"), function (j, opt)
+	      {
+		      if (opt.innerHTML == name) opt.selected = true;
+		    });
+	  	});
+	  });
+
+	  
+	  /**
+	   * Re-render receivers list
+	   */
+	  function rerenderReceiversList ()
+	  {
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    {
+	      if (option.innerHTML == name) option.selected = true;
+	    });
+
+	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
+	  }
+
 	    
 	  /**
 	   * Extract escalation information
@@ -636,23 +846,222 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
+	  /**
+	   * Bulk cleaners for mailboxes
+	   */
+	  $scope.clean = {
+	  	inbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.inbox);
+	  	},
+	  	outbox: function ()
+	  	{
+	  		Messages.clean($scope.messages.outbox);
+	  	},
+	  	trash: function ()
+	  	{
+	  		Messages.clean($scope.messages.trash); 		
+	  	}
+	  };
 
 
 
-	  // $scope.clean = {
-	  // 	inbox: function ()
-	  // 	{
-	  // 		console.log('inbox clean');
-	  // 	},
-	  // 	outbox: function ()
-	  // 	{
-	  // 		Messages.clean($scope.messages.outbox);
-	  // 	},
-	  // 	trash: function ()
-	  // 	{
-	  // 		console.log('trash clean');	  		
-	  // 	}
-	  // }
+
+
+
+	  /**
+	   * Scheaduler jobs manager
+	   */
+	  $scope.scheaduler = {
+
+	  	/**
+	  	 * Make data ready for insertion
+	  	 */
+	  	job: function (message, broadcast, scheaduled)
+	  	{
+		    var members = [],
+		        types 	= [];
+
+		    angular.forEach(message.receivers, function (receiver, index) { members.push(receiver.id); });
+
+		    types.push('paige');
+
+		    if (broadcast.sms) types.push('sms');
+		    if (broadcast.email) types.push('email');
+
+		    return {
+		    	sender: 		$rootScope.app.resources.uuid,
+		      recipients: members,
+		      label: 			scheaduled.title,
+		      subject: 		message.subject,
+		      message: 		message.body,
+		      offsets: 		Offsetter.arrayed(scheaduled.offsets),
+		      repeat: 		'week',
+		      types: 			types,
+		      active: 		scheaduled.status
+		    };
+		  },
+
+
+	  	/**
+	  	 * Scheaduler jobs lister
+	  	 */
+	  	list: function (callback)
+	  	{
+				$rootScope.statusBar.display('Refreshing scheaduled jobs...');
+
+				Messages.scheaduled.list()
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with getting scheadules..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+				    $scope.scheadules = result;
+
+				    $rootScope.statusBar.off();
+
+				    callback();
+				  };
+				});
+	  	},
+
+
+	  	/**
+	  	 * NOT IN USE
+	  	 * 
+	  	 * Get a scheaduler job
+	  	 */
+	  	get: function (uuid)
+	  	{
+				Messages.scheaduled.get(uuid)
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with getting the scheadule..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+				    // console.log('notification fetched ->', result);
+
+				    $scope.scheaduled = result;
+				  };
+				});
+	  	},
+
+
+	  	/**
+	  	 * Save a scheadule job
+	  	 */
+	  	save: function (message, broadcast, scheaduled)
+	  	{
+	  		if (scheaduled.uuid)
+	  		{
+	  			this.edit(message, broadcast, scheaduled);
+	  		}
+	  		else
+	  		{
+	  			this.add(message, broadcast, scheaduled)
+	  		}
+	  	},
+
+
+	  	/**
+	  	 * Add a scheadule job
+	  	 */
+	  	add: function (message, broadcast, scheaduled)
+	  	{
+	  		var self = this;
+
+	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
+
+	  		Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with creating the notification...');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+	          $rootScope.notifier.success('Scheaduled job is saved successfully.');
+
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
+				  };
+				});
+	  	},
+
+
+	  	/**
+	  	 * Edit a schedule job
+	  	 */
+	  	edit: function (message, broadcast, scheaduled)
+	  	{
+	  		var self = this;
+
+	    	$rootScope.statusBar.display('Editing scheaduled job...');
+
+				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
+				.then(function (result)
+				{
+				  if (result.error)
+				  {
+				    $rootScope.notifier.error('Error with editing scheadule..');
+				    console.warn('error ->', result);
+				  }
+				  else
+				  {
+	          $rootScope.notifier.success('Scheaduled job is edited successfully.');
+
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
+	        	});
+				  };
+				});	
+	  	},
+
+
+	  	/**
+	  	 * Remove a scheadule job
+	  	 */
+	  	remove: function (uuid)
+	  	{
+	  		var self = this;
+
+	    	$rootScope.statusBar.display('Deleting a scheaduled job...');
+
+		    Messages.scheaduled.remove(uuid)
+		    .then(function (result)
+		    {
+		      if (result.error)
+		      {
+		        $rootScope.notifier.error('Error with deleting the scheadule..');
+		        console.warn('error ->', result);
+		      }
+		      else
+		      {
+	          $rootScope.notifier.success('Scheaduled job is deleted successfully.');
+
+	          self.list(function ()
+	        	{
+	        		$scope.setViewTo('notifications');
+	        	});
+		      };
+		    });
+	  	}
+
+	  };
 
 	}
-]);
+])

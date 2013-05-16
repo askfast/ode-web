@@ -8,7 +8,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 .controller('planboard', 
 [
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter', 
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter',
 	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
 	{
 	  /**
@@ -26,6 +26,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * Pass time slots data
 	   */
 	  $scope.data = data;
+
+	  // console.log('data ->', data);
 
 	  
 	  /**
@@ -102,6 +104,20 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
+	  
+
+	  /**
+	   * IE8 fix for inability of - signs in date object
+	   */
+	  if ($.browser.msie && $.browser.version == '8.0')
+	  {
+	  	$scope.timeline.options = {
+	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
+	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
+	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
+	    }
+	  }
 
 
 	  /**
@@ -242,9 +258,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
-
-
-	  // $scope.self.timeline.redraw();
 
 	}
 ]);

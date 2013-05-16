@@ -26,6 +26,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 		$scope.self = this;
 
 
+		console.warn('data ->', data);
+
+
 	  /**
 	   * Pass periods
 	   */
@@ -45,8 +48,20 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Set data for view
 	   */
-	  if (data.user) data.user 	= data.slots.data;
+	  if (data.slots) 
+	  	data.user = data.slots.data;
+
+
+	  /**
+	   * PAss data container
+	   */
 	  $scope.data = data;
+
+
+	  /**
+	   * Pass profile information
+	   */
+	  $scope.profilemeta = data.resources;
 
 
 	  /**
@@ -272,10 +287,12 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  if ($location.hash() == 'timeline')
+	  // if ($location.hash() == 'timeline')
+	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
 	  	timelinebooter();
 	  };
+
 
 
 	  /**
@@ -283,8 +300,11 @@ angular.module('WebPaige.Controllers.Profile', [])
 	   */
 	  $scope.redraw = function ()
 	  {
-	  	timelinebooter();
-	  };
+	  	setTimeout(function ()
+	  	{
+	  		// timelinebooter();
+	  	}, 100);
+		};
 
 
 	  function timelinebooter ()
@@ -293,7 +313,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       	id: 'userTimeline',
       	main: false,
       	user: {
-      		id: 	$route.current.params.userId
+      		id: $route.current.params.userId
       	},
         current: $scope.current,
         options: {
@@ -323,6 +343,15 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         $scope.timeline.config.legenda[index] = true;
       });
+
+
+	  /**
+	   * Prepeare timeline range for dateranger widget
+	   */
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	                      Dater.readable.date($scope.timeline.range.end);
+
+	                      
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');
