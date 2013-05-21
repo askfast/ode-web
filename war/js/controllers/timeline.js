@@ -845,31 +845,47 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  }
 
 
+		window.setInterval(function ()
+		{
+			$scope.slot = {};
+
+			$scope.resetViews();
+
+			// if ($scope.views.slot.add) $scope.views.slot.add = true;
+			// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+
+			$scope.timeliner.load({
+			  start:  $scope.data.periods.start,
+			  end:    $scope.data.periods.end
+			}, true);
+		}, 60000);
+
+
 
 	  /**
 	   * Background sync
 	   */
-	  if ($location.path() == 'planboard')
-	  {
-			Timer.start('planboard', 
-			function ()
-			{
-				console.log('syncing in background');
+	  // if ($location.path() == 'planboard')
+	  // {
+			// Timer.start('planboard', 
+			// function ()
+			// {
+			// 	console.log('syncing in background');
 
-			  $scope.slot = {};
+			//   $scope.slot = {};
 
-			  $scope.resetViews();
+			//   $scope.resetViews();
 
-			  // if ($scope.views.slot.add) $scope.views.slot.add = true;
-			  // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+			//   // if ($scope.views.slot.add) $scope.views.slot.add = true;
+			//   // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
-			  $scope.timeliner.load({
-			    start:  $scope.data.periods.start,
-			    end:    $scope.data.periods.end
-			  }, true);
+			//   $scope.timeliner.load({
+			//     start:  $scope.data.periods.start,
+			//     end:    $scope.data.periods.end
+			//   }, true);
 
-			}, 8);
-	  }
+			// }, 8);
+	  // }
 
 	}
 ]);

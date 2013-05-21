@@ -11,13 +11,10 @@
 
 ## Versions
 
-	2.3.0
-		* Deployed for 100T, 110K, 120G and 130B 16-5-2013
-
 	2.2.0
 		* Hotfix for stability issues in profile timeline 15-5-2013
 		* Hotfix for not displaying user information on profile editing form 15-5-2013
-		* Background planboard sync (64 seconds interval) 13-5-2013
+		* Background planboard sync (60 seconds interval) 13-5-2013
 		* Message job scheduler 13-5-2013
 		* IE 8/9/10 planboard stabilization 13-5-2013
 		* Hotfix for not going further than 6th page in pagination in messages 4-5-2013
