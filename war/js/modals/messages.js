@@ -432,6 +432,47 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 
 	  /**
+	   * Send a message
+	   */
+	  Messages.prototype.email = function (content) 
+	  {
+	    var deferred 	= $q.defer(),
+	    		types 		= [],
+	    		receivers = [];
+
+	    types.push('email');
+	    receivers.push($rootScope.app.resources.uuid);
+
+	    var message = {
+	      members: 	receivers,
+	      content: 	content.body,
+	      subject: 	content.subject,
+	      types: 		types
+	    };
+
+	    Messages.send(null, message, 
+	      function (result) 
+	      {
+	        var returned = '';
+
+	        angular.forEach(result, function (chr, i)
+	        {
+	          returned += chr;
+	        });
+
+	        deferred.resolve(returned);
+	      },
+	      function (error)
+	      {
+	        deferred.resolve({error: error});
+	      }
+	    );
+
+	    return deferred.promise;
+	  };
+
+
+	  /**
 	   * Get unread messages
 	   */
 	  Messages.prototype.unread = function ()

@@ -56,8 +56,28 @@ var profile = {
     status: true,
     url:    'http://knrm.myask.me/rpc/client/p2000.php',
     codes:  '1405545, 1405546, 1735749, 1735748'
+  },
+
+  mobileApp: {
+    status: true,
+    text:   'Download Android App',
+    link:   'http://www.google.com/',
+    email:  function ()
+    {
+      var self = this;
+
+      return  {
+        subject:  'Some email subject',
+        body:     'Dear user,\n\nThis is a sample message. Here is the link: ' + 
+                  self.link + 
+                  '\n\nGreetings,\nAsk Community Systems'
+      }
+    }
   }
 };
+
+
+
 
 
 

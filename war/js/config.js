@@ -28,7 +28,8 @@ angular.module('WebPaige')
         app:    ''
       },
       background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
-      p2000:      profile.p2000
+      p2000:      profile.p2000,
+      mobileApp:  profile.mobileApp
     },
 
     statesall: {

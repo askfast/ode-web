@@ -240,7 +240,7 @@
         <div id="copyrights">
 
           <!-- ask & version -->
-          <span class="muted">
+          <span class="muted" ng-style="(!config.profile.mobileApp.status) && 'right:0'">
             <small>
               Ask Community Systems, 2013<br><i>WebPaige <a href="version.html" target="_blank">v{{config.version}}</a></i>
             </small>
@@ -248,11 +248,9 @@
           <!-- end ask & version -->
 
           <!-- download mobile app -->
-          <div id="download-footer">
-            <button class="btn btn-success btn-large" type="button" bs-tooltip="ui.downloads.app">
-              <!-- <span class="entypo">&#128241;</span> -->
-              <!-- <i class="icon-download icon-white"></i> -->
-              {{ui.login.downloadApp}}
+          <div id="download-footer" ng-show="config.profile.mobileApp.status">
+            <button class="btn btn-success btn-large" type="button" ng-click="downloadMobileApp()">
+              {{config.profile.mobileApp.text}}
             </button>
           </div>
           <!-- end download mobile app -->

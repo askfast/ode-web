@@ -39,6 +39,13 @@ var profile = {
     status: true,
     url:    'http://knrmtest.myask.me/rpc/client/p2000.php',
     codes:  '1500982'
+  },
+
+  mobileApp: {
+    status: true,
+    text: 'Download Android App',
+    link: 'http://www.google.com/',
+    email: 'Dear user,<br>This is a sample message. Here is the link: ' + this.link + '<br>Greetings,<br>Ask Community Systems'
   }
 };
 

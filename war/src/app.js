@@ -678,7 +678,8 @@ angular.module('WebPaige')
         app:    ''
       },
       background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
-      p2000:      profile.p2000
+      p2000:      profile.p2000,
+      mobileApp:  profile.mobileApp
     },
 
     statesall: {
@@ -1283,7 +1284,7 @@ angular.module('WebPaige')
     /**
      * Detect route change start
      */
-    $rootScope.$on("$routeChangeStart", function (event, next, current)
+    $rootScope.$on('$routeChangeStart', function (event, next, current)
     {
       function resetLoaders ()
       {
@@ -1346,7 +1347,7 @@ angular.module('WebPaige')
     /**
      * Route change successfull
      */
-    $rootScope.$on("$routeChangeSuccess", function (event, current, previous)
+    $rootScope.$on('$routeChangeSuccess', function (event, current, previous)
     {
       $rootScope.newLocation = $location.path();
 
@@ -1364,7 +1365,7 @@ angular.module('WebPaige')
      * 
      * Route change is failed!
      */
-    $rootScope.$on("$routeChangeError", function (event, current, previous, rejection)
+    $rootScope.$on('$routeChangeError', function (event, current, previous, rejection)
     {
       $rootScope.notifier.error(rejection);
     });
@@ -1440,11 +1441,30 @@ angular.module('WebPaige')
      */
     if ($.os.windows)
     {
-      console.log('coming to here');
+      // console.log('coming to here');
       
       $('#loading p').css({
         paddingTop: '130px'
       });
+    }
+
+
+
+
+
+    if (!$config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
+
+    $rootScope.downloadMobileApp = function ()
+    {
+      $rootScope.statusBar.display('Sending mobile app download instructions...');
+
+      Messages.email($config.profile.mobileApp.email())
+      .then(function (result)
+      {
+        $rootScope.notifier.success('Please check your mailbox for download instructions.');
+
+        $rootScope.statusBar.off();
+      })
     }
 
   }
@@ -2814,6 +2834,47 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      content: message.body,
 	      subject: message.subject,
 	      types: types
+	    };
+
+	    Messages.send(null, message, 
+	      function (result) 
+	      {
+	        var returned = '';
+
+	        angular.forEach(result, function (chr, i)
+	        {
+	          returned += chr;
+	        });
+
+	        deferred.resolve(returned);
+	      },
+	      function (error)
+	      {
+	        deferred.resolve({error: error});
+	      }
+	    );
+
+	    return deferred.promise;
+	  };
+
+
+	  /**
+	   * Send a message
+	   */
+	  Messages.prototype.email = function (content) 
+	  {
+	    var deferred 	= $q.defer(),
+	    		types 		= [],
+	    		receivers = [];
+
+	    types.push('email');
+	    receivers.push($rootScope.app.resources.uuid);
+
+	    var message = {
+	      members: 	receivers,
+	      content: 	content.body,
+	      subject: 	content.subject,
+	      types: 		types
 	    };
 
 	    Messages.send(null, message, 
@@ -9519,9 +9580,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Set messages
 	   */
-	  $scope.messages 			= data.messages;
+	  $scope.messages 	= data.messages;
 
-	  $scope.scheadules 		= data.scheadules;
+	  $scope.scheadules = data.scheadules;
 
 
 	  /**
@@ -10265,7 +10326,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  $("div#composeTab select.chzn-select").chosen()
 	  .change(function (item)
 	  {
-	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
+	  	$.each($(this).next().find("ul li.result-selected"), function (i, li)
 	    {
 	  		var name = $(li).html();
 

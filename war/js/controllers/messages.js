@@ -34,9 +34,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Set messages
 	   */
-	  $scope.messages 			= data.messages;
+	  $scope.messages 	= data.messages;
 
-	  $scope.scheadules 		= data.scheadules;
+	  $scope.scheadules = data.scheadules;
 
 
 	  /**
@@ -780,7 +780,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  $("div#composeTab select.chzn-select").chosen()
 	  .change(function (item)
 	  {
-	  	$.each($(this).next().find("ul li.result-selected"), function (i,li)
+	  	$.each($(this).next().find("ul li.result-selected"), function (i, li)
 	    {
 	  		var name = $(li).html();
 
