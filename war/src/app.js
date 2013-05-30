@@ -1458,7 +1458,11 @@ angular.module('WebPaige')
     {
       $rootScope.statusBar.display('Sending mobile app download instructions...');
 
-      Messages.email($config.profile.mobileApp.email())
+      Messages.email({
+        receivers:  [$rootScope.app.resources.uuid],
+        subject:    $config.profile.mobileApp.subject,
+        body:       $config.profile.mobileApp.email()
+      })
       .then(function (result)
       {
         $rootScope.notifier.success('Please check your mailbox for download instructions.');
@@ -2861,20 +2865,15 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  /**
 	   * Send a message
 	   */
-	  Messages.prototype.email = function (content) 
+	  Messages.prototype.email = function (mail) 
 	  {
-	    var deferred 	= $q.defer(),
-	    		types 		= [],
-	    		receivers = [];
-
-	    types.push('email');
-	    receivers.push($rootScope.app.resources.uuid);
+	    var deferred 	= $q.defer();
 
 	    var message = {
-	      members: 	receivers,
-	      content: 	content.body,
-	      subject: 	content.subject,
-	      types: 		types
+	      members: 	mail.receivers,
+	      subject: 	mail.subject,
+	      content: 	mail.body,
+	      types: 		['email']
 	    };
 
 	    Messages.send(null, message, 

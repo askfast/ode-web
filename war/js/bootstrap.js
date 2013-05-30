@@ -421,7 +421,11 @@ angular.module('WebPaige')
     {
       $rootScope.statusBar.display('Sending mobile app download instructions...');
 
-      Messages.email($config.profile.mobileApp.email())
+      Messages.email({
+        receivers:  [$rootScope.app.resources.uuid],
+        subject:    $config.profile.mobileApp.subject,
+        body:       $config.profile.mobileApp.email()
+      })
       .then(function (result)
       {
         $rootScope.notifier.success('Please check your mailbox for download instructions.');

@@ -434,20 +434,15 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  /**
 	   * Send a message
 	   */
-	  Messages.prototype.email = function (content) 
+	  Messages.prototype.email = function (mail) 
 	  {
-	    var deferred 	= $q.defer(),
-	    		types 		= [],
-	    		receivers = [];
-
-	    types.push('email');
-	    receivers.push($rootScope.app.resources.uuid);
+	    var deferred 	= $q.defer();
 
 	    var message = {
-	      members: 	receivers,
-	      content: 	content.body,
-	      subject: 	content.subject,
-	      types: 		types
+	      members: 	mail.receivers,
+	      subject: 	mail.subject,
+	      content: 	mail.body,
+	      types: 		['email']
 	    };
 
 	    Messages.send(null, message, 

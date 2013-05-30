@@ -59,9 +59,13 @@ var profile = {
 
   mobileApp: {
     status: true,
-    text: 'Download Android App',
-    link: 'http://www.google.com/',
-    email: 'Dear user,<br>This is a sample message. Here is the link: ' + this.link + '<br>Greetings,<br>Ask Community Systems'
+    text:   'Download Android App',
+    link:   'http://www.google.com/',
+    subject:  'Some email subject',
+    email:  function ()
+    {
+      return  'Dear user,\n\nThis is a sample message. Here is the link: ' + this.link + '\n\nGreetings,\nAsk Community Systems'
+    }
   }
 };
 

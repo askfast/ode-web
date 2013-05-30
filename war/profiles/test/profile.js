@@ -62,16 +62,10 @@ var profile = {
     status: true,
     text:   'Download Android App',
     link:   'http://www.google.com/',
+    subject:  'Some email subject',
     email:  function ()
     {
-      var self = this;
-
-      return  {
-        subject:  'Some email subject',
-        body:     'Dear user,\n\nThis is a sample message. Here is the link: ' + 
-                  self.link + 
-                  '\n\nGreetings,\nAsk Community Systems'
-      }
+      return  'Dear user,\n\nThis is a sample message. Here is the link: ' + this.link + '\n\nGreetings,\nAsk Community Systems'
     }
   }
 };
