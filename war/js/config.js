@@ -106,6 +106,7 @@ angular.module('WebPaige')
       config: {
         zoom:       '0.4',
         bar:        false,
+        layouts:    profile.timeline.config.layouts,
         wishes:     false,
         legenda:    {},
         legendarer: false,

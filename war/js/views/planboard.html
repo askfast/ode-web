@@ -443,7 +443,8 @@
                   <button type="button" 
                           ng-model="timeline.current.layouts.members" 
                           class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                          ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
+                          ng-click="requestTimeline('members')"
+                          ng-show="timeline.config.layouts.members">{{ui.planboard.members}}</button>
                 </div>
                 <!-- end timeline layout manager -->
 
@@ -581,7 +582,8 @@
                 <button type="button" 
                         ng-model="timeline.current.layouts.members" 
                         class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                        ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
+                        ng-click="requestTimeline('members')"
+                        ng-show="timeline.config.layouts.members">{{ui.planboard.members}}</button>
               </div>
               <!-- end timeline layout manager -->
 

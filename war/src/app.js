@@ -756,6 +756,7 @@ angular.module('WebPaige')
       config: {
         zoom:       '0.4',
         bar:        false,
+        layouts:    profile.timeline.config.layouts,
         wishes:     false,
         legenda:    {},
         legendarer: false,
@@ -8234,6 +8235,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    },
 	    config: {
 	      bar:        $rootScope.config.timeline.config.bar,
+	      layouts:    $rootScope.config.timeline.config.layouts,
 	      wishes:     $rootScope.config.timeline.config.wishes,
 	      legenda:    {},
 	      legendarer: $rootScope.config.timeline.config.legendarer,

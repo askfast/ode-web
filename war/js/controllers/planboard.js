@@ -96,6 +96,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    },
 	    config: {
 	      bar:        $rootScope.config.timeline.config.bar,
+	      layouts:    $rootScope.config.timeline.config.layouts,
 	      wishes:     $rootScope.config.timeline.config.wishes,
 	      legenda:    {},
 	      legendarer: $rootScope.config.timeline.config.legendarer,

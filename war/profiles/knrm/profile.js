@@ -21,6 +21,15 @@ var profile = {
     'com.ask-cs.State.Unreached'
   ],
 
+  timeline: {
+    config: {
+      layouts: {
+        groups:   true,
+        members:  true
+      }
+    }
+  },
+
   divisions: [
     {
       id: 'all',

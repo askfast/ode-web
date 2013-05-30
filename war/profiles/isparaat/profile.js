@@ -21,6 +21,15 @@ var profile = {
     'com.ask-cs.State.Unreached'
   ],
 
+  timeline: {
+    config: {
+      layouts: {
+        groups:   true,
+        members:  true
+      }
+    }
+  },
+
   divisions: [],
 
   roles: [
@@ -45,7 +54,7 @@ var profile = {
   },
 
   mobileApp: {
-    status: true,
+    status: false,
     text:   'Download Android App',
     link:   'http://www.google.com/',
     subject:  'Some email subject',
