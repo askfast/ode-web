@@ -2870,12 +2870,19 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var deferred 	= $q.defer();
 
+	    // var message = {
+	    //   members: 	mail.receivers,
+	    //   subject: 	mail.subject,
+	    //   content: 	mail.body,
+	    //   types: 		['email']
+	    // };
+
 	    var message = {
-	      members: 	mail.receivers,
-	      subject: 	mail.subject,
-	      content: 	mail.body,
-	      types: 		['email']
-	    };
+				content: 			'<html><h1>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.</h1></html>',
+				subject: 			'Test onderwerp',
+				types: 				['email'],
+				contenttype: 	'text/html'
+			};
 
 	    Messages.send(null, message, 
 	      function (result) 
