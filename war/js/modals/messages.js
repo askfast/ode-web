@@ -11,8 +11,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
  */
 .factory('Messages',
 [
-	'$rootScope', '$config', '$resource', '$q', 'Storage',
-	function ($rootScope, $config, $resource, $q, Storage)
+	'$rootScope', '$config', '$resource', '$q', 'Storage', '$http', 
+	function ($rootScope, $config, $resource, $q, Storage, $http)
 	{
 	  var Messages = $resource(
 	    $config.host + '/question/:action',
@@ -438,37 +438,42 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var deferred 	= $q.defer();
 
-	    // var message = {
-	    //   members: 	mail.receivers,
-	    //   subject: 	mail.subject,
-	    //   content: 	mail.body,
-	    //   types: 		['email']
-	    // };
+	    $http({
+			  method: 'GET', 
+			  url: '../mail/mobile_app.html'
+			}).
+		  success(function (content, status, headers, config)
+		  {
+		    var message = {
+					content: 			content,
+					subject: 			'Test onderwerp',
+					types: 				['email'],
+					contenttype: 	'text/html'
+				};
 
-	    var message = {
-				content: 			'<html><h1>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.</h1></html>',
-				subject: 			'Test onderwerp',
-				types: 				['email'],
-				contenttype: 	'text/html'
-			};
+		    Messages.send(null, message, 
+		      function (result) 
+		      {
+		        var returned = '';
 
-	    Messages.send(null, message, 
-	      function (result) 
-	      {
-	        var returned = '';
+		        angular.forEach(result, function (chr, i)
+		        {
+		          returned += chr;
+		        });
 
-	        angular.forEach(result, function (chr, i)
-	        {
-	          returned += chr;
-	        });
+		        deferred.resolve(returned);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+		  }).
+		  error(function (data, status, headers, config)
+		  {
+		  	console.log('smth went wrong');
+		  });
 
-	        deferred.resolve(returned);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
 
 	    return deferred.promise;
 	  };
