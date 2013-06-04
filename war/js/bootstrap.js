@@ -22,6 +22,7 @@ angular.module('WebPaige')
 
     $rootScope.config.init();
 
+
     /**
      * TODO
      * Move these checks to jquery.browser
@@ -268,28 +269,40 @@ angular.module('WebPaige')
       {
         case '/dashboard':
           $rootScope.loaderIcons.dashboard = true;
+
+          $rootScope.location = 'dashboard';
         break;
 
         case '/planboard':
           $rootScope.loaderIcons.planboard = true;
+
+          $rootScope.location = 'planboard';
         break;
 
         case '/messages':
           $rootScope.loaderIcons.messages = true;
+
+          $rootScope.location = 'messages';
         break;
 
         case '/groups':
           $rootScope.loaderIcons.groups = true;
+
+          $rootScope.location = 'groups';
         break;
 
         case '/settings':
           $rootScope.loaderIcons.settings = true;
+
+          $rootScope.location = 'settings';
         break;
 
         default:
           if ($location.path().match(/profile/))
           {
             $rootScope.loaderIcons.profile = true;
+
+            $rootScope.location = 'profile';
           }
           else
           {

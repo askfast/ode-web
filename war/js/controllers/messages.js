@@ -48,6 +48,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	trash: 	0
 	  };
 
+
+	  /**
+	   * PAginate engine
+	   */
 	  $scope.paginate = {
 
 	  	set: function (page, box)

@@ -110,9 +110,11 @@
 
             <!-- desktop version -->
             <ul class="nav pull-right" ng-hide="browser.mobile">
+
               <li>
-                <a href="#help"><i class="icon-question-sign icon-white"></i> Help & Support</a>
+                <a href="#help#{{location}}"><i class="icon-question-sign icon-white"></i> Help & Support</a>
               </li>
+
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
@@ -129,9 +131,11 @@
                   </li>
                 </ul>
               </li>
+
               <li id="fullscreener" ng-show="config.fullscreen && browser.webkit">
                 <a ng-click="fullScreen()"><i class="icon-fullscreen icon-white"></i></a>
               </li>
+
             </ul>
             <!-- end desktop version -->
 
@@ -166,7 +170,7 @@
       </div>
     </div>
     <!-- end navbar -->
-
+    
 
     <!-- loading -->
     <div id="loading" ng-show="loadingBig" class="ng-cloak">

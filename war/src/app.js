@@ -1060,6 +1060,7 @@ angular.module('WebPaige')
 
     $rootScope.config.init();
 
+
     /**
      * TODO
      * Move these checks to jquery.browser
@@ -1306,28 +1307,40 @@ angular.module('WebPaige')
       {
         case '/dashboard':
           $rootScope.loaderIcons.dashboard = true;
+
+          $rootScope.location = 'dashboard';
         break;
 
         case '/planboard':
           $rootScope.loaderIcons.planboard = true;
+
+          $rootScope.location = 'planboard';
         break;
 
         case '/messages':
           $rootScope.loaderIcons.messages = true;
+
+          $rootScope.location = 'messages';
         break;
 
         case '/groups':
           $rootScope.loaderIcons.groups = true;
+
+          $rootScope.location = 'groups';
         break;
 
         case '/settings':
           $rootScope.loaderIcons.settings = true;
+
+          $rootScope.location = 'settings';
         break;
 
         default:
           if ($location.path().match(/profile/))
           {
             $rootScope.loaderIcons.profile = true;
+
+            $rootScope.location = 'profile';
           }
           else
           {
@@ -9620,6 +9633,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	trash: 	0
 	  };
 
+
+	  /**
+	   * PAginate engine
+	   */
 	  $scope.paginate = {
 
 	  	set: function (page, box)
@@ -11987,12 +12004,66 @@ angular.module('WebPaige.Controllers.Help', [])
  */
 .controller('help',
 [
-	'$rootScope', '$scope',
-	function ($rootScope, $scope)
+	'$rootScope', '$scope', '$location',
+	function ($rootScope, $scope, $location)
 	{
 		/**
 		 * Fix styles
 		 */
 		$rootScope.fixStyles();
+
+
+	  /**
+	   * View setter
+	   */
+	  function setView (hash)
+	  {
+	    $scope.views = {
+	      dashboard:false,
+	      planboard:false,
+	      messages: false,
+	      groups:  	false,
+	      profile:  false,
+	      settings: false,
+	      support: 	false
+	    };
+
+	    $scope.views[hash] = true;
+	  };
+
+
+	  /**
+	   * Switch between the views and set hash accordingly
+	   */
+	  $scope.setViewTo = function (hash)
+	  {
+	    $scope.$watch(hash, function ()
+	    {
+	      $location.hash(hash);
+
+	      setView(hash);
+	    });
+	  };
+
+
+	  /**
+	   * If no params or hashes given in url
+	   */
+	  if (!$location.hash())
+	  {
+	    var view = 'dashboard';
+
+	    $location.hash('dashboard');
+	  }
+	  else
+	  {
+	    var view = $location.hash();
+	  }
+
+
+	  /**
+	   * Set view
+	   */
+	  setView(view);
 	}
 ]);
