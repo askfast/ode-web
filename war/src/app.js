@@ -48,7 +48,7 @@ var ui = {
         noP2000: 'There are no alarm messages'
       },
       planboard: {
-        planboard: 'Planboard',
+        planboard: 'Agenda',
         newAvail: 'New Availability',
         day: 'Day',
         week: 'Week',
@@ -279,7 +279,7 @@ var ui = {
       loading: {
         general:    'Loading',
         dashboard:  'dashboard',
-        planboard:  'planboard',
+        planboard:  'agenda',
         messages:   'messages',
         groups:     'groups',
         profile:    'profile',
@@ -329,7 +329,7 @@ var ui = {
         noP2000: 'Er zijn geen alarm berichten.'
       },
       planboard : {
-        planboard: 'Planboard',
+        planboard: 'Agenda',
         newAvail: 'Nieuwe beschikbaarheid',
         day: 'Dag',
         week: 'Week',
@@ -559,7 +559,7 @@ var ui = {
       loading: {
         general:    'Laden',
         dashboard:  'dashboard',
-        planboard:  'planboard',
+        planboard:  'agenda',
         messages:   'berichten',
         groups:     'groepen',
         profile:    'profiel',
