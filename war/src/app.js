@@ -1442,8 +1442,6 @@ angular.module('WebPaige')
      */
     if ($.os.windows)
     {
-      // console.log('coming to here');
-      
       $('#loading p').css({
         paddingTop: '130px'
       });
@@ -1716,8 +1714,8 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
  */
 .factory('Dashboard',
 [
-	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
-	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer)
+	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', '$http',
+	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer, $http)
 	{
 		var Dashboard = $resource(
 			'http://knrm.myask.me/rpc/client/p2000.php',
@@ -1731,7 +1729,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				}
 			}
 		);
-
+		
 
 		/**
 		 * Get group aggs for pie charts
@@ -1791,6 +1789,21 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 					deferred.resolve({error: error});
 				}
 			});
+
+			// $http({
+			// 	method: 'jsonp',
+			// 	url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
+			// })
+			// .success(function (data, status)
+			// {
+			// 	console.log('results ->', data);
+
+			// 	deferred.resolve( Announcer.process(data) );
+			// })
+			// .error(function (error)
+			// {
+			// 	deferred.resolve({error: error});
+			// });
 
 			return deferred.promise;
 		};

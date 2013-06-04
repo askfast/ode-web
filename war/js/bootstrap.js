@@ -404,8 +404,6 @@ angular.module('WebPaige')
      */
     if ($.os.windows)
     {
-      // console.log('coming to here');
-      
       $('#loading p').css({
         paddingTop: '130px'
       });
