@@ -434,19 +434,21 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  /**
 	   * Send a message
 	   */
-	  Messages.prototype.email = function (mail) 
+	  Messages.prototype.email = function () 
 	  {
 	    var deferred 	= $q.defer();
 
 	    $http({
 			  method: 'GET', 
-			  url: '../mail/mobile_app.html'
+			  url: 		'../mail/mobile_app.html'
 			}).
 		  success(function (content, status, headers, config)
 		  {
+		  	content = content.replace('__download_link__', $config.profile.mobileApp.link);
+
 		    var message = {
 					content: 			content,
-					subject: 			'Test onderwerp',
+					subject: 			'Mobiele App Instructies',
 					types: 				['email'],
 					contenttype: 	'text/html'
 				};
