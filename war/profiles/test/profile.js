@@ -69,7 +69,7 @@ var profile = {
 
   mobileApp: {
     status: true,
-    text:   'Download Android App',
+    text:   'Download Mobiele App',
     link:   'http://www.google.com/',
     subject:  'Some email subject',
     email:  function ()

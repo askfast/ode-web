@@ -12,6 +12,7 @@
 ## Versions
 
 	2.3.0
+		* Download mobile app functionality 4-6-2013
 		* Deployed for 100T, 110K, 120G and 130B 16-5-2013
 
 	2.2.0
