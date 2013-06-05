@@ -51,8 +51,8 @@ var profile = {
   },
 
   mobileApp: {
-    status:   false,
-    link:     'http://www.google.com/'
+    status:   true,
+    link:     'http://test.ask-webpaige.appspot.com/profiles/test/app/knrm-paige.apk'
   }
 };
 

@@ -56,7 +56,7 @@
             ng-click="setViewTo('settings')"><span class="entypo">&#9881;</span> {{ui.settings.settings}}</a>
       </li>
 
-      <li class="{{(views.support==true) && 'active'}}">
+      <li class="{{(views.support==true) && 'active'}}" ng-show="(config.profile.meta=='knrm') || (config.profile.meta=='test')">
         <a  href="#supportTab" 
             data-toggle="tab"
             ng-click="setViewTo('support')"><span class="entypo">&#59272;</span> {{ui.help.support}}</a>
@@ -319,13 +319,13 @@
 
         <h5>Telefoon</h5>
 
-        <p>Telefoonnummer: 0255 54 84 54</p>
+        <p>0255 54 84 54</p>
 
         <!-- <br> -->
 
         <h5>E-mail</h5>
 
-        <p>E-mail: ask@knrm.nl</p>
+        <p><a href="mailto:ask@knrm.nl">ask@knrm.nl</a></p>
       </div>
       <!-- end supportTab -->
 
