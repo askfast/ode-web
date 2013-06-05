@@ -1154,10 +1154,20 @@ angular.module('WebPaige')
           status: false,
           message: 'Loading..'
         };
+
+        $rootScope.app.preloader = {
+          status: false,
+          total:  0,
+          count:  0
+        }
       },
 
       display: function (message)
       {
+        // $rootScope.app.preloader || {status: false};
+
+        $rootScope.app.preloader.status = false;
+
         $rootScope.loading = {
           status:   true,
           message:  message
@@ -2191,6 +2201,33 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
+	   * Slots percentage calculator
+	   */
+	  var preloader = {
+
+	  	/**
+	  	 * Init preloader
+	  	 */
+	  	init: function (total)
+	  	{
+	  		$rootScope.app.preloader = {
+	  			status: true,
+	  			total: 	total,
+	  			count: 	0
+	  		}
+	  	},
+
+	  	/**
+	  	 * Countdown
+	  	 */
+	  	count: function ()
+	  	{
+	  		$rootScope.app.preloader.count = Math.abs(Math.floor( $rootScope.app.preloader.count + (100 / $rootScope.app.preloader.total) ));
+	  	}
+	  };
+
+
+	  /**
 	   * Get slot bundels; user, group aggs and members
 	   */
 	  Slots.prototype.all = function (options) 
@@ -2229,9 +2266,14 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              var members = angular.fromJson(Storage.get(options.groupId)),
 	                  calls   = [];
 
-	              angular.forEach(members, function(member, index)
+	              /**
+	               * Run the preloader
+	               */
+	              preloader.init(members.length);
+
+	              angular.forEach(members, function (member, index)
 	              {
-	                calls.push(Slots.prototype.user({
+	              	calls.push(Slots.prototype.user({
 	                  user: member.uuid,
 	                  start:params.start,
 	                  end:  params.end,
@@ -2304,6 +2346,11 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (result) 
 	      {
+	      	/**
+	      	 * Countdown on preloader
+	      	 */
+					preloader.count();
+
 	        deferred.resolve({
 	          id:     params.user,
 	          data:   result,
@@ -8516,21 +8563,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			else
 			{
-				// if ($location.hash() == 'timeline')
-	  	// 	if ($rootScope.app.resources.uuid != $route.current.params.userId)
-				// {
+				range = $scope.self.timeline.getVisibleChartRange();
 
-
-					range = $scope.self.timeline.getVisibleChartRange();
-
-					// console.log('range ->', range);
-
-					$scope.timeline.range = {
-						start:  new Date(range.start).toString(),
-						end:    new Date(range.end).toString()
-					};
-
-				// }
+				$scope.timeline.range = {
+					start:  new Date(range.start).toString(),
+					end:    new Date(range.end).toString()
+				};
 			}
 		});
 
@@ -9274,15 +9312,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  if ($scope.timeline && $scope.timeline.main)
 		{
-			// console.log('there is any timeline');
-
-	    setTimeout(function() 
+			setTimeout(function () 
 	    {
 	      $scope.self.timeline.redraw();
 	    }, 100);
 	  }
 
 
+	  /**
+	   * Background sync in every 60 sec
+	   */
 		window.setInterval(function ()
 		{
 			$scope.slot = {};
@@ -9297,33 +9336,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			  end:    $scope.data.periods.end
 			}, true);
 		}, 60000);
-
-
-
-	  /**
-	   * Background sync
-	   */
-	  // if ($location.path() == 'planboard')
-	  // {
-			// Timer.start('planboard', 
-			// function ()
-			// {
-			// 	console.log('syncing in background');
-
-			//   $scope.slot = {};
-
-			//   $scope.resetViews();
-
-			//   // if ($scope.views.slot.add) $scope.views.slot.add = true;
-			//   // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
-
-			//   $scope.timeliner.load({
-			//     start:  $scope.data.periods.start,
-			//     end:    $scope.data.periods.end
-			//   }, true);
-
-			// }, 8);
-	  // }
 
 	}
 ]);;/*jslint node: true */

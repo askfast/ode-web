@@ -78,21 +78,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			else
 			{
-				// if ($location.hash() == 'timeline')
-	  	// 	if ($rootScope.app.resources.uuid != $route.current.params.userId)
-				// {
+				range = $scope.self.timeline.getVisibleChartRange();
 
-
-					range = $scope.self.timeline.getVisibleChartRange();
-
-					// console.log('range ->', range);
-
-					$scope.timeline.range = {
-						start:  new Date(range.start).toString(),
-						end:    new Date(range.end).toString()
-					};
-
-				// }
+				$scope.timeline.range = {
+					start:  new Date(range.start).toString(),
+					end:    new Date(range.end).toString()
+				};
 			}
 		});
 
@@ -836,15 +827,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  if ($scope.timeline && $scope.timeline.main)
 		{
-			// console.log('there is any timeline');
-
-	    setTimeout(function() 
+			setTimeout(function () 
 	    {
 	      $scope.self.timeline.redraw();
 	    }, 100);
 	  }
 
 
+	  /**
+	   * Background sync in every 60 sec
+	   */
 		window.setInterval(function ()
 		{
 			$scope.slot = {};
@@ -859,33 +851,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			  end:    $scope.data.periods.end
 			}, true);
 		}, 60000);
-
-
-
-	  /**
-	   * Background sync
-	   */
-	  // if ($location.path() == 'planboard')
-	  // {
-			// Timer.start('planboard', 
-			// function ()
-			// {
-			// 	console.log('syncing in background');
-
-			//   $scope.slot = {};
-
-			//   $scope.resetViews();
-
-			//   // if ($scope.views.slot.add) $scope.views.slot.add = true;
-			//   // if ($scope.views.slot.edit) $scope.views.slot.edit = true;
-
-			//   $scope.timeliner.load({
-			//     start:  $scope.data.periods.start,
-			//     end:    $scope.data.periods.end
-			//   }, true);
-
-			// }, 8);
-	  // }
 
 	}
 ]);

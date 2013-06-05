@@ -248,7 +248,7 @@
 
         <!-- general preloader -->
         <p class="muted" ng-show="loading.status">
-          <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
+          <img src="img/ajax-loader.gif"><small><span ng-show="app.preloader.status">{{app.preloader.count}}% </span>{{loading.message}}</small>
         </p>
         <!-- end general preloader -->
 

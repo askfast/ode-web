@@ -369,6 +369,33 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
+	   * Slots percentage calculator
+	   */
+	  var preloader = {
+
+	  	/**
+	  	 * Init preloader
+	  	 */
+	  	init: function (total)
+	  	{
+	  		$rootScope.app.preloader = {
+	  			status: true,
+	  			total: 	total,
+	  			count: 	0
+	  		}
+	  	},
+
+	  	/**
+	  	 * Countdown
+	  	 */
+	  	count: function ()
+	  	{
+	  		$rootScope.app.preloader.count = Math.abs(Math.floor( $rootScope.app.preloader.count + (100 / $rootScope.app.preloader.total) ));
+	  	}
+	  };
+
+
+	  /**
 	   * Get slot bundels; user, group aggs and members
 	   */
 	  Slots.prototype.all = function (options) 
@@ -407,9 +434,14 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              var members = angular.fromJson(Storage.get(options.groupId)),
 	                  calls   = [];
 
-	              angular.forEach(members, function(member, index)
+	              /**
+	               * Run the preloader
+	               */
+	              preloader.init(members.length);
+
+	              angular.forEach(members, function (member, index)
 	              {
-	                calls.push(Slots.prototype.user({
+	              	calls.push(Slots.prototype.user({
 	                  user: member.uuid,
 	                  start:params.start,
 	                  end:  params.end,
@@ -482,6 +514,11 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (result) 
 	      {
+	      	/**
+	      	 * Countdown on preloader
+	      	 */
+					preloader.count();
+
 	        deferred.resolve({
 	          id:     params.user,
 	          data:   result,

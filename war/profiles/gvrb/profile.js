@@ -52,7 +52,7 @@ var profile = {
 
   mobileApp: {
     status:   true,
-    link:     'http://test.ask-webpaige.appspot.com/profiles/test/app/knrm-paige.apk'
+    link:     'https://play.google.com/store/apps/details?id=nl.ask.paige.gvrb'
   }
 };
 

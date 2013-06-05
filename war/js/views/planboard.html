@@ -8,7 +8,7 @@
 
   <!-- page header -->
   <div class="page-header">
-    <h2>Planboard</h2>
+    <h2>Agenda</h2>
     <div class="btn-group pull-right">
       <button type="submit" 
               ng-click="toggleSlotForm()" 
@@ -444,12 +444,7 @@
                           ng-model="timeline.current.layouts.members" 
                           class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
                           ng-click="requestTimeline('members')"
-                          ng-show="timeline.config.layouts.members">{{ui.planboard.members}}</button>
-                  <button type="button" 
-                          ng-model="timeline.current.layouts.members" 
-                          class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                          ng-click="requestTimeline('members')"
-                          ng-show="app.resources.role < 3">{{ui.planboard.members}}</button>
+                          ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}</button>
                 </div>
                 <!-- end timeline layout manager -->
 
@@ -588,12 +583,7 @@
                         ng-model="timeline.current.layouts.members" 
                         class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
                         ng-click="requestTimeline('members')"
-                        ng-show="timeline.config.layouts.members">{{ui.planboard.members}}</button>
-                <button type="button" 
-                        ng-model="timeline.current.layouts.members" 
-                        class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                        ng-click="requestTimeline('members')"
-                        ng-show="app.resources.role < 3">{{ui.planboard.members}}</button>
+                        ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}</button>
               </div>
               <!-- end timeline layout manager -->
 

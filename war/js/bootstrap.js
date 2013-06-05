@@ -116,10 +116,20 @@ angular.module('WebPaige')
           status: false,
           message: 'Loading..'
         };
+
+        $rootScope.app.preloader = {
+          status: false,
+          total:  0,
+          count:  0
+        }
       },
 
       display: function (message)
       {
+        // $rootScope.app.preloader || {status: false};
+
+        $rootScope.app.preloader.status = false;
+
         $rootScope.loading = {
           status:   true,
           message:  message

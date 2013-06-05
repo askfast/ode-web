@@ -12,6 +12,8 @@
 ## Versions
 
 	2.3.0
+		* Percentage counter for members timeline in status bar 5-6-2013
+		* Live 120G 5-6-2013
 		* Help & Support 4-6-2013
 		* Download mobile app functionality 4-6-2013
 		* Deployed for 100T, 110K, 120G and 130B 16-5-2013
