@@ -67,8 +67,7 @@ var profile = {
   },
 
   mobileApp: {
-    status:   true,
-    link:     'http://test.ask-webpaige.appspot.com/profiles/test/app/knrm-paige.apk'
+    status:   true
   }
 };
 

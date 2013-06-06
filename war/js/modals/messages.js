@@ -440,11 +440,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    $http({
 			  method: 'GET', 
-			  url: 		'../mail/mobile_app.html'
+			  url: 		'../profiles/' + $config.profile.meta + '/mail/mobile_app.html'
 			}).
 		  success(function (content, status, headers, config)
 		  {
-		  	content = content.replace('__download_link__', $config.profile.mobileApp.link);
+		  	// content = content.replace('__download_link__', $config.profile.mobileApp.link);
 
 		    var message = {
 					content: 			content,

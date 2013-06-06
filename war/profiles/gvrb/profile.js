@@ -51,8 +51,7 @@ var profile = {
   },
 
   mobileApp: {
-    status:   true,
-    link:     'https://play.google.com/store/apps/details?id=nl.ask.paige.gvrb'
+    status:   true
   }
 };
 

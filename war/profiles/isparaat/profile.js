@@ -54,7 +54,6 @@ var profile = {
   },
 
   mobileApp: {
-    status:   false,
-    link:     'http://www.google.com/'
+    status:   false
   }
 };
