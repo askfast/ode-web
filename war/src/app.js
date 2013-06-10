@@ -9324,17 +9324,23 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 		window.setInterval(function ()
 		{
-			$scope.slot = {};
+			/**
+			 * Update planboard only in planboard is selected
+			 */
+			if ($location.path() == '/planboard')
+			{
+				$scope.slot = {};
 
-			$scope.resetViews();
+				$scope.resetViews();
 
-			// if ($scope.views.slot.add) $scope.views.slot.add = true;
-			// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+				// if ($scope.views.slot.add) $scope.views.slot.add = true;
+				// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
-			$scope.timeliner.load({
-			  start:  $scope.data.periods.start,
-			  end:    $scope.data.periods.end
-			}, true);
+				$scope.timeliner.load({
+				  start:  $scope.data.periods.start,
+				  end:    $scope.data.periods.end
+				}, true);
+			}
 		}, 60000);
 
 	}
