@@ -52,6 +52,12 @@ var profile = {
 
   mobileApp: {
     status:   true
+  },
+
+  analytics: {
+    status: false,
+    ua:     'UA-36532309-1',
+    domain: 'ask-cs.com'
   }
 };
 

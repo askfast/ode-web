@@ -2524,11 +2524,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'GET',
 	        params: {
 		        action: '', 
-		        0: 'dm'
-		        // 0: 'all', 
-		        // state: 'READ',
-		        // limit: 50,
-		        // offset: 0
+		        // 0: 'dm'
+		        0: 'all', 
+		        status: 'READ',
+		        limit: 50,
+		        offset: 0
 		      },
 	        isArray: true
 	      },
