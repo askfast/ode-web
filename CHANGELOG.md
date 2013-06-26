@@ -19,6 +19,7 @@
 		* Deployed for 100T, 110K, 120G and 130B 16-5-2013
 
 	2.2.0
+		* Hotfix for not clearing cache for users 20-6-2013
 		* Hotfix for stability issues in profile timeline 15-5-2013
 		* Hotfix for not displaying user information on profile editing form 15-5-2013
 		* Background planboard sync (60 seconds interval) 13-5-2013

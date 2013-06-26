@@ -662,7 +662,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.0',
+    version:  '2.2.0',
     lang:     'nl',
 
     fullscreen: true,
@@ -2524,11 +2524,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        method: 'GET',
 	        params: {
 		        action: '', 
-		        // 0: 'dm'
-		        0: 'all', 
-		        status: 'READ',
-		        limit: 50,
-		        offset: 0
+		        0: 'dm'
+		        // 0: 'all', 
+		        // status: 'READ',
+		        // limit: 50,
+		        // offset: 0
 		      },
 	        isArray: true
 	      },
@@ -7947,7 +7947,7 @@ angular.module('WebPaige.Controllers.Logout', [])
 	    }
 	    else
 	    {
-	      // Storage.clearAll();
+	      Storage.clearAll();
 
 	      Storage.session.clearAll();
 

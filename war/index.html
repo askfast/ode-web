@@ -31,7 +31,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/gvrb/profile.js"></script>
+    <script src="profiles/knrm/profile.js"></script>
 
     <!--[if IE]><link rel="stylesheet" href="css/ie.css"><![endif]-->
     <!--[if IE 8]><link rel="stylesheet" href="css/ie8.css"><![endif]-->
@@ -40,7 +40,7 @@
     
     <!-- compability tests and css fixers -->
     <script src="libs/modernizr/2.6.2/modernizr-2.6.2.min.js"></script>
-    <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+    <!-- <script src="libs/prefixfree/1.0.7/prefixfree.min.js"></script> -->
     
   </head>
   <body>
@@ -267,32 +267,20 @@
     <script src="src/app.js"></script>
     <!--<![endif]-->
 
+    
     <script type="text/javascript">
       /**
        * Profile based analytics
        */
-      if (window.profile.analytics.status)
-      {
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount',     window.profile.analytics.ua]);
-        _gaq.push(['_setDomainName',  window.profile.analytics.domain]);
-        _gaq.push(['_setAllowLinker', true]);
-        _gaq.push(['_trackPageview']);
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-      }
-    </script>
-    
-    <script type="text/javascript">
+      if (window.profile.analytics.status) window.profile.analytics.code();
+
       /**
        * Livereload only on localhost
        */
       if (location.host.split(':')[0] == 'localhost')
         document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
     </script>
+
     
   </body>
 </html>
