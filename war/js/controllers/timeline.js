@@ -8,8 +8,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', '$route', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
-	function ($rootScope, $scope, $q, $location, $route, Slots, Dater, Storage, Sloter, Profile, Timer)
+	'$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
+	function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile, Timer)
 	{
 		var range, diff;
 
@@ -237,6 +237,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        };
 		      });
 		    };
+
 	    },
 
 	    /**
@@ -489,6 +490,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.timelineOnSelect = function ()
 	  {
+		  $rootScope.planboardSync.clear();
+
 	    $scope.$apply(function ()
 	    {
 	      $scope.selectedOriginal = $scope.selectedSlot();
@@ -571,6 +574,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.timelineOnAdd = function (form, slot)
 	  {
+	  	$rootScope.planboardSync.clear();
+
 	  	/**
 	  	 * Make view for new slot
 	  	 */
@@ -660,6 +665,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          };
 
 		          $scope.timeliner.refresh();
+
+		          $rootScope.planboardSync.start();
 		        }
 		      );
 		    };
@@ -672,6 +679,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.timelineOnChange = function (direct, original, slot, options)
 	  {
+	  	$rootScope.planboardSync.clear();
+
 	    if (!direct)
 	    {
 	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
@@ -724,6 +733,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          };
 
 	          $scope.timeliner.refresh();
+
+	          $rootScope.planboardSync.start();
 	        }
 	      );
 	    };
@@ -735,6 +746,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.timelineOnRemove = function ()
 	  {
+	  	$rootScope.planboardSync.clear();
+
 	    if ($scope.timeliner.isAdded() > 0)
 	    {
 	      $scope.self.timeline.cancelAdd();
@@ -773,6 +786,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            };
 
 	            $scope.timeliner.refresh();
+
+	            $rootScope.planboardSync.start();
 	          }
 	        );
 	      };
@@ -837,26 +852,49 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Background sync in every 60 sec
 	   */
-		window.setInterval(function ()
-		{
+	  $rootScope.planboardSync = {
+
+	  	/**
+	  	 * Start planboard sync
+	  	 */
+	  	start: function ()
+		  {
+				$window.planboardSync = $window.setInterval(function ()
+				{
+					console.log('syncing started..');
+
+					/**
+					 * Update planboard only in planboard is selected
+					 */
+					if ($location.path() == '/planboard')
+					{
+						$scope.slot = {};
+
+						$scope.resetViews();
+
+						// if ($scope.views.slot.add) $scope.views.slot.add = true;
+						// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
+
+						$scope.timeliner.load({
+						  start:  $scope.data.periods.start,
+						  end:    $scope.data.periods.end
+						}, true);
+					}
+				}, 60000);
+			},
+
 			/**
-			 * Update planboard only in planboard is selected
+			 * Clear planboard sync
 			 */
-			if ($location.path() == '/planboard')
+			clear: function ()
 			{
-				$scope.slot = {};
+				console.log('syncing stopped..');
 
-				$scope.resetViews();
-
-				// if ($scope.views.slot.add) $scope.views.slot.add = true;
-				// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
-
-				$scope.timeliner.load({
-				  start:  $scope.data.periods.start,
-				  end:    $scope.data.periods.end
-				}, true);
+				$window.clearInterval($window.planboardSync);
 			}
-		}, 60000);
+	  }
+
+		$rootScope.planboardSync.start();
 
 	}
 ]);

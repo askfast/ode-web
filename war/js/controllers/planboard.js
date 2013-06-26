@@ -195,10 +195,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  {
 	    if ($scope.views.slot.add)
 	    {
+	    	$rootScope.planboardSync.start();
+
 	      $scope.resetInlineForms();
 	    }
 	    else
 	    {
+	    	$rootScope.planboardSync.clear();
+
 	      $scope.slot = {};
 
 	      $scope.slot = {
