@@ -115,7 +115,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    onRemove: function () { $scope.timelineOnRemove() },
 
-	    onChange: function () { $scope.timelineOnChange() },
+	    onChange: function () { $scope.timelineChanging() },
 
 	    onSelect: function () { $scope.timelineOnSelect() },
 
@@ -249,7 +249,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      if ($scope.timeline.main)
 	      {
-		      $scope.resetViews();
+	      	$rootScope.$broadcast('resetPlanboardViews');
+		      // $scope.resetViews();
 
 		      $scope.views.slot.add = true;
 	      }
@@ -386,6 +387,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      var values  = $scope.self.timeline.getItem(selection.row),
 	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
+	      
+	      // console.log('value ->', 	values);
+	     	// console.log('content ->', content);
+
 
 	      $scope.original = {
 	        start:        values.start,
@@ -399,7 +404,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      if ($scope.timeline.main)
 	      {
-		      $scope.resetViews();
+	      	$rootScope.$broadcast('resetPlanboardViews');
+		      // $scope.resetViews();
 		    }
 		    else
 		    {
@@ -589,7 +595,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	if ($scope.timeline.main)
 		    	{
-			      $scope.resetViews();
+			      // $scope.resetViews();
+			      
+			      $rootScope.$broadcast('resetPlanboardViews');
 
 			      $scope.views.slot.add = true;
 		    	}
@@ -654,6 +662,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      .then(
 		        function (result)
 		        {
+		        	$rootScope.$broadcast('resetPlanboardViews');
+
 		          if (result.error)
 		          {
 		            $rootScope.notifier.error('Error with adding a new timeslot.');
@@ -677,8 +687,49 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Timeline on change
 	   */
+	  $scope.timelineChanging = function ()
+	  {
+
+	  	$rootScope.planboardSync.clear();
+
+      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
+          options = {
+            start:    values.start,
+            end:      values.end,
+            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+          };
+
+      
+      $scope.$apply(function ()
+    	{    		
+	      $scope.slot = {
+	        start: {
+	          date: new Date(values.start).toString($rootScope.config.formats.date),
+	          time: new Date(values.start).toString($rootScope.config.formats.time),
+	          datetime: new Date(values.start).toISOString()
+	        },
+	        end: {
+	          date: new Date(values.end).toString($rootScope.config.formats.date),
+	          time: new Date(values.end).toString($rootScope.config.formats.time),
+	          datetime: new Date(values.end).toISOString()
+	        },
+	        state:      options.content.state,
+	        recursive:  options.content.recursive,
+	        id:         options.content.id
+	      };
+    	});
+
+	  }
+
+
+
+	  /**
+	   * Timeline on change
+	   */
 	  $scope.timelineOnChange = function (direct, original, slot, options)
 	  {
+	  	// console.log('changing stuff');
+
 	  	$rootScope.planboardSync.clear();
 
 	    if (!direct)
@@ -689,6 +740,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            end:      values.end,
 	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
 	          };
+
 	    }
 	    else
 	    {
@@ -722,6 +774,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      .then(
 	        function (result)
 	        {
+	        	$rootScope.$broadcast('resetPlanboardViews');
+
 	          if (result.error)
 	          {
 	            $rootScope.notifier.error('Error with changing timeslot.');
@@ -775,6 +829,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        .then(
 	          function (result)
 	          {
+	          	$rootScope.$broadcast('resetPlanboardViews');
+
 	            if (result.error)
 	            {
 	              $rootScope.notifier.error('Error with removing timeslot.');
@@ -818,6 +874,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    .then(
 	      function (result)
 	      {
+	      	$rootScope.$broadcast('resetPlanboardViews');
+
 	        if (result.error)
 	        {
 	          $rootScope.notifier.error('Error with changing wish value.');
@@ -870,7 +928,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					{
 						$scope.slot = {};
 
-						$scope.resetViews();
+						$rootScope.$broadcast('resetPlanboardViews');
+						// $scope.resetViews();
 
 						// if ($scope.views.slot.add) $scope.views.slot.add = true;
 						// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
@@ -895,6 +954,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  }
 
 		$rootScope.planboardSync.start();
+
+
+
+
+
+		$scope.$watch(function ()
+		{
+			$scope.self.timeline.on
+		})
+
 
 	}
 ]);

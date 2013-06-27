@@ -174,18 +174,36 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.resetViews = function ()
 	  {
-	    $scope.views = {
-	      slot: {
-	        add:  false,
-	        edit: false
-	      },
-	      group:  false,
-	      wish:   false,
-	      member: false
-	    };
+	  	// $scope.$watch(function ()
+	  	// {  		
+		    $scope.views = {
+		      slot: {
+		        add:  false,
+		        edit: false
+		      },
+		      group:  false,
+		      wish:   false,
+		      member: false
+		    };
+	  	// })
 	  };
 
 	  $scope.resetViews();
+
+
+
+	  /**
+	   * Reset planboard views
+	   */
+	  $rootScope.$on('resetPlanboardViews', function () 
+	  {
+	  	console.log('reseting views');
+
+	    $scope.resetViews();
+	  });
+
+
+
 
 
 	  /**

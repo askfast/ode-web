@@ -662,7 +662,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.2.0',
+    version:  '2.3.0',
     lang:     'nl',
 
     fullscreen: true,
@@ -1913,6 +1913,22 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
+	   */
+	  var MemberSlots = $resource(
+	    $config.host + '/network/:id/member/slots2',
+	    {
+	    },
+	    {
+	      query: {
+	        method: 'GET',
+	        params: {id: '', start:'', end:''},
+	        isArray: true
+	      }
+	    }
+	  );
+
+
+	  /**
 	   * Get group wishes
 	   */
 	  Slots.prototype.wishes = function (options) 
@@ -2211,9 +2227,10 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  	init: function (total)
 	  	{
 	  		$rootScope.app.preloader = {
-	  			status: true,
-	  			total: 	total,
-	  			count: 	0
+	  			status: 	true,
+	  			total: 		total,
+	  			count: 		0,
+	  			started: 	Date.now().getTime()
 	  		}
 	  	},
 
@@ -2223,6 +2240,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  	count: function ()
 	  	{
 	  		$rootScope.app.preloader.count = Math.abs(Math.floor( $rootScope.app.preloader.count + (100 / $rootScope.app.preloader.total) ));
+
+	  		$rootScope.app.preloader.stopped = Date.now().getTime();
 	  	}
 	  };
 
@@ -2266,6 +2285,47 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              var members = angular.fromJson(Storage.get(options.groupId)),
 	                  calls   = [];
 
+
+
+
+
+
+
+
+	             
+
+
+						    // MemberSlots.query(
+							   //  {
+							   //  	id: 		options.groupId,
+						    // 		start: 	params.start,
+						    // 		end: 		params.end,
+						    // 		type: 	'both'
+						    // 	},
+						    //   function (members) 
+						    //   {
+						    //     // deferred.resolve(result);
+
+		        //         deferred.resolve({
+		        //           user:     user,
+		        //           groupId:  options.groupId,
+		        //           aggs:     aggs,
+		        //           members:  members,
+		        //           synced:   new Date().getTime(),
+		        //           periods: {
+		        //             start:  options.stamps.start,
+		        //             end:    options.stamps.end
+		        //           }
+		        //         });
+
+						    //   },
+						    //   function (error)
+						    //   {
+						    //     deferred.resolve({error: error});
+						    //   }
+						    // );
+
+
 	              /**
 	               * Run the preloader
 	               */
@@ -2296,6 +2356,12 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	                  }
 	                });
 	              });
+
+
+
+
+
+
 	            }
 	            else
 	            {
@@ -8396,18 +8462,36 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.resetViews = function ()
 	  {
-	    $scope.views = {
-	      slot: {
-	        add:  false,
-	        edit: false
-	      },
-	      group:  false,
-	      wish:   false,
-	      member: false
-	    };
+	  	// $scope.$watch(function ()
+	  	// {  		
+		    $scope.views = {
+		      slot: {
+		        add:  false,
+		        edit: false
+		      },
+		      group:  false,
+		      wish:   false,
+		      member: false
+		    };
+	  	// })
 	  };
 
 	  $scope.resetViews();
+
+
+
+	  /**
+	   * Reset planboard views
+	   */
+	  $rootScope.$on('resetPlanboardViews', function () 
+	  {
+	  	console.log('reseting views');
+
+	    $scope.resetViews();
+	  });
+
+
+
 
 
 	  /**
@@ -8604,7 +8688,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    onRemove: function () { $scope.timelineOnRemove() },
 
-	    onChange: function () { $scope.timelineOnChange() },
+	    onChange: function () { $scope.timelineChanging() },
 
 	    onSelect: function () { $scope.timelineOnSelect() },
 
@@ -8738,7 +8822,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      if ($scope.timeline.main)
 	      {
-		      $scope.resetViews();
+	      	$rootScope.$broadcast('resetPlanboardViews');
+		      // $scope.resetViews();
 
 		      $scope.views.slot.add = true;
 	      }
@@ -8875,6 +8960,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      var values  = $scope.self.timeline.getItem(selection.row),
 	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
+	      
+	      // console.log('value ->', 	values);
+	     	// console.log('content ->', content);
+
 
 	      $scope.original = {
 	        start:        values.start,
@@ -8888,7 +8977,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      if ($scope.timeline.main)
 	      {
-		      $scope.resetViews();
+	      	$rootScope.$broadcast('resetPlanboardViews');
+		      // $scope.resetViews();
 		    }
 		    else
 		    {
@@ -9078,7 +9168,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	if ($scope.timeline.main)
 		    	{
-			      $scope.resetViews();
+			      // $scope.resetViews();
+			      
+			      $rootScope.$broadcast('resetPlanboardViews');
 
 			      $scope.views.slot.add = true;
 		    	}
@@ -9143,6 +9235,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      .then(
 		        function (result)
 		        {
+		        	$rootScope.$broadcast('resetPlanboardViews');
+
 		          if (result.error)
 		          {
 		            $rootScope.notifier.error('Error with adding a new timeslot.');
@@ -9166,8 +9260,49 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Timeline on change
 	   */
+	  $scope.timelineChanging = function ()
+	  {
+
+	  	$rootScope.planboardSync.clear();
+
+      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
+          options = {
+            start:    values.start,
+            end:      values.end,
+            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+          };
+
+      
+      $scope.$apply(function ()
+    	{    		
+	      $scope.slot = {
+	        start: {
+	          date: new Date(values.start).toString($rootScope.config.formats.date),
+	          time: new Date(values.start).toString($rootScope.config.formats.time),
+	          datetime: new Date(values.start).toISOString()
+	        },
+	        end: {
+	          date: new Date(values.end).toString($rootScope.config.formats.date),
+	          time: new Date(values.end).toString($rootScope.config.formats.time),
+	          datetime: new Date(values.end).toISOString()
+	        },
+	        state:      options.content.state,
+	        recursive:  options.content.recursive,
+	        id:         options.content.id
+	      };
+    	});
+
+	  }
+
+
+
+	  /**
+	   * Timeline on change
+	   */
 	  $scope.timelineOnChange = function (direct, original, slot, options)
 	  {
+	  	// console.log('changing stuff');
+
 	  	$rootScope.planboardSync.clear();
 
 	    if (!direct)
@@ -9178,6 +9313,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            end:      values.end,
 	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
 	          };
+
 	    }
 	    else
 	    {
@@ -9211,6 +9347,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      .then(
 	        function (result)
 	        {
+	        	$rootScope.$broadcast('resetPlanboardViews');
+
 	          if (result.error)
 	          {
 	            $rootScope.notifier.error('Error with changing timeslot.');
@@ -9264,6 +9402,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        .then(
 	          function (result)
 	          {
+	          	$rootScope.$broadcast('resetPlanboardViews');
+
 	            if (result.error)
 	            {
 	              $rootScope.notifier.error('Error with removing timeslot.');
@@ -9307,6 +9447,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    .then(
 	      function (result)
 	      {
+	      	$rootScope.$broadcast('resetPlanboardViews');
+
 	        if (result.error)
 	        {
 	          $rootScope.notifier.error('Error with changing wish value.');
@@ -9359,7 +9501,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					{
 						$scope.slot = {};
 
-						$scope.resetViews();
+						$rootScope.$broadcast('resetPlanboardViews');
+						// $scope.resetViews();
 
 						// if ($scope.views.slot.add) $scope.views.slot.add = true;
 						// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
@@ -9384,6 +9527,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  }
 
 		$rootScope.planboardSync.start();
+
+
+
+
+
+		$scope.$watch(function ()
+		{
+			$scope.self.timeline.on
+		})
+
 
 	}
 ]);;/*jslint node: true */
@@ -9636,8 +9789,6 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 		
 		$scope.fullWidth = function ()
 		{
-			console.log('ok!');
-
 			$scope.self.timeline.redraw();
 		}
 	}

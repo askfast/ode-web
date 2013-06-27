@@ -12,6 +12,9 @@
 ## Versions
 
 	2.3.0
+		* Deployed for 100T, 110K, 120G and 130B 27-5-2013
+		* Always change a timeslot through slot form in planboard 27-6-2013
+		* Planboard auto refresher is being blocked while working on planboard 27-6-2013
 		* Percentage counter for members timeline in status bar 5-6-2013
 		* Live 120G 5-6-2013
 		* Help & Support 4-6-2013

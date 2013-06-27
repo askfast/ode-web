@@ -248,8 +248,6 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 		
 		$scope.fullWidth = function ()
 		{
-			console.log('ok!');
-
 			$scope.self.timeline.redraw();
 		}
 	}
