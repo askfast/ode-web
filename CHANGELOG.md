@@ -11,6 +11,8 @@
 
 ## Versions
 
+	2.4.0 (Snapshot)
+
 	2.3.0
 		* Deployed for 100T, 110K, 120G and 130B 27-5-2013
 		* Always change a timeslot through slot form in planboard 27-6-2013
