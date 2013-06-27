@@ -12,8 +12,8 @@
 angular.module('WebPaige')
 .run(
 [
-  '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window', 'Timer',
-  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, Timer)
+  '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
+  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
   {
     /**
      * Pass config and init dynamic config values
@@ -21,6 +21,7 @@ angular.module('WebPaige')
     $rootScope.config = $config;
 
     $rootScope.config.init();
+
 
     /**
      * TODO
@@ -115,10 +116,20 @@ angular.module('WebPaige')
           status: false,
           message: 'Loading..'
         };
+
+        $rootScope.app.preloader = {
+          status: false,
+          total:  0,
+          count:  0
+        }
       },
 
       display: function (message)
       {
+        // $rootScope.app.preloader || {status: false};
+
+        $rootScope.app.preloader.status = false;
+
         $rootScope.loading = {
           status:   true,
           message:  message
@@ -247,7 +258,7 @@ angular.module('WebPaige')
     /**
      * Detect route change start
      */
-    $rootScope.$on("$routeChangeStart", function (event, next, current)
+    $rootScope.$on('$routeChangeStart', function (event, next, current)
     {
       function resetLoaders ()
       {
@@ -268,28 +279,40 @@ angular.module('WebPaige')
       {
         case '/dashboard':
           $rootScope.loaderIcons.dashboard = true;
+
+          $rootScope.location = 'dashboard';
         break;
 
         case '/planboard':
           $rootScope.loaderIcons.planboard = true;
+
+          $rootScope.location = 'planboard';
         break;
 
         case '/messages':
           $rootScope.loaderIcons.messages = true;
+
+          $rootScope.location = 'messages';
         break;
 
         case '/groups':
           $rootScope.loaderIcons.groups = true;
+
+          $rootScope.location = 'groups';
         break;
 
         case '/settings':
           $rootScope.loaderIcons.settings = true;
+
+          $rootScope.location = 'settings';
         break;
 
         default:
           if ($location.path().match(/profile/))
           {
             $rootScope.loaderIcons.profile = true;
+
+            $rootScope.location = 'profile';
           }
           else
           {
@@ -310,7 +333,7 @@ angular.module('WebPaige')
     /**
      * Route change successfull
      */
-    $rootScope.$on("$routeChangeSuccess", function (event, current, previous)
+    $rootScope.$on('$routeChangeSuccess', function (event, current, previous)
     {
       $rootScope.newLocation = $location.path();
 
@@ -328,7 +351,7 @@ angular.module('WebPaige')
      * 
      * Route change is failed!
      */
-    $rootScope.$on("$routeChangeError", function (event, current, previous, rejection)
+    $rootScope.$on('$routeChangeError', function (event, current, previous, rejection)
     {
       $rootScope.notifier.error(rejection);
     });
@@ -404,11 +427,28 @@ angular.module('WebPaige')
      */
     if ($.os.windows)
     {
-      console.log('coming to here');
-      
       $('#loading p').css({
         paddingTop: '130px'
       });
+    }
+
+
+
+
+
+    if (!$config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
+
+    $rootScope.downloadMobileApp = function ()
+    {
+      $rootScope.statusBar.display('Instructies aan het verzenden...');
+
+      Messages.email()
+      .then(function (result)
+      {
+        $rootScope.notifier.success('Controleer uw inbox voor de instructies.');
+
+        $rootScope.statusBar.off();
+      })
     }
 
   }

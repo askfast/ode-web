@@ -21,6 +21,15 @@ var profile = {
     'com.ask-cs.State.Unreached'
   ],
 
+  timeline: {
+    config: {
+      layouts: {
+        groups:   true,
+        members:  true
+      }
+    }
+  },
+
   divisions: [],
 
   roles: [
@@ -42,5 +51,16 @@ var profile = {
     status: true,
     url:    'http://knrmtest.myask.me/rpc/client/p2000.php',
     codes:  '0104517'
+  },
+
+  mobileApp: {
+    status:   false
+  },
+
+  analytics: {
+    status: false,
+    code:   function ()
+    {
+    }
   }
 };

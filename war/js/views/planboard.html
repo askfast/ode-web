@@ -8,7 +8,7 @@
 
   <!-- page header -->
   <div class="page-header">
-    <h2>Planboard</h2>
+    <h2>Agenda</h2>
     <div class="btn-group pull-right">
       <button type="submit" 
               ng-click="toggleSlotForm()" 
@@ -20,6 +20,10 @@
 
 
 
+
+  <!-- started: {{app.preloader.started}}<br>
+  stopped: {{app.preloader.stopped}}<br>
+  result:  {{app.preloader.stopped - app.preloader.started}} -->
 
 
 
@@ -443,7 +447,8 @@
                   <button type="button" 
                           ng-model="timeline.current.layouts.members" 
                           class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                          ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
+                          ng-click="requestTimeline('members')"
+                          ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}</button>
                 </div>
                 <!-- end timeline layout manager -->
 
@@ -518,7 +523,7 @@
           <!-- planbaord footer -->
           <p>
             <small class="pull-left">
-              <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>
+              <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
               <span class="muted">{{data.synced | nicelyDate}}</span>
             </small>
             <small class="pull-right">
@@ -581,7 +586,8 @@
                 <button type="button" 
                         ng-model="timeline.current.layouts.members" 
                         class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
-                        ng-click="requestTimeline('members')">{{ui.planboard.members}}</button>
+                        ng-click="requestTimeline('members')"
+                        ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}</button>
               </div>
               <!-- end timeline layout manager -->
 
@@ -707,7 +713,7 @@
           <!-- planbaord footer -->
           <p>
             <small class="pull-left">
-              <span class="text-warning">{{ui.planboard.lastSyncTime}} </span>
+              <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
               <span class="muted">{{data.synced | nicelyDate}}</span>
             </small>
             <small class="pull-right">

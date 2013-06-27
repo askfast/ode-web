@@ -81,6 +81,22 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
+	   */
+	  var MemberSlots = $resource(
+	    $config.host + '/network/:id/member/slots2',
+	    {
+	    },
+	    {
+	      query: {
+	        method: 'GET',
+	        params: {id: '', start:'', end:''},
+	        isArray: true
+	      }
+	    }
+	  );
+
+
+	  /**
 	   * Get group wishes
 	   */
 	  Slots.prototype.wishes = function (options) 
@@ -369,6 +385,36 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
+	   * Slots percentage calculator
+	   */
+	  var preloader = {
+
+	  	/**
+	  	 * Init preloader
+	  	 */
+	  	init: function (total)
+	  	{
+	  		$rootScope.app.preloader = {
+	  			status: 	true,
+	  			total: 		total,
+	  			count: 		0,
+	  			started: 	Date.now().getTime()
+	  		}
+	  	},
+
+	  	/**
+	  	 * Countdown
+	  	 */
+	  	count: function ()
+	  	{
+	  		$rootScope.app.preloader.count = Math.abs(Math.floor( $rootScope.app.preloader.count + (100 / $rootScope.app.preloader.total) ));
+
+	  		$rootScope.app.preloader.stopped = Date.now().getTime();
+	  	}
+	  };
+
+
+	  /**
 	   * Get slot bundels; user, group aggs and members
 	   */
 	  Slots.prototype.all = function (options) 
@@ -407,9 +453,55 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              var members = angular.fromJson(Storage.get(options.groupId)),
 	                  calls   = [];
 
-	              angular.forEach(members, function(member, index)
+
+
+
+
+
+
+
+	             
+
+
+						    // MemberSlots.query(
+							   //  {
+							   //  	id: 		options.groupId,
+						    // 		start: 	params.start,
+						    // 		end: 		params.end,
+						    // 		type: 	'both'
+						    // 	},
+						    //   function (members) 
+						    //   {
+						    //     // deferred.resolve(result);
+
+		        //         deferred.resolve({
+		        //           user:     user,
+		        //           groupId:  options.groupId,
+		        //           aggs:     aggs,
+		        //           members:  members,
+		        //           synced:   new Date().getTime(),
+		        //           periods: {
+		        //             start:  options.stamps.start,
+		        //             end:    options.stamps.end
+		        //           }
+		        //         });
+
+						    //   },
+						    //   function (error)
+						    //   {
+						    //     deferred.resolve({error: error});
+						    //   }
+						    // );
+
+
+	              /**
+	               * Run the preloader
+	               */
+	              preloader.init(members.length);
+
+	              angular.forEach(members, function (member, index)
 	              {
-	                calls.push(Slots.prototype.user({
+	              	calls.push(Slots.prototype.user({
 	                  user: member.uuid,
 	                  start:params.start,
 	                  end:  params.end,
@@ -432,6 +524,12 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	                  }
 	                });
 	              });
+
+
+
+
+
+
 	            }
 	            else
 	            {
@@ -482,6 +580,11 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (result) 
 	      {
+	      	/**
+	      	 * Countdown on preloader
+	      	 */
+					preloader.count();
+
 	        deferred.resolve({
 	          id:     params.user,
 	          data:   result,

@@ -96,6 +96,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    },
 	    config: {
 	      bar:        $rootScope.config.timeline.config.bar,
+	      layouts:    $rootScope.config.timeline.config.layouts,
 	      wishes:     $rootScope.config.timeline.config.wishes,
 	      legenda:    {},
 	      legendarer: $rootScope.config.timeline.config.legendarer,
@@ -173,18 +174,36 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.resetViews = function ()
 	  {
-	    $scope.views = {
-	      slot: {
-	        add:  false,
-	        edit: false
-	      },
-	      group:  false,
-	      wish:   false,
-	      member: false
-	    };
+	  	// $scope.$watch(function ()
+	  	// {  		
+		    $scope.views = {
+		      slot: {
+		        add:  false,
+		        edit: false
+		      },
+		      group:  false,
+		      wish:   false,
+		      member: false
+		    };
+	  	// })
 	  };
 
 	  $scope.resetViews();
+
+
+
+	  /**
+	   * Reset planboard views
+	   */
+	  $rootScope.$on('resetPlanboardViews', function () 
+	  {
+	  	console.log('reseting views');
+
+	    $scope.resetViews();
+	  });
+
+
+
 
 
 	  /**
@@ -194,10 +213,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  {
 	    if ($scope.views.slot.add)
 	    {
+	    	$rootScope.planboardSync.start();
+
 	      $scope.resetInlineForms();
 	    }
 	    else
 	    {
+	    	$rootScope.planboardSync.clear();
+
 	      $scope.slot = {};
 
 	      $scope.slot = {

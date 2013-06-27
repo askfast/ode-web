@@ -11,8 +11,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
  */
 .factory('Messages',
 [
-	'$rootScope', '$config', '$resource', '$q', 'Storage',
-	function ($rootScope, $config, $resource, $q, Storage)
+	'$rootScope', '$config', '$resource', '$q', 'Storage', '$http', 
+	function ($rootScope, $config, $resource, $q, Storage, $http)
 	{
 	  var Messages = $resource(
 	    $config.host + '/question/:action',
@@ -25,7 +25,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		        action: '', 
 		        0: 'dm'
 		        // 0: 'all', 
-		        // state: 'READ',
+		        // status: 'READ',
 		        // limit: 50,
 		        // offset: 0
 		      },
@@ -426,6 +426,56 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        deferred.resolve({error: error});
 	      }
 	    );
+
+	    return deferred.promise;
+	  };
+
+
+	  /**
+	   * Send a message
+	   */
+	  Messages.prototype.email = function () 
+	  {
+	    var deferred 	= $q.defer();
+
+	    $http({
+			  method: 'GET', 
+			  url: 		'../profiles/' + $config.profile.meta + '/mail/mobile_app.html'
+			}).
+		  success(function (content, status, headers, config)
+		  {
+		  	// content = content.replace('__download_link__', $config.profile.mobileApp.link);
+
+		    var message = {
+					content: 			content,
+					subject: 			'Mobiele App Instructies',
+					types: 				['email'],
+					contenttype: 	'text/html'
+				};
+
+		    Messages.send(null, message, 
+		      function (result) 
+		      {
+		        var returned = '';
+
+		        angular.forEach(result, function (chr, i)
+		        {
+		          returned += chr;
+		        });
+
+		        deferred.resolve(returned);
+		      },
+		      function (error)
+		      {
+		        deferred.resolve({error: error});
+		      }
+		    );
+		  }).
+		  error(function (data, status, headers, config)
+		  {
+		  	console.log('smth went wrong');
+		  });
+
 
 	    return deferred.promise;
 	  };

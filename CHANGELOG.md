@@ -11,13 +11,23 @@
 
 ## Versions
 
+	2.4.0 (Snapshot)
+
 	2.3.0
+		* Deployed for 100T, 110K, 120G and 130B 27-5-2013
+		* Always change a timeslot through slot form in planboard 27-6-2013
+		* Planboard auto refresher is being blocked while working on planboard 27-6-2013
+		* Percentage counter for members timeline in status bar 5-6-2013
+		* Live 120G 5-6-2013
+		* Help & Support 4-6-2013
+		* Download mobile app functionality 4-6-2013
 		* Deployed for 100T, 110K, 120G and 130B 16-5-2013
 
 	2.2.0
+		* Hotfix for not clearing cache for users 20-6-2013
 		* Hotfix for stability issues in profile timeline 15-5-2013
 		* Hotfix for not displaying user information on profile editing form 15-5-2013
-		* Background planboard sync (64 seconds interval) 13-5-2013
+		* Background planboard sync (60 seconds interval) 13-5-2013
 		* Message job scheduler 13-5-2013
 		* IE 8/9/10 planboard stabilization 13-5-2013
 		* Hotfix for not going further than 6th page in pagination in messages 4-5-2013

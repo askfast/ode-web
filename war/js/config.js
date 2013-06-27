@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.0',
+    version:  '2.4.0 (Snapshot)',
     lang:     'nl',
 
     fullscreen: true,
@@ -28,7 +28,8 @@ angular.module('WebPaige')
         app:    ''
       },
       background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
-      p2000:      profile.p2000
+      p2000:      profile.p2000,
+      mobileApp:  profile.mobileApp
     },
 
     statesall: {
@@ -105,6 +106,7 @@ angular.module('WebPaige')
       config: {
         zoom:       '0.4',
         bar:        false,
+        layouts:    profile.timeline.config.layouts,
         wishes:     false,
         legenda:    {},
         legendarer: false,
