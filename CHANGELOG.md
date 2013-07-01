@@ -12,6 +12,7 @@
 ## Versions
 
 	2.4.0
+		* Hotfix for the bug for switching to 'today' when clicked on 'day' button in timeline navigation 1-7-2013
 		* Planboard initial start is fixed to next 7 days 1-7-2013
 
 	2.3.0

@@ -66,6 +66,9 @@ angular.module('WebPaige')
                       groupId:  settings.app.group,
                       division: 'all',
                       stamps: {
+                        /**
+                         * Initial start up is next 7 days
+                         */
                         start:  periods.days[Dater.current.today()].last.timeStamp,
                         end:    periods.days[Dater.current.today() + 7].last.timeStamp
                       },

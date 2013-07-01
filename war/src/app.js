@@ -883,6 +883,9 @@ angular.module('WebPaige')
                       groupId:  settings.app.group,
                       division: 'all',
                       stamps: {
+                        /**
+                         * Initial start up is next 7 days
+                         */
                         start:  periods.days[Dater.current.today()].last.timeStamp,
                         end:    periods.days[Dater.current.today() + 7].last.timeStamp
                       },
@@ -8376,7 +8379,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
         group:    true,
         members:  false
       },
-      day:      Dater.current.today(),
+      /**
+       * Fix for timeline scoper to day
+       */
+      day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
@@ -8409,6 +8415,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  		role: $rootScope.app.resources.role
 	  	},
 	    current: $scope.current,
+	    /**
+	     * Initial start up is next 7 days
+	     */
 	    options: {
         start:  $scope.periods.days[Dater.current.today()].last.day,
         end:    $scope.periods.days[Dater.current.today() + 7].last.day,
@@ -8818,7 +8827,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        if (data.error)
 		        {
 		          $rootScope.notifier.error('Error with gettings timeslots.');
-		          console.warn('error ->', result);
+		          console.warn('error ->', data.error);
 		        }
 		        else
 		        {
@@ -9554,6 +9563,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						  end:    $scope.data.periods.end
 						}, true);
 					}
+				// Sync periodically for a minute
 				}, 60000);
 			},
 
@@ -9571,13 +9581,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		$rootScope.planboardSync.start();
 
 
-
-
-
-		$scope.$watch(function ()
-		{
-			$scope.self.timeline.on
-		})
+		/**
+		 * Not known??
+		 * What for?
+		 */
+		// $scope.$watch(function ()
+		// {
+		// 	$scope.self.timeline.on
+		// })
 
 
 	}

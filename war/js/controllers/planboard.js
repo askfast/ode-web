@@ -46,7 +46,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
         group:    true,
         members:  false
       },
-      day:      Dater.current.today(),
+      /**
+       * Fix for timeline scoper to day
+       */
+      day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
@@ -79,6 +82,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  		role: $rootScope.app.resources.role
 	  	},
 	    current: $scope.current,
+	    /**
+	     * Initial start up is next 7 days
+	     */
 	    options: {
         start:  $scope.periods.days[Dater.current.today()].last.day,
         end:    $scope.periods.days[Dater.current.today() + 7].last.day,

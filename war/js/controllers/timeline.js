@@ -203,7 +203,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        if (data.error)
 		        {
 		          $rootScope.notifier.error('Error with gettings timeslots.');
-		          console.warn('error ->', result);
+		          console.warn('error ->', data.error);
 		        }
 		        else
 		        {
@@ -939,6 +939,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						  end:    $scope.data.periods.end
 						}, true);
 					}
+				// Sync periodically for a minute
 				}, 60000);
 			},
 
@@ -956,13 +957,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		$rootScope.planboardSync.start();
 
 
-
-
-
-		$scope.$watch(function ()
-		{
-			$scope.self.timeline.on
-		})
+		/**
+		 * Not known??
+		 * What for?
+		 */
+		// $scope.$watch(function ()
+		// {
+		// 	$scope.self.timeline.on
+		// })
 
 
 	}
