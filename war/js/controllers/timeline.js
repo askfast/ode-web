@@ -167,7 +167,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	var timeout = ($location.hash() == 'timeline') ? 100 : 1700;
 
-			    setTimeout( function() 
+			    setTimeout( function () 
 		      {
 		        $scope.self.timeline.draw(
 		          Sloter.profile(

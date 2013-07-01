@@ -11,7 +11,8 @@
 
 ## Versions
 
-	2.4.0 (Snapshot)
+	2.4.0
+		* Planboard initial start is fixed to next 7 days 1-7-2013
 
 	2.3.0
 		* Deployed for 100T, 110K, 120G and 130B 27-5-2013

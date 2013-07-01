@@ -89,8 +89,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        params: {id: '', start:'', end:''},
-	        isArray: true
+	        params: {id: '', start:'', end:''}
+	        // ,
+	        // isArray: true
 	      }
 	    }
 	  );
@@ -463,67 +464,92 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	             
 
 
-						    // MemberSlots.query(
-							   //  {
-							   //  	id: 		options.groupId,
-						    // 		start: 	params.start,
-						    // 		end: 		params.end,
-						    // 		type: 	'both'
-						    // 	},
-						    //   function (members) 
-						    //   {
-						    //     // deferred.resolve(result);
+						    MemberSlots.query(
+							    {
+							    	id: 		options.groupId,
+						    		start: 	params.start,
+						    		end: 		params.end,
+						    		type: 	'both'
+						    	},
+						      function (members) 
+						      {
+						        // deferred.resolve(result);
+						        // 
+						        
 
-		        //         deferred.resolve({
-		        //           user:     user,
-		        //           groupId:  options.groupId,
-		        //           aggs:     aggs,
-		        //           members:  members,
-		        //           synced:   new Date().getTime(),
-		        //           periods: {
-		        //             start:  options.stamps.start,
-		        //             end:    options.stamps.end
-		        //           }
-		        //         });
+						        // console.log('members ->', members);
 
-						    //   },
-						    //   function (error)
-						    //   {
-						    //     deferred.resolve({error: error});
-						    //   }
-						    // );
+
+						        var mems = [];
+
+						        angular.forEach(members, function (mdata, index)
+						      	{
+						      		angular.forEach(mdata, function (tslot, ind)
+						      		{
+						      			tslot.text = tslot.state;	
+						      		})
+
+						      		mems.push({
+							          id:     index,
+							          data:   mdata,
+							          stats:  Stats.member(mdata)
+							        })
+						      	})
+
+
+		                deferred.resolve({
+		                  user:     user,
+		                  groupId:  options.groupId,
+		                  aggs:     aggs,
+		                  members:  mems,
+		                  synced:   new Date().getTime(),
+		                  periods: {
+		                    start:  options.stamps.start,
+		                    end:    options.stamps.end
+		                  }
+		                });
+
+						      },
+						      function (error)
+						      {
+						        deferred.resolve({error: error});
+						      }
+						    );
+
+
+
 
 
 	              /**
 	               * Run the preloader
 	               */
-	              preloader.init(members.length);
+	              // preloader.init(members.length);
 
-	              angular.forEach(members, function (member, index)
-	              {
-	              	calls.push(Slots.prototype.user({
-	                  user: member.uuid,
-	                  start:params.start,
-	                  end:  params.end,
-	                  type: 'both'
-	                }));
-	              });
+	              // angular.forEach(members, function (member, index)
+	              // {
+	              // 	calls.push(Slots.prototype.user({
+	              //     user: member.uuid,
+	              //     start:params.start,
+	              //     end:  params.end,
+	              //     type: 'both'
+	              //   }));
+	              // });
 
-	              $q.all(calls)
-	              .then(function (members)
-	              {
-	                deferred.resolve({
-	                  user:     user,
-	                  groupId:  options.groupId,
-	                  aggs:     aggs,
-	                  members:  members,
-	                  synced:   new Date().getTime(),
-	                  periods: {
-	                    start:  options.stamps.start,
-	                    end:    options.stamps.end
-	                  }
-	                });
-	              });
+	              // $q.all(calls)
+	              // .then(function (members)
+	              // {
+	              //   deferred.resolve({
+	              //     user:     user,
+	              //     groupId:  options.groupId,
+	              //     aggs:     aggs,
+	              //     members:  members,
+	              //     synced:   new Date().getTime(),
+	              //     periods: {
+	              //       start:  options.stamps.start,
+	              //       end:    options.stamps.end
+	              //     }
+	              //   });
+	              // });
 
 
 

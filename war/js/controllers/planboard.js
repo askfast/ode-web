@@ -80,14 +80,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  	},
 	    current: $scope.current,
 	    options: {
-	      start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
-	      min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
+        start:  $scope.periods.days[Dater.current.today()].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.day,
+        min:  	$scope.periods.days[Dater.current.today()].last.day,
+        max:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    range: {
-	      start:  $scope.periods.weeks[$scope.current.week].first.day,
-	      end:    $scope.periods.weeks[$scope.current.week].last.day
+        start:  $scope.periods.days[Dater.current.today()].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    scope: {
 	      day:    false,
@@ -152,7 +152,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var states = {};
 
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
 
 	  $scope.states = states;
 

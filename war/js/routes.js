@@ -56,18 +56,18 @@ angular.module('WebPaige')
           '$route', 'Slots', 'Storage', 'Dater',
           function ($route, Slots, Storage, Dater)
           {
-            var periods = Storage.local.periods(),
-                current = Dater.current.week(),
-                initial = periods.weeks[current],
-                groups  = Storage.local.groups(),
-                settings = Storage.local.settings();
+            var periods   = Storage.local.periods(),
+                current   = Dater.current.week(),
+                initial   = periods.weeks[current],
+                groups    = Storage.local.groups(),
+                settings  = Storage.local.settings();
 
             return  Slots.all({
                       groupId:  settings.app.group,
                       division: 'all',
                       stamps: {
-                        start:  initial.first.timeStamp,
-                        end:    initial.last.timeStamp
+                        start:  periods.days[Dater.current.today()].last.timeStamp,
+                        end:    periods.days[Dater.current.today() + 7].last.timeStamp
                       },
                       month: Dater.current.month(),
                       layouts: {

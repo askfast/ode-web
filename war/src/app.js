@@ -662,7 +662,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.0',
+    version:  '2.4.0 (Snapshot)',
     lang:     'nl',
 
     fullscreen: true,
@@ -873,18 +873,18 @@ angular.module('WebPaige')
           '$route', 'Slots', 'Storage', 'Dater',
           function ($route, Slots, Storage, Dater)
           {
-            var periods = Storage.local.periods(),
-                current = Dater.current.week(),
-                initial = periods.weeks[current],
-                groups  = Storage.local.groups(),
-                settings = Storage.local.settings();
+            var periods   = Storage.local.periods(),
+                current   = Dater.current.week(),
+                initial   = periods.weeks[current],
+                groups    = Storage.local.groups(),
+                settings  = Storage.local.settings();
 
             return  Slots.all({
                       groupId:  settings.app.group,
                       division: 'all',
                       stamps: {
-                        start:  initial.first.timeStamp,
-                        end:    initial.last.timeStamp
+                        start:  periods.days[Dater.current.today()].last.timeStamp,
+                        end:    periods.days[Dater.current.today() + 7].last.timeStamp
                       },
                       month: Dater.current.month(),
                       layouts: {
@@ -1921,8 +1921,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        params: {id: '', start:'', end:''},
-	        isArray: true
+	        params: {id: '', start:'', end:''}
+	        // ,
+	        // isArray: true
 	      }
 	    }
 	  );
@@ -2295,67 +2296,92 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	             
 
 
-						    // MemberSlots.query(
-							   //  {
-							   //  	id: 		options.groupId,
-						    // 		start: 	params.start,
-						    // 		end: 		params.end,
-						    // 		type: 	'both'
-						    // 	},
-						    //   function (members) 
-						    //   {
-						    //     // deferred.resolve(result);
+						    MemberSlots.query(
+							    {
+							    	id: 		options.groupId,
+						    		start: 	params.start,
+						    		end: 		params.end,
+						    		type: 	'both'
+						    	},
+						      function (members) 
+						      {
+						        // deferred.resolve(result);
+						        // 
+						        
 
-		        //         deferred.resolve({
-		        //           user:     user,
-		        //           groupId:  options.groupId,
-		        //           aggs:     aggs,
-		        //           members:  members,
-		        //           synced:   new Date().getTime(),
-		        //           periods: {
-		        //             start:  options.stamps.start,
-		        //             end:    options.stamps.end
-		        //           }
-		        //         });
+						        // console.log('members ->', members);
 
-						    //   },
-						    //   function (error)
-						    //   {
-						    //     deferred.resolve({error: error});
-						    //   }
-						    // );
+
+						        var mems = [];
+
+						        angular.forEach(members, function (mdata, index)
+						      	{
+						      		angular.forEach(mdata, function (tslot, ind)
+						      		{
+						      			tslot.text = tslot.state;	
+						      		})
+
+						      		mems.push({
+							          id:     index,
+							          data:   mdata,
+							          stats:  Stats.member(mdata)
+							        })
+						      	})
+
+
+		                deferred.resolve({
+		                  user:     user,
+		                  groupId:  options.groupId,
+		                  aggs:     aggs,
+		                  members:  mems,
+		                  synced:   new Date().getTime(),
+		                  periods: {
+		                    start:  options.stamps.start,
+		                    end:    options.stamps.end
+		                  }
+		                });
+
+						      },
+						      function (error)
+						      {
+						        deferred.resolve({error: error});
+						      }
+						    );
+
+
+
 
 
 	              /**
 	               * Run the preloader
 	               */
-	              preloader.init(members.length);
+	              // preloader.init(members.length);
 
-	              angular.forEach(members, function (member, index)
-	              {
-	              	calls.push(Slots.prototype.user({
-	                  user: member.uuid,
-	                  start:params.start,
-	                  end:  params.end,
-	                  type: 'both'
-	                }));
-	              });
+	              // angular.forEach(members, function (member, index)
+	              // {
+	              // 	calls.push(Slots.prototype.user({
+	              //     user: member.uuid,
+	              //     start:params.start,
+	              //     end:  params.end,
+	              //     type: 'both'
+	              //   }));
+	              // });
 
-	              $q.all(calls)
-	              .then(function (members)
-	              {
-	                deferred.resolve({
-	                  user:     user,
-	                  groupId:  options.groupId,
-	                  aggs:     aggs,
-	                  members:  members,
-	                  synced:   new Date().getTime(),
-	                  periods: {
-	                    start:  options.stamps.start,
-	                    end:    options.stamps.end
-	                  }
-	                });
-	              });
+	              // $q.all(calls)
+	              // .then(function (members)
+	              // {
+	              //   deferred.resolve({
+	              //     user:     user,
+	              //     groupId:  options.groupId,
+	              //     aggs:     aggs,
+	              //     members:  members,
+	              //     synced:   new Date().getTime(),
+	              //     periods: {
+	              //       start:  options.stamps.start,
+	              //       end:    options.stamps.end
+	              //     }
+	              //   });
+	              // });
 
 
 
@@ -4637,6 +4663,11 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         month: function ()
         {
           return new Date().getMonth() + 1;
+        },
+
+        initial: function ()
+        {
+          console.log('today ->', this.today());
         }
       },
 
@@ -5768,7 +5799,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       addLoading: function (data, timedata, rows)
       {
-        angular.forEach(rows, function(row, index)
+        angular.forEach(rows, function (row, index)
         {
           timedata.push({
             start:  data.periods.end,
@@ -6144,7 +6175,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       members: function (data, timedata, config, privilage)
       {
         var _this   = this,
-            members = this.get.members();          
+            members = this.get.members();
+
+
+        
+        
+        // console.log('members inside sloter ->', data.members);
+
+
+
 
         angular.forEach(data.members, function (member, index)
         {
@@ -6204,6 +6243,9 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             stat.state = 'bar-' + state[0];
           });
         });
+
+
+
 
         return timedata;
       },
@@ -8368,14 +8410,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  	},
 	    current: $scope.current,
 	    options: {
-	      start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
-	      min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
+        start:  $scope.periods.days[Dater.current.today()].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.day,
+        min:  	$scope.periods.days[Dater.current.today()].last.day,
+        max:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    range: {
-	      start:  $scope.periods.weeks[$scope.current.week].first.day,
-	      end:    $scope.periods.weeks[$scope.current.week].last.day
+        start:  $scope.periods.days[Dater.current.today()].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    scope: {
 	      day:    false,
@@ -8440,7 +8482,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var states = {};
 
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
 
 	  $scope.states = states;
 
@@ -8740,7 +8782,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	var timeout = ($location.hash() == 'timeline') ? 100 : 1700;
 
-			    setTimeout( function() 
+			    setTimeout( function () 
 		      {
 		        $scope.self.timeline.draw(
 		          Sloter.profile(
