@@ -53,7 +53,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
-      // group:    groups[0].uuid,
       division: 'all'
     };
 
@@ -180,38 +179,24 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.resetViews = function ()
 	  {
-	  	// $scope.$watch('views', function ()
-	  	// {
-		    $scope.views = {
-		      slot: {
-		        add:  false,
-		        edit: false
-		      },
-		      group:  false,
-		      wish:   false,
-		      member: false
-		    };
-	  	// })
-	  	
-	  	console.log('views ->', $scope.views);
+	    $scope.views = {
+	      slot: {
+	        add:  false,
+	        edit: false
+	      },
+	      group:  false,
+	      wish:   false,
+	      member: false
+	    };
 	  };
 
 	  $scope.resetViews();
 
 
-
 	  /**
 	   * Reset planboard views
 	   */
-	  $rootScope.$on('resetPlanboardViews', function () 
-	  {
-	  	console.log('reseting views from subscriber..');
-
-	    $scope.resetViews();
-	  });
-
-
-
+	  $rootScope.$on('resetPlanboardViews', function () { $scope.resetViews(); });
 
 
 	  /**

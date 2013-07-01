@@ -628,7 +628,8 @@ if ('localStorage' in window && window['localStorage'] !== null)
   basket
     .require(
       { url: 'libs/chosen/chosen.jquery.min.js' },
-      { url: 'libs/chaps/timeline/2.4.0/timeline_modified.min.js' },
+      // { url: 'libs/chaps/timeline/2.4.0/timeline_modified.min.js' },
+      // { url: 'libs/chaps/timeline/2.4.0/timeline_modified.js' },
       { url: 'libs/bootstrap-datepicker/bootstrap-datepicker.min.js' },
       { url: 'libs/bootstrap-timepicker/bootstrap-timepicker.min.js' },
       { url: 'libs/daterangepicker/1.1.0/daterangepicker.min.js' },
@@ -4667,11 +4668,6 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         {
           return new Date().getMonth() + 1;
         },
-
-        initial: function ()
-        {
-          console.log('today ->', this.today());
-        }
       },
 
       readable: 
@@ -8386,7 +8382,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
-      // group:    groups[0].uuid,
       division: 'all'
     };
 
@@ -8513,38 +8508,24 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.resetViews = function ()
 	  {
-	  	// $scope.$watch('views', function ()
-	  	// {
-		    $scope.views = {
-		      slot: {
-		        add:  false,
-		        edit: false
-		      },
-		      group:  false,
-		      wish:   false,
-		      member: false
-		    };
-	  	// })
-	  	
-	  	console.log('views ->', $scope.views);
+	    $scope.views = {
+	      slot: {
+	        add:  false,
+	        edit: false
+	      },
+	      group:  false,
+	      wish:   false,
+	      member: false
+	    };
 	  };
 
 	  $scope.resetViews();
 
 
-
 	  /**
 	   * Reset planboard views
 	   */
-	  $rootScope.$on('resetPlanboardViews', function () 
-	  {
-	  	console.log('reseting views from subscriber..');
-
-	    $scope.resetViews();
-	  });
-
-
-
+	  $rootScope.$on('resetPlanboardViews', function () { $scope.resetViews(); });
 
 
 	  /**
@@ -9010,8 +8991,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    if (selection = $scope.self.timeline.getSelection()[0])
 	    {
-	      var values  = $scope.self.timeline.getItem(selection.row),
-	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
+	      var values  = $scope.self.timeline.getItem(selection.row);
+
+	      console.log('values ->', values);
+
+	      var content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
 	      
 	      // console.log('value ->', 	values);
 	     	// console.log('content ->', content);
@@ -9021,8 +9005,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        end:          values.end,
 	        content: {
 	          recursive:  content.recursive,
-	          state:      content.state,
-	          id:         content.id
+	          state:      content.state
+	          // ,
+	          // id:         content.id
 	        }
 	      };
 
@@ -9049,21 +9034,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      	{
 			      switch (content.type)
 			      {
-			        case 'slot':
-			          $scope.views.slot.edit = true;
-			        break;
-
-			        case 'group':
-			          $scope.views.group = true;
-			        break;
-
-			        case 'wish':
-			          $scope.views.wish = true;
-			        break;
-
-			        case 'member':
-			          $scope.views.member = true;
-			        break;
+			        case 'slot': 		$scope.views.slot.edit 	= true; 	break;
+			        case 'group': 	$scope.views.group 			= true; 	break;
+			        case 'wish': 		$scope.views.wish 			= true; 	break;
+			        case 'member': 	$scope.views.member 		= true; 	break;
 			      };
 	      	};
 
@@ -9213,7 +9187,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	{
 		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
-		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
+
+
+		    // if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
+
+
+		    console.log('add happened');
+        console.warn('scope self timeline ->', $scope.self.timeline);
+
+
 
 		    $scope.$apply(function ()
 		    {

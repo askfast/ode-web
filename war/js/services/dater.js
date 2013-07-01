@@ -30,11 +30,6 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         {
           return new Date().getMonth() + 1;
         },
-
-        initial: function ()
-        {
-          console.log('today ->', this.today());
-        }
       },
 
       readable: 
