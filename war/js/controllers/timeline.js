@@ -89,6 +89,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
+	   * Timeliner listener
+	   */
+	  $rootScope.$on('slotInitials', function () 
+	  {
+			$scope.slot = {};
+
+      $scope.slot = {
+        start: {
+          date: new Date().toString($rootScope.config.formats.date),
+          time: new Date().toString($rootScope.config.formats.time),
+          datetime: new Date().toISOString()
+        },
+        end: {
+          date: new Date().toString($rootScope.config.formats.date),
+          time: new Date().addHours(1).toString($rootScope.config.formats.time),
+          datetime: new Date().toISOString()
+        },
+        state:      '',
+        recursive:  false,
+        id:         ''
+      };
+	  });
+
+
+	  /**
 	   * Timeline (The big boy)
 	   */
 	  $scope.timeliner = {
@@ -277,12 +302,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    isAdded: function ()
 	    {
-	    	return $('.timeline-event-content')
-	                .contents()
-	                .filter(function ()
-	                { 
-	                  return this.nodeValue == 'New' 
-	                }).length;
+	    	// return $('.timeline-event-content')
+	     //            .contents()
+	     //            .filter(function ()
+	     //            { 
+	     //              return this.nodeValue == 'New' 
+	     //            }).length;
+	    	return $('.state-new').length;
 	    },
 
 	    /**

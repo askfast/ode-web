@@ -628,7 +628,7 @@ if ('localStorage' in window && window['localStorage'] !== null)
   basket
     .require(
       { url: 'libs/chosen/chosen.jquery.min.js' },
-      { url: 'libs/chaps/timeline/2.4.0/timeline_modified.min.js' },
+      // { url: 'libs/chaps/timeline/2.4.0/timeline_modified.js' },
       { url: 'libs/bootstrap-datepicker/bootstrap-datepicker.min.js' },
       { url: 'libs/bootstrap-timepicker/bootstrap-timepicker.min.js' },
       { url: 'libs/daterangepicker/1.1.0/daterangepicker.min.js' },
@@ -8562,23 +8562,32 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    {
 	    	$rootScope.planboardSync.clear();
 
-	      $scope.slot = {};
+	    	/**
+	    	 * Broadcast for slot initials
+	    	 */
+	    	$rootScope.$broadcast('slotInitials');
 
-	      $scope.slot = {
-	        start: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        end: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        state:      '',
-	        recursive:  false,
-	        id:         ''
-	      };
+	      // $scope.slot = {};
+
+	      // $scope.slot = {
+	      //   start: {
+	      //     date: new Date().toString($rootScope.config.formats.date),
+	      //     time: new Date().toString($rootScope.config.formats.time),
+	      //     datetime: new Date().toISOString()
+	      //   },
+	      //   end: {
+	      //     date: new Date().toString($rootScope.config.formats.date),
+	      //     time: new Date().addHours(1).toString($rootScope.config.formats.time),
+	      //     datetime: new Date().toISOString()
+	      //   },
+	      //   state:      '',
+	      //   recursive:  false,
+	      //   id:         ''
+	      // };
+
+
+	      console.warn('SLOT ->', $scope.slot);
+
 
 	      $scope.resetViews();
 
@@ -8712,6 +8721,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				};
 			}
 		});
+
+
+	  /**
+	   * Timeliner listener
+	   */
+	  $rootScope.$on('slotInitials', function () 
+	  {
+			$scope.slot = {};
+
+      $scope.slot = {
+        start: {
+          date: new Date().toString($rootScope.config.formats.date),
+          time: new Date().toString($rootScope.config.formats.time),
+          datetime: new Date().toISOString()
+        },
+        end: {
+          date: new Date().toString($rootScope.config.formats.date),
+          time: new Date().addHours(1).toString($rootScope.config.formats.time),
+          datetime: new Date().toISOString()
+        },
+        state:      '',
+        recursive:  false,
+        id:         ''
+      };
+	  });
 
 
 	  /**
@@ -8903,12 +8937,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    isAdded: function ()
 	    {
-	    	return $('.timeline-event-content')
-	                .contents()
-	                .filter(function ()
-	                { 
-	                  return this.nodeValue == 'New' 
-	                }).length;
+	    	// return $('.timeline-event-content')
+	     //            .contents()
+	     //            .filter(function ()
+	     //            { 
+	     //              return this.nodeValue == 'New' 
+	     //            }).length;
+	    	return $('.state-new').length;
 	    },
 
 	    /**

@@ -60,7 +60,7 @@ if ('localStorage' in window && window['localStorage'] !== null)
   basket
     .require(
       { url: 'libs/chosen/chosen.jquery.min.js' },
-      { url: 'libs/chaps/timeline/2.4.0/timeline_modified.min.js' },
+      // { url: 'libs/chaps/timeline/2.4.0/timeline_modified.js' },
       { url: 'libs/bootstrap-datepicker/bootstrap-datepicker.min.js' },
       { url: 'libs/bootstrap-timepicker/bootstrap-timepicker.min.js' },
       { url: 'libs/daterangepicker/1.1.0/daterangepicker.min.js' },

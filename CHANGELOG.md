@@ -12,6 +12,9 @@
 ## Versions
 
 	2.4.0
+		* Adjust slotform times when mutation planboard items 1-7-2013
+		* Hotfix for auto-refresh kicks in  while mutating  1-7-2013
+		* Remove slotform after planboard mutation 1-7-2013
 		* Hotfix for the bug for switching to 'today' when clicked on 'day' button in timeline navigation 1-7-2013
 		* Planboard initial start is fixed to next 7 days 1-7-2013
 
