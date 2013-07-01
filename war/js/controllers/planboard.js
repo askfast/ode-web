@@ -180,8 +180,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.resetViews = function ()
 	  {
-	  	// $scope.$watch(function ()
-	  	// {  		
+	  	// $scope.$watch('views', function ()
+	  	// {
 		    $scope.views = {
 		      slot: {
 		        add:  false,
@@ -192,6 +192,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 		      member: false
 		    };
 	  	// })
+	  	
+	  	console.log('views ->', $scope.views);
 	  };
 
 	  $scope.resetViews();
@@ -203,7 +205,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $rootScope.$on('resetPlanboardViews', function () 
 	  {
-	  	console.log('reseting views');
+	  	console.log('reseting views from subscriber..');
 
 	    $scope.resetViews();
 	  });

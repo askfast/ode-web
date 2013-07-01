@@ -148,7 +148,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			  	$scope.timeline.options.end 	= new Date(options.end);
 			  }
 
-
 	      angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
 
 	      if ($scope.timeline.main)
@@ -203,7 +202,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        if (data.error)
 		        {
 		          $rootScope.notifier.error('Error with gettings timeslots.');
-		          console.warn('error ->', data.error);
+		          console.warn('error ->', data);
 		        }
 		        else
 		        {
@@ -223,7 +222,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        if (data.error)
 		        {
 		          $rootScope.notifier.error('Error with gettings timeslots.');
-		          console.warn('error ->', result);
+		          console.warn('error ->', data);
 		        }
 		        else
 		        {
@@ -252,7 +251,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      	$rootScope.$broadcast('resetPlanboardViews');
 		      // $scope.resetViews();
 
-		      $scope.views.slot.add = true;
+		      // $scope.views.slot.add = true;
 	      }
 	      else
 	      {
@@ -390,7 +389,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      
 	      // console.log('value ->', 	values);
 	     	// console.log('content ->', content);
-
 
 	      $scope.original = {
 	        start:        values.start,
@@ -699,18 +697,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
             content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
           };
 
-      
       $scope.$apply(function ()
     	{    		
 	      $scope.slot = {
 	        start: {
-	          date: new Date(values.start).toString($rootScope.config.formats.date),
-	          time: new Date(values.start).toString($rootScope.config.formats.time),
+	          date: 		new Date(values.start).toString($rootScope.config.formats.date),
+	          time: 		new Date(values.start).toString($rootScope.config.formats.time),
 	          datetime: new Date(values.start).toISOString()
 	        },
 	        end: {
-	          date: new Date(values.end).toString($rootScope.config.formats.date),
-	          time: new Date(values.end).toString($rootScope.config.formats.time),
+	          date: 		new Date(values.end).toString($rootScope.config.formats.date),
+	          time: 		new Date(values.end).toString($rootScope.config.formats.time),
 	          datetime: new Date(values.end).toISOString()
 	        },
 	        state:      options.content.state,
@@ -728,8 +725,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.timelineOnChange = function (direct, original, slot, options)
 	  {
-	  	// console.log('changing stuff');
-
 	  	$rootScope.planboardSync.clear();
 
 	    if (!direct)
@@ -740,7 +735,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            end:      values.end,
 	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
 	          };
-
 	    }
 	    else
 	    {
