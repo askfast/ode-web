@@ -182,7 +182,7 @@
             ng-show="config.profile.p2000.status">
 
         <div class="head">
-          <h4>{{ui.dashboard.announcements}}</h4>
+          <h4>{{ui.dashboard.announcements}} {{loading.alerts}}</h4>
           <!-- <button class="btn btn-small"><i class="icon-cog"></i></button> -->
         </div>
         <hr>
@@ -227,6 +227,15 @@
             <a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>
           </small>
         </p>
+
+        <!-- p2000 footer -->
+        <p>
+          <small class="pull-left">
+            <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
+            <span class="muted">{{synced.alarms | nicelyDate}}</span>
+          </small>
+        </p>
+        <!-- end p2000 footer -->
 
       </div>
       <!-- end announcements sidebar -->

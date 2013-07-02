@@ -192,8 +192,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  };
 
 	  $scope.resetViews();
-
-
+	  
 
 	  /**
 	   * Reset planboard views
@@ -202,9 +201,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  {
 	  	$scope.resetViews();
 	  });
-
-
-
 
 
 	  /**

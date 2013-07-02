@@ -12,8 +12,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
-	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile)
+	'$scope', '$rootScope', '$q', '$window', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
+	function ($scope, $rootScope, $q, $window, Dashboard, Slots, Dater, Storage, Settings, Profile)
 	{
 		/**
 		 * Fix styles
@@ -36,6 +36,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.more = {
 			status: false,
 			text:   'show more'
+		};
+
+
+		/**
+		 * Default values for syned pointer values
+		 */
+		$scope.synced = {
+			alarms: new Date().getTime(),
+			pies: 	new Date().getTime()
 		};
 
 
@@ -197,7 +206,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			});
 		}
 
+
+		/**
+		 * Get pie overviews
+		 */
 		getOverviews();
+
 
 		/**
 		 * Save widget settings
@@ -227,26 +241,57 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
-		/**
-		 * P2000 annnouncements
-		 */
-		Dashboard.p2000().
-		then(function (result)
+		function getP2000 ()
 		{
-			if (result.error)
+			/**
+			 * P2000 annnouncements
+			 */
+			Dashboard.p2000().
+			then(function (result)
 			{
-				$rootScope.notifier.error('Error with getting p2000 alarm messages.');
-				console.warn('error ->', result);
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with getting p2000 alarm messages.');
+					console.warn('error ->', result);
+					}
+				else
+				{
+					$scope.loading.alarms = false;
+
+					// $rootScope.statusBar.off();
+
+					$scope.alarms = result.alarms;
+
+					$scope.alarms.list = $scope.alarms.short;
+
+					$scope.synced.alarms = result.synced;
 				}
-			else
+			});
+		}
+
+
+		/**
+		 * Get alarms
+		 */
+		getP2000();
+
+
+		/**
+		 * Sync alarms
+		 */
+		$window.alarmsSync = $window.setInterval(function ()
+		{
+			$scope.$apply(function ()
 			{
-				$scope.loading.alerts = false;
+				// $rootScope.statusBar.display('Getting new alarms');
 
-				$scope.alarms = result;
+			  $scope.loading.alerts = true;
+			});
 
-				$scope.alarms.list = $scope.alarms.short;
-			}
-		});
+			getP2000();
+
+		// Sync periodically for a minute
+		}, 100000 * 3);
 
 
 		/**

@@ -454,16 +454,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              var members = angular.fromJson(Storage.get(options.groupId)),
 	                  calls   = [];
 
-
-
-
-
-
-
-
-	             
-
-
+	              /**
+	               * New bundled call
+	               */
 						    MemberSlots.query(
 							    {
 							    	id: 		options.groupId,
@@ -474,12 +467,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						      function (members) 
 						      {
 						        // deferred.resolve(result);
-						        // 
-						        
-
 						        // console.log('members ->', members);
-
-
+						        
 						        var mems = [];
 
 						        angular.forEach(members, function (mdata, index)
@@ -487,7 +476,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						      		angular.forEach(mdata, function (tslot, ind)
 						      		{
 						      			tslot.text = tslot.state;	
-						      		})
+						      		});
 
 						      		mems.push({
 							          id:     index,
@@ -515,9 +504,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						        deferred.resolve({error: error});
 						      }
 						    );
-
-
-
 
 
 	              /**
@@ -550,10 +536,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              //     }
 	              //   });
 	              // });
-
-
-
-
 
 
 	            }

@@ -1799,12 +1799,20 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred = $q.defer();
 
+			$rootScope.statusBar.display('Getting new alarms');
+
 			$.ajax({
 				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
 				dataType: 'jsonp',
 				success: function (results)
 				{
-					deferred.resolve( Announcer.process(results) );
+					$rootScope.statusBar.off();
+					
+					deferred.resolve(
+					{
+						alarms: 	Announcer.process(results),
+						synced:   new Date().getTime()
+					});
 				},
 				error: function ()
 				{
@@ -2289,16 +2297,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              var members = angular.fromJson(Storage.get(options.groupId)),
 	                  calls   = [];
 
-
-
-
-
-
-
-
-	             
-
-
+	              /**
+	               * New bundled call
+	               */
 						    MemberSlots.query(
 							    {
 							    	id: 		options.groupId,
@@ -2309,12 +2310,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						      function (members) 
 						      {
 						        // deferred.resolve(result);
-						        // 
-						        
-
 						        // console.log('members ->', members);
-
-
+						        
 						        var mems = [];
 
 						        angular.forEach(members, function (mdata, index)
@@ -2322,7 +2319,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						      		angular.forEach(mdata, function (tslot, ind)
 						      		{
 						      			tslot.text = tslot.state;	
-						      		})
+						      		});
 
 						      		mems.push({
 							          id:     index,
@@ -2350,9 +2347,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						        deferred.resolve({error: error});
 						      }
 						    );
-
-
-
 
 
 	              /**
@@ -2385,10 +2379,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              //     }
 	              //   });
 	              // });
-
-
-
-
 
 
 	            }
@@ -8077,8 +8067,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
-	function ($scope, $rootScope, $q, Dashboard, Slots, Dater, Storage, Settings, Profile)
+	'$scope', '$rootScope', '$q', '$window', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
+	function ($scope, $rootScope, $q, $window, Dashboard, Slots, Dater, Storage, Settings, Profile)
 	{
 		/**
 		 * Fix styles
@@ -8101,6 +8091,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.more = {
 			status: false,
 			text:   'show more'
+		};
+
+
+		/**
+		 * Default values for syned pointer values
+		 */
+		$scope.synced = {
+			alarms: new Date().getTime(),
+			pies: 	new Date().getTime()
 		};
 
 
@@ -8262,7 +8261,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			});
 		}
 
+
+		/**
+		 * Get pie overviews
+		 */
 		getOverviews();
+
 
 		/**
 		 * Save widget settings
@@ -8292,26 +8296,57 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
-		/**
-		 * P2000 annnouncements
-		 */
-		Dashboard.p2000().
-		then(function (result)
+		function getP2000 ()
 		{
-			if (result.error)
+			/**
+			 * P2000 annnouncements
+			 */
+			Dashboard.p2000().
+			then(function (result)
 			{
-				$rootScope.notifier.error('Error with getting p2000 alarm messages.');
-				console.warn('error ->', result);
+				if (result.error)
+				{
+					$rootScope.notifier.error('Error with getting p2000 alarm messages.');
+					console.warn('error ->', result);
+					}
+				else
+				{
+					$scope.loading.alarms = false;
+
+					// $rootScope.statusBar.off();
+
+					$scope.alarms = result.alarms;
+
+					$scope.alarms.list = $scope.alarms.short;
+
+					$scope.synced.alarms = result.synced;
 				}
-			else
+			});
+		}
+
+
+		/**
+		 * Get alarms
+		 */
+		getP2000();
+
+
+		/**
+		 * Sync alarms
+		 */
+		$window.alarmsSync = $window.setInterval(function ()
+		{
+			$scope.$apply(function ()
 			{
-				$scope.loading.alerts = false;
+				// $rootScope.statusBar.display('Getting new alarms');
 
-				$scope.alarms = result;
+			  $scope.loading.alerts = true;
+			});
 
-				$scope.alarms.list = $scope.alarms.short;
-			}
-		});
+			getP2000();
+
+		// Sync periodically for a minute
+		}, 100000 * 3);
 
 
 		/**
@@ -8520,8 +8555,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  };
 
 	  $scope.resetViews();
-
-
+	  
 
 	  /**
 	   * Reset planboard views
@@ -8530,9 +8564,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  {
 	  	$scope.resetViews();
 	  });
-
-
-
 
 
 	  /**
@@ -8936,7 +8967,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    cancelAdd: function ()
 	    {
 	      $scope.self.timeline.cancelAdd();
-	    }
+		  }
 	  };
 	 
 

@@ -317,7 +317,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    cancelAdd: function ()
 	    {
 	      $scope.self.timeline.cancelAdd();
-	    }
+		  }
 	  };
 	 
 

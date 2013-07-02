@@ -76,12 +76,20 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred = $q.defer();
 
+			$rootScope.statusBar.display('Getting new alarms');
+
 			$.ajax({
 				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
 				dataType: 'jsonp',
 				success: function (results)
 				{
-					deferred.resolve( Announcer.process(results) );
+					$rootScope.statusBar.off();
+					
+					deferred.resolve(
+					{
+						alarms: 	Announcer.process(results),
+						synced:   new Date().getTime()
+					});
 				},
 				error: function ()
 				{
