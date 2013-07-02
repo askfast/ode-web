@@ -12,8 +12,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', '$window', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
-	function ($scope, $rootScope, $q, $window, Dashboard, Slots, Dater, Storage, Settings, Profile)
+	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
+	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile)
 	{
 		/**
 		 * Fix styles
@@ -241,7 +241,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
-		function getP2000 ()
+		$scope.getP2000 = function  ()
 		{
 			/**
 			 * P2000 annnouncements
@@ -249,23 +249,19 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Dashboard.p2000().
 			then(function (result)
 			{
-				if (result.error)
-				{
-					$rootScope.notifier.error('Error with getting p2000 alarm messages.');
-					console.warn('error ->', result);
-					}
-				else
-				{
-					$scope.loading.alarms = false;
-
-					// $rootScope.statusBar.off();
-
+				// if (result.error)
+				// {
+				// 	$rootScope.notifier.error('Error with getting p2000 alarm messages.');
+				// 	console.warn('error ->', result);
+				// 	}
+				// else
+				// {
 					$scope.alarms = result.alarms;
 
 					$scope.alarms.list = $scope.alarms.short;
 
 					$scope.synced.alarms = result.synced;
-				}
+				// }
 			});
 		}
 
@@ -273,25 +269,45 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		/**
 		 * Get alarms
 		 */
-		getP2000();
+		$scope.getP2000();
 
 
-		/**
-		 * Sync alarms
-		 */
-		$window.alarmsSync = $window.setInterval(function ()
-		{
-			$scope.$apply(function ()
+	  $rootScope.alarmSync = {
+	  	/**
+	  	 * Start planboard sync
+	  	 */
+	  	start: function ()
+		  {
+				$window.planboardSync = $window.setInterval(function ()
+				{
+					console.log('syncing started for p2000 alerts..');
+
+					/**
+					 * Update planboard only in planboard is selected
+					 */
+					if ($location.path() == '/dashboard')
+					{
+						$scope.$apply()
+						{
+							$scope.getP2000();
+						}
+					}
+				// Sync periodically for a minute
+				}, 1000000 * 3);
+			},
+
+			/**
+			 * Clear planboard sync
+			 */
+			clear: function ()
 			{
-				// $rootScope.statusBar.display('Getting new alarms');
+				console.log('syncing for p2000 alerts stopped..');
 
-			  $scope.loading.alerts = true;
-			});
+				$window.clearInterval($window.alarmSync);
+			}
+	  }
 
-			getP2000();
-
-		// Sync periodically for a minute
-		}, 100000 * 3);
+		// $rootScope.alarmSync.start();
 
 
 		/**

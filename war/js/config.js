@@ -83,7 +83,7 @@ angular.module('WebPaige')
       date:         'dd-MM-yyyy',
       time:         'HH:mm',
       datetime:     'dd-MM-yyyy HH:mm',
-      datetimefull: 'dd-MM-yyyy HH:mm'
+      datetimefull: 'dd-MM-yyyy HH:mm:ss'
     },
 
     roles: profile.roles,

@@ -399,7 +399,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	 	{
 	 		if (typeof date == 'string') date = Number(date);
 
-	 		return new Date(date).toString($rootScope.config.formats.datetime);
+	 		return new Date(date).toString($rootScope.config.formats.datetimefull);
 	 	};
 	}
 ])

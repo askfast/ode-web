@@ -733,7 +733,7 @@ angular.module('WebPaige')
       date:         'dd-MM-yyyy',
       time:         'HH:mm',
       datetime:     'dd-MM-yyyy HH:mm',
-      datetimefull: 'dd-MM-yyyy HH:mm'
+      datetimefull: 'dd-MM-yyyy HH:mm:ss'
     },
 
     roles: profile.roles,
@@ -7070,7 +7070,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	 	{
 	 		if (typeof date == 'string') date = Number(date);
 
-	 		return new Date(date).toString($rootScope.config.formats.datetime);
+	 		return new Date(date).toString($rootScope.config.formats.datetimefull);
 	 	};
 	}
 ])
@@ -8067,8 +8067,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', '$window', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
-	function ($scope, $rootScope, $q, $window, Dashboard, Slots, Dater, Storage, Settings, Profile)
+	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
+	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile)
 	{
 		/**
 		 * Fix styles
@@ -8296,7 +8296,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
-		function getP2000 ()
+		$scope.getP2000 = function  ()
 		{
 			/**
 			 * P2000 annnouncements
@@ -8304,23 +8304,19 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Dashboard.p2000().
 			then(function (result)
 			{
-				if (result.error)
-				{
-					$rootScope.notifier.error('Error with getting p2000 alarm messages.');
-					console.warn('error ->', result);
-					}
-				else
-				{
-					$scope.loading.alarms = false;
-
-					// $rootScope.statusBar.off();
-
+				// if (result.error)
+				// {
+				// 	$rootScope.notifier.error('Error with getting p2000 alarm messages.');
+				// 	console.warn('error ->', result);
+				// 	}
+				// else
+				// {
 					$scope.alarms = result.alarms;
 
 					$scope.alarms.list = $scope.alarms.short;
 
 					$scope.synced.alarms = result.synced;
-				}
+				// }
 			});
 		}
 
@@ -8328,25 +8324,45 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		/**
 		 * Get alarms
 		 */
-		getP2000();
+		$scope.getP2000();
 
 
-		/**
-		 * Sync alarms
-		 */
-		$window.alarmsSync = $window.setInterval(function ()
-		{
-			$scope.$apply(function ()
+	  $rootScope.alarmSync = {
+	  	/**
+	  	 * Start planboard sync
+	  	 */
+	  	start: function ()
+		  {
+				$window.planboardSync = $window.setInterval(function ()
+				{
+					console.log('syncing started for p2000 alerts..');
+
+					/**
+					 * Update planboard only in planboard is selected
+					 */
+					if ($location.path() == '/dashboard')
+					{
+						$scope.$apply()
+						{
+							$scope.getP2000();
+						}
+					}
+				// Sync periodically for a minute
+				}, 1000000 * 3);
+			},
+
+			/**
+			 * Clear planboard sync
+			 */
+			clear: function ()
 			{
-				// $rootScope.statusBar.display('Getting new alarms');
+				console.log('syncing for p2000 alerts stopped..');
 
-			  $scope.loading.alerts = true;
-			});
+				$window.clearInterval($window.alarmSync);
+			}
+	  }
 
-			getP2000();
-
-		// Sync periodically for a minute
-		}, 100000 * 3);
+		// $rootScope.alarmSync.start();
 
 
 		/**
@@ -9404,6 +9420,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    if (!direct)
 	    {
+	    	/**
+	    	 * Through timeline
+	    	 */
 	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
 	          options = {
 	            start:    values.start,
@@ -9413,6 +9432,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    }
 	    else
 	    {
+	    	/**
+	    	 * Through form
+	    	 */
 	    	var options = {
 		      start:  ($rootScope.browser.mobile) ?
 		                new Date(slot.start.datetime).getTime() : 
@@ -9420,16 +9442,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      end:    ($rootScope.browser.mobile) ? 
 		                new Date(slot.end.datetime).getTime() :
 		                Dater.convert.absolute(slot.end.date, slot.end.time, false),
-		      content: angular.toJson({
+		      content: {
 		        recursive:  slot.recursive, 
 		        state:      slot.state 
-		      })
+		      }
+		      // content: angular.toJson({
+		      //   recursive:  slot.recursive, 
+		      //   state:      slot.state 
+		      // })
 		    };
 	    }
 
 	    var now = Date.now().getTime();
 
-	    if (options.end <= now && options.content.recursive == false)
+	    if (options.start <= now && options.content.recursive == false)
 	    {
 	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
 
@@ -9484,14 +9510,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      var now = Date.now().getTime();
 
-	      if ($scope.original.end.getTime() <= now && $scope.original.recursive == false)
+	      if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
 	      {
-	        $rootScope.notifier.error('You can not delete timeslots in past.');
+	        $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
 
 	        $scope.timeliner.refresh();
 	      }
 	      else
 	      {
+	      	console.log('failed');
+
 	        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
 	        Slots.remove($scope.original, $scope.timeline.user.id)
@@ -9515,6 +9543,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            $rootScope.planboardSync.start();
 	          }
 	        );
+
 	      };
 	    };
 	  };
@@ -9608,7 +9637,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						}, true);
 					}
 				// Sync periodically for a minute
-				}, 60000 * 3);
+				}, 1000000 * 3);
 			},
 
 			/**

@@ -754,6 +754,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    if (!direct)
 	    {
+	    	/**
+	    	 * Through timeline
+	    	 */
 	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
 	          options = {
 	            start:    values.start,
@@ -763,6 +766,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    }
 	    else
 	    {
+	    	/**
+	    	 * Through form
+	    	 */
 	    	var options = {
 		      start:  ($rootScope.browser.mobile) ?
 		                new Date(slot.start.datetime).getTime() : 
@@ -770,16 +776,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      end:    ($rootScope.browser.mobile) ? 
 		                new Date(slot.end.datetime).getTime() :
 		                Dater.convert.absolute(slot.end.date, slot.end.time, false),
-		      content: angular.toJson({
+		      content: {
 		        recursive:  slot.recursive, 
 		        state:      slot.state 
-		      })
+		      }
+		      // content: angular.toJson({
+		      //   recursive:  slot.recursive, 
+		      //   state:      slot.state 
+		      // })
 		    };
 	    }
 
 	    var now = Date.now().getTime();
 
-	    if (options.end <= now && options.content.recursive == false)
+	    if (options.start <= now && options.content.recursive == false)
 	    {
 	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
 
@@ -834,14 +844,16 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      var now = Date.now().getTime();
 
-	      if ($scope.original.end.getTime() <= now && $scope.original.recursive == false)
+	      if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
 	      {
-	        $rootScope.notifier.error('You can not delete timeslots in past.');
+	        $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
 
 	        $scope.timeliner.refresh();
 	      }
 	      else
 	      {
+	      	console.log('failed');
+
 	        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
 	        Slots.remove($scope.original, $scope.timeline.user.id)
@@ -865,6 +877,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            $rootScope.planboardSync.start();
 	          }
 	        );
+
 	      };
 	    };
 	  };
@@ -958,7 +971,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						}, true);
 					}
 				// Sync periodically for a minute
-				}, 60000 * 3);
+				}, 1000000 * 3);
 			},
 
 			/**
