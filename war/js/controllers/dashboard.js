@@ -249,6 +249,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Dashboard.p2000().
 			then(function (result)
 			{
+				console.log('result ->', result);
+
+				$scope.loading.alerts = false;
+
 				// if (result.error)
 				// {
 				// 	$rootScope.notifier.error('Error with getting p2000 alarm messages.');
@@ -293,7 +297,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						}
 					}
 				// Sync periodically for a minute
-				}, 1000000 * 3);
+				}, 1000 * 5);
 			},
 
 			/**

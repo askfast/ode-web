@@ -671,7 +671,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		                    text:       slot.state
 		                  };
 
-		    if (values.start * 1000 <= now && values.recursive == false)
+		    /**
+		     * Two minutes waiting time to take an action
+		     */
+		    if ((values.start * 1000) + 60000 * 2 < now && values.recursive == false)
 		    {
 		      $rootScope.notifier.error('Invoer van tijden in het verleden is niet toegestaan!');
 
@@ -971,7 +974,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						}, true);
 					}
 				// Sync periodically for a minute
-				}, 1000000 * 3);
+				}, 60000);
 			},
 
 			/**

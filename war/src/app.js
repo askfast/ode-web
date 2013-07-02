@@ -8304,6 +8304,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Dashboard.p2000().
 			then(function (result)
 			{
+				console.log('result ->', result);
+
+				$scope.loading.alerts = false;
+
 				// if (result.error)
 				// {
 				// 	$rootScope.notifier.error('Error with getting p2000 alarm messages.');
@@ -8348,7 +8352,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						}
 					}
 				// Sync periodically for a minute
-				}, 1000000 * 3);
+				}, 1000 * 5);
 			},
 
 			/**
@@ -9337,7 +9341,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		                    text:       slot.state
 		                  };
 
-		    if (values.start * 1000 <= now && values.recursive == false)
+		    /**
+		     * Two minutes waiting time to take an action
+		     */
+		    if ((values.start * 1000) + 60000 * 2 < now && values.recursive == false)
 		    {
 		      $rootScope.notifier.error('Invoer van tijden in het verleden is niet toegestaan!');
 
@@ -9637,7 +9644,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						}, true);
 					}
 				// Sync periodically for a minute
-				}, 1000000 * 3);
+				}, 60000);
 			},
 
 			/**
