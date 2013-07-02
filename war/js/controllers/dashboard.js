@@ -291,13 +291,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					 */
 					if ($location.path() == '/dashboard')
 					{
+						console.log('yes it is the dashboard');
+
 						$scope.$apply()
 						{
 							$scope.getP2000();
 						}
 					}
 				// Sync periodically for a minute
-				}, 1000 * 5);
+				}, 60000);
 			},
 
 			/**
@@ -311,7 +313,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			}
 	  }
 
-		// $rootScope.alarmSync.start();
+		$rootScope.alarmSync.start();
 
 
 		/**
