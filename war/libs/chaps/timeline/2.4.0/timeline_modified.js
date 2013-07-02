@@ -2197,7 +2197,7 @@ links.Timeline.prototype.repaintNavigation = function () {
                 //     'group': group
                 // });
 
-                console.log('group from timeline 1 ->', group);
+                // console.log('group from timeline 1 ->', group);
 
                 var recursive = (group.match(/recursive/)) ? 'true' : 'false';
 
@@ -2660,7 +2660,7 @@ links.Timeline.prototype.onMouseDown = function(event) {
         
         var group = this.getGroupFromHeight(y);   // (group may be undefined)
 
-        console.log('group from timeline 2 ->', this.getGroupName(group));
+        // console.log('group from timeline 2 ->', this.getGroupName(group));
 
         var recursive = (this.getGroupName(group).match(/recursive/)) ? 'true' : 'false';
 
@@ -3058,7 +3058,7 @@ links.Timeline.prototype.onDblClick = function (event) {
             // var content = "New";
             var group = this.getGroupFromHeight(y);   // (group may be undefined)
 
-            console.log('group from timeline 3 ->', this.getGroupName(group));
+            // console.log('group from timeline 3 ->', this.getGroupName(group));
 
             var recursive = (this.getGroupName(group).match(/recursive/)) ? 'true' : 'false';
 

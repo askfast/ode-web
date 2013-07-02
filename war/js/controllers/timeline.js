@@ -611,7 +611,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	 */
 	  	if (!form)
 	  	{
-		    var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+	  		var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
 		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
@@ -659,7 +659,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	 */
 	  	else
 	  	{
-		    var now     = Date.now().getTime(),
+	  		var now     = Date.now().getTime(),
 		        values  = {
 		                    start:      ($rootScope.browser.mobile) ? 
 		                                  new Date(slot.start.datetime).getTime() / 1000 :
@@ -671,9 +671,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		                    text:       slot.state
 		                  };
 
-		    if (values.end * 1000 <= now && values.recursive == false)
+		    if (values.start * 1000 <= now && values.recursive == false)
 		    {
-		      $rootScope.notifier.error('You can not input timeslots in past.');
+		      $rootScope.notifier.error('Invoer van tijden in het verleden is niet toegestaan!');
 
 		      // timeliner.cancelAdd();
 		      $scope.timeliner.refresh();
@@ -703,6 +703,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          $rootScope.planboardSync.start();
 		        }
 		      );
+
 		    };
 	  	}
 	  };
@@ -713,7 +714,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.timelineChanging = function ()
 	  {
-
 	  	$rootScope.planboardSync.clear();
 
       var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
@@ -741,7 +741,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        id:         options.content.id
 	      };
     	});
-
 	  }
 
 
@@ -782,7 +781,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    if (options.end <= now && options.content.recursive == false)
 	    {
-	      $rootScope.notifier.error('You can not change timeslots in past.');
+	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
 
 	      $scope.timeliner.refresh();
 	    }
@@ -931,7 +930,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   * Background sync in every 60 sec
 	   */
 	  $rootScope.planboardSync = {
-
 	  	/**
 	  	 * Start planboard sync
 	  	 */
@@ -960,7 +958,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						}, true);
 					}
 				// Sync periodically for a minute
-				}, 60000);
+				}, 60000 * 3);
 			},
 
 			/**
