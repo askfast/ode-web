@@ -9644,8 +9644,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						}, true);
 					}
 				// Sync periodically for a minute
-				// }, 60000); // 1 minute
-				}, 5000); // 5 seconds
+				}, 60000); // 1 minute
+				// }, 5000); // 5 seconds
 			},
 
 			/**
