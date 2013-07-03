@@ -12,6 +12,7 @@
 ## Versions
 
 	2.3.1
+		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
 		* Background syncing for p2000 alerts 2-7-2013
 		*	Adding timeslots in the past has been reviewed and blocked 2-7-2013
 		* Show slotform feelds already filled with time and date when opening 1-7-2013

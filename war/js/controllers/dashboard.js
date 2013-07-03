@@ -276,6 +276,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.getP2000();
 
 
+		/**
+		 * Alarm syncer
+		 */
 	  $rootScope.alarmSync = {
 	  	/**
 	  	 * Start planboard sync
@@ -299,9 +302,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						}
 					}
 				// Sync periodically for a minute
-				}, 60000);
+				}, 60000); // one minute
 			},
-
 			/**
 			 * Clear planboard sync
 			 */
@@ -313,6 +315,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			}
 	  }
 
+
+	  /**
+	   * Init the syncer
+	   */
 		$rootScope.alarmSync.start();
 
 
