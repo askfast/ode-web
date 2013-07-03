@@ -892,7 +892,7 @@ angular.module('WebPaige')
                       month: Dater.current.month(),
                       layouts: {
                         user:     true,
-                        group:    false,
+                        group:    true,
                         members:  false
                       }
                     });
@@ -8434,7 +8434,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.current = {
       layouts: {
         user:     true,
-        group:    false,
+        group:    true,
         members:  false
       },
       /**
