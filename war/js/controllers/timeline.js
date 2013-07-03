@@ -14,20 +14,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		var range, diff;
 
 
-
-
-
-		// console.log('range ->', $scope.timeline.range);
-		// console.log('options ->', $scope.timeline.options);
-
-		// if (typeof $scope.timeline.range === undefined)
-		// {
-		// 	console.log('range undefined');
-		// }
-
-
-
-
 		/**
 		 * Watch for changes in timeline range
 		 */
@@ -39,8 +25,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			if ($scope.timeline && $scope.timeline.main)
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
-
-				// console.log('range from timeline ->', range);
 
 				diff  = Dater.calculate.diff(range);
 
@@ -86,11 +70,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					start:  new Date(range.start).toString(),
 					end:    new Date(range.end).toString()
 				};
-
-				// $scope.timeline.options = {
-				// 	start:  $scope.timeline.range.start,
-				// 	end:    $scope.timeline.range.end
-				// };
 
 				$scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
 														' / ' +
@@ -172,10 +151,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     */
 	    render: function (options, remember)
 	    {
-	    	// console.warn('after 	 ->', $scope.timeline.range.start, $scope.timeline.range.end);
-
-	    	// window.after_start = new Date($scope.timeline.range.start).getTime();
-	     //  window.after_end = new Date($scope.timeline.range.end).getTime();
+	    	/**
+	    	 * Hotfix for not converted Date objects initally given by timeline
+	    	 */
+	    	if (typeof $scope.timeline.range.start != Date) $scope.timeline.range.start = new Date($scope.timeline.range.start);
+	    	if (typeof $scope.timeline.range.end != Date) $scope.timeline.range.end = new Date($scope.timeline.range.end);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
@@ -229,17 +209,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      }, timeout);
 		    };
 
-		    // console.log('set 	 ->', $scope.timeline.options.start, $scope.timeline.options.end);
-
-		   	// window.set_start = new Date($scope.timeline.options.start).getTime();
-	     //  window.set_end = new Date($scope.timeline.options.end).getTime();
-
-	    	// console.log('--------------------------------------------------------------------------------------');
-	    	// console.log(window.before_start, window.before_end, window.after_start, window.after_end, window.set_start, window.set_end);
-	    	// console.log('--------------------------------------------------------------------------------------');
-	    	// console.log('range ->', $scope.timeline.range, 'range ->', $scope.timeline);
-
-
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	      
 	    },
@@ -252,14 +221,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      var _this = this;
 
 	      $rootScope.statusBar.display($rootScope.ui.planboard.refreshTimeline);
-
-
-	      // console.warn('before	 ->', $scope.timeline.range.start, $scope.timeline.range.end);
-
-	      // window.before_start = new Date($scope.timeline.range.start).getTime();
-	      // window.before_end = new Date($scope.timeline.range.end).getTime();
-
-
 
 	      if ($scope.timeline.main)
 	      {
@@ -322,9 +283,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      if ($scope.timeline.main)
 	      {
 	      	$rootScope.$broadcast('resetPlanboardViews');
-		      // $scope.resetViews();
-
-		      // $scope.views.slot.add = true;
 	      }
 	      else
 	      {
@@ -460,9 +418,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      var values  = $scope.self.timeline.getItem(selection.row),
 	          content = angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1]) || null;
-	      
-	      // console.log('value ->', 	values);
-	     	// console.log('content ->', content);
 
 	      $scope.original = {
 	        start:        values.start,
@@ -477,7 +432,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      if ($scope.timeline.main)
 	      {
 	      	$rootScope.$broadcast('resetPlanboardViews');
-		      // $scope.resetViews();
 		    }
 		    else
 		    {
@@ -667,8 +621,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	if ($scope.timeline.main)
 		    	{
-			      // $scope.resetViews();
-			      
 			      $rootScope.$broadcast('resetPlanboardViews');
 
 			      $scope.views.slot.add = true;
@@ -726,7 +678,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		      $rootScope.notifier.error('Invoer van tijden in het verleden is niet toegestaan!');
 
-		      // timeliner.cancelAdd();
 		      $scope.timeliner.refresh();
 		    }
 		    else
@@ -831,10 +782,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        recursive:  slot.recursive, 
 		        state:      slot.state 
 		      }
-		      // content: angular.toJson({
-		      //   recursive:  slot.recursive, 
-		      //   state:      slot.state 
-		      // })
 		    };
 	    }
 
@@ -951,7 +898,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	                new Date(slot.end.datetime).getTime() / 1000 : 
 	                Dater.convert.absolute(slot.end.date, slot.end.time, true),
 	      recursive:  false,
-	      // recursive:  slot.recursive,
 	      wish:       slot.wish
 	    })
 	    .then(
@@ -1001,8 +947,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					// console.log('syncing started..');
-
 					/**
 					 * Update planboard only in planboard is selected
 					 */
@@ -1031,24 +975,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			clear: function ()
 			{
-				// console.log('syncing stopped..');
-
 				$window.clearInterval($window.planboardSync);
 			}
 	  }
 
+
+	  /**
+	   * Start planboard sync
+	   */
 		$rootScope.planboardSync.start();
-
-
-		/**
-		 * Not known??
-		 * What for?
-		 */
-		// $scope.$watch(function ()
-		// {
-		// 	$scope.self.timeline.on
-		// })
-
-
 	}
 ]);
