@@ -12,7 +12,8 @@
 ## Versions
 
 	2.3.2
-		* 
+		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
+		* Hotfix for bug in changing view (e.g. jump back to week-view) after mutating planboard (#26/#3) 3-7-2013
 
 	2.3.1
 		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
