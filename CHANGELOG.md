@@ -18,8 +18,8 @@
 		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
 		* Performance issues: Grouped calls for member timelines (#25) 28-6-2013
 		* Performance issues: Live instance (#25) 28-6-2013
-		* Background syncing for p2000 alerts 2-7-2013
-		*	Extreme mutations in the past has been reviewed and blocked 2-7-2013
+		* Background syncing for P2000 alerts (#32) 2-7-2013
+		*	Extreme mutations in the past has been reviewed and blocked (#31) 2-7-2013
 		* Show slotform feelds already filled with time and date when opening (#2) 1-7-2013
 		* Adjust slotform times when mutation planboard items (#37) 1-7-2013
 		* Auto-refresh kicks in  while mutating (#28) 1-7-2013
