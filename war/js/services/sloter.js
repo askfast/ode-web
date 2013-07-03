@@ -58,7 +58,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       addLoading: function (data, timedata, rows)
       {
-        angular.forEach(rows, function(row, index)
+        angular.forEach(rows, function (row, index)
         {
           timedata.push({
             start:  data.periods.end,
@@ -434,7 +434,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       members: function (data, timedata, config, privilage)
       {
         var _this   = this,
-            members = this.get.members();          
+            members = this.get.members();
+
+
+        
+        
+        // console.log('members inside sloter ->', data.members);
+
+
+
 
         angular.forEach(data.members, function (member, index)
         {
@@ -494,6 +502,9 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             stat.state = 'bar-' + state[0];
           });
         });
+
+
+
 
         return timedata;
       },

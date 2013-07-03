@@ -46,7 +46,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
         group:    true,
         members:  false
       },
-      day:      Dater.current.today(),
+      /**
+       * Fix for timeline scoper to day
+       */
+      day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
@@ -79,15 +82,18 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  		role: $rootScope.app.resources.role
 	  	},
 	    current: $scope.current,
+	    /**
+	     * Initial start up is next 7 days
+	     */
 	    options: {
-	      start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
-	      min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
-	      max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
+        start:  $scope.periods.days[Dater.current.today()].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.day,
+        min:  	$scope.periods.days[Dater.current.today()].last.day,
+        max:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    range: {
-	      start:  $scope.periods.weeks[$scope.current.week].first.day,
-	      end:    $scope.periods.weeks[$scope.current.week].last.day
+        start:  $scope.periods.days[Dater.current.today()].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    scope: {
 	      day:    false,
@@ -152,7 +158,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var states = {};
 
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
 
 	  $scope.states = states;
 
@@ -174,22 +180,18 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.resetViews = function ()
 	  {
-	  	// $scope.$watch(function ()
-	  	// {  		
-		    $scope.views = {
-		      slot: {
-		        add:  false,
-		        edit: false
-		      },
-		      group:  false,
-		      wish:   false,
-		      member: false
-		    };
-	  	// })
+	    $scope.views = {
+	      slot: {
+	        add:  false,
+	        edit: false
+	      },
+	      group:  false,
+	      wish:   false,
+	      member: false
+	    };
 	  };
 
 	  $scope.resetViews();
-
 
 
 	  /**
@@ -197,13 +199,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $rootScope.$on('resetPlanboardViews', function () 
 	  {
-	  	console.log('reseting views');
-
-	    $scope.resetViews();
+	  	$scope.resetViews();
 	  });
-
-
-
 
 
 	  /**
@@ -221,23 +218,28 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    {
 	    	$rootScope.planboardSync.clear();
 
-	      $scope.slot = {};
+	    	/**
+	    	 * Broadcast for slot initials
+	    	 */
+	    	$rootScope.$broadcast('slotInitials');
 
-	      $scope.slot = {
-	        start: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        end: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        state:      '',
-	        recursive:  false,
-	        id:         ''
-	      };
+	      // $scope.slot = {};
+
+	      // $scope.slot = {
+	      //   start: {
+	      //     date: new Date().toString($rootScope.config.formats.date),
+	      //     time: new Date().toString($rootScope.config.formats.time),
+	      //     datetime: new Date().toISOString()
+	      //   },
+	      //   end: {
+	      //     date: new Date().toString($rootScope.config.formats.date),
+	      //     time: new Date().addHours(1).toString($rootScope.config.formats.time),
+	      //     datetime: new Date().toISOString()
+	      //   },
+	      //   state:      '',
+	      //   recursive:  false,
+	      //   id:         ''
+	      // };
 
 	      $scope.resetViews();
 

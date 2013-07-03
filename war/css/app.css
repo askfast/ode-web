@@ -1657,6 +1657,12 @@ div.timeline-event.state-unavailable {
   text-indent: -9999px;
 }
 
+div.timeline-event.state-new {
+  margin: 0;
+  background-color: #ddd;
+  text-indent: -9999px;
+}
+
 div.timeline-event div.timeline-event-content span.secret {
   font-size: 1px;
 }

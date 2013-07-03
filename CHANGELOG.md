@@ -11,7 +11,21 @@
 
 ## Versions
 
-	2.4.0 (Snapshot)
+	2.3.2
+		* 
+
+	2.3.1
+		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
+		* Performance issues: Grouped calls for member timelines (#25) 28-6-2013
+		* Performance issues: Live instance (#25) 28-6-2013
+		* Background syncing for p2000 alerts 2-7-2013
+		*	Extreme mutations in the past has been reviewed and blocked 2-7-2013
+		* Show slotform feelds already filled with time and date when opening (#2) 1-7-2013
+		* Adjust slotform times when mutation planboard items (#37) 1-7-2013
+		* Auto-refresh kicks in  while mutating (#28) 1-7-2013
+		* Remove slotform after planboard mutation (#36) 1-7-2013
+		* Clicking today shows yesterday (#35) 1-7-2013
+		* Set standard agenda view to today +6days (#30) 1-7-2013
 
 	2.3.0
 		* Deployed for 100T, 110K, 120G and 130B 27-5-2013

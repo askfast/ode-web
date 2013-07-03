@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.4.0 (Snapshot)',
+    version:  '2.3.2',
     lang:     'nl',
 
     fullscreen: true,
@@ -83,7 +83,7 @@ angular.module('WebPaige')
       date:         'dd-MM-yyyy',
       time:         'HH:mm',
       datetime:     'dd-MM-yyyy HH:mm',
-      datetimefull: 'dd-MM-yyyy HH:mm'
+      datetimefull: 'dd-MM-yyyy HH:mm:ss'
     },
 
     roles: profile.roles,
