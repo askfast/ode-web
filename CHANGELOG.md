@@ -10,8 +10,6 @@
 
 
 ## Versions
-	
-	2.3.3
 
 	2.3.2
 		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
