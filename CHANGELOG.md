@@ -11,6 +11,9 @@
 
 ## Versions
 
+	2.3.2
+		* 
+
 	2.3.1
 		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
 		* Performance issues: Grouped calls for member timelines (#25) 28-6-2013
