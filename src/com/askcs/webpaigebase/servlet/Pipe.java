@@ -86,6 +86,7 @@ public class Pipe extends javax.servlet.http.HttpServlet
 			//return it 
 			res.setContentType( connection.getContentType() );
 			res.setStatus( responseCode );
+			res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 			
 			if( responseCode != 200 )
 			{

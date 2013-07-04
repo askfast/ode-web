@@ -435,6 +435,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
+	      	/**
+	      	 * If group is on
+	      	 */
 	        if (options.layouts.group)
 	        {
 	          var groupParams = {
