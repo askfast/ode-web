@@ -662,7 +662,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.2',
+    version:  '2.3.1',
     lang:     'nl',
 
     fullscreen: true,
@@ -4610,6 +4610,7 @@ angular.module('WebPaige.Services.Session', ['ngResource'])
         $rootScope.session = session;
 
         $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
+        $http.defaults.cache = false;
 
         return session;
       },
@@ -8613,24 +8614,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    	 * Broadcast for slot initials
 	    	 */
 	    	$rootScope.$broadcast('slotInitials');
-
-	      // $scope.slot = {};
-
-	      // $scope.slot = {
-	      //   start: {
-	      //     date: new Date().toString($rootScope.config.formats.date),
-	      //     time: new Date().toString($rootScope.config.formats.time),
-	      //     datetime: new Date().toISOString()
-	      //   },
-	      //   end: {
-	      //     date: new Date().toString($rootScope.config.formats.date),
-	      //     time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	      //     datetime: new Date().toISOString()
-	      //   },
-	      //   state:      '',
-	      //   recursive:  false,
-	      //   id:         ''
-	      // };
 
 	      $scope.resetViews();
 
