@@ -246,6 +246,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        };
 
 		        $rootScope.statusBar.off();
+
+		        if ($scope.timeline.config.wishes) getWishes();
 		      });
 		    }
 	      else
@@ -569,13 +571,46 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.groupWishes = function ()
 	  {
-	    $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
+	    if ($scope.timeline.config.wishes)
+	    {
+	    	$scope.timeline.config.wishes = false;
 
-	    $scope.timeliner.render({
-	      start:  $scope.timeline.range.start,
-	      end:    $scope.timeline.range.end
-	    });
+	  		delete $scope.data.aggs.wishes;
+
+	  		$scope.timeliner.render({
+	        start:  	$scope.timeline.range.start,
+	        end:    	$scope.timeline.range.end
+		    }, true);
+	    }
+	    else
+	    {
+	    	$scope.timeline.config.wishes = true;
+
+	    	getWishes();
+	    }
 	  };
+
+
+	  function getWishes ()
+	  {
+    	$rootScope.statusBar.display('Getting wishes..');
+
+	    Slots.wishes({
+	    	id:  			$scope.timeline.current.group,
+        start:  	$scope.data.periods.start / 1000,
+        end:    	$scope.data.periods.end / 1000
+	    }).then(function (wishes)
+	  	{
+	  		$rootScope.statusBar.off();
+
+	  		$scope.data.aggs.wishes = wishes;
+
+	  		$scope.timeliner.render({
+	        start:  	$scope.timeline.range.start,
+	        end:    	$scope.timeline.range.end
+		    }, true);
+	  	});
+	  }
 	  
 
 	  /**
