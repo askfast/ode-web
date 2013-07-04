@@ -53,7 +53,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
-      // group:    groups[0].uuid,
       division: 'all'
     };
 

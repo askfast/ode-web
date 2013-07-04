@@ -8444,7 +8444,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
-      // group:    groups[0].uuid,
       division: 'all'
     };
 
@@ -9086,8 +9085,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        end:          values.end,
 	        content: {
 	          recursive:  content.recursive,
-	          state:      content.state,
-	          id:         content.id
+	          state:      content.state
+	          // ,
+	          // id:         content.id
 	        }
 	      };
 
@@ -9113,21 +9113,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      	{
 			      switch (content.type)
 			      {
-			        case 'slot':
-			          $scope.views.slot.edit = true;
-			        break;
-
-			        case 'group':
-			          $scope.views.group = true;
-			        break;
-
-			        case 'wish':
-			          $scope.views.wish = true;
-			        break;
-
-			        case 'member':
-			          $scope.views.member = true;
-			        break;
+			        case 'slot': 		$scope.views.slot.edit 	= true; 	break;
+			        case 'group': 	$scope.views.group 			= true; 	break;
+			        case 'wish': 		$scope.views.wish 			= true; 	break;
+			        case 'member': 	$scope.views.member 		= true; 	break;
 			      };
 	      	};
 
@@ -9310,7 +9299,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	{
 	  		var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
-		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
+		    // if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
 		    $scope.$apply(function ()
 		    {
