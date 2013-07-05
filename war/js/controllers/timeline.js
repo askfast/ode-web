@@ -408,9 +408,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  {
 	    var selection;
 
-
-
-
 	    // if ($scope.mode == 'edit')
 	    // {
 	    // 	console.log('in edit mode');
@@ -420,15 +417,25 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    // 	console.log('not in editing mode');
 	    // }
 
-
-
-
 	    /**
 	     * TODO
 	     * 
 	     * Not working!!
 	     */
-	    $scope.timeliner.cancelAdd();
+	    // $scope.self.timeline.cancelAdd();
+
+	    if ($scope.timeliner.isAdded() > 0)
+	    {
+	    	console.log('there is one newly added slot');
+
+	      // $scope.self.timeline.prototype.cancelAdd();
+
+	      // links.Timeline.prototype.cancelAdd();
+
+	      // $scope.self.timeline.applyAdd = false;
+
+	      // $scope.resetInlineForms();
+	    }
 
 	    if (selection = $scope.self.timeline.getSelection()[0])
 	    {
@@ -786,11 +793,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      };
     	});
 
-
-			
-
 			// console.log('content ->', options.content);
-
 
 			if ($scope.mode == 'edit')
 			{
@@ -847,15 +850,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    };
 	    }
 
-	    var now = Date.now().getTime();
-
-	    if (options.start <= now && options.content.recursive == false)
+	    var isChangeAllowed = function (old, curr)
 	    {
-	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
+	    	var now = Date.now().getTime();
 
-	      $scope.timeliner.refresh();
+	    	if (old == curr) return true;
+
+	    	if (old < now) return false;
+
+	    	if (curr < now) return false;
+	    	
+	    	return true;
 	    }
-	    else
+
+	    if (options.content.recursive == true || 
+		    	(isChangeAllowed(new Date($scope.original.start).getTime(), options.start) && 
+		    	isChangeAllowed(new Date($scope.original.end).getTime(), options.end)))
 	    {
 	      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
@@ -880,7 +890,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          $rootScope.planboardSync.start();
 	        }
 	      );
-	    };
+	    }
+	    else
+	    {
+	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
+
+	      $scope.timeliner.refresh();
+	    }
+
 	  };
 
 
@@ -1037,7 +1054,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			clear: function ()
 			{
-				console.log('planboard sync STOPPED');
+				// console.log('planboard sync STOPPED');
 
 				// if ($window.planboardSync)
 				// {
