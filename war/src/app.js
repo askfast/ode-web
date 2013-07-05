@@ -668,7 +668,7 @@ angular.module('WebPaige')
     fullscreen: true,
 
     // REMOVE
-    demo_users: true,
+    demo_users: false,
 
     profile: {
       meta:   profile.meta,
@@ -9323,7 +9323,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	{
 	  		var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
-		    // if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
+		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
 		    $scope.$apply(function ()
 		    {
@@ -9458,18 +9458,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			// console.log('content ->', options.content);
 
 
-			// if ($scope.mode == 'edit')
-			// {
-			// 	if (options.content.id != $scope.slotid)
-			// 	{
-			// 		$scope.self.timeline.cancelChange();
-			// 	}
-			// }
-			// else
-			// {
-			// 	$scope.mode = 'edit';
-			// 	$scope.slotid = options.content.id;
-			// }
+			if ($scope.mode == 'edit')
+			{
+				if (options.content.id != $scope.slotid)
+				{
+					$scope.self.timeline.cancelChange();
+				}
+			}
+			else
+			{
+				$scope.mode = 'edit';
+				$scope.slotid = options.content.id;
+			}
 
 	  }
 
