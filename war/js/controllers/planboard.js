@@ -265,5 +265,12 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
 
+
+
+	  $scope.modifySlot = function (slot)
+	  {
+	  	console.log('changing state ->', slot);
+	  }
+
 	}
 ]);

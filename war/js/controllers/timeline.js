@@ -87,7 +87,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					end:    new Date(range.end).toString()
 				};
 			}
-
 		});
 
 	  /**
@@ -409,6 +408,21 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  {
 	    var selection;
 
+
+
+
+	    // if ($scope.mode == 'edit')
+	    // {
+	    // 	console.log('in edit mode');
+	    // }
+	    // else
+	    // {
+	    // 	console.log('not in editing mode');
+	    // }
+
+
+
+
 	    /**
 	     * TODO
 	     * 
@@ -581,6 +595,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  };
 
 
+	  /**
+	   * Get wishes
+	   */
 	  function getWishes ()
 	  {
     	$rootScope.statusBar.display('Getting wishes..');
@@ -768,6 +785,26 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        id:         options.content.id
 	      };
     	});
+
+
+			
+
+			// console.log('content ->', options.content);
+
+
+			// if ($scope.mode == 'edit')
+			// {
+			// 	if (options.content.id != $scope.slotid)
+			// 	{
+			// 		$scope.self.timeline.cancelChange();
+			// 	}
+			// }
+			// else
+			// {
+			// 	$scope.mode = 'edit';
+			// 	$scope.slotid = options.content.id;
+			// }
+
 	  }
 
 
@@ -875,9 +912,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      }
 	      else
 	      {
-	      	console.log('failed');
-
-	        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+	      	$rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
 	        Slots.remove($scope.original, $scope.timeline.user.id)
 	        .then(
@@ -972,6 +1007,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
+					console.log('planboard sync started..');
+
 					/**
 					 * Update planboard only in planboard is selected
 					 */
@@ -1000,6 +1037,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			clear: function ()
 			{
+				console.log('planboard sync STOPPED');
+
+				// if ($window.planboardSync)
+				// {
+				// 	console.log('it exists', $window);
+				// }
+				// else
+				// {
+				// 	console.log('NOT existing !');
+				// }
+
 				$window.clearInterval($window.planboardSync);
 			}
 	  }

@@ -18,7 +18,7 @@ angular.module('WebPaige')
     fullscreen: true,
 
     // REMOVE
-    demo_users: false,
+    demo_users: true,
 
     profile: {
       meta:   profile.meta,
