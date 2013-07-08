@@ -43,7 +43,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.current = {
       layouts: {
         user:     true,
-        group:    false,
+        group:    true,
         members:  false
       },
       /**
@@ -267,6 +267,11 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 
+	  /**
+	   * DEPRECIATED
+	   * 
+	   * Not used probably?
+	   */
 	  $scope.modifySlot = function (slot)
 	  {
 	  	console.log('changing state ->', slot);

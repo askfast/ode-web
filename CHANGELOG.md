@@ -11,6 +11,13 @@
 
 ## Versions
 
+	2.3.2
+		* Deployed for 100T, 110K, 120G and 130B 8-7-2013
+		* Applying alphabetical sorting on receivers list when composing a message 8-7-2013
+		* Internationalization updates with a focus on the Dutch language 8-7-2013
+		* Major performance improvement when adding, modifying or deleting new timeslots (back-end improvement) 8-7-2013
+		* Addressed a bug in the functionality of changing the availability of another team member 8-7-2013
+
 	2.3.1
 		* Deployed for 100T, 110K, 120G and 130B 3-7-2013
 		* Hotfix for bug in changing view (e.g. jump back to week-view) after mutating planboard (#26/#3) 3-7-2013

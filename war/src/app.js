@@ -666,7 +666,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.1',
+    version:  '2.3.2',
     lang:     'nl',
 
     fullscreen: true,
@@ -896,7 +896,7 @@ angular.module('WebPaige')
                       month: Dater.current.month(),
                       layouts: {
                         user:     true,
-                        group:    false,
+                        group:    true,
                         members:  false
                       }
                     });
@@ -6840,10 +6840,20 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		{
 			if (dates)
 			{
+				var cFirst = function (str)
+				{
+				  return str.charAt(0).toUpperCase() + str.substr(1);
+				}
+
 				var dates = {
-					start: 	new Date(dates.start).toString('dddd, MMMM d'),
-					end: 		new Date(dates.end).toString('dddd, MMMM d')
+					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+					end: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
 				};
+
+				// var dates = {
+				// 	start: 	new Date(dates.start).toString('dddd d MMMM'),
+				// 	end: 		new Date(dates.end).toString('dddd d MMMM')
+				// };
 
 				return 	dates.start + 
 								' / ' + 
@@ -6934,7 +6944,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 		return function (timeline)
 		{
-			if (timeline) return 'Week number: ' + timeline.current.week;
+			if (timeline) return 'Weeknummer: ' + timeline.current.week;
 		};
 	}
 ])
@@ -8495,7 +8505,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.current = {
       layouts: {
         user:     true,
-        group:    false,
+        group:    true,
         members:  false
       },
       /**
@@ -8719,6 +8729,11 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 
+	  /**
+	   * DEPRECIATED
+	   * 
+	   * Not used probably?
+	   */
 	  $scope.modifySlot = function (slot)
 	  {
 	  	console.log('changing state ->', slot);
@@ -9331,7 +9346,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display('Getting wishes..');
+    	$rootScope.statusBar.display('Groep behoefte getal aan het ophalen ...');
 
 	    Slots.wishes({
 	    	id:  			$scope.timeline.current.group,

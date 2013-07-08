@@ -604,7 +604,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display('Getting wishes..');
+    	$rootScope.statusBar.display('Groep behoefte getal aan het ophalen ...');
 
 	    Slots.wishes({
 	    	id:  			$scope.timeline.current.group,

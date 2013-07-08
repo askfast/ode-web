@@ -130,10 +130,20 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		{
 			if (dates)
 			{
+				var cFirst = function (str)
+				{
+				  return str.charAt(0).toUpperCase() + str.substr(1);
+				}
+
 				var dates = {
-					start: 	new Date(dates.start).toString('dddd, MMMM d'),
-					end: 		new Date(dates.end).toString('dddd, MMMM d')
+					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+					end: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
 				};
+
+				// var dates = {
+				// 	start: 	new Date(dates.start).toString('dddd d MMMM'),
+				// 	end: 		new Date(dates.end).toString('dddd d MMMM')
+				// };
 
 				return 	dates.start + 
 								' / ' + 
@@ -224,7 +234,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 		return function (timeline)
 		{
-			if (timeline) return 'Week number: ' + timeline.current.week;
+			if (timeline) return 'Weeknummer: ' + timeline.current.week;
 		};
 	}
 ])
