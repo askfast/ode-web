@@ -77,8 +77,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			}
 			/**
 			 * User timeline
+			 * Allow only if it is not user
 			 */
-			else
+			else if ($route.current.params.userId != $rootScope.app.resources.uuid)
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 
@@ -427,13 +428,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    if ($scope.timeliner.isAdded() > 0)
 	    {
 	    	console.log('there is one newly added slot');
-
 	      // $scope.self.timeline.prototype.cancelAdd();
-
 	      // links.Timeline.prototype.cancelAdd();
-
 	      // $scope.self.timeline.applyAdd = false;
-
 	      // $scope.resetInlineForms();
 	    }
 
@@ -795,18 +792,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 			// console.log('content ->', options.content);
 
-			if ($scope.mode == 'edit')
-			{
-				if (options.content.id != $scope.slotid)
-				{
-					$scope.self.timeline.cancelChange();
-				}
-			}
-			else
-			{
-				$scope.mode = 'edit';
-				$scope.slotid = options.content.id;
-			}
+			// if ($scope.mode == 'edit')
+			// {
+			// 	if (options.content.id != $scope.slotid)
+			// 	{
+			// 		$scope.self.timeline.cancelChange();
+			// 	}
+			// }
+			// else
+			// {
+			// 	$scope.mode = 'edit';
+			// 	$scope.slotid = options.content.id;
+			// }
 
 	  }
 
@@ -859,7 +856,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	if (old < now) return false;
 
 	    	if (curr < now) return false;
-	    	
+
 	    	return true;
 	    }
 

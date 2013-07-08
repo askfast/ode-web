@@ -249,7 +249,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Dashboard.p2000().
 			then(function (result)
 			{
-				console.log('result ->', result);
+				// console.log('result ->', result);
 
 				$scope.loading.alerts = false;
 
@@ -287,14 +287,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					console.log('syncing started for p2000 alerts..');
+					// console.log('syncing started for p2000 alerts..');
 
 					/**
 					 * Update planboard only in planboard is selected
 					 */
 					if ($location.path() == '/dashboard')
 					{
-						console.log('yes it is the dashboard');
+						// console.log('yes it is the dashboard');
 
 						$scope.$apply()
 						{
@@ -309,7 +309,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			 */
 			clear: function ()
 			{
-				console.log('syncing for p2000 alerts stopped..');
+				// console.log('syncing for p2000 alerts stopped..');
 
 				$window.clearInterval($window.alarmSync);
 			}

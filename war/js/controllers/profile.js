@@ -26,7 +26,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 		$scope.self = this;
 
 
-		console.warn('data ->', data);
+		// console.warn('data ->', data);
 
 
 	  /**

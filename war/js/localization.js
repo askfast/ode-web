@@ -11,6 +11,7 @@ var ui = {
         label: 'English'
       },
       login: {
+        setting_up_app: 'Setting up the application...',
         header: "Please sign in",
         placeholder_username: "Please enter your username",
         placeholder_password: "Your password",
@@ -38,6 +39,7 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
+        groupOverviews: 'Loading and analyzing group overviews...',
         thisWeek: 'This Week',
         welcome: 'Welcome',
         newMessage: 'New Messages',
@@ -292,6 +294,7 @@ var ui = {
         label: 'Nederlands'
       },
       login: {
+        setting_up_app: 'Applicatie laden...',
         header: "Inloggen",
         placeholder_username: "Vul uw gebruikersnaam in",
         placeholder_password: "Vul uw wachtwoord in",
@@ -319,6 +322,7 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
+        groupOverviews: 'Laden en analyseren groepsoverzichten...',
         thisWeek: 'Deze week',
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',

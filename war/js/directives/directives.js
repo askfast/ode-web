@@ -96,11 +96,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
           // startDate: startDate,
           // endDate: endDate,
           ranges: {
-            'Today':        ['today',     'tomorrow'],
-            'Tomorrow':     ['tomorrow',  new Date.today().addDays(2)],
-            'Yesterday':    ['yesterday', 'today'],
-            'Next 3 Days':  ['today',     new Date.create().addDays(3)],
-            'Next 7 Days':  ['today',     new Date.create().addDays(7)]
+            'Vandaag':          ['today',     'tomorrow'],
+            'Morgen':           ['tomorrow',  new Date.today().addDays(2)],
+            'Gisteren':         ['yesterday', 'today'],
+            'Komende 3 dagen':  ['today',     new Date.create().addDays(3)],
+            'Komende 7 dagen':  ['today',     new Date.create().addDays(7)]
           }
         },
         function (start, end)

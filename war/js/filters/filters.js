@@ -48,39 +48,61 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
 				dates.start = new Date(dates.end).addDays(-1);
 
+			var cFirst = function (str)
+			{
+			    return str.charAt(0).toUpperCase() + str.substr(1);
+			}
+
+			var ndates = {
+						start: {
+							real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+							month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+							day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
+						},
+						end: {
+							real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+							month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+							day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
+						}
+					};
+
 			var dates = {
 						start: {
-							real: 	new Date(dates.start).toString('dddd, MMMM d'),
+							real: 	new Date(dates.start).toString('dddd d MMMM'),
 							month: 	new Date(dates.start).toString('MMMM'),
 							day: 		new Date(dates.start).toString('d')
 						},
 						end: {
-							real: 	new Date(dates.end).toString('dddd, MMMM d'),
+							real: 	new Date(dates.end).toString('dddd d MMMM'),
 							month: 	new Date(dates.end).toString('MMMM'),
 							day: 		new Date(dates.end).toString('d')
 						}
 					},
 					monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && dates.start.month == dates.end.month)
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && 
+					dates.start.month == dates.end.month)
 			{
-				return 	dates.start.real + 
-								', ' + 
-								Dater.getThisYear();
+				return 	ndates.start.real;
+								//  + 
+								// ', ' + 
+								// Dater.getThisYear();
 			}
-			else if(dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
+			else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
 			{
-				return 	dates.start.month + 
-								', ' + 
-								Dater.getThisYear();
+				return 	ndates.start.month;
+								//  + 
+								// ', ' + 
+								// Dater.getThisYear();
 			}
 			else
 			{
-				return 	dates.start.real + 
+				return 	ndates.start.real + 
 								' / ' + 
-								dates.end.real + 
-								', ' + 
-								Dater.getThisYear();
+								ndates.end.real;
+								//  + 
+								// ', ' + 
+								// Dater.getThisYear();
 			};
 
 		}
@@ -146,15 +168,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			if (diff > (2419200000 + 259200000))
 			{
-				return 'Total selected days: ' + Math.round(diff / 86400000);
+				return 'Totaal aantal geselecteerde dagen: ' + Math.round(diff / 86400000);
 			}
 			else
 			{
 				if (timeline.scope.day)
 				{
 					var hours = {
-						start: new Date(timeline.range.start).toString('HH:mm'),
-						end: new Date(timeline.range.end).toString('HH:mm')
+						start: 	new Date(timeline.range.start).toString('HH:mm'),
+						end: 		new Date(timeline.range.end).toString('HH:mm')
 					};
 
 					/**
@@ -162,21 +184,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 					 */
 					if (hours.end == '00:00') hours.end = '24:00';
 
-					return 	'Time: ' + 
+					return 	'Tijd: ' + 
 									hours.start + 
 									' / ' + 
 									hours.end;
 				}
 				else if (timeline.scope.week)
 				{
-					return 	'Week number: ' + 
+					return 	'Weeknummer: ' + 
 									timeline.current.week;
 				}
 				else if (timeline.scope.month)
 				{
-					return 	'Month number: ' + 
+					return 	'Maand: ' + 
 									timeline.current.month + 
-									', Total days: ' + 
+									', Totaal aantal dagen: ' + 
 									periods.months[timeline.current.month].totalDays;
 				};
 			};

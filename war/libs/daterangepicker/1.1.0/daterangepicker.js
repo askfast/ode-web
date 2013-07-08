@@ -24,19 +24,19 @@
         this.dateLimit = false;
         this.opens = 'right';
         this.cb = function () { };
-        this.format = 'MM/dd/yyyy';
-        this.separator = ' - ';
+        this.format = 'dd-MM-yyyy';
+        this.separator = ' / ';
         this.showWeekNumbers = false;
         this.buttonClasses = ['btn-success'];
         this.applyClass = 'btn btn-small btn-success';
         this.clearClass = 'btn btn-small';
         this.locale = {
-            applyLabel: 'Apply',
-            clearLabel:"Clear",
-            fromLabel: 'From',
-            toLabel: 'To',
+            applyLabel: 'Toepassen',
+            clearLabel:"Annuleren",
+            fromLabel: 'van',
+            toLabel: 'tot',
             weekLabel: 'W',
-            customRangeLabel: 'Custom Range',
+            customRangeLabel: 'Aangepaste periode',
             daysOfWeek: Date.CultureInfo.shortestDayNames,
             monthNames: Date.CultureInfo.monthNames,
             firstDay: 0

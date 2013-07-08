@@ -75,7 +75,7 @@ angular.module('WebPaige')
                       month: Dater.current.month(),
                       layouts: {
                         user:     true,
-                        group:    true,
+                        group:    false,
                         members:  false
                       }
                     });

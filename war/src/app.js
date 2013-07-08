@@ -11,6 +11,7 @@ var ui = {
         label: 'English'
       },
       login: {
+        setting_up_app: 'Setting up the application...',
         header: "Please sign in",
         placeholder_username: "Please enter your username",
         placeholder_password: "Your password",
@@ -38,6 +39,7 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
+        groupOverviews: 'Loading and analyzing group overviews...',
         thisWeek: 'This Week',
         welcome: 'Welcome',
         newMessage: 'New Messages',
@@ -292,6 +294,7 @@ var ui = {
         label: 'Nederlands'
       },
       login: {
+        setting_up_app: 'Applicatie laden...',
         header: "Inloggen",
         placeholder_username: "Vul uw gebruikersnaam in",
         placeholder_password: "Vul uw wachtwoord in",
@@ -319,6 +322,7 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
+        groupOverviews: 'Laden en analyseren groepsoverzichten...',
         thisWeek: 'Deze week',
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',
@@ -892,7 +896,7 @@ angular.module('WebPaige')
                       month: Dater.current.month(),
                       layouts: {
                         user:     true,
-                        group:    true,
+                        group:    false,
                         members:  false
                       }
                     });
@@ -1155,7 +1159,7 @@ angular.module('WebPaige')
       {
         $rootScope.loading = {
           status: false,
-          message: 'Loading..'
+          message: 'Aan het laden..'
         };
 
         $rootScope.app.preloader = {
@@ -1365,7 +1369,7 @@ angular.module('WebPaige')
 
       $rootScope.loadingBig = true;
 
-      $rootScope.statusBar.display('Loading..');
+      $rootScope.statusBar.display('Aan het laden...');
 
       $('div[ng-view]').hide();
     });
@@ -4313,11 +4317,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
           // startDate: startDate,
           // endDate: endDate,
           ranges: {
-            'Today':        ['today',     'tomorrow'],
-            'Tomorrow':     ['tomorrow',  new Date.today().addDays(2)],
-            'Yesterday':    ['yesterday', 'today'],
-            'Next 3 Days':  ['today',     new Date.create().addDays(3)],
-            'Next 7 Days':  ['today',     new Date.create().addDays(7)]
+            'Vandaag':          ['today',     'tomorrow'],
+            'Morgen':           ['tomorrow',  new Date.today().addDays(2)],
+            'Gisteren':         ['yesterday', 'today'],
+            'Komende 3 dagen':  ['today',     new Date.create().addDays(3)],
+            'Komende 7 dagen':  ['today',     new Date.create().addDays(7)]
           }
         },
         function (start, end)
@@ -4871,6 +4875,41 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
       getPeriods: function ()
       {
         return angular.fromJson(Storage.get('periods'));
+      },
+
+      translateToDutch: function (date)
+      {
+        var conversions = {
+          // days
+          Monday:     'maandag',
+          tuesday:    'dinsdag',
+          wednesday:  'woensdag',
+          thursday:   'donderdag',
+          friday:     'vrijdag',
+          saturday:   'zaterdag',
+          sunday:     'zondag',
+          // months
+          january:    'januari',
+          february:   'februari',
+          march:      'maart',
+          april:      'april',
+          may:        'mei',
+          june:       'juni',
+          july:       'juli',
+          august:     'augustus',
+          september:  'september',
+          october:    'oktober',
+          november:   'november',
+          december:   'december'
+        };
+
+        if (date)
+        {
+          angular.forEach(conversions, function (conversion, index) { date = date.replace(new RegExp(index, 'gi'), conversion) });
+
+          return date;
+        }
+
       }
     }
   }
@@ -6719,39 +6758,61 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
 				dates.start = new Date(dates.end).addDays(-1);
 
+			var cFirst = function (str)
+			{
+			    return str.charAt(0).toUpperCase() + str.substr(1);
+			}
+
+			var ndates = {
+						start: {
+							real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+							month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+							day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
+						},
+						end: {
+							real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+							month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+							day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
+						}
+					};
+
 			var dates = {
 						start: {
-							real: 	new Date(dates.start).toString('dddd, MMMM d'),
+							real: 	new Date(dates.start).toString('dddd d MMMM'),
 							month: 	new Date(dates.start).toString('MMMM'),
 							day: 		new Date(dates.start).toString('d')
 						},
 						end: {
-							real: 	new Date(dates.end).toString('dddd, MMMM d'),
+							real: 	new Date(dates.end).toString('dddd d MMMM'),
 							month: 	new Date(dates.end).toString('MMMM'),
 							day: 		new Date(dates.end).toString('d')
 						}
 					},
 					monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && dates.start.month == dates.end.month)
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && 
+					dates.start.month == dates.end.month)
 			{
-				return 	dates.start.real + 
-								', ' + 
-								Dater.getThisYear();
+				return 	ndates.start.real;
+								//  + 
+								// ', ' + 
+								// Dater.getThisYear();
 			}
-			else if(dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
+			else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
 			{
-				return 	dates.start.month + 
-								', ' + 
-								Dater.getThisYear();
+				return 	ndates.start.month;
+								//  + 
+								// ', ' + 
+								// Dater.getThisYear();
 			}
 			else
 			{
-				return 	dates.start.real + 
+				return 	ndates.start.real + 
 								' / ' + 
-								dates.end.real + 
-								', ' + 
-								Dater.getThisYear();
+								ndates.end.real;
+								//  + 
+								// ', ' + 
+								// Dater.getThisYear();
 			};
 
 		}
@@ -6817,15 +6878,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			if (diff > (2419200000 + 259200000))
 			{
-				return 'Total selected days: ' + Math.round(diff / 86400000);
+				return 'Totaal aantal geselecteerde dagen: ' + Math.round(diff / 86400000);
 			}
 			else
 			{
 				if (timeline.scope.day)
 				{
 					var hours = {
-						start: new Date(timeline.range.start).toString('HH:mm'),
-						end: new Date(timeline.range.end).toString('HH:mm')
+						start: 	new Date(timeline.range.start).toString('HH:mm'),
+						end: 		new Date(timeline.range.end).toString('HH:mm')
 					};
 
 					/**
@@ -6833,21 +6894,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 					 */
 					if (hours.end == '00:00') hours.end = '24:00';
 
-					return 	'Time: ' + 
+					return 	'Tijd: ' + 
 									hours.start + 
 									' / ' + 
 									hours.end;
 				}
 				else if (timeline.scope.week)
 				{
-					return 	'Week number: ' + 
+					return 	'Weeknummer: ' + 
 									timeline.current.week;
 				}
 				else if (timeline.scope.month)
 				{
-					return 	'Month number: ' + 
+					return 	'Maand: ' + 
 									timeline.current.month + 
-									', Total days: ' + 
+									', Totaal aantal dagen: ' + 
 									periods.months[timeline.current.month].totalDays;
 				};
 			};
@@ -8304,7 +8365,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Dashboard.p2000().
 			then(function (result)
 			{
-				console.log('result ->', result);
+				// console.log('result ->', result);
 
 				$scope.loading.alerts = false;
 
@@ -8342,14 +8403,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					console.log('syncing started for p2000 alerts..');
+					// console.log('syncing started for p2000 alerts..');
 
 					/**
 					 * Update planboard only in planboard is selected
 					 */
 					if ($location.path() == '/dashboard')
 					{
-						console.log('yes it is the dashboard');
+						// console.log('yes it is the dashboard');
 
 						$scope.$apply()
 						{
@@ -8364,7 +8425,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			 */
 			clear: function ()
 			{
-				console.log('syncing for p2000 alerts stopped..');
+				// console.log('syncing for p2000 alerts stopped..');
 
 				$window.clearInterval($window.alarmSync);
 			}
@@ -8434,7 +8495,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.current = {
       layouts: {
         user:     true,
-        group:    true,
+        group:    false,
         members:  false
       },
       /**
@@ -8743,8 +8804,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			}
 			/**
 			 * User timeline
+			 * Allow only if it is not user
 			 */
-			else
+			else if ($route.current.params.userId != $rootScope.app.resources.uuid)
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 
@@ -9093,13 +9155,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    if ($scope.timeliner.isAdded() > 0)
 	    {
 	    	console.log('there is one newly added slot');
-
 	      // $scope.self.timeline.prototype.cancelAdd();
-
 	      // links.Timeline.prototype.cancelAdd();
-
 	      // $scope.self.timeline.applyAdd = false;
-
 	      // $scope.resetInlineForms();
 	    }
 
@@ -9461,18 +9519,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 			// console.log('content ->', options.content);
 
-			if ($scope.mode == 'edit')
-			{
-				if (options.content.id != $scope.slotid)
-				{
-					$scope.self.timeline.cancelChange();
-				}
-			}
-			else
-			{
-				$scope.mode = 'edit';
-				$scope.slotid = options.content.id;
-			}
+			// if ($scope.mode == 'edit')
+			// {
+			// 	if (options.content.id != $scope.slotid)
+			// 	{
+			// 		$scope.self.timeline.cancelChange();
+			// 	}
+			// }
+			// else
+			// {
+			// 	$scope.mode = 'edit';
+			// 	$scope.slotid = options.content.id;
+			// }
 
 	  }
 
@@ -9525,7 +9583,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	if (old < now) return false;
 
 	    	if (curr < now) return false;
-	    	
+
 	    	return true;
 	    }
 
@@ -11961,7 +12019,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 		$scope.self = this;
 
 
-		console.warn('data ->', data);
+		// console.warn('data ->', data);
 
 
 	  /**
