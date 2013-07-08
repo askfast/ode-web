@@ -11,6 +11,8 @@
 
 ## Versions
 
+	2.3.3
+
 	2.3.2
 		* Deployed for 100T, 110K, 120G and 130B 8-7-2013
 		* Applying alphabetical sorting on receivers list when composing a message 8-7-2013
