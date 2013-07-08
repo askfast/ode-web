@@ -114,7 +114,7 @@ angular.module('WebPaige')
       {
         $rootScope.loading = {
           status: false,
-          message: 'Loading..'
+          message: 'Aan het laden..'
         };
 
         $rootScope.app.preloader = {
@@ -324,7 +324,7 @@ angular.module('WebPaige')
 
       $rootScope.loadingBig = true;
 
-      $rootScope.statusBar.display('Loading..');
+      $rootScope.statusBar.display('Aan het laden...');
 
       $('div[ng-view]').hide();
     });

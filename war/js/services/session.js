@@ -78,6 +78,9 @@ angular.module('WebPaige.Services.Session', ['ngResource'])
 
         $http.defaults.headers.common['X-SESSION_ID'] = $rootScope.session.id;
 
+        // $.ajaxSetup({cache: false});
+        // $http.defaults.cache = false;
+
         return session;
       },
 

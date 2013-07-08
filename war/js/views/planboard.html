@@ -105,7 +105,6 @@
 
 
 
-
   <!-- slot controls -->
   <div class="row-fluid" ng-show="views.slot.add || views.slot.edit || views.group || views.wish || views.member">
 
@@ -249,6 +248,7 @@
         <label>{{ui.planboard.state}}</label>
         <select ng-model="slot.state" 
                 ng-options="option as value for (option, value) in states" 
+                ng-change="modifySlot(slot)" 
                 ng-show="views.slot.add || views.slot.edit">
           <option value="">{{ui.planboard.selectAState}}</option>
         </select>

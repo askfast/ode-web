@@ -34,7 +34,7 @@ var profile = {
   divisions: [
     {
       id: 'all',
-      label: 'All divisions'
+      label: 'Beide stations'
     }, 
     {
       id: 'knrm.StateGroup.BeschikbaarNoord',

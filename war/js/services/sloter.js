@@ -102,11 +102,11 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                                             _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
                 content:  _this.secret(angular.toJson({
                   type:   'slot',
-                  id:     slot.id, 
+                  id:     index, // slot.id, 
                   recursive: slot.recursive, 
                   state:  slot.text 
                   })),
-                className:  config.states[slot.text].className,
+                className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });
             };
@@ -145,11 +145,11 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                                             _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
                 content: _this.secret(angular.toJson({
                   type: 'slot',
-                  id:   slot.id, 
+                  id:   index, // slot.id, 
                   recursive:  slot.recursive, 
                   state:      slot.text 
                   })),
-                className:  config.states[slot.text].className,
+                className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });  
             };
@@ -435,14 +435,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       {
         var _this   = this,
             members = this.get.members();
-
-
-        
         
         // console.log('members inside sloter ->', data.members);
-
-
-
 
         angular.forEach(data.members, function (member, index)
         {
@@ -502,9 +496,6 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             stat.state = 'bar-' + state[0];
           });
         });
-
-
-
 
         return timedata;
       },

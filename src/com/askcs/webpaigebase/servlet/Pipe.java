@@ -49,6 +49,7 @@ public class Pipe extends javax.servlet.http.HttpServlet
 		try{
 			url = new java.net.URL( destination_host + path );
 			connection = (java.net.HttpURLConnection) url.openConnection();
+			connection.setConnectTimeout( 60*1000 ); // might not work on GAE?
 			connection.setRequestMethod( req.getMethod() );
 
 			//TODO: copy ALL headers?
@@ -85,6 +86,7 @@ public class Pipe extends javax.servlet.http.HttpServlet
 			//return it 
 			res.setContentType( connection.getContentType() );
 			res.setStatus( responseCode );
+			res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 			
 			if( responseCode != 200 )
 			{

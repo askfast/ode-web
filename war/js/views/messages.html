@@ -149,7 +149,7 @@
                       style="width:530px" 
                       chosen
                       ng-model="message.receivers" 
-                      ng-options="receiver.name group by receiver.group for receiver in receviersList">
+                      ng-options="receiver.name group by receiver.group for receiver in receviersList | orderBy:'name'">
               </select>
               <!-- <p ng-repeat="receiver in message.receivers"><strong>Chosen: {{receiver.id}}</strong></p> -->
               <!-- <p ng-repeat="receiver in recipients"><strong>Recipients: {{receiver}}</strong></p> -->
@@ -457,7 +457,7 @@
 
           <span class="muted pull-right">
             <!-- <small><i>Page: {{page.inbox + 1}} of {{messages.inbox.length}}, {{(messages.inbox | filter:query.inbox).length | i18n_spec:'message.someMessage'}} </i></small> -->
-            <small><i>Pagina: {{page.inbox + 1}} of {{messages.inbox.length}}, in totaal: {{messages.inbox | countBox}} </i></small>
+            <small><i>Pagina: {{page.inbox + 1}} van {{messages.inbox.length}}, in totaal: {{messages.inbox | countBox}} </i></small>
           </span>
 
         </div>
@@ -490,7 +490,7 @@
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Filter messages.." 
+                    placeholder="Berichten filteren..." 
                     ng-model="query.outbox">
           </form>
           <!-- end filter messages -->
@@ -556,7 +556,7 @@
           <br><br>
 
           <span class="muted pull-right">
-            <small><i>Pagina: {{page.outbox + 1}} of {{messages.outbox.length}}, in totaal: {{messages.outbox | countBox}}</i></small>
+            <small><i>Pagina: {{page.outbox + 1}} van {{messages.outbox.length}}, in totaal: {{messages.outbox | countBox}}</i></small>
           </span>
 
         </div>
@@ -589,7 +589,7 @@
 
         <hr>
 
-        <p ng-hide="scheadules.length > 0">There are no notifications.</p>
+        <p ng-hide="scheadules.length > 0">Er zijn geen notificaties.</p>
         
         <!-- notifications listing -->
         <div ng-show="scheadules.length > 0">
@@ -599,16 +599,16 @@
                 <th width="60"><!-- Status --></th>
                 <th width="50"><!-- Types --></th>
                 <th>Label</th>
-                <th>Audience</th>
-                <th>Frequency</th>
+                <th>Ontvangers</th>
+                <th>Frequentie</th>
                 <th width="60"></th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="scheadule in scheadules">
                 <td>
-                  <span class="label label-success" ng-show="scheadule.active">Enabled</span>
-                  <span class="label" ng-hide="scheadule.active">Disabled</span>
+                  <span class="label label-success" ng-show="scheadule.active">Ingeschakeld</span>
+                  <span class="label" ng-hide="scheadule.active">Uitgeschakeld</span>
                 </td>
                 <td class="scheadule-icons">
                   <div><span class="entypo sms" ng-show="scheadule.sms">&#128241;</span></div>
@@ -672,7 +672,7 @@
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Filter messages.." 
+                    placeholder="Berichten filteren..." 
                     ng-model="query.trash">
           </form>
           <!-- end filter messages -->
@@ -740,7 +740,7 @@
           <br><br>
 
           <span class="muted pull-right">
-            <small><i>Pagina: {{page.trash + 1}} of {{messages.trash.length}}, in totaal: {{messages.trash | countBox}}</i></small>
+            <small><i>Pagina: {{page.trash + 1}} van {{messages.trash.length}}, in totaal: {{messages.trash | countBox}}</i></small>
           </span>
 
         </div>

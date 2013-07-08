@@ -235,6 +235,41 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
       getPeriods: function ()
       {
         return angular.fromJson(Storage.get('periods'));
+      },
+
+      translateToDutch: function (date)
+      {
+        var conversions = {
+          // days
+          Monday:     'maandag',
+          tuesday:    'dinsdag',
+          wednesday:  'woensdag',
+          thursday:   'donderdag',
+          friday:     'vrijdag',
+          saturday:   'zaterdag',
+          sunday:     'zondag',
+          // months
+          january:    'januari',
+          february:   'februari',
+          march:      'maart',
+          april:      'april',
+          may:        'mei',
+          june:       'juni',
+          july:       'juli',
+          august:     'augustus',
+          september:  'september',
+          october:    'oktober',
+          november:   'november',
+          december:   'december'
+        };
+
+        if (date)
+        {
+          angular.forEach(conversions, function (conversion, index) { date = date.replace(new RegExp(index, 'gi'), conversion) });
+
+          return date;
+        }
+
       }
     }
   }

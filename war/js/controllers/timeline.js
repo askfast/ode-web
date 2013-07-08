@@ -77,8 +77,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			}
 			/**
 			 * User timeline
+			 * Allow only if it is not user
 			 */
-			else
+			else if ($route.current.params.userId != $rootScope.app.resources.uuid)
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 
@@ -87,7 +88,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					end:    new Date(range.end).toString()
 				};
 			}
-
 		});
 
 	  /**
@@ -246,6 +246,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        };
 
 		        $rootScope.statusBar.off();
+
+		        if ($scope.timeline.config.wishes) getWishes();
 		      });
 		    }
 	      else
@@ -407,12 +409,30 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  {
 	    var selection;
 
+	    // if ($scope.mode == 'edit')
+	    // {
+	    // 	console.log('in edit mode');
+	    // }
+	    // else
+	    // {
+	    // 	console.log('not in editing mode');
+	    // }
+
 	    /**
 	     * TODO
 	     * 
 	     * Not working!!
 	     */
-	    $scope.timeliner.cancelAdd();
+	    // $scope.self.timeline.cancelAdd();
+
+	    if ($scope.timeliner.isAdded() > 0)
+	    {
+	    	console.log('there is one newly added slot');
+	      // $scope.self.timeline.prototype.cancelAdd();
+	      // links.Timeline.prototype.cancelAdd();
+	      // $scope.self.timeline.applyAdd = false;
+	      // $scope.resetInlineForms();
+	    }
 
 	    if (selection = $scope.self.timeline.getSelection()[0])
 	    {
@@ -424,8 +444,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        end:          values.end,
 	        content: {
 	          recursive:  content.recursive,
-	          state:      content.state,
-	          id:         content.id
+	          state:      content.state
+	          // ,
+	          // id:         content.id
 	        }
 	      };
 
@@ -451,21 +472,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      	{
 			      switch (content.type)
 			      {
-			        case 'slot':
-			          $scope.views.slot.edit = true;
-			        break;
-
-			        case 'group':
-			          $scope.views.group = true;
-			        break;
-
-			        case 'wish':
-			          $scope.views.wish = true;
-			        break;
-
-			        case 'member':
-			          $scope.views.member = true;
-			        break;
+			        case 'slot': 		$scope.views.slot.edit 	= true; 	break;
+			        case 'group': 	$scope.views.group 			= true; 	break;
+			        case 'wish': 		$scope.views.wish 			= true; 	break;
+			        case 'member': 	$scope.views.member 		= true; 	break;
 			      };
 	      	};
 
@@ -569,13 +579,49 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  $scope.groupWishes = function ()
 	  {
-	    $scope.timeline.config.wishes = !$scope.timeline.config.wishes;
+	    if ($scope.timeline.config.wishes)
+	    {
+	    	$scope.timeline.config.wishes = false;
 
-	    $scope.timeliner.render({
-	      start:  $scope.timeline.range.start,
-	      end:    $scope.timeline.range.end
-	    });
+	  		delete $scope.data.aggs.wishes;
+
+	  		$scope.timeliner.render({
+	        start:  	$scope.timeline.range.start,
+	        end:    	$scope.timeline.range.end
+		    }, true);
+	    }
+	    else
+	    {
+	    	$scope.timeline.config.wishes = true;
+
+	    	getWishes();
+	    }
 	  };
+
+
+	  /**
+	   * Get wishes
+	   */
+	  function getWishes ()
+	  {
+    	$rootScope.statusBar.display('Groep behoefte getal aan het ophalen ...');
+
+	    Slots.wishes({
+	    	id:  			$scope.timeline.current.group,
+        start:  	$scope.data.periods.start / 1000,
+        end:    	$scope.data.periods.end / 1000
+	    }).then(function (wishes)
+	  	{
+	  		$rootScope.statusBar.off();
+
+	  		$scope.data.aggs.wishes = wishes;
+
+	  		$scope.timeliner.render({
+	        start:  	$scope.timeline.range.start,
+	        end:    	$scope.timeline.range.end
+		    }, true);
+	  	});
+	  }
 	  
 
 	  /**
@@ -743,6 +789,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        id:         options.content.id
 	      };
     	});
+
+			// console.log('content ->', options.content);
+
+			// if ($scope.mode == 'edit')
+			// {
+			// 	if (options.content.id != $scope.slotid)
+			// 	{
+			// 		$scope.self.timeline.cancelChange();
+			// 	}
+			// }
+			// else
+			// {
+			// 	$scope.mode = 'edit';
+			// 	$scope.slotid = options.content.id;
+			// }
+
 	  }
 
 
@@ -785,15 +847,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    };
 	    }
 
-	    var now = Date.now().getTime();
-
-	    if (options.start <= now && options.content.recursive == false)
+	    var isChangeAllowed = function (old, curr)
 	    {
-	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
+	    	var now = Date.now().getTime();
 
-	      $scope.timeliner.refresh();
+	    	if (old == curr) return true;
+
+	    	if (old < now) return false;
+
+	    	if (curr < now) return false;
+
+	    	return true;
 	    }
-	    else
+
+	    if (options.content.recursive == true || 
+		    	(isChangeAllowed(new Date($scope.original.start).getTime(), options.start) && 
+		    	isChangeAllowed(new Date($scope.original.end).getTime(), options.end)))
 	    {
 	      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
@@ -818,7 +887,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          $rootScope.planboardSync.start();
 	        }
 	      );
-	    };
+	    }
+	    else
+	    {
+	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
+
+	      $scope.timeliner.refresh();
+	    }
+
 	  };
 
 
@@ -850,9 +926,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      }
 	      else
 	      {
-	      	console.log('failed');
-
-	        $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
+	      	$rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
 	        Slots.remove($scope.original, $scope.timeline.user.id)
 	        .then(
@@ -947,6 +1021,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
+					console.log('planboard sync started..');
+
 					/**
 					 * Update planboard only in planboard is selected
 					 */
@@ -975,6 +1051,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			clear: function ()
 			{
+				// console.log('planboard sync STOPPED');
+
+				// if ($window.planboardSync)
+				// {
+				// 	console.log('it exists', $window);
+				// }
+				// else
+				// {
+				// 	console.log('NOT existing !');
+				// }
+
 				$window.clearInterval($window.planboardSync);
 			}
 	  }

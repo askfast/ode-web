@@ -171,18 +171,26 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      {
 	        var stats = Stats.aggs(result);
 
-	        Slots.prototype.wishes(params)
-	        .then(function (wishes)
-	        {
-	          deferred.resolve({
-	            id:       options.id,
-	            division: options.division,
-	            wishes:   wishes,
-	            data:     result,
-	            ratios:   stats.ratios,
-	            durations: stats.durations
-	          });
-	        });
+          deferred.resolve({
+            id:       options.id,
+            division: options.division,
+            data:     result,
+            ratios:   stats.ratios,
+            durations: stats.durations
+          });
+
+	        // Slots.prototype.wishes(params)
+	        // .then(function (wishes)
+	        // {
+	        //   deferred.resolve({
+	        //     id:       options.id,
+	        //     division: options.division,
+	        //     wishes:   wishes,
+	        //     data:     result,
+	        //     ratios:   stats.ratios,
+	        //     durations: stats.durations
+	        //   });
+	        // });
 	      },
 	      function (error)
 	      {
@@ -435,6 +443,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
+	      	/**
+	      	 * If group is on
+	      	 */
 	        if (options.layouts.group)
 	        {
 	          var groupParams = {
@@ -449,6 +460,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	          Slots.prototype.aggs(groupParams)
 	          .then(function (aggs)
 	          {
+	          	/**
+	          	 * If members are on
+	          	 */
 	            if (options.layouts.members)
 	            {
 	              var members = angular.fromJson(Storage.get(options.groupId)),
@@ -466,9 +480,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						    	},
 						      function (members) 
 						      {
-						        // deferred.resolve(result);
-						        // console.log('members ->', members);
-						        
 						        var mems = [];
 
 						        angular.forEach(members, function (mdata, index)
@@ -483,8 +494,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 							          data:   mdata,
 							          stats:  Stats.member(mdata)
 							        })
-						      	})
-
+						      	});
 
 		                deferred.resolve({
 		                  user:     user,
@@ -497,14 +507,12 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 		                    end:    options.stamps.end
 		                  }
 		                });
-
 						      },
 						      function (error)
 						      {
 						        deferred.resolve({error: error});
 						      }
 						    );
-
 
 	              /**
 	               * Run the preloader
@@ -536,8 +544,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              //     }
 	              //   });
 	              // });
-
-
 	            }
 	            else
 	            {

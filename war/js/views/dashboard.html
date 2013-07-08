@@ -25,7 +25,7 @@
         </div>
         <hr>
 
-        <p ng-show="loading.pies">Loading and analyzing group overviews..</p>
+        <p ng-show="loading.pies">{{ui.dashboard.groupOverviews}}</p>
 
         <!-- pie loop -->
         <ul id="pies" ng-hide="loading.pies">
@@ -119,7 +119,7 @@
 
               <!-- <span class="remove">{{shortageHolders['shortages-' + pie.id]}}</span> -->
 
-              <div id="shortages-{{pie.id}}" 
+              <!-- <div id="shortages-{{pie.id}}" 
                     class="shortages span12" 
                     ng-show="pie.weeks.current.shortages.length > 0 || pie.weeks.next.shortages.length > 0"
                     ng-hide="shortageHolders['shortages-' + pie.id] == false">
@@ -133,7 +133,7 @@
                       <small class="muted">van</small>, 
                       <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
                       <small class="muted">tot</small>
-                      <!-- <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button> -->
+                      <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
                     </li>
                   </ul>
                 </div>
@@ -147,12 +147,11 @@
                       <small class="muted">van</small>, 
                       <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
                       <small class="muted">tot</small>
-                      <!-- <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button> -->
+                      <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
                     </li>
                   </ul>
                 </div>
-
-              </div>
+              </div> -->
 
             </footer>
 
@@ -163,11 +162,11 @@
         <hr class="lastline" ng-hide="loading.pies">
         <p ng-hide="loading.pies">
           <small class="pull-right">
-            <span class="text-warning">Periods: </span>
+            <span class="text-warning">Perioden: </span>
             <span class="muted">
               &nbsp;
               {{periods.start}}
-              &nbsp;/&nbsp;
+              &nbsp;|&nbsp;
               {{periods.end}}
             </span>
           </small>

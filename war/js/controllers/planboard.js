@@ -53,7 +53,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       group:    settings.app.group,
-      // group:    groups[0].uuid,
       division: 'all'
     };
 
@@ -223,24 +222,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    	 */
 	    	$rootScope.$broadcast('slotInitials');
 
-	      // $scope.slot = {};
-
-	      // $scope.slot = {
-	      //   start: {
-	      //     date: new Date().toString($rootScope.config.formats.date),
-	      //     time: new Date().toString($rootScope.config.formats.time),
-	      //     datetime: new Date().toISOString()
-	      //   },
-	      //   end: {
-	      //     date: new Date().toString($rootScope.config.formats.date),
-	      //     time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	      //     datetime: new Date().toISOString()
-	      //   },
-	      //   state:      '',
-	      //   recursive:  false,
-	      //   id:         ''
-	      // };
-
 	      $scope.resetViews();
 
 	      $scope.views.slot.add = true;
@@ -283,6 +264,18 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
+
+
+
+	  /**
+	   * DEPRECIATED
+	   * 
+	   * Not used probably?
+	   */
+	  $scope.modifySlot = function (slot)
+	  {
+	  	console.log('changing state ->', slot);
+	  }
 
 	}
 ]);
