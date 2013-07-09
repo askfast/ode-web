@@ -12216,6 +12216,11 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  {
 	    $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
+	    /**
+	     * Convert given other user's password to MD5
+	     */
+	    if (resources.Password) resources.askPass = MD5(resources.Password);
+
 	    Profile.save($route.current.params.userId, resources)
 	    .then(function (result)
 	    {
@@ -12249,6 +12254,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	        });
 	      };
 	    });
+
 	  };
 
 
