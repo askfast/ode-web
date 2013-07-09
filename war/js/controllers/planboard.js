@@ -16,6 +16,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 		$rootScope.fixStyles();
 
+
 	  /**
 	   * Pass the self
 	   */

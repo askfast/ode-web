@@ -4663,7 +4663,17 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         week: function ()
         {
-          return new Date().getWeek();
+          /**
+           * IE library does not exist bug
+           */
+          if (new Date().getWeek)
+          {
+            return new Date().getWeek();
+          }
+          else
+          {
+            console.log('Date getWeek does not exist !');
+          }
         },
 
         month: function ()
@@ -5287,6 +5297,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
   // period for readability
   // var prefix = angularLocalStorage.constant;
   
+
   if ($config.title.substr(-1) !== '.') $config.title = !!$config.title ? $config.title + '.' : '';
 
   // Checks the browser to see if local storage is supported
@@ -6976,7 +6987,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			angular.forEach(stats, function (stat, index)
 			{
-				ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
+				var state = stat.state.replace(/^bar-+/, '');
+
+				if (state == 'Available') state = 'Beschikbaar';
+				if (state == 'Unavailable') state = 'Niet Beschikbaar';
+				if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
+				if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
+				if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
+				if (state == 'Unreached') state = 'Niet Bereikt';
+
+				ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
 			});
 
 			return ratios.substring(0, ratios.length - 2);
@@ -8477,6 +8497,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * Fix styles
 	   */
 		$rootScope.fixStyles();
+
 
 	  /**
 	   * Pass the self

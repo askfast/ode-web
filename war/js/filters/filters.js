@@ -266,7 +266,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			angular.forEach(stats, function (stat, index)
 			{
-				ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
+				var state = stat.state.replace(/^bar-+/, '');
+
+				if (state == 'Available') state = 'Beschikbaar';
+				if (state == 'Unavailable') state = 'Niet Beschikbaar';
+				if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
+				if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
+				if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
+				if (state == 'Unreached') state = 'Niet Bereikt';
+
+				ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
 			});
 
 			return ratios.substring(0, ratios.length - 2);

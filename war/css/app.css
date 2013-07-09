@@ -1218,6 +1218,16 @@ ul.nav-tabs-app li span.entypo {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffa93232', endColorstr='#ff8f2b2b', GradientType=0);
 }
+#memberBars ul li .progress .bar-Unreached {
+  background-color: #65619b;
+  background-image: -moz-linear-gradient(top, #65619b, #514e7c);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#65619b), to(#514e7c));
+  background-image: -webkit-linear-gradient(top, #65619b, #514e7c);
+  background-image: -o-linear-gradient(top, #65619b, #514e7c);
+  background-image: linear-gradient(to bottom, #65619b, #514e7c);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff65619b', endColorstr='#ff514E7C', GradientType=0);
+}
 
 /*legenda*/
 .legenda {
