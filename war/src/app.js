@@ -2550,8 +2550,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    var content = angular.fromJson(slot.content);
 
 	    return {
-	      start:      new Date(slot.start).getTime() / 1000,
-	      end:        new Date(slot.end).getTime() / 1000,
+	      start:      Math.floor(new Date(slot.start).getTime() / 1000),
+	      end:        Math.floor(new Date(slot.end).getTime() / 1000),
 	      recursive:  content.recursive,
 	      text:       content.state,
 	      id:         content.id
@@ -9641,134 +9641,60 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			    $scope.original.start < Date.now().getTime()
 		     )
 	    {
-	    	console.log('slot has been moved to future');
-
-	    	console.log('original ->', $scope.original.start, new Date($scope.original.start).getTime(), $scope.original.end, new Date($scope.original.end).getTime() );
-
-	    	console.log('past ->', $scope.original.start, new Date($scope.original.start).getTime(), new Date(Date.now().getTime()), Date.now().getTime() );
-
-	    	// console.log('future ->', new Date(options.start - (Date.now().getTime() - $scope.original.start)), new Date(options.end));
-	    	// 
-	    	console.log('future ->', new Date(options.start), options.start, new Date(options.end), options.end);
-
-	    	// $scope.timeliner.refresh();
-
-
-
-	    			console.log('oo ->', $scope.original);
-
-	    			var now = Date.now().getTime();
-
-			      Slots.change($scope.original, {
-				      start:  new Date($scope.original.start).getTime(),
-				      // end: 		1373436000 * 1000,
-				      end:    Math.abs(Math.floor( Date.now().getTime() )),
-				      content: {
-				        recursive:  slot.recursive, 
-				        state:      slot.state 
-				      }
-				    }, $scope.timeline.user.id)
-			      .then(
-			        function (result)
-			        {
-			        	$rootScope.$broadcast('resetPlanboardViews');
-
-			          if (result.error)
-			          {
-			            $rootScope.notifier.error('Error with changing timeslot.');
-			            console.warn('error ->', result);
-			          }
-			          else
-			          {
-			            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-			          };
-
-			          $scope.timeliner.refresh();
-
-			          $rootScope.planboardSync.start();
-			        }
-			      );
-
-
 	    	// change slot
-	     //  Slots.change($scope.original, {
+	      Slots.change($scope.original, {
 
-		    //   start:  ($rootScope.browser.mobile) ?
-		    //   					$scope.original.start / 1000 :
-		    //             // new Date(slot.start.datetime).getTime() : 
-		    //             Dater.convert.absolute(slot.start.date, slot.start.time, false),
-		    //   end:    ($rootScope.browser.mobile) ? 
-		    //             // new Date(slot.end.datetime).getTime() :
-		    //             Date.now().getTime() / 1000 :
-		    //             Dater.convert.absolute(slot.end.date, slot.end.time, false),
-		    //   content: {
-		    //     recursive:  slot.recursive, 
-		    //     state:      slot.state 
-		    //   }
+		      start:  new Date($scope.original.start).getTime(),
+		      end:    Date.now().getTime(),
+		      content: {
+		        recursive:  slot.recursive, 
+		        state:      slot.state 
+		      }
 
-		    // }, $scope.timeline.user.id)
-	     //  .then(
-	     //    function (result)
-	     //    {
-	     //    	$rootScope.$broadcast('resetPlanboardViews');
+		    }, $scope.timeline.user.id)
+	      .then(
+	        function (result)
+	        {
+	        	$rootScope.$broadcast('resetPlanboardViews');
 
-	     //      if (result.error)
-	     //      {
-	     //        $rootScope.notifier.error('Error with changing timeslot.');
-	     //        console.warn('error ->', result);
-	     //      }
-	     //      else
-	     //      {
-	     //        // $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-	           
-	     //       	console.log('changing slot was a success');
+	          if (result.error)
+	          {
+	            $rootScope.notifier.error('Error with changing timeslot.');
+	            console.warn('error ->', result);
+	          }
+	          else
+	          {
+		          // add new slot
+				      Slots.add(
+					      {
+	                start:      options.start / 1000,
+	                end:        options.end / 1000,
+	                recursive:  (slot.recursive) ? true : false,
+	                text:       slot.state
+	              }, $scope.timeline.user.id)
+				      .then(
+				        function (result)
+				        {
+				          $rootScope.$broadcast('resetPlanboardViews');
 
-		    //     	// add new slot
-				  //     // Slots.add(
-					 //     //  {
-	     //     //        start:      ($rootScope.browser.mobile) ? 
-	     //     //        							$scope.original.start / 1000 : 
-	     //     //                      // new Date(slot.start.datetime).getTime() / 1000 :
-	     //     //                      Dater.convert.absolute(slot.start.date, slot.start.time, true),
-	     //     //        end:        ($rootScope.browser.mobile) ? 
-	     //     //        							Date.now().getTime() / 1000 :
-	     //     //        							// options.end / 1000,
-	     //     //        							// options.end - (Date.now().getTime() - $scope.original.start) / 1000 :
-	     //     //                      // new Date(slot.end.datetime).getTime() / 1000 : 
-	     //     //                      Dater.convert.absolute(slot.end.date, slot.end.time, true),
-	     //     //        recursive:  (slot.recursive) ? true : false,
-	     //     //        text:       slot.state
-	     //     //      }, $scope.timeline.user.id)
-				  //     // .then(
-				  //     //   function (result)
-				  //     //   {
-				  //     //     $rootScope.$broadcast('resetPlanboardViews');
+				          if (result.error)
+				          {
+				            $rootScope.notifier.error('Error with adding a new timeslot.');
+				            console.warn('error ->', result);
+				          }
+				          else
+				          {
+				            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+				          };
 
-				  //     //     if (result.error)
-				  //     //     {
-				  //     //       $rootScope.notifier.error('Error with adding a new timeslot.');
-				  //     //       console.warn('error ->', result);
-				  //     //     }
-				  //     //     else
-				  //     //     {
-				  //     //       $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
-				  //     //     };
+				          $scope.timeliner.refresh();
 
-				  //     //     $scope.timeliner.refresh();
-
-				  //     //     $rootScope.planboardSync.start();
-				  //     //   }
-				  //     // );
-
-
-	     //      };
-
-	     //      // $scope.timeliner.refresh();
-
-	     //      // $rootScope.planboardSync.start();
-
-	     //    }
-	     //  );
+				          $rootScope.planboardSync.start();
+				        }
+				      );
+	          };
+	        }
+	      );
 
 
 	    }
@@ -9776,7 +9702,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   	{
 		    if (options.content.recursive == true || 
 			    	(
-				    	// isChangeAllowed(new Date($scope.original.start).getTime(), options.start) && 
+				    	isChangeAllowed(new Date($scope.original.start).getTime(), options.start) && 
 				    	isChangeAllowed(new Date($scope.original.end).getTime(), options.end)
 				    )
 			     )
@@ -9839,14 +9765,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      var now = Date.now().getTime();
 
-	      if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
-	      {
-	        $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
+	      // if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
+	      // {
+	      //   $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
 
-	        $scope.timeliner.refresh();
-	      }
-	      else
-	      {
+	      //   $scope.timeliner.refresh();
+	      // }
+	      // else
+	      // {
 	      	$rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
 	        Slots.remove($scope.original, $scope.timeline.user.id)
@@ -9871,7 +9797,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          }
 	        );
 
-	      };
+	      // };
+
+
 	    };
 	  };
 

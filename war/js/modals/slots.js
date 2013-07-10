@@ -703,8 +703,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    var content = angular.fromJson(slot.content);
 
 	    return {
-	      start:      new Date(slot.start).getTime() / 1000,
-	      end:        new Date(slot.end).getTime() / 1000,
+	      start:      Math.floor(new Date(slot.start).getTime() / 1000),
+	      end:        Math.floor(new Date(slot.end).getTime() / 1000),
 	      recursive:  content.recursive,
 	      text:       content.state,
 	      id:         content.id
