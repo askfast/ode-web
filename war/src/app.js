@@ -9765,14 +9765,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    {
 	      var now = Date.now().getTime();
 
-	      // if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
-	      // {
-	      //   $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
+	      if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
+	      {
+	        $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
 
-	      //   $scope.timeliner.refresh();
-	      // }
-	      // else
-	      // {
+	        $scope.timeliner.refresh();
+	      }
+	      else
+	      {
 	      	$rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
 	        Slots.remove($scope.original, $scope.timeline.user.id)
@@ -9796,10 +9796,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            $rootScope.planboardSync.start();
 	          }
 	        );
-
-	      // };
-
-
+	      };
 	    };
 	  };
 
@@ -9919,7 +9916,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Start planboard sync
 	   */
-		// $rootScope.planboardSync.start();
+		$rootScope.planboardSync.start();
 	}
 ]);;/*jslint node: true */
 /*global angular */
