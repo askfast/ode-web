@@ -40,14 +40,23 @@ var ui = {
       },
       dashboard: {
         groupOverviews: 'Loading and analyzing group overviews...',
-        thisWeek: 'This Week',
+        thisWeek: 'This week',
+        nextWeek: 'Next week',
         welcome: 'Welcome',
         newMessage: 'New Messages',
         goToInbox: 'Go to inbox',
         announcements: 'Announcements',
         loadingPie: 'Loading pie charts...',
         loadingP2000: 'Loading alarm messages',
-        noP2000: 'There are no alarm messages'
+        noP2000: 'There are no alarm messages',
+        widgetSave: 'Save',
+        widgetCancel: 'Cancel',
+        currentState: 'Current state',
+        overview: 'Overview',
+        statMore: 'more',
+        statEven: 'enough',
+        statLess: 'less',
+        periods: 'Periods'
       },
       planboard: {
         planboard: 'Agenda',
@@ -169,7 +178,21 @@ var ui = {
         typeSubject: 'Type a subject',
         // messages: 'Messages',
         ph_filterMessage: 'Filter messages..',
-        noReceivers: 'Please select a receiver.'
+        noReceivers: 'Please select a receiver.',
+        days: {
+          monday:     'monday',
+          tuesday:    'tuesday',
+          wednesday:  'wednesday',
+          thursday:   'thursday',
+          friday:     'friday',
+          saturday:   'saturday',
+          sunday:     'sunday'
+        },
+        repeat: 'Repeat',
+        repeatOn: 'On',
+        repeatOff: 'Off',
+        repeatNew: 'New repeat',
+        notificationLabel: 'Notification label'
       },
       groups: {
         groups: 'Groups',
@@ -222,7 +245,10 @@ var ui = {
         deleting: 'Deleting group..',
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
-        searchfor: 'firstname, lastname..'
+        searchfor: 'firstname, lastname..',
+        widgetSave: 'Save',
+        widgetCancel: 'Cancel',
+        requiredPeople: 'Required'
       },
       profile: {
         profile: 'Profile',
@@ -285,7 +311,8 @@ var ui = {
         messages:   'messages',
         groups:     'groups',
         profile:    'profile',
-        settings:   'settings'
+        settings:   'settings',
+        loggingOut: 'Logging out...'
       }
     },
     nl: {
@@ -324,13 +351,22 @@ var ui = {
       dashboard: {
         groupOverviews: 'Laden en analyseren groepsoverzichten...',
         thisWeek: 'Deze week',
+        nextWeek: 'Volgende week',
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',
         goToInbox: 'Ga naar inbox',
         loadingPie: 'Cirkeldiagrammen laden...',
         announcements: 'Alarm berichten',
         loadingP2000: 'Alarm berichten laden...',
-        noP2000: 'Er zijn geen alarm berichten.'
+        noP2000: 'Er zijn geen alarm berichten.',
+        widgetSave: 'Opslaan',
+        widgetCancel: 'Annuleren',
+        currentState: 'Huidige status',
+        overview: 'Overzicht',
+        statMore: 'meer',
+        statEven: 'genoeg',
+        statLess: 'minder',
+        periods: 'Perioden'
       },
       planboard : {
         planboard: 'Agenda',
@@ -452,7 +488,21 @@ var ui = {
         typeSubject: 'Vul een onderwerp in',
         // messages: 'Berichten',
         ph_filterMessage: 'Berichten filteren...',
-        noReceivers: 'Graag een ontvanger selecteren.'
+        noReceivers: 'Graag een ontvanger selecteren.',
+        days: {
+          monday:     'maandag',
+          tuesday:    'dinsdag',
+          wednesday:  'woensdag',
+          thursday:   'donderdag',
+          friday:     'vrijdag',
+          saturday:   'zaterdag',
+          sunday:     'zondag'
+        },
+        repeat: 'Herhaling',
+        repeatOn: 'Aan',
+        repeatOff: 'Uit',
+        repeatNew: 'Nieuwe herhaling',
+        notificationLabel: 'Notificatie label'
       },
       groups: {
         groups: 'Groepen',
@@ -504,7 +554,10 @@ var ui = {
         deleting: 'Groep verwijderen...',
         deleted: 'Groep succesvol verwijderd.',
         filterMembers: 'Leden filteren...',
-        searchfor: 'voornaam, achternaam..'
+        searchfor: 'voornaam, achternaam..',
+        widgetSave: 'Opslaan',
+        widgetCancel: 'Annuleren',
+        requiredPeople: 'Behoefte'
       },
       profile: {
         profile: 'Profiel',
@@ -567,7 +620,8 @@ var ui = {
         messages:   'berichten',
         groups:     'groepen',
         profile:    'profiel',
-        settings:   'instellingen'
+        settings:   'instellingen',
+        loggingOut: 'Aan het uitloggen...'
       }
     }
 };;/*jslint node: true */
@@ -896,7 +950,7 @@ angular.module('WebPaige')
                       month: Dater.current.month(),
                       layouts: {
                         user:     true,
-                        group:    false,
+                        group:    true,
                         members:  false
                       }
                     });
@@ -8526,7 +8580,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.current = {
       layouts: {
         user:     true,
-        group:    false,
+        group:    true,
         members:  false
       },
       /**

@@ -177,7 +177,7 @@
 
             <!-- scheadulerPane toggle -->
             <div class="control-group" ng-hide="scheadulerPane">
-              <label class="control-label">Herhaling</label>
+              <label class="control-label">{{ui.message.repeat}}</label>
 
               <div  class="btn-group"  
                     bs-buttons-checkbox="" 
@@ -187,7 +187,7 @@
                         class="btn btn-small" 
                         ng-model="scheadulerPane" 
                         ng-click="scheadulerPane == !scheadulerPane"
-                        bs-button="">Aan</button>
+                        bs-button="">{{ui.message.repeatOn}}</button>
 
               </div>
             </div>
@@ -198,10 +198,10 @@
 
               <!-- scheaduler header -->
               <header>
-                <h4>Herhaling</h4>
+                <h4>{{ui.message.repeat}}</h4>
                 <div class="pull-right">
-                  <button type="button" class="btn btn-small" ng-click="scheadulerPane = false" ng-hide="views.scheaduler">Uit</button>
-                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">Nieuwe herhaling</button>
+                  <button type="button" class="btn btn-small" ng-click="scheadulerPane = false" ng-hide="views.scheaduler">{{ui.message.repeatOff}}</button>
+                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">{{ui.message.repeatNew}}</button>
                 </div>
               </header>
               <!-- end scheaduler header -->
@@ -210,7 +210,7 @@
 
               <!-- notification title -->
               <div class="control-group">
-                <label class="control-label">Notificatie label</label>
+                <label class="control-label">{{ui.message.notificationLabel}}</label>
 
                 <input type="text" 
                       class="span6"

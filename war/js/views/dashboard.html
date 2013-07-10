@@ -17,7 +17,7 @@
       <div class="widget {{(!browser.mobile) && 'span9' || 'span12'}}">
 
         <div class="head">
-          <h4>Overzicht</h4>
+          <h4>{{ui.dashboard.overview}}</h4>
           <button class="btn btn-small" 
                   bs-popover="'dist/views/dashboard-pies.html'" 
                   data-placement="{{(browser.mobile) && 'left' || 'bottom'}}"
@@ -47,7 +47,7 @@
                     </div>
                   </div>
                   <div class="body">
-                    <h3>Huidige status</h3>
+                    <h3>{{ui.dashboard.currentState}}</h3>
                     <hr>
                     <h5>{{pie.state.start}}</h5>&nbsp;
                     <small class="muted">van</small>
@@ -64,16 +64,16 @@
                     <div id="weeklyPieCurrent-{{pie.id}}" class="pie"></div>
                   </div>
                   <div class="body">
-                    <h3>Deze week</h3>
+                    <h3>{{ui.dashboard.thisWeek}}</h3>
                     <hr>
                     <small class="muted">{{pie.weeks.current.start.date}} / {{pie.weeks.current.end.date}}</small>
                     <br>
                     <h5>{{pie.weeks.current.ratios.more}}%</h5>&nbsp;
-                    <small class="muted">more</small>,&nbsp;
+                    <small class="muted">{{ui.dashboard.statMore}}</small>,&nbsp;
                     <h5>{{pie.weeks.current.ratios.even}}%</h5>&nbsp;
-                    <small class="muted">even</small>,&nbsp;
+                    <small class="muted">{{ui.dashboard.statEven}}</small>,&nbsp;
                     <h5>{{pie.weeks.current.ratios.less}}%</h5>&nbsp;
-                    <small class="muted">less</small>
+                    <small class="muted">{{ui.dashboard.statLess}}</small>
                   </div>
                 </div>
               </div>
@@ -84,16 +84,16 @@
                     <div id="weeklyPieNext-{{pie.id}}" class="pie"></div>
                   </div>
                   <div class="body">
-                    <h3>Volgende week</h3>
+                    <h3>{{ui.dashboard.nextWeek}}</h3>
                     <hr>
                     <small class="muted">{{pie.weeks.next.start.date}} / {{pie.weeks.next.end.date}}</small>
                     <br>
                     <h5>{{pie.weeks.next.ratios.more}}%</h5>&nbsp;
-                    <small class="muted">more</small>,&nbsp;
+                    <small class="muted">{{ui.dashboard.statMore}}</small>,&nbsp;
                     <h5>{{pie.weeks.next.ratios.even}}%</h5>&nbsp;
-                    <small class="muted">even</small>,&nbsp;
+                    <small class="muted">{{ui.dashboard.statEven}}</small>,&nbsp;
                     <h5>{{pie.weeks.next.ratios.less}}%</h5>&nbsp;
-                    <small class="muted">less</small>
+                    <small class="muted">{{ui.dashboard.statLess}}</small>
                   </div>
                 </div>
               </div>
@@ -162,7 +162,7 @@
         <hr class="lastline" ng-hide="loading.pies">
         <p ng-hide="loading.pies">
           <small class="pull-right">
-            <span class="text-warning">Perioden: </span>
+            <span class="text-warning">{{ui.dashboard.periods}}: </span>
             <span class="muted">
               &nbsp;
               {{periods.start}}
@@ -190,11 +190,9 @@
 
         <!-- p2000 loop -->
         <ul id="announcements" ng-hide="loading.alerts">
-
           <li ng-show="alarms.list.length < 1">
             {{ui.dashboard.noP2000}}
           </li>
-
           <li ng-repeat="alarm in alarms.list">
             <table>
               <tr>
@@ -220,6 +218,7 @@
           </li>
         </ul>
         <!-- end p2000 loop -->
+
         <hr class="lastline">
         <p ng-show="alarms.list.length > 4">
           <small>
