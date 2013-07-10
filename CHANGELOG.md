@@ -12,6 +12,8 @@
 ## Versions
 
 	2.3.3
+		* Changing passwords of group members allowed for plannners
+		* IE bug fix for library loading order issue
 
 	2.3.2
 		* Deployed for 100T, 110K, 120G and 130B 8-7-2013

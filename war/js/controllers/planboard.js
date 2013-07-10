@@ -44,7 +44,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.current = {
       layouts: {
         user:     true,
-        group:    true,
+        group:    false,
         members:  false
       },
       /**
