@@ -36,7 +36,12 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..'
+        loading: 'Loading..',
+        setting: 'Setting..',
+        passwordChanged: 'Password changed!',
+        button_changePassword: 'Change password',
+        button_changingPassword: 'Changing password..',
+        checkYourMail: 'Please check your email to reset your password!'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -57,7 +62,10 @@ var ui = {
         statMore: 'more',
         statEven: 'enough',
         statLess: 'less',
-        periods: 'Periods'
+        periods: 'Periods',
+        refreshGroupOverviews: 'Refreshing group overviews..',
+        showMore: 'meer tonen',
+        showLess: 'minder tonen'
       },
       planboard: {
         planboard: 'Agenda',
@@ -122,7 +130,8 @@ var ui = {
         statMinutes: 'minutes',
         statPeopleLess: 'Less people than expected',
         statPeopleEven: 'Just enough people as expected',
-        statPeopleMore: 'More people than expected'
+        statPeopleMore: 'More people than expected',
+        getWishes: 'Getting minimum required value...'
       },
       message: {
         messages: 'Messages',
@@ -205,7 +214,27 @@ var ui = {
         notifications: 'Notifications',
         notificationsEmpty: 'There are currently no notifications.Er zijn (nog) geen herhalingen.',
         notificationStatus: 'Notification status',
-        notificationSave: 'Save'
+        notificationSave: 'Save',
+        notificationHeaderLabel: 'Label',
+        notificationHeaderReceivers: 'Receivers',
+        notificationHeaderFrequency: 'Frequency',
+        paginationPage: 'Page',
+        paginationOf: 'of',
+        paginationInTotal: 'in total',
+        paginationPrevious: 'Previous',
+        paginationNext: 'Next',
+        filterMessages: 'Filter messages...',
+        inTotal: 'In total:',
+        loadingNotifications: 'Getting notifications...',
+        receiversUsers: 'Users',
+        receiversGroups: 'Groups',
+        notificationsRefresh: 'Refreshing scheduled notifications...',
+        notificationsAdd: 'Adding a new scheduled notification...',
+        notificationSaved: 'Scheduled notification is successfully saved.',
+        notificationsEditing: 'Editing scheduled notification...',
+        notificationsEdited: 'Scheduled notification is successfully edited.',
+        notificationsDeleting: 'Deleting a scheduled notification...',
+        notificationsDeleted: 'Scheduled notification is successfully deleted.'
       },
       groups: {
         groups: 'Groups',
@@ -328,6 +357,62 @@ var ui = {
         profile:    'profile',
         settings:   'settings',
         loggingOut: 'Logging out...'
+      },
+      errors: {
+        dashboard: {
+          getOverviews: 'Error with getting group overviews.'
+        },
+        groups: {
+          query: 'Error with getting groups and users.',
+          saveWish: 'Error with changing wish value.',
+          searchMembers: 'Error with searching members.',
+          addMember: 'Error with adding a member to a group.',
+          removeMember: 'Error with removing a member from a group.',
+          removeMembers: 'Error with removing members from a group.',
+          groupSubmit: 'Error with saving group.',
+          memberSubmitRegistered: 'Username is already registered.',
+          memberSubmitRegister: 'Error with registering a member.',
+          deleteGroup: 'Error with deleting a group.'
+        },
+        login: {
+          changePass: 'Something wrong with password changing!',
+          forgotCantFind: 'Error this account does not exist!',
+          changePassAllFields: 'Please fill all fields!',
+          changePassNoMatch: 'Error, passwords do not match!' 
+        },
+        settings: {
+          save: 'Error with saving settings!'
+        },
+        profile: {
+          save: 'Error with saving profile information!',
+          get: 'Error with getting profile data!',
+          changePassword: 'Error with changing password!'
+        },
+        messages: {
+          query: 'Error with getting messages!',
+          changeState: 'Error with changing message state!',
+          removeMessage: 'Error with removing message!',
+          removeMessages: 'Error with removing messages!',
+          restoreMessage: 'Error with restoring message!',
+          restoreMessages: 'Error with restoring message!',
+          emptyTrash: 'Error with empting trash!',
+          send: 'Error with sending message!',
+          notificationsList: 'Error with getting scheduled notifictions!',
+          notificationsGet: 'Error with getting scheduled notification!',
+          notificationsAdd: 'Error with creating scheduled notification!',
+          notificationsEdit: 'Error with editing scheduled notification!',
+          notificationsDelete: 'Error with deleting scheduled notification!'
+        },
+        timeline: {
+          query: 'Error with gettings timeslots!',
+          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
+          add: 'Error with adding a new timeslot!',
+          change: 'Error with changing timeslot!',
+          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
+          remove: 'Error with removing timeslot!',
+          wisher: 'Error with changing wish value!'
+        }
       }
     },
     nl: {
@@ -360,8 +445,13 @@ var ui = {
         loading_Group:'Groepen laden...',
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
-        logout: 'Logout',
-        loading: 'Loading..'
+        logout: 'Uitloggen',
+        loading: 'Aan het laden..',
+        setting: 'Aan het toepassen..',
+        passwordChanged: 'Wachtwoord gewijzigd!',
+        button_changePassword: 'Wachtwoord wijzigen',
+        button_changingPassword: 'Wachtwoord aan het wijzigen..',
+        checkYourMail: 'Controleer uw mailbox voor de instructies!'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -382,7 +472,10 @@ var ui = {
         statMore: 'meer',
         statEven: 'genoeg',
         statLess: 'minder',
-        periods: 'Perioden'
+        periods: 'Perioden',
+        refreshGroupOverviews: 'Groep overzichten laden...',
+        showMore: 'show more',
+        showLess: 'show less'
       },
       planboard : {
         planboard: 'Agenda',
@@ -447,7 +540,8 @@ var ui = {
         statMinutes: 'minuten',
         statPeopleLess: 'Te weinig mensen',
         statPeopleEven: 'Precies genoeg mensen',
-        statPeopleMore: 'Meer mensen'
+        statPeopleMore: 'Meer mensen',
+        getWishes: 'Groep behoefte getal aan het ophalen...'
       },
       message: {
         messages: 'Berichten',
@@ -530,7 +624,27 @@ var ui = {
         notifications: 'Herinneringen',
         notificationsEmpty: 'Er zijn (nog) geen herhalingen.',
         notificationStatus: 'Notificatie status',
-        notificationSave: 'Opslaan'
+        notificationSave: 'Opslaan',
+        notificationHeaderLabel: 'Label',
+        notificationHeaderReceivers: 'Ontvangers',
+        notificationHeaderFrequency: 'Frequentie',
+        paginationPage: 'Pagina',
+        paginationOf: 'van',
+        paginationInTotal: 'in totaal',
+        paginationPrevious: 'Vorige',
+        paginationNext: 'Volgende',
+        filterMessages: 'Berichten filteren...',
+        inTotal: 'In totaal:',
+        loadingNotifications: 'Notificaties aan het laden...',
+        receiversUsers: 'Gebruikers',
+        receiversGroups: 'Groepen',
+        notificationsRefresh: 'Notificaties aan het laden...',
+        notificationsAdd: 'Notificatie aan het toevoegen...',
+        notificationSaved: 'Notificatie is met success opgeslagen.',
+        notificationsEditing: 'Notificatie wordt gewijzigd...',
+        notificationsEdited: 'Notificatie is met succes gewijzigd.',
+        notificationsDeleting: 'Notificatie wordt verwijderd...',
+        notificationsDeleted: 'Notificatie is met succes verwijderd.'
       },
       groups: {
         groups: 'Groepen',
@@ -652,6 +766,11 @@ var ui = {
         profile:    'profiel',
         settings:   'instellingen',
         loggingOut: 'Aan het uitloggen...'
+      },
+      errors: {
+        dashboard: {
+          getOverviews: 'Error with getting group overviews.'
+        }
       }
     }
 };

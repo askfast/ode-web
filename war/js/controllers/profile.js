@@ -197,7 +197,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with saving profile information.');
+	        $rootScope.notifier.error($rootScope.ui.errors.profile.save);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -211,7 +211,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	        {
 	          if (data.error)
 	          {
-	            $rootScope.notifier.error('Error with getting profile data.');
+	            $rootScope.notifier.error($rootScope.ui.errors.profile.get);
 	            console.warn('error ->', data);
 	          }
 	          else
@@ -256,7 +256,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	      {
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with changing password.');
+	          $rootScope.notifier.error($rootScope.ui.errors.profile.changePassword);
 	          console.warn('error ->', result);
 	        }
 	        else
@@ -268,7 +268,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	          {
 	            if (data.error)
 	            {
-	              $rootScope.notifier.error('Error with getting profile data.');
+	              $rootScope.notifier.error($rootScope.ui.errors.profile.get);
 	              console.warn('error ->', data);
 	            }
 	            else

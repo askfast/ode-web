@@ -273,10 +273,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * 
 	   * Not used probably?
 	   */
-	  $scope.modifySlot = function (slot)
-	  {
-	  	console.log('changing state ->', slot);
-	  }
+	  // $scope.modifySlot = function (slot)
+	  // {
+	  // 	console.log('changing state ->', slot);
+	  // }
 
 	}
 ]);

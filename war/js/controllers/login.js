@@ -60,7 +60,8 @@ angular.module('WebPaige.Controllers.Login', [])
 	   $scope.knrmLogin = function (user)
 	   {
 	     $('#login button[type=submit]')
-	       .text('Login..')
+	       // .text('Login..')
+	       .text($rootScope.ui.login.button_loggingIn)
 	       .attr('disabled', 'disabled');
 
 	    self.auth(user.uuid, user.resources.askPass);
@@ -138,14 +139,14 @@ angular.module('WebPaige.Controllers.Login', [])
 	      };
 
 	      $('#login button[type=submit]')
-	        .text('Login')
+	        .text($rootScope.ui.login.button_login)
 	        .removeAttr('disabled');
 
 	      return false;     
 	    };
 
 	    $('#login button[type=submit]')
-	      .text('Login..')
+	      .text($rootScope.ui.login.button_loggingIn)
 	      .attr('disabled', 'disabled');
 
 	    Storage.add('logindata', angular.toJson({
@@ -177,7 +178,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        };
 
 	        $('#login button[type=submit]')
-	          .text('Login')
+	          .text($rootScope.ui.login.button_loggingIn)
 	          .removeAttr('disabled');
 
 	        return false;
@@ -514,7 +515,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 		$scope.forgot = function ()
 	  {
-			$('#forgot button[type=submit]').text('setting ...').attr('disabled', 'disabled');
+			$('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
 
 			User.password($scope.remember.id)
 	    .then(function (result)
@@ -522,26 +523,26 @@ angular.module('WebPaige.Controllers.Login', [])
 				if (result == "ok")
 	      {
 					$scope.alert = {
-						forget : {
-							display : true,
-							type : 'alert-success',
-							message : 'Please check your email to reset your password!'
+						forget: {
+							display: true,
+							type: 'alert-success',
+							message: $rootScope.ui.login.checkYourMail
 						}
 					};
 				}
 	      else 
 	      {
 					$scope.alert = {
-						forget : {
-							display : true,
-							type : 'alert-error',
-							message : 'Error, we can not find this account !'
+						forget: {
+							display: true,
+							type: 'alert-error',
+							message: $rootScope.ui.errors.login.forgotCantFind
 						}
 					};
 				};
 
 				$('#forgot button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 			});
 		};
@@ -559,20 +560,20 @@ angular.module('WebPaige.Controllers.Login', [])
 				if(result.status == 400 || result.status == 500 || result.status == 409)
 	      {
 					$scope.alert = {
-						changePass : {
-							display : true,
-							type : 'alert-error',
-							message : 'Something wrong with password changing!'
+						changePass: {
+							display: true,
+							type: 'alert-error',
+							message: $rootScope.ui.errors.login.changePass
 						}
 					};
 				}
 	      else
 	      { // successfully changed
 					$scope.alert = {
-						changePass : {
-							display : true,
-							type : 'alert-success',
-							message : 'Password changed!'
+						changePass: {
+							display: true,
+							type: 'alert-success',
+							message: $rootScope.ui.login.passwordChanged
 						}
 					}; 
 					
@@ -580,7 +581,7 @@ angular.module('WebPaige.Controllers.Login', [])
 				};
 
 				$('#changePass button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 			})
 		};
@@ -597,15 +598,15 @@ angular.module('WebPaige.Controllers.Login', [])
 			if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
 	    {
 				$scope.alert = {
-					changePass : {
-						display : true,
-						type : 'alert-error',
-						message : 'Please fill all fields!'
+					changePass: {
+						display: true,
+						type: 'alert-error',
+						message: $rootScope.ui.errors.login.changePassAllFields
 					}
 				};
 
 				$('#changePass button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 
 				return false;
@@ -613,22 +614,22 @@ angular.module('WebPaige.Controllers.Login', [])
 	    else if ($scope.changeData.newPass != $scope.changeData.retypePass)
 	    {
 				$scope.alert = {
-					changePass : {
-						display : true,
-						type : 'alert-error',
-						message : 'Please make the reType password is indentical !'
+					changePass: {
+						display: true,
+						type: 'alert-error',
+						message: $rootScope.ui.errors.login.changePassNoMatch
 					}
 				};
 
 				$('#changePass button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 
 				return false;
 			};
 
 			$('#changePass button[type=submit]')
-	      .text('changing ...')
+	      .text($rootScope.ui.login.button_changingPassword)
 	      .attr('disabled', 'disabled');
 
 			self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);

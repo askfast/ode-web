@@ -149,7 +149,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				{
 					if (result.error)
 					{
-						$rootScope.notifier.error('Error with changing wish value.');
+						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
 						console.warn('error ->', result);
 					}
 					else
@@ -291,7 +291,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with search.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.searchMembers);
 					console.warn('error ->', result);
 				}
 				else
@@ -323,7 +323,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with adding a member.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
 					console.warn('error ->', result);
 				}
 				else
@@ -337,7 +337,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -364,7 +364,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with removing a member.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
 					console.warn('error ->', result);
 				}
 				else
@@ -378,7 +378,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -405,7 +405,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with removing members.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
 					console.warn('error ->', result);
 				}
 				else
@@ -421,7 +421,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -454,7 +454,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (returned.error)
 				{
-					$rootScope.notifier.error('Error with saving group.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
 					console.warn('error ->', returned);
 				}
 				else
@@ -468,7 +468,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -523,7 +523,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				{
 					if (result.error.status === 409)
 					{
-						$rootScope.notifier.error('Username is already registered.');
+						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
 						// $scope.memberForm = {};
 
@@ -531,7 +531,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					}
 					else
 					{
-						$rootScope.notifier.error('Error with registering a member.');
+						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
 					}
 					
 					console.warn('error ->', result);
@@ -547,7 +547,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -576,7 +576,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with deleting a group.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
 					console.warn('error ->', result);
 				}
 				else
@@ -590,7 +590,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else

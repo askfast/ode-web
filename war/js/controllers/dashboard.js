@@ -35,7 +35,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		$scope.more = {
 			status: false,
-			text:   'show more'
+			text:   $rootScope.ui.dashboard.showMore
 		};
 
 
@@ -79,7 +79,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			{
 				if (pies.error)
 				{
-					$rootScope.notifier.error('Error with getting group overviews.');
+					$rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
 					console.warn('error ->', pies.error);
 				}
 				else
@@ -112,11 +112,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						}
 
 						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-																						new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime) :
+																						new Date(pie.weeks.current.state.start * 1000)
+																							.toString($rootScope.config.formats.datetime) :
 																						'undefined';
 
 						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-																						new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime) :
+																						new Date(pie.weeks.current.state.end * 1000)
+																							.toString($rootScope.config.formats.datetime) :
 																						'undefined';
 
 						pie.shortages = {
@@ -230,7 +232,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			})
 			.then(function (result)
 			{
-				$rootScope.statusBar.display('Refreshing group overviews..');
+				$rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
 				Profile.get($rootScope.app.resources.uuid, true)
 				.then(function (resources)
@@ -329,7 +331,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		{
 			$scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
 
-			$scope.more.text = (more) ? 'show more' : 'show less';
+			$scope.more.text = (more) ? $rootScope.ui.dashboard.showMore : $rootScope.ui.dashboard.showLess;
 
 			$scope.more.status = !$scope.more.status;
 		};

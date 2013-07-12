@@ -68,7 +68,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	      {
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with saving settings.');
+	          $rootScope.notifier.error($rootScope.ui.errors.settings.save);
 	          console.warn('error ->', result);
 	        }
 	        else

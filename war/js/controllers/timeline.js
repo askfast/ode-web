@@ -235,7 +235,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      {
 		        if (data.error)
 		        {
-		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          $rootScope.notifier.error($rootScope.ui.errors.timeline.query);
 		          console.warn('error ->', data);
 		        }
 		        else
@@ -257,7 +257,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      {
 		        if (data.error)
 		        {
-		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          $rootScope.notifier.error($rootScope.ui.errors.timeline.query);
 		          console.warn('error ->', data);
 		        }
 		        else
@@ -427,7 +427,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    if ($scope.timeliner.isAdded() > 0)
 	    {
-	    	console.log('there is one newly added slot');
+	    	// console.log('there is one newly added slot');
 	      // $scope.self.timeline.prototype.cancelAdd();
 	      // links.Timeline.prototype.cancelAdd();
 	      // $scope.self.timeline.applyAdd = false;
@@ -604,7 +604,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display('Groep behoefte getal aan het ophalen ...');
+    	$rootScope.statusBar.display($rootScope.ui.message.getWishes);
 
 	    Slots.wishes({
 	    	id:  			$scope.timeline.current.group,
@@ -722,7 +722,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		     */
 		    if ((values.start * 1000) + 60000 * 2 < now && values.recursive == false)
 		    {
-		      $rootScope.notifier.error('Invoer van tijden in het verleden is niet toegestaan!');
+		      $rootScope.notifier.error($rootScope.ui.errors.timeline.pastAdding);
 
 		      $scope.timeliner.refresh();
 		    }
@@ -738,7 +738,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 		          if (result.error)
 		          {
-		            $rootScope.notifier.error('Error with adding a new timeslot.');
+		            $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
 		            console.warn('error ->', result);
 		          }
 		          else
@@ -896,7 +896,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	          if (result.error)
 	          {
-	            $rootScope.notifier.error('Error with changing timeslot.');
+	            $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
 	            console.warn('error ->', result);
 	          }
 	          else
@@ -916,7 +916,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 				          if (result.error)
 				          {
-				            $rootScope.notifier.error('Error with adding a new timeslot.');
+				            $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
 				            console.warn('error ->', result);
 				          }
 				          else
@@ -956,7 +956,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 		          if (result.error)
 		          {
-		            $rootScope.notifier.error('Error with changing timeslot.');
+		            $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
 		            console.warn('error ->', result);
 		          }
 		          else
@@ -973,7 +973,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
-		      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
+		      $rootScope.notifier.error($rootScope.ui.errors.timeline.pastChanging);
 
 		      $scope.timeliner.refresh();
 		    }
@@ -1004,7 +1004,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
 	      {
-	        $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
+	        $rootScope.notifier.error($rootScope.ui.errors.timeline.pastDeleting);
 
 	        $scope.timeliner.refresh();
 	      }
@@ -1020,7 +1020,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	            if (result.error)
 	            {
-	              $rootScope.notifier.error('Error with removing timeslot.');
+	              $rootScope.notifier.error($rootScope.ui.errors.timeline.remove);
 	              console.warn('error ->', result);
 	            }
 	            else
@@ -1064,7 +1064,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with changing wish value.');
+	          $rootScope.notifier.error($rootScope.ui.errors.timeline.wisher);
 	          console.warn('error ->', result);
 	        }
 	        else
@@ -1104,7 +1104,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					console.log('planboard sync started..');
+					// console.log('planboard sync started..');
 
 					/**
 					 * Update planboard only in planboard is selected

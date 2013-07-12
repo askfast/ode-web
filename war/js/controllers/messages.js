@@ -225,7 +225,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      {
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with changing message state.');
+	          $rootScope.notifier.error($rootScope.ui.errors.messages.changeState);
 	          console.warn('error ->', result);
 	        }
 	        else
@@ -311,7 +311,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 		  		name = members[recipient].name;
 
 		  		receivers.push({
-		  			group: 	'Users',
+		  			group: 	$rootScope.ui.message.receiversUsers,
 		  			id: 		recipient,
 		  			name: 	name
 		  		});
@@ -325,7 +325,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 			  			name = group.name;
 
 				  		receivers.push({
-				  			group: 	'Groups',
+				  			group: 	$rootScope.ui.message.receiversGroups,
 				  			id: 		recipient,
 				  			name: 	name
 				  		});
@@ -396,7 +396,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $scope.requestNotification = function (id)
 	  {
-	  	$rootScope.statusBar.display('Getting notification..');
+	  	$rootScope.statusBar.display($rootScope.ui.message.loadingNotifications);
 
 	    setView('scheaduler');
 
@@ -512,7 +512,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with removing message.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -558,7 +558,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with removing messages.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -595,7 +595,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with restoring message.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -635,7 +635,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with restoring message.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -668,8 +668,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with emting trash.');
-	        console.warn('error ->', result);
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
+	        console.warn('error ->', result);s
 	      }
 	      else
 	      {
@@ -682,7 +682,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        {
 	          if (messages.error)
 	          {
-	            $rootScope.notifier.error('Error with getting messages.');
+	            $rootScope.notifier.error($rootScope.ui.errors.messages.query);
 	            console.warn('error ->', messages);
 	          }
 	          else
@@ -737,7 +737,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      {
 	        if (uuid.error)
 	        {
-	          $rootScope.notifier.error('Error with sending message.');
+	          $rootScope.notifier.error($rootScope.ui.errors.messages.send);
 	          console.warn('error ->', uuid);
 	        }
 	        else
@@ -751,7 +751,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          {
 	            if (messages.error)
 	            {
-	              $rootScope.notifier.error('Error with getting messages.');
+	              $rootScope.notifier.error($rootScope.ui.errors.messages.query);
 	              console.warn('error ->', messages);
 	            }
 	            else
@@ -832,7 +832,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    $scope.message = {
 	      subject: $rootScope.ui.message.escalation,
 	      receivers: [{
-	        group: 'Groups', 
+	        group: $rootScope.ui.message.receiversGroups, 
 	        id: uuid, 
 	        name: name
 	      }],
@@ -912,14 +912,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	list: function (callback)
 	  	{
-				$rootScope.statusBar.display('Refreshing scheaduled jobs...');
+				$rootScope.statusBar.display($rootScope.ui.message.notificationsRefresh);
 
 				Messages.scheaduled.list()
 				.then(function (result)
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with getting scheadules..');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsList);
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -946,7 +946,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with getting the scheadule..');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsGet);
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -982,19 +982,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		var self = this;
 
-	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
+	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsAdd);
 
 	  		Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
 				.then(function (result)
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with creating the notification...');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
 				    console.warn('error ->', result);
 				  }
 				  else
 				  {
-	          $rootScope.notifier.success('Scheaduled job is saved successfully.');
+	          $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
 
 	          self.list(function ()
 	        	{
@@ -1012,19 +1012,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		var self = this;
 
-	    	$rootScope.statusBar.display('Editing scheaduled job...');
+	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsEditing);
 
 				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
 				.then(function (result)
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with editing scheadule..');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
 				    console.warn('error ->', result);
 				  }
 				  else
 				  {
-	          $rootScope.notifier.success('Scheaduled job is edited successfully.');
+	          $rootScope.notifier.success($rootScope.ui.message.notificationsEdited);
 
 	          self.list(function ()
 	        	{
@@ -1043,19 +1043,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		var self = this;
 
-	    	$rootScope.statusBar.display('Deleting a scheaduled job...');
+	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsDeleting);
 
 		    Messages.scheaduled.remove(uuid)
 		    .then(function (result)
 		    {
 		      if (result.error)
 		      {
-		        $rootScope.notifier.error('Error with deleting the scheadule..');
+		        $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
 		        console.warn('error ->', result);
 		      }
 		      else
 		      {
-	          $rootScope.notifier.success('Scheaduled job is deleted successfully.');
+	          $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
 
 	          self.list(function ()
 	        	{

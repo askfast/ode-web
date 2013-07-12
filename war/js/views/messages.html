@@ -453,10 +453,10 @@
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
               <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" 
-                      ng-click="paginate.before('inbox')">« Vorige
+                      ng-click="paginate.before('inbox')">« {{ui.message.paginationPrevious}}
               </button>
               <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" 
-                      ng-click="paginate.next('inbox')">Volgende »
+                      ng-click="paginate.next('inbox')">{{ui.message.paginationNext}} »
               </button>
             </div>
           </div>
@@ -468,7 +468,7 @@
               <i>Page: {{page.inbox + 1}} of {{messages.inbox.length}}, {{(messages.inbox | filter:query.inbox).length | i18n_spec:'message.someMessage'}} </i>
             </small> -->
             <small>
-              <i>Pagina: {{page.inbox + 1}} van {{messages.inbox.length}}, in totaal: {{messages.inbox | countBox}} </i>
+              <i>{{ui.message.paginationPage}}: {{page.inbox + 1}} {{ui.message.paginationOf}} {{messages.inbox.length}}, {{ui.message.paginationInTotal}}: {{messages.inbox | countBox}} </i>
             </small>
           </span>
 
@@ -502,7 +502,7 @@
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Berichten filteren..." 
+                    placeholder="{{ui.message.filterMessages}}" 
                     ng-model="query.outbox">
           </form>
           <!-- end filter messages -->
@@ -561,10 +561,10 @@
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
               <button class="btn btn-small {{(page.outbox == 0) && 'disabled'}}" 
-                      ng-click="paginate.before('outbox')">« Vorige
+                      ng-click="paginate.before('outbox')">« {{ui.message.paginationPrevious}}
               </button>
               <button class="btn btn-small {{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}" 
-                      ng-click="paginate.next('outbox')">Volgende »
+                      ng-click="paginate.next('outbox')">{{ui.message.paginationNext}} »
               </button>
             </div>
           </div>
@@ -573,7 +573,7 @@
 
           <span class="muted pull-right">
             <small>
-              <i>Pagina: {{page.outbox + 1}} van {{messages.outbox.length}}, in totaal: {{messages.outbox | countBox}}</i>
+              <i>{{ui.message.paginationPage}}: {{page.outbox + 1}} {{ui.message.paginationOf}} {{messages.outbox.length}}, {{ui.message.paginationInTotal}}: {{messages.outbox | countBox}}</i>
             </small>
           </span>
 
@@ -616,9 +616,9 @@
               <tr>
                 <th width="60"><!-- Status --></th>
                 <th width="50"><!-- Types --></th>
-                <th>Label</th>
-                <th>Ontvangers</th>
-                <th>Frequentie</th>
+                <th>{{ui.message.notificationHeaderLabel}}</th>
+                <th>{{ui.message.notificationHeaderReceivers}}</th>
+                <th>{{ui.message.notificationHeaderFrequency}}</th>
                 <th width="60"></th>
               </tr>
             </thead>
@@ -649,7 +649,7 @@
           </table>
 
           <span class="muted pull-right">
-            <small><i>In totaal: {{scheadules.length}} </i></small>
+            <small><i>{{ui.message.inTotal}}: {{scheadules.length}} </i></small>
           </span>
 
         </div>
@@ -690,7 +690,7 @@
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Berichten filteren..." 
+                    placeholder="{{ui.message.filterMessages}}" 
                     ng-model="query.trash">
           </form>
           <!-- end filter messages -->
@@ -751,10 +751,10 @@
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
               <button class="btn btn-small {{(page.trash == 0) && 'disabled'}}" 
-                      ng-click="paginate.before('trash')">« Vorige
+                      ng-click="paginate.before('trash')">« {{ui.message.paginationPrevious}}
               </button>
               <button class="btn btn-small {{(page.trash + 1 == messages.trash.length) && 'disabled'}}" 
-                      ng-click="paginate.next('trash')">Volgende »
+                      ng-click="paginate.next('trash')">{{ui.message.paginationNext}} »
               </button>
             </div>
           </div>
@@ -763,7 +763,7 @@
 
           <span class="muted pull-right">
             <small>
-              <i>Pagina: {{page.trash + 1}} van {{messages.trash.length}}, in totaal: {{messages.trash | countBox}}</i>
+              <i>{{ui.message.paginationPage}}: {{page.trash + 1}} {{ui.message.paginationOf}} {{messages.trash.length}}, {{ui.message.paginationInTotal}}: {{messages.trash | countBox}}</i>
             </small>
           </span>
 
