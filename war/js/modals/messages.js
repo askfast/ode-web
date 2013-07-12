@@ -365,7 +365,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        receivers.push({
 	        id: member.uuid,
 	        name: member.name,
-	        group: 'Users'
+	        group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
@@ -374,7 +374,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        receivers.push({
 	        id: group.uuid,
 	        name: group.name,
-	        group: 'Groups'
+	        group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 

@@ -76,7 +76,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred = $q.defer();
 
-			$rootScope.statusBar.display('Getting new alarms');
+			$rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
 			$.ajax({
 				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,

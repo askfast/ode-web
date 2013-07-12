@@ -61,7 +61,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
          */
         scope.remover = function (key)
         {
-          console.log('coming to remover');
+          // console.log('coming to remover');
 
           scope.$parent.$parent.remover(key);
         };
@@ -92,17 +92,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
         //     endDate   = Date.create();       
         //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
-        element.daterangepicker({
+        var options = {
           // startDate: startDate,
           // endDate: endDate,
-          ranges: {
-            'Vandaag':          ['today',     'tomorrow'],
-            'Morgen':           ['tomorrow',  new Date.today().addDays(2)],
-            'Gisteren':         ['yesterday', 'today'],
-            'Komende 3 dagen':  ['today',     new Date.create().addDays(3)],
-            'Komende 7 dagen':  ['today',     new Date.create().addDays(7)]
-          }
-        },
+          ranges: {}
+        };
+
+        options.ranges[$rootScope.ui.planboard.daterangerToday]     = ['today', 'tomorrow'];
+        options.ranges[$rootScope.ui.planboard.daterangerTomorrow]  = ['tomorrow', new Date.today().addDays(2)];
+        options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
+        options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
+        options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
+
+        element.daterangepicker(options,
         function (start, end)
         {
           scope.$apply(function ()
@@ -220,29 +222,5 @@ angular.module('WebPaige.Directives', ['ngResource'])
 // ]);
 
 
-/**
- * 
- */
-// .directive('shortcuts', 
-// [
-//   '$rootScope', 
-//   function ($rootScope)
-//   {
-//     return {
-//       restrict: 'E',
-//       template: '<link rel="shortcut icon" ng-href="js/profiles/{{profile}}/img/ico/favicon.ico">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-144-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-114-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="72x72"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-72-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="57x57"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-57-precomposed.png">',
-//       replace: true,
-//       scope: {
-//         profile: '@profile'
-//       },
-//       link: function (scope, element, attrs)
-//       {
-//       }
-//     }
-//   }
-// ]);
+
 

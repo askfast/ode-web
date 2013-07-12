@@ -65,7 +65,8 @@ var ui = {
         periods: 'Periods',
         refreshGroupOverviews: 'Refreshing group overviews..',
         showMore: 'meer tonen',
-        showLess: 'minder tonen'
+        showLess: 'minder tonen',
+        gettingAlarms: 'Getting P2000 alarm messages'
       },
       planboard: {
         planboard: 'Agenda',
@@ -131,7 +132,17 @@ var ui = {
         statPeopleLess: 'Less people than expected',
         statPeopleEven: 'Just enough people as expected',
         statPeopleMore: 'More people than expected',
-        getWishes: 'Getting minimum required value...'
+        getWishes: 'Getting minimum required value...',
+        daterangerToday: 'Today',
+        daterangerTomorrow: 'Tomorrow',
+        daterangerYesterday: 'Yesterday',
+        daterangerNext3Days: 'Next 3 days',
+        daterangerNext7Days: 'Next 7 days',
+        rangeInfoTotalSelectedDays: 'Total selected days: ',
+        rangeInfoTime: 'Time: ',
+        rangeInfoWeekNumber: 'Week number: ',
+        rangeInfoMonth: 'Month: ',
+        rangeInfoTotalDays: ', Total days: '
       },
       message: {
         messages: 'Messages',
@@ -360,19 +371,19 @@ var ui = {
       },
       errors: {
         dashboard: {
-          getOverviews: 'Error with getting group overviews.'
+          getOverviews: 'Error with getting group overviews!'
         },
         groups: {
-          query: 'Error with getting groups and users.',
-          saveWish: 'Error with changing wish value.',
-          searchMembers: 'Error with searching members.',
-          addMember: 'Error with adding a member to a group.',
-          removeMember: 'Error with removing a member from a group.',
-          removeMembers: 'Error with removing members from a group.',
-          groupSubmit: 'Error with saving group.',
-          memberSubmitRegistered: 'Username is already registered.',
-          memberSubmitRegister: 'Error with registering a member.',
-          deleteGroup: 'Error with deleting a group.'
+          query: 'Error with getting groups and users!',
+          saveWish: 'Error with changing wish value!',
+          searchMembers: 'Error with searching members!',
+          addMember: 'Error with adding a member to a group!',
+          removeMember: 'Error with removing a member from a group!',
+          removeMembers: 'Error with removing members from a group!',
+          groupSubmit: 'Error with saving group!',
+          memberSubmitRegistered: 'Username is already registered!',
+          memberSubmitRegister: 'Error with registering a member!',
+          deleteGroup: 'Error with deleting a group!'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -475,7 +486,8 @@ var ui = {
         periods: 'Perioden',
         refreshGroupOverviews: 'Groep overzichten laden...',
         showMore: 'show more',
-        showLess: 'show less'
+        showLess: 'show less',
+        gettingAlarms: 'P2000 alarm berichten aan het ophalen...'
       },
       planboard : {
         planboard: 'Agenda',
@@ -541,7 +553,17 @@ var ui = {
         statPeopleLess: 'Te weinig mensen',
         statPeopleEven: 'Precies genoeg mensen',
         statPeopleMore: 'Meer mensen',
-        getWishes: 'Groep behoefte getal aan het ophalen...'
+        getWishes: 'Groep behoefte getal aan het ophalen...',
+        daterangerToday: 'Vandaag sddf',
+        daterangerTomorrow: 'Morgen',
+        daterangerYesterday: 'Gisteren',
+        daterangerNext3Days: 'Komende 3 dagen',
+        daterangerNext7Days: 'Komende 7 dagen',
+        rangeInfoTotalSelectedDays: 'Totaal aantal geselecteerde dagen: ',
+        rangeInfoTime: 'Tijd: ',
+        rangeInfoWeekNumber: 'Weeknummer: ',
+        rangeInfoMonth: 'Maand: ',
+        rangeInfoTotalDays: ', Totaal aantal dagen: '
       },
       message: {
         messages: 'Berichten',
@@ -769,7 +791,46 @@ var ui = {
       },
       errors: {
         dashboard: {
-          getOverviews: 'Error with getting group overviews.'
+          getOverviews: 'Fout bij het ophalen van groep overzichten!'
+        },
+        groups: {
+          query: 'Fout bij het ophalen van groepen en gebruikers!',
+          saveWish: 'Fout bij het veranderen van de behoefte!',
+          searchMembers: 'Fout bij het zoeken van leden!',
+          addMember: 'Fout bij het toevoegen van een lid aan een groep!',
+          removeMember: 'Fout bij het verwijderen van een lid uit een groep!',
+          removeMembers: 'Fout bij het verwijderen van leden uit een groep!',
+          groupSubmit: 'Fout bij het opslaan van de groep!',
+          memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
+          memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
+          deleteGroup: 'Fout bij het verwijderen van een groep!'
+        },
+        login: {
+          changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
+          forgotCantFind: 'Fout, deze account bestaat niet!',
+          changePassAllFields: 'Vul alstublieft alle velden in!',
+          changePassNoMatch: 'Fout, de wachtwoorden komen niet overeen!'
+        },
+        settings: {
+          save: 'Fout bij het opslaan van de instellingen!'
+        },
+        profile: {
+          save: 'Fout bij het opslaan van het profiel!',
+          get: 'Fout bij het ophalen van het profiel!',
+          changePassword: 'Fout bij het wijzigen van het wachtwoord!'
+        },
+        messages: {
+          query: 'Fout bij het ophalen van berichten!',
+          changeState: 'Fout bij het wijzigen van bericht status!',
+          removeMessage: 'Fout bij het verwijderen van het bericht!',
+          removeMessages: 'Fout bij het verwijderen van de berichten!',
+          restoreMessage: 'Fout bij het terugzetten van het bericht!',
+          restoreMessages: 'Fout bij het terugzetten van de berichten!',
+          emptyTrash: 'Fout bij het leegmaken van de prullenbak!',
+          send: 'Fout bij het verzenden van bericht!',
+          notificationsList: 'Fout bij het ophalen van de geplande notificaties!',
+          notificationsGet: 'Fout bij het ophalen van een geplande notificatie!',
+          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
         }
       }
     }

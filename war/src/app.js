@@ -65,7 +65,8 @@ var ui = {
         periods: 'Periods',
         refreshGroupOverviews: 'Refreshing group overviews..',
         showMore: 'meer tonen',
-        showLess: 'minder tonen'
+        showLess: 'minder tonen',
+        gettingAlarms: 'Getting P2000 alarm messages'
       },
       planboard: {
         planboard: 'Agenda',
@@ -131,7 +132,17 @@ var ui = {
         statPeopleLess: 'Less people than expected',
         statPeopleEven: 'Just enough people as expected',
         statPeopleMore: 'More people than expected',
-        getWishes: 'Getting minimum required value...'
+        getWishes: 'Getting minimum required value...',
+        daterangerToday: 'Today',
+        daterangerTomorrow: 'Tomorrow',
+        daterangerYesterday: 'Yesterday',
+        daterangerNext3Days: 'Next 3 days',
+        daterangerNext7Days: 'Next 7 days',
+        rangeInfoTotalSelectedDays: 'Total selected days: ',
+        rangeInfoTime: 'Time: ',
+        rangeInfoWeekNumber: 'Week number: ',
+        rangeInfoMonth: 'Month: ',
+        rangeInfoTotalDays: ', Total days: '
       },
       message: {
         messages: 'Messages',
@@ -360,19 +371,19 @@ var ui = {
       },
       errors: {
         dashboard: {
-          getOverviews: 'Error with getting group overviews.'
+          getOverviews: 'Error with getting group overviews!'
         },
         groups: {
-          query: 'Error with getting groups and users.',
-          saveWish: 'Error with changing wish value.',
-          searchMembers: 'Error with searching members.',
-          addMember: 'Error with adding a member to a group.',
-          removeMember: 'Error with removing a member from a group.',
-          removeMembers: 'Error with removing members from a group.',
-          groupSubmit: 'Error with saving group.',
-          memberSubmitRegistered: 'Username is already registered.',
-          memberSubmitRegister: 'Error with registering a member.',
-          deleteGroup: 'Error with deleting a group.'
+          query: 'Error with getting groups and users!',
+          saveWish: 'Error with changing wish value!',
+          searchMembers: 'Error with searching members!',
+          addMember: 'Error with adding a member to a group!',
+          removeMember: 'Error with removing a member from a group!',
+          removeMembers: 'Error with removing members from a group!',
+          groupSubmit: 'Error with saving group!',
+          memberSubmitRegistered: 'Username is already registered!',
+          memberSubmitRegister: 'Error with registering a member!',
+          deleteGroup: 'Error with deleting a group!'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -475,7 +486,8 @@ var ui = {
         periods: 'Perioden',
         refreshGroupOverviews: 'Groep overzichten laden...',
         showMore: 'show more',
-        showLess: 'show less'
+        showLess: 'show less',
+        gettingAlarms: 'P2000 alarm berichten aan het ophalen...'
       },
       planboard : {
         planboard: 'Agenda',
@@ -541,7 +553,17 @@ var ui = {
         statPeopleLess: 'Te weinig mensen',
         statPeopleEven: 'Precies genoeg mensen',
         statPeopleMore: 'Meer mensen',
-        getWishes: 'Groep behoefte getal aan het ophalen...'
+        getWishes: 'Groep behoefte getal aan het ophalen...',
+        daterangerToday: 'Vandaag sddf',
+        daterangerTomorrow: 'Morgen',
+        daterangerYesterday: 'Gisteren',
+        daterangerNext3Days: 'Komende 3 dagen',
+        daterangerNext7Days: 'Komende 7 dagen',
+        rangeInfoTotalSelectedDays: 'Totaal aantal geselecteerde dagen: ',
+        rangeInfoTime: 'Tijd: ',
+        rangeInfoWeekNumber: 'Weeknummer: ',
+        rangeInfoMonth: 'Maand: ',
+        rangeInfoTotalDays: ', Totaal aantal dagen: '
       },
       message: {
         messages: 'Berichten',
@@ -769,7 +791,46 @@ var ui = {
       },
       errors: {
         dashboard: {
-          getOverviews: 'Error with getting group overviews.'
+          getOverviews: 'Fout bij het ophalen van groep overzichten!'
+        },
+        groups: {
+          query: 'Fout bij het ophalen van groepen en gebruikers!',
+          saveWish: 'Fout bij het veranderen van de behoefte!',
+          searchMembers: 'Fout bij het zoeken van leden!',
+          addMember: 'Fout bij het toevoegen van een lid aan een groep!',
+          removeMember: 'Fout bij het verwijderen van een lid uit een groep!',
+          removeMembers: 'Fout bij het verwijderen van leden uit een groep!',
+          groupSubmit: 'Fout bij het opslaan van de groep!',
+          memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
+          memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
+          deleteGroup: 'Fout bij het verwijderen van een groep!'
+        },
+        login: {
+          changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
+          forgotCantFind: 'Fout, deze account bestaat niet!',
+          changePassAllFields: 'Vul alstublieft alle velden in!',
+          changePassNoMatch: 'Fout, de wachtwoorden komen niet overeen!'
+        },
+        settings: {
+          save: 'Fout bij het opslaan van de instellingen!'
+        },
+        profile: {
+          save: 'Fout bij het opslaan van het profiel!',
+          get: 'Fout bij het ophalen van het profiel!',
+          changePassword: 'Fout bij het wijzigen van het wachtwoord!'
+        },
+        messages: {
+          query: 'Fout bij het ophalen van berichten!',
+          changeState: 'Fout bij het wijzigen van bericht status!',
+          removeMessage: 'Fout bij het verwijderen van het bericht!',
+          removeMessages: 'Fout bij het verwijderen van de berichten!',
+          restoreMessage: 'Fout bij het terugzetten van het bericht!',
+          restoreMessages: 'Fout bij het terugzetten van de berichten!',
+          emptyTrash: 'Fout bij het leegmaken van de prullenbak!',
+          send: 'Fout bij het verzenden van bericht!',
+          notificationsList: 'Fout bij het ophalen van de geplande notificaties!',
+          notificationsGet: 'Fout bij het ophalen van een geplande notificatie!',
+          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
         }
       }
     }
@@ -2006,7 +2067,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred = $q.defer();
 
-			$rootScope.statusBar.display('Getting new alarms');
+			$rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
 			$.ajax({
 				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
@@ -3164,7 +3225,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        receivers.push({
 	        id: member.uuid,
 	        name: member.name,
-	        group: 'Users'
+	        group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
@@ -3173,7 +3234,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        receivers.push({
 	        id: group.uuid,
 	        name: group.name,
-	        group: 'Groups'
+	        group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 
@@ -4485,7 +4546,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
          */
         scope.remover = function (key)
         {
-          console.log('coming to remover');
+          // console.log('coming to remover');
 
           scope.$parent.$parent.remover(key);
         };
@@ -4516,17 +4577,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
         //     endDate   = Date.create();       
         //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
-        element.daterangepicker({
+        var options = {
           // startDate: startDate,
           // endDate: endDate,
-          ranges: {
-            'Vandaag':          ['today',     'tomorrow'],
-            'Morgen':           ['tomorrow',  new Date.today().addDays(2)],
-            'Gisteren':         ['yesterday', 'today'],
-            'Komende 3 dagen':  ['today',     new Date.create().addDays(3)],
-            'Komende 7 dagen':  ['today',     new Date.create().addDays(7)]
-          }
-        },
+          ranges: {}
+        };
+
+        options.ranges[$rootScope.ui.planboard.daterangerToday]     = ['today', 'tomorrow'];
+        options.ranges[$rootScope.ui.planboard.daterangerTomorrow]  = ['tomorrow', new Date.today().addDays(2)];
+        options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
+        options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
+        options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
+
+        element.daterangepicker(options,
         function (start, end)
         {
           scope.$apply(function ()
@@ -4644,31 +4707,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
 // ]);
 
 
-/**
- * 
- */
-// .directive('shortcuts', 
-// [
-//   '$rootScope', 
-//   function ($rootScope)
-//   {
-//     return {
-//       restrict: 'E',
-//       template: '<link rel="shortcut icon" ng-href="js/profiles/{{profile}}/img/ico/favicon.ico">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-144-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-114-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="72x72"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-72-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="57x57"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-57-precomposed.png">',
-//       replace: true,
-//       scope: {
-//         profile: '@profile'
-//       },
-//       link: function (scope, element, attrs)
-//       {
-//       }
-//     }
-//   }
-// ]);
+
 
 ;/**
  * AngularStrap - Twitter Bootstrap directives for AngularJS
@@ -4716,7 +4755,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
 
         if (timers[id].delay == timers[id].counter)
         {
-          console.log('calling timer event');
+          // console.log('calling timer event');
 
           // if (id == 'unreadCount')
           // {            
@@ -5080,8 +5119,8 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         Storage.add('periods', angular.toJson({
           months: this.getMonthTimeStamps(),
-          weeks: this.getWeekTimeStamps(),
-          days: this.getDayTimeStamps()
+          weeks:  this.getWeekTimeStamps(),
+          days:   this.getDayTimeStamps()
         }));      
       },
 
@@ -6222,7 +6261,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                             style + 
                             '" ' + 
 
-                            'title="'+'Minimum aantal benodigden'+': ' + 
+                            'title="' + 'Minimum aantal benodigden' + ': ' + 
 
                             num + 
                             ' personen"></div>';
@@ -7091,8 +7130,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeInfoFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'$rootScope', 'Dater', 'Storage', 
+	function ($rootScope, Dater, Storage)
 	{
 		var periods = Dater.getPeriods();
 
@@ -7102,7 +7141,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			if (diff > (2419200000 + 259200000))
 			{
-				return 'Totaal aantal geselecteerde dagen: ' + Math.round(diff / 86400000);
+				return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
 			}
 			else
 			{
@@ -7118,21 +7157,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 					 */
 					if (hours.end == '00:00') hours.end = '24:00';
 
-					return 	'Tijd: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoTime + 
 									hours.start + 
 									' / ' + 
 									hours.end;
 				}
 				else if (timeline.scope.week)
 				{
-					return 	'Weeknummer: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoWeekNumber + 
 									timeline.current.week;
 				}
 				else if (timeline.scope.month)
 				{
-					return 	'Maand: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoMonth + 
 									timeline.current.month + 
-									', Totaal aantal dagen: ' + 
+									$rootScope.ui.planboard.rangeInfoTotalDays + 
 									periods.months[timeline.current.month].totalDays;
 				};
 			};
@@ -7158,7 +7197,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 		return function (timeline)
 		{
-			if (timeline) return 'Weeknummer: ' + timeline.current.week;
+			if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
 		};
 	}
 ])

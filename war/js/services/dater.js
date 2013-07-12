@@ -237,8 +237,8 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         Storage.add('periods', angular.toJson({
           months: this.getMonthTimeStamps(),
-          weeks: this.getWeekTimeStamps(),
-          days: this.getDayTimeStamps()
+          weeks:  this.getWeekTimeStamps(),
+          days:   this.getDayTimeStamps()
         }));      
       },
 

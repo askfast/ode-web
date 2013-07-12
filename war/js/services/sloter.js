@@ -231,7 +231,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                             style + 
                             '" ' + 
 
-                            'title="'+'Minimum aantal benodigden'+': ' + 
+                            'title="' + 'Minimum aantal benodigden' + ': ' + 
 
                             num + 
                             ' personen"></div>';

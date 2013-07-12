@@ -37,7 +37,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
 
         if (timers[id].delay == timers[id].counter)
         {
-          console.log('calling timer event');
+          // console.log('calling timer event');
 
           // if (id == 'unreadCount')
           // {            
