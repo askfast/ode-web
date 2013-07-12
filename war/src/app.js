@@ -39,6 +39,7 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
+        dashboard: 'Dashboard',
         groupOverviews: 'Loading and analyzing group overviews...',
         thisWeek: 'This week',
         nextWeek: 'Next week',
@@ -115,7 +116,13 @@ var ui = {
         preCompilingStortageMessage: 'Pre-compiling shortage message',
         weeklyPlanning: 'Weekly planning',
         planning: 'Planning',
-        minNumber: 'Minimum number benodigden'
+        minNumber: 'Minimum number benodigden',
+        statDays: 'days',
+        statHours: 'hours',
+        statMinutes: 'minutes',
+        statPeopleLess: 'Less people than expected',
+        statPeopleEven: 'Just enough people as expected',
+        statPeopleMore: 'More people than expected'
       },
       message: {
         messages: 'Messages',
@@ -155,14 +162,14 @@ var ui = {
         escalation: 'Escalation message',
         escalationBody: function (diff,startDate,startTime,endDate,endTime)
         {
-            return 'We have ' +
-            diff +
-            ' shortage in between ' +
-            startDate + ' ' +
-            startTime + ' and ' +
-            endDate + ' ' +
-            endTime + '. ' +
-            'Would you please make yourself available if you are available for that period?';
+          return 'We have ' +
+          diff +
+          ' shortage in between ' +
+          startDate + ' ' +
+          startTime + ' and ' +
+          endDate + ' ' +
+          endTime + '. ' +
+          'Would you please make yourself available if you are available for that period?';
         },
         removed: 'Message removed successfully.',
         removing: 'Removing the message...',
@@ -191,8 +198,14 @@ var ui = {
         repeat: 'Repeat',
         repeatOn: 'On',
         repeatOff: 'Off',
+        enabled: 'Enabled',
+        disabled: 'Disabled',
         repeatNew: 'New repeat',
-        notificationLabel: 'Notification label'
+        notificationLabel: 'Notification label',
+        notifications: 'Notifications',
+        notificationsEmpty: 'There are currently no notifications.Er zijn (nog) geen herhalingen.',
+        notificationStatus: 'Notification status',
+        notificationSave: 'Save'
       },
       groups: {
         groups: 'Groups',
@@ -282,7 +295,8 @@ var ui = {
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
         changingTimeslot: 'Changing a timeslot..',
-        timeslotChanged: 'Timeslot is succesfully changed.'
+        timeslotChanged: 'Timeslot is succesfully changed.',
+        passwordChangeWarning: 'Warning! with this option you will change password this user.'
       },
       settings: {
         settings: 'Settings',
@@ -297,6 +311,7 @@ var ui = {
         saved: 'Settings successfully saved.'
       },
       help: {
+        help: 'Help',
         header: 'Help & Support',
         support: 'Support'
       },
@@ -349,6 +364,7 @@ var ui = {
         loading: 'Loading..'
       },
       dashboard: {
+        dashboard: 'Dashboard',
         groupOverviews: 'Laden en analyseren groepsoverzichten...',
         thisWeek: 'Deze week',
         nextWeek: 'Volgende week',
@@ -425,7 +441,13 @@ var ui = {
         preCompilingStortageMessage: 'Opstellen tekortbericht',
         weeklyPlanning: 'Wekelijkse planning',
         planning: 'Planning',
-        minNumber: 'Minimum aantal benodigde mensen'
+        minNumber: 'Minimum aantal benodigde mensen',
+        statDays: 'dagen',
+        statHours: 'uren',
+        statMinutes: 'minuten',
+        statPeopleLess: 'Te weinig mensen',
+        statPeopleEven: 'Precies genoeg mensen',
+        statPeopleMore: 'Meer mensen'
       },
       message: {
         messages: 'Berichten',
@@ -465,14 +487,14 @@ var ui = {
         escalation: 'Escalatiebericht',
         escalationBody: function(diff,startDate,startTime,endDate,endTime)
         {
-            return 'Er is een tekort van ' +
-            diff +
-            ' mensen tussen ' +
-            startDate + ' ' +
-            startTime + ' en ' +
-            endDate + ' ' +
-            endTime + '. ' +
-            'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
+          return 'Er is een tekort van ' +
+          diff +
+          ' mensen tussen ' +
+          startDate + ' ' +
+          startTime + ' en ' +
+          endDate + ' ' +
+          endTime + '. ' +
+          'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
         },
         removed: 'Bericht succesvol verwijderd.',
         removing: 'Bericht verwijderen...',
@@ -501,8 +523,14 @@ var ui = {
         repeat: 'Herhaling',
         repeatOn: 'Aan',
         repeatOff: 'Uit',
+        enabled: 'Ingeschakeld',
+        disabled: 'Uitgeschakeld',
         repeatNew: 'Nieuwe herhaling',
-        notificationLabel: 'Notificatie label'
+        notificationLabel: 'Notificatie label',
+        notifications: 'Herinneringen',
+        notificationsEmpty: 'Er zijn (nog) geen herhalingen.',
+        notificationStatus: 'Notificatie status',
+        notificationSave: 'Opslaan'
       },
       groups: {
         groups: 'Groepen',
@@ -591,7 +619,8 @@ var ui = {
         passwrong: 'Ingevoerd wachtwoord is foutief! Probeer het opnieuw.',
         newTimeslotAdded: 'Nieuw tijdslot succesvol toegevoegd.',
         changingTimeslot: 'Tijdslot wijzigen...',
-        timeslotChanged: 'Tijdslot succesvol gewijzigd.'
+        timeslotChanged: 'Tijdslot succesvol gewijzigd.',
+        passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.'
       },
       settings: {
         settings: 'Instellingen',
@@ -606,6 +635,7 @@ var ui = {
         saved: 'Instellingen succesvol gewijzigd.'
       },
       help: {
+        help: 'Hulp',
         header: 'Hulp & Ondersteuning',
         support: 'Ondersteuning'
       },

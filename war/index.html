@@ -14,11 +14,16 @@
     <meta name="viewport" content="width=device-width">
     
     <!-- favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="57x57" ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
-                                   <link rel="shortcut icon" ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" 
+          ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" 
+          ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" 
+          ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" 
+          ng-href="profiles/{{config.profile.meta}}/img/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" 
+          ng-href="profiles/{{config.profile.meta}}/img/ico/favicon.ico">
 
     <!-- styles -->
     <link rel="stylesheet" href="dist/bootstrap.css">
@@ -281,7 +286,12 @@
        * Livereload only on localhost
        */
       if (location.host.split(':')[0] == 'localhost')
-        document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+        document.write(
+            '<script src="http://' + 
+            (location.host || 'localhost').split(':')[0] + 
+            ':35729/livereload.js?snipver=1"></' + 
+            'script>'
+        );
     </script>
 
     
