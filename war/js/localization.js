@@ -831,6 +831,16 @@ var ui = {
           notificationsList: 'Fout bij het ophalen van de geplande notificaties!',
           notificationsGet: 'Fout bij het ophalen van een geplande notificatie!',
           notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
+        },
+        timeline: {
+          query: 'Error with gettings timeslots!',
+          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
+          add: 'Error with adding a new timeslot!',
+          change: 'Error with changing timeslot!',
+          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
+          remove: 'Error with removing timeslot!',
+          wisher: 'Error with changing wish value!'
         }
       }
     }

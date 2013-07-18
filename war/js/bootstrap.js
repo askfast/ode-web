@@ -81,6 +81,9 @@ angular.module('WebPaige')
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
+    console.log('-->', $rootScope.ui);
+
+
     /**
      * If periods are not present calculate them
      */

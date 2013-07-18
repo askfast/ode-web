@@ -973,6 +973,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
+		    	console.log('->', $rootScope.ui.errors);
+		    	
 		      $rootScope.notifier.error($rootScope.ui.errors.timeline.pastChanging);
 
 		      $scope.timeliner.refresh();

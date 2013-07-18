@@ -12,6 +12,7 @@
 ## Versions
 
 	2.3.3
+		* Finalised localization
 		* Slicing
 		* Changing passwords of group members allowed for plannners
 		* IE bug fix for library loading order issue
