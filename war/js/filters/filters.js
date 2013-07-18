@@ -227,8 +227,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeInfoWeekFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'$rootScope', 'Dater', 'Storage', 
+	function ($rootScope, Dater, Storage)
 	{
 		var periods = Dater.getPeriods();
 
