@@ -1409,7 +1409,7 @@ angular.module('WebPaige')
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
-    console.log('-->', $rootScope.ui);
+    // console.log('-->', $rootScope.ui);
 
 
     /**
@@ -1452,7 +1452,7 @@ angular.module('WebPaige')
           status: false,
           total:  0,
           count:  0
-        }
+        };
       },
 
       display: function (message)
