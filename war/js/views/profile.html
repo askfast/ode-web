@@ -252,7 +252,8 @@
       <!-- userTimelineTab -->
       <div class="tab-pane {{(views.timeline==true) && 'active'}}" 
             id="userTimelineTab"
-            ng-hide="views.user"ng-controller="timeline">
+            ng-hide="views.user"
+            ng-controller="timeline">
 
 
 
@@ -269,7 +270,6 @@
 
 
         <hr>
-
 
         <!-- timeline controls -->
         <div class="row-fluid" id="timeline-controls" ng-controller="timeline-navigation">
@@ -505,7 +505,13 @@
 
 
         <!-- timeline -->
-        <div id="timeline">
+
+        <div ng-hide="timelineLoaded">
+          <p>{{ui.planboard.loadingTimeline}}</p>
+        </div>
+
+        <div id="timeline" ng-show="timelineLoaded">
+        <!-- <div id="timeline"> -->
           <div id="userTimeline"></div>
         </div>
         <!-- end timeline -->

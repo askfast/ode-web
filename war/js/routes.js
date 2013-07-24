@@ -76,7 +76,7 @@ angular.module('WebPaige')
                       layouts: {
                         user:     true,
                         group:    true,
-                        members:  false
+                        members:  true
                       }
                     });
           }

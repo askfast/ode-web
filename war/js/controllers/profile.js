@@ -163,7 +163,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    $scope.views[hash] = true;
 
 	    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
-	  };
+	  }
 
 
 	  /**
@@ -302,14 +302,22 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
+     * TODO
+     * Is it really needed?
+     * Since the timelinebooter is disabled
+     *
 	   * Redraw timeline
 	   */
 	  $scope.redraw = function ()
 	  {
 	  	setTimeout(function ()
 	  	{
-	  		// timelinebooter();
+	  		//timelinebooter();
+	  		if($scope.self.timeline)
+	  			$scope.self.timeline.redraw();
+		     //console.warn('timeline ->', $scope.timeline);
 	  	}, 100);
+	  	console.log("redraw timeline here??");
 		};
 
 

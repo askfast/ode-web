@@ -45,7 +45,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       layouts: {
         user:     true,
         group:    true,
-        members:  false
+        members:  true
       },
       /**
        * Fix for timeline scoper to day

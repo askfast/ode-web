@@ -81,12 +81,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			else if ($route.current.params.userId != $rootScope.app.resources.uuid)
 			{
-				range = $scope.self.timeline.getVisibleChartRange();
+				if ($scope.self.timeline)
+				{
+					range = $scope.self.timeline.getVisibleChartRange();
 
-				$scope.timeline.range = {
-					start:  new Date(range.start).toString(),
-					end:    new Date(range.end).toString()
-				};
+					$scope.timeline.range = {
+						start:  new Date(range.start).toString(),
+						end:    new Date(range.end).toString()
+					};
+				}
 			}
 		});
 
@@ -197,10 +200,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
-		    	var timeout = ($location.hash() == 'timeline') ? 100 : 1700;
+		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
+
+		    	
+
+          $rootScope.timelineLoaded = false;
 
 			    setTimeout( function () 
 		      {
+		      	console.log('komt hier');
+
+
+            $rootScope.timelineLoaded = true;
+            $rootScope.$apply();
+
 		        $scope.self.timeline.draw(
 		          Sloter.profile(
 		            $scope.data.slots.data, 
@@ -292,7 +305,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        add:  true,
 		        edit: false
 		      };
-		    };
+		    }
 
 	      this.load({
 	        start:  $scope.data.periods.start,
@@ -367,7 +380,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
 	          $scope.timeline.current.layouts.group = true;
 	      break;
-	    };
+	    }
 
 	    $scope.timeliner.load({
 	      start:  $scope.data.periods.start,

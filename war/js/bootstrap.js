@@ -365,6 +365,8 @@ angular.module('WebPaige')
      */
     $rootScope.fixStyles = function ()
     {
+      $rootScope.timelineLoaded = false;
+
       var tabHeight = $('.tabs-left .nav-tabs').height();
 
       $.each($('.tab-content').children(), function () 
