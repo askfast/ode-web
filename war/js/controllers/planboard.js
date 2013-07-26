@@ -117,11 +117,11 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  if ($.browser.msie && $.browser.version == '8.0')
 	  {
 	  	$scope.timeline.options = {
-	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
-	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
-	    }
+        start:  $scope.periods.days[Dater.current.today()].last.timeStamp,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.timeStamp,
+        min:    $scope.periods.days[Dater.current.today()].last.timeStamp,
+        max:    $scope.periods.days[Dater.current.today() + 7].last.timeStamp
+	    };
 	  }
 
 

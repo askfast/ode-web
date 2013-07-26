@@ -8874,11 +8874,11 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  if ($.browser.msie && $.browser.version == '8.0')
 	  {
 	  	$scope.timeline.options = {
-	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
-	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
-	    }
+        start:  $scope.periods.days[Dater.current.today()].last.timeStamp,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.timeStamp,
+        min:    $scope.periods.days[Dater.current.today()].last.timeStamp,
+        max:    $scope.periods.days[Dater.current.today() + 7].last.timeStamp
+	    };
 	  }
 
 
@@ -10698,7 +10698,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        else
 	        {
 	          // console.log('state changed');
-	        };
+	        }
 	      });
 
 	      var _inbox = [];
@@ -10713,10 +10713,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	  $scope.messages.inbox = _inbox;
 
 	      Messages.unreadCount(); 
-	    };
+	    }
 
 	    $rootScope.statusBar.off();
-	  };
+	  }
 
 
 	  /**
@@ -10928,7 +10928,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');
-	    };
+	    }
 	  };
 
 
@@ -10991,7 +10991,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function (messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.loading = false;
 
@@ -10999,7 +10999,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11037,11 +11037,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function (messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11078,7 +11078,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11118,7 +11118,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11157,9 +11157,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            $scope.messages = messages;
 
 	            $rootScope.statusBar.off();
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });    
 	  };
 
@@ -11230,9 +11230,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	              $scope.requestMessage(uuid, $scope.origin);
 
 	              $rootScope.statusBar.off();
-	            };
+	            }
 	          });
-	        };
+	        }
 	      });
 	    }
 	    else
@@ -11240,7 +11240,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $rootScope.notifier.error($rootScope.ui.message.noReceivers);
 
 	      $rootScope.statusBar.off();
-	    };
+	    }
 	  };
 
 
@@ -11314,7 +11314,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    $scope.broadcast = {
 	      sms: true
 	    };
-	  };
+	  }
 
 
 	  /**
@@ -11396,7 +11396,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    $rootScope.statusBar.off();
 
 				    callback();
-				  };
+				  }
 				});
 	  	},
 
@@ -11421,7 +11421,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    // console.log('notification fetched ->', result);
 
 				    $scope.scheaduled = result;
-				  };
+				  }
 				});
 	  	},
 
@@ -11467,7 +11467,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        	{
 	        		$scope.setViewTo('notifications');
 	        	});
-				  };
+				  }
 				});
 	  	},
 
@@ -11498,7 +11498,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        		$scope.setViewTo('notifications');
 					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
 	        	});
-				  };
+				  }
 				});	
 	  	},
 
@@ -11528,7 +11528,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        	{
 	        		$scope.setViewTo('notifications');
 	        	});
-		      };
+		      }
 		    });
 	  	}
 

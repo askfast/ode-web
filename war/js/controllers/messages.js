@@ -231,7 +231,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        else
 	        {
 	          // console.log('state changed');
-	        };
+	        }
 	      });
 
 	      var _inbox = [];
@@ -246,10 +246,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	  $scope.messages.inbox = _inbox;
 
 	      Messages.unreadCount(); 
-	    };
+	    }
 
 	    $rootScope.statusBar.off();
-	  };
+	  }
 
 
 	  /**
@@ -461,7 +461,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');
-	    };
+	    }
 	  };
 
 
@@ -524,7 +524,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function (messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.loading = false;
 
@@ -532,7 +532,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -570,11 +570,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function (messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -611,7 +611,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -651,7 +651,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -690,9 +690,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            $scope.messages = messages;
 
 	            $rootScope.statusBar.off();
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });    
 	  };
 
@@ -763,9 +763,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	              $scope.requestMessage(uuid, $scope.origin);
 
 	              $rootScope.statusBar.off();
-	            };
+	            }
 	          });
-	        };
+	        }
 	      });
 	    }
 	    else
@@ -773,7 +773,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $rootScope.notifier.error($rootScope.ui.message.noReceivers);
 
 	      $rootScope.statusBar.off();
-	    };
+	    }
 	  };
 
 
@@ -847,7 +847,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    $scope.broadcast = {
 	      sms: true
 	    };
-	  };
+	  }
 
 
 	  /**
@@ -929,7 +929,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    $rootScope.statusBar.off();
 
 				    callback();
-				  };
+				  }
 				});
 	  	},
 
@@ -954,7 +954,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    // console.log('notification fetched ->', result);
 
 				    $scope.scheaduled = result;
-				  };
+				  }
 				});
 	  	},
 
@@ -1000,7 +1000,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        	{
 	        		$scope.setViewTo('notifications');
 	        	});
-				  };
+				  }
 				});
 	  	},
 
@@ -1031,7 +1031,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        		$scope.setViewTo('notifications');
 					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
 	        	});
-				  };
+				  }
 				});	
 	  	},
 
@@ -1061,7 +1061,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        	{
 	        		$scope.setViewTo('notifications');
 	        	});
-		      };
+		      }
 		    });
 	  	}
 
