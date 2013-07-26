@@ -38,42 +38,48 @@ angular.module('WebPaige')
         className:'state-available',
         label:    'Beschikbaar',
         color:    '#4f824f',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.BeschikbaarNoord':
       {
         className:'state-available-north',
         label:    'Beschikbaar voor Noord',
         color:    '#000',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.BeschikbaarZuid':
       {
         className:'state-available-south',
         label:    'Beschikbaar voor Zuid',
         color:    '#e08a0c',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.Unavailable':
       {
         className:'state-unavailable',
         label:    'Niet Beschikbaar',
         color:    '#a93232',
-        type:     'Niet Beschikbaar'
+        type:     'Niet Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.SchipperVanDienst':
       {
         className:'state-schipper-service',
         label:    'Schipper van Dienst',
         color:    '#e0c100',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.Unreached':
       {
         className:'state-unreached',
         label:    'Niet Bereikt',
         color:    '#65619b',
-        type:     'Niet Beschikbaar'
+        type:     'Niet Beschikbaar' ,
+        display:  false
       }
     },
 

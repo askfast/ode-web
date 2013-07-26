@@ -8,8 +8,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 .controller('planboard', 
 [
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter',
-	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage',
+	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage)
 	{
 	  /**
 	   * Fix styles
@@ -28,8 +28,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-	  // console.log('data ->', data);
-
 	  
 	  /**
 	   * Get groups and settings
@@ -45,7 +43,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       layouts: {
         user:     true,
         group:    true,
-        members:  true
+        members:  false
       },
       /**
        * Fix for timeline scoper to day
@@ -149,7 +147,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Prepeare timeline range for dateranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
+                        ' / ' +
 	                      Dater.readable.date($scope.timeline.range.end);
 
 
@@ -158,7 +157,12 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var states = {};
 
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
+	  angular.forEach($scope.timeline.config.states, function (state, key)
+    {
+      // show only user editable states
+      if (state.display)
+        states[key] = state.label;
+    });
 
 	  $scope.states = states;
 
@@ -226,7 +230,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      $scope.resetViews();
 
 	      $scope.views.slot.add = true;
-	    };
+	    }
 	  };
 
 

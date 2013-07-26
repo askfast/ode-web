@@ -966,42 +966,48 @@ angular.module('WebPaige')
         className:'state-available',
         label:    'Beschikbaar',
         color:    '#4f824f',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.BeschikbaarNoord':
       {
         className:'state-available-north',
         label:    'Beschikbaar voor Noord',
         color:    '#000',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.BeschikbaarZuid':
       {
         className:'state-available-south',
         label:    'Beschikbaar voor Zuid',
         color:    '#e08a0c',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.Unavailable':
       {
         className:'state-unavailable',
         label:    'Niet Beschikbaar',
         color:    '#a93232',
-        type:     'Niet Beschikbaar'
+        type:     'Niet Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.SchipperVanDienst':
       {
         className:'state-schipper-service',
         label:    'Schipper van Dienst',
         color:    '#e0c100',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.Unreached':
       {
         className:'state-unreached',
         label:    'Niet Bereikt',
         color:    '#65619b',
-        type:     'Niet Beschikbaar'
+        type:     'Niet Beschikbaar' ,
+        display:  false
       }
     },
 
@@ -1171,7 +1177,7 @@ angular.module('WebPaige')
                       layouts: {
                         user:     true,
                         group:    true,
-                        members:  true
+                        members:  false
                       }
                     });
           }
@@ -8759,8 +8765,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 .controller('planboard', 
 [
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter',
-	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage',
+	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage)
 	{
 	  /**
 	   * Fix styles
@@ -8779,8 +8785,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-	  // console.log('data ->', data);
-
 	  
 	  /**
 	   * Get groups and settings
@@ -8796,7 +8800,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       layouts: {
         user:     true,
         group:    true,
-        members:  true
+        members:  false
       },
       /**
        * Fix for timeline scoper to day
@@ -8900,7 +8904,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Prepeare timeline range for dateranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
+                        ' / ' +
 	                      Dater.readable.date($scope.timeline.range.end);
 
 
@@ -8909,7 +8914,12 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var states = {};
 
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
+	  angular.forEach($scope.timeline.config.states, function (state, key)
+    {
+      // show only user editable states
+      if (state.display)
+        states[key] = state.label;
+    });
 
 	  $scope.states = states;
 
@@ -8977,7 +8987,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      $scope.resetViews();
 
 	      $scope.views.slot.add = true;
-	    };
+	    }
 	  };
 
 
@@ -9040,8 +9050,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
-	function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile, Timer)
+	'$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
+	function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile)
 	{
 		var range, diff;
 
@@ -9143,7 +9153,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           time: new Date().addHours(1).toString($rootScope.config.formats.time),
           datetime: new Date().toISOString()
         },
-        state:      '',
+        state:      'com.ask-cs.State.Available',
         recursive:  false,
         id:         ''
       };

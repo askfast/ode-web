@@ -8,8 +8,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
-	function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile, Timer)
+	'$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
+	function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile)
 	{
 		var range, diff;
 
@@ -111,7 +111,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           time: new Date().addHours(1).toString($rootScope.config.formats.time),
           datetime: new Date().toISOString()
         },
-        state:      '',
+        state:      'com.ask-cs.State.Available',
         recursive:  false,
         id:         ''
       };

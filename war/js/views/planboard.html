@@ -101,8 +101,7 @@
     <form class="form-inline form-toggled well">
 
       <!-- close btn -->
-      <button ng-click="resetInlineForms()" 
-              class="close">&times;</button>
+      <button ng-click="resetInlineForms()" class="close">&times;</button>
       <!-- end close btn -->
     
       <h4 ng-show="views.slot.add">{{ui.planboard.newAvail}}</h4>
@@ -240,7 +239,7 @@
                 ng-options="option as value for (option, value) in states" 
                 ng-change="modifySlot(slot)" 
                 ng-show="views.slot.add || views.slot.edit">
-          <option value="">{{ui.planboard.selectAState}}</option>
+          <!--<option value="">{{ui.planboard.selectAState}}</option>-->
         </select>
         <select ng-model="slot.state" 
                 disabled
@@ -323,6 +322,7 @@
         </div>
       </div>
       <!-- end slot actions -->
+
     </form>
   </div>
   <!-- end slot controls -->
