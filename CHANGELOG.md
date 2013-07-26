@@ -12,10 +12,10 @@
 ## Versions
 
 	2.3.3
-		* Finalised localization
-		* Slicing
-		* Changing passwords of group members allowed for plannners
-		* IE bug fix for library loading order issue
+		* Improved translations (#33) 12-7-2013
+		* Implement the moving of time-slots starting in the past and ending in the future by slicing them 10-7-2013
+		* Enabling changing of group member passwords for planners 9-7-2013
+		* Multiple IE bugs fix for library loading order issue 9-7-2013
 
 	2.3.2
 		* Deployed for 100T, 110K, 120G and 130B 8-7-2013
