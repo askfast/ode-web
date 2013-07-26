@@ -2,13 +2,9 @@
 
 
 
-
-
-
-
   <!-- page header -->
   <div class="page-header">
-    <h2>Agenda</h2>
+    <h2>{{ui.planboard.planboard}}</h2>
     <div class="btn-group pull-right">
       <button type="submit" 
               ng-click="toggleSlotForm()" 
@@ -18,12 +14,6 @@
   <!-- end page header -->
 
 
-
-
-
-  <!-- started: {{app.preloader.started}}<br>
-  stopped: {{app.preloader.stopped}}<br>
-  result:  {{app.preloader.stopped - app.preloader.started}} -->
 
 
 
@@ -111,8 +101,7 @@
     <form class="form-inline form-toggled well">
 
       <!-- close btn -->
-      <button ng-click="resetInlineForms()" 
-              class="close">&times;</button>
+      <button ng-click="resetInlineForms()" class="close">&times;</button>
       <!-- end close btn -->
     
       <h4 ng-show="views.slot.add">{{ui.planboard.newAvail}}</h4>
@@ -250,7 +239,7 @@
                 ng-options="option as value for (option, value) in states" 
                 ng-change="modifySlot(slot)" 
                 ng-show="views.slot.add || views.slot.edit">
-          <option value="">{{ui.planboard.selectAState}}</option>
+          <!--<option value="">{{ui.planboard.selectAState}}</option>-->
         </select>
         <select ng-model="slot.state" 
                 disabled
@@ -333,6 +322,7 @@
         </div>
       </div>
       <!-- end slot actions -->
+
     </form>
   </div>
   <!-- end slot controls -->
@@ -448,7 +438,8 @@
                           ng-model="timeline.current.layouts.members" 
                           class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
                           ng-click="requestTimeline('members')"
-                          ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}</button>
+                          ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}
+                  </button>
                 </div>
                 <!-- end timeline layout manager -->
 
@@ -587,7 +578,8 @@
                         ng-model="timeline.current.layouts.members" 
                         class="btn {{(timeline.current.layouts.members==true) && 'active'}}" 
                         ng-click="requestTimeline('members')"
-                        ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}</button>
+                        ng-show="(app.resources.role < 3) || timeline.config.layouts.members">{{ui.planboard.members}}
+                </button>
               </div>
               <!-- end timeline layout manager -->
 
@@ -635,7 +627,7 @@
               <div id="groupPie"></div>
               
               <div class="groupStatInfo">
-                <h3>{{data.aggs.id|groupIdToName}}</h3>
+                <h3>{{data.aggs.id | groupIdToName}}</h3>
                 <hr>
                 <ul>
                   <li>
@@ -644,13 +636,13 @@
                       <span class="percentage">%</span>
                     </div>
                     <div class="info">                    
-                      <h4>More people than expected</h4>
-                      <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5> 
-                      <small class="muted">days</small>, 
-                      <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5> 
-                      <small class="muted">hours</small>, 
-                      <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5> 
-                      <small class="muted">minutes</small>
+                      <h4>{{ui.planboard.statPeopleMore}}</h4>
+                      <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statDays}}</small>,&nbsp;
+                      <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statHours}}</small>,&nbsp;
+                      <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statMinutes}}</small>
                     </div>
                   </li>
                   <li>
@@ -659,13 +651,13 @@
                       <span class="percentage">%</span>
                     </div>
                     <div class="info">                    
-                      <h4>Just as many people as wished</h4>
-                      <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5> 
-                      <small class="muted">days</small>, 
-                      <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5> 
-                      <small class="muted">hours</small>, 
-                      <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5> 
-                      <small class="muted">minutes</small>
+                      <h4>{{ui.planboard.statPeopleEven}}</h4>
+                      <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statDays}}</small>,&nbsp;
+                      <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statHours}}</small>,&nbsp;
+                      <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statMinutes}}</small>
                     </div>
                   </li>
                   <li>
@@ -674,13 +666,13 @@
                       <span class="percentage">%</span>
                     </div>
                     <div class="info">
-                      <h4>Less people than expected</h4>
-                      <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5> 
-                      <small class="muted">days</small>, 
-                      <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5> 
-                      <small class="muted">hours</small>, 
-                      <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5> 
-                      <small class="muted">minutes</small>
+                      <h4>{{ui.planboard.statPeopleLess}}</h4>
+                      <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statDays}}</small>,&nbsp;
+                      <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statHours}}</small>,&nbsp;
+                      <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5>&nbsp;
+                      <small class="muted">{{ui.planboard.statMinutes}}</small>
                     </div>
                   </li>
                 </ul>

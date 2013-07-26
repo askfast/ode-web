@@ -19,7 +19,7 @@
       <li class="{{(views.dashboard==true) && 'active'}}">
         <a  href="#dashboardTab" 
             data-toggle="tab"
-            ng-click="setViewTo('dashboard')"><span class="entypo">&#9716;</span> Dashboard</a>
+            ng-click="setViewTo('dashboard')"><span class="entypo">&#9716;</span> {{ui.dashboard.dashboard}}</a>
       </li>
 
       <li class="{{(views.planboard==true) && 'active'}}">
@@ -76,7 +76,7 @@
       <!-- dashboardTab -->
       <div class="tab-pane {{(views.dashboard == true == true) && 'active'}}" id="dashboardTab">
         <div class="tab-header">
-          <h3 class="pull-left">Dashboard</h3>
+          <h3 class="pull-left">{{ui.dashboard.dashboard}}</h3>
         </div>
         <hr>
 

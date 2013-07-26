@@ -23,7 +23,17 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         week: function ()
         {
-          return new Date().getWeek();
+          /**
+           * IE library does not exist bug
+           */
+          if (new Date().getWeek)
+          {
+            return new Date().getWeek();
+          }
+          else
+          {
+            console.log('Date getWeek does not exist !');
+          }
         },
 
         month: function ()
@@ -227,8 +237,8 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         Storage.add('periods', angular.toJson({
           months: this.getMonthTimeStamps(),
-          weeks: this.getWeekTimeStamps(),
-          days: this.getDayTimeStamps()
+          weeks:  this.getWeekTimeStamps(),
+          days:   this.getDayTimeStamps()
         }));      
       },
 

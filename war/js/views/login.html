@@ -43,7 +43,7 @@
 		  	<small>
 		  		<a ng-click="views.forgot=true; views.login=false">{{ui.login.forgot_password}}</a>
 		  		&nbsp;|&nbsp;
-		  		<a ng-click="views.help=true">Hulp</a>
+		  		<a ng-click="views.help=true">{{ui.help.help}}</a>
 		  	</small>
 		  </p>
 		  <p>
@@ -62,11 +62,13 @@
 	<div id="login" class="boxed" ng-show="views.help" ng-hide="views.login">
 		<form ng-submit="">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
-		  <h4 class="form-signin-heading">Hulp</h4>
+		  <h4 class="form-signin-heading">{{ui.help.help}}</h4>
+
 		  <p style="text-align: left;">Om in te loggen en gebruik te maken van het paraatheidssysteem van ASK, dient u te beschikken over een juiste login. Heeft u nog geen login, neem dan contact op met uw teamleider voor meer informatie.</p>
 		  <p style="text-align: left;">Na het invullen van uw login gegevens kunt u gebruik maken van de “onthoud mij” optie. Wanneer u deze optie aanvinkt, wordt u automatisch ingelogd, elke volgende keer dat u site bezoekt.</p>
 		  <p style="text-align: left;">Bent u uw wachtwoord vergeten, dan kunt u door middel van de “wachtwoord vergeten” link een nieuw wachtwoord aanvragen en laten versturen naar uw eigen email adres.</p>
 		  <p style="text-align: left;">Door op English of Nederlands te klikken kunt u de taal instellen.</p>
+		  
 		  <p>
 		  	<small>
 			  	<a ng-click="views.help=false; views.login=true">Terug naar inloggen</a>

@@ -13,6 +13,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
   // period for readability
   // var prefix = angularLocalStorage.constant;
   
+
   if ($config.title.substr(-1) !== '.') $config.title = !!$config.title ? $config.title + '.' : '';
 
   // Checks the browser to see if local storage is supported

@@ -167,8 +167,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeInfoFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'$rootScope', 'Dater', 'Storage', 
+	function ($rootScope, Dater, Storage)
 	{
 		var periods = Dater.getPeriods();
 
@@ -178,7 +178,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			if (diff > (2419200000 + 259200000))
 			{
-				return 'Totaal aantal geselecteerde dagen: ' + Math.round(diff / 86400000);
+				return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
 			}
 			else
 			{
@@ -194,21 +194,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 					 */
 					if (hours.end == '00:00') hours.end = '24:00';
 
-					return 	'Tijd: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoTime + 
 									hours.start + 
 									' / ' + 
 									hours.end;
 				}
 				else if (timeline.scope.week)
 				{
-					return 	'Weeknummer: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoWeekNumber + 
 									timeline.current.week;
 				}
 				else if (timeline.scope.month)
 				{
-					return 	'Maand: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoMonth + 
 									timeline.current.month + 
-									', Totaal aantal dagen: ' + 
+									$rootScope.ui.planboard.rangeInfoTotalDays + 
 									periods.months[timeline.current.month].totalDays;
 				};
 			};
@@ -227,14 +227,14 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeInfoWeekFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'$rootScope', 'Dater', 'Storage', 
+	function ($rootScope, Dater, Storage)
 	{
 		var periods = Dater.getPeriods();
 
 		return function (timeline)
 		{
-			if (timeline) return 'Weeknummer: ' + timeline.current.week;
+			if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
 		};
 	}
 ])
@@ -266,7 +266,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			angular.forEach(stats, function (stat, index)
 			{
-				ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
+				var state = stat.state.replace(/^bar-+/, '');
+
+				if (state == 'Available') state = 'Beschikbaar';
+				if (state == 'Unavailable') state = 'Niet Beschikbaar';
+				if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
+				if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
+				if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
+				if (state == 'Unreached') state = 'Niet Bereikt';
+
+				ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
 			});
 
 			return ratios.substring(0, ratios.length - 2);

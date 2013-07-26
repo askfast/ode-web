@@ -36,18 +36,37 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..'
+        loading: 'Loading..',
+        setting: 'Setting..',
+        passwordChanged: 'Password changed!',
+        button_changePassword: 'Change password',
+        button_changingPassword: 'Changing password..',
+        checkYourMail: 'Please check your email to reset your password!'
       },
       dashboard: {
+        dashboard: 'Dashboard',
         groupOverviews: 'Loading and analyzing group overviews...',
-        thisWeek: 'This Week',
+        thisWeek: 'This week',
+        nextWeek: 'Next week',
         welcome: 'Welcome',
         newMessage: 'New Messages',
         goToInbox: 'Go to inbox',
         announcements: 'Announcements',
         loadingPie: 'Loading pie charts...',
         loadingP2000: 'Loading alarm messages',
-        noP2000: 'There are no alarm messages'
+        noP2000: 'There are no alarm messages',
+        widgetSave: 'Save',
+        widgetCancel: 'Cancel',
+        currentState: 'Current state',
+        overview: 'Overview',
+        statMore: 'more',
+        statEven: 'enough',
+        statLess: 'less',
+        periods: 'Periods',
+        refreshGroupOverviews: 'Refreshing group overviews..',
+        showMore: 'meer tonen',
+        showLess: 'minder tonen',
+        gettingAlarms: 'Getting P2000 alarm messages'
       },
       planboard: {
         planboard: 'Agenda',
@@ -106,7 +125,24 @@ var ui = {
         preCompilingStortageMessage: 'Pre-compiling shortage message',
         weeklyPlanning: 'Weekly planning',
         planning: 'Planning',
-        minNumber: 'Minimum number benodigden'
+        minNumber: 'Minimum number benodigden',
+        statDays: 'days',
+        statHours: 'hours',
+        statMinutes: 'minutes',
+        statPeopleLess: 'Less people than expected',
+        statPeopleEven: 'Just enough people as expected',
+        statPeopleMore: 'More people than expected',
+        getWishes: 'Getting minimum required value...',
+        daterangerToday: 'Today',
+        daterangerTomorrow: 'Tomorrow',
+        daterangerYesterday: 'Yesterday',
+        daterangerNext3Days: 'Next 3 days',
+        daterangerNext7Days: 'Next 7 days',
+        rangeInfoTotalSelectedDays: 'Total selected days: ',
+        rangeInfoTime: 'Time: ',
+        rangeInfoWeekNumber: 'Week number: ',
+        rangeInfoMonth: 'Month: ',
+        rangeInfoTotalDays: ', Total days: '
       },
       message: {
         messages: 'Messages',
@@ -146,14 +182,14 @@ var ui = {
         escalation: 'Escalation message',
         escalationBody: function (diff,startDate,startTime,endDate,endTime)
         {
-            return 'We have ' +
-            diff +
-            ' shortage in between ' +
-            startDate + ' ' +
-            startTime + ' and ' +
-            endDate + ' ' +
-            endTime + '. ' +
-            'Would you please make yourself available if you are available for that period?';
+          return 'We have ' +
+          diff +
+          ' shortage in between ' +
+          startDate + ' ' +
+          startTime + ' and ' +
+          endDate + ' ' +
+          endTime + '. ' +
+          'Would you please make yourself available if you are available for that period?';
         },
         removed: 'Message removed successfully.',
         removing: 'Removing the message...',
@@ -169,7 +205,47 @@ var ui = {
         typeSubject: 'Type a subject',
         // messages: 'Messages',
         ph_filterMessage: 'Filter messages..',
-        noReceivers: 'Please select a receiver.'
+        noReceivers: 'Please select a receiver.',
+        days: {
+          monday:     'monday',
+          tuesday:    'tuesday',
+          wednesday:  'wednesday',
+          thursday:   'thursday',
+          friday:     'friday',
+          saturday:   'saturday',
+          sunday:     'sunday'
+        },
+        repeat: 'Repeat',
+        repeatOn: 'On',
+        repeatOff: 'Off',
+        enabled: 'Enabled',
+        disabled: 'Disabled',
+        repeatNew: 'New repeat',
+        notificationLabel: 'Notification label',
+        notifications: 'Notifications',
+        notificationsEmpty: 'There are currently no notifications.Er zijn (nog) geen herhalingen.',
+        notificationStatus: 'Notification status',
+        notificationSave: 'Save',
+        notificationHeaderLabel: 'Label',
+        notificationHeaderReceivers: 'Receivers',
+        notificationHeaderFrequency: 'Frequency',
+        paginationPage: 'Page',
+        paginationOf: 'of',
+        paginationInTotal: 'in total',
+        paginationPrevious: 'Previous',
+        paginationNext: 'Next',
+        filterMessages: 'Filter messages...',
+        inTotal: 'In total:',
+        loadingNotifications: 'Getting notifications...',
+        receiversUsers: 'Users',
+        receiversGroups: 'Groups',
+        notificationsRefresh: 'Refreshing scheduled notifications...',
+        notificationsAdd: 'Adding a new scheduled notification...',
+        notificationSaved: 'Scheduled notification is successfully saved.',
+        notificationsEditing: 'Editing scheduled notification...',
+        notificationsEdited: 'Scheduled notification is successfully edited.',
+        notificationsDeleting: 'Deleting a scheduled notification...',
+        notificationsDeleted: 'Scheduled notification is successfully deleted.'
       },
       groups: {
         groups: 'Groups',
@@ -222,7 +298,10 @@ var ui = {
         deleting: 'Deleting group..',
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
-        searchfor: 'firstname, lastname..'
+        searchfor: 'firstname, lastname..',
+        widgetSave: 'Save',
+        widgetCancel: 'Cancel',
+        requiredPeople: 'Required'
       },
       profile: {
         profile: 'Profile',
@@ -256,7 +335,8 @@ var ui = {
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
         changingTimeslot: 'Changing a timeslot..',
-        timeslotChanged: 'Timeslot is succesfully changed.'
+        timeslotChanged: 'Timeslot is succesfully changed.',
+        passwordChangeWarning: 'Warning! with this option you will change password this user.'
       },
       settings: {
         settings: 'Settings',
@@ -271,6 +351,7 @@ var ui = {
         saved: 'Settings successfully saved.'
       },
       help: {
+        help: 'Help',
         header: 'Help & Support',
         support: 'Support'
       },
@@ -285,7 +366,64 @@ var ui = {
         messages:   'messages',
         groups:     'groups',
         profile:    'profile',
-        settings:   'settings'
+        settings:   'settings',
+        loggingOut: 'Logging out...'
+      },
+      errors: {
+        dashboard: {
+          getOverviews: 'Error with getting group overviews!'
+        },
+        groups: {
+          query: 'Error with getting groups and users!',
+          saveWish: 'Error with changing wish value!',
+          searchMembers: 'Error with searching members!',
+          addMember: 'Error with adding a member to a group!',
+          removeMember: 'Error with removing a member from a group!',
+          removeMembers: 'Error with removing members from a group!',
+          groupSubmit: 'Error with saving group!',
+          memberSubmitRegistered: 'Username is already registered!',
+          memberSubmitRegister: 'Error with registering a member!',
+          deleteGroup: 'Error with deleting a group!'
+        },
+        login: {
+          changePass: 'Something wrong with password changing!',
+          forgotCantFind: 'Error this account does not exist!',
+          changePassAllFields: 'Please fill all fields!',
+          changePassNoMatch: 'Error, passwords do not match!' 
+        },
+        settings: {
+          save: 'Error with saving settings!'
+        },
+        profile: {
+          save: 'Error with saving profile information!',
+          get: 'Error with getting profile data!',
+          changePassword: 'Error with changing password!'
+        },
+        messages: {
+          query: 'Error with getting messages!',
+          changeState: 'Error with changing message state!',
+          removeMessage: 'Error with removing message!',
+          removeMessages: 'Error with removing messages!',
+          restoreMessage: 'Error with restoring message!',
+          restoreMessages: 'Error with restoring message!',
+          emptyTrash: 'Error with empting trash!',
+          send: 'Error with sending message!',
+          notificationsList: 'Error with getting scheduled notifictions!',
+          notificationsGet: 'Error with getting scheduled notification!',
+          notificationsAdd: 'Error with creating scheduled notification!',
+          notificationsEdit: 'Error with editing scheduled notification!',
+          notificationsDelete: 'Error with deleting scheduled notification!'
+        },
+        timeline: {
+          query: 'Error with gettings timeslots!',
+          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
+          add: 'Error with adding a new timeslot!',
+          change: 'Error with changing timeslot!',
+          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
+          remove: 'Error with removing timeslot!',
+          wisher: 'Error with changing wish value!'
+        }
       }
     },
     nl: {
@@ -318,19 +456,38 @@ var ui = {
         loading_Group:'Groepen laden...',
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
-        logout: 'Logout',
-        loading: 'Loading..'
+        logout: 'Uitloggen',
+        loading: 'Aan het laden..',
+        setting: 'Aan het toepassen..',
+        passwordChanged: 'Wachtwoord gewijzigd!',
+        button_changePassword: 'Wachtwoord wijzigen',
+        button_changingPassword: 'Wachtwoord aan het wijzigen..',
+        checkYourMail: 'Controleer uw mailbox voor de instructies!'
       },
       dashboard: {
+        dashboard: 'Dashboard',
         groupOverviews: 'Laden en analyseren groepsoverzichten...',
         thisWeek: 'Deze week',
+        nextWeek: 'Volgende week',
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',
         goToInbox: 'Ga naar inbox',
         loadingPie: 'Cirkeldiagrammen laden...',
         announcements: 'Alarm berichten',
         loadingP2000: 'Alarm berichten laden...',
-        noP2000: 'Er zijn geen alarm berichten.'
+        noP2000: 'Er zijn geen alarm berichten.',
+        widgetSave: 'Opslaan',
+        widgetCancel: 'Annuleren',
+        currentState: 'Huidige status',
+        overview: 'Overzicht',
+        statMore: 'meer',
+        statEven: 'genoeg',
+        statLess: 'minder',
+        periods: 'Perioden',
+        refreshGroupOverviews: 'Groep overzichten laden...',
+        showMore: 'show more',
+        showLess: 'show less',
+        gettingAlarms: 'P2000 alarm berichten aan het ophalen...'
       },
       planboard : {
         planboard: 'Agenda',
@@ -389,7 +546,24 @@ var ui = {
         preCompilingStortageMessage: 'Opstellen tekortbericht',
         weeklyPlanning: 'Wekelijkse planning',
         planning: 'Planning',
-        minNumber: 'Minimum aantal benodigde mensen'
+        minNumber: 'Minimum aantal benodigde mensen',
+        statDays: 'dagen',
+        statHours: 'uren',
+        statMinutes: 'minuten',
+        statPeopleLess: 'Te weinig mensen',
+        statPeopleEven: 'Precies genoeg mensen',
+        statPeopleMore: 'Meer mensen',
+        getWishes: 'Groep behoefte getal aan het ophalen...',
+        daterangerToday: 'Vandaag sddf',
+        daterangerTomorrow: 'Morgen',
+        daterangerYesterday: 'Gisteren',
+        daterangerNext3Days: 'Komende 3 dagen',
+        daterangerNext7Days: 'Komende 7 dagen',
+        rangeInfoTotalSelectedDays: 'Totaal aantal geselecteerde dagen: ',
+        rangeInfoTime: 'Tijd: ',
+        rangeInfoWeekNumber: 'Weeknummer: ',
+        rangeInfoMonth: 'Maand: ',
+        rangeInfoTotalDays: ', Totaal aantal dagen: '
       },
       message: {
         messages: 'Berichten',
@@ -429,14 +603,14 @@ var ui = {
         escalation: 'Escalatiebericht',
         escalationBody: function(diff,startDate,startTime,endDate,endTime)
         {
-            return 'Er is een tekort van ' +
-            diff +
-            ' mensen tussen ' +
-            startDate + ' ' +
-            startTime + ' en ' +
-            endDate + ' ' +
-            endTime + '. ' +
-            'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
+          return 'Er is een tekort van ' +
+          diff +
+          ' mensen tussen ' +
+          startDate + ' ' +
+          startTime + ' en ' +
+          endDate + ' ' +
+          endTime + '. ' +
+          'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
         },
         removed: 'Bericht succesvol verwijderd.',
         removing: 'Bericht verwijderen...',
@@ -452,7 +626,47 @@ var ui = {
         typeSubject: 'Vul een onderwerp in',
         // messages: 'Berichten',
         ph_filterMessage: 'Berichten filteren...',
-        noReceivers: 'Graag een ontvanger selecteren.'
+        noReceivers: 'Graag een ontvanger selecteren.',
+        days: {
+          monday:     'maandag',
+          tuesday:    'dinsdag',
+          wednesday:  'woensdag',
+          thursday:   'donderdag',
+          friday:     'vrijdag',
+          saturday:   'zaterdag',
+          sunday:     'zondag'
+        },
+        repeat: 'Herhaling',
+        repeatOn: 'Aan',
+        repeatOff: 'Uit',
+        enabled: 'Ingeschakeld',
+        disabled: 'Uitgeschakeld',
+        repeatNew: 'Nieuwe herhaling',
+        notificationLabel: 'Notificatie label',
+        notifications: 'Herinneringen',
+        notificationsEmpty: 'Er zijn (nog) geen herhalingen.',
+        notificationStatus: 'Notificatie status',
+        notificationSave: 'Opslaan',
+        notificationHeaderLabel: 'Label',
+        notificationHeaderReceivers: 'Ontvangers',
+        notificationHeaderFrequency: 'Frequentie',
+        paginationPage: 'Pagina',
+        paginationOf: 'van',
+        paginationInTotal: 'in totaal',
+        paginationPrevious: 'Vorige',
+        paginationNext: 'Volgende',
+        filterMessages: 'Berichten filteren...',
+        inTotal: 'In totaal:',
+        loadingNotifications: 'Notificaties aan het laden...',
+        receiversUsers: 'Gebruikers',
+        receiversGroups: 'Groepen',
+        notificationsRefresh: 'Notificaties aan het laden...',
+        notificationsAdd: 'Notificatie aan het toevoegen...',
+        notificationSaved: 'Notificatie is met success opgeslagen.',
+        notificationsEditing: 'Notificatie wordt gewijzigd...',
+        notificationsEdited: 'Notificatie is met succes gewijzigd.',
+        notificationsDeleting: 'Notificatie wordt verwijderd...',
+        notificationsDeleted: 'Notificatie is met succes verwijderd.'
       },
       groups: {
         groups: 'Groepen',
@@ -504,7 +718,10 @@ var ui = {
         deleting: 'Groep verwijderen...',
         deleted: 'Groep succesvol verwijderd.',
         filterMembers: 'Leden filteren...',
-        searchfor: 'voornaam, achternaam..'
+        searchfor: 'voornaam, achternaam..',
+        widgetSave: 'Opslaan',
+        widgetCancel: 'Annuleren',
+        requiredPeople: 'Behoefte'
       },
       profile: {
         profile: 'Profiel',
@@ -538,7 +755,8 @@ var ui = {
         passwrong: 'Ingevoerd wachtwoord is foutief! Probeer het opnieuw.',
         newTimeslotAdded: 'Nieuw tijdslot succesvol toegevoegd.',
         changingTimeslot: 'Tijdslot wijzigen...',
-        timeslotChanged: 'Tijdslot succesvol gewijzigd.'
+        timeslotChanged: 'Tijdslot succesvol gewijzigd.',
+        passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.'
       },
       settings: {
         settings: 'Instellingen',
@@ -553,6 +771,7 @@ var ui = {
         saved: 'Instellingen succesvol gewijzigd.'
       },
       help: {
+        help: 'Hulp',
         header: 'Hulp & Ondersteuning',
         support: 'Ondersteuning'
       },
@@ -567,7 +786,62 @@ var ui = {
         messages:   'berichten',
         groups:     'groepen',
         profile:    'profiel',
-        settings:   'instellingen'
+        settings:   'instellingen',
+        loggingOut: 'Aan het uitloggen...'
+      },
+      errors: {
+        dashboard: {
+          getOverviews: 'Fout bij het ophalen van groep overzichten!'
+        },
+        groups: {
+          query: 'Fout bij het ophalen van groepen en gebruikers!',
+          saveWish: 'Fout bij het veranderen van de behoefte!',
+          searchMembers: 'Fout bij het zoeken van leden!',
+          addMember: 'Fout bij het toevoegen van een lid aan een groep!',
+          removeMember: 'Fout bij het verwijderen van een lid uit een groep!',
+          removeMembers: 'Fout bij het verwijderen van leden uit een groep!',
+          groupSubmit: 'Fout bij het opslaan van de groep!',
+          memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
+          memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
+          deleteGroup: 'Fout bij het verwijderen van een groep!'
+        },
+        login: {
+          changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
+          forgotCantFind: 'Fout, deze account bestaat niet!',
+          changePassAllFields: 'Vul alstublieft alle velden in!',
+          changePassNoMatch: 'Fout, de wachtwoorden komen niet overeen!'
+        },
+        settings: {
+          save: 'Fout bij het opslaan van de instellingen!'
+        },
+        profile: {
+          save: 'Fout bij het opslaan van het profiel!',
+          get: 'Fout bij het ophalen van het profiel!',
+          changePassword: 'Fout bij het wijzigen van het wachtwoord!'
+        },
+        messages: {
+          query: 'Fout bij het ophalen van berichten!',
+          changeState: 'Fout bij het wijzigen van bericht status!',
+          removeMessage: 'Fout bij het verwijderen van het bericht!',
+          removeMessages: 'Fout bij het verwijderen van de berichten!',
+          restoreMessage: 'Fout bij het terugzetten van het bericht!',
+          restoreMessages: 'Fout bij het terugzetten van de berichten!',
+          emptyTrash: 'Fout bij het leegmaken van de prullenbak!',
+          send: 'Fout bij het verzenden van bericht!',
+          notificationsList: 'Fout bij het ophalen van de geplande notificaties!',
+          notificationsGet: 'Fout bij het ophalen van een geplande notificatie!',
+          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
+        },
+        timeline: {
+          query: 'Error with gettings timeslots!',
+          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
+          add: 'Error with adding a new timeslot!',
+          change: 'Error with changing timeslot!',
+          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
+          remove: 'Error with removing timeslot!',
+          wisher: 'Error with changing wish value!'
+        }
       }
     }
 };;/*jslint node: true */
@@ -692,42 +966,48 @@ angular.module('WebPaige')
         className:'state-available',
         label:    'Beschikbaar',
         color:    '#4f824f',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.BeschikbaarNoord':
       {
         className:'state-available-north',
         label:    'Beschikbaar voor Noord',
         color:    '#000',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.BeschikbaarZuid':
       {
         className:'state-available-south',
         label:    'Beschikbaar voor Zuid',
         color:    '#e08a0c',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.Unavailable':
       {
         className:'state-unavailable',
         label:    'Niet Beschikbaar',
         color:    '#a93232',
-        type:     'Niet Beschikbaar'
+        type:     'Niet Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.KNRM.SchipperVanDienst':
       {
         className:'state-schipper-service',
         label:    'Schipper van Dienst',
         color:    '#e0c100',
-        type:     'Beschikbaar'
+        type:     'Beschikbaar',
+        display:  true
       },
       'com.ask-cs.State.Unreached':
       {
         className:'state-unreached',
         label:    'Niet Bereikt',
         color:    '#65619b',
-        type:     'Niet Beschikbaar'
+        type:     'Niet Beschikbaar' ,
+        display:  false
       }
     },
 
@@ -956,14 +1236,23 @@ angular.module('WebPaige')
       controller: 'profile',
       resolve: {
         data: [
-          '$rootScope', 'Profile', '$route', '$location', 'Dater',
-          function ($rootScope, Profile, $route, $location, Dater)
+          '$rootScope', 'Profile', '$route', '$location',
+          function ($rootScope, Profile, $route, $location)
           {
             if ($route.current.params.userId != $rootScope.app.resources.uuid)
             {
-              var periods = Dater.getPeriods(),
-                  current = Dater.current.week(),
-                  ranges  = {
+              // IE route fix
+              var onejan = new Date(new Date().getFullYear(),0,1);
+
+              // var periods = Dater.getPeriods(),
+              var periods = angular.fromJson(localStorage.getItem('WebPaige.periods')),
+                  // current = Dater.current.week(),
+                  // current = new Date().getWeek(),
+                  current = Math.ceil((((new Date() - onejan) / 86400000) + onejan.getDay()+1)/7);
+
+              // console.log('---->', current);
+
+              var ranges  = {
                     start:  periods.weeks[current].first.timeStamp / 1000,
                     end:    periods.weeks[current].last.timeStamp / 1000
                   };
@@ -1126,6 +1415,9 @@ angular.module('WebPaige')
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
+    // console.log('-->', $rootScope.ui);
+
+
     /**
      * If periods are not present calculate them
      */
@@ -1166,7 +1458,7 @@ angular.module('WebPaige')
           status: false,
           total:  0,
           count:  0
-        }
+        };
       },
 
       display: function (message)
@@ -1407,6 +1699,8 @@ angular.module('WebPaige')
      */
     $rootScope.fixStyles = function ()
     {
+      $rootScope.timelineLoaded = false;
+
       var tabHeight = $('.tabs-left .nav-tabs').height();
 
       $.each($('.tab-content').children(), function () 
@@ -1803,7 +2097,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred = $q.defer();
 
-			$rootScope.statusBar.display('Getting new alarms');
+			$rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
 			$.ajax({
 				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
@@ -2550,8 +2844,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    var content = angular.fromJson(slot.content);
 
 	    return {
-	      start:      new Date(slot.start).getTime() / 1000,
-	      end:        new Date(slot.end).getTime() / 1000,
+	      start:      Math.floor(new Date(slot.start).getTime() / 1000),
+	      end:        Math.floor(new Date(slot.end).getTime() / 1000),
 	      recursive:  content.recursive,
 	      text:       content.state,
 	      id:         content.id
@@ -2961,7 +3255,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        receivers.push({
 	        id: member.uuid,
 	        name: member.name,
-	        group: 'Users'
+	        group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
@@ -2970,7 +3264,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        receivers.push({
 	        id: group.uuid,
 	        name: group.name,
-	        group: 'Groups'
+	        group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 
@@ -4282,7 +4576,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
          */
         scope.remover = function (key)
         {
-          console.log('coming to remover');
+          // console.log('coming to remover');
 
           scope.$parent.$parent.remover(key);
         };
@@ -4313,17 +4607,19 @@ angular.module('WebPaige.Directives', ['ngResource'])
         //     endDate   = Date.create();       
         //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
-        element.daterangepicker({
+        var options = {
           // startDate: startDate,
           // endDate: endDate,
-          ranges: {
-            'Vandaag':          ['today',     'tomorrow'],
-            'Morgen':           ['tomorrow',  new Date.today().addDays(2)],
-            'Gisteren':         ['yesterday', 'today'],
-            'Komende 3 dagen':  ['today',     new Date.create().addDays(3)],
-            'Komende 7 dagen':  ['today',     new Date.create().addDays(7)]
-          }
-        },
+          ranges: {}
+        };
+
+        options.ranges[$rootScope.ui.planboard.daterangerToday]     = ['today', 'tomorrow'];
+        options.ranges[$rootScope.ui.planboard.daterangerTomorrow]  = ['tomorrow', new Date.today().addDays(2)];
+        options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
+        options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
+        options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
+
+        element.daterangepicker(options,
         function (start, end)
         {
           scope.$apply(function ()
@@ -4441,31 +4737,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
 // ]);
 
 
-/**
- * 
- */
-// .directive('shortcuts', 
-// [
-//   '$rootScope', 
-//   function ($rootScope)
-//   {
-//     return {
-//       restrict: 'E',
-//       template: '<link rel="shortcut icon" ng-href="js/profiles/{{profile}}/img/ico/favicon.ico">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="144x144" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-144-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="114x114" ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-114-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="72x72"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-72-precomposed.png">' +
-//                 '<link rel="apple-touch-icon-precomposed" sizes="57x57"   ng-href="js/profiles/{{profile}}/img/ico/apple-touch-icon-57-precomposed.png">',
-//       replace: true,
-//       scope: {
-//         profile: '@profile'
-//       },
-//       link: function (scope, element, attrs)
-//       {
-//       }
-//     }
-//   }
-// ]);
+
 
 ;/**
  * AngularStrap - Twitter Bootstrap directives for AngularJS
@@ -4513,7 +4785,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
 
         if (timers[id].delay == timers[id].counter)
         {
-          console.log('calling timer event');
+          // console.log('calling timer event');
 
           // if (id == 'unreadCount')
           // {            
@@ -4663,7 +4935,17 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         week: function ()
         {
-          return new Date().getWeek();
+          /**
+           * IE library does not exist bug
+           */
+          if (new Date().getWeek)
+          {
+            return new Date().getWeek();
+          }
+          else
+          {
+            console.log('Date getWeek does not exist !');
+          }
         },
 
         month: function ()
@@ -4867,8 +5149,8 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         Storage.add('periods', angular.toJson({
           months: this.getMonthTimeStamps(),
-          weeks: this.getWeekTimeStamps(),
-          days: this.getDayTimeStamps()
+          weeks:  this.getWeekTimeStamps(),
+          days:   this.getDayTimeStamps()
         }));      
       },
 
@@ -5287,6 +5569,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
   // period for readability
   // var prefix = angularLocalStorage.constant;
   
+
   if ($config.title.substr(-1) !== '.') $config.title = !!$config.title ? $config.title + '.' : '';
 
   // Checks the browser to see if local storage is supported
@@ -6008,7 +6291,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                             style + 
                             '" ' + 
 
-                            'title="'+'Minimum aantal benodigden'+': ' + 
+                            'title="' + 'Minimum aantal benodigden' + ': ' + 
 
                             num + 
                             ' personen"></div>';
@@ -6877,8 +7160,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeInfoFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'$rootScope', 'Dater', 'Storage', 
+	function ($rootScope, Dater, Storage)
 	{
 		var periods = Dater.getPeriods();
 
@@ -6888,7 +7171,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			if (diff > (2419200000 + 259200000))
 			{
-				return 'Totaal aantal geselecteerde dagen: ' + Math.round(diff / 86400000);
+				return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
 			}
 			else
 			{
@@ -6904,21 +7187,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 					 */
 					if (hours.end == '00:00') hours.end = '24:00';
 
-					return 	'Tijd: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoTime + 
 									hours.start + 
 									' / ' + 
 									hours.end;
 				}
 				else if (timeline.scope.week)
 				{
-					return 	'Weeknummer: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoWeekNumber + 
 									timeline.current.week;
 				}
 				else if (timeline.scope.month)
 				{
-					return 	'Maand: ' + 
+					return 	$rootScope.ui.planboard.rangeInfoMonth + 
 									timeline.current.month + 
-									', Totaal aantal dagen: ' + 
+									$rootScope.ui.planboard.rangeInfoTotalDays + 
 									periods.months[timeline.current.month].totalDays;
 				};
 			};
@@ -6937,14 +7220,14 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeInfoWeekFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'$rootScope', 'Dater', 'Storage', 
+	function ($rootScope, Dater, Storage)
 	{
 		var periods = Dater.getPeriods();
 
 		return function (timeline)
 		{
-			if (timeline) return 'Weeknummer: ' + timeline.current.week;
+			if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
 		};
 	}
 ])
@@ -6976,7 +7259,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			angular.forEach(stats, function (stat, index)
 			{
-				ratios += stat.ratio.toFixed(1) + '% ' + stat.state.replace(/^bar-+/, '') + ', ';
+				var state = stat.state.replace(/^bar-+/, '');
+
+				if (state == 'Available') state = 'Beschikbaar';
+				if (state == 'Unavailable') state = 'Niet Beschikbaar';
+				if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
+				if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
+				if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
+				if (state == 'Unreached') state = 'Niet Bereikt';
+
+				ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
 			});
 
 			return ratios.substring(0, ratios.length - 2);
@@ -7509,7 +7801,8 @@ angular.module('WebPaige.Controllers.Login', [])
 	   $scope.knrmLogin = function (user)
 	   {
 	     $('#login button[type=submit]')
-	       .text('Login..')
+	       // .text('Login..')
+	       .text($rootScope.ui.login.button_loggingIn)
 	       .attr('disabled', 'disabled');
 
 	    self.auth(user.uuid, user.resources.askPass);
@@ -7587,14 +7880,14 @@ angular.module('WebPaige.Controllers.Login', [])
 	      };
 
 	      $('#login button[type=submit]')
-	        .text('Login')
+	        .text($rootScope.ui.login.button_login)
 	        .removeAttr('disabled');
 
 	      return false;     
 	    };
 
 	    $('#login button[type=submit]')
-	      .text('Login..')
+	      .text($rootScope.ui.login.button_loggingIn)
 	      .attr('disabled', 'disabled');
 
 	    Storage.add('logindata', angular.toJson({
@@ -7626,7 +7919,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        };
 
 	        $('#login button[type=submit]')
-	          .text('Login')
+	          .text($rootScope.ui.login.button_loggingIn)
 	          .removeAttr('disabled');
 
 	        return false;
@@ -7963,7 +8256,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 		$scope.forgot = function ()
 	  {
-			$('#forgot button[type=submit]').text('setting ...').attr('disabled', 'disabled');
+			$('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
 
 			User.password($scope.remember.id)
 	    .then(function (result)
@@ -7971,26 +8264,26 @@ angular.module('WebPaige.Controllers.Login', [])
 				if (result == "ok")
 	      {
 					$scope.alert = {
-						forget : {
-							display : true,
-							type : 'alert-success',
-							message : 'Please check your email to reset your password!'
+						forget: {
+							display: true,
+							type: 'alert-success',
+							message: $rootScope.ui.login.checkYourMail
 						}
 					};
 				}
 	      else 
 	      {
 					$scope.alert = {
-						forget : {
-							display : true,
-							type : 'alert-error',
-							message : 'Error, we can not find this account !'
+						forget: {
+							display: true,
+							type: 'alert-error',
+							message: $rootScope.ui.errors.login.forgotCantFind
 						}
 					};
 				};
 
 				$('#forgot button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 			});
 		};
@@ -8008,20 +8301,20 @@ angular.module('WebPaige.Controllers.Login', [])
 				if(result.status == 400 || result.status == 500 || result.status == 409)
 	      {
 					$scope.alert = {
-						changePass : {
-							display : true,
-							type : 'alert-error',
-							message : 'Something wrong with password changing!'
+						changePass: {
+							display: true,
+							type: 'alert-error',
+							message: $rootScope.ui.errors.login.changePass
 						}
 					};
 				}
 	      else
 	      { // successfully changed
 					$scope.alert = {
-						changePass : {
-							display : true,
-							type : 'alert-success',
-							message : 'Password changed!'
+						changePass: {
+							display: true,
+							type: 'alert-success',
+							message: $rootScope.ui.login.passwordChanged
 						}
 					}; 
 					
@@ -8029,7 +8322,7 @@ angular.module('WebPaige.Controllers.Login', [])
 				};
 
 				$('#changePass button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 			})
 		};
@@ -8046,15 +8339,15 @@ angular.module('WebPaige.Controllers.Login', [])
 			if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
 	    {
 				$scope.alert = {
-					changePass : {
-						display : true,
-						type : 'alert-error',
-						message : 'Please fill all fields!'
+					changePass: {
+						display: true,
+						type: 'alert-error',
+						message: $rootScope.ui.errors.login.changePassAllFields
 					}
 				};
 
 				$('#changePass button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 
 				return false;
@@ -8062,22 +8355,22 @@ angular.module('WebPaige.Controllers.Login', [])
 	    else if ($scope.changeData.newPass != $scope.changeData.retypePass)
 	    {
 				$scope.alert = {
-					changePass : {
-						display : true,
-						type : 'alert-error',
-						message : 'Please make the reType password is indentical !'
+					changePass: {
+						display: true,
+						type: 'alert-error',
+						message: $rootScope.ui.errors.login.changePassNoMatch
 					}
 				};
 
 				$('#changePass button[type=submit]')
-	        .text('change password')
+	        .text($rootScope.ui.login.button_changePassword)
 	        .removeAttr('disabled');
 
 				return false;
 			};
 
 			$('#changePass button[type=submit]')
-	      .text('changing ...')
+	      .text($rootScope.ui.login.button_changingPassword)
 	      .attr('disabled', 'disabled');
 
 			self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
@@ -8161,7 +8454,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		$scope.more = {
 			status: false,
-			text:   'show more'
+			text:   $rootScope.ui.dashboard.showMore
 		};
 
 
@@ -8205,7 +8498,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			{
 				if (pies.error)
 				{
-					$rootScope.notifier.error('Error with getting group overviews.');
+					$rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
 					console.warn('error ->', pies.error);
 				}
 				else
@@ -8238,11 +8531,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						}
 
 						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-																						new Date(pie.weeks.current.state.start * 1000).toString($rootScope.config.formats.datetime) :
+																						new Date(pie.weeks.current.state.start * 1000)
+																							.toString($rootScope.config.formats.datetime) :
 																						'undefined';
 
 						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-																						new Date(pie.weeks.current.state.end * 1000).toString($rootScope.config.formats.datetime) :
+																						new Date(pie.weeks.current.state.end * 1000)
+																							.toString($rootScope.config.formats.datetime) :
 																						'undefined';
 
 						pie.shortages = {
@@ -8356,7 +8651,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			})
 			.then(function (result)
 			{
-				$rootScope.statusBar.display('Refreshing group overviews..');
+				$rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
 				Profile.get($rootScope.app.resources.uuid, true)
 				.then(function (resources)
@@ -8455,7 +8750,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		{
 			$scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
 
-			$scope.more.text = (more) ? 'show more' : 'show less';
+			$scope.more.text = (more) ? $rootScope.ui.dashboard.showMore : $rootScope.ui.dashboard.showLess;
 
 			$scope.more.status = !$scope.more.status;
 		};
@@ -8470,13 +8765,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 .controller('planboard', 
 [
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter',
-	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage',
+	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage)
 	{
 	  /**
 	   * Fix styles
 	   */
 		$rootScope.fixStyles();
+
 
 	  /**
 	   * Pass the self
@@ -8488,8 +8784,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * Pass time slots data
 	   */
 	  $scope.data = data;
-
-	  // console.log('data ->', data);
 
 	  
 	  /**
@@ -8610,7 +8904,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Prepeare timeline range for dateranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
+                        ' / ' +
 	                      Dater.readable.date($scope.timeline.range.end);
 
 
@@ -8619,7 +8914,12 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var states = {};
 
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
+	  angular.forEach($scope.timeline.config.states, function (state, key)
+    {
+      // show only user editable states
+      if (state.display)
+        states[key] = state.label;
+    });
 
 	  $scope.states = states;
 
@@ -8687,7 +8987,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      $scope.resetViews();
 
 	      $scope.views.slot.add = true;
-	    };
+	    }
 	  };
 
 
@@ -8734,10 +9034,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * 
 	   * Not used probably?
 	   */
-	  $scope.modifySlot = function (slot)
-	  {
-	  	console.log('changing state ->', slot);
-	  }
+	  // $scope.modifySlot = function (slot)
+	  // {
+	  // 	console.log('changing state ->', slot);
+	  // }
 
 	}
 ]);;/*jslint node: true */
@@ -8750,8 +9050,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 .controller('timeline',
 [
-	'$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile', 'Timer',
-	function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile, Timer)
+	'$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
+	function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile)
 	{
 		var range, diff;
 
@@ -8823,12 +9123,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			else if ($route.current.params.userId != $rootScope.app.resources.uuid)
 			{
-				range = $scope.self.timeline.getVisibleChartRange();
+				if ($scope.self.timeline)
+				{
+					range = $scope.self.timeline.getVisibleChartRange();
 
-				$scope.timeline.range = {
-					start:  new Date(range.start).toString(),
-					end:    new Date(range.end).toString()
-				};
+					$scope.timeline.range = {
+						start:  new Date(range.start).toString(),
+						end:    new Date(range.end).toString()
+					};
+				}
 			}
 		});
 
@@ -8850,7 +9153,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           time: new Date().addHours(1).toString($rootScope.config.formats.time),
           datetime: new Date().toISOString()
         },
-        state:      '',
+        state:      'com.ask-cs.State.Available',
         recursive:  false,
         id:         ''
       };
@@ -8939,10 +9242,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
-		    	var timeout = ($location.hash() == 'timeline') ? 100 : 1700;
+		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
+
+		    	
+
+          $rootScope.timelineLoaded = false;
 
 			    setTimeout( function () 
 		      {
+		      	console.log('komt hier');
+
+
+            $rootScope.timelineLoaded = true;
+            $rootScope.$apply();
+
 		        $scope.self.timeline.draw(
 		          Sloter.profile(
 		            $scope.data.slots.data, 
@@ -8977,7 +9290,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      {
 		        if (data.error)
 		        {
-		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          $rootScope.notifier.error($rootScope.ui.errors.timeline.query);
 		          console.warn('error ->', data);
 		        }
 		        else
@@ -8999,7 +9312,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      {
 		        if (data.error)
 		        {
-		          $rootScope.notifier.error('Error with gettings timeslots.');
+		          $rootScope.notifier.error($rootScope.ui.errors.timeline.query);
 		          console.warn('error ->', data);
 		        }
 		        else
@@ -9034,7 +9347,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        add:  true,
 		        edit: false
 		      };
-		    };
+		    }
 
 	      this.load({
 	        start:  $scope.data.periods.start,
@@ -9109,7 +9422,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        if ($scope.timeline.current.layouts.members && !$scope.timeline.current.layouts.group)
 	          $scope.timeline.current.layouts.group = true;
 	      break;
-	    };
+	    }
 
 	    $scope.timeliner.load({
 	      start:  $scope.data.periods.start,
@@ -9169,7 +9482,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    if ($scope.timeliner.isAdded() > 0)
 	    {
-	    	console.log('there is one newly added slot');
+	    	// console.log('there is one newly added slot');
 	      // $scope.self.timeline.prototype.cancelAdd();
 	      // links.Timeline.prototype.cancelAdd();
 	      // $scope.self.timeline.applyAdd = false;
@@ -9346,7 +9659,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display('Groep behoefte getal aan het ophalen ...');
+    	$rootScope.statusBar.display($rootScope.ui.message.getWishes);
 
 	    Slots.wishes({
 	    	id:  			$scope.timeline.current.group,
@@ -9464,7 +9777,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		     */
 		    if ((values.start * 1000) + 60000 * 2 < now && values.recursive == false)
 		    {
-		      $rootScope.notifier.error('Invoer van tijden in het verleden is niet toegestaan!');
+		      $rootScope.notifier.error($rootScope.ui.errors.timeline.pastAdding);
 
 		      $scope.timeliner.refresh();
 		    }
@@ -9480,7 +9793,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 		          if (result.error)
 		          {
-		            $rootScope.notifier.error('Error with adding a new timeslot.');
+		            $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
 		            console.warn('error ->', result);
 		          }
 		          else
@@ -9532,6 +9845,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      };
     	});
 
+
+    	/**
+    	 * DEPRECIATED
+    	 */
+    	
 			// console.log('content ->', options.content);
 
 			// if ($scope.mode == 'edit')
@@ -9602,13 +9920,30 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	return true;
 	    }
 
-	    if (options.content.recursive == true || 
-		    	(isChangeAllowed(new Date($scope.original.start).getTime(), options.start) && 
-		    	isChangeAllowed(new Date($scope.original.end).getTime(), options.end)))
+	    /**
+	     * If slot start was in past and end in the future has been moved to
+	     * future completely right than now() then slice it with now and leave
+	     * the past as it is
+	     */
+	    if (options.content.recursive == false && 
+		    	(
+			    	new Date($scope.original.start).getTime() < options.start && 
+			    	new Date($scope.original.end).getTime() < options.end
+			    ) && 
+			    $scope.original.start < Date.now().getTime()
+		     )
 	    {
-	      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+	    	// change slot
+	      Slots.change($scope.original, {
 
-	      Slots.change($scope.original, options, $scope.timeline.user.id)
+		      start:  new Date($scope.original.start).getTime(),
+		      end:    Date.now().getTime(),
+		      content: {
+		        recursive:  slot.recursive, 
+		        state:      slot.state 
+		      }
+
+		    }, $scope.timeline.user.id)
 	      .then(
 	        function (result)
 	        {
@@ -9616,26 +9951,90 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	          if (result.error)
 	          {
-	            $rootScope.notifier.error('Error with changing timeslot.');
+	            $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
 	            console.warn('error ->', result);
 	          }
 	          else
 	          {
-	            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+		          // add new slot
+				      Slots.add(
+					      {
+	                start:      options.start / 1000,
+	                end:        options.end / 1000,
+	                recursive:  (slot.recursive) ? true : false,
+	                text:       slot.state
+	              }, $scope.timeline.user.id)
+				      .then(
+				        function (result)
+				        {
+				          $rootScope.$broadcast('resetPlanboardViews');
+
+				          if (result.error)
+				          {
+				            $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
+				            console.warn('error ->', result);
+				          }
+				          else
+				          {
+				            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+				          };
+
+				          $scope.timeliner.refresh();
+
+				          $rootScope.planboardSync.start();
+				        }
+				      );
 	          };
-
-	          $scope.timeliner.refresh();
-
-	          $rootScope.planboardSync.start();
 	        }
 	      );
-	    }
-	    else
-	    {
-	      $rootScope.notifier.error('Veranderen van tijden in het verleden is niet toegestaan!');
 
-	      $scope.timeliner.refresh();
+
 	    }
+	   	else
+	   	{
+		    if (options.content.recursive == true || 
+			    	(
+				    	isChangeAllowed(new Date($scope.original.start).getTime(), options.start) && 
+				    	isChangeAllowed(new Date($scope.original.end).getTime(), options.end)
+				    )
+			     )
+		    {
+		      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
+		      console.log('changing allowed!');
+
+		      Slots.change($scope.original, options, $scope.timeline.user.id)
+		      .then(
+		        function (result)
+		        {
+		        	$rootScope.$broadcast('resetPlanboardViews');
+
+		          if (result.error)
+		          {
+		            $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
+		            console.warn('error ->', result);
+		          }
+		          else
+		          {
+		            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+		          };
+
+		          $scope.timeliner.refresh();
+
+		          $rootScope.planboardSync.start();
+		        }
+		      );
+
+		    }
+		    else
+		    {
+		    	console.log('->', $rootScope.ui.errors);
+		    	
+		      $rootScope.notifier.error($rootScope.ui.errors.timeline.pastChanging);
+
+		      $scope.timeliner.refresh();
+		    }
+	   	}
 
 	  };
 
@@ -9662,7 +10061,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	      if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
 	      {
-	        $rootScope.notifier.error('Verwijderen van tijden in het verleden is niet toegestaan!');
+	        $rootScope.notifier.error($rootScope.ui.errors.timeline.pastDeleting);
 
 	        $scope.timeliner.refresh();
 	      }
@@ -9678,7 +10077,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	            if (result.error)
 	            {
-	              $rootScope.notifier.error('Error with removing timeslot.');
+	              $rootScope.notifier.error($rootScope.ui.errors.timeline.remove);
 	              console.warn('error ->', result);
 	            }
 	            else
@@ -9691,7 +10090,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            $rootScope.planboardSync.start();
 	          }
 	        );
-
 	      };
 	    };
 	  };
@@ -9723,7 +10121,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with changing wish value.');
+	          $rootScope.notifier.error($rootScope.ui.errors.timeline.wisher);
 	          console.warn('error ->', result);
 	        }
 	        else
@@ -9763,7 +10161,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					console.log('planboard sync started..');
+					// console.log('planboard sync started..');
 
 					/**
 					 * Update planboard only in planboard is selected
@@ -10294,7 +10692,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      {
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with changing message state.');
+	          $rootScope.notifier.error($rootScope.ui.errors.messages.changeState);
 	          console.warn('error ->', result);
 	        }
 	        else
@@ -10380,7 +10778,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 		  		name = members[recipient].name;
 
 		  		receivers.push({
-		  			group: 	'Users',
+		  			group: 	$rootScope.ui.message.receiversUsers,
 		  			id: 		recipient,
 		  			name: 	name
 		  		});
@@ -10394,7 +10792,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 			  			name = group.name;
 
 				  		receivers.push({
-				  			group: 	'Groups',
+				  			group: 	$rootScope.ui.message.receiversGroups,
 				  			id: 		recipient,
 				  			name: 	name
 				  		});
@@ -10465,7 +10863,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $scope.requestNotification = function (id)
 	  {
-	  	$rootScope.statusBar.display('Getting notification..');
+	  	$rootScope.statusBar.display($rootScope.ui.message.loadingNotifications);
 
 	    setView('scheaduler');
 
@@ -10581,7 +10979,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with removing message.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -10627,7 +11025,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with removing messages.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -10664,7 +11062,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with restoring message.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -10704,7 +11102,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with restoring message.');
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -10737,8 +11135,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with emting trash.');
-	        console.warn('error ->', result);
+	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
+	        console.warn('error ->', result);s
 	      }
 	      else
 	      {
@@ -10751,7 +11149,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        {
 	          if (messages.error)
 	          {
-	            $rootScope.notifier.error('Error with getting messages.');
+	            $rootScope.notifier.error($rootScope.ui.errors.messages.query);
 	            console.warn('error ->', messages);
 	          }
 	          else
@@ -10806,7 +11204,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      {
 	        if (uuid.error)
 	        {
-	          $rootScope.notifier.error('Error with sending message.');
+	          $rootScope.notifier.error($rootScope.ui.errors.messages.send);
 	          console.warn('error ->', uuid);
 	        }
 	        else
@@ -10820,7 +11218,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          {
 	            if (messages.error)
 	            {
-	              $rootScope.notifier.error('Error with getting messages.');
+	              $rootScope.notifier.error($rootScope.ui.errors.messages.query);
 	              console.warn('error ->', messages);
 	            }
 	            else
@@ -10901,7 +11299,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    $scope.message = {
 	      subject: $rootScope.ui.message.escalation,
 	      receivers: [{
-	        group: 'Groups', 
+	        group: $rootScope.ui.message.receiversGroups, 
 	        id: uuid, 
 	        name: name
 	      }],
@@ -10981,14 +11379,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	 */
 	  	list: function (callback)
 	  	{
-				$rootScope.statusBar.display('Refreshing scheaduled jobs...');
+				$rootScope.statusBar.display($rootScope.ui.message.notificationsRefresh);
 
 				Messages.scheaduled.list()
 				.then(function (result)
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with getting scheadules..');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsList);
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -11015,7 +11413,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with getting the scheadule..');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsGet);
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -11051,19 +11449,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		var self = this;
 
-	    	$rootScope.statusBar.display('Adding a new scheaduled job...');
+	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsAdd);
 
 	  		Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
 				.then(function (result)
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with creating the notification...');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
 				    console.warn('error ->', result);
 				  }
 				  else
 				  {
-	          $rootScope.notifier.success('Scheaduled job is saved successfully.');
+	          $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
 
 	          self.list(function ()
 	        	{
@@ -11081,19 +11479,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		var self = this;
 
-	    	$rootScope.statusBar.display('Editing scheaduled job...');
+	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsEditing);
 
 				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
 				.then(function (result)
 				{
 				  if (result.error)
 				  {
-				    $rootScope.notifier.error('Error with editing scheadule..');
+				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
 				    console.warn('error ->', result);
 				  }
 				  else
 				  {
-	          $rootScope.notifier.success('Scheaduled job is edited successfully.');
+	          $rootScope.notifier.success($rootScope.ui.message.notificationsEdited);
 
 	          self.list(function ()
 	        	{
@@ -11112,19 +11510,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	{
 	  		var self = this;
 
-	    	$rootScope.statusBar.display('Deleting a scheaduled job...');
+	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsDeleting);
 
 		    Messages.scheaduled.remove(uuid)
 		    .then(function (result)
 		    {
 		      if (result.error)
 		      {
-		        $rootScope.notifier.error('Error with deleting the scheadule..');
+		        $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
 		        console.warn('error ->', result);
 		      }
 		      else
 		      {
-	          $rootScope.notifier.success('Scheaduled job is deleted successfully.');
+	          $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
 
 	          self.list(function ()
 	        	{
@@ -11390,7 +11788,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				{
 					if (result.error)
 					{
-						$rootScope.notifier.error('Error with changing wish value.');
+						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
 						console.warn('error ->', result);
 					}
 					else
@@ -11532,7 +11930,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with search.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.searchMembers);
 					console.warn('error ->', result);
 				}
 				else
@@ -11564,7 +11962,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with adding a member.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
 					console.warn('error ->', result);
 				}
 				else
@@ -11578,7 +11976,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -11605,7 +12003,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with removing a member.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
 					console.warn('error ->', result);
 				}
 				else
@@ -11619,7 +12017,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -11646,7 +12044,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with removing members.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
 					console.warn('error ->', result);
 				}
 				else
@@ -11662,7 +12060,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -11695,7 +12093,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (returned.error)
 				{
-					$rootScope.notifier.error('Error with saving group.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
 					console.warn('error ->', returned);
 				}
 				else
@@ -11709,7 +12107,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -11764,7 +12162,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				{
 					if (result.error.status === 409)
 					{
-						$rootScope.notifier.error('Username is already registered.');
+						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
 						// $scope.memberForm = {};
 
@@ -11772,7 +12170,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					}
 					else
 					{
-						$rootScope.notifier.error('Error with registering a member.');
+						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
 					}
 					
 					console.warn('error ->', result);
@@ -11788,7 +12186,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -11817,7 +12215,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			{
 				if (result.error)
 				{
-					$rootScope.notifier.error('Error with deleting a group.');
+					$rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
 					console.warn('error ->', result);
 				}
 				else
@@ -11831,7 +12229,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						if (data.error)
 						{
-							$rootScope.notifier.error('Error with getting groups and users.');
+							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
 							console.warn('error ->', data);
 						}
 						else
@@ -12171,7 +12569,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    $scope.views[hash] = true;
 
 	    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
-	  };
+	  }
 
 
 	  /**
@@ -12195,12 +12593,17 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  {
 	    $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
+	    /**
+	     * Convert given other user's password to MD5
+	     */
+	    if (resources.Password) resources.askPass = MD5(resources.Password);
+
 	    Profile.save($route.current.params.userId, resources)
 	    .then(function (result)
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with saving profile information.');
+	        $rootScope.notifier.error($rootScope.ui.errors.profile.save);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -12214,7 +12617,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	        {
 	          if (data.error)
 	          {
-	            $rootScope.notifier.error('Error with getting profile data.');
+	            $rootScope.notifier.error($rootScope.ui.errors.profile.get);
 	            console.warn('error ->', data);
 	          }
 	          else
@@ -12228,6 +12631,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	        });
 	      };
 	    });
+
 	  };
 
 
@@ -12258,7 +12662,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	      {
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with changing password.');
+	          $rootScope.notifier.error($rootScope.ui.errors.profile.changePassword);
 	          console.warn('error ->', result);
 	        }
 	        else
@@ -12270,7 +12674,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	          {
 	            if (data.error)
 	            {
-	              $rootScope.notifier.error('Error with getting profile data.');
+	              $rootScope.notifier.error($rootScope.ui.errors.profile.get);
 	              console.warn('error ->', data);
 	            }
 	            else
@@ -12304,14 +12708,22 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
+     * TODO
+     * Is it really needed?
+     * Since the timelinebooter is disabled
+     *
 	   * Redraw timeline
 	   */
 	  $scope.redraw = function ()
 	  {
 	  	setTimeout(function ()
 	  	{
-	  		// timelinebooter();
+	  		//timelinebooter();
+	  		if($scope.self.timeline)
+	  			$scope.self.timeline.redraw();
+		     //console.warn('timeline ->', $scope.timeline);
 	  	}, 100);
+	  	console.log("redraw timeline here??");
 		};
 
 
@@ -12436,7 +12848,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	      {
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with saving settings.');
+	          $rootScope.notifier.error($rootScope.ui.errors.settings.save);
 	          console.warn('error ->', result);
 	        }
 	        else

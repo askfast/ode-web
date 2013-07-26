@@ -36,18 +36,37 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..'
+        loading: 'Loading..',
+        setting: 'Setting..',
+        passwordChanged: 'Password changed!',
+        button_changePassword: 'Change password',
+        button_changingPassword: 'Changing password..',
+        checkYourMail: 'Please check your email to reset your password!'
       },
       dashboard: {
+        dashboard: 'Dashboard',
         groupOverviews: 'Loading and analyzing group overviews...',
-        thisWeek: 'This Week',
+        thisWeek: 'This week',
+        nextWeek: 'Next week',
         welcome: 'Welcome',
         newMessage: 'New Messages',
         goToInbox: 'Go to inbox',
         announcements: 'Announcements',
         loadingPie: 'Loading pie charts...',
         loadingP2000: 'Loading alarm messages',
-        noP2000: 'There are no alarm messages'
+        noP2000: 'There are no alarm messages',
+        widgetSave: 'Save',
+        widgetCancel: 'Cancel',
+        currentState: 'Current state',
+        overview: 'Overview',
+        statMore: 'more',
+        statEven: 'enough',
+        statLess: 'less',
+        periods: 'Periods',
+        refreshGroupOverviews: 'Refreshing group overviews..',
+        showMore: 'meer tonen',
+        showLess: 'minder tonen',
+        gettingAlarms: 'Getting P2000 alarm messages'
       },
       planboard: {
         planboard: 'Agenda',
@@ -106,7 +125,24 @@ var ui = {
         preCompilingStortageMessage: 'Pre-compiling shortage message',
         weeklyPlanning: 'Weekly planning',
         planning: 'Planning',
-        minNumber: 'Minimum number benodigden'
+        minNumber: 'Minimum number benodigden',
+        statDays: 'days',
+        statHours: 'hours',
+        statMinutes: 'minutes',
+        statPeopleLess: 'Less people than expected',
+        statPeopleEven: 'Just enough people as expected',
+        statPeopleMore: 'More people than expected',
+        getWishes: 'Getting minimum required value...',
+        daterangerToday: 'Today',
+        daterangerTomorrow: 'Tomorrow',
+        daterangerYesterday: 'Yesterday',
+        daterangerNext3Days: 'Next 3 days',
+        daterangerNext7Days: 'Next 7 days',
+        rangeInfoTotalSelectedDays: 'Total selected days: ',
+        rangeInfoTime: 'Time: ',
+        rangeInfoWeekNumber: 'Week number: ',
+        rangeInfoMonth: 'Month: ',
+        rangeInfoTotalDays: ', Total days: '
       },
       message: {
         messages: 'Messages',
@@ -146,14 +182,14 @@ var ui = {
         escalation: 'Escalation message',
         escalationBody: function (diff,startDate,startTime,endDate,endTime)
         {
-            return 'We have ' +
-            diff +
-            ' shortage in between ' +
-            startDate + ' ' +
-            startTime + ' and ' +
-            endDate + ' ' +
-            endTime + '. ' +
-            'Would you please make yourself available if you are available for that period?';
+          return 'We have ' +
+          diff +
+          ' shortage in between ' +
+          startDate + ' ' +
+          startTime + ' and ' +
+          endDate + ' ' +
+          endTime + '. ' +
+          'Would you please make yourself available if you are available for that period?';
         },
         removed: 'Message removed successfully.',
         removing: 'Removing the message...',
@@ -169,7 +205,47 @@ var ui = {
         typeSubject: 'Type a subject',
         // messages: 'Messages',
         ph_filterMessage: 'Filter messages..',
-        noReceivers: 'Please select a receiver.'
+        noReceivers: 'Please select a receiver.',
+        days: {
+          monday:     'monday',
+          tuesday:    'tuesday',
+          wednesday:  'wednesday',
+          thursday:   'thursday',
+          friday:     'friday',
+          saturday:   'saturday',
+          sunday:     'sunday'
+        },
+        repeat: 'Repeat',
+        repeatOn: 'On',
+        repeatOff: 'Off',
+        enabled: 'Enabled',
+        disabled: 'Disabled',
+        repeatNew: 'New repeat',
+        notificationLabel: 'Notification label',
+        notifications: 'Notifications',
+        notificationsEmpty: 'There are currently no notifications.Er zijn (nog) geen herhalingen.',
+        notificationStatus: 'Notification status',
+        notificationSave: 'Save',
+        notificationHeaderLabel: 'Label',
+        notificationHeaderReceivers: 'Receivers',
+        notificationHeaderFrequency: 'Frequency',
+        paginationPage: 'Page',
+        paginationOf: 'of',
+        paginationInTotal: 'in total',
+        paginationPrevious: 'Previous',
+        paginationNext: 'Next',
+        filterMessages: 'Filter messages...',
+        inTotal: 'In total:',
+        loadingNotifications: 'Getting notifications...',
+        receiversUsers: 'Users',
+        receiversGroups: 'Groups',
+        notificationsRefresh: 'Refreshing scheduled notifications...',
+        notificationsAdd: 'Adding a new scheduled notification...',
+        notificationSaved: 'Scheduled notification is successfully saved.',
+        notificationsEditing: 'Editing scheduled notification...',
+        notificationsEdited: 'Scheduled notification is successfully edited.',
+        notificationsDeleting: 'Deleting a scheduled notification...',
+        notificationsDeleted: 'Scheduled notification is successfully deleted.'
       },
       groups: {
         groups: 'Groups',
@@ -222,7 +298,10 @@ var ui = {
         deleting: 'Deleting group..',
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
-        searchfor: 'firstname, lastname..'
+        searchfor: 'firstname, lastname..',
+        widgetSave: 'Save',
+        widgetCancel: 'Cancel',
+        requiredPeople: 'Required'
       },
       profile: {
         profile: 'Profile',
@@ -256,7 +335,8 @@ var ui = {
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
         changingTimeslot: 'Changing a timeslot..',
-        timeslotChanged: 'Timeslot is succesfully changed.'
+        timeslotChanged: 'Timeslot is succesfully changed.',
+        passwordChangeWarning: 'Warning! with this option you will change password this user.'
       },
       settings: {
         settings: 'Settings',
@@ -271,6 +351,7 @@ var ui = {
         saved: 'Settings successfully saved.'
       },
       help: {
+        help: 'Help',
         header: 'Help & Support',
         support: 'Support'
       },
@@ -285,7 +366,64 @@ var ui = {
         messages:   'messages',
         groups:     'groups',
         profile:    'profile',
-        settings:   'settings'
+        settings:   'settings',
+        loggingOut: 'Logging out...'
+      },
+      errors: {
+        dashboard: {
+          getOverviews: 'Error with getting group overviews!'
+        },
+        groups: {
+          query: 'Error with getting groups and users!',
+          saveWish: 'Error with changing wish value!',
+          searchMembers: 'Error with searching members!',
+          addMember: 'Error with adding a member to a group!',
+          removeMember: 'Error with removing a member from a group!',
+          removeMembers: 'Error with removing members from a group!',
+          groupSubmit: 'Error with saving group!',
+          memberSubmitRegistered: 'Username is already registered!',
+          memberSubmitRegister: 'Error with registering a member!',
+          deleteGroup: 'Error with deleting a group!'
+        },
+        login: {
+          changePass: 'Something wrong with password changing!',
+          forgotCantFind: 'Error this account does not exist!',
+          changePassAllFields: 'Please fill all fields!',
+          changePassNoMatch: 'Error, passwords do not match!' 
+        },
+        settings: {
+          save: 'Error with saving settings!'
+        },
+        profile: {
+          save: 'Error with saving profile information!',
+          get: 'Error with getting profile data!',
+          changePassword: 'Error with changing password!'
+        },
+        messages: {
+          query: 'Error with getting messages!',
+          changeState: 'Error with changing message state!',
+          removeMessage: 'Error with removing message!',
+          removeMessages: 'Error with removing messages!',
+          restoreMessage: 'Error with restoring message!',
+          restoreMessages: 'Error with restoring message!',
+          emptyTrash: 'Error with empting trash!',
+          send: 'Error with sending message!',
+          notificationsList: 'Error with getting scheduled notifictions!',
+          notificationsGet: 'Error with getting scheduled notification!',
+          notificationsAdd: 'Error with creating scheduled notification!',
+          notificationsEdit: 'Error with editing scheduled notification!',
+          notificationsDelete: 'Error with deleting scheduled notification!'
+        },
+        timeline: {
+          query: 'Error with gettings timeslots!',
+          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
+          add: 'Error with adding a new timeslot!',
+          change: 'Error with changing timeslot!',
+          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
+          remove: 'Error with removing timeslot!',
+          wisher: 'Error with changing wish value!'
+        }
       }
     },
     nl: {
@@ -318,19 +456,38 @@ var ui = {
         loading_Group:'Groepen laden...',
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
-        logout: 'Logout',
-        loading: 'Loading..'
+        logout: 'Uitloggen',
+        loading: 'Aan het laden..',
+        setting: 'Aan het toepassen..',
+        passwordChanged: 'Wachtwoord gewijzigd!',
+        button_changePassword: 'Wachtwoord wijzigen',
+        button_changingPassword: 'Wachtwoord aan het wijzigen..',
+        checkYourMail: 'Controleer uw mailbox voor de instructies!'
       },
       dashboard: {
+        dashboard: 'Dashboard',
         groupOverviews: 'Laden en analyseren groepsoverzichten...',
         thisWeek: 'Deze week',
+        nextWeek: 'Volgende week',
         welcome: 'Welkom',
         newMessage: 'Nieuwe berichten',
         goToInbox: 'Ga naar inbox',
         loadingPie: 'Cirkeldiagrammen laden...',
         announcements: 'Alarm berichten',
         loadingP2000: 'Alarm berichten laden...',
-        noP2000: 'Er zijn geen alarm berichten.'
+        noP2000: 'Er zijn geen alarm berichten.',
+        widgetSave: 'Opslaan',
+        widgetCancel: 'Annuleren',
+        currentState: 'Huidige status',
+        overview: 'Overzicht',
+        statMore: 'meer',
+        statEven: 'genoeg',
+        statLess: 'minder',
+        periods: 'Perioden',
+        refreshGroupOverviews: 'Groep overzichten laden...',
+        showMore: 'show more',
+        showLess: 'show less',
+        gettingAlarms: 'P2000 alarm berichten aan het ophalen...'
       },
       planboard : {
         planboard: 'Agenda',
@@ -389,7 +546,24 @@ var ui = {
         preCompilingStortageMessage: 'Opstellen tekortbericht',
         weeklyPlanning: 'Wekelijkse planning',
         planning: 'Planning',
-        minNumber: 'Minimum aantal benodigde mensen'
+        minNumber: 'Minimum aantal benodigde mensen',
+        statDays: 'dagen',
+        statHours: 'uren',
+        statMinutes: 'minuten',
+        statPeopleLess: 'Te weinig mensen',
+        statPeopleEven: 'Precies genoeg mensen',
+        statPeopleMore: 'Meer mensen',
+        getWishes: 'Groep behoefte getal aan het ophalen...',
+        daterangerToday: 'Vandaag sddf',
+        daterangerTomorrow: 'Morgen',
+        daterangerYesterday: 'Gisteren',
+        daterangerNext3Days: 'Komende 3 dagen',
+        daterangerNext7Days: 'Komende 7 dagen',
+        rangeInfoTotalSelectedDays: 'Totaal aantal geselecteerde dagen: ',
+        rangeInfoTime: 'Tijd: ',
+        rangeInfoWeekNumber: 'Weeknummer: ',
+        rangeInfoMonth: 'Maand: ',
+        rangeInfoTotalDays: ', Totaal aantal dagen: '
       },
       message: {
         messages: 'Berichten',
@@ -429,14 +603,14 @@ var ui = {
         escalation: 'Escalatiebericht',
         escalationBody: function(diff,startDate,startTime,endDate,endTime)
         {
-            return 'Er is een tekort van ' +
-            diff +
-            ' mensen tussen ' +
-            startDate + ' ' +
-            startTime + ' en ' +
-            endDate + ' ' +
-            endTime + '. ' +
-            'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
+          return 'Er is een tekort van ' +
+          diff +
+          ' mensen tussen ' +
+          startDate + ' ' +
+          startTime + ' en ' +
+          endDate + ' ' +
+          endTime + '. ' +
+          'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
         },
         removed: 'Bericht succesvol verwijderd.',
         removing: 'Bericht verwijderen...',
@@ -452,7 +626,47 @@ var ui = {
         typeSubject: 'Vul een onderwerp in',
         // messages: 'Berichten',
         ph_filterMessage: 'Berichten filteren...',
-        noReceivers: 'Graag een ontvanger selecteren.'
+        noReceivers: 'Graag een ontvanger selecteren.',
+        days: {
+          monday:     'maandag',
+          tuesday:    'dinsdag',
+          wednesday:  'woensdag',
+          thursday:   'donderdag',
+          friday:     'vrijdag',
+          saturday:   'zaterdag',
+          sunday:     'zondag'
+        },
+        repeat: 'Herhaling',
+        repeatOn: 'Aan',
+        repeatOff: 'Uit',
+        enabled: 'Ingeschakeld',
+        disabled: 'Uitgeschakeld',
+        repeatNew: 'Nieuwe herhaling',
+        notificationLabel: 'Notificatie label',
+        notifications: 'Herinneringen',
+        notificationsEmpty: 'Er zijn (nog) geen herhalingen.',
+        notificationStatus: 'Notificatie status',
+        notificationSave: 'Opslaan',
+        notificationHeaderLabel: 'Label',
+        notificationHeaderReceivers: 'Ontvangers',
+        notificationHeaderFrequency: 'Frequentie',
+        paginationPage: 'Pagina',
+        paginationOf: 'van',
+        paginationInTotal: 'in totaal',
+        paginationPrevious: 'Vorige',
+        paginationNext: 'Volgende',
+        filterMessages: 'Berichten filteren...',
+        inTotal: 'In totaal:',
+        loadingNotifications: 'Notificaties aan het laden...',
+        receiversUsers: 'Gebruikers',
+        receiversGroups: 'Groepen',
+        notificationsRefresh: 'Notificaties aan het laden...',
+        notificationsAdd: 'Notificatie aan het toevoegen...',
+        notificationSaved: 'Notificatie is met success opgeslagen.',
+        notificationsEditing: 'Notificatie wordt gewijzigd...',
+        notificationsEdited: 'Notificatie is met succes gewijzigd.',
+        notificationsDeleting: 'Notificatie wordt verwijderd...',
+        notificationsDeleted: 'Notificatie is met succes verwijderd.'
       },
       groups: {
         groups: 'Groepen',
@@ -504,7 +718,10 @@ var ui = {
         deleting: 'Groep verwijderen...',
         deleted: 'Groep succesvol verwijderd.',
         filterMembers: 'Leden filteren...',
-        searchfor: 'voornaam, achternaam..'
+        searchfor: 'voornaam, achternaam..',
+        widgetSave: 'Opslaan',
+        widgetCancel: 'Annuleren',
+        requiredPeople: 'Behoefte'
       },
       profile: {
         profile: 'Profiel',
@@ -538,7 +755,8 @@ var ui = {
         passwrong: 'Ingevoerd wachtwoord is foutief! Probeer het opnieuw.',
         newTimeslotAdded: 'Nieuw tijdslot succesvol toegevoegd.',
         changingTimeslot: 'Tijdslot wijzigen...',
-        timeslotChanged: 'Tijdslot succesvol gewijzigd.'
+        timeslotChanged: 'Tijdslot succesvol gewijzigd.',
+        passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.'
       },
       settings: {
         settings: 'Instellingen',
@@ -553,6 +771,7 @@ var ui = {
         saved: 'Instellingen succesvol gewijzigd.'
       },
       help: {
+        help: 'Hulp',
         header: 'Hulp & Ondersteuning',
         support: 'Ondersteuning'
       },
@@ -567,7 +786,62 @@ var ui = {
         messages:   'berichten',
         groups:     'groepen',
         profile:    'profiel',
-        settings:   'instellingen'
+        settings:   'instellingen',
+        loggingOut: 'Aan het uitloggen...'
+      },
+      errors: {
+        dashboard: {
+          getOverviews: 'Fout bij het ophalen van groep overzichten!'
+        },
+        groups: {
+          query: 'Fout bij het ophalen van groepen en gebruikers!',
+          saveWish: 'Fout bij het veranderen van de behoefte!',
+          searchMembers: 'Fout bij het zoeken van leden!',
+          addMember: 'Fout bij het toevoegen van een lid aan een groep!',
+          removeMember: 'Fout bij het verwijderen van een lid uit een groep!',
+          removeMembers: 'Fout bij het verwijderen van leden uit een groep!',
+          groupSubmit: 'Fout bij het opslaan van de groep!',
+          memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
+          memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
+          deleteGroup: 'Fout bij het verwijderen van een groep!'
+        },
+        login: {
+          changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
+          forgotCantFind: 'Fout, deze account bestaat niet!',
+          changePassAllFields: 'Vul alstublieft alle velden in!',
+          changePassNoMatch: 'Fout, de wachtwoorden komen niet overeen!'
+        },
+        settings: {
+          save: 'Fout bij het opslaan van de instellingen!'
+        },
+        profile: {
+          save: 'Fout bij het opslaan van het profiel!',
+          get: 'Fout bij het ophalen van het profiel!',
+          changePassword: 'Fout bij het wijzigen van het wachtwoord!'
+        },
+        messages: {
+          query: 'Fout bij het ophalen van berichten!',
+          changeState: 'Fout bij het wijzigen van bericht status!',
+          removeMessage: 'Fout bij het verwijderen van het bericht!',
+          removeMessages: 'Fout bij het verwijderen van de berichten!',
+          restoreMessage: 'Fout bij het terugzetten van het bericht!',
+          restoreMessages: 'Fout bij het terugzetten van de berichten!',
+          emptyTrash: 'Fout bij het leegmaken van de prullenbak!',
+          send: 'Fout bij het verzenden van bericht!',
+          notificationsList: 'Fout bij het ophalen van de geplande notificaties!',
+          notificationsGet: 'Fout bij het ophalen van een geplande notificatie!',
+          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
+        },
+        timeline: {
+          query: 'Error with gettings timeslots!',
+          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
+          add: 'Error with adding a new timeslot!',
+          change: 'Error with changing timeslot!',
+          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
+          remove: 'Error with removing timeslot!',
+          wisher: 'Error with changing wish value!'
+        }
       }
     }
 };

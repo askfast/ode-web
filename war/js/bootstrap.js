@@ -81,6 +81,9 @@ angular.module('WebPaige')
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
+    // console.log('-->', $rootScope.ui);
+
+
     /**
      * If periods are not present calculate them
      */
@@ -121,7 +124,7 @@ angular.module('WebPaige')
           status: false,
           total:  0,
           count:  0
-        }
+        };
       },
 
       display: function (message)
@@ -362,6 +365,8 @@ angular.module('WebPaige')
      */
     $rootScope.fixStyles = function ()
     {
+      $rootScope.timelineLoaded = false;
+
       var tabHeight = $('.tabs-left .nav-tabs').height();
 
       $.each($('.tab-content').children(), function () 

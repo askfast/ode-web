@@ -163,7 +163,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    $scope.views[hash] = true;
 
 	    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
-	  };
+	  }
 
 
 	  /**
@@ -187,12 +187,17 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  {
 	    $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
+	    /**
+	     * Convert given other user's password to MD5
+	     */
+	    if (resources.Password) resources.askPass = MD5(resources.Password);
+
 	    Profile.save($route.current.params.userId, resources)
 	    .then(function (result)
 	    {
 	      if (result.error)
 	      {
-	        $rootScope.notifier.error('Error with saving profile information.');
+	        $rootScope.notifier.error($rootScope.ui.errors.profile.save);
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -206,7 +211,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	        {
 	          if (data.error)
 	          {
-	            $rootScope.notifier.error('Error with getting profile data.');
+	            $rootScope.notifier.error($rootScope.ui.errors.profile.get);
 	            console.warn('error ->', data);
 	          }
 	          else
@@ -220,6 +225,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	        });
 	      };
 	    });
+
 	  };
 
 
@@ -250,7 +256,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	      {
 	        if (result.error)
 	        {
-	          $rootScope.notifier.error('Error with changing password.');
+	          $rootScope.notifier.error($rootScope.ui.errors.profile.changePassword);
 	          console.warn('error ->', result);
 	        }
 	        else
@@ -262,7 +268,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	          {
 	            if (data.error)
 	            {
-	              $rootScope.notifier.error('Error with getting profile data.');
+	              $rootScope.notifier.error($rootScope.ui.errors.profile.get);
 	              console.warn('error ->', data);
 	            }
 	            else
@@ -296,14 +302,22 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
+     * TODO
+     * Is it really needed?
+     * Since the timelinebooter is disabled
+     *
 	   * Redraw timeline
 	   */
 	  $scope.redraw = function ()
 	  {
 	  	setTimeout(function ()
 	  	{
-	  		// timelinebooter();
+	  		//timelinebooter();
+	  		if($scope.self.timeline)
+	  			$scope.self.timeline.redraw();
+		     //console.warn('timeline ->', $scope.timeline);
 	  	}, 100);
+	  	console.log("redraw timeline here??");
 		};
 
 

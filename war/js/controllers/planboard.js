@@ -8,13 +8,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 .controller('planboard', 
 [
-	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage', 'Sloter',
-	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, Sloter) 
+	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage',
+	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage)
 	{
 	  /**
 	   * Fix styles
 	   */
 		$rootScope.fixStyles();
+
 
 	  /**
 	   * Pass the self
@@ -26,8 +27,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * Pass time slots data
 	   */
 	  $scope.data = data;
-
-	  // console.log('data ->', data);
 
 	  
 	  /**
@@ -148,7 +147,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Prepeare timeline range for dateranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
+                        ' / ' +
 	                      Dater.readable.date($scope.timeline.range.end);
 
 
@@ -157,7 +157,12 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var states = {};
 
-	  angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label; });
+	  angular.forEach($scope.timeline.config.states, function (state, key)
+    {
+      // show only user editable states
+      if (state.display)
+        states[key] = state.label;
+    });
 
 	  $scope.states = states;
 
@@ -225,7 +230,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      $scope.resetViews();
 
 	      $scope.views.slot.add = true;
-	    };
+	    }
 	  };
 
 
@@ -272,10 +277,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * 
 	   * Not used probably?
 	   */
-	  $scope.modifySlot = function (slot)
-	  {
-	  	console.log('changing state ->', slot);
-	  }
+	  // $scope.modifySlot = function (slot)
+	  // {
+	  // 	console.log('changing state ->', slot);
+	  // }
 
 	}
 ]);

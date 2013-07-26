@@ -58,7 +58,7 @@
         <a href="#notificationsTab" 
             data-toggle="tab"
             ng-click="resetViews(); setViewTo('notifications')">
-          <span class="entypo">&#128276;</span> Herinneringen
+          <span class="entypo">&#128276;</span> {{ui.message.notifications}}
         </a>
       </li>
 
@@ -90,7 +90,9 @@
 
       
       <!-- composeTab -->
-      <div class="tab-pane {{(views.compose == true || views.scheaduler == true) && 'active'}}" id="composeTab" ng-show="views.compose || views.scheaduler">
+      <div class="tab-pane {{(views.compose == true || views.scheaduler == true) && 'active'}}" 
+            id="composeTab" 
+            ng-show="views.compose || views.scheaduler">
         
         <div class="tab-header">
 
@@ -177,7 +179,7 @@
 
             <!-- scheadulerPane toggle -->
             <div class="control-group" ng-hide="scheadulerPane">
-              <label class="control-label">Herhaling</label>
+              <label class="control-label">{{ui.message.repeat}}</label>
 
               <div  class="btn-group"  
                     bs-buttons-checkbox="" 
@@ -187,7 +189,7 @@
                         class="btn btn-small" 
                         ng-model="scheadulerPane" 
                         ng-click="scheadulerPane == !scheadulerPane"
-                        bs-button="">Aan</button>
+                        bs-button="">{{ui.message.repeatOn}}</button>
 
               </div>
             </div>
@@ -198,10 +200,11 @@
 
               <!-- scheaduler header -->
               <header>
-                <h4>Herhaling</h4>
+                <h4>{{ui.message.repeat}}</h4>
                 <div class="pull-right">
-                  <button type="button" class="btn btn-small" ng-click="scheadulerPane = false" ng-hide="views.scheaduler">Uit</button>
-                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">Nieuwe herhaling</button>
+                  <button type="button" class="btn btn-small" ng-click="scheadulerPane = false" ng-hide="views.scheaduler">{{ui.message.repeatOff}}</button>
+                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">{{ui.message.repeatNew}}
+                  </button>
                 </div>
               </header>
               <!-- end scheaduler header -->
@@ -210,31 +213,32 @@
 
               <!-- notification title -->
               <div class="control-group">
-                <label class="control-label">Notificatie label</label>
+                <label class="control-label">{{ui.message.notificationLabel}}</label>
 
                 <input type="text" 
                       class="span6"
                       ng-model="scheaduled.title"
-                      placeholder="Notificatie label">
+                      placeholder="{{ui.message.notificationLabel}}">
 
               </div>
               <!-- end notification title -->
 
               <!-- no notifications -->
               <div class="control-group" ng-hide="scheaduleCount > 0">
-                <label class="control-label">Notificaties</label>
-                <p class="muted"><small><i>Er zijn (nog) geen herhalingen.</i></small></p>
+                <label class="control-label">{{ui.message.notifications}}</label>
+                <p class="muted"><small><i>{{ui.message.notificationsEmpty}}</i></small></p>
               </div>
               <!-- end no notifications -->
 
               <!-- notifications list -->
               <div class="control-group" ng-show="scheaduleCount > 0">
-                <label class="control-label">Notificaties</label>
+                <label class="control-label">{{ui.message.notifications}}</label>
 
                 <!-- <span style="font-size:11px" ng-repeat="o in offsets"> {{o}}<br></span> -->
 
                 <!-- notification items -->
-                <notification-item ng-repeat="offset in scheaduled.offsets" scheadule="offset" remover="remover()"></notification-item>
+                <notification-item ng-repeat="offset in scheaduled.offsets" scheadule="offset" remover="remover()">
+                </notification-item>
                 <!-- end notification items -->
 
               </div>
@@ -242,7 +246,7 @@
 
               <!-- scheaduler status -->
               <div class="control-group">
-                <label class="control-label">Notificatie status</label>
+                <label class="control-label">{{ui.message.notificationStatus}}</label>
                 
                 <!-- status toggler -->
                 <div  class="btn-group" 
@@ -251,20 +255,20 @@
                   <button type="button" 
                           class="btn btn-small {{(scheaduled.status) && 'active'}}" 
                           ng-model="scheaduled.status" 
-                          ng-click="scheaduled.status = true">Aan</button>
+                          ng-click="scheaduled.status = true">{{ui.message.repeatOn}}</button>
 
                   <button type="button" 
                           class="btn btn-small {{(!scheaduled.status) && 'active'}}" 
                           ng-model="scheaduled.status" 
-                          ng-click="scheaduled.status = false">Uit</button>
+                          ng-click="scheaduled.status = false">{{ui.message.repeatOff}}</button>
 
                 </div>
                 <!-- end status toggler -->
 
                 <!-- status indicator -->
                 <div style="margin-left: 10px; display: inline;">
-                  <span class="label label-success" ng-show="scheaduled.status">Ingeschakeld</span>
-                  <span class="label" ng-hide="scheaduled.status">Uitgeschakeld</span>
+                  <span class="label label-success" ng-show="scheaduled.status">{{ui.message.enabled}}</span>
+                  <span class="label" ng-hide="scheaduled.status">{{ui.message.disabled}}</span>
                 </div>
                 <!-- end status indicator -->
 
@@ -281,12 +285,12 @@
               <div ng-show="scheadulerPane">
                 <button type="submit" 
                         ng-hide="scheaduleCount > 0"
-                        class="btn btn-success disabled">Opslaan</button>
+                        class="btn btn-success disabled">{{ui.message.notificationSave}}</button>
 
                 <button type="submit" 
                         ng-click="scheaduler.save(message, broadcast, scheaduled)" 
                         ng-show="scheaduleCount > 0"
-                        class="btn btn-success">Opslaan</button>
+                        class="btn btn-success">{{ui.message.notificationSave}}</button>
               </div>
               <!-- end scheadular action buttons -->
 
@@ -448,16 +452,24 @@
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
-              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" ng-click="paginate.before('inbox')">« Vorige</button>
-              <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" ng-click="paginate.next('inbox')">Volgende »</button>
+              <button class="btn btn-small {{(page.inbox == 0) && 'disabled'}}" 
+                      ng-click="paginate.before('inbox')">« {{ui.message.paginationPrevious}}
+              </button>
+              <button class="btn btn-small {{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}" 
+                      ng-click="paginate.next('inbox')">{{ui.message.paginationNext}} »
+              </button>
             </div>
           </div>
 
           <br><br>
 
           <span class="muted pull-right">
-            <!-- <small><i>Page: {{page.inbox + 1}} of {{messages.inbox.length}}, {{(messages.inbox | filter:query.inbox).length | i18n_spec:'message.someMessage'}} </i></small> -->
-            <small><i>Pagina: {{page.inbox + 1}} van {{messages.inbox.length}}, in totaal: {{messages.inbox | countBox}} </i></small>
+            <!-- <small>
+              <i>Page: {{page.inbox + 1}} of {{messages.inbox.length}}, {{(messages.inbox | filter:query.inbox).length | i18n_spec:'message.someMessage'}} </i>
+            </small> -->
+            <small>
+              <i>{{ui.message.paginationPage}}: {{page.inbox + 1}} {{ui.message.paginationOf}} {{messages.inbox.length}}, {{ui.message.paginationInTotal}}: {{messages.inbox | countBox}} </i>
+            </small>
           </span>
 
         </div>
@@ -490,7 +502,7 @@
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Berichten filteren..." 
+                    placeholder="{{ui.message.filterMessages}}" 
                     ng-model="query.outbox">
           </form>
           <!-- end filter messages -->
@@ -548,15 +560,21 @@
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
-              <button class="btn btn-small {{(page.outbox == 0) && 'disabled'}}" ng-click="paginate.before('outbox')">« Vorige</button>
-              <button class="btn btn-small {{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}" ng-click="paginate.next('outbox')">Volgende »</button>
+              <button class="btn btn-small {{(page.outbox == 0) && 'disabled'}}" 
+                      ng-click="paginate.before('outbox')">« {{ui.message.paginationPrevious}}
+              </button>
+              <button class="btn btn-small {{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}" 
+                      ng-click="paginate.next('outbox')">{{ui.message.paginationNext}} »
+              </button>
             </div>
           </div>
 
           <br><br>
 
           <span class="muted pull-right">
-            <small><i>Pagina: {{page.outbox + 1}} van {{messages.outbox.length}}, in totaal: {{messages.outbox | countBox}}</i></small>
+            <small>
+              <i>{{ui.message.paginationPage}}: {{page.outbox + 1}} {{ui.message.paginationOf}} {{messages.outbox.length}}, {{ui.message.paginationInTotal}}: {{messages.outbox | countBox}}</i>
+            </small>
           </span>
 
         </div>
@@ -583,13 +601,13 @@
       <div class="tab-pane {{(views.notifications==true) && 'active'}}" id="notificationsTab">
 
         <div class="tab-header">
-          <h3 class="pull-left">Herinneringen</h3>
+          <h3 class="pull-left">{{ui.message.notifications}}</h3>
 
         </div>
 
         <hr>
 
-        <p ng-hide="scheadules.length > 0">Er zijn geen notificaties.</p>
+        <p ng-hide="scheadules.length > 0">{{ui.message.notificationsEmpty}}</p>
         
         <!-- notifications listing -->
         <div ng-show="scheadules.length > 0">
@@ -598,17 +616,17 @@
               <tr>
                 <th width="60"><!-- Status --></th>
                 <th width="50"><!-- Types --></th>
-                <th>Label</th>
-                <th>Ontvangers</th>
-                <th>Frequentie</th>
+                <th>{{ui.message.notificationHeaderLabel}}</th>
+                <th>{{ui.message.notificationHeaderReceivers}}</th>
+                <th>{{ui.message.notificationHeaderFrequency}}</th>
                 <th width="60"></th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="scheadule in scheadules">
                 <td>
-                  <span class="label label-success" ng-show="scheadule.active">Ingeschakeld</span>
-                  <span class="label" ng-hide="scheadule.active">Uitgeschakeld</span>
+                  <span class="label label-success" ng-show="scheadule.active">{{ui.message.enabled}}</span>
+                  <span class="label" ng-hide="scheadule.active">{{ui.message.disabled}}</span>
                 </td>
                 <td class="scheadule-icons">
                   <div><span class="entypo sms" ng-show="scheadule.sms">&#128241;</span></div>
@@ -631,7 +649,7 @@
           </table>
 
           <span class="muted pull-right">
-            <small><i>In totaal: {{scheadules.length}} </i></small>
+            <small><i>{{ui.message.inTotal}}: {{scheadules.length}} </i></small>
           </span>
 
         </div>
@@ -672,7 +690,7 @@
           <form class="pull-right">
             <input type="text" 
                     class="span12 search-query" 
-                    placeholder="Berichten filteren..." 
+                    placeholder="{{ui.message.filterMessages}}" 
                     ng-model="query.trash">
           </form>
           <!-- end filter messages -->
@@ -732,15 +750,21 @@
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
-              <button class="btn btn-small {{(page.trash == 0) && 'disabled'}}" ng-click="paginate.before('trash')">« Vorige</button>
-              <button class="btn btn-small {{(page.trash + 1 == messages.trash.length) && 'disabled'}}" ng-click="paginate.next('trash')">Volgende »</button>
+              <button class="btn btn-small {{(page.trash == 0) && 'disabled'}}" 
+                      ng-click="paginate.before('trash')">« {{ui.message.paginationPrevious}}
+              </button>
+              <button class="btn btn-small {{(page.trash + 1 == messages.trash.length) && 'disabled'}}" 
+                      ng-click="paginate.next('trash')">{{ui.message.paginationNext}} »
+              </button>
             </div>
           </div>
 
           <br><br>
 
           <span class="muted pull-right">
-            <small><i>Pagina: {{page.trash + 1}} van {{messages.trash.length}}, in totaal: {{messages.trash | countBox}}</i></small>
+            <small>
+              <i>{{ui.message.paginationPage}}: {{page.trash + 1}} {{ui.message.paginationOf}} {{messages.trash.length}}, {{ui.message.paginationInTotal}}: {{messages.trash | countBox}}</i>
+            </small>
           </span>
 
         </div>
