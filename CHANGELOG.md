@@ -11,7 +11,10 @@
 
 ## Versions
 
+  2.3.4
+
 	2.3.3
+	  * Deployed for 100T, 110K, 120G and 130B 26-7-2013
 		* Improved translations (#33) 12-7-2013
 		* Implement the moving of time-slots starting in the past and ending in the future by slicing them 10-7-2013
 		* Enabling changing of group member passwords for planners 9-7-2013
