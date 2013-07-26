@@ -1772,6 +1772,16 @@ angular.module('WebPaige')
     }
 
 
+    /**
+     * IE8 fix for inability of - not ready for angular by loading
+     * especially for index.html
+     */
+    if ($.browser.msie && $.browser.version == '8.0')
+    {
+      document.title = $rootScope.config.profile.title;
+    }
+
+
 
 
 
