@@ -31,21 +31,21 @@ angular.module('WebPaige.Controllers.Login', [])
 		if ($routeParams.uuid && $routeParams.key)
 	  {
 			$scope.views = {
-				changePass: true,
+				changePass: true
 			};
 
 			$scope.changepass = {
 				uuid: $routeParams.uuid,
-				key:  $routeParams.key,
+				key:  $routeParams.key
 			}
 		}
 	  else
 	  {
 			$scope.views = {
-				login: true,
+				login:  true,
 				forgot: false
 			};
-		};
+		}
 
 
 	  /**
@@ -73,14 +73,14 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  $scope.alert = {
 	    login: {
-	      display: false,
-	      type: '',
-	      message: ''
+	      display:  false,
+	      type:     '',
+	      message:  ''
 	    },
 	    forgot: {
-	      display: false,
-	      type: '',
-	      message: ''
+	      display:  false,
+	      type:     '',
+	      message:  ''
 	    }
 	  };
 
@@ -133,7 +133,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	      $scope.alert = {
 	        login: {
 	          display: true,
-	          type: 'alert-error',
+	          type:    'alert-error',
 	          message: $rootScope.ui.login.alert_fillfiled
 	        }
 	      };

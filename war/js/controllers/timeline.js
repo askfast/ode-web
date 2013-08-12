@@ -220,7 +220,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		            $scope.timeline.config
 		          ), $scope.timeline.options);
 		      }, timeout);
-		    };
+		    }
 
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	      
@@ -256,7 +256,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          $scope.data = data;
 
 		          _this.render(stamps, remember);
-		        };
+		        }
 
 		        $rootScope.statusBar.off();
 
@@ -282,9 +282,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        _this.render(stamps, remember);
 
 			        $rootScope.statusBar.off();
-		        };
+		        }
 		      });
-		    };
+		    }
 
 	    },
 
@@ -409,7 +409,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        start:  Dater.readable.date(new Date(range.start).getTime()),
 		        end:    Dater.readable.date(new Date(range.end).getTime())
 		      };
-	      };
+	      }
 
 	    });
 	  };
@@ -477,7 +477,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        add:  false,
 		        edit: true
 		      };
-		    };
+		    }
 
 	      if (content.type)
 	      {
@@ -489,8 +489,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        case 'group': 	$scope.views.group 			= true; 	break;
 			        case 'wish': 		$scope.views.wish 			= true; 	break;
 			        case 'member': 	$scope.views.member 		= true; 	break;
-			      };
-	      	};
+			      }
+	      	}
 
 		      $scope.slot = {
 		        start: {
@@ -531,12 +531,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        case 'member':
 			          $scope.slot.member = content.mid;
 			        break;
-			      };
-		      };
-	      };
+			      }
+		      }
+	      }
 
 	      return values;
-	    };
+	    }
 	  };
 
 
@@ -690,7 +690,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        add:  true,
 			        edit: false
 			      };
-			    };
+			    }
 
 		      $scope.slot = {
 		        start: {
@@ -757,7 +757,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          else
 		          {
 		            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
-		          };
+		          }
 
 		          $scope.timeliner.refresh();
 
@@ -765,7 +765,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        }
 		      );
 
-		    };
+		    }
 	  	}
 	  };
 
@@ -823,7 +823,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			// 	$scope.slotid = options.content.id;
 			// }
 
-	  }
+	  };
 
 
 
@@ -876,7 +876,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	if (curr < now) return false;
 
 	    	return true;
-	    }
+	    };
 
 	    /**
 	     * If slot start was in past and end in the future has been moved to
@@ -935,14 +935,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				          else
 				          {
 				            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-				          };
+				          }
 
 				          $scope.timeliner.refresh();
 
 				          $rootScope.planboardSync.start();
 				        }
 				      );
-	          };
+	          }
 	        }
 	      );
 
@@ -1041,15 +1041,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            else
 	            {
 	              $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
-	            };
+	            }
 
 	            $scope.timeliner.refresh();
 
 	            $rootScope.planboardSync.start();
 	          }
 	        );
-	      };
-	    };
+	      }
+	    }
 	  };
 
 
@@ -1085,7 +1085,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        else
 	        {
 	          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
-	        };
+	        }
 
 	        $scope.timeliner.refresh();
 	      }
@@ -1162,7 +1162,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 				$window.clearInterval($window.planboardSync);
 			}
-	  }
+	  };
 
 
 	  /**
