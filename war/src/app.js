@@ -1159,13 +1159,10 @@ angular.module('WebPaige')
           {
             var periods   = Storage.local.periods(),
                 current   = Dater.current.week(),
-                initial   = periods.weeks[current],
-                groups    = Storage.local.groups(),
                 settings  = Storage.local.settings();
 
             return  Slots.all({
                       groupId:  settings.app.group,
-                      division: 'all',
                       stamps: {
                         /**
                          * Initial start up is next 7 days
@@ -2303,24 +2300,75 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  };
 
 
+
+
+
+
+
+
+
+
+
+
 	  /**
 	   * Get group aggs
 	   */
-	  Slots.prototype.aggs = function (options) 
-	  {
-	    var deferred = $q.defer(),
-	        params = {
-	          id:     options.id,
-	          start:  options.start,
-	          end:    options.end
-	        };
+    Slots.prototype.aggs = function (options)
+    {
+      var deferred  = $q.defer(),
+          calls     = [];
 
-	    if (options.division != undefined) params.stateGroup = options.division;
 
-	    Aggs.query(params, 
-	      function (result) 
-	      {
-	        var stats = Stats.aggs(result);
+
+      if ($rootScope.config.timeline.config.divisions.length > 0)
+      {
+        angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+        {
+          var params = {
+            id:     options.id,
+            start:  options.start,
+            end:    options.end,
+            stateGroup: division.id,
+            division: {
+              id:    division.id,
+              label: division.label
+            }
+          };
+
+          calls.push(Slots.prototype.agg(params));
+        });
+      }
+      else
+      {
+        calls.push(Slots.prototype.agg({
+          id:     options.id,
+          start:  options.start,
+          end:    options.end
+        }));
+      }
+
+
+
+
+
+      $q.all(calls)
+        .then(function (result)
+        {
+          deferred.resolve(result);
+        });
+
+      return deferred.promise;
+    };
+
+
+    Slots.prototype.agg = function (options)
+    {
+      var deferred = $q.defer();
+
+      Aggs.query(options,
+        function (result)
+        {
+          var stats = Stats.aggs(result);
 
           deferred.resolve({
             id:       options.id,
@@ -2330,27 +2378,23 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             durations: stats.durations
           });
 
-	        // Slots.prototype.wishes(params)
-	        // .then(function (wishes)
-	        // {
-	        //   deferred.resolve({
-	        //     id:       options.id,
-	        //     division: options.division,
-	        //     wishes:   wishes,
-	        //     data:     result,
-	        //     ratios:   stats.ratios,
-	        //     durations: stats.durations
-	        //   });
-	        // });
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        });
 
-	    return deferred.promise;
-	  };
+      return deferred.promise;
+    };
+
+
+
+
+
+
+
+
+
 
 
 	  /**
@@ -2574,6 +2618,11 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  };
 
 
+
+
+
+
+
 	  /**
 	   * Get slot bundels; user, group aggs and members
 	   */
@@ -2606,12 +2655,12 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              month:  options.month
 	          };
 
-	          if (options.division != 'all') groupParams.division = options.division;
+	          // if (options.division != 'all') groupParams.division = options.division;
 
 	          Slots.prototype.aggs(groupParams)
 	          .then(function (aggs)
 	          {
-	          	/**
+              /**
 	          	 * If members are on
 	          	 */
 	            if (options.layouts.members)
@@ -2708,7 +2757,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	                  end:    options.stamps.end
 	                }
 	              });
-	            };
+	            }
 	          });
 	        }
 	        else
@@ -2721,7 +2770,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              end:    options.stamps.end
 	            }
 	          });
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -2731,6 +2780,10 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 	    return deferred.promise;
 	  };
+
+
+
+
 
 
 	  /**
@@ -3871,7 +3924,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    });
 
 	    return deferred.promise; 
-	  }
+	  };
 
 
 	  /**
@@ -3922,7 +3975,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        else
 	        {
 	          deferred.resolve(groups);
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -3962,7 +4015,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        else
 	        {
 	          returned = result;
-	        };
+	        }
 
 	        Storage.add(id, angular.toJson(returned));
 
@@ -4043,7 +4096,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	          deferred.resolve({error: error});
 	        }
 	      ); 
-	    };
+	    }
 
 	    return deferred.promise;
 	  };
@@ -6179,7 +6232,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });
-            };
+            }
           });       
         });
 
@@ -6199,8 +6252,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       profile: function (data, config)
       {
-        var _this = this,
-            timedata = [];
+        var _this     = this,
+            timedata  = [];
 
         angular.forEach(data, function (slot, index)
         {
@@ -6222,7 +6275,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });  
-            };
+            }
           });       
         });
 
@@ -6250,18 +6303,18 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Handle group name whether divisions selected
        */
-      namer: function (data, divisions, privilage)
+      namer: function (agg, privilage)
       {
         var groups  = this.get.groups(),
-            name    = groups[data.aggs.id],
-            link    = '<a href="#/groups?uuid=' + 
-                      data.aggs.id + 
+            name    = groups[agg.id],
+            link    = '<a href="#/groups?uuid=' +
+                      agg.id +
                       '#view">' +
                       name +
                       '</a>',
                       title;
 
-        if (data.aggs.division == 'all' || data.aggs.division == undefined)
+        if (!agg.division)
         {
           title = (privilage == 1) ? link : '<span>' + name + '</span>';
         }
@@ -6269,12 +6322,10 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var label;
 
-          angular.forEach(divisions, function (division, index) { if (division.id == data.aggs.division) label = division.label; });
-
           title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
-          title += ' <span class="label">' + label + '</span>';
-        };
+          title += ' <span class="label">' + agg.division.label + '</span>';
+        }
 
         return title;
       },
@@ -6282,112 +6333,119 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Handle group aggs (with divisions) with bars
        */
-      bars: function (data, timedata, config, name)
+      bars: function (data, timedata, config, privilage)
       {
         var _this = this,
-            maxh = 0;
+            maxh  = 0;
 
-        angular.forEach(data.aggs.data, function (slot, index) { if (slot.wish > maxh)  maxh = slot.wish; });
-
-        angular.forEach(data.aggs.data, function (slot, index)
+        angular.forEach(data.aggs, function (agg)
         {
-          var maxNum      = maxh,
-              num         = slot.wish,
-              xwish       = num,
-              height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
-              minHeight   = height,
-              style       = 'height:' + height + 'px;',
-              requirement = '<div class="requirement" style="' + 
-                            style + 
-                            '" ' + 
 
-                            'title="' + 'Minimum aantal benodigden' + ': ' + 
+          var name = _this.namer(agg, privilage);
 
-                            num + 
-                            ' personen"></div>';
-
-          num = slot.wish + slot.diff;
-
-          var xcurrent = num;
-
-          height = Math.round(num / maxNum * 80 + 20);
-
-          if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(agg.data, function (slot, index)
           {
-            switch (slot.diff)
+            if (slot.wish > maxh)  maxh = slot.wish;
+          });
+
+          angular.forEach(agg.data, function (slot, index)
+          {
+            var maxNum      = maxh,
+                num         = slot.wish,
+                xwish       = num,
+                height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
+                minHeight   = height,
+                style       = 'height:' + height + 'px;',
+                requirement = '<div class="requirement" style="' +
+                              style +
+                              '" ' +
+                              'title="' + 'Minimum aantal benodigden' + ': ' +
+                              num +
+                              ' personen"></div>';
+
+            num = slot.wish + slot.diff;
+
+            var xcurrent = num;
+
+            height = Math.round(num / maxNum * 80 + 20);
+
+            if (slot.diff >= 0 && slot.diff < 7)
             {
-              case 0:
-                var color = config.densities.even;
-              break
-              case 1:
-                var color = config.densities.one;
-              break;
-              case 2:
-                var color = config.densities.two;
-              break;
-              case 3:
-                var color = config.densities.three;
-              break;
-              case 4:
-                var color = config.densities.four;
-              break;
-              case 5:
-                var color = config.densities.five;
-              break;
-              case 6:
-                var color = config.densities.six;
-              break;
+              var color;
+
+              switch (slot.diff)
+              {
+                case 0:
+                  color = config.densities.even;
+                  break;
+                case 1:
+                  color = config.densities.one;
+                  break;
+                case 2:
+                  color = config.densities.two;
+                  break;
+                case 3:
+                  color = config.densities.three;
+                  break;
+                case 4:
+                  color = config.densities.four;
+                  break;
+                case 5:
+                  color = config.densities.five;
+                  break;
+                case 6:
+                  color = config.densities.six;
+                  break;
+              }
             }
-          }
-          else if (slot.diff >= 7)
-          {
-            var color = config.densities.more;
-          }
-          else
-          {
-            var color = config.densities.less;
-          };
+            else if (slot.diff >= 7)
+            {
+              color = config.densities.more;
+            }
+            else
+            {
+              color = config.densities.less;
+            }
 
-          var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+            var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
 
-          if (xcurrent > xwish) height = minHeight;
+            if (xcurrent > xwish) height = minHeight;
 
-          style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+            style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
 
-          var actual = '<div class="bar" style="' + 
-                        style + 
-                        '" ' + 
+            var actual = '<div class="bar" style="' +
+              style +
+              '" ' +
+              ' title="Huidig aantal beschikbaar: ' +
+              num +
+              ' personen">' +
+              span +
+              '</div>';
 
-                        ' title="Huidig aantal beschikbaar: ' + 
+            if (  (slot.diff > 0  && config.legenda.groups.more) ||
+              (slot.diff == 0 && config.legenda.groups.even) ||
+              (slot.diff < 0  && config.legenda.groups.less) )
+            {
+              timedata.push({
+                start:    Math.round(slot.start * 1000),
+                end:      Math.round(slot.end * 1000),
+                group:    _this.wrapper('c') + name,
+                content:  requirement +
+                  actual +
+                  _this.secret(angular.toJson({
+                    type: 'group',
+                    diff: slot.diff,
+                    group: name
+                  })),
+                className: 'group-aggs',
+                editable: false
+              });
+            }
 
-                        num + 
-                        ' personen">' + 
-                        span + 
-                        '</div>';
-
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:    Math.round(slot.start * 1000),
-              end:      Math.round(slot.end * 1000),
-              group:    _this.wrapper('c') + name,
-              content:  requirement + 
-                        actual +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className: 'group-aggs',
-              editable: false
-            });
-          };
-
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
+            timedata = _this.addLoading(data, timedata, [
+              _this.wrapper('c') + name
+            ]);
+          });
         });
 
         return timedata;
@@ -6396,58 +6454,64 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Process plain group aggs
        */
-      aggs: function (data, timedata, config, name)
+      aggs: function (data, timedata, config, privilage)
       {
         var _this = this;
 
-        angular.forEach(data.aggs.data, function (slot, index)
+        angular.forEach(data.aggs, function (agg)
         {
-          var cn;
+          var name = _this.namer(agg, privilage);
 
-          if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(agg.data, function (slot, index)
           {
-            switch (slot.diff)
+            var cn;
+
+            if (slot.diff >= 0 && slot.diff < 7)
             {
-              case 0: cn = 'even';  break
-              case 1: cn = 1;       break
-              case 2: cn = 2;       break
-              case 3: cn = 3;       break
-              case 4: cn = 4;       break
-              case 5: cn = 5;       break
-              case 6: cn = 6;       break
+              switch (slot.diff)
+              {
+                case 0: cn = 'even';  break;
+                case 1: cn = 1;       break;
+                case 2: cn = 2;       break;
+                case 3: cn = 3;       break;
+                case 4: cn = 4;       break;
+                case 5: cn = 5;       break;
+                case 6: cn = 6;       break;
+              }
             }
-          }
-          else if (slot.diff >= 7)
-          {
-            cn = 'more';
-          }
-          else
-          {
-            cn = 'less'
-          };
+            else if (slot.diff >= 7)
+            {
+              cn = 'more';
+            }
+            else
+            {
+              cn = 'less'
+            }
 
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:  Math.round(slot.start * 1000),
-              end:    Math.round(slot.end * 1000),
-              group: _this.wrapper('c') + name,
-              content:  cn +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className:  'agg-' + cn,
-              editable:   false
-            });
-          };
+            if ((slot.diff > 0  && config.legenda.groups.more) ||
+                (slot.diff == 0 && config.legenda.groups.even) ||
+                (slot.diff < 0  && config.legenda.groups.less))
+            {
+              timedata.push({
+                start:  Math.round(slot.start * 1000),
+                end:    Math.round(slot.end * 1000),
+                group: _this.wrapper('c') + name,
+                content:  cn +
+                  _this.secret(angular.toJson({
+                    type: 'group',
+                    diff: slot.diff,
+                    group: name
+                  })),
+                className:  'agg-' + cn,
+                editable:   false
+              });
+            }
 
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
+            timedata = _this.addLoading(data, timedata, [
+              _this.wrapper('c') + name
+            ]);
+          });
+
         });
 
         return timedata;
@@ -6456,42 +6520,57 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Wish slots
        */
-      wishes: function (data, timedata, name)
+      wishes: function (data, timedata, privilage)
       {
-        var _this = this;
+        var _this   = this;
+
+        var groups  = this.get.groups(),
+            name    = groups[data.aggs[0].id],
+            link    = '<a href="#/groups?uuid=' +
+                      data.aggs[0].id +
+                      '#view">' +
+                      name +
+                      '</a>',
+            title;
+
+        title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+        title += ' <span class="label">Behoefte</span>';
 
         angular.forEach(data.aggs.wishes, function (wish, index)
         {
+          var cn;
+
           if ( wish.count >= 7 )
           {
-            var cn = 'wishes-more';
+            cn = 'wishes-more';
           }
           else if ( wish.count == 0 )
           {
-            var cn = 'wishes-even';
+            cn = 'wishes-even';
           }
           else
           {
-            var cn = 'wishes-' + wish.count;
-          };
+            cn = 'wishes-' + wish.count;
+          }
 
           timedata.push({
             start:  Math.round(wish.start * 1000),
             end:    Math.round(wish.end * 1000),
-            group:  _this.wrapper('c') + name + ' (Wishes)',
-            content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
-                      _this.secret(angular.toJson({
-                        type: 'wish',
-                        wish: wish.count,
-                        group: name,
-                        groupId: data.aggs.id
-                      })),
+            group:  _this.wrapper('c') + title,
+            content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
+              _this.secret(angular.toJson({
+                type: 'wish',
+                wish: wish.count,
+                group: title,
+                groupId: data.aggs[0].id
+              })),
             className:  cn,
             editable:   false
           });
 
           timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name + ' (Wishes)'
+            _this.wrapper('c') + title
           ]);
         });
 
@@ -6505,8 +6584,6 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       {
         var _this   = this,
             members = this.get.members();
-        
-        // console.log('members inside sloter ->', data.members);
 
         angular.forEach(data.members, function (member, index)
         {
@@ -6540,7 +6617,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                   className:  config.states[slot.text].className,
                   editable:   false
                 });
-              };
+              }
             });
           });
 
@@ -6575,9 +6652,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       pies: function (data)
       {
-        document.getElementById("groupPie").innerHTML = '';
+        angular.forEach(data.aggs, function (agg)
+        {
+          var id;
 
-        var ratios    = [],
+          id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
+
+          document.getElementById('groupPie-' + id).innerHTML = '';
+
+          var ratios    = [],
             colorMap  = {
               more: '#415e6b',
               even: '#ba6a24',
@@ -6586,27 +6669,28 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             colors    = [],
             xratios   = [];
 
-        angular.forEach(data.aggs.ratios, function (ratio, index)
-        {
-          if (ratio != 0)
+          angular.forEach(agg.ratios, function (ratio, index)
           {
-            ratios.push({
-              ratio: ratio, 
-              color: colorMap[index]
-            });
-          };
+            if (ratio != 0)
+            {
+              ratios.push({
+                ratio: ratio,
+                color: colorMap[index]
+              });
+            }
+          });
+
+          ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+          angular.forEach(ratios, function (ratio, index)
+          {
+            colors.push(ratio.color);
+            xratios.push(ratio.ratio);
+          });
+
+          var r   = Raphael('groupPie-' + id),
+              pie = r.piechart(120, 120, 100, xratios, { colors: colors });
         });
-
-        ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
-
-        angular.forEach(ratios, function (ratio, index)
-        {
-          colors.push(ratio.color);
-          xratios.push(ratio.ratio);
-        });
-
-        var r   = Raphael("groupPie"),
-            pie = r.piechart(120, 120, 100, xratios, { colors: colors });
       },
       
       /**
@@ -6621,23 +6705,27 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         if (data.aggs)
         {
-          var name = _this.namer(data, divisions, privilage);
-
           if (config.bar) 
           {
-            timedata = _this.bars(data, timedata, config, name);
+            timedata = _this.bars(data, timedata, config, privilage);
           }
           else
           {
-            timedata = _this.aggs(data, timedata, config, name);
-          };
-        };
+            timedata = _this.aggs(data, timedata, config, privilage);
+          }
+        }
 
-        if (config.wishes) timedata = _this.wishes(data, timedata, name);
+        if (config.wishes && data.aggs) timedata = _this.wishes(data, timedata, privilage);
 
         if (data.members) timedata = _this.members(data, timedata, config, privilage);
 
-        if (data.aggs && data.aggs.ratios) _this.pies(data);
+        if (data.aggs)
+        {
+          setTimeout(function ()
+          {
+            _this.pies(data);
+          }, 100);
+        }
 
         return timedata;
       }
@@ -7939,7 +8027,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        Session.set(result["X-SESSION_ID"]);
 
 	        self.preloader();
-	      };
+	      }
 		  });
 	  };
 
@@ -8010,13 +8098,13 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO language!!');
 	                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
 	                  sync = true;
-	                };             
+	                }
 	              }
 	              else
 	              {
 	                // console.log('NO user settings at all !!');
 	                sync = true;
-	              };
+	              }
 
 	              // check for app settings-all
 	              if (settings.app)
@@ -8042,7 +8130,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO widget settings!!');
 	                  defaults.app.widgets = { groups: _groups(groups) };
 	                  sync = true;
-	                };
+	                }
 
 	                // check for app group setting
 	                if (settings.app.group && settings.app.group != undefined)
@@ -8055,14 +8143,14 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO first group setting!!');
 	                  parenting = true;
 	                  sync      = true;
-	                };          
+	                }
 	              }
 	              else
 	              {
 	                // console.log('NO app settings!!');
 	                defaults.app = { widgets: { groups: _groups(groups) } };
 	                sync = true;
-	              };
+	              }
 	            }
 	            else
 	            {
@@ -8077,7 +8165,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                }
 	              };
 	              sync = true;
-	            };
+	            }
 
 	            // sync settings with missing parts also parenting check
 	            if (sync)
@@ -8102,7 +8190,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
 
 	                    defaults.app.group = groups[0].uuid;
-	                  };
+	                  }
 	                                
 	                  // console.warn('SAVE ME (with parenting) ->', defaults);
 
@@ -8145,9 +8233,9 @@ angular.module('WebPaige.Controllers.Login', [])
 	            {
 	              finalize();
 	            }
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -8221,7 +8309,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        $rootScope.app.unreadMessages = Messages.unreadCount();
 
 	        Storage.session.unreadMessages = Messages.unreadCount();
-	      };
+	      }
 	    });
 	  };
 
@@ -8329,7 +8417,7 @@ angular.module('WebPaige.Controllers.Login', [])
 					}; 
 					
 					$location.path( "/message" );
-				};
+				}
 
 				$('#changePass button[type=submit]')
 	        .text($rootScope.ui.login.button_changePassword)
@@ -8377,7 +8465,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        .removeAttr('disabled');
 
 				return false;
-			};
+			}
 
 			$('#changePass button[type=submit]')
 	      .text($rootScope.ui.login.button_changingPassword)
@@ -8818,8 +8906,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
-      group:    settings.app.group,
-      division: 'all'
+      group:    settings.app.group
     };
 
 
@@ -8872,7 +8959,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      legenda:    {},
 	      legendarer: $rootScope.config.timeline.config.legendarer,
 	      states:     $rootScope.config.timeline.config.states,
-	      divisions:  $rootScope.config.timeline.config.divisions,
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
@@ -9037,18 +9123,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
 
-
-
-	  /**
-	   * DEPRECIATED
-	   * 
-	   * Not used probably?
-	   */
-	  // $scope.modifySlot = function (slot)
-	  // {
-	  // 	console.log('changing state ->', slot);
-	  // }
-
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -9071,6 +9145,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		 */
 		$scope.$watch(function ()
 		{
+//      if (!$scope.timeline.current.layouts.group)
+//      {
+//        // timeline.current.layouts.group
+//        $scope.timeline.config.wishes = false;
+//        $scope.groupWishes();
+//      }
+
 			/**
 			 * If main timeline
 			 */
@@ -9207,7 +9288,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    render: function (options, remember)
 	    {
 	    	/**
-	    	 * Hotfix for not converted Date objects initally given by timeline
+	    	 * Hotfix for not converted Date objects initially given by timeline
 	    	 */
 	    	if (typeof $scope.timeline.range.start != Date) $scope.timeline.range.start = new Date($scope.timeline.range.start);
 	    	if (typeof $scope.timeline.range.end != Date) $scope.timeline.range.end = new Date($scope.timeline.range.end);
@@ -9254,15 +9335,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
 
-		    	
-
           $rootScope.timelineLoaded = false;
 
 			    setTimeout( function () 
 		      {
-		      	console.log('komt hier');
-
-
             $rootScope.timelineLoaded = true;
             $rootScope.$apply();
 
@@ -9312,7 +9388,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 		        $rootScope.statusBar.off();
 
-		        if ($scope.timeline.config.wishes) getWishes();
+		        if ($scope.timeline.config.wishes)
+            {
+              getWishes();
+            }
 		      });
 		    }
 	      else
@@ -9669,23 +9748,26 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display($rootScope.ui.message.getWishes);
+      if ($scope.timeline.current.layouts.group)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.getWishes);
 
-	    Slots.wishes({
-	    	id:  			$scope.timeline.current.group,
-        start:  	$scope.data.periods.start / 1000,
-        end:    	$scope.data.periods.end / 1000
-	    }).then(function (wishes)
-	  	{
-	  		$rootScope.statusBar.off();
+        Slots.wishes({
+          id:  			$scope.timeline.current.group,
+          start:  	$scope.data.periods.start / 1000,
+          end:    	$scope.data.periods.end / 1000
+        }).then(function (wishes)
+          {
+            $rootScope.statusBar.off();
 
-	  		$scope.data.aggs.wishes = wishes;
+            $scope.data.aggs.wishes = wishes;
 
-	  		$scope.timeliner.render({
-	        start:  	$scope.timeline.range.start,
-	        end:    	$scope.timeline.range.end
-		    }, true);
-	  	});
+            $scope.timeliner.render({
+              start:  	$scope.timeline.range.start,
+              end:    	$scope.timeline.range.end
+            }, true);
+          });
+      }
 	  }
 	  
 
@@ -10027,7 +10109,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          else
 		          {
 		            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-		          };
+		          }
 
 		          $scope.timeliner.refresh();
 

@@ -283,7 +283,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    });
 
 	    return deferred.promise; 
-	  }
+	  };
 
 
 	  /**
@@ -334,7 +334,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        else
 	        {
 	          deferred.resolve(groups);
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -374,7 +374,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        else
 	        {
 	          returned = result;
-	        };
+	        }
 
 	        Storage.add(id, angular.toJson(returned));
 
@@ -455,7 +455,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	          deferred.resolve({error: error});
 	        }
 	      ); 
-	    };
+	    }
 
 	    return deferred.promise;
 	  };

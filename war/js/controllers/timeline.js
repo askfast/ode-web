@@ -19,6 +19,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		 */
 		$scope.$watch(function ()
 		{
+//      if (!$scope.timeline.current.layouts.group)
+//      {
+//        // timeline.current.layouts.group
+//        $scope.timeline.config.wishes = false;
+//        $scope.groupWishes();
+//      }
+
 			/**
 			 * If main timeline
 			 */
@@ -155,7 +162,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    render: function (options, remember)
 	    {
 	    	/**
-	    	 * Hotfix for not converted Date objects initally given by timeline
+	    	 * Hotfix for not converted Date objects initially given by timeline
 	    	 */
 	    	if (typeof $scope.timeline.range.start != Date) $scope.timeline.range.start = new Date($scope.timeline.range.start);
 	    	if (typeof $scope.timeline.range.end != Date) $scope.timeline.range.end = new Date($scope.timeline.range.end);
@@ -202,15 +209,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
 
-		    	
-
           $rootScope.timelineLoaded = false;
 
 			    setTimeout( function () 
 		      {
-		      	console.log('komt hier');
-
-
             $rootScope.timelineLoaded = true;
             $rootScope.$apply();
 
@@ -260,7 +262,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 		        $rootScope.statusBar.off();
 
-		        if ($scope.timeline.config.wishes) getWishes();
+		        if ($scope.timeline.config.wishes)
+            {
+              getWishes();
+            }
 		      });
 		    }
 	      else
@@ -617,23 +622,26 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display($rootScope.ui.message.getWishes);
+      if ($scope.timeline.current.layouts.group)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.getWishes);
 
-	    Slots.wishes({
-	    	id:  			$scope.timeline.current.group,
-        start:  	$scope.data.periods.start / 1000,
-        end:    	$scope.data.periods.end / 1000
-	    }).then(function (wishes)
-	  	{
-	  		$rootScope.statusBar.off();
+        Slots.wishes({
+          id:  			$scope.timeline.current.group,
+          start:  	$scope.data.periods.start / 1000,
+          end:    	$scope.data.periods.end / 1000
+        }).then(function (wishes)
+          {
+            $rootScope.statusBar.off();
 
-	  		$scope.data.aggs.wishes = wishes;
+            $scope.data.aggs.wishes = wishes;
 
-	  		$scope.timeliner.render({
-	        start:  	$scope.timeline.range.start,
-	        end:    	$scope.timeline.range.end
-		    }, true);
-	  	});
+            $scope.timeliner.render({
+              start:  	$scope.timeline.range.start,
+              end:    	$scope.timeline.range.end
+            }, true);
+          });
+      }
 	  }
 	  
 
@@ -975,7 +983,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          else
 		          {
 		            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-		          };
+		          }
 
 		          $scope.timeliner.refresh();
 

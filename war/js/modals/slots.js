@@ -152,24 +152,75 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  };
 
 
+
+
+
+
+
+
+
+
+
+
 	  /**
 	   * Get group aggs
 	   */
-	  Slots.prototype.aggs = function (options) 
-	  {
-	    var deferred = $q.defer(),
-	        params = {
-	          id:     options.id,
-	          start:  options.start,
-	          end:    options.end
-	        };
+    Slots.prototype.aggs = function (options)
+    {
+      var deferred  = $q.defer(),
+          calls     = [];
 
-	    if (options.division != undefined) params.stateGroup = options.division;
 
-	    Aggs.query(params, 
-	      function (result) 
-	      {
-	        var stats = Stats.aggs(result);
+
+      if ($rootScope.config.timeline.config.divisions.length > 0)
+      {
+        angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+        {
+          var params = {
+            id:     options.id,
+            start:  options.start,
+            end:    options.end,
+            stateGroup: division.id,
+            division: {
+              id:    division.id,
+              label: division.label
+            }
+          };
+
+          calls.push(Slots.prototype.agg(params));
+        });
+      }
+      else
+      {
+        calls.push(Slots.prototype.agg({
+          id:     options.id,
+          start:  options.start,
+          end:    options.end
+        }));
+      }
+
+
+
+
+
+      $q.all(calls)
+        .then(function (result)
+        {
+          deferred.resolve(result);
+        });
+
+      return deferred.promise;
+    };
+
+
+    Slots.prototype.agg = function (options)
+    {
+      var deferred = $q.defer();
+
+      Aggs.query(options,
+        function (result)
+        {
+          var stats = Stats.aggs(result);
 
           deferred.resolve({
             id:       options.id,
@@ -179,27 +230,23 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             durations: stats.durations
           });
 
-	        // Slots.prototype.wishes(params)
-	        // .then(function (wishes)
-	        // {
-	        //   deferred.resolve({
-	        //     id:       options.id,
-	        //     division: options.division,
-	        //     wishes:   wishes,
-	        //     data:     result,
-	        //     ratios:   stats.ratios,
-	        //     durations: stats.durations
-	        //   });
-	        // });
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        });
 
-	    return deferred.promise;
-	  };
+      return deferred.promise;
+    };
+
+
+
+
+
+
+
+
+
 
 
 	  /**
@@ -423,6 +470,11 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  };
 
 
+
+
+
+
+
 	  /**
 	   * Get slot bundels; user, group aggs and members
 	   */
@@ -455,12 +507,12 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              month:  options.month
 	          };
 
-	          if (options.division != 'all') groupParams.division = options.division;
+	          // if (options.division != 'all') groupParams.division = options.division;
 
 	          Slots.prototype.aggs(groupParams)
 	          .then(function (aggs)
 	          {
-	          	/**
+              /**
 	          	 * If members are on
 	          	 */
 	            if (options.layouts.members)
@@ -557,7 +609,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	                  end:    options.stamps.end
 	                }
 	              });
-	            };
+	            }
 	          });
 	        }
 	        else
@@ -570,7 +622,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              end:    options.stamps.end
 	            }
 	          });
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -580,6 +632,10 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 	    return deferred.promise;
 	  };
+
+
+
+
 
 
 	  /**
