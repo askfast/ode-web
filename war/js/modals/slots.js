@@ -81,6 +81,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
+     * Members resource
 	   */
 	  var MemberSlots = $resource(
 	    $config.host + '/network/:id/member/slots2',
@@ -152,16 +153,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  };
 
 
-
-
-
-
-
-
-
-
-
-
 	  /**
 	   * Get group aggs
 	   */
@@ -207,6 +198,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
     };
 
 
+    /**
+     * Fetch calculated planning of one group
+     */
     Slots.prototype.agg = function (options)
     {
       var deferred = $q.defer();
@@ -233,15 +227,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
     };
 
 
-
-
-
-
-
-
-
-
-
 	  /**
 	   * Get group aggs for pie charts
 	   */
@@ -265,8 +250,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	        },
 	        slicer = weeks.current.period.last.timeStamp;
 
-
-
       var params = {
         id:     options.id,
         start:  weeks.current.period.first.timeStamp / 1000,
@@ -286,16 +269,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      }
 	    );
 
-
-
-
-
-
       function processPies (results)
       {
         var state;
-
-//          console.warn('RESULTS ->', results);
 
         // Check whether it is only one
         if (results.length > 1)
@@ -452,7 +428,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
       }
 
-
 	    return deferred.promise;
 	  };
 
@@ -485,11 +460,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  		$rootScope.app.preloader.stopped = Date.now().getTime();
 	  	}
 	  };
-
-
-
-
-
 
 
 	  /**
@@ -649,10 +619,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 	    return deferred.promise;
 	  };
-
-
-
-
 
 
 	  /**

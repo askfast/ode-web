@@ -37,72 +37,14 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred  = $q.defer(),
 					groups    = angular.fromJson(Storage.get('groups')),
-					// settings  = Storage.local.settings().app.widgets.groups,
-					list      = [],
+					settings  = Storage.local.settings().app.widgets.groups,
 					calls     = [];
 
-			// if (settings.length === 0) console.warn('no settings');
+			if (settings.length === 0) console.warn('no settings');
 
-      // console.warn('settings ->', angular.toJson(Storage.local.settings()));
-
-      var settings = {
-        "user": {
-          "language": "nl"
-        },
-        "app": {
-          "widgets": {
-            "groups": {
-              "f609041a-69b6-1030-a3ab-005056bc7e66": {
-                "status": true,
-                "divisions": false
-              },
-              "4a1a3392-7611-1030-a3ab-005056bc7e66": {
-                "status": true,
-                "divisions": true
-              },
-              "e6155d7e-8abd-1030-a3ab-005056bc7e66": {
-                "status": false,
-                "divisions": false
-              },
-              "a2408ffc-69b5-1030-a3ab-005056bc7e66": {
-                "status": true,
-                "divisions": false
-              },
-              "c19c3eb6-f3fb-1030-a3ab-005056bc7e66": {
-                "status": false,
-                "divisions": false
-              },
-              "e9b67064-f4ba-1030-a3ab-005056bc7e66": {
-                "status": false,
-                "divisions": false
-              },
-              "09dee150-f4bb-1030-a3ab-005056bc7e66": {
-                "status": false,
-                "divisions": false
-              },
-              "64e6f4be-8d39-1030-a3ab-005056bc7e66": {
-                "status": false,
-                "divisions": false
-              },
-              "5c8d0e84-8d39-1030-a3ab-005056bc7e66": {
-                "status": false,
-                "divisions": false
-              },
-              "b4550b94-8d39-1030-a3ab-005056bc7e66": {
-                "status": false,
-                "divisions": false
-              }
-            }
-          },
-          "group": "4a1a3392-7611-1030-a3ab-005056bc7e66"
-        }
-      };
-
-      settings = settings.app.widgets.groups;
-
-			angular.forEach(groups, function(group)
+      angular.forEach(groups, function(group)
 			{
-				if (settings[group.uuid] && settings[group.uuid].status)
+        if (settings[group.uuid] && settings[group.uuid].status)
         {
           if (!settings[group.uuid].divisions)
           {
@@ -130,8 +72,6 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 			.then(function (results)
 			{
 				$rootScope.statusBar.off();
-
-        console.warn('FROM MODAL ->', results);
 
 				deferred.resolve(results);
 			});

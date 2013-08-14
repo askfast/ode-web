@@ -18,10 +18,12 @@
 
         <div class="head">
           <h4>{{ui.dashboard.overview}}</h4>
-          <button class="btn btn-small" 
+          <button id="dashboardPopoverBtn"
+                  class="btn btn-small"
                   bs-popover="'dist/views/dashboard-pies.html'" 
                   data-placement="{{(browser.mobile) && 'left' || 'bottom'}}"
-                  data-title="Overzicht instellingen"><i class="icon-cog"></i></button>
+                  data-title="Overzicht instellingen"
+                  ng-click="fixPopoverPos()"><i class="icon-cog"></i></button>
         </div>
         <hr>
 

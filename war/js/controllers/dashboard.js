@@ -48,18 +48,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 		/**
 		 * TODO
 		 * Check somewhere that user-settings widget-groups are synced with the
@@ -238,7 +226,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		$scope.saveOverviewWidget = function (selection)
 		{
-			$rootScope.statusBar.display($rootScope.ui.settings.saving);
+      $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
 			Settings.save($rootScope.app.resources.uuid, {
 				user: Storage.local.settings().user,
@@ -259,17 +247,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 				});
 			});
 		};
-
-
-
-
-
-
-
-
-
-
-
 
 
 		$scope.getP2000 = function  ()
@@ -364,5 +341,28 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 			$scope.more.status = !$scope.more.status;
 		};
+
+
+    /**
+     * Fix popover position
+     */
+    $scope.fixPopoverPos = function ()
+    {
+      // console.log('fixing the pos of popover', $('.popover').css('top'));
+
+      setTimeout(function ()
+      {
+//        $('body').css({
+//          position: 'relative'
+//        });
+        var width = $('#dashboard .span9').css('width') - ($('#dashboard .popover') / 2);
+//        var width = '436px';
+
+        $('.popover').css({
+          top: $('#dashboardPopoverBtn').css('top'),
+          left: width + 'px'// $('#dashboardPopoverBtn').css('left') + $('#dashboard .span9').css('width')
+        });
+      }, 100);
+    }
 	}
 ]);

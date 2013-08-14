@@ -143,7 +143,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        .removeAttr('disabled');
 
 	      return false;     
-	    };
+	    }
 
 	    $('#login button[type=submit]')
 	      .text($rootScope.ui.login.button_loggingIn)
@@ -235,16 +235,23 @@ angular.module('WebPaige.Controllers.Login', [])
 	                parenting = false,
 	                defaults  = $rootScope.config.defaults.settingsWebPaige,
 	                _groups   = function (groups)
-	                {
-	                  var _groups = {};
-	                  angular.forEach(groups, function (group, index) { _groups[group.uuid] = true; });
-	                  return _groups;
-	                };
+                              {
+                                var _groups = {};
+                                angular.forEach(groups, function (group)
+                                                        {
+                                                          _groups[group.uuid] = {
+                                                            status:     true,
+                                                            divisions:  false
+                                                          };
+                                                        }
+                                );
+                                return _groups;
+                              };
 
 	            // Check if there is any settings at all
 	            if (settings != null || settings != undefined)
 	            {
-	              // check for user settigns-all
+	              // check for user settings-all
 	              if (settings.user)
 	              {
 	                // check for user-language settings
@@ -275,13 +282,41 @@ angular.module('WebPaige.Controllers.Login', [])
 	                {
 	                  // check for app-widget-groups setting
 	                  if (settings.app.widgets.groups)
-	                  {
-	                    // console.warn('user HAS app widgets groups settings');
-	                    defaults.app.widgets.groups = settings.app.widgets.groups;
+                    {
+                      // console.log('settings for groups =>', settings.app.widgets.groups);
+                      var oldGroupSetup = false;
+
+                      if (!jQuery.isEmptyObject(settings.app.widgets.groups))
+                      {
+                        angular.forEach(settings.app.widgets.groups, function (value, id)
+                        {
+                          // console.log('value ->', value);
+                          if (typeof value !== 'object' || value == {})
+                          {
+                            oldGroupSetup = true;
+                          }
+                        });
+                      }
+                      else
+                      {
+                        oldGroupSetup = true;
+                      }
+
+                      if (oldGroupSetup)
+                      {
+                        // console.warn('OLD SETUP => user has NO app widgets groups!!');
+                        defaults.app.widgets.groups = _groups(groups);
+                        sync = true;
+                      }
+                      else
+                      {
+                        // console.warn('user HAS app widgets groups settings');
+                        defaults.app.widgets.groups = settings.app.widgets.groups;
+                      }
 	                  }
 	                  else
 	                  {
-	                    // console.warn('user has NO app widgets groups!!');
+	                    console.warn('user has NO app widgets groups!!');
 	                    defaults.app.widgets.groups = _groups(groups);
 	                    sync = true;
 	                  }
@@ -539,7 +574,7 @@ angular.module('WebPaige.Controllers.Login', [])
 							message: $rootScope.ui.errors.login.forgotCantFind
 						}
 					};
-				};
+				}
 
 				$('#forgot button[type=submit]')
 	        .text($rootScope.ui.login.button_changePassword)

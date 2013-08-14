@@ -57,7 +57,6 @@ angular.module('WebPaige')
           function ($route, Slots, Storage, Dater)
           {
             var periods   = Storage.local.periods(),
-                current   = Dater.current.week(),
                 settings  = Storage.local.settings();
 
             return  Slots.all({
