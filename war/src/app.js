@@ -2065,30 +2065,101 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred  = $q.defer(),
 					groups    = angular.fromJson(Storage.get('groups')),
-					settings  = Storage.local.settings().app.widgets.groups,
+					// settings  = Storage.local.settings().app.widgets.groups,
 					list      = [],
-					now       = new Date.now().getTime(),
 					calls     = [];
 
-			if (settings.length === 0) console.warn('no settings');
+			// if (settings.length === 0) console.warn('no settings');
 
-			angular.forEach(groups, function(group, index)
-			{
-				if (settings[group.uuid]) list.push({ id: group.uuid, name: group.name});
-			});
+      // console.warn('settings ->', angular.toJson(Storage.local.settings()));
 
-			angular.forEach(list, function (group, index)
+      var settings = {
+        "user": {
+          "language": "nl"
+        },
+        "app": {
+          "widgets": {
+            "groups": {
+              "f609041a-69b6-1030-a3ab-005056bc7e66": {
+                "status": true,
+                "divisions": false
+              },
+              "4a1a3392-7611-1030-a3ab-005056bc7e66": {
+                "status": true,
+                "divisions": true
+              },
+              "e6155d7e-8abd-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "a2408ffc-69b5-1030-a3ab-005056bc7e66": {
+                "status": true,
+                "divisions": false
+              },
+              "c19c3eb6-f3fb-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "e9b67064-f4ba-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "09dee150-f4bb-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "64e6f4be-8d39-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "5c8d0e84-8d39-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "b4550b94-8d39-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              }
+            }
+          },
+          "group": "4a1a3392-7611-1030-a3ab-005056bc7e66"
+        }
+      };
+
+      settings = settings.app.widgets.groups;
+
+			angular.forEach(groups, function(group)
 			{
-				calls.push(Slots.pie({
-					id:     group.id,
-					name:   group.name
-				}));
+				if (settings[group.uuid] && settings[group.uuid].status)
+        {
+          if (!settings[group.uuid].divisions)
+          {
+            calls.push(Slots.pie({
+              id:         group.uuid,
+              name:       group.name,
+              division:   'both'
+            }));
+          }
+          else
+          {
+            angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+            {
+              calls.push(Slots.pie({
+                id:         group.uuid,
+                name:       group.name,
+                division:   division.id
+              }));
+            })
+          }
+        }
 			});
 
 			$q.all(calls)
 			.then(function (results)
 			{
 				$rootScope.statusBar.off();
+
+        console.warn('FROM MODAL ->', results);
 
 				deferred.resolve(results);
 			});
@@ -2223,7 +2294,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      save: {
 	        method: 'PUT',
 	        params: {id: ''}
-	      },
+	      }
 	    }
 	  );
 
@@ -2318,8 +2389,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
       var deferred  = $q.defer(),
           calls     = [];
 
-
-
       if ($rootScope.config.timeline.config.divisions.length > 0)
       {
         angular.forEach($rootScope.config.timeline.config.divisions, function (division)
@@ -2347,10 +2416,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
         }));
       }
 
-
-
-
-
       $q.all(calls)
         .then(function (result)
         {
@@ -2377,7 +2442,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             ratios:   stats.ratios,
             durations: stats.durations
           });
-
         },
         function (error)
         {
@@ -2406,183 +2470,207 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	        now       = Math.floor(Date.now().getTime() / 1000),
 	        periods   = Dater.getPeriods(),
 	        current   = Dater.current.week(),
-	        weeks      = {
+	        weeks     = {
 	          current:  {
-	            period: periods.weeks[current],
-	            data:   [],
-	            shortages: []
+	            period:   periods.weeks[current],
+	            data:     [],
+	            shortages:[]
 	          },
 	          next: {
-	            period: periods.weeks[current + 1],
-	            data:   [],
-	            shortages: []
+	            period:   periods.weeks[current + 1],
+	            data:     [],
+	            shortages:[]
 	          }
 	        },
-	        slicer    = weeks.current.period.last.timeStamp;
+	        slicer = weeks.current.period.last.timeStamp;
 
-	    Aggs.query({
-	      id:     options.id,
-	      start:  weeks.current.period.first.timeStamp / 1000,
-	      end:    weeks.next.period.last.timeStamp / 1000
-	    }, 
+
+
+      var params = {
+        id:     options.id,
+        start:  weeks.current.period.first.timeStamp / 1000,
+        end:    weeks.next.period.last.timeStamp / 1000
+      };
+
+      if (options.division != 'both') params.stateGroup = options.division;
+
+	    Aggs.query(params,
 	      function (results)
 	      {
-	        var state;
-
-	        // Check whether it is only one
-	        if (results.length > 1)
-	        {
-	          angular.forEach(results, function (slot, index)
-	          {
-	            // Fish out the current
-	            if (now >= slot.start && now <= slot.end) state = slot;
-
-	            // Slice from end of first week
-	            if (slicer <= slot.start * 1000)
-	            {
-	              weeks.next.data.push(slot);
-	            }
-	            else if (slicer >= slot.start * 1000)
-	            {
-	              weeks.current.data.push(slot)
-	            };
-	          });
-
-	          // slice extra timestamp from the last of current week dataset and add that to week next
-	          var last        = weeks.current.data[weeks.current.data.length-1],
-	              next        = weeks.next.data[0],
-	              difference  = (last.end * 1000 - slicer) / 1000,
-	              currents    = [];
-
-	          // if start of current of is before the start reset it to start
-	          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
-
-	          // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
-	          if (difference > 0)
-	          {
-	            last.end = slicer / 1000;
-
-	            weeks.next.data.unshift({
-	              diff: last.diff,
-	              start: slicer / 1000,
-	              end: last.end,
-	              wish: last.wish
-	            });
-	          };
-
-	          // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
-	          angular.forEach(weeks.current.data, function (slot, index)
-	          {
-	            if (slot.end - slot.start > 0) currents.push(slot);
-
-	            // add to shortages
-	            if (slot.diff < 0) weeks.current.shortages.push(slot);
-	          });
-
-	          // reset to start of current weekly begin to week begin
-	          currents[0].start = weeks.current.period.first.timeStamp / 1000;
-
-	          // add to shortages
-	          angular.forEach(weeks.next.data, function (slot, index)
-	          {
-	            if (slot.diff < 0) weeks.next.shortages.push(slot);
-	          });
-
-	          deferred.resolve({
-	            id:       options.id,
-	            name:     options.name,
-	            weeks:    {
-	              current: {
-	                data:   currents,
-	                state:  state,
-	                shortages: weeks.current.shortages,
-	                start: {
-	                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(currents)
-	              },
-	              next: {
-	                data:   weeks.next.data,
-	                shortages: weeks.next.shortages,
-	                start: {
-	                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(weeks.next.data)
-	              }
-	            }
-	          }); 
-	        }
-	        else
-	        {
-	          if (results[0].diff == null) results[0].diff = 0;
-	          if (results[0].wish == null) results[0].wish = 0;
-
-	          var currentWeek = [{
-	                start:  weeks.current.period.first.timeStamp / 1000,
-	                end:    weeks.current.period.last.timeStamp / 1000,
-	                wish:   results[0].wish,
-	                diff:   results[0].diff
-	              }],
-	              nextWeek = [{
-	                start:  weeks.next.period.first.timeStamp / 1000,
-	                end:    weeks.next.period.last.timeStamp / 1000,
-	                wish:   results[0].wish,
-	                diff:   results[0].diff
-	              }];
-	          
-	          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
-	          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
-
-	          deferred.resolve({
-	            id:       options.id,
-	            name:     options.name,
-	            weeks:    {
-	              current: {
-	                data: currentWeek,
-	                state: currentWeek,
-	                shortages: weeks.current.shortages,
-	                start: {
-	                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(currentWeek)
-	              },
-	              next: {
-	                data: nextWeek,
-	                shortages: weeks.next.shortages,
-	                start: {
-	                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(nextWeek)
-	              }
-	            }
-	          });
-	        };          
+          deferred.resolve(processPies(results));
 	      },
 	      function (error)
 	      {
 	        deferred.resolve({error: error});
 	      }
 	    );
+
+
+
+
+
+
+      function processPies (results)
+      {
+        var state;
+
+//          console.warn('RESULTS ->', results);
+
+        // Check whether it is only one
+        if (results.length > 1)
+        {
+          angular.forEach(results, function (slot)
+          {
+            // Fish out the current
+            if (now >= slot.start && now <= slot.end) state = slot;
+
+            // Slice from end of first week
+            if (slicer <= slot.start * 1000)
+            {
+              weeks.next.data.push(slot);
+            }
+            else if (slicer >= slot.start * 1000)
+            {
+              weeks.current.data.push(slot)
+            }
+          });
+
+          // slice extra timestamp from the last of current week data set and add that to week next
+          var last        = weeks.current.data[weeks.current.data.length-1],
+              next        = weeks.next.data[0],
+              difference  = (last.end * 1000 - slicer) / 1000,
+              currents    = [];
+
+          // if start of current of is before the start reset it to start
+          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // if there is a leak to next week adjust the last one of current
+          // week and add new slot to next week with same values
+          if (difference > 0)
+          {
+            last.end = slicer / 1000;
+
+            weeks.next.data.unshift({
+              diff:   last.diff,
+              start:  slicer / 1000,
+              end:    last.end,
+              wish:   last.wish
+            });
+          }
+
+          // shortages and back-end gives more than asked sometimes, with returning
+          // values out of the range which being asked !
+          angular.forEach(weeks.current.data, function (slot)
+          {
+            if (slot.end - slot.start > 0) currents.push(slot);
+
+            // add to shortages
+            if (slot.diff < 0) weeks.current.shortages.push(slot);
+          });
+
+          // reset to start of current weekly begin to week begin
+          currents[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // add to shortages
+          angular.forEach(weeks.next.data, function (slot)
+          {
+            if (slot.diff < 0) weeks.next.shortages.push(slot);
+          });
+
+          return {
+            id:       options.id,
+            division: options.division,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data:   currents,
+                state:  state,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currents)
+              },
+              next: {
+                data:   weeks.next.data,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(weeks.next.data)
+              }
+            }
+          }
+        }
+        else
+        {
+          if (results[0].diff == null) results[0].diff = 0;
+          if (results[0].wish == null) results[0].wish = 0;
+
+          var currentWeek = [{
+              start:  weeks.current.period.first.timeStamp / 1000,
+              end:    weeks.current.period.last.timeStamp / 1000,
+              wish:   results[0].wish,
+              diff:   results[0].diff
+            }],
+            nextWeek = [{
+              start:  weeks.next.period.first.timeStamp / 1000,
+              end:    weeks.next.period.last.timeStamp / 1000,
+              wish:   results[0].wish,
+              diff:   results[0].diff
+            }];
+
+          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+
+          return {
+            id:       options.id,
+            division: options.division,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data: currentWeek,
+                state: currentWeek,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currentWeek)
+              },
+              next: {
+                data: nextWeek,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(nextWeek)
+              }
+            }
+          }
+        }
+
+      }
+
 
 	    return deferred.promise;
 	  };
@@ -2913,7 +3001,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      text:       content.state,
 	      id:         content.id
 	    }
-	  };
+	  }
 
 
 	  /**
@@ -2950,6 +3038,210 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  return new Slots;
+
+
+    /**
+     * Get group aggs for pie charts
+     */
+//    Slots.prototype.pie = function (options)
+//    {
+//      var deferred  = $q.defer(),
+//        now       = Math.floor(Date.now().getTime() / 1000),
+//        periods   = Dater.getPeriods(),
+//        current   = Dater.current.week(),
+//        weeks     = {
+//          current:  {
+//            period:   periods.weeks[current],
+//            data:     [],
+//            shortages:[]
+//          },
+//          next: {
+//            period:   periods.weeks[current + 1],
+//            data:     [],
+//            shortages:[]
+//          }
+//        },
+//        slicer = weeks.current.period.last.timeStamp;
+//
+//
+//
+//
+//
+//      Aggs.query(
+//        {
+//          id:     options.id,
+//          start:  weeks.current.period.first.timeStamp / 1000,
+//          end:    weeks.next.period.last.timeStamp / 1000
+//        },
+//        function (results)
+//        {
+//          var state;
+//
+////          console.warn('results ->', results);
+//
+//          // Check whether it is only one
+//          if (results.length > 1)
+//          {
+//            angular.forEach(results, function (slot)
+//            {
+//              // Fish out the current
+//              if (now >= slot.start && now <= slot.end) state = slot;
+//
+//              // Slice from end of first week
+//              if (slicer <= slot.start * 1000)
+//              {
+//                weeks.next.data.push(slot);
+//              }
+//              else if (slicer >= slot.start * 1000)
+//              {
+//                weeks.current.data.push(slot)
+//              }
+//            });
+//
+//            // slice extra timestamp from the last of current week dataset and add that to week next
+//            var last        = weeks.current.data[weeks.current.data.length-1],
+//              next        = weeks.next.data[0],
+//              difference  = (last.end * 1000 - slicer) / 1000,
+//              currents    = [];
+//
+//            // if start of current of is before the start reset it to start
+//            weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+//
+//            // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
+//            if (difference > 0)
+//            {
+//              last.end = slicer / 1000;
+//
+//              weeks.next.data.unshift({
+//                diff:   last.diff,
+//                start:  slicer / 1000,
+//                end:    last.end,
+//                wish:   last.wish
+//              });
+//            }
+//
+//            // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
+//            angular.forEach(weeks.current.data, function (slot)
+//            {
+//              if (slot.end - slot.start > 0) currents.push(slot);
+//
+//              // add to shortages
+//              if (slot.diff < 0) weeks.current.shortages.push(slot);
+//            });
+//
+//            // reset to start of current weekly begin to week begin
+//            currents[0].start = weeks.current.period.first.timeStamp / 1000;
+//
+//            // add to shortages
+//            angular.forEach(weeks.next.data, function (slot)
+//            {
+//              if (slot.diff < 0) weeks.next.shortages.push(slot);
+//            });
+//
+//            deferred.resolve({
+//              id:       options.id,
+//              name:     options.name,
+//              weeks:    {
+//                current: {
+//                  data:   currents,
+//                  state:  state,
+//                  shortages: weeks.current.shortages,
+//                  start: {
+//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(currents)
+//                },
+//                next: {
+//                  data:   weeks.next.data,
+//                  shortages: weeks.next.shortages,
+//                  start: {
+//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(weeks.next.data)
+//                }
+//              }
+//            });
+//          }
+//          else
+//          {
+//            if (results[0].diff == null) results[0].diff = 0;
+//            if (results[0].wish == null) results[0].wish = 0;
+//
+//            var currentWeek = [{
+//                start:  weeks.current.period.first.timeStamp / 1000,
+//                end:    weeks.current.period.last.timeStamp / 1000,
+//                wish:   results[0].wish,
+//                diff:   results[0].diff
+//              }],
+//              nextWeek = [{
+//                start:  weeks.next.period.first.timeStamp / 1000,
+//                end:    weeks.next.period.last.timeStamp / 1000,
+//                wish:   results[0].wish,
+//                diff:   results[0].diff
+//              }];
+//
+//            if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+//            if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+//
+//            deferred.resolve({
+//              id:       options.id,
+//              name:     options.name,
+//              weeks:    {
+//                current: {
+//                  data: currentWeek,
+//                  state: currentWeek,
+//                  shortages: weeks.current.shortages,
+//                  start: {
+//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(currentWeek)
+//                },
+//                next: {
+//                  data: nextWeek,
+//                  shortages: weeks.next.shortages,
+//                  start: {
+//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(nextWeek)
+//                }
+//              }
+//            });
+//          }
+//        },
+//        function (error)
+//        {
+//          deferred.resolve({error: error});
+//        }
+//      );
+//
+//
+//
+//
+//
+//
+//
+//      return deferred.promise;
+//    };
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -7098,24 +7390,50 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Translate roles
  */
-.filter('translateRole', 
-[
-	'$config', 
-	function ($config)
-	{
-		return function (role)
-		{
-			var urole;
+  .filter('translateRole',
+    [
+      '$config',
+      function ($config)
+      {
+        return function (role)
+        {
+          var urole;
 
-			angular.forEach($config.roles, function (prole, index)
-			{
-				if (prole.id == role) urole = prole.label;
-			});
+          angular.forEach($config.roles, function (prole, index)
+          {
+            if (prole.id == role) urole = prole.label;
+          });
 
-			return urole;
-		}
-	}
-])
+          return urole;
+        }
+      }
+    ])
+
+
+/**
+ * Translate division ids to names
+ */
+  .filter('translateDivision',
+    [
+      '$config',
+      function ($config)
+      {
+        return function (divid)
+        {
+          var filtered;
+
+          angular.forEach($config.timeline.config.divisions, function (division)
+          {
+            if (division.id == divid)
+            {
+              filtered = division.label;
+            }
+          });
+
+          return filtered;
+        }
+      }
+    ])
 
 
 
@@ -7129,8 +7447,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeMainFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'Dater',
+	function (Dater)
 	{
 		var periods = Dater.getPeriods();
 
@@ -7142,7 +7460,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			var cFirst = function (str)
 			{
 			    return str.charAt(0).toUpperCase() + str.substr(1);
-			}
+			};
 
 			var ndates = {
 						start: {
@@ -7194,7 +7512,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 								//  + 
 								// ', ' + 
 								// Dater.getThisYear();
-			};
+			}
 
 		}
 	}
@@ -7224,7 +7542,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				var cFirst = function (str)
 				{
 				  return str.charAt(0).toUpperCase() + str.substr(1);
-				}
+				};
 
 				var dates = {
 					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
@@ -7241,7 +7559,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 								dates.end + 
 								', ' + 
 								Dater.getThisYear();
-			};
+			}
 		}
 	}
 ])
@@ -7301,8 +7619,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 									timeline.current.month + 
 									$rootScope.ui.planboard.rangeInfoTotalDays + 
 									periods.months[timeline.current.month].totalDays;
-				};
-			};
+				}
+			}
 		};
 	}
 ])
@@ -7508,7 +7826,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    else
 	    {
 	      return members[id].name;
-	    };
+	    }
 		};
 	}
 ])
@@ -7646,7 +7964,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  	for (var i in groups)
 	  	{
 	  		if (groups[i].uuid == id) return groups[i].name;
-	  	};
+	  	}
 	  }
 	}
 ])
@@ -8565,6 +8883,18 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 		/**
 		 * TODO
 		 * Check somewhere that user-settings widget-groups are synced with the
@@ -8572,7 +8902,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * default!
 		 */
 		var groups    = Storage.local.groups(),
-				settings  = Storage.local.settings(),
 				selection = {};
 
 		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
@@ -8601,7 +8930,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 				}
 				else
 				{
-					$scope.shortageHolders = {};
+          $scope.shortageHolders = {};
 
 					$scope.loading.pies = false;
 
@@ -8610,14 +8939,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						end:    pies[0].weeks.next.end.date
 					};
 
-					angular.forEach(pies, function (pie, index)
+					angular.forEach(pies, function (pie)
 					{
 						if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
 						if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
 						if (pie.weeks.current.state.diff > 0)
 						{
-						pie.weeks.current.state.cls = 'more';
+						  pie.weeks.current.state.cls = 'more';
 						}
 						else if (pie.weeks.current.state.diff === 0)
 						{
@@ -8629,14 +8958,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						}
 
 						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-																						new Date(pie.weeks.current.state.start * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+                                              new Date(pie.weeks.current.state.start * 1000)
+                                                .toString($rootScope.config.formats.datetime) :
+                                              'undefined';
 
 						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-																						new Date(pie.weeks.current.state.end * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+                                              new Date(pie.weeks.current.state.end * 1000)
+                                                .toString($rootScope.config.formats.datetime) :
+                                              'undefined';
 
 						pie.shortages = {
 							current:  pie.weeks.current.shortages,
@@ -8675,19 +9004,23 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					$scope.pies = pies;
 				}
 			})
-			.then( function (result)
+			.then( function ()
 			{
-				angular.forEach($scope.pies, function (pie, index)
+
+
+				angular.forEach($scope.pies, function (pie)
 				{
-					pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
-					pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
+					pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
+					pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
 				});
 
-				function pieMaker ($id, id, name, _ratios)
+
+
+				function pieMaker ($id, id, _ratios)
 				{
 					setTimeout( function ()
 					{
-					document.getElementById($id + id).innerHTML = '';
+					  document.getElementById($id + id).innerHTML = '';
 
 						var ratios    = [],
 								colorMap  = {
@@ -8711,7 +9044,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 						ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
 
-						angular.forEach(ratios, function (ratio, index)
+						angular.forEach(ratios, function (ratio)
 						{
 							colors.push(ratio.color);
 							xratios.push(ratio.ratio);
@@ -8722,6 +9055,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 					}, 100);
 				}
+
+
+
 			});
 		}
 
@@ -8747,12 +9083,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					}
 				}
 			})
-			.then(function (result)
+			.then(function ()
 			{
 				$rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
 				Profile.get($rootScope.app.resources.uuid, true)
-				.then(function (resources)
+				.then(function ()
 				{
 					getOverviews();
 				});
@@ -8760,10 +9096,21 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
+
+
+
+
+
+
+
+
+
+
+
 		$scope.getP2000 = function  ()
 		{
 			/**
-			 * P2000 annnouncements
+			 * P2000 announcements
 			 */
 			Dashboard.p2000().
 			then(function (result)
@@ -8786,7 +9133,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					$scope.synced.alarms = result.synced;
 				// }
 			});
-		}
+		};
 
 
 		/**
@@ -8832,7 +9179,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 				$window.clearInterval($window.alarmSync);
 			}
-	  }
+	  };
 
 
 	  /**

@@ -75,7 +75,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      save: {
 	        method: 'PUT',
 	        params: {id: ''}
-	      },
+	      }
 	    }
 	  );
 
@@ -170,8 +170,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
       var deferred  = $q.defer(),
           calls     = [];
 
-
-
       if ($rootScope.config.timeline.config.divisions.length > 0)
       {
         angular.forEach($rootScope.config.timeline.config.divisions, function (division)
@@ -199,10 +197,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
         }));
       }
 
-
-
-
-
       $q.all(calls)
         .then(function (result)
         {
@@ -229,7 +223,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             ratios:   stats.ratios,
             durations: stats.durations
           });
-
         },
         function (error)
         {
@@ -258,183 +251,207 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	        now       = Math.floor(Date.now().getTime() / 1000),
 	        periods   = Dater.getPeriods(),
 	        current   = Dater.current.week(),
-	        weeks      = {
+	        weeks     = {
 	          current:  {
-	            period: periods.weeks[current],
-	            data:   [],
-	            shortages: []
+	            period:   periods.weeks[current],
+	            data:     [],
+	            shortages:[]
 	          },
 	          next: {
-	            period: periods.weeks[current + 1],
-	            data:   [],
-	            shortages: []
+	            period:   periods.weeks[current + 1],
+	            data:     [],
+	            shortages:[]
 	          }
 	        },
-	        slicer    = weeks.current.period.last.timeStamp;
+	        slicer = weeks.current.period.last.timeStamp;
 
-	    Aggs.query({
-	      id:     options.id,
-	      start:  weeks.current.period.first.timeStamp / 1000,
-	      end:    weeks.next.period.last.timeStamp / 1000
-	    }, 
+
+
+      var params = {
+        id:     options.id,
+        start:  weeks.current.period.first.timeStamp / 1000,
+        end:    weeks.next.period.last.timeStamp / 1000
+      };
+
+      if (options.division != 'both') params.stateGroup = options.division;
+
+	    Aggs.query(params,
 	      function (results)
 	      {
-	        var state;
-
-	        // Check whether it is only one
-	        if (results.length > 1)
-	        {
-	          angular.forEach(results, function (slot, index)
-	          {
-	            // Fish out the current
-	            if (now >= slot.start && now <= slot.end) state = slot;
-
-	            // Slice from end of first week
-	            if (slicer <= slot.start * 1000)
-	            {
-	              weeks.next.data.push(slot);
-	            }
-	            else if (slicer >= slot.start * 1000)
-	            {
-	              weeks.current.data.push(slot)
-	            };
-	          });
-
-	          // slice extra timestamp from the last of current week dataset and add that to week next
-	          var last        = weeks.current.data[weeks.current.data.length-1],
-	              next        = weeks.next.data[0],
-	              difference  = (last.end * 1000 - slicer) / 1000,
-	              currents    = [];
-
-	          // if start of current of is before the start reset it to start
-	          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
-
-	          // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
-	          if (difference > 0)
-	          {
-	            last.end = slicer / 1000;
-
-	            weeks.next.data.unshift({
-	              diff: last.diff,
-	              start: slicer / 1000,
-	              end: last.end,
-	              wish: last.wish
-	            });
-	          };
-
-	          // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
-	          angular.forEach(weeks.current.data, function (slot, index)
-	          {
-	            if (slot.end - slot.start > 0) currents.push(slot);
-
-	            // add to shortages
-	            if (slot.diff < 0) weeks.current.shortages.push(slot);
-	          });
-
-	          // reset to start of current weekly begin to week begin
-	          currents[0].start = weeks.current.period.first.timeStamp / 1000;
-
-	          // add to shortages
-	          angular.forEach(weeks.next.data, function (slot, index)
-	          {
-	            if (slot.diff < 0) weeks.next.shortages.push(slot);
-	          });
-
-	          deferred.resolve({
-	            id:       options.id,
-	            name:     options.name,
-	            weeks:    {
-	              current: {
-	                data:   currents,
-	                state:  state,
-	                shortages: weeks.current.shortages,
-	                start: {
-	                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(currents)
-	              },
-	              next: {
-	                data:   weeks.next.data,
-	                shortages: weeks.next.shortages,
-	                start: {
-	                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(weeks.next.data)
-	              }
-	            }
-	          }); 
-	        }
-	        else
-	        {
-	          if (results[0].diff == null) results[0].diff = 0;
-	          if (results[0].wish == null) results[0].wish = 0;
-
-	          var currentWeek = [{
-	                start:  weeks.current.period.first.timeStamp / 1000,
-	                end:    weeks.current.period.last.timeStamp / 1000,
-	                wish:   results[0].wish,
-	                diff:   results[0].diff
-	              }],
-	              nextWeek = [{
-	                start:  weeks.next.period.first.timeStamp / 1000,
-	                end:    weeks.next.period.last.timeStamp / 1000,
-	                wish:   results[0].wish,
-	                diff:   results[0].diff
-	              }];
-	          
-	          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
-	          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
-
-	          deferred.resolve({
-	            id:       options.id,
-	            name:     options.name,
-	            weeks:    {
-	              current: {
-	                data: currentWeek,
-	                state: currentWeek,
-	                shortages: weeks.current.shortages,
-	                start: {
-	                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(currentWeek)
-	              },
-	              next: {
-	                data: nextWeek,
-	                shortages: weeks.next.shortages,
-	                start: {
-	                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(nextWeek)
-	              }
-	            }
-	          });
-	        };          
+          deferred.resolve(processPies(results));
 	      },
 	      function (error)
 	      {
 	        deferred.resolve({error: error});
 	      }
 	    );
+
+
+
+
+
+
+      function processPies (results)
+      {
+        var state;
+
+//          console.warn('RESULTS ->', results);
+
+        // Check whether it is only one
+        if (results.length > 1)
+        {
+          angular.forEach(results, function (slot)
+          {
+            // Fish out the current
+            if (now >= slot.start && now <= slot.end) state = slot;
+
+            // Slice from end of first week
+            if (slicer <= slot.start * 1000)
+            {
+              weeks.next.data.push(slot);
+            }
+            else if (slicer >= slot.start * 1000)
+            {
+              weeks.current.data.push(slot)
+            }
+          });
+
+          // slice extra timestamp from the last of current week data set and add that to week next
+          var last        = weeks.current.data[weeks.current.data.length-1],
+              next        = weeks.next.data[0],
+              difference  = (last.end * 1000 - slicer) / 1000,
+              currents    = [];
+
+          // if start of current of is before the start reset it to start
+          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // if there is a leak to next week adjust the last one of current
+          // week and add new slot to next week with same values
+          if (difference > 0)
+          {
+            last.end = slicer / 1000;
+
+            weeks.next.data.unshift({
+              diff:   last.diff,
+              start:  slicer / 1000,
+              end:    last.end,
+              wish:   last.wish
+            });
+          }
+
+          // shortages and back-end gives more than asked sometimes, with returning
+          // values out of the range which being asked !
+          angular.forEach(weeks.current.data, function (slot)
+          {
+            if (slot.end - slot.start > 0) currents.push(slot);
+
+            // add to shortages
+            if (slot.diff < 0) weeks.current.shortages.push(slot);
+          });
+
+          // reset to start of current weekly begin to week begin
+          currents[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // add to shortages
+          angular.forEach(weeks.next.data, function (slot)
+          {
+            if (slot.diff < 0) weeks.next.shortages.push(slot);
+          });
+
+          return {
+            id:       options.id,
+            division: options.division,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data:   currents,
+                state:  state,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currents)
+              },
+              next: {
+                data:   weeks.next.data,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(weeks.next.data)
+              }
+            }
+          }
+        }
+        else
+        {
+          if (results[0].diff == null) results[0].diff = 0;
+          if (results[0].wish == null) results[0].wish = 0;
+
+          var currentWeek = [{
+              start:  weeks.current.period.first.timeStamp / 1000,
+              end:    weeks.current.period.last.timeStamp / 1000,
+              wish:   results[0].wish,
+              diff:   results[0].diff
+            }],
+            nextWeek = [{
+              start:  weeks.next.period.first.timeStamp / 1000,
+              end:    weeks.next.period.last.timeStamp / 1000,
+              wish:   results[0].wish,
+              diff:   results[0].diff
+            }];
+
+          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+
+          return {
+            id:       options.id,
+            division: options.division,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data: currentWeek,
+                state: currentWeek,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currentWeek)
+              },
+              next: {
+                data: nextWeek,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(nextWeek)
+              }
+            }
+          }
+        }
+
+      }
+
 
 	    return deferred.promise;
 	  };
@@ -765,7 +782,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      text:       content.state,
 	      id:         content.id
 	    }
-	  };
+	  }
 
 
 	  /**
@@ -802,5 +819,209 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  return new Slots;
+
+
+    /**
+     * Get group aggs for pie charts
+     */
+//    Slots.prototype.pie = function (options)
+//    {
+//      var deferred  = $q.defer(),
+//        now       = Math.floor(Date.now().getTime() / 1000),
+//        periods   = Dater.getPeriods(),
+//        current   = Dater.current.week(),
+//        weeks     = {
+//          current:  {
+//            period:   periods.weeks[current],
+//            data:     [],
+//            shortages:[]
+//          },
+//          next: {
+//            period:   periods.weeks[current + 1],
+//            data:     [],
+//            shortages:[]
+//          }
+//        },
+//        slicer = weeks.current.period.last.timeStamp;
+//
+//
+//
+//
+//
+//      Aggs.query(
+//        {
+//          id:     options.id,
+//          start:  weeks.current.period.first.timeStamp / 1000,
+//          end:    weeks.next.period.last.timeStamp / 1000
+//        },
+//        function (results)
+//        {
+//          var state;
+//
+////          console.warn('results ->', results);
+//
+//          // Check whether it is only one
+//          if (results.length > 1)
+//          {
+//            angular.forEach(results, function (slot)
+//            {
+//              // Fish out the current
+//              if (now >= slot.start && now <= slot.end) state = slot;
+//
+//              // Slice from end of first week
+//              if (slicer <= slot.start * 1000)
+//              {
+//                weeks.next.data.push(slot);
+//              }
+//              else if (slicer >= slot.start * 1000)
+//              {
+//                weeks.current.data.push(slot)
+//              }
+//            });
+//
+//            // slice extra timestamp from the last of current week dataset and add that to week next
+//            var last        = weeks.current.data[weeks.current.data.length-1],
+//              next        = weeks.next.data[0],
+//              difference  = (last.end * 1000 - slicer) / 1000,
+//              currents    = [];
+//
+//            // if start of current of is before the start reset it to start
+//            weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+//
+//            // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
+//            if (difference > 0)
+//            {
+//              last.end = slicer / 1000;
+//
+//              weeks.next.data.unshift({
+//                diff:   last.diff,
+//                start:  slicer / 1000,
+//                end:    last.end,
+//                wish:   last.wish
+//              });
+//            }
+//
+//            // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
+//            angular.forEach(weeks.current.data, function (slot)
+//            {
+//              if (slot.end - slot.start > 0) currents.push(slot);
+//
+//              // add to shortages
+//              if (slot.diff < 0) weeks.current.shortages.push(slot);
+//            });
+//
+//            // reset to start of current weekly begin to week begin
+//            currents[0].start = weeks.current.period.first.timeStamp / 1000;
+//
+//            // add to shortages
+//            angular.forEach(weeks.next.data, function (slot)
+//            {
+//              if (slot.diff < 0) weeks.next.shortages.push(slot);
+//            });
+//
+//            deferred.resolve({
+//              id:       options.id,
+//              name:     options.name,
+//              weeks:    {
+//                current: {
+//                  data:   currents,
+//                  state:  state,
+//                  shortages: weeks.current.shortages,
+//                  start: {
+//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(currents)
+//                },
+//                next: {
+//                  data:   weeks.next.data,
+//                  shortages: weeks.next.shortages,
+//                  start: {
+//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(weeks.next.data)
+//                }
+//              }
+//            });
+//          }
+//          else
+//          {
+//            if (results[0].diff == null) results[0].diff = 0;
+//            if (results[0].wish == null) results[0].wish = 0;
+//
+//            var currentWeek = [{
+//                start:  weeks.current.period.first.timeStamp / 1000,
+//                end:    weeks.current.period.last.timeStamp / 1000,
+//                wish:   results[0].wish,
+//                diff:   results[0].diff
+//              }],
+//              nextWeek = [{
+//                start:  weeks.next.period.first.timeStamp / 1000,
+//                end:    weeks.next.period.last.timeStamp / 1000,
+//                wish:   results[0].wish,
+//                diff:   results[0].diff
+//              }];
+//
+//            if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+//            if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+//
+//            deferred.resolve({
+//              id:       options.id,
+//              name:     options.name,
+//              weeks:    {
+//                current: {
+//                  data: currentWeek,
+//                  state: currentWeek,
+//                  shortages: weeks.current.shortages,
+//                  start: {
+//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(currentWeek)
+//                },
+//                next: {
+//                  data: nextWeek,
+//                  shortages: weeks.next.shortages,
+//                  start: {
+//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(nextWeek)
+//                }
+//              }
+//            });
+//          }
+//        },
+//        function (error)
+//        {
+//          deferred.resolve({error: error});
+//        }
+//      );
+//
+//
+//
+//
+//
+//
+//
+//      return deferred.promise;
+//    };
 	}
 ]);

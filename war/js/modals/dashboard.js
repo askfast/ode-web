@@ -37,30 +37,101 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		{
 			var deferred  = $q.defer(),
 					groups    = angular.fromJson(Storage.get('groups')),
-					settings  = Storage.local.settings().app.widgets.groups,
+					// settings  = Storage.local.settings().app.widgets.groups,
 					list      = [],
-					now       = new Date.now().getTime(),
 					calls     = [];
 
-			if (settings.length === 0) console.warn('no settings');
+			// if (settings.length === 0) console.warn('no settings');
 
-			angular.forEach(groups, function(group, index)
-			{
-				if (settings[group.uuid]) list.push({ id: group.uuid, name: group.name});
-			});
+      // console.warn('settings ->', angular.toJson(Storage.local.settings()));
 
-			angular.forEach(list, function (group, index)
+      var settings = {
+        "user": {
+          "language": "nl"
+        },
+        "app": {
+          "widgets": {
+            "groups": {
+              "f609041a-69b6-1030-a3ab-005056bc7e66": {
+                "status": true,
+                "divisions": false
+              },
+              "4a1a3392-7611-1030-a3ab-005056bc7e66": {
+                "status": true,
+                "divisions": true
+              },
+              "e6155d7e-8abd-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "a2408ffc-69b5-1030-a3ab-005056bc7e66": {
+                "status": true,
+                "divisions": false
+              },
+              "c19c3eb6-f3fb-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "e9b67064-f4ba-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "09dee150-f4bb-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "64e6f4be-8d39-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "5c8d0e84-8d39-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              },
+              "b4550b94-8d39-1030-a3ab-005056bc7e66": {
+                "status": false,
+                "divisions": false
+              }
+            }
+          },
+          "group": "4a1a3392-7611-1030-a3ab-005056bc7e66"
+        }
+      };
+
+      settings = settings.app.widgets.groups;
+
+			angular.forEach(groups, function(group)
 			{
-				calls.push(Slots.pie({
-					id:     group.id,
-					name:   group.name
-				}));
+				if (settings[group.uuid] && settings[group.uuid].status)
+        {
+          if (!settings[group.uuid].divisions)
+          {
+            calls.push(Slots.pie({
+              id:         group.uuid,
+              name:       group.name,
+              division:   'both'
+            }));
+          }
+          else
+          {
+            angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+            {
+              calls.push(Slots.pie({
+                id:         group.uuid,
+                name:       group.name,
+                division:   division.id
+              }));
+            })
+          }
+        }
 			});
 
 			$q.all(calls)
 			.then(function (results)
 			{
 				$rootScope.statusBar.off();
+
+        console.warn('FROM MODAL ->', results);
 
 				deferred.resolve(results);
 			});

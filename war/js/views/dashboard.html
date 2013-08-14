@@ -32,7 +32,9 @@
           <li ng-repeat="pie in pies | orderBy:'shortages.total':true">
 
             <header>
-              <h4>{{pie.name}}</h4>
+              <h4>{{pie.name}}
+                <span ng-show="(pie.division != 'both')">&nbsp;({{ pie.division | translateDivision }})</span>
+              </h4>
               <!-- <button type="button" class="close">&times;</button> -->
             </header>
 
@@ -61,7 +63,7 @@
               <div class="span4">
                 <div class="block">
                   <div class="icon">
-                    <div id="weeklyPieCurrent-{{pie.id}}" class="pie"></div>
+                    <div id="weeklyPieCurrent-{{pie.id}}-{{pie.division}}" class="pie"></div>
                   </div>
                   <div class="body">
                     <h3>{{ui.dashboard.thisWeek}}</h3>
@@ -81,7 +83,7 @@
               <div class="span4">
                 <div class="block">
                   <div class="icon">
-                    <div id="weeklyPieNext-{{pie.id}}" class="pie"></div>
+                    <div id="weeklyPieNext-{{pie.id}}-{{pie.division}}" class="pie"></div>
                   </div>
                   <div class="body">
                     <h3>{{ui.dashboard.nextWeek}}</h3>
