@@ -9599,10 +9599,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
         /**
          * First setup comes with undefined
          */
-        if (remember === undefined)
-        {
-          remember = true;
-        }
+//        if (remember === undefined)
+//        {
+//          remember = true;
+//        }
 
         var start,
             end;
@@ -10618,7 +10618,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					}
 				// Sync periodically for a minute
 				}, 60000); // 1 minute
-				// }, 10000); //  10 seconds
+				// }, 5000); //  10 seconds
 			},
 
 			/**
