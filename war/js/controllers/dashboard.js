@@ -176,7 +176,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             }
             else
             {
-              document.getElementById($id + id).innerHTML = '';
+              if (document.getElementById($id + id))
+              {
+                document.getElementById($id + id).innerHTML = '';
+              }
             }
 
 						var ratios    = [],

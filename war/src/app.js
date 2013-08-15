@@ -8963,7 +8963,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             }
             else
             {
-              document.getElementById($id + id).innerHTML = '';
+              if (document.getElementById($id + id))
+              {
+                document.getElementById($id + id).innerHTML = '';
+              }
             }
 
 						var ratios    = [],
@@ -9593,6 +9596,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     */
 	    render: function (options, remember)
 	    {
+        /**
+         * First setup comes with undefined
+         */
+        if (remember === undefined)
+        {
+          remember = true;
+        }
+
+        var start,
+            end;
+
 	    	/**
 	    	 * Hotfix for not converted Date objects initially given by timeline
 	    	 */
@@ -9607,9 +9621,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             $scope.timeline.range.end = new Date($scope.timeline.range.end);
           }
+
+          // console.log('RANGE GOOD !!');
+          start = $scope.timeline.range.start;
+          end = $scope.timeline.range.end;
+        }
+        else
+        {
+          // console.log('NOOOO RANGE !!');
+          start = new Date(options.start);
+          end = new Date(options.end);
         }
 
         // console.log('range in timeline ->', $scope.timeline.range);
+        // console.log('REMEMBER ->', remember);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
@@ -9619,8 +9644,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
-	          start:  (remember) ? $scope.timeline.range.start : new Date(options.start),
-	          end:    (remember) ? $scope.timeline.range.end : new Date(options.end),
+	          start:  (remember) ? start : new Date(options.start),
+	          end:    (remember) ? end : new Date(options.end),
 	          min:    new Date(options.start),
 	          max:    new Date(options.end)
 	        }
@@ -10593,7 +10618,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					}
 				// Sync periodically for a minute
 				}, 60000); // 1 minute
-				// }, 5000); // 5 seconds
+				// }, 10000); //  10 seconds
 			},
 
 			/**
