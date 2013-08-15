@@ -51,8 +51,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
-      group:    settings.app.group,
-      division: 'all'
+      group:    settings.app.group
     };
 
 
@@ -105,7 +104,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      legenda:    {},
 	      legendarer: $rootScope.config.timeline.config.legendarer,
 	      states:     $rootScope.config.timeline.config.states,
-	      divisions:  $rootScope.config.timeline.config.divisions,
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
@@ -269,18 +267,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
-
-
-
-	  /**
-	   * DEPRECIATED
-	   * 
-	   * Not used probably?
-	   */
-	  // $scope.modifySlot = function (slot)
-	  // {
-	  // 	console.log('changing state ->', slot);
-	  // }
 
 	}
 ]);

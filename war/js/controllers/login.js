@@ -143,7 +143,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        .removeAttr('disabled');
 
 	      return false;     
-	    };
+	    }
 
 	    $('#login button[type=submit]')
 	      .text($rootScope.ui.login.button_loggingIn)
@@ -188,7 +188,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        Session.set(result["X-SESSION_ID"]);
 
 	        self.preloader();
-	      };
+	      }
 		  });
 	  };
 
@@ -235,16 +235,23 @@ angular.module('WebPaige.Controllers.Login', [])
 	                parenting = false,
 	                defaults  = $rootScope.config.defaults.settingsWebPaige,
 	                _groups   = function (groups)
-	                {
-	                  var _groups = {};
-	                  angular.forEach(groups, function (group, index) { _groups[group.uuid] = true; });
-	                  return _groups;
-	                };
+                              {
+                                var _groups = {};
+                                angular.forEach(groups, function (group)
+                                                        {
+                                                          _groups[group.uuid] = {
+                                                            status:     true,
+                                                            divisions:  false
+                                                          };
+                                                        }
+                                );
+                                return _groups;
+                              };
 
 	            // Check if there is any settings at all
 	            if (settings != null || settings != undefined)
 	            {
-	              // check for user settigns-all
+	              // check for user settings-all
 	              if (settings.user)
 	              {
 	                // check for user-language settings
@@ -259,13 +266,13 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO language!!');
 	                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
 	                  sync = true;
-	                };             
+	                }
 	              }
 	              else
 	              {
 	                // console.log('NO user settings at all !!');
 	                sync = true;
-	              };
+	              }
 
 	              // check for app settings-all
 	              if (settings.app)
@@ -275,13 +282,41 @@ angular.module('WebPaige.Controllers.Login', [])
 	                {
 	                  // check for app-widget-groups setting
 	                  if (settings.app.widgets.groups)
-	                  {
-	                    // console.warn('user HAS app widgets groups settings');
-	                    defaults.app.widgets.groups = settings.app.widgets.groups;
+                    {
+                      // console.log('settings for groups =>', settings.app.widgets.groups);
+                      var oldGroupSetup = false;
+
+                      if (!jQuery.isEmptyObject(settings.app.widgets.groups))
+                      {
+                        angular.forEach(settings.app.widgets.groups, function (value, id)
+                        {
+                          // console.log('value ->', value);
+                          if (typeof value !== 'object' || value == {})
+                          {
+                            oldGroupSetup = true;
+                          }
+                        });
+                      }
+                      else
+                      {
+                        oldGroupSetup = true;
+                      }
+
+                      if (oldGroupSetup)
+                      {
+                        // console.warn('OLD SETUP => user has NO app widgets groups!!');
+                        defaults.app.widgets.groups = _groups(groups);
+                        sync = true;
+                      }
+                      else
+                      {
+                        // console.warn('user HAS app widgets groups settings');
+                        defaults.app.widgets.groups = settings.app.widgets.groups;
+                      }
 	                  }
 	                  else
 	                  {
-	                    // console.warn('user has NO app widgets groups!!');
+	                    console.warn('user has NO app widgets groups!!');
 	                    defaults.app.widgets.groups = _groups(groups);
 	                    sync = true;
 	                  }
@@ -291,7 +326,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO widget settings!!');
 	                  defaults.app.widgets = { groups: _groups(groups) };
 	                  sync = true;
-	                };
+	                }
 
 	                // check for app group setting
 	                if (settings.app.group && settings.app.group != undefined)
@@ -304,14 +339,14 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO first group setting!!');
 	                  parenting = true;
 	                  sync      = true;
-	                };          
+	                }
 	              }
 	              else
 	              {
 	                // console.log('NO app settings!!');
 	                defaults.app = { widgets: { groups: _groups(groups) } };
 	                sync = true;
-	              };
+	              }
 	            }
 	            else
 	            {
@@ -326,7 +361,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                }
 	              };
 	              sync = true;
-	            };
+	            }
 
 	            // sync settings with missing parts also parenting check
 	            if (sync)
@@ -351,7 +386,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
 
 	                    defaults.app.group = groups[0].uuid;
-	                  };
+	                  }
 	                                
 	                  // console.warn('SAVE ME (with parenting) ->', defaults);
 
@@ -394,9 +429,9 @@ angular.module('WebPaige.Controllers.Login', [])
 	            {
 	              finalize();
 	            }
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -470,7 +505,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        $rootScope.app.unreadMessages = Messages.unreadCount();
 
 	        Storage.session.unreadMessages = Messages.unreadCount();
-	      };
+	      }
 	    });
 	  };
 
@@ -539,7 +574,7 @@ angular.module('WebPaige.Controllers.Login', [])
 							message: $rootScope.ui.errors.login.forgotCantFind
 						}
 					};
-				};
+				}
 
 				$('#forgot button[type=submit]')
 	        .text($rootScope.ui.login.button_changePassword)
@@ -578,7 +613,7 @@ angular.module('WebPaige.Controllers.Login', [])
 					}; 
 					
 					$location.path( "/message" );
-				};
+				}
 
 				$('#changePass button[type=submit]')
 	        .text($rootScope.ui.login.button_changePassword)
@@ -626,7 +661,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        .removeAttr('disabled');
 
 				return false;
-			};
+			}
 
 			$('#changePass button[type=submit]')
 	      .text($rootScope.ui.login.button_changingPassword)

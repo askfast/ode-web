@@ -55,7 +55,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * default!
 		 */
 		var groups    = Storage.local.groups(),
-				settings  = Storage.local.settings(),
 				selection = {};
 
 		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
@@ -84,7 +83,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 				}
 				else
 				{
-					$scope.shortageHolders = {};
+          $scope.shortageHolders = {};
 
 					$scope.loading.pies = false;
 
@@ -93,14 +92,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						end:    pies[0].weeks.next.end.date
 					};
 
-					angular.forEach(pies, function (pie, index)
+					angular.forEach(pies, function (pie)
 					{
 						if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
 						if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
 						if (pie.weeks.current.state.diff > 0)
 						{
-						pie.weeks.current.state.cls = 'more';
+						  pie.weeks.current.state.cls = 'more';
 						}
 						else if (pie.weeks.current.state.diff === 0)
 						{
@@ -112,14 +111,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						}
 
 						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-																						new Date(pie.weeks.current.state.start * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+                                              new Date(pie.weeks.current.state.start * 1000)
+                                                .toString($rootScope.config.formats.datetime) :
+                                              'undefined';
 
 						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-																						new Date(pie.weeks.current.state.end * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+                                              new Date(pie.weeks.current.state.end * 1000)
+                                                .toString($rootScope.config.formats.datetime) :
+                                              'undefined';
 
 						pie.shortages = {
 							current:  pie.weeks.current.shortages,
@@ -158,19 +157,30 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					$scope.pies = pies;
 				}
 			})
-			.then( function (result)
+			.then( function ()
 			{
-				angular.forEach($scope.pies, function (pie, index)
+
+				angular.forEach($scope.pies, function (pie)
 				{
-					pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
-					pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
+					pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
+					pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
 				});
 
-				function pieMaker ($id, id, name, _ratios)
+				function pieMaker ($id, id, _ratios)
 				{
 					setTimeout( function ()
 					{
-					document.getElementById($id + id).innerHTML = '';
+            if ($.browser.msie && $.browser.version == '8.0')
+            {
+              $('#' + $id + id).html('');
+            }
+            else
+            {
+              if (document.getElementById($id + id))
+              {
+                document.getElementById($id + id).innerHTML = '';
+              }
+            }
 
 						var ratios    = [],
 								colorMap  = {
@@ -194,7 +204,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 						ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
 
-						angular.forEach(ratios, function (ratio, index)
+						angular.forEach(ratios, function (ratio)
 						{
 							colors.push(ratio.color);
 							xratios.push(ratio.ratio);
@@ -205,6 +215,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 					}, 100);
 				}
+
 			});
 		}
 
@@ -220,22 +231,31 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		$scope.saveOverviewWidget = function (selection)
 		{
-			$rootScope.statusBar.display($rootScope.ui.settings.saving);
+      $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+      angular.forEach(selection, function (selected)
+      {
+        if (!selected.status)
+        {
+          selected.divisions = false;
+        }
+      });
 
 			Settings.save($rootScope.app.resources.uuid, {
 				user: Storage.local.settings().user,
 				app: {
+          group: Storage.local.settings().app.group,
 					widgets: {
 						groups: selection
 					}
 				}
 			})
-			.then(function (result)
+			.then(function ()
 			{
 				$rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
 				Profile.get($rootScope.app.resources.uuid, true)
-				.then(function (resources)
+				.then(function ()
 				{
 					getOverviews();
 				});
@@ -246,7 +266,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.getP2000 = function  ()
 		{
 			/**
-			 * P2000 annnouncements
+			 * P2000 announcements
 			 */
 			Dashboard.p2000().
 			then(function (result)
@@ -269,7 +289,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					$scope.synced.alarms = result.synced;
 				// }
 			});
-		}
+		};
 
 
 		/**
@@ -315,7 +335,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 				$window.clearInterval($window.alarmSync);
 			}
-	  }
+	  };
 
 
 	  /**
@@ -335,5 +355,24 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 			$scope.more.status = !$scope.more.status;
 		};
+
+
+    /**
+     * Fix popover position
+     */
+    $scope.fixPopoverPos = function ()
+    {
+      setTimeout(function ()
+      {
+        var spanWidth = $('#dashboard .span9').css('width'),
+            popWidth  = $('#dashboard .popover').css('width');
+
+        $('.popover').css({
+          top: $('#dashboardPopoverBtn').css('top'),
+          left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
+                + 'px'
+        });
+      }, 100);
+    }
 	}
 ]);

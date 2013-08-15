@@ -19,6 +19,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		 */
 		$scope.$watch(function ()
 		{
+//      if (!$scope.timeline.current.layouts.group)
+//      {
+//        // timeline.current.layouts.group
+//        $scope.timeline.config.wishes = false;
+//        $scope.groupWishes();
+//      }
+
 			/**
 			 * If main timeline
 			 */
@@ -154,11 +161,45 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     */
 	    render: function (options, remember)
 	    {
+        /**
+         * First setup comes with undefined
+         */
+//        if (remember === undefined)
+//        {
+//          remember = true;
+//        }
+
+        var start,
+            end;
+
 	    	/**
-	    	 * Hotfix for not converted Date objects initally given by timeline
+	    	 * Hotfix for not converted Date objects initially given by timeline
 	    	 */
-	    	if (typeof $scope.timeline.range.start != Date) $scope.timeline.range.start = new Date($scope.timeline.range.start);
-	    	if (typeof $scope.timeline.range.end != Date) $scope.timeline.range.end = new Date($scope.timeline.range.end);
+        if ($scope.timeline.range)
+        {
+          if (typeof $scope.timeline.range.start != Date)
+          {
+            $scope.timeline.range.start = new Date($scope.timeline.range.start);
+          }
+
+          if (typeof $scope.timeline.range.end != Date)
+          {
+            $scope.timeline.range.end = new Date($scope.timeline.range.end);
+          }
+
+          // console.log('RANGE GOOD !!');
+          start = $scope.timeline.range.start;
+          end = $scope.timeline.range.end;
+        }
+        else
+        {
+          // console.log('NOOOO RANGE !!');
+          start = new Date(options.start);
+          end = new Date(options.end);
+        }
+
+        // console.log('range in timeline ->', $scope.timeline.range);
+        // console.log('REMEMBER ->', remember);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
@@ -168,8 +209,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
-	          start:  (remember) ? $scope.timeline.range.start : new Date(options.start),
-	          end:    (remember) ? $scope.timeline.range.end : new Date(options.end),
+	          start:  (remember) ? start : new Date(options.start),
+	          end:    (remember) ? end : new Date(options.end),
 	          min:    new Date(options.start),
 	          max:    new Date(options.end)
 	        }
@@ -202,15 +243,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
 
-		    	
-
           $rootScope.timelineLoaded = false;
 
 			    setTimeout( function () 
 		      {
-		      	console.log('komt hier');
-
-
             $rootScope.timelineLoaded = true;
             $rootScope.$apply();
 
@@ -260,7 +296,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 		        $rootScope.statusBar.off();
 
-		        if ($scope.timeline.config.wishes) getWishes();
+		        if ($scope.timeline.config.wishes)
+            {
+              getWishes();
+            }
 		      });
 		    }
 	      else
@@ -617,23 +656,26 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display($rootScope.ui.message.getWishes);
+      if ($scope.timeline.current.layouts.group)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.getWishes);
 
-	    Slots.wishes({
-	    	id:  			$scope.timeline.current.group,
-        start:  	$scope.data.periods.start / 1000,
-        end:    	$scope.data.periods.end / 1000
-	    }).then(function (wishes)
-	  	{
-	  		$rootScope.statusBar.off();
+        Slots.wishes({
+          id:  			$scope.timeline.current.group,
+          start:  	$scope.data.periods.start / 1000,
+          end:    	$scope.data.periods.end / 1000
+        }).then(function (wishes)
+          {
+            $rootScope.statusBar.off();
 
-	  		$scope.data.aggs.wishes = wishes;
+            $scope.data.aggs.wishes = wishes;
 
-	  		$scope.timeliner.render({
-	        start:  	$scope.timeline.range.start,
-	        end:    	$scope.timeline.range.end
-		    }, true);
-	  	});
+            $scope.timeliner.render({
+              start:  	$scope.timeline.range.start,
+              end:    	$scope.timeline.range.end
+            }, true);
+          });
+      }
 	  }
 	  
 
@@ -975,7 +1017,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          else
 		          {
 		            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-		          };
+		          }
 
 		          $scope.timeliner.refresh();
 
@@ -1141,7 +1183,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					}
 				// Sync periodically for a minute
 				}, 60000); // 1 minute
-				// }, 5000); // 5 seconds
+				// }, 5000); //  10 seconds
 			},
 
 			/**

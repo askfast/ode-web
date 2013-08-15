@@ -109,7 +109,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });
-            };
+            }
           });       
         });
 
@@ -129,8 +129,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       profile: function (data, config)
       {
-        var _this = this,
-            timedata = [];
+        var _this     = this,
+            timedata  = [];
 
         angular.forEach(data, function (slot, index)
         {
@@ -152,7 +152,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });  
-            };
+            }
           });       
         });
 
@@ -180,18 +180,18 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Handle group name whether divisions selected
        */
-      namer: function (data, divisions, privilage)
+      namer: function (agg, privilage)
       {
         var groups  = this.get.groups(),
-            name    = groups[data.aggs.id],
-            link    = '<a href="#/groups?uuid=' + 
-                      data.aggs.id + 
+            name    = groups[agg.id],
+            link    = '<a href="#/groups?uuid=' +
+                      agg.id +
                       '#view">' +
                       name +
                       '</a>',
                       title;
 
-        if (data.aggs.division == 'all' || data.aggs.division == undefined)
+        if (!agg.division)
         {
           title = (privilage == 1) ? link : '<span>' + name + '</span>';
         }
@@ -199,12 +199,10 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var label;
 
-          angular.forEach(divisions, function (division, index) { if (division.id == data.aggs.division) label = division.label; });
-
           title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
-          title += ' <span class="label">' + label + '</span>';
-        };
+          title += ' <span class="label">' + agg.division.label + '</span>';
+        }
 
         return title;
       },
@@ -212,112 +210,119 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Handle group aggs (with divisions) with bars
        */
-      bars: function (data, timedata, config, name)
+      bars: function (data, timedata, config, privilage)
       {
         var _this = this,
-            maxh = 0;
+            maxh  = 0;
 
-        angular.forEach(data.aggs.data, function (slot, index) { if (slot.wish > maxh)  maxh = slot.wish; });
-
-        angular.forEach(data.aggs.data, function (slot, index)
+        angular.forEach(data.aggs, function (agg)
         {
-          var maxNum      = maxh,
-              num         = slot.wish,
-              xwish       = num,
-              height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
-              minHeight   = height,
-              style       = 'height:' + height + 'px;',
-              requirement = '<div class="requirement" style="' + 
-                            style + 
-                            '" ' + 
 
-                            'title="' + 'Minimum aantal benodigden' + ': ' + 
+          var name = _this.namer(agg, privilage);
 
-                            num + 
-                            ' personen"></div>';
-
-          num = slot.wish + slot.diff;
-
-          var xcurrent = num;
-
-          height = Math.round(num / maxNum * 80 + 20);
-
-          if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(agg.data, function (slot, index)
           {
-            switch (slot.diff)
+            if (slot.wish > maxh)  maxh = slot.wish;
+          });
+
+          angular.forEach(agg.data, function (slot, index)
+          {
+            var maxNum      = maxh,
+                num         = slot.wish,
+                xwish       = num,
+                height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
+                minHeight   = height,
+                style       = 'height:' + height + 'px;',
+                requirement = '<div class="requirement" style="' +
+                              style +
+                              '" ' +
+                              'title="' + 'Minimum aantal benodigden' + ': ' +
+                              num +
+                              ' personen"></div>';
+
+            num = slot.wish + slot.diff;
+
+            var xcurrent = num;
+
+            height = Math.round(num / maxNum * 80 + 20);
+
+            if (slot.diff >= 0 && slot.diff < 7)
             {
-              case 0:
-                var color = config.densities.even;
-              break
-              case 1:
-                var color = config.densities.one;
-              break;
-              case 2:
-                var color = config.densities.two;
-              break;
-              case 3:
-                var color = config.densities.three;
-              break;
-              case 4:
-                var color = config.densities.four;
-              break;
-              case 5:
-                var color = config.densities.five;
-              break;
-              case 6:
-                var color = config.densities.six;
-              break;
+              var color;
+
+              switch (slot.diff)
+              {
+                case 0:
+                  color = config.densities.even;
+                  break;
+                case 1:
+                  color = config.densities.one;
+                  break;
+                case 2:
+                  color = config.densities.two;
+                  break;
+                case 3:
+                  color = config.densities.three;
+                  break;
+                case 4:
+                  color = config.densities.four;
+                  break;
+                case 5:
+                  color = config.densities.five;
+                  break;
+                case 6:
+                  color = config.densities.six;
+                  break;
+              }
             }
-          }
-          else if (slot.diff >= 7)
-          {
-            var color = config.densities.more;
-          }
-          else
-          {
-            var color = config.densities.less;
-          };
+            else if (slot.diff >= 7)
+            {
+              color = config.densities.more;
+            }
+            else
+            {
+              color = config.densities.less;
+            }
 
-          var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+            var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
 
-          if (xcurrent > xwish) height = minHeight;
+            if (xcurrent > xwish) height = minHeight;
 
-          style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+            style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
 
-          var actual = '<div class="bar" style="' + 
-                        style + 
-                        '" ' + 
+            var actual = '<div class="bar" style="' +
+              style +
+              '" ' +
+              ' title="Huidig aantal beschikbaar: ' +
+              num +
+              ' personen">' +
+              span +
+              '</div>';
 
-                        ' title="Huidig aantal beschikbaar: ' + 
+            if (  (slot.diff > 0  && config.legenda.groups.more) ||
+              (slot.diff == 0 && config.legenda.groups.even) ||
+              (slot.diff < 0  && config.legenda.groups.less) )
+            {
+              timedata.push({
+                start:    Math.round(slot.start * 1000),
+                end:      Math.round(slot.end * 1000),
+                group:    _this.wrapper('c') + name,
+                content:  requirement +
+                  actual +
+                  _this.secret(angular.toJson({
+                    type: 'group',
+                    diff: slot.diff,
+                    group: name
+                  })),
+                className: 'group-aggs',
+                editable: false
+              });
+            }
 
-                        num + 
-                        ' personen">' + 
-                        span + 
-                        '</div>';
-
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:    Math.round(slot.start * 1000),
-              end:      Math.round(slot.end * 1000),
-              group:    _this.wrapper('c') + name,
-              content:  requirement + 
-                        actual +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className: 'group-aggs',
-              editable: false
-            });
-          };
-
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
+            timedata = _this.addLoading(data, timedata, [
+              _this.wrapper('c') + name
+            ]);
+          });
         });
 
         return timedata;
@@ -326,58 +331,64 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Process plain group aggs
        */
-      aggs: function (data, timedata, config, name)
+      aggs: function (data, timedata, config, privilage)
       {
         var _this = this;
 
-        angular.forEach(data.aggs.data, function (slot, index)
+        angular.forEach(data.aggs, function (agg)
         {
-          var cn;
+          var name = _this.namer(agg, privilage);
 
-          if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(agg.data, function (slot, index)
           {
-            switch (slot.diff)
+            var cn;
+
+            if (slot.diff >= 0 && slot.diff < 7)
             {
-              case 0: cn = 'even';  break
-              case 1: cn = 1;       break
-              case 2: cn = 2;       break
-              case 3: cn = 3;       break
-              case 4: cn = 4;       break
-              case 5: cn = 5;       break
-              case 6: cn = 6;       break
+              switch (slot.diff)
+              {
+                case 0: cn = 'even';  break;
+                case 1: cn = 1;       break;
+                case 2: cn = 2;       break;
+                case 3: cn = 3;       break;
+                case 4: cn = 4;       break;
+                case 5: cn = 5;       break;
+                case 6: cn = 6;       break;
+              }
             }
-          }
-          else if (slot.diff >= 7)
-          {
-            cn = 'more';
-          }
-          else
-          {
-            cn = 'less'
-          };
+            else if (slot.diff >= 7)
+            {
+              cn = 'more';
+            }
+            else
+            {
+              cn = 'less'
+            }
 
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:  Math.round(slot.start * 1000),
-              end:    Math.round(slot.end * 1000),
-              group: _this.wrapper('c') + name,
-              content:  cn +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className:  'agg-' + cn,
-              editable:   false
-            });
-          };
+            if ((slot.diff > 0  && config.legenda.groups.more) ||
+                (slot.diff == 0 && config.legenda.groups.even) ||
+                (slot.diff < 0  && config.legenda.groups.less))
+            {
+              timedata.push({
+                start:  Math.round(slot.start * 1000),
+                end:    Math.round(slot.end * 1000),
+                group: _this.wrapper('c') + name,
+                content:  cn +
+                  _this.secret(angular.toJson({
+                    type: 'group',
+                    diff: slot.diff,
+                    group: name
+                  })),
+                className:  'agg-' + cn,
+                editable:   false
+              });
+            }
 
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
+            timedata = _this.addLoading(data, timedata, [
+              _this.wrapper('c') + name
+            ]);
+          });
+
         });
 
         return timedata;
@@ -386,42 +397,57 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Wish slots
        */
-      wishes: function (data, timedata, name)
+      wishes: function (data, timedata, privilage)
       {
-        var _this = this;
+        var _this   = this;
+
+        var groups  = this.get.groups(),
+            name    = groups[data.aggs[0].id],
+            link    = '<a href="#/groups?uuid=' +
+                      data.aggs[0].id +
+                      '#view">' +
+                      name +
+                      '</a>',
+            title;
+
+        title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+        title += ' <span class="label">Behoefte</span>';
 
         angular.forEach(data.aggs.wishes, function (wish, index)
         {
+          var cn;
+
           if ( wish.count >= 7 )
           {
-            var cn = 'wishes-more';
+            cn = 'wishes-more';
           }
           else if ( wish.count == 0 )
           {
-            var cn = 'wishes-even';
+            cn = 'wishes-even';
           }
           else
           {
-            var cn = 'wishes-' + wish.count;
-          };
+            cn = 'wishes-' + wish.count;
+          }
 
           timedata.push({
             start:  Math.round(wish.start * 1000),
             end:    Math.round(wish.end * 1000),
-            group:  _this.wrapper('c') + name + ' (Wishes)',
-            content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
-                      _this.secret(angular.toJson({
-                        type: 'wish',
-                        wish: wish.count,
-                        group: name,
-                        groupId: data.aggs.id
-                      })),
+            group:  _this.wrapper('c') + title,
+            content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
+              _this.secret(angular.toJson({
+                type: 'wish',
+                wish: wish.count,
+                group: title,
+                groupId: data.aggs[0].id
+              })),
             className:  cn,
             editable:   false
           });
 
           timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name + ' (Wishes)'
+            _this.wrapper('c') + title
           ]);
         });
 
@@ -435,8 +461,6 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       {
         var _this   = this,
             members = this.get.members();
-        
-        // console.log('members inside sloter ->', data.members);
 
         angular.forEach(data.members, function (member, index)
         {
@@ -470,7 +494,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                   className:  config.states[slot.text].className,
                   editable:   false
                 });
-              };
+              }
             });
           });
 
@@ -505,9 +529,24 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       pies: function (data)
       {
-        document.getElementById("groupPie").innerHTML = '';
+        angular.forEach(data.aggs, function (agg)
+        {
+          var id;
 
-        var ratios    = [],
+          id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
+
+          // document.getElementById('groupPie-' + id).innerHTML = '';
+
+          if ($.browser.msie && $.browser.version == '8.0')
+          {
+            $('#' + 'groupPie-' + id).html('');
+          }
+          else
+          {
+            document.getElementById('groupPie-' + id).innerHTML = '';
+          }
+
+          var ratios    = [],
             colorMap  = {
               more: '#415e6b',
               even: '#ba6a24',
@@ -516,27 +555,28 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             colors    = [],
             xratios   = [];
 
-        angular.forEach(data.aggs.ratios, function (ratio, index)
-        {
-          if (ratio != 0)
+          angular.forEach(agg.ratios, function (ratio, index)
           {
-            ratios.push({
-              ratio: ratio, 
-              color: colorMap[index]
-            });
-          };
+            if (ratio != 0)
+            {
+              ratios.push({
+                ratio: ratio,
+                color: colorMap[index]
+              });
+            }
+          });
+
+          ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+          angular.forEach(ratios, function (ratio, index)
+          {
+            colors.push(ratio.color);
+            xratios.push(ratio.ratio);
+          });
+
+          var r   = Raphael('groupPie-' + id),
+              pie = r.piechart(120, 120, 100, xratios, { colors: colors });
         });
-
-        ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
-
-        angular.forEach(ratios, function (ratio, index)
-        {
-          colors.push(ratio.color);
-          xratios.push(ratio.ratio);
-        });
-
-        var r   = Raphael("groupPie"),
-            pie = r.piechart(120, 120, 100, xratios, { colors: colors });
       },
       
       /**
@@ -551,23 +591,27 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         if (data.aggs)
         {
-          var name = _this.namer(data, divisions, privilage);
-
           if (config.bar) 
           {
-            timedata = _this.bars(data, timedata, config, name);
+            timedata = _this.bars(data, timedata, config, privilage);
           }
           else
           {
-            timedata = _this.aggs(data, timedata, config, name);
-          };
-        };
+            timedata = _this.aggs(data, timedata, config, privilage);
+          }
+        }
 
-        if (config.wishes) timedata = _this.wishes(data, timedata, name);
+        if (config.wishes && data.aggs) timedata = _this.wishes(data, timedata, privilage);
 
         if (data.members) timedata = _this.members(data, timedata, config, privilage);
 
-        if (data.aggs && data.aggs.ratios) _this.pies(data);
+        if (data.aggs)
+        {
+          setTimeout(function ()
+          {
+            _this.pies(data);
+          }, 100);
+        }
 
         return timedata;
       }
