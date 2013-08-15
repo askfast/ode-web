@@ -1160,6 +1160,8 @@ angular.module('WebPaige')
             var periods   = Storage.local.periods(),
                 settings  = Storage.local.settings();
 
+            console.log('group to be asked ->', Storage.local.settings());
+
             return  Slots.all({
                       groupId:  settings.app.group,
                       stamps: {
@@ -9010,6 +9012,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Settings.save($rootScope.app.resources.uuid, {
 				user: Storage.local.settings().user,
 				app: {
+          group: Storage.local.settings().app.group,
 					widgets: {
 						groups: selection
 					}
@@ -9123,8 +9126,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
-     * TODO (Working well yet?)
-     *
      * Fix popover position
      */
     $scope.fixPopoverPos = function ()
@@ -13192,7 +13193,10 @@ angular.module('WebPaige.Controllers.Settings', [])
 	   */
 	  var languages = {};
 
-	  angular.forEach(ui, function (lang, index) { languages[lang.meta.name] = lang.meta.label; });
+	  angular.forEach(ui, function (lang)
+    {
+      languages[lang.meta.name] = lang.meta.label;
+    });
 
 	  $scope.languages = languages;
 
@@ -13202,7 +13206,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	   */
 	   var groups = {};
 
-	   angular.forEach(Storage.local.groups(), function (group, index)
+	   angular.forEach(Storage.local.groups(), function (group)
 	   {
 	     groups[group.uuid] = group.name;
 	   });
@@ -13218,7 +13222,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	    $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
 	    Settings.save($rootScope.app.resources.uuid, settings)
-	    .then(function (saved)
+	    .then(function ()
 	    {
 	      $rootScope.notifier.success($rootScope.ui.settings.saved);
 
@@ -13239,7 +13243,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	          $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
 
 	          $rootScope.statusBar.off();
-	        };
+	        }
 	      })
 	    });
 	  };

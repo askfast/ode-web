@@ -234,6 +234,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			Settings.save($rootScope.app.resources.uuid, {
 				user: Storage.local.settings().user,
 				app: {
+          group: Storage.local.settings().app.group,
 					widgets: {
 						groups: selection
 					}
@@ -347,8 +348,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
-     * TODO (Working well yet?)
-     *
      * Fix popover position
      */
     $scope.fixPopoverPos = function ()
