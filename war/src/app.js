@@ -1160,7 +1160,7 @@ angular.module('WebPaige')
             var periods   = Storage.local.periods(),
                 settings  = Storage.local.settings();
 
-            console.log('group to be asked ->', Storage.local.settings());
+            // console.log('group to be asked ->', Storage.local.settings());
 
             return  Slots.all({
                       groupId:  settings.app.group,
@@ -6858,7 +6858,16 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
           id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
 
-          document.getElementById('groupPie-' + id).innerHTML = '';
+          // document.getElementById('groupPie-' + id).innerHTML = '';
+
+          if ($.browser.msie && $.browser.version == '8.0')
+          {
+            $('#' + 'groupPie-' + id).html('');
+          }
+          else
+          {
+            document.getElementById('groupPie-' + id).innerHTML = '';
+          }
 
           var ratios    = [],
             colorMap  = {
@@ -8948,7 +8957,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 				{
 					setTimeout( function ()
 					{
-					  document.getElementById($id + id).innerHTML = '';
+            if ($.browser.msie && $.browser.version == '8.0')
+            {
+              $('#' + $id + id).html('');
+            }
+            else
+            {
+              document.getElementById($id + id).innerHTML = '';
+            }
 
 						var ratios    = [],
 								colorMap  = {
@@ -9580,8 +9596,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	/**
 	    	 * Hotfix for not converted Date objects initially given by timeline
 	    	 */
-	    	if (typeof $scope.timeline.range.start != Date) $scope.timeline.range.start = new Date($scope.timeline.range.start);
-	    	if (typeof $scope.timeline.range.end != Date) $scope.timeline.range.end = new Date($scope.timeline.range.end);
+        if ($scope.timeline.range)
+        {
+          if (typeof $scope.timeline.range.start != Date)
+          {
+            $scope.timeline.range.start = new Date($scope.timeline.range.start);
+          }
+
+          if (typeof $scope.timeline.range.end != Date)
+          {
+            $scope.timeline.range.end = new Date($scope.timeline.range.end);
+          }
+        }
+
+        // console.log('range in timeline ->', $scope.timeline.range);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,

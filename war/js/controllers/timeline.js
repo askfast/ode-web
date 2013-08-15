@@ -164,8 +164,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	/**
 	    	 * Hotfix for not converted Date objects initially given by timeline
 	    	 */
-	    	if (typeof $scope.timeline.range.start != Date) $scope.timeline.range.start = new Date($scope.timeline.range.start);
-	    	if (typeof $scope.timeline.range.end != Date) $scope.timeline.range.end = new Date($scope.timeline.range.end);
+        if ($scope.timeline.range)
+        {
+          if (typeof $scope.timeline.range.start != Date)
+          {
+            $scope.timeline.range.start = new Date($scope.timeline.range.start);
+          }
+
+          if (typeof $scope.timeline.range.end != Date)
+          {
+            $scope.timeline.range.end = new Date($scope.timeline.range.end);
+          }
+        }
+
+        // console.log('range in timeline ->', $scope.timeline.range);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,

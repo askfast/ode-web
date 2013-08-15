@@ -59,7 +59,7 @@ angular.module('WebPaige')
             var periods   = Storage.local.periods(),
                 settings  = Storage.local.settings();
 
-            console.log('group to be asked ->', Storage.local.settings());
+            // console.log('group to be asked ->', Storage.local.settings());
 
             return  Slots.all({
                       groupId:  settings.app.group,

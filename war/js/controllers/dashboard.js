@@ -170,7 +170,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 				{
 					setTimeout( function ()
 					{
-					  document.getElementById($id + id).innerHTML = '';
+            if ($.browser.msie && $.browser.version == '8.0')
+            {
+              $('#' + $id + id).html('');
+            }
+            else
+            {
+              document.getElementById($id + id).innerHTML = '';
+            }
 
 						var ratios    = [],
 								colorMap  = {

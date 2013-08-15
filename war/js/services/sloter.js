@@ -535,7 +535,16 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
           id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
 
-          document.getElementById('groupPie-' + id).innerHTML = '';
+          // document.getElementById('groupPie-' + id).innerHTML = '';
+
+          if ($.browser.msie && $.browser.version == '8.0')
+          {
+            $('#' + 'groupPie-' + id).html('');
+          }
+          else
+          {
+            document.getElementById('groupPie-' + id).innerHTML = '';
+          }
 
           var ratios    = [],
             colorMap  = {
