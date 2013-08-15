@@ -160,14 +160,11 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			.then( function ()
 			{
 
-
 				angular.forEach($scope.pies, function (pie)
 				{
 					pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
 					pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
 				});
-
-
 
 				function pieMaker ($id, id, _ratios)
 				{
@@ -209,8 +206,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					}, 100);
 				}
 
-
-
 			});
 		}
 
@@ -227,6 +222,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.saveOverviewWidget = function (selection)
 		{
       $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+      angular.forEach(selection, function (selected)
+      {
+        if (!selected.status)
+        {
+          selected.divisions = false;
+        }
+      });
 
 			Settings.save($rootScope.app.resources.uuid, {
 				user: Storage.local.settings().user,
@@ -344,23 +347,21 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
+     * TODO (Working well yet?)
+     *
      * Fix popover position
      */
     $scope.fixPopoverPos = function ()
     {
-      // console.log('fixing the pos of popover', $('.popover').css('top'));
-
       setTimeout(function ()
       {
-//        $('body').css({
-//          position: 'relative'
-//        });
-        var width = $('#dashboard .span9').css('width') - ($('#dashboard .popover') / 2);
-//        var width = '436px';
+        var spanWidth = $('#dashboard .span9').css('width'),
+            popWidth  = $('#dashboard .popover').css('width');
 
         $('.popover').css({
           top: $('#dashboardPopoverBtn').css('top'),
-          left: width + 'px'// $('#dashboardPopoverBtn').css('left') + $('#dashboard .span9').css('width')
+          left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
+                + 'px'
         });
       }, 100);
     }
