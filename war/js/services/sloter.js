@@ -210,14 +210,13 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Handle group aggs (with divisions) with bars
        */
-      bars: function (data, timedata, config, privilage)
+      bars: function (data, timedata, config, privilage, current)
       {
         var _this = this,
             maxh  = 0;
 
-        angular.forEach(data.aggs, function (agg)
+        angular.forEach(_this.filtered(data, current), function (agg)
         {
-
           var name = _this.namer(agg, privilage);
 
           angular.forEach(agg.data, function (slot, index)
@@ -331,15 +330,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Process plain group aggs
        */
-      aggs: function (data, timedata, config, privilage)
+      aggs: function (data, timedata, config, privilage, current)
       {
         var _this = this;
 
-        angular.forEach(data.aggs, function (agg)
+        angular.forEach(_this.filtered(data, current), function (agg)
         {
           var name = _this.namer(agg, privilage);
 
-          angular.forEach(agg.data, function (slot, index)
+          angular.forEach(agg.data, function (slot)
           {
             var cn;
 
@@ -366,8 +365,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             }
 
             if ((slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) ||
-                (slot.diff < 0  && config.legenda.groups.less))
+              (slot.diff == 0 && config.legenda.groups.even) ||
+              (slot.diff < 0  && config.legenda.groups.less))
             {
               timedata.push({
                 start:  Math.round(slot.start * 1000),
@@ -412,7 +411,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
-        title += ' <span class="label">Behoefte</span>';
+        title += ' <span class="label">Behoefte (elke divisie)</span>';
 
         angular.forEach(data.aggs.wishes, function (wish, index)
         {
@@ -513,11 +512,12 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
            * TODO
            * Good place to host this here?
            */
-          angular.forEach(member.stats, function (stat, index)
+          angular.forEach(member.stats, function (stat)
           {
             var state = stat.state.split('.');
             state.reverse();
-            stat.state = 'bar-' + state[0];
+
+            stat.state = (stat.state.match(/bar-(.*)/)) ? stat.state : 'bar-' + state[0];
           });
         });
 
@@ -527,15 +527,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Produce pie charts
        */
-      pies: function (data)
+      pies: function (data, current)
       {
-        angular.forEach(data.aggs, function (agg)
+        var _this = this;
+
+        angular.forEach(_this.filtered(data, current), function (agg)
         {
           var id;
 
           id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
-
-          // document.getElementById('groupPie-' + id).innerHTML = '';
 
           if ($.browser.msie && $.browser.version == '8.0')
           {
@@ -578,11 +578,37 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
               pie = r.piechart(120, 120, 100, xratios, { colors: colors });
         });
       },
+
+
+      /**
+       * Filter group agg data based on selected divisions
+       */
+      filtered: function (data, current)
+      {
+        var filtered = [];
+
+        if (current.division == 'all')
+        {
+          filtered = data.aggs;
+        }
+        else
+        {
+          angular.forEach(data.aggs, function (agg)
+          {
+            if (current.division == agg.division.id)
+            {
+              filtered.push(agg);
+            }
+          });
+        }
+
+        return filtered;
+      },
       
       /**
        * Timeline data processing
        */
-      process: function (data, config, divisions, privilage)
+      process: function (data, config, divisions, privilage, current)
       {
         var _this     = this,
             timedata  = [];
@@ -593,11 +619,11 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           if (config.bar) 
           {
-            timedata = _this.bars(data, timedata, config, privilage);
+            timedata = _this.bars(data, timedata, config, privilage, current);
           }
           else
           {
-            timedata = _this.aggs(data, timedata, config, privilage);
+            timedata = _this.aggs(data, timedata, config, privilage, current);
           }
         }
 
@@ -609,7 +635,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           setTimeout(function ()
           {
-            _this.pies(data);
+            _this.pies(data, current);
           }, 100);
         }
 

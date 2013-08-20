@@ -12,7 +12,7 @@
                 <input type="checkbox" ng-model="popover.selection[group.uuid].status">&nbsp;{{group.name}}
               </label>
 
-              <label ng-show="popover.selection[group.uuid].status"
+              <label ng-show="popover.selection[group.uuid].status && popover.divisions"
                      style="margin-left: 20px;">
                 <input type="checkbox"
                        ng-model="popover.selection[group.uuid].divisions"

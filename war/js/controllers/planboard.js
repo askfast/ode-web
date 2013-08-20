@@ -46,12 +46,13 @@ angular.module('WebPaige.Controllers.Planboard', [])
         members:  false
       },
       /**
-       * Fix for timeline scoper to day
+       * Fix for timeline scope to day
        */
       day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
-      group:    settings.app.group
+      group:    settings.app.group,
+      division: 'all'
     };
 
 
@@ -104,6 +105,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      legenda:    {},
 	      legendarer: $rootScope.config.timeline.config.legendarer,
 	      states:     $rootScope.config.timeline.config.states,
+        divisions:  $rootScope.config.timeline.config.divisions,
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
@@ -124,7 +126,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Legenda defaults
+	   * Legend defaults
 	   */
 	  angular.forEach($rootScope.config.timeline.config.states, function (state, index)
 	  {
@@ -133,7 +135,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Timeline group legenda default configuration
+	   * Timeline group legend default configuration
 	   */
 	  $scope.timeline.config.legenda.groups = {
 	    more: true,
@@ -143,15 +145,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Prepeare timeline range for dateranger widget
+	   * Prepare timeline range for date ranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
-                        ' / ' +
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' +
 	                      Dater.readable.date($scope.timeline.range.end);
 
 
 	  /**
-	   * States for dropdown
+	   * States for drop down
 	   */
 	  var states = {};
 
@@ -159,22 +160,42 @@ angular.module('WebPaige.Controllers.Planboard', [])
     {
       // show only user editable states
       if (state.display)
+      {
         states[key] = state.label;
+      }
     });
 
 	  $scope.states = states;
 
 
 	  /**
-	   * Groups for dropdown
+	   * Groups for drop down
 	   */
 	  $scope.groups = groups;
 
 
 	  /**
-	   * Groups for dropdown
+	   * Groups for drop down
 	   */
 	  $scope.divisions = $scope.timeline.config.divisions;
+
+    if ($scope.timeline.config.divisions.length > 0)
+    {
+      if ($scope.divisions[0].id !== 'all')
+      {
+        $scope.divisions.unshift({
+          id:     'all',
+          label:  'Alle divisies'
+        });
+      }
+
+      $scope.groupPieHide = {};
+
+      angular.forEach($scope.divisions, function (division)
+      {
+        $scope.groupPieHide[division.id] = false;
+      });
+    }
 
 
 	  /**
@@ -206,7 +227,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Slot form toggler
+	   * Slot form toggle
 	   */
 	  $scope.toggleSlotForm = function ()
 	  {

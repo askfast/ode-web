@@ -58,11 +58,14 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
           {
             angular.forEach($rootScope.config.timeline.config.divisions, function (division)
             {
-              calls.push(Slots.pie({
-                id:         group.uuid,
-                name:       group.name,
-                division:   division.id
-              }));
+              if (division.id !== 'all')
+              {
+                calls.push(Slots.pie({
+                  id:         group.uuid,
+                  name:       group.name,
+                  division:   division.id
+                }));
+              }
             })
           }
         }

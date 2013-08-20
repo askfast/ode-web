@@ -165,18 +165,21 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
       {
         angular.forEach($rootScope.config.timeline.config.divisions, function (division)
         {
-          var params = {
-            id:     options.id,
-            start:  options.start,
-            end:    options.end,
-            stateGroup: division.id,
-            division: {
-              id:    division.id,
-              label: division.label
-            }
-          };
+          if (division.id !== 'all')
+          {
+            var params = {
+              id:     options.id,
+              start:  options.start,
+              end:    options.end,
+              stateGroup: division.id,
+              division: {
+                id:    division.id,
+                label: division.label
+              }
+            };
 
-          calls.push(Slots.prototype.agg(params));
+            calls.push(Slots.prototype.agg(params));
+          }
         });
       }
       else

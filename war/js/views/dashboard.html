@@ -27,11 +27,15 @@
         </div>
         <hr>
 
-        <p ng-show="loading.pies">{{ui.dashboard.groupOverviews}}</p>
+        <p ng-hide="loading.pies || !checkAnyPies()"
+            ng-show="checkAnyPies()">Er zijn geen groepen geselecteerd.</p>
+
+        <p ng-show="loadingPies">{{ui.dashboard.groupOverviews}}</p>
 
         <!-- pie loop -->
-        <ul id="pies" ng-hide="loading.pies">
-          <li ng-repeat="pie in pies | orderBy:'shortages.total':true">
+        <ul id="pies" ng-hide="loadingPies || checkAnyPies()">
+          <!--<li ng-repeat="pie in pies | orderBy:'shortages.total':true">-->
+          <li ng-repeat="pie in pies">
 
             <header>
               <h4>{{pie.name}}
@@ -163,8 +167,8 @@
         </ul>
         <!-- end pie loop -->
 
-        <hr class="lastline" ng-hide="loading.pies">
-        <p ng-hide="loading.pies">
+        <hr class="lastline" ng-hide="loadingPies || checkAnyPies()">
+        <p ng-hide="loadingPies || checkAnyPies()">
           <small class="pull-right">
             <span class="text-warning">{{ui.dashboard.periods}}: </span>
             <span class="muted">
@@ -223,15 +227,16 @@
         </ul>
         <!-- end p2000 loop -->
 
-        <hr class="lastline">
-        <p ng-show="alarms.list.length > 4">
-          <small>
-            <a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>
-          </small>
-        </p>
+        <hr ng-hide="loading.alerts" class="lastline">
+
+        <!--<p ng-hide="loading.alerts" ng-show="alarms.list.length > 4">-->
+          <!--<small>-->
+            <!--<a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>-->
+          <!--</small>-->
+        <!--</p>-->
 
         <!-- p2000 footer -->
-        <p>
+        <p ng-hide="loading.alerts">
           <small class="pull-left">
             <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
             <span class="muted">{{synced.alarms | nicelyDate}}</span>
