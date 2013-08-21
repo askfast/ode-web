@@ -251,13 +251,15 @@ var ui = {
         groups: 'Groups',
         newGroup: 'New Group',
         newMember: 'New Member',
-        serach: 'Search',
+        search: 'Search',
         addNewGroup: 'Add New Group',
         editGroup: 'Edit Group',
         searchResults: 'Search results',
         group: 'Group',
         close: 'Close',
         name: 'Name',
+        firstName: 'First Name',
+        lastName: 'Last Name',
         saveGroup: 'Save Group',
         registerMember: 'Register Member',
         role: 'Role',
@@ -272,7 +274,7 @@ var ui = {
         userName: 'Username',
         password: 'Password',
         saveMember: 'Save Member',
-        serachFor: 'Search results for ',
+        searchedFor: 'Search results for ',
         sorryCanNotFind: 'Sorry but we couldn\'t find what you are looking for.',
         // troubled
         // selectGroup: '-- select a group --',
@@ -298,7 +300,7 @@ var ui = {
         deleting: 'Deleting group..',
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
-        searchfor: 'firstname, lastname..',
+        searchFor: 'firstname, lastname..',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
         requiredPeople: 'Required'
@@ -672,13 +674,15 @@ var ui = {
         groups: 'Groepen',
         newGroup: 'Nieuwe Group',
         newMember: 'Nieuw lid',
-        serach: 'Zoeken',
+        search: 'Zoeken',
         addNewGroup: 'Nieuwe groep toevoegen',
         editGroup: 'Groep wijzigen',
         searchResults: 'Zoekresultaten',
         group: 'Groep',
         close: 'Sluiten',
         name: 'Naam',
+        firstName: 'Voornaam',
+        lastName: 'Achternaam',
         saveGroup: 'Groep opslaan',
         registerMember: 'Lid registreren',
         role: 'Functie',
@@ -695,7 +699,7 @@ var ui = {
         userName: 'Gebruikersnaam',
         password: 'Wachtwoord',
         saveMember: 'Lid opslaan',
-        serachFor: 'Zoekresultaten voor ',
+        searchedFor: 'Zoekresultaten voor ',
         sorryCanNotFind: 'Sorry, geen resultaten.',
         addToGroup: 'Aan groep toevoegen',
         addMemberToGroup: 'Voeg geselecteerde leden aan groep toe',
@@ -718,7 +722,7 @@ var ui = {
         deleting: 'Groep verwijderen...',
         deleted: 'Groep succesvol verwijderd.',
         filterMembers: 'Leden filteren...',
-        searchfor: 'voornaam, achternaam..',
+        searchFor: 'voornaam, achternaam..',
         widgetSave: 'Opslaan',
         widgetCancel: 'Annuleren',
         requiredPeople: 'Behoefte'
@@ -3929,7 +3933,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        // params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
 	        params: {id:'', fields: '[role, settingsWebPaige]'},
 	        isArray: true
 	      },
@@ -3966,8 +3969,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      {
 	        if (!all)
 	        {
-	          // console.warn('returned ===>', result.length);
-
 	          if (result.length == 0)
 	          {
 	            deferred.resolve(null);
@@ -3993,8 +3994,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Extract only the groups which are in the local list
+	   * TODO (Extract only the groups which are in the local list)
 	   * 
 	   * Get container (parent) group data
 	   */
@@ -4004,7 +4004,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        cons      = [];
 
 	    Containers.get(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        /**
@@ -4041,8 +4043,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Members.add(
 	      { 
-	        id: candidate.group.uuid, 
-	        mid: candidate.id 
+	        id:   candidate.group.uuid,
+	        mid:  candidate.id
 	      }, 
 	      {}, 
 	      function (result) 
@@ -4068,8 +4070,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Members.remove(
 	      { 
-	        id: groupId, 
-	        mid: memberId 
+	        id:   groupId,
+	        mid:  memberId
 	      }, 
 	      function (result) 
 	      {
@@ -4090,12 +4092,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	   */
 	  Groups.prototype.removeMembers = function (selection, group)
 	  {
-	    var deferred = $q.defer(),
-	        calls = [];
+	    var deferred  = $q.defer(),
+	        calls     = [];
 
 	    angular.forEach(selection, function (value, id)
 	    {
-	      if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	      if (id)
+        {
+          calls.push(Groups.prototype.removeMember(id, group.uuid));
+        }
 	    });
 
 	    $q.all(calls)
@@ -4114,14 +4119,19 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        count     = 0;
 
 	    Slots.wishes({
-	      id: id,
+	      id:     id,
 	      start:  255600,
 	      end:    860400
 	    }).then(function (results)
 	    {
-	      angular.forEach(results, function (slot, index)
+	      angular.forEach(results, function (slot)
 	      {
-	        if (slot.start == 255600 && slot.end == 860400 && slot.count != null) count = slot.count;
+	        if (slot.start == 255600 &&
+              slot.end == 860400 &&
+              slot.count != null)
+          {
+            count = slot.count;
+          }
 	      });
 
 	      deferred.resolve({
@@ -4149,7 +4159,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        {
 	          var calls = [];
 
-	          angular.forEach(groups, function (group, index)
+	          angular.forEach(groups, function (group)
 	          {
 	            calls.push(Groups.prototype.get(group.uuid));
 	          });
@@ -4163,13 +4173,13 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	            data.members = {};
 
-	            angular.forEach(groups, function (group, gindex)
+	            angular.forEach(groups, function (group)
 	            {
 	              data.groups = groups;
 
 	              data.members[group.uuid] = [];
 
-	              angular.forEach(results, function (result, mindex)
+	              angular.forEach(results, function (result)
 	              {
 	                if (result.id == group.uuid) data.members[group.uuid] = result.data;
 	              });
@@ -4201,7 +4211,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred = $q.defer();
 
 	    Members.query(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        /**
@@ -4241,15 +4253,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * Make an inuque list of members
+	   * Make an unique list of members
 	   */
 	  Groups.prototype.uniqueMembers = function ()
 	  {
-	    angular.forEach(angular.fromJson(Storage.get('groups')), function (group, index)
+	    angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
 	    {
 	      var members = angular.fromJson(Storage.get('members')) || {};
 
-	      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, index)
+	      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
 	      {
 	        members[member.uuid] = member;
 	      });
@@ -4272,15 +4284,25 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	     */
 	    if (group.id)
 	    {
-	      Groups.edit({id: group.id}, {name: group.name}, function (result) 
-	      {
-	        deferred.resolve(group.id);
-	      });
+	      Groups.edit(
+          {
+            id: group.id
+          },
+          {
+            name: group.name
+          },
+          function ()
+          {
+            deferred.resolve(group.id);
+          }
+        );
 	    }
 	    else
 	    {
 	      Groups.save(
-	        { id: $rootScope.app.resources.uuid }, 
+	        {
+            id: $rootScope.app.resources.uuid
+          },
 	        group, 
 	        function (result) 
 	        {
@@ -4316,7 +4338,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred = $q.defer();
 
 	    Groups.remove(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        deferred.resolve(result);
@@ -4332,7 +4356,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * Search candidate mambers
+	   * Search candidate members
 	   */
 	  Groups.prototype.search = function (query) 
 	  {
@@ -4340,16 +4364,18 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Groups.search(
 	      null, 
-	      {key: query}, 
+	      {
+          key: query
+        },
 	      function (results) 
 	      {
 	        var processed = [];
 
-	        angular.forEach(results, function (result, index)
+	        angular.forEach(results, function (result)
 	        {
 	          processed.push({
-	            id: result.id,
-	            name: result.name,
+	            id:     result.id,
+	            name:   result.name,
 	            groups: Groups.prototype.getMemberGroups(result.id)
 	          });
 	        });
@@ -4371,20 +4397,22 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	   */
 	  Groups.prototype.getMemberGroups = function (id)
 	  {
-	    var groups = angular.fromJson(Storage.get('groups')),
-	        memberGroups = [];
+	    var groups        = angular.fromJson(Storage.get('groups')),
+	        memberGroups  = [];
 
-	    angular.forEach(groups, function (group, index)
+	    angular.forEach(groups, function (group)
 	    {
 	      var localGroup = angular.fromJson(Storage.get(group.uuid));
 
-	      angular.forEach(localGroup, function (member, index)
+	      angular.forEach(localGroup, function (member)
 	      {
 	        if (member.uuid === id)
-	          memberGroups.push({
-	            uuid: group.uuid,
-	            name: group.name
-	          });
+          {
+            memberGroups.push({
+              uuid: group.uuid,
+              name: group.name
+            });
+          }
 	      });
 	    });
 
@@ -4477,7 +4505,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      {
 	        uuid: 	profile.username,
 	        pass: 	MD5(profile.password),
-	        name: 	profile.name,
+	        name: 	String(profile.firstName + ' ' + profile.lastName),
 	        phone: 	profile.PhoneAddress
 	      }, 
 	      function (registered) 
@@ -4486,6 +4514,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	        .then(function (roled)
 	        {
 	          Profile.prototype.save(profile.username, {
+              firstName:    profile.firstName,
+              lastName:     profile.lastName,
 	            EmailAddress: profile.EmailAddress,
 	            PostAddress: 	profile.PostAddress,
 	            PostZip: 			profile.PostZip,
@@ -4494,7 +4524,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	          {
 	            var calls = [];
 
-	            angular.forEach(profile.groups, function (group, index)
+	            angular.forEach(profile.groups, function (group)
 	            {
 	              calls.push(Groups.addMember({
 	                id: 		profile.username,
@@ -4619,8 +4649,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            end: 		params.end * 1000
 	          }
 	        }));        
-	      }); // user slots
-	    }); // profile get
+	      });
+	    });
 
 	    return deferred.promise;
 	  };
@@ -4638,8 +4668,6 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      user:   id,
 	      start: 	params.start / 1000,
 	      end: 		params.end / 1000
-	      // start:  params.start,
-	      // end:    params.end
 	    }).then(function (slots)
 	    {
 	      deferred.resolve({
@@ -4669,10 +4697,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	  {
 	    var deferred = $q.defer();
 
+      resources.name = resources.firstName + ' ' + resources.lastName;
+
 	    Profile.save(
-	      {id: id}, 
-	      resources, 
-	      function (result) 
+	      {
+          id: id
+        },
+	      resources,
+	      function (result)
 	      {
 	        deferred.resolve(result);
 	      },
@@ -4687,44 +4719,46 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
 	  /**
+     * DEPRECIATED
+     *
 	   * Create settings resources for user if it is missing
 	   */
-	  Profile.prototype.createSettings_ = function (id) 
-	  {
-	    var deferred = $q.defer();
-
-	    Profile.prototype.get(id, false)
-	    .then(function (result) 
-	    {
-	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
-	      {
-	        Profile.save(
-	          {id: result.resources.uuid}, 
-	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }), 
-	          function (result)
-	          {
-	            deferred.resolve({
-	              status: 'modified',
-	              resources: result
-	            });
-	          },
-	          function (error)
-	          {
-	            deferred.resolve({error: error});
-	          }
-	        );
-	      }
-	      else
-	      {
-	        deferred.resolve({
-	          status: 'full',
-	          resources: result
-	        });
-	      }
-	    });
-
-	    return deferred.promise;
-	  };
+//	  Profile.prototype.createSettings_ = function (id)
+//	  {
+//	    var deferred = $q.defer();
+//
+//	    Profile.prototype.get(id, false)
+//	    .then(function (result)
+//	    {
+//	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
+//	      {
+//	        Profile.save(
+//	          {id: result.resources.uuid},
+//	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }),
+//	          function (result)
+//	          {
+//	            deferred.resolve({
+//	              status: 'modified',
+//	              resources: result
+//	            });
+//	          },
+//	          function (error)
+//	          {
+//	            deferred.resolve({error: error});
+//	          }
+//	        );
+//	      }
+//	      else
+//	      {
+//	        deferred.resolve({
+//	          status: 'full',
+//	          resources: result
+//	        });
+//	      }
+//	    });
+//
+//	    return deferred.promise;
+//	  };
 
 
 	  return new Profile;
@@ -12233,8 +12267,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 		/**
 		 * Self this
 		 */
-		var self = this,
-				params = $location.search();
+		var self    = this,
+				params  = $location.search();
 
 
 		/**
@@ -12305,7 +12339,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		function setGroupView (id)
 		{
-			angular.forEach(data.groups, function (group, index)
+			angular.forEach(data.groups, function (group)
 			{
 				if (group.uuid == id) $scope.group = group;
 			});
@@ -12342,8 +12376,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.saveWish = function (id, wish)
 		{
-			// console.warn('setting the wish:' + wish + ' for the group:', id);
-
 			$rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
 
 			Slots.setWish(
@@ -12388,7 +12420,10 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 			if (switched)
 			{
-				if ($location.hash() != 'view') $location.hash('view');
+				if ($location.hash() != 'view')
+        {
+          $location.hash('view');
+        }
 
 				setView('view');
 			}
@@ -12645,8 +12680,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			});
 
 			/**
-			 * TODO
-			 * not working to reset master checkbox!
+			 * TODO (Not working to reset master checkbox!)
 			 */
 			//$scope.selectionMaster = {};
 		};
@@ -12687,29 +12721,30 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 							$scope.data = data;
 
-							angular.forEach(data.groups, function (group, index)
+							angular.forEach(data.groups, function (group)
 							{
-							if (group.uuid == returned)
-							{
-								$scope.groups = data.groups;
+                if (group.uuid == returned)
+                {
+                  $scope.groups = data.groups;
 
-								angular.forEach(data.groups, function (g, index)
-								{
-									if (g.uuid == group.uuid) $scope.group = g;
-								});
+                  angular.forEach(data.groups, function (g)
+                  {
+                    if (g.uuid == group.uuid)
+                    {
+                      $scope.group = g;
+                    }
+                  });
 
-								$scope.members = data.members[group.uuid];
+                  $scope.members = data.members[group.uuid];
 
-								$scope.current = group.uuid;
+                  $scope.current = group.uuid;
 
-								$scope.$watch($location.search(), function ()
-								{
-									$location.search({uuid: group.uuid});
-								}); // end of watch
-
-							} // end of if
-
-							}); // end of foreach
+                  $scope.$watch($location.search(), function ()
+                  {
+                    $location.search({uuid: group.uuid});
+                  });
+                }
+							});
 
 							$rootScope.statusBar.off();
 						}
@@ -12807,6 +12842,9 @@ angular.module('WebPaige.Controllers.Groups', [])
 						{
 							$scope.data = data;
 
+              /**
+               * TODO (Is this really supposed to be like this?)
+               */
 							angular.forEach(data.groups, function (group, index)
 							{
 								$scope.groups = data.groups;
@@ -12822,8 +12860,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 									{
 										$location.search({uuid: data.groups[0].uuid});
 									}
-								); // end of watch
-							}); // end of foreach
+								);
+							});
 
 							$rootScope.statusBar.off();
 						}
@@ -12834,22 +12872,26 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 
 		/**
-		 * Selection toggler
+		 * Selection toggle
 		 */
 		$scope.toggleSelection = function (group, master)
 		{
-			var flag = (master) ? true : false,
+			var flag    = (master) ? true : false,
 					members = angular.fromJson(Storage.get(group.uuid));
 
-			angular.forEach(members, function (member, index)
+			angular.forEach(members, function (member)
 			{
 				$scope.selection[member.uuid] = flag;
 			});
 		};
 
 
+
+
+
+
 		/**
-		 * Not used in groups yet but login uses modal call..
+		 * TODO (Not used in groups yet but login uses modal call..)
 		 * 
 		 * Fetch parent groups
 		 */
@@ -12863,7 +12905,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 		/**
-		 * Not used in groups yet..
+		 * TODO (Not used in groups yet..)
 		 * 
 		 * Fetch parent groups
 		 */
@@ -12875,10 +12917,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 				console.warn('containers -> ', result);
 			});
 		};
-
-
-
-
 
 
 
@@ -13003,9 +13041,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 		$scope.self = this;
 
 
-		// console.warn('data ->', data);
-
-
 	  /**
 	   * Pass periods
 	   */
@@ -13025,12 +13060,14 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Set data for view
 	   */
-	  if (data.slots) 
-	  	data.user = data.slots.data;
+	  if (data.slots)
+    {
+      data.user = data.slots.data;
+    }
 
 
 	  /**
-	   * PAss data container
+	   * Pass data container
 	   */
 	  $scope.data = data;
 
@@ -13067,7 +13104,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-	   * Slot form toggler
+	   * Slot form toggle
 	   */
 	  $scope.toggleSlotForm = function ()
 	  {
@@ -13144,7 +13181,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-	   * Switch between the views and set hash ccordingly
+	   * Switch between the views and set hash accordingly
 	   */
 	  $scope.setViewTo = function (hash)
 	  {
@@ -13167,7 +13204,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    /**
 	     * Convert given other user's password to MD5
 	     */
-	    if (resources.Password) resources.askPass = MD5(resources.Password);
+	    if (resources.Password)
+      {
+        resources.askPass = MD5(resources.Password);
+      }
 
 	    Profile.save($route.current.params.userId, resources)
 	    .then(function (result)
@@ -13198,9 +13238,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	            $scope.data = data;
 
 	            $rootScope.statusBar.off();
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });
 
 	  };
@@ -13216,7 +13256,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
 	      return false;
-	    };
+	    }
 
 	    if (passwords.new1 != passwords.new2)
 	    {
@@ -13255,33 +13295,30 @@ angular.module('WebPaige.Controllers.Profile', [])
 	              $scope.data = data;
 
 	              $rootScope.statusBar.off();
-	            };
+	            }
 	          });
-	        };
+	        }
 	      });
 	    }
 	    else
 	    {
 	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
-	    };
+	    }
 	  };
 	  
 
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  // if ($location.hash() == 'timeline')
 	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
 	  	timelinebooter();
-	  };
+	  }
 
 
 
 	  /**
-     * TODO
-     * Is it really needed?
-     * Since the timelinebooter is disabled
+     * TODO (Is it really needed? Since the timelinebooter is disabled)
      *
 	   * Redraw timeline
 	   */
@@ -13289,12 +13326,11 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  {
 	  	setTimeout(function ()
 	  	{
-	  		//timelinebooter();
 	  		if($scope.self.timeline)
-	  			$scope.self.timeline.redraw();
-		     //console.warn('timeline ->', $scope.timeline);
+        {
+          $scope.self.timeline.redraw();
+        }
 	  	}, 100);
-	  	console.log("redraw timeline here??");
 		};
 
 
@@ -13342,7 +13378,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
 	                      Dater.readable.date($scope.timeline.range.end);
 
-	                      
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');

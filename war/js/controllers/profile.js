@@ -26,9 +26,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 		$scope.self = this;
 
 
-		// console.warn('data ->', data);
-
-
 	  /**
 	   * Pass periods
 	   */
@@ -48,12 +45,14 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Set data for view
 	   */
-	  if (data.slots) 
-	  	data.user = data.slots.data;
+	  if (data.slots)
+    {
+      data.user = data.slots.data;
+    }
 
 
 	  /**
-	   * PAss data container
+	   * Pass data container
 	   */
 	  $scope.data = data;
 
@@ -90,7 +89,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-	   * Slot form toggler
+	   * Slot form toggle
 	   */
 	  $scope.toggleSlotForm = function ()
 	  {
@@ -167,7 +166,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-	   * Switch between the views and set hash ccordingly
+	   * Switch between the views and set hash accordingly
 	   */
 	  $scope.setViewTo = function (hash)
 	  {
@@ -190,7 +189,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    /**
 	     * Convert given other user's password to MD5
 	     */
-	    if (resources.Password) resources.askPass = MD5(resources.Password);
+	    if (resources.Password)
+      {
+        resources.askPass = MD5(resources.Password);
+      }
 
 	    Profile.save($route.current.params.userId, resources)
 	    .then(function (result)
@@ -221,9 +223,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	            $scope.data = data;
 
 	            $rootScope.statusBar.off();
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });
 
 	  };
@@ -239,7 +241,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
 	      return false;
-	    };
+	    }
 
 	    if (passwords.new1 != passwords.new2)
 	    {
@@ -278,33 +280,30 @@ angular.module('WebPaige.Controllers.Profile', [])
 	              $scope.data = data;
 
 	              $rootScope.statusBar.off();
-	            };
+	            }
 	          });
-	        };
+	        }
 	      });
 	    }
 	    else
 	    {
 	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
-	    };
+	    }
 	  };
 	  
 
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  // if ($location.hash() == 'timeline')
 	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
 	  	timelinebooter();
-	  };
+	  }
 
 
 
 	  /**
-     * TODO
-     * Is it really needed?
-     * Since the timelinebooter is disabled
+     * TODO (Is it really needed? Since the timelinebooter is disabled)
      *
 	   * Redraw timeline
 	   */
@@ -312,12 +311,11 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  {
 	  	setTimeout(function ()
 	  	{
-	  		//timelinebooter();
 	  		if($scope.self.timeline)
-	  			$scope.self.timeline.redraw();
-		     //console.warn('timeline ->', $scope.timeline);
+        {
+          $scope.self.timeline.redraw();
+        }
 	  	}, 100);
-	  	console.log("redraw timeline here??");
 		};
 
 
@@ -365,7 +363,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
 	                      Dater.readable.date($scope.timeline.range.end);
 
-	                      
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');

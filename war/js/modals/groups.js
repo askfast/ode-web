@@ -82,7 +82,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        // params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
 	        params: {id:'', fields: '[role, settingsWebPaige]'},
 	        isArray: true
 	      },
@@ -119,8 +118,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      {
 	        if (!all)
 	        {
-	          // console.warn('returned ===>', result.length);
-
 	          if (result.length == 0)
 	          {
 	            deferred.resolve(null);
@@ -146,8 +143,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Extract only the groups which are in the local list
+	   * TODO (Extract only the groups which are in the local list)
 	   * 
 	   * Get container (parent) group data
 	   */
@@ -157,7 +153,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        cons      = [];
 
 	    Containers.get(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        /**
@@ -194,8 +192,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Members.add(
 	      { 
-	        id: candidate.group.uuid, 
-	        mid: candidate.id 
+	        id:   candidate.group.uuid,
+	        mid:  candidate.id
 	      }, 
 	      {}, 
 	      function (result) 
@@ -221,8 +219,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Members.remove(
 	      { 
-	        id: groupId, 
-	        mid: memberId 
+	        id:   groupId,
+	        mid:  memberId
 	      }, 
 	      function (result) 
 	      {
@@ -243,12 +241,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	   */
 	  Groups.prototype.removeMembers = function (selection, group)
 	  {
-	    var deferred = $q.defer(),
-	        calls = [];
+	    var deferred  = $q.defer(),
+	        calls     = [];
 
 	    angular.forEach(selection, function (value, id)
 	    {
-	      if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	      if (id)
+        {
+          calls.push(Groups.prototype.removeMember(id, group.uuid));
+        }
 	    });
 
 	    $q.all(calls)
@@ -267,14 +268,19 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        count     = 0;
 
 	    Slots.wishes({
-	      id: id,
+	      id:     id,
 	      start:  255600,
 	      end:    860400
 	    }).then(function (results)
 	    {
-	      angular.forEach(results, function (slot, index)
+	      angular.forEach(results, function (slot)
 	      {
-	        if (slot.start == 255600 && slot.end == 860400 && slot.count != null) count = slot.count;
+	        if (slot.start == 255600 &&
+              slot.end == 860400 &&
+              slot.count != null)
+          {
+            count = slot.count;
+          }
 	      });
 
 	      deferred.resolve({
@@ -302,7 +308,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        {
 	          var calls = [];
 
-	          angular.forEach(groups, function (group, index)
+	          angular.forEach(groups, function (group)
 	          {
 	            calls.push(Groups.prototype.get(group.uuid));
 	          });
@@ -316,13 +322,13 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	            data.members = {};
 
-	            angular.forEach(groups, function (group, gindex)
+	            angular.forEach(groups, function (group)
 	            {
 	              data.groups = groups;
 
 	              data.members[group.uuid] = [];
 
-	              angular.forEach(results, function (result, mindex)
+	              angular.forEach(results, function (result)
 	              {
 	                if (result.id == group.uuid) data.members[group.uuid] = result.data;
 	              });
@@ -354,7 +360,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred = $q.defer();
 
 	    Members.query(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        /**
@@ -394,15 +402,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * Make an inuque list of members
+	   * Make an unique list of members
 	   */
 	  Groups.prototype.uniqueMembers = function ()
 	  {
-	    angular.forEach(angular.fromJson(Storage.get('groups')), function (group, index)
+	    angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
 	    {
 	      var members = angular.fromJson(Storage.get('members')) || {};
 
-	      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, index)
+	      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
 	      {
 	        members[member.uuid] = member;
 	      });
@@ -425,15 +433,25 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	     */
 	    if (group.id)
 	    {
-	      Groups.edit({id: group.id}, {name: group.name}, function (result) 
-	      {
-	        deferred.resolve(group.id);
-	      });
+	      Groups.edit(
+          {
+            id: group.id
+          },
+          {
+            name: group.name
+          },
+          function ()
+          {
+            deferred.resolve(group.id);
+          }
+        );
 	    }
 	    else
 	    {
 	      Groups.save(
-	        { id: $rootScope.app.resources.uuid }, 
+	        {
+            id: $rootScope.app.resources.uuid
+          },
 	        group, 
 	        function (result) 
 	        {
@@ -469,7 +487,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred = $q.defer();
 
 	    Groups.remove(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        deferred.resolve(result);
@@ -485,7 +505,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * Search candidate mambers
+	   * Search candidate members
 	   */
 	  Groups.prototype.search = function (query) 
 	  {
@@ -493,16 +513,18 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Groups.search(
 	      null, 
-	      {key: query}, 
+	      {
+          key: query
+        },
 	      function (results) 
 	      {
 	        var processed = [];
 
-	        angular.forEach(results, function (result, index)
+	        angular.forEach(results, function (result)
 	        {
 	          processed.push({
-	            id: result.id,
-	            name: result.name,
+	            id:     result.id,
+	            name:   result.name,
 	            groups: Groups.prototype.getMemberGroups(result.id)
 	          });
 	        });
@@ -524,20 +546,22 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	   */
 	  Groups.prototype.getMemberGroups = function (id)
 	  {
-	    var groups = angular.fromJson(Storage.get('groups')),
-	        memberGroups = [];
+	    var groups        = angular.fromJson(Storage.get('groups')),
+	        memberGroups  = [];
 
-	    angular.forEach(groups, function (group, index)
+	    angular.forEach(groups, function (group)
 	    {
 	      var localGroup = angular.fromJson(Storage.get(group.uuid));
 
-	      angular.forEach(localGroup, function (member, index)
+	      angular.forEach(localGroup, function (member)
 	      {
 	        if (member.uuid === id)
-	          memberGroups.push({
-	            uuid: group.uuid,
-	            name: group.name
-	          });
+          {
+            memberGroups.push({
+              uuid: group.uuid,
+              name: group.name
+            });
+          }
 	      });
 	    });
 
