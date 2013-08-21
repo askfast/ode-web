@@ -7,24 +7,50 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Translate roles
  */
-.filter('translateRole', 
-[
-	'$config', 
-	function ($config)
-	{
-		return function (role)
-		{
-			var urole;
+  .filter('translateRole',
+    [
+      '$config',
+      function ($config)
+      {
+        return function (role)
+        {
+          var urole;
 
-			angular.forEach($config.roles, function (prole, index)
-			{
-				if (prole.id == role) urole = prole.label;
-			});
+          angular.forEach($config.roles, function (prole, index)
+          {
+            if (prole.id == role) urole = prole.label;
+          });
 
-			return urole;
-		}
-	}
-])
+          return urole;
+        }
+      }
+    ])
+
+
+/**
+ * Translate division ids to names
+ */
+  .filter('translateDivision',
+    [
+      '$config',
+      function ($config)
+      {
+        return function (divid)
+        {
+          var filtered;
+
+          angular.forEach($config.timeline.config.divisions, function (division)
+          {
+            if (division.id == divid)
+            {
+              filtered = division.label;
+            }
+          });
+
+          return filtered;
+        }
+      }
+    ])
 
 
 
@@ -38,8 +64,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeMainFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'Dater',
+	function (Dater)
 	{
 		var periods = Dater.getPeriods();
 
@@ -51,7 +77,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			var cFirst = function (str)
 			{
 			    return str.charAt(0).toUpperCase() + str.substr(1);
-			}
+			};
 
 			var ndates = {
 						start: {
@@ -103,7 +129,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 								//  + 
 								// ', ' + 
 								// Dater.getThisYear();
-			};
+			}
 
 		}
 	}
@@ -133,7 +159,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				var cFirst = function (str)
 				{
 				  return str.charAt(0).toUpperCase() + str.substr(1);
-				}
+				};
 
 				var dates = {
 					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
@@ -150,7 +176,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 								dates.end + 
 								', ' + 
 								Dater.getThisYear();
-			};
+			}
 		}
 	}
 ])
@@ -210,8 +236,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 									timeline.current.month + 
 									$rootScope.ui.planboard.rangeInfoTotalDays + 
 									periods.months[timeline.current.month].totalDays;
-				};
-			};
+				}
+			}
 		};
 	}
 ])
@@ -417,7 +443,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    else
 	    {
 	      return members[id].name;
-	    };
+	    }
 		};
 	}
 ])
@@ -555,7 +581,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  	for (var i in groups)
 	  	{
 	  		if (groups[i].uuid == id) return groups[i].name;
-	  	};
+	  	}
 	  }
 	}
 ])

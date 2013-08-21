@@ -940,7 +940,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.3',
+    version:  '2.3.4',
     lang:     'nl',
 
     fullscreen: true,
@@ -1158,14 +1158,12 @@ angular.module('WebPaige')
           function ($route, Slots, Storage, Dater)
           {
             var periods   = Storage.local.periods(),
-                current   = Dater.current.week(),
-                initial   = periods.weeks[current],
-                groups    = Storage.local.groups(),
                 settings  = Storage.local.settings();
+
+            // console.log('group to be asked ->', Storage.local.settings());
 
             return  Slots.all({
                       groupId:  settings.app.group,
-                      division: 'all',
                       stamps: {
                         /**
                          * Initial start up is next 7 days
@@ -1772,6 +1770,16 @@ angular.module('WebPaige')
     }
 
 
+    /**
+     * IE8 fix for inability of - not ready for angular by loading
+     * especially for index.html
+     */
+    if ($.browser.msie && $.browser.version == '8.0')
+    {
+      document.title = $rootScope.config.profile.title;
+    }
+
+
 
 
 
@@ -1868,6 +1876,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    }
 	  );
 
+
 	  // var changePassword = $resource($config.host+'/passwordReset', 
 	  //   {uuid: uuid,
 	  //    pass: newpass,
@@ -1898,7 +1907,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	        else
 	        {
 	          deferred.resolve(result);
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -1927,7 +1936,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	        else 
 	        {
 	          deferred.resolve(result);
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -1962,7 +1971,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    );
 	    
 	    return deferred.promise;
-	  }
+	  };
 
 
 	  /**
@@ -2059,23 +2068,37 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 			var deferred  = $q.defer(),
 					groups    = angular.fromJson(Storage.get('groups')),
 					settings  = Storage.local.settings().app.widgets.groups,
-					list      = [],
-					now       = new Date.now().getTime(),
 					calls     = [];
 
 			if (settings.length === 0) console.warn('no settings');
 
-			angular.forEach(groups, function(group, index)
+      angular.forEach(groups, function(group)
 			{
-				if (settings[group.uuid]) list.push({ id: group.uuid, name: group.name});
-			});
-
-			angular.forEach(list, function (group, index)
-			{
-				calls.push(Slots.pie({
-					id:     group.id,
-					name:   group.name
-				}));
+        if (settings[group.uuid] && settings[group.uuid].status)
+        {
+          if (!settings[group.uuid].divisions)
+          {
+            calls.push(Slots.pie({
+              id:         group.uuid,
+              name:       group.name,
+              division:   'both'
+            }));
+          }
+          else
+          {
+            angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+            {
+              if (division.id !== 'all')
+              {
+                calls.push(Slots.pie({
+                  id:         group.uuid,
+                  name:       group.name,
+                  division:   division.id
+                }));
+              }
+            })
+          }
+        }
 			});
 
 			$q.all(calls)
@@ -2216,12 +2239,13 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      save: {
 	        method: 'PUT',
 	        params: {id: ''}
-	      },
+	      }
 	    }
 	  );
 
 
 	  /**
+     * Members resource
 	   */
 	  var MemberSlots = $resource(
 	    $config.host + '/network/:id/member/slots2',
@@ -2296,21 +2320,62 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  /**
 	   * Get group aggs
 	   */
-	  Slots.prototype.aggs = function (options) 
-	  {
-	    var deferred = $q.defer(),
-	        params = {
-	          id:     options.id,
-	          start:  options.start,
-	          end:    options.end
-	        };
+    Slots.prototype.aggs = function (options)
+    {
+      var deferred  = $q.defer(),
+          calls     = [];
 
-	    if (options.division != undefined) params.stateGroup = options.division;
+      if ($rootScope.config.timeline.config.divisions.length > 0)
+      {
+        angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+        {
+          if (division.id !== 'all')
+          {
+            var params = {
+              id:     options.id,
+              start:  options.start,
+              end:    options.end,
+              stateGroup: division.id,
+              division: {
+                id:    division.id,
+                label: division.label
+              }
+            };
 
-	    Aggs.query(params, 
-	      function (result) 
-	      {
-	        var stats = Stats.aggs(result);
+            calls.push(Slots.prototype.agg(params));
+          }
+        });
+      }
+      else
+      {
+        calls.push(Slots.prototype.agg({
+          id:     options.id,
+          start:  options.start,
+          end:    options.end
+        }));
+      }
+
+      $q.all(calls)
+        .then(function (result)
+        {
+          deferred.resolve(result);
+        });
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Fetch calculated planning of one group
+     */
+    Slots.prototype.agg = function (options)
+    {
+      var deferred = $q.defer();
+
+      Aggs.query(options,
+        function (result)
+        {
+          var stats = Stats.aggs(result);
 
           deferred.resolve({
             id:       options.id,
@@ -2319,28 +2384,14 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             ratios:   stats.ratios,
             durations: stats.durations
           });
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        });
 
-	        // Slots.prototype.wishes(params)
-	        // .then(function (wishes)
-	        // {
-	        //   deferred.resolve({
-	        //     id:       options.id,
-	        //     division: options.division,
-	        //     wishes:   wishes,
-	        //     data:     result,
-	        //     ratios:   stats.ratios,
-	        //     durations: stats.durations
-	        //   });
-	        // });
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
+      return deferred.promise;
+    };
 
 
 	  /**
@@ -2352,183 +2403,197 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	        now       = Math.floor(Date.now().getTime() / 1000),
 	        periods   = Dater.getPeriods(),
 	        current   = Dater.current.week(),
-	        weeks      = {
+	        weeks     = {
 	          current:  {
-	            period: periods.weeks[current],
-	            data:   [],
-	            shortages: []
+	            period:   periods.weeks[current],
+	            data:     [],
+	            shortages:[]
 	          },
 	          next: {
-	            period: periods.weeks[current + 1],
-	            data:   [],
-	            shortages: []
+	            period:   periods.weeks[current + 1],
+	            data:     [],
+	            shortages:[]
 	          }
 	        },
-	        slicer    = weeks.current.period.last.timeStamp;
+	        slicer = weeks.current.period.last.timeStamp;
 
-	    Aggs.query({
-	      id:     options.id,
-	      start:  weeks.current.period.first.timeStamp / 1000,
-	      end:    weeks.next.period.last.timeStamp / 1000
-	    }, 
+      var params = {
+        id:     options.id,
+        start:  weeks.current.period.first.timeStamp / 1000,
+        end:    weeks.next.period.last.timeStamp / 1000
+      };
+
+      if (options.division != 'both') params.stateGroup = options.division;
+
+	    Aggs.query(params,
 	      function (results)
 	      {
-	        var state;
-
-	        // Check whether it is only one
-	        if (results.length > 1)
-	        {
-	          angular.forEach(results, function (slot, index)
-	          {
-	            // Fish out the current
-	            if (now >= slot.start && now <= slot.end) state = slot;
-
-	            // Slice from end of first week
-	            if (slicer <= slot.start * 1000)
-	            {
-	              weeks.next.data.push(slot);
-	            }
-	            else if (slicer >= slot.start * 1000)
-	            {
-	              weeks.current.data.push(slot)
-	            };
-	          });
-
-	          // slice extra timestamp from the last of current week dataset and add that to week next
-	          var last        = weeks.current.data[weeks.current.data.length-1],
-	              next        = weeks.next.data[0],
-	              difference  = (last.end * 1000 - slicer) / 1000,
-	              currents    = [];
-
-	          // if start of current of is before the start reset it to start
-	          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
-
-	          // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
-	          if (difference > 0)
-	          {
-	            last.end = slicer / 1000;
-
-	            weeks.next.data.unshift({
-	              diff: last.diff,
-	              start: slicer / 1000,
-	              end: last.end,
-	              wish: last.wish
-	            });
-	          };
-
-	          // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
-	          angular.forEach(weeks.current.data, function (slot, index)
-	          {
-	            if (slot.end - slot.start > 0) currents.push(slot);
-
-	            // add to shortages
-	            if (slot.diff < 0) weeks.current.shortages.push(slot);
-	          });
-
-	          // reset to start of current weekly begin to week begin
-	          currents[0].start = weeks.current.period.first.timeStamp / 1000;
-
-	          // add to shortages
-	          angular.forEach(weeks.next.data, function (slot, index)
-	          {
-	            if (slot.diff < 0) weeks.next.shortages.push(slot);
-	          });
-
-	          deferred.resolve({
-	            id:       options.id,
-	            name:     options.name,
-	            weeks:    {
-	              current: {
-	                data:   currents,
-	                state:  state,
-	                shortages: weeks.current.shortages,
-	                start: {
-	                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(currents)
-	              },
-	              next: {
-	                data:   weeks.next.data,
-	                shortages: weeks.next.shortages,
-	                start: {
-	                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(weeks.next.data)
-	              }
-	            }
-	          }); 
-	        }
-	        else
-	        {
-	          if (results[0].diff == null) results[0].diff = 0;
-	          if (results[0].wish == null) results[0].wish = 0;
-
-	          var currentWeek = [{
-	                start:  weeks.current.period.first.timeStamp / 1000,
-	                end:    weeks.current.period.last.timeStamp / 1000,
-	                wish:   results[0].wish,
-	                diff:   results[0].diff
-	              }],
-	              nextWeek = [{
-	                start:  weeks.next.period.first.timeStamp / 1000,
-	                end:    weeks.next.period.last.timeStamp / 1000,
-	                wish:   results[0].wish,
-	                diff:   results[0].diff
-	              }];
-	          
-	          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
-	          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
-
-	          deferred.resolve({
-	            id:       options.id,
-	            name:     options.name,
-	            weeks:    {
-	              current: {
-	                data: currentWeek,
-	                state: currentWeek,
-	                shortages: weeks.current.shortages,
-	                start: {
-	                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.current.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(currentWeek)
-	              },
-	              next: {
-	                data: nextWeek,
-	                shortages: weeks.next.shortages,
-	                start: {
-	                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.first.timeStamp
-	                },
-	                end: {
-	                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-	                  timeStamp:  weeks.next.period.last.timeStamp
-	                },
-	                ratios: Stats.pies(nextWeek)
-	              }
-	            }
-	          });
-	        };          
+          deferred.resolve(processPies(results));
 	      },
 	      function (error)
 	      {
 	        deferred.resolve({error: error});
 	      }
 	    );
+
+      function processPies (results)
+      {
+        var state;
+
+        // Check whether it is only one
+        if (results.length > 1)
+        {
+          angular.forEach(results, function (slot)
+          {
+            // Fish out the current
+            if (now >= slot.start && now <= slot.end) state = slot;
+
+            // Slice from end of first week
+            if (slicer <= slot.start * 1000)
+            {
+              weeks.next.data.push(slot);
+            }
+            else if (slicer >= slot.start * 1000)
+            {
+              weeks.current.data.push(slot)
+            }
+          });
+
+          // slice extra timestamp from the last of current week data set and add that to week next
+          var last        = weeks.current.data[weeks.current.data.length-1],
+              next        = weeks.next.data[0],
+              difference  = (last.end * 1000 - slicer) / 1000,
+              currents    = [];
+
+          // if start of current of is before the start reset it to start
+          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // if there is a leak to next week adjust the last one of current
+          // week and add new slot to next week with same values
+          if (difference > 0)
+          {
+            last.end = slicer / 1000;
+
+            weeks.next.data.unshift({
+              diff:   last.diff,
+              start:  slicer / 1000,
+              end:    last.end,
+              wish:   last.wish
+            });
+          }
+
+          // shortages and back-end gives more than asked sometimes, with returning
+          // values out of the range which being asked !
+          angular.forEach(weeks.current.data, function (slot)
+          {
+            if (slot.end - slot.start > 0) currents.push(slot);
+
+            // add to shortages
+            if (slot.diff < 0) weeks.current.shortages.push(slot);
+          });
+
+          // reset to start of current weekly begin to week begin
+          currents[0].start = weeks.current.period.first.timeStamp / 1000;
+
+          // add to shortages
+          angular.forEach(weeks.next.data, function (slot)
+          {
+            if (slot.diff < 0) weeks.next.shortages.push(slot);
+          });
+
+          return {
+            id:       options.id,
+            division: options.division,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data:   currents,
+                state:  state,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currents)
+              },
+              next: {
+                data:   weeks.next.data,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(weeks.next.data)
+              }
+            }
+          }
+        }
+        else
+        {
+          if (results[0].diff == null) results[0].diff = 0;
+          if (results[0].wish == null) results[0].wish = 0;
+
+          var currentWeek = [{
+              start:  weeks.current.period.first.timeStamp / 1000,
+              end:    weeks.current.period.last.timeStamp / 1000,
+              wish:   results[0].wish,
+              diff:   results[0].diff
+            }],
+            nextWeek = [{
+              start:  weeks.next.period.first.timeStamp / 1000,
+              end:    weeks.next.period.last.timeStamp / 1000,
+              wish:   results[0].wish,
+              diff:   results[0].diff
+            }];
+
+          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+
+          return {
+            id:       options.id,
+            division: options.division,
+            name:     options.name,
+            weeks:    {
+              current: {
+                data: currentWeek,
+                state: currentWeek,
+                shortages: weeks.current.shortages,
+                start: {
+                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.current.period.last.timeStamp
+                },
+                ratios: Stats.pies(currentWeek)
+              },
+              next: {
+                data: nextWeek,
+                shortages: weeks.next.shortages,
+                start: {
+                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.first.timeStamp
+                },
+                end: {
+                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                  timeStamp:  weeks.next.period.last.timeStamp
+                },
+                ratios: Stats.pies(nextWeek)
+              }
+            }
+          }
+        }
+
+      }
 
 	    return deferred.promise;
 	  };
@@ -2596,12 +2661,12 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              month:  options.month
 	          };
 
-	          if (options.division != 'all') groupParams.division = options.division;
+	          // if (options.division != 'all') groupParams.division = options.division;
 
 	          Slots.prototype.aggs(groupParams)
 	          .then(function (aggs)
 	          {
-	          	/**
+              /**
 	          	 * If members are on
 	          	 */
 	            if (options.layouts.members)
@@ -2698,7 +2763,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	                  end:    options.stamps.end
 	                }
 	              });
-	            };
+	            }
 	          });
 	        }
 	        else
@@ -2711,7 +2776,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	              end:    options.stamps.end
 	            }
 	          });
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -2850,7 +2915,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	      text:       content.state,
 	      id:         content.id
 	    }
-	  };
+	  }
 
 
 	  /**
@@ -2887,6 +2952,210 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  return new Slots;
+
+
+    /**
+     * Get group aggs for pie charts
+     */
+//    Slots.prototype.pie = function (options)
+//    {
+//      var deferred  = $q.defer(),
+//        now       = Math.floor(Date.now().getTime() / 1000),
+//        periods   = Dater.getPeriods(),
+//        current   = Dater.current.week(),
+//        weeks     = {
+//          current:  {
+//            period:   periods.weeks[current],
+//            data:     [],
+//            shortages:[]
+//          },
+//          next: {
+//            period:   periods.weeks[current + 1],
+//            data:     [],
+//            shortages:[]
+//          }
+//        },
+//        slicer = weeks.current.period.last.timeStamp;
+//
+//
+//
+//
+//
+//      Aggs.query(
+//        {
+//          id:     options.id,
+//          start:  weeks.current.period.first.timeStamp / 1000,
+//          end:    weeks.next.period.last.timeStamp / 1000
+//        },
+//        function (results)
+//        {
+//          var state;
+//
+////          console.warn('results ->', results);
+//
+//          // Check whether it is only one
+//          if (results.length > 1)
+//          {
+//            angular.forEach(results, function (slot)
+//            {
+//              // Fish out the current
+//              if (now >= slot.start && now <= slot.end) state = slot;
+//
+//              // Slice from end of first week
+//              if (slicer <= slot.start * 1000)
+//              {
+//                weeks.next.data.push(slot);
+//              }
+//              else if (slicer >= slot.start * 1000)
+//              {
+//                weeks.current.data.push(slot)
+//              }
+//            });
+//
+//            // slice extra timestamp from the last of current week dataset and add that to week next
+//            var last        = weeks.current.data[weeks.current.data.length-1],
+//              next        = weeks.next.data[0],
+//              difference  = (last.end * 1000 - slicer) / 1000,
+//              currents    = [];
+//
+//            // if start of current of is before the start reset it to start
+//            weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+//
+//            // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
+//            if (difference > 0)
+//            {
+//              last.end = slicer / 1000;
+//
+//              weeks.next.data.unshift({
+//                diff:   last.diff,
+//                start:  slicer / 1000,
+//                end:    last.end,
+//                wish:   last.wish
+//              });
+//            }
+//
+//            // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
+//            angular.forEach(weeks.current.data, function (slot)
+//            {
+//              if (slot.end - slot.start > 0) currents.push(slot);
+//
+//              // add to shortages
+//              if (slot.diff < 0) weeks.current.shortages.push(slot);
+//            });
+//
+//            // reset to start of current weekly begin to week begin
+//            currents[0].start = weeks.current.period.first.timeStamp / 1000;
+//
+//            // add to shortages
+//            angular.forEach(weeks.next.data, function (slot)
+//            {
+//              if (slot.diff < 0) weeks.next.shortages.push(slot);
+//            });
+//
+//            deferred.resolve({
+//              id:       options.id,
+//              name:     options.name,
+//              weeks:    {
+//                current: {
+//                  data:   currents,
+//                  state:  state,
+//                  shortages: weeks.current.shortages,
+//                  start: {
+//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(currents)
+//                },
+//                next: {
+//                  data:   weeks.next.data,
+//                  shortages: weeks.next.shortages,
+//                  start: {
+//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(weeks.next.data)
+//                }
+//              }
+//            });
+//          }
+//          else
+//          {
+//            if (results[0].diff == null) results[0].diff = 0;
+//            if (results[0].wish == null) results[0].wish = 0;
+//
+//            var currentWeek = [{
+//                start:  weeks.current.period.first.timeStamp / 1000,
+//                end:    weeks.current.period.last.timeStamp / 1000,
+//                wish:   results[0].wish,
+//                diff:   results[0].diff
+//              }],
+//              nextWeek = [{
+//                start:  weeks.next.period.first.timeStamp / 1000,
+//                end:    weeks.next.period.last.timeStamp / 1000,
+//                wish:   results[0].wish,
+//                diff:   results[0].diff
+//              }];
+//
+//            if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+//            if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+//
+//            deferred.resolve({
+//              id:       options.id,
+//              name:     options.name,
+//              weeks:    {
+//                current: {
+//                  data: currentWeek,
+//                  state: currentWeek,
+//                  shortages: weeks.current.shortages,
+//                  start: {
+//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.current.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(currentWeek)
+//                },
+//                next: {
+//                  data: nextWeek,
+//                  shortages: weeks.next.shortages,
+//                  start: {
+//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.first.timeStamp
+//                  },
+//                  end: {
+//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+//                    timeStamp:  weeks.next.period.last.timeStamp
+//                  },
+//                  ratios: Stats.pies(nextWeek)
+//                }
+//              }
+//            });
+//          }
+//        },
+//        function (error)
+//        {
+//          deferred.resolve({error: error});
+//        }
+//      );
+//
+//
+//
+//
+//
+//
+//
+//      return deferred.promise;
+//    };
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -3861,7 +4130,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    });
 
 	    return deferred.promise; 
-	  }
+	  };
 
 
 	  /**
@@ -3912,7 +4181,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        else
 	        {
 	          deferred.resolve(groups);
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -3952,7 +4221,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        else
 	        {
 	          returned = result;
-	        };
+	        }
 
 	        Storage.add(id, angular.toJson(returned));
 
@@ -4033,7 +4302,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	          deferred.resolve({error: error});
 	        }
 	      ); 
-	    };
+	    }
 
 	    return deferred.promise;
 	  };
@@ -4500,7 +4769,7 @@ angular.module('WebPaige.Modals.Settings', ['ngResource'])
 	    Profile.save(id, {
 	      settingsWebPaige: angular.toJson(settings)
 	    })
-	    .then(function (result)
+	    .then(function ()
 	    {
 	      deferred.resolve({
 	        saved: true
@@ -6169,7 +6438,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });
-            };
+            }
           });       
         });
 
@@ -6189,8 +6458,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       profile: function (data, config)
       {
-        var _this = this,
-            timedata = [];
+        var _this     = this,
+            timedata  = [];
 
         angular.forEach(data, function (slot, index)
         {
@@ -6212,7 +6481,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 className:  'slot-' + index + ' ' + config.states[slot.text].className,
                 editable:   true
               });  
-            };
+            }
           });       
         });
 
@@ -6240,18 +6509,18 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Handle group name whether divisions selected
        */
-      namer: function (data, divisions, privilage)
+      namer: function (agg, privilage)
       {
         var groups  = this.get.groups(),
-            name    = groups[data.aggs.id],
-            link    = '<a href="#/groups?uuid=' + 
-                      data.aggs.id + 
+            name    = groups[agg.id],
+            link    = '<a href="#/groups?uuid=' +
+                      agg.id +
                       '#view">' +
                       name +
                       '</a>',
                       title;
 
-        if (data.aggs.division == 'all' || data.aggs.division == undefined)
+        if (!agg.division)
         {
           title = (privilage == 1) ? link : '<span>' + name + '</span>';
         }
@@ -6259,12 +6528,10 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var label;
 
-          angular.forEach(divisions, function (division, index) { if (division.id == data.aggs.division) label = division.label; });
-
           title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
-          title += ' <span class="label">' + label + '</span>';
-        };
+          title += ' <span class="label">' + agg.division.label + '</span>';
+        }
 
         return title;
       },
@@ -6272,112 +6539,118 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Handle group aggs (with divisions) with bars
        */
-      bars: function (data, timedata, config, name)
+      bars: function (data, timedata, config, privilage, current)
       {
         var _this = this,
-            maxh = 0;
+            maxh  = 0;
 
-        angular.forEach(data.aggs.data, function (slot, index) { if (slot.wish > maxh)  maxh = slot.wish; });
-
-        angular.forEach(data.aggs.data, function (slot, index)
+        angular.forEach(_this.filtered(data, current), function (agg)
         {
-          var maxNum      = maxh,
-              num         = slot.wish,
-              xwish       = num,
-              height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
-              minHeight   = height,
-              style       = 'height:' + height + 'px;',
-              requirement = '<div class="requirement" style="' + 
-                            style + 
-                            '" ' + 
+          var name = _this.namer(agg, privilage);
 
-                            'title="' + 'Minimum aantal benodigden' + ': ' + 
-
-                            num + 
-                            ' personen"></div>';
-
-          num = slot.wish + slot.diff;
-
-          var xcurrent = num;
-
-          height = Math.round(num / maxNum * 80 + 20);
-
-          if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(agg.data, function (slot, index)
           {
-            switch (slot.diff)
+            if (slot.wish > maxh)  maxh = slot.wish;
+          });
+
+          angular.forEach(agg.data, function (slot, index)
+          {
+            var maxNum      = maxh,
+                num         = slot.wish,
+                xwish       = num,
+                height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
+                minHeight   = height,
+                style       = 'height:' + height + 'px;',
+                requirement = '<div class="requirement" style="' +
+                              style +
+                              '" ' +
+                              'title="' + 'Minimum aantal benodigden' + ': ' +
+                              num +
+                              ' personen"></div>';
+
+            num = slot.wish + slot.diff;
+
+            var xcurrent = num;
+
+            height = Math.round(num / maxNum * 80 + 20);
+
+            if (slot.diff >= 0 && slot.diff < 7)
             {
-              case 0:
-                var color = config.densities.even;
-              break
-              case 1:
-                var color = config.densities.one;
-              break;
-              case 2:
-                var color = config.densities.two;
-              break;
-              case 3:
-                var color = config.densities.three;
-              break;
-              case 4:
-                var color = config.densities.four;
-              break;
-              case 5:
-                var color = config.densities.five;
-              break;
-              case 6:
-                var color = config.densities.six;
-              break;
+              var color;
+
+              switch (slot.diff)
+              {
+                case 0:
+                  color = config.densities.even;
+                  break;
+                case 1:
+                  color = config.densities.one;
+                  break;
+                case 2:
+                  color = config.densities.two;
+                  break;
+                case 3:
+                  color = config.densities.three;
+                  break;
+                case 4:
+                  color = config.densities.four;
+                  break;
+                case 5:
+                  color = config.densities.five;
+                  break;
+                case 6:
+                  color = config.densities.six;
+                  break;
+              }
             }
-          }
-          else if (slot.diff >= 7)
-          {
-            var color = config.densities.more;
-          }
-          else
-          {
-            var color = config.densities.less;
-          };
+            else if (slot.diff >= 7)
+            {
+              color = config.densities.more;
+            }
+            else
+            {
+              color = config.densities.less;
+            }
 
-          var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+            var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
 
-          if (xcurrent > xwish) height = minHeight;
+            if (xcurrent > xwish) height = minHeight;
 
-          style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+            style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
 
-          var actual = '<div class="bar" style="' + 
-                        style + 
-                        '" ' + 
+            var actual = '<div class="bar" style="' +
+              style +
+              '" ' +
+              ' title="Huidig aantal beschikbaar: ' +
+              num +
+              ' personen">' +
+              span +
+              '</div>';
 
-                        ' title="Huidig aantal beschikbaar: ' + 
+            if (  (slot.diff > 0  && config.legenda.groups.more) ||
+              (slot.diff == 0 && config.legenda.groups.even) ||
+              (slot.diff < 0  && config.legenda.groups.less) )
+            {
+              timedata.push({
+                start:    Math.round(slot.start * 1000),
+                end:      Math.round(slot.end * 1000),
+                group:    _this.wrapper('c') + name,
+                content:  requirement +
+                  actual +
+                  _this.secret(angular.toJson({
+                    type: 'group',
+                    diff: slot.diff,
+                    group: name
+                  })),
+                className: 'group-aggs',
+                editable: false
+              });
+            }
 
-                        num + 
-                        ' personen">' + 
-                        span + 
-                        '</div>';
-
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:    Math.round(slot.start * 1000),
-              end:      Math.round(slot.end * 1000),
-              group:    _this.wrapper('c') + name,
-              content:  requirement + 
-                        actual +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className: 'group-aggs',
-              editable: false
-            });
-          };
-
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
+            timedata = _this.addLoading(data, timedata, [
+              _this.wrapper('c') + name
+            ]);
+          });
         });
 
         return timedata;
@@ -6386,58 +6659,64 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Process plain group aggs
        */
-      aggs: function (data, timedata, config, name)
+      aggs: function (data, timedata, config, privilage, current)
       {
         var _this = this;
 
-        angular.forEach(data.aggs.data, function (slot, index)
+        angular.forEach(_this.filtered(data, current), function (agg)
         {
-          var cn;
+          var name = _this.namer(agg, privilage);
 
-          if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(agg.data, function (slot)
           {
-            switch (slot.diff)
+            var cn;
+
+            if (slot.diff >= 0 && slot.diff < 7)
             {
-              case 0: cn = 'even';  break
-              case 1: cn = 1;       break
-              case 2: cn = 2;       break
-              case 3: cn = 3;       break
-              case 4: cn = 4;       break
-              case 5: cn = 5;       break
-              case 6: cn = 6;       break
+              switch (slot.diff)
+              {
+                case 0: cn = 'even';  break;
+                case 1: cn = 1;       break;
+                case 2: cn = 2;       break;
+                case 3: cn = 3;       break;
+                case 4: cn = 4;       break;
+                case 5: cn = 5;       break;
+                case 6: cn = 6;       break;
+              }
             }
-          }
-          else if (slot.diff >= 7)
-          {
-            cn = 'more';
-          }
-          else
-          {
-            cn = 'less'
-          };
+            else if (slot.diff >= 7)
+            {
+              cn = 'more';
+            }
+            else
+            {
+              cn = 'less'
+            }
 
-          if (  (slot.diff > 0  && config.legenda.groups.more) ||
-                (slot.diff == 0 && config.legenda.groups.even) || 
-                (slot.diff < 0  && config.legenda.groups.less) )
-          {
-            timedata.push({
-              start:  Math.round(slot.start * 1000),
-              end:    Math.round(slot.end * 1000),
-              group: _this.wrapper('c') + name,
-              content:  cn +
-                        _this.secret(angular.toJson({
-                          type: 'group',
-                          diff: slot.diff,
-                          group: name
-                        })),
-              className:  'agg-' + cn,
-              editable:   false
-            });
-          };
+            if ((slot.diff > 0  && config.legenda.groups.more) ||
+              (slot.diff == 0 && config.legenda.groups.even) ||
+              (slot.diff < 0  && config.legenda.groups.less))
+            {
+              timedata.push({
+                start:  Math.round(slot.start * 1000),
+                end:    Math.round(slot.end * 1000),
+                group: _this.wrapper('c') + name,
+                content:  cn +
+                  _this.secret(angular.toJson({
+                    type: 'group',
+                    diff: slot.diff,
+                    group: name
+                  })),
+                className:  'agg-' + cn,
+                editable:   false
+              });
+            }
 
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name
-          ]);
+            timedata = _this.addLoading(data, timedata, [
+              _this.wrapper('c') + name
+            ]);
+          });
+
         });
 
         return timedata;
@@ -6446,42 +6725,57 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Wish slots
        */
-      wishes: function (data, timedata, name)
+      wishes: function (data, timedata, privilage)
       {
-        var _this = this;
+        var _this   = this;
+
+        var groups  = this.get.groups(),
+            name    = groups[data.aggs[0].id],
+            link    = '<a href="#/groups?uuid=' +
+                      data.aggs[0].id +
+                      '#view">' +
+                      name +
+                      '</a>',
+            title;
+
+        title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+        title += ' <span class="label">Behoefte (elke divisie)</span>';
 
         angular.forEach(data.aggs.wishes, function (wish, index)
         {
+          var cn;
+
           if ( wish.count >= 7 )
           {
-            var cn = 'wishes-more';
+            cn = 'wishes-more';
           }
           else if ( wish.count == 0 )
           {
-            var cn = 'wishes-even';
+            cn = 'wishes-even';
           }
           else
           {
-            var cn = 'wishes-' + wish.count;
-          };
+            cn = 'wishes-' + wish.count;
+          }
 
           timedata.push({
             start:  Math.round(wish.start * 1000),
             end:    Math.round(wish.end * 1000),
-            group:  _this.wrapper('c') + name + ' (Wishes)',
-            content: '<span class="badge badge-inverse">' + wish.count + '</span>' + 
-                      _this.secret(angular.toJson({
-                        type: 'wish',
-                        wish: wish.count,
-                        group: name,
-                        groupId: data.aggs.id
-                      })),
+            group:  _this.wrapper('c') + title,
+            content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
+              _this.secret(angular.toJson({
+                type: 'wish',
+                wish: wish.count,
+                group: title,
+                groupId: data.aggs[0].id
+              })),
             className:  cn,
             editable:   false
           });
 
           timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + name + ' (Wishes)'
+            _this.wrapper('c') + title
           ]);
         });
 
@@ -6495,8 +6789,6 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       {
         var _this   = this,
             members = this.get.members();
-        
-        // console.log('members inside sloter ->', data.members);
 
         angular.forEach(data.members, function (member, index)
         {
@@ -6530,7 +6822,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                   className:  config.states[slot.text].className,
                   editable:   false
                 });
-              };
+              }
             });
           });
 
@@ -6549,11 +6841,12 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
            * TODO
            * Good place to host this here?
            */
-          angular.forEach(member.stats, function (stat, index)
+          angular.forEach(member.stats, function (stat)
           {
             var state = stat.state.split('.');
             state.reverse();
-            stat.state = 'bar-' + state[0];
+
+            stat.state = (stat.state.match(/bar-(.*)/)) ? stat.state : 'bar-' + state[0];
           });
         });
 
@@ -6563,11 +6856,26 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       /**
        * Produce pie charts
        */
-      pies: function (data)
+      pies: function (data, current)
       {
-        document.getElementById("groupPie").innerHTML = '';
+        var _this = this;
 
-        var ratios    = [],
+        angular.forEach(_this.filtered(data, current), function (agg)
+        {
+          var id;
+
+          id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
+
+          if ($.browser.msie && $.browser.version == '8.0')
+          {
+            $('#' + 'groupPie-' + id).html('');
+          }
+          else
+          {
+            document.getElementById('groupPie-' + id).innerHTML = '';
+          }
+
+          var ratios    = [],
             colorMap  = {
               more: '#415e6b',
               even: '#ba6a24',
@@ -6576,33 +6884,60 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             colors    = [],
             xratios   = [];
 
-        angular.forEach(data.aggs.ratios, function (ratio, index)
-        {
-          if (ratio != 0)
+          angular.forEach(agg.ratios, function (ratio, index)
           {
-            ratios.push({
-              ratio: ratio, 
-              color: colorMap[index]
-            });
-          };
+            if (ratio != 0)
+            {
+              ratios.push({
+                ratio: ratio,
+                color: colorMap[index]
+              });
+            }
+          });
+
+          ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+          angular.forEach(ratios, function (ratio, index)
+          {
+            colors.push(ratio.color);
+            xratios.push(ratio.ratio);
+          });
+
+          var r   = Raphael('groupPie-' + id),
+              pie = r.piechart(120, 120, 100, xratios, { colors: colors });
         });
+      },
 
-        ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
 
-        angular.forEach(ratios, function (ratio, index)
+      /**
+       * Filter group agg data based on selected divisions
+       */
+      filtered: function (data, current)
+      {
+        var filtered = [];
+
+        if (current.division == 'all')
         {
-          colors.push(ratio.color);
-          xratios.push(ratio.ratio);
-        });
+          filtered = data.aggs;
+        }
+        else
+        {
+          angular.forEach(data.aggs, function (agg)
+          {
+            if (current.division == agg.division.id)
+            {
+              filtered.push(agg);
+            }
+          });
+        }
 
-        var r   = Raphael("groupPie"),
-            pie = r.piechart(120, 120, 100, xratios, { colors: colors });
+        return filtered;
       },
       
       /**
        * Timeline data processing
        */
-      process: function (data, config, divisions, privilage)
+      process: function (data, config, divisions, privilage, current)
       {
         var _this     = this,
             timedata  = [];
@@ -6611,23 +6946,27 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         if (data.aggs)
         {
-          var name = _this.namer(data, divisions, privilage);
-
           if (config.bar) 
           {
-            timedata = _this.bars(data, timedata, config, name);
+            timedata = _this.bars(data, timedata, config, privilage, current);
           }
           else
           {
-            timedata = _this.aggs(data, timedata, config, name);
-          };
-        };
+            timedata = _this.aggs(data, timedata, config, privilage, current);
+          }
+        }
 
-        if (config.wishes) timedata = _this.wishes(data, timedata, name);
+        if (config.wishes && data.aggs) timedata = _this.wishes(data, timedata, privilage);
 
         if (data.members) timedata = _this.members(data, timedata, config, privilage);
 
-        if (data.aggs && data.aggs.ratios) _this.pies(data);
+        if (data.aggs)
+        {
+          setTimeout(function ()
+          {
+            _this.pies(data, current);
+          }, 100);
+        }
 
         return timedata;
       }
@@ -7000,24 +7339,50 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Translate roles
  */
-.filter('translateRole', 
-[
-	'$config', 
-	function ($config)
-	{
-		return function (role)
-		{
-			var urole;
+  .filter('translateRole',
+    [
+      '$config',
+      function ($config)
+      {
+        return function (role)
+        {
+          var urole;
 
-			angular.forEach($config.roles, function (prole, index)
-			{
-				if (prole.id == role) urole = prole.label;
-			});
+          angular.forEach($config.roles, function (prole, index)
+          {
+            if (prole.id == role) urole = prole.label;
+          });
 
-			return urole;
-		}
-	}
-])
+          return urole;
+        }
+      }
+    ])
+
+
+/**
+ * Translate division ids to names
+ */
+  .filter('translateDivision',
+    [
+      '$config',
+      function ($config)
+      {
+        return function (divid)
+        {
+          var filtered;
+
+          angular.forEach($config.timeline.config.divisions, function (division)
+          {
+            if (division.id == divid)
+            {
+              filtered = division.label;
+            }
+          });
+
+          return filtered;
+        }
+      }
+    ])
 
 
 
@@ -7031,8 +7396,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeMainFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'Dater',
+	function (Dater)
 	{
 		var periods = Dater.getPeriods();
 
@@ -7044,7 +7409,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			var cFirst = function (str)
 			{
 			    return str.charAt(0).toUpperCase() + str.substr(1);
-			}
+			};
 
 			var ndates = {
 						start: {
@@ -7096,7 +7461,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 								//  + 
 								// ', ' + 
 								// Dater.getThisYear();
-			};
+			}
 
 		}
 	}
@@ -7126,7 +7491,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				var cFirst = function (str)
 				{
 				  return str.charAt(0).toUpperCase() + str.substr(1);
-				}
+				};
 
 				var dates = {
 					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
@@ -7143,7 +7508,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 								dates.end + 
 								', ' + 
 								Dater.getThisYear();
-			};
+			}
 		}
 	}
 ])
@@ -7203,8 +7568,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 									timeline.current.month + 
 									$rootScope.ui.planboard.rangeInfoTotalDays + 
 									periods.months[timeline.current.month].totalDays;
-				};
-			};
+				}
+			}
 		};
 	}
 ])
@@ -7410,7 +7775,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    else
 	    {
 	      return members[id].name;
-	    };
+	    }
 		};
 	}
 ])
@@ -7548,7 +7913,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  	for (var i in groups)
 	  	{
 	  		if (groups[i].uuid == id) return groups[i].name;
-	  	};
+	  	}
 	  }
 	}
 ])
@@ -7772,21 +8137,21 @@ angular.module('WebPaige.Controllers.Login', [])
 		if ($routeParams.uuid && $routeParams.key)
 	  {
 			$scope.views = {
-				changePass: true,
+				changePass: true
 			};
 
 			$scope.changepass = {
 				uuid: $routeParams.uuid,
-				key:  $routeParams.key,
+				key:  $routeParams.key
 			}
 		}
 	  else
 	  {
 			$scope.views = {
-				login: true,
+				login:  true,
 				forgot: false
 			};
-		};
+		}
 
 
 	  /**
@@ -7814,14 +8179,14 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  $scope.alert = {
 	    login: {
-	      display: false,
-	      type: '',
-	      message: ''
+	      display:  false,
+	      type:     '',
+	      message:  ''
 	    },
 	    forgot: {
-	      display: false,
-	      type: '',
-	      message: ''
+	      display:  false,
+	      type:     '',
+	      message:  ''
 	    }
 	  };
 
@@ -7874,7 +8239,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	      $scope.alert = {
 	        login: {
 	          display: true,
-	          type: 'alert-error',
+	          type:    'alert-error',
 	          message: $rootScope.ui.login.alert_fillfiled
 	        }
 	      };
@@ -7884,7 +8249,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        .removeAttr('disabled');
 
 	      return false;     
-	    };
+	    }
 
 	    $('#login button[type=submit]')
 	      .text($rootScope.ui.login.button_loggingIn)
@@ -7929,7 +8294,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        Session.set(result["X-SESSION_ID"]);
 
 	        self.preloader();
-	      };
+	      }
 		  });
 	  };
 
@@ -7976,16 +8341,23 @@ angular.module('WebPaige.Controllers.Login', [])
 	                parenting = false,
 	                defaults  = $rootScope.config.defaults.settingsWebPaige,
 	                _groups   = function (groups)
-	                {
-	                  var _groups = {};
-	                  angular.forEach(groups, function (group, index) { _groups[group.uuid] = true; });
-	                  return _groups;
-	                };
+                              {
+                                var _groups = {};
+                                angular.forEach(groups, function (group)
+                                                        {
+                                                          _groups[group.uuid] = {
+                                                            status:     true,
+                                                            divisions:  false
+                                                          };
+                                                        }
+                                );
+                                return _groups;
+                              };
 
 	            // Check if there is any settings at all
 	            if (settings != null || settings != undefined)
 	            {
-	              // check for user settigns-all
+	              // check for user settings-all
 	              if (settings.user)
 	              {
 	                // check for user-language settings
@@ -8000,13 +8372,13 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO language!!');
 	                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
 	                  sync = true;
-	                };             
+	                }
 	              }
 	              else
 	              {
 	                // console.log('NO user settings at all !!');
 	                sync = true;
-	              };
+	              }
 
 	              // check for app settings-all
 	              if (settings.app)
@@ -8016,13 +8388,41 @@ angular.module('WebPaige.Controllers.Login', [])
 	                {
 	                  // check for app-widget-groups setting
 	                  if (settings.app.widgets.groups)
-	                  {
-	                    // console.warn('user HAS app widgets groups settings');
-	                    defaults.app.widgets.groups = settings.app.widgets.groups;
+                    {
+                      // console.log('settings for groups =>', settings.app.widgets.groups);
+                      var oldGroupSetup = false;
+
+                      if (!jQuery.isEmptyObject(settings.app.widgets.groups))
+                      {
+                        angular.forEach(settings.app.widgets.groups, function (value, id)
+                        {
+                          // console.log('value ->', value);
+                          if (typeof value !== 'object' || value == {})
+                          {
+                            oldGroupSetup = true;
+                          }
+                        });
+                      }
+                      else
+                      {
+                        oldGroupSetup = true;
+                      }
+
+                      if (oldGroupSetup)
+                      {
+                        // console.warn('OLD SETUP => user has NO app widgets groups!!');
+                        defaults.app.widgets.groups = _groups(groups);
+                        sync = true;
+                      }
+                      else
+                      {
+                        // console.warn('user HAS app widgets groups settings');
+                        defaults.app.widgets.groups = settings.app.widgets.groups;
+                      }
 	                  }
 	                  else
 	                  {
-	                    // console.warn('user has NO app widgets groups!!');
+	                    console.warn('user has NO app widgets groups!!');
 	                    defaults.app.widgets.groups = _groups(groups);
 	                    sync = true;
 	                  }
@@ -8032,7 +8432,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO widget settings!!');
 	                  defaults.app.widgets = { groups: _groups(groups) };
 	                  sync = true;
-	                };
+	                }
 
 	                // check for app group setting
 	                if (settings.app.group && settings.app.group != undefined)
@@ -8045,14 +8445,14 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('user has NO first group setting!!');
 	                  parenting = true;
 	                  sync      = true;
-	                };          
+	                }
 	              }
 	              else
 	              {
 	                // console.log('NO app settings!!');
 	                defaults.app = { widgets: { groups: _groups(groups) } };
 	                sync = true;
-	              };
+	              }
 	            }
 	            else
 	            {
@@ -8067,7 +8467,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                }
 	              };
 	              sync = true;
-	            };
+	            }
 
 	            // sync settings with missing parts also parenting check
 	            if (sync)
@@ -8092,7 +8492,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
 
 	                    defaults.app.group = groups[0].uuid;
-	                  };
+	                  }
 	                                
 	                  // console.warn('SAVE ME (with parenting) ->', defaults);
 
@@ -8135,9 +8535,9 @@ angular.module('WebPaige.Controllers.Login', [])
 	            {
 	              finalize();
 	            }
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -8211,7 +8611,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        $rootScope.app.unreadMessages = Messages.unreadCount();
 
 	        Storage.session.unreadMessages = Messages.unreadCount();
-	      };
+	      }
 	    });
 	  };
 
@@ -8280,7 +8680,7 @@ angular.module('WebPaige.Controllers.Login', [])
 							message: $rootScope.ui.errors.login.forgotCantFind
 						}
 					};
-				};
+				}
 
 				$('#forgot button[type=submit]')
 	        .text($rootScope.ui.login.button_changePassword)
@@ -8319,7 +8719,7 @@ angular.module('WebPaige.Controllers.Login', [])
 					}; 
 					
 					$location.path( "/message" );
-				};
+				}
 
 				$('#changePass button[type=submit]')
 	        .text($rootScope.ui.login.button_changePassword)
@@ -8367,7 +8767,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        .removeAttr('disabled');
 
 				return false;
-			};
+			}
 
 			$('#changePass button[type=submit]')
 	      .text($rootScope.ui.login.button_changingPassword)
@@ -8474,7 +8874,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * default!
 		 */
 		var groups    = Storage.local.groups(),
-				settings  = Storage.local.settings(),
 				selection = {};
 
 		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
@@ -8483,9 +8882,30 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		});
 
 		$scope.popover = {
-			groups: groups,
-			selection: selection
+			groups:     groups,
+			selection:  selection,
+      divisions:  !!($rootScope.config.timeline.config.divisions.length > 0)
 		};
+
+    $scope.checkAnyPies = function ()
+    {
+      var ret = true;
+
+      $scope.loading.pies = false;
+
+      angular.forEach(Storage.local.settings().app.widgets.groups, function (group)
+      {
+        if (group.status === true)
+        {
+          ret = false;
+        }
+      });
+
+      return ret;
+    };
+
+
+    $scope.loadingPies = true;
 
 
 		/**
@@ -8493,138 +8913,162 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		function getOverviews ()
 		{
-			Dashboard.pies()
-			.then(function (pies)
-			{
-				if (pies.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
-					console.warn('error ->', pies.error);
-				}
-				else
-				{
-					$scope.shortageHolders = {};
+      $scope.loadingPies = true;
 
-					$scope.loading.pies = false;
+      if (!$scope.checkAnyPies())
+      {
+        Dashboard.pies()
+          .then(function (pies)
+          {
+            $scope.loadingPies = false;
 
-					$scope.periods = {
-						start:  pies[0].weeks.current.start.date,
-						end:    pies[0].weeks.next.end.date
-					};
+            if (pies.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
+              console.warn('error ->', pies.error);
+            }
+            else
+            {
+              $scope.shortageHolders = {};
 
-					angular.forEach(pies, function (pie, index)
-					{
-						if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
-						if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
+              $scope.loading.pies = false;
 
-						if (pie.weeks.current.state.diff > 0)
-						{
-						pie.weeks.current.state.cls = 'more';
-						}
-						else if (pie.weeks.current.state.diff === 0)
-						{
-							pie.weeks.current.state.cls = 'even';
-						}
-						else if (pie.weeks.current.state.diff < 0)
-						{
-							pie.weeks.current.state.cls = 'less';
-						}
+              $scope.periods = {
+                start:  pies[0].weeks.current.start.date,
+                end:    pies[0].weeks.next.end.date
+              };
 
-						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-																						new Date(pie.weeks.current.state.start * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+              angular.forEach(pies, function (pie)
+              {
+                if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
+                if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
-						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-																						new Date(pie.weeks.current.state.end * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+                if (pie.weeks.current.state.diff > 0)
+                {
+                  pie.weeks.current.state.cls = 'more';
+                }
+                else if (pie.weeks.current.state.diff === 0)
+                {
+                  pie.weeks.current.state.cls = 'even';
+                }
+                else if (pie.weeks.current.state.diff < 0)
+                {
+                  pie.weeks.current.state.cls = 'less';
+                }
 
-						pie.shortages = {
-							current:  pie.weeks.current.shortages,
-							next:     pie.weeks.next.shortages,
-							total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
-						};
+                pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
+                  new Date(pie.weeks.current.state.start * 1000)
+                    .toString($rootScope.config.formats.datetime) :
+                  'undefined';
 
-						pie.state = pie.weeks.current.state;
+                pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
+                  new Date(pie.weeks.current.state.end * 1000)
+                    .toString($rootScope.config.formats.datetime) :
+                  'undefined';
 
-						delete(pie.weeks.current.shortages);
-						delete(pie.weeks.current.state);
+                pie.shortages = {
+                  current:  pie.weeks.current.shortages,
+                  next:     pie.weeks.next.shortages,
+                  total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
+                };
 
-						$scope.shortageHolders['shortages-' + pie.id] = false;
-					});
+                pie.state = pie.weeks.current.state;
+
+                delete(pie.weeks.current.shortages);
+                delete(pie.weeks.current.state);
+
+                $scope.shortageHolders['shortages-' + pie.id] = false;
+              });
 
 
-					// angular.forEach(pies, function (pie, index)
-					// {
-					// 	console.log('pie ->', pie);
+              // angular.forEach(pies, function (pie, index)
+              // {
+              // 	console.log('pie ->', pie);
 
-					// 	angular.forEach(pie.shortages.current, function (slot, index)
-					// 	{
-					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	angular.forEach(pie.shortages.current, function (slot, index)
+              // 	{
+              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
 
-					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-					// 	});
+              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	});
 
-					// 	angular.forEach(pie.shortages.next, function (slot, index)
-					// 	{
-					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	angular.forEach(pie.shortages.next, function (slot, index)
+              // 	{
+              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
 
-					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-					// 	});
-					// });
+              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	});
+              // });
 
-					$scope.pies = pies;
-				}
-			})
-			.then( function (result)
-			{
-				angular.forEach($scope.pies, function (pie, index)
-				{
-					pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
-					pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
-				});
+              $scope.pies = pies;
+            }
+          })
+          .then( function ()
+          {
 
-				function pieMaker ($id, id, name, _ratios)
-				{
-					setTimeout( function ()
-					{
-					document.getElementById($id + id).innerHTML = '';
+            angular.forEach($scope.pies, function (pie)
+            {
+              pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
+              pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
+            });
 
-						var ratios    = [],
-								colorMap  = {
-									more: '#415e6b',
-									even: '#ba6a24',
-									less: '#a0a0a0'
-								},
-								colors    = [],
-								xratios   = [];
+            function pieMaker ($id, id, _ratios)
+            {
+              setTimeout( function ()
+              {
+                if ($.browser.msie && $.browser.version == '8.0')
+                {
+                  $('#' + $id + id).html('');
+                }
+                else
+                {
+                  if (document.getElementById($id + id))
+                  {
+                    document.getElementById($id + id).innerHTML = '';
+                  }
+                }
 
-						angular.forEach(_ratios, function (ratio, index)
-						{
-							if (ratio !== 0)
-							{
-								ratios.push({
-									ratio: ratio,
-									color: colorMap[index]
-								});
-							}
-						});
+                var ratios    = [],
+                  colorMap  = {
+                    more: '#415e6b',
+                    even: '#ba6a24',
+                    less: '#a0a0a0'
+                  },
+                  colors    = [],
+                  xratios   = [];
 
-						ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
+                angular.forEach(_ratios, function (ratio, index)
+                {
+                  if (ratio !== 0)
+                  {
+                    ratios.push({
+                      ratio: ratio,
+                      color: colorMap[index]
+                    });
+                  }
+                });
 
-						angular.forEach(ratios, function (ratio, index)
-						{
-							colors.push(ratio.color);
-							xratios.push(ratio.ratio);
-						});
+                ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
 
-						var r   = new Raphael($id + id),
-								pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                angular.forEach(ratios, function (ratio)
+                {
+                  colors.push(ratio.color);
+                  xratios.push(ratio.ratio);
+                });
 
-					}, 100);
-				}
-			});
+                var r   = new Raphael($id + id),
+                  pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+
+              }, 100);
+            }
+
+          });
+      }
+      else
+      {
+        $rootScope.statusBar.off();
+      }
+
 		}
 
 
@@ -8639,22 +9083,33 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		$scope.saveOverviewWidget = function (selection)
 		{
-			$rootScope.statusBar.display($rootScope.ui.settings.saving);
+      $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+      // console.log('selection ->', selection);
+
+      angular.forEach(selection, function (selected)
+      {
+        if (!selected.status)
+        {
+          selected.divisions = false;
+        }
+      });
 
 			Settings.save($rootScope.app.resources.uuid, {
 				user: Storage.local.settings().user,
 				app: {
+          group: Storage.local.settings().app.group,
 					widgets: {
 						groups: selection
 					}
 				}
 			})
-			.then(function (result)
+			.then(function ()
 			{
 				$rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
 				Profile.get($rootScope.app.resources.uuid, true)
-				.then(function (resources)
+				.then(function ()
 				{
 					getOverviews();
 				});
@@ -8665,7 +9120,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.getP2000 = function  ()
 		{
 			/**
-			 * P2000 annnouncements
+			 * P2000 announcements
 			 */
 			Dashboard.p2000().
 			then(function (result)
@@ -8688,7 +9143,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					$scope.synced.alarms = result.synced;
 				// }
 			});
-		}
+		};
 
 
 		/**
@@ -8734,7 +9189,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 				$window.clearInterval($window.alarmSync);
 			}
-	  }
+	  };
 
 
 	  /**
@@ -8754,6 +9209,25 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 			$scope.more.status = !$scope.more.status;
 		};
+
+
+    /**
+     * Fix popover position
+     */
+    $scope.fixPopoverPos = function ()
+    {
+      setTimeout(function ()
+      {
+        var spanWidth = $('#dashboard .span9').css('width'),
+            popWidth  = $('#dashboard .popover').css('width');
+
+        $('.popover').css({
+          top: $('#dashboardPopoverBtn').css('top'),
+          left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
+                + 'px'
+        });
+      }, 100);
+    }
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -8803,7 +9277,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
         members:  false
       },
       /**
-       * Fix for timeline scoper to day
+       * Fix for timeline scope to day
        */
       day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
@@ -8862,7 +9336,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      legenda:    {},
 	      legendarer: $rootScope.config.timeline.config.legendarer,
 	      states:     $rootScope.config.timeline.config.states,
-	      divisions:  $rootScope.config.timeline.config.divisions,
+        divisions:  $rootScope.config.timeline.config.divisions,
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
@@ -8874,16 +9348,16 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  if ($.browser.msie && $.browser.version == '8.0')
 	  {
 	  	$scope.timeline.options = {
-	      start:  $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      end:    $scope.periods.weeks[$scope.current.week].last.timeStamp,
-	      min:    $scope.periods.weeks[$scope.current.week].first.timeStamp,
-	      max:    $scope.periods.weeks[$scope.current.week].last.timeStamp
-	    }
+        start:  $scope.periods.days[Dater.current.today()].last.timeStamp,
+        end:    $scope.periods.days[Dater.current.today() + 7].last.timeStamp,
+        min:    $scope.periods.days[Dater.current.today()].last.timeStamp,
+        max:    $scope.periods.days[Dater.current.today() + 7].last.timeStamp
+	    };
 	  }
 
 
 	  /**
-	   * Legenda defaults
+	   * Legend defaults
 	   */
 	  angular.forEach($rootScope.config.timeline.config.states, function (state, index)
 	  {
@@ -8892,7 +9366,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Timeline group legenda default configuration
+	   * Timeline group legend default configuration
 	   */
 	  $scope.timeline.config.legenda.groups = {
 	    more: true,
@@ -8902,15 +9376,14 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Prepeare timeline range for dateranger widget
+	   * Prepare timeline range for date ranger widget
 	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
-                        ' / ' +
+	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' +
 	                      Dater.readable.date($scope.timeline.range.end);
 
 
 	  /**
-	   * States for dropdown
+	   * States for drop down
 	   */
 	  var states = {};
 
@@ -8918,22 +9391,42 @@ angular.module('WebPaige.Controllers.Planboard', [])
     {
       // show only user editable states
       if (state.display)
+      {
         states[key] = state.label;
+      }
     });
 
 	  $scope.states = states;
 
 
 	  /**
-	   * Groups for dropdown
+	   * Groups for drop down
 	   */
 	  $scope.groups = groups;
 
 
 	  /**
-	   * Groups for dropdown
+	   * Groups for drop down
 	   */
 	  $scope.divisions = $scope.timeline.config.divisions;
+
+    if ($scope.timeline.config.divisions.length > 0)
+    {
+      if ($scope.divisions[0].id !== 'all')
+      {
+        $scope.divisions.unshift({
+          id:     'all',
+          label:  'Alle divisies'
+        });
+      }
+
+      $scope.groupPieHide = {};
+
+      angular.forEach($scope.divisions, function (division)
+      {
+        $scope.groupPieHide[division.id] = false;
+      });
+    }
 
 
 	  /**
@@ -8965,7 +9458,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 	  /**
-	   * Slot form toggler
+	   * Slot form toggle
 	   */
 	  $scope.toggleSlotForm = function ()
 	  {
@@ -9027,18 +9520,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	    $location.path('/messages').search({ escalate: true }).hash('compose');
 	  };
 
-
-
-	  /**
-	   * DEPRECIATED
-	   * 
-	   * Not used probably?
-	   */
-	  // $scope.modifySlot = function (slot)
-	  // {
-	  // 	console.log('changing state ->', slot);
-	  // }
-
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -9061,6 +9542,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		 */
 		$scope.$watch(function ()
 		{
+       /*
+      if (!$scope.timeline.current.layouts.group)
+      {
+        // timeline.current.layouts.group
+        $scope.timeline.config.wishes = false;
+        $scope.groupWishes();
+      }
+      */
+
 			/**
 			 * If main timeline
 			 */
@@ -9073,8 +9563,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				/**
 				 * Scope is a day
 				 * 
-				 * TODO
-				 * try later on!
+				 * TODO (try later on!)
 				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
 				 */
 				if (diff <= 86400000)
@@ -9113,8 +9602,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					end:    new Date(range.end).toString()
 				};
 
-				$scope.daterange =  Dater.readable.date($scope.timeline.range.start) +
-														' / ' +
+				$scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' +
 														Dater.readable.date($scope.timeline.range.end);
 			}
 			/**
@@ -9196,11 +9684,47 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     */
 	    render: function (options, remember)
 	    {
+        /**
+         * First setup comes with undefined
+         */
+        /*
+        if (remember === undefined)
+        {
+          remember = true;
+        }
+        */
+
+        var start,
+            end;
+
 	    	/**
-	    	 * Hotfix for not converted Date objects initally given by timeline
+	    	 * Hotfix for not converted Date objects initially given by timeline
 	    	 */
-	    	if (typeof $scope.timeline.range.start != Date) $scope.timeline.range.start = new Date($scope.timeline.range.start);
-	    	if (typeof $scope.timeline.range.end != Date) $scope.timeline.range.end = new Date($scope.timeline.range.end);
+        if ($scope.timeline.range)
+        {
+          if (typeof $scope.timeline.range.start != Date)
+          {
+            $scope.timeline.range.start = new Date($scope.timeline.range.start);
+          }
+
+          if (typeof $scope.timeline.range.end != Date)
+          {
+            $scope.timeline.range.end = new Date($scope.timeline.range.end);
+          }
+
+          // console.log('RANGE GOOD !!');
+          start = $scope.timeline.range.start;
+          end   = $scope.timeline.range.end;
+        }
+        else
+        {
+          // console.log('NOOOO RANGE !!');
+          start = new Date(options.start);
+          end   = new Date(options.end);
+        }
+
+        // console.log('range in timeline ->', $scope.timeline.range);
+        // console.log('REMEMBER ->', remember);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
@@ -9210,8 +9734,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        scope: 		$scope.timeline.scope,
 	        config:   $scope.timeline.config,
 	        options: {
-	          start:  (remember) ? $scope.timeline.range.start : new Date(options.start),
-	          end:    (remember) ? $scope.timeline.range.end : new Date(options.end),
+	          start:  (remember) ? start : new Date(options.start),
+	          end:    (remember) ? end : new Date(options.end),
 	          min:    new Date(options.start),
 	          max:    new Date(options.end)
 	        }
@@ -9235,7 +9759,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          $scope.data,
 		          $scope.timeline.config,
 		          $scope.divisions,
-		          $scope.timeline.user.role
+		          $scope.timeline.user.role,
+              $scope.timeline.current
 		        ),
 		        $scope.timeline.options
 		      );
@@ -9244,15 +9769,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    {
 		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
 
-		    	
-
           $rootScope.timelineLoaded = false;
 
 			    setTimeout( function () 
 		      {
-		      	console.log('komt hier');
-
-
             $rootScope.timelineLoaded = true;
             $rootScope.$apply();
 
@@ -9262,7 +9782,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		            $scope.timeline.config
 		          ), $scope.timeline.options);
 		      }, timeout);
-		    };
+		    }
 
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
 	      
@@ -9298,11 +9818,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          $scope.data = data;
 
 		          _this.render(stamps, remember);
-		        };
+		        }
 
 		        $rootScope.statusBar.off();
 
-		        if ($scope.timeline.config.wishes) getWishes();
+		        if ($scope.timeline.config.wishes)
+            {
+              getWishes();
+            }
 		      });
 		    }
 	      else
@@ -9324,9 +9847,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        _this.render(stamps, remember);
 
 			        $rootScope.statusBar.off();
-		        };
+		        }
 		      });
-		    };
+		    }
 
 	    },
 
@@ -9451,7 +9974,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        start:  Dater.readable.date(new Date(range.start).getTime()),
 		        end:    Dater.readable.date(new Date(range.end).getTime())
 		      };
-	      };
+	      }
 
 	    });
 	  };
@@ -9519,7 +10042,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        add:  false,
 		        edit: true
 		      };
-		    };
+		    }
 
 	      if (content.type)
 	      {
@@ -9531,8 +10054,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        case 'group': 	$scope.views.group 			= true; 	break;
 			        case 'wish': 		$scope.views.wish 			= true; 	break;
 			        case 'member': 	$scope.views.member 		= true; 	break;
-			      };
-	      	};
+			      }
+	      	}
 
 		      $scope.slot = {
 		        start: {
@@ -9573,12 +10096,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        case 'member':
 			          $scope.slot.member = content.mid;
 			        break;
-			      };
-		      };
-	      };
+			      }
+		      }
+	      }
 
 	      return values;
-	    };
+	    }
 	  };
 
 
@@ -9615,18 +10138,63 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  };
 
 
-	  /**
-	   * Group aggs barCharts toggler
-	   */
-	  $scope.barCharts = function ()
-	  {
-	    $scope.timeline.config.bar = !$scope.timeline.config.bar;
+    /**
+     * Change division
+     */
+    $scope.changeDivision = function ()
+    {
+//      var filtered = [];
+//
+//      if ($scope.timeline.current.division == 'all')
+//      {
+//        filtered = $scope.data.aggs;
+//      }
+//      else
+//      {
+//        angular.forEach($scope.data.aggs, function (agg)
+//        {
+//          if ($scope.timeline.current.division == agg.division.id)
+//          {
+//            filtered.push(agg);
+//          }
+//        });
+//      }
+//
+//      $scope.data.filtered = filtered;
 
-	    $scope.timeliner.render({
-	      start:  $scope.timeline.range.start,
-	      end:    $scope.timeline.range.end
-	    });
-	  };
+//      console.log('division ->', $scope.timeline.current.division);
+//
+//      console.log('div ->', $scope.groupPieHide);
+
+      angular.forEach($scope.divisions, function (division)
+      {
+        $scope.groupPieHide[division.id] = false;
+      });
+
+      if ($scope.timeline.current.division !== 'all')
+      {
+        $scope.groupPieHide[$scope.timeline.current.division] = true;
+      }
+
+      $scope.timeliner.render({
+        start:  $scope.timeline.range.start,
+        end:    $scope.timeline.range.end
+      });
+    };
+
+
+    /**
+     * Group aggs barCharts toggler
+     */
+    $scope.barCharts = function ()
+    {
+      $scope.timeline.config.bar = !$scope.timeline.config.bar;
+
+      $scope.timeliner.render({
+        start:  $scope.timeline.range.start,
+        end:    $scope.timeline.range.end
+      });
+    };
 	  
 
 	  /**
@@ -9659,23 +10227,26 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	   */
 	  function getWishes ()
 	  {
-    	$rootScope.statusBar.display($rootScope.ui.message.getWishes);
+      if ($scope.timeline.current.layouts.group)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.getWishes);
 
-	    Slots.wishes({
-	    	id:  			$scope.timeline.current.group,
-        start:  	$scope.data.periods.start / 1000,
-        end:    	$scope.data.periods.end / 1000
-	    }).then(function (wishes)
-	  	{
-	  		$rootScope.statusBar.off();
+        Slots.wishes({
+          id:  			$scope.timeline.current.group,
+          start:  	$scope.data.periods.start / 1000,
+          end:    	$scope.data.periods.end / 1000
+        }).then(function (wishes)
+          {
+            $rootScope.statusBar.off();
 
-	  		$scope.data.aggs.wishes = wishes;
+            $scope.data.aggs.wishes = wishes;
 
-	  		$scope.timeliner.render({
-	        start:  	$scope.timeline.range.start,
-	        end:    	$scope.timeline.range.end
-		    }, true);
-	  	});
+            $scope.timeliner.render({
+              start:  	$scope.timeline.range.start,
+              end:    	$scope.timeline.range.end
+            }, true);
+          });
+      }
 	  }
 	  
 
@@ -9732,7 +10303,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			        add:  true,
 			        edit: false
 			      };
-			    };
+			    }
 
 		      $scope.slot = {
 		        start: {
@@ -9799,7 +10370,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          else
 		          {
 		            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
-		          };
+		          }
 
 		          $scope.timeliner.refresh();
 
@@ -9807,7 +10378,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        }
 		      );
 
-		    };
+		    }
 	  	}
 	  };
 
@@ -9865,7 +10436,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			// 	$scope.slotid = options.content.id;
 			// }
 
-	  }
+	  };
 
 
 
@@ -9918,7 +10489,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	if (curr < now) return false;
 
 	    	return true;
-	    }
+	    };
 
 	    /**
 	     * If slot start was in past and end in the future has been moved to
@@ -9977,14 +10548,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				          else
 				          {
 				            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-				          };
+				          }
 
 				          $scope.timeliner.refresh();
 
 				          $rootScope.planboardSync.start();
 				        }
 				      );
-	          };
+	          }
 	        }
 	      );
 
@@ -10017,7 +10588,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          else
 		          {
 		            $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-		          };
+		          }
 
 		          $scope.timeliner.refresh();
 
@@ -10083,15 +10654,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	            else
 	            {
 	              $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
-	            };
+	            }
 
 	            $scope.timeliner.refresh();
 
 	            $rootScope.planboardSync.start();
 	          }
 	        );
-	      };
-	    };
+	      }
+	    }
 	  };
 
 
@@ -10127,7 +10698,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	        else
 	        {
 	          $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
-	        };
+	        }
 
 	        $scope.timeliner.refresh();
 	      }
@@ -10161,7 +10732,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					// console.log('planboard sync started..');
+					// console.log('planboard sync started..', new Date.now());
 
 					/**
 					 * Update planboard only in planboard is selected
@@ -10183,7 +10754,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					}
 				// Sync periodically for a minute
 				}, 60000); // 1 minute
-				// }, 5000); // 5 seconds
+				// }, 5000); //  10 seconds
 			},
 
 			/**
@@ -10204,7 +10775,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 				$window.clearInterval($window.planboardSync);
 			}
-	  }
+	  };
 
 
 	  /**
@@ -10698,7 +11269,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        else
 	        {
 	          // console.log('state changed');
-	        };
+	        }
 	      });
 
 	      var _inbox = [];
@@ -10713,10 +11284,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	  $scope.messages.inbox = _inbox;
 
 	      Messages.unreadCount(); 
-	    };
+	    }
 
 	    $rootScope.statusBar.off();
-	  };
+	  }
 
 
 	  /**
@@ -10928,7 +11499,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $scope.scheaduleCounter();
 
 	      $scope.setViewTo('inbox');
-	    };
+	    }
 	  };
 
 
@@ -10991,7 +11562,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function (messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.loading = false;
 
@@ -10999,7 +11570,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11037,11 +11608,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function (messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11078,7 +11649,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11118,7 +11689,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	          $rootScope.statusBar.off();
 	        });
-	      };
+	      }
 	    });
 	  };
 
@@ -11157,9 +11728,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            $scope.messages = messages;
 
 	            $rootScope.statusBar.off();
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });    
 	  };
 
@@ -11230,9 +11801,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	              $scope.requestMessage(uuid, $scope.origin);
 
 	              $rootScope.statusBar.off();
-	            };
+	            }
 	          });
-	        };
+	        }
 	      });
 	    }
 	    else
@@ -11240,7 +11811,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      $rootScope.notifier.error($rootScope.ui.message.noReceivers);
 
 	      $rootScope.statusBar.off();
-	    };
+	    }
 	  };
 
 
@@ -11314,7 +11885,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    $scope.broadcast = {
 	      sms: true
 	    };
-	  };
+	  }
 
 
 	  /**
@@ -11396,7 +11967,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    $rootScope.statusBar.off();
 
 				    callback();
-				  };
+				  }
 				});
 	  	},
 
@@ -11421,7 +11992,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				    // console.log('notification fetched ->', result);
 
 				    $scope.scheaduled = result;
-				  };
+				  }
 				});
 	  	},
 
@@ -11467,7 +12038,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        	{
 	        		$scope.setViewTo('notifications');
 	        	});
-				  };
+				  }
 				});
 	  	},
 
@@ -11498,7 +12069,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        		$scope.setViewTo('notifications');
 					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
 	        	});
-				  };
+				  }
 				});	
 	  	},
 
@@ -11528,7 +12099,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        	{
 	        		$scope.setViewTo('notifications');
 	        	});
-		      };
+		      }
 		    });
 	  	}
 
@@ -12811,7 +13382,10 @@ angular.module('WebPaige.Controllers.Settings', [])
 	   */
 	  var languages = {};
 
-	  angular.forEach(ui, function (lang, index) { languages[lang.meta.name] = lang.meta.label; });
+	  angular.forEach(ui, function (lang)
+    {
+      languages[lang.meta.name] = lang.meta.label;
+    });
 
 	  $scope.languages = languages;
 
@@ -12821,7 +13395,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	   */
 	   var groups = {};
 
-	   angular.forEach(Storage.local.groups(), function (group, index)
+	   angular.forEach(Storage.local.groups(), function (group)
 	   {
 	     groups[group.uuid] = group.name;
 	   });
@@ -12837,7 +13411,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	    $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
 	    Settings.save($rootScope.app.resources.uuid, settings)
-	    .then(function (saved)
+	    .then(function ()
 	    {
 	      $rootScope.notifier.success($rootScope.ui.settings.saved);
 
@@ -12858,7 +13432,7 @@ angular.module('WebPaige.Controllers.Settings', [])
 	          $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
 
 	          $rootScope.statusBar.off();
-	        };
+	        }
 	      })
 	    });
 	  };

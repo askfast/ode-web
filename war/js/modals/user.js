@@ -69,6 +69,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    }
 	  );
 
+
 	  // var changePassword = $resource($config.host+'/passwordReset', 
 	  //   {uuid: uuid,
 	  //    pass: newpass,
@@ -99,7 +100,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	        else
 	        {
 	          deferred.resolve(result);
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -128,7 +129,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	        else 
 	        {
 	          deferred.resolve(result);
-	        };
+	        }
 	      },
 	      function (error)
 	      {
@@ -163,7 +164,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    );
 	    
 	    return deferred.promise;
-	  }
+	  };
 
 
 	  /**

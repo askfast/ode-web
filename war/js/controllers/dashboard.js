@@ -55,7 +55,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * default!
 		 */
 		var groups    = Storage.local.groups(),
-				settings  = Storage.local.settings(),
 				selection = {};
 
 		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
@@ -64,9 +63,30 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		});
 
 		$scope.popover = {
-			groups: groups,
-			selection: selection
+			groups:     groups,
+			selection:  selection,
+      divisions:  !!($rootScope.config.timeline.config.divisions.length > 0)
 		};
+
+    $scope.checkAnyPies = function ()
+    {
+      var ret = true;
+
+      $scope.loading.pies = false;
+
+      angular.forEach(Storage.local.settings().app.widgets.groups, function (group)
+      {
+        if (group.status === true)
+        {
+          ret = false;
+        }
+      });
+
+      return ret;
+    };
+
+
+    $scope.loadingPies = true;
 
 
 		/**
@@ -74,138 +94,162 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		function getOverviews ()
 		{
-			Dashboard.pies()
-			.then(function (pies)
-			{
-				if (pies.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
-					console.warn('error ->', pies.error);
-				}
-				else
-				{
-					$scope.shortageHolders = {};
+      $scope.loadingPies = true;
 
-					$scope.loading.pies = false;
+      if (!$scope.checkAnyPies())
+      {
+        Dashboard.pies()
+          .then(function (pies)
+          {
+            $scope.loadingPies = false;
 
-					$scope.periods = {
-						start:  pies[0].weeks.current.start.date,
-						end:    pies[0].weeks.next.end.date
-					};
+            if (pies.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
+              console.warn('error ->', pies.error);
+            }
+            else
+            {
+              $scope.shortageHolders = {};
 
-					angular.forEach(pies, function (pie, index)
-					{
-						if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
-						if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
+              $scope.loading.pies = false;
 
-						if (pie.weeks.current.state.diff > 0)
-						{
-						pie.weeks.current.state.cls = 'more';
-						}
-						else if (pie.weeks.current.state.diff === 0)
-						{
-							pie.weeks.current.state.cls = 'even';
-						}
-						else if (pie.weeks.current.state.diff < 0)
-						{
-							pie.weeks.current.state.cls = 'less';
-						}
+              $scope.periods = {
+                start:  pies[0].weeks.current.start.date,
+                end:    pies[0].weeks.next.end.date
+              };
 
-						pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-																						new Date(pie.weeks.current.state.start * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+              angular.forEach(pies, function (pie)
+              {
+                if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
+                if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
-						pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-																						new Date(pie.weeks.current.state.end * 1000)
-																							.toString($rootScope.config.formats.datetime) :
-																						'undefined';
+                if (pie.weeks.current.state.diff > 0)
+                {
+                  pie.weeks.current.state.cls = 'more';
+                }
+                else if (pie.weeks.current.state.diff === 0)
+                {
+                  pie.weeks.current.state.cls = 'even';
+                }
+                else if (pie.weeks.current.state.diff < 0)
+                {
+                  pie.weeks.current.state.cls = 'less';
+                }
 
-						pie.shortages = {
-							current:  pie.weeks.current.shortages,
-							next:     pie.weeks.next.shortages,
-							total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
-						};
+                pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
+                  new Date(pie.weeks.current.state.start * 1000)
+                    .toString($rootScope.config.formats.datetime) :
+                  'undefined';
 
-						pie.state = pie.weeks.current.state;
+                pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
+                  new Date(pie.weeks.current.state.end * 1000)
+                    .toString($rootScope.config.formats.datetime) :
+                  'undefined';
 
-						delete(pie.weeks.current.shortages);
-						delete(pie.weeks.current.state);
+                pie.shortages = {
+                  current:  pie.weeks.current.shortages,
+                  next:     pie.weeks.next.shortages,
+                  total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
+                };
 
-						$scope.shortageHolders['shortages-' + pie.id] = false;
-					});
+                pie.state = pie.weeks.current.state;
+
+                delete(pie.weeks.current.shortages);
+                delete(pie.weeks.current.state);
+
+                $scope.shortageHolders['shortages-' + pie.id] = false;
+              });
 
 
-					// angular.forEach(pies, function (pie, index)
-					// {
-					// 	console.log('pie ->', pie);
+              // angular.forEach(pies, function (pie, index)
+              // {
+              // 	console.log('pie ->', pie);
 
-					// 	angular.forEach(pie.shortages.current, function (slot, index)
-					// 	{
-					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	angular.forEach(pie.shortages.current, function (slot, index)
+              // 	{
+              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
 
-					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-					// 	});
+              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	});
 
-					// 	angular.forEach(pie.shortages.next, function (slot, index)
-					// 	{
-					// 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	angular.forEach(pie.shortages.next, function (slot, index)
+              // 	{
+              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
 
-					// 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-					// 	});
-					// });
+              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
+              // 	});
+              // });
 
-					$scope.pies = pies;
-				}
-			})
-			.then( function (result)
-			{
-				angular.forEach($scope.pies, function (pie, index)
-				{
-					pieMaker('weeklyPieCurrent-', pie.id, pie.name, pie.weeks.current.ratios);
-					pieMaker('weeklyPieNext-', pie.id, pie.name, pie.weeks.next.ratios);
-				});
+              $scope.pies = pies;
+            }
+          })
+          .then( function ()
+          {
 
-				function pieMaker ($id, id, name, _ratios)
-				{
-					setTimeout( function ()
-					{
-					document.getElementById($id + id).innerHTML = '';
+            angular.forEach($scope.pies, function (pie)
+            {
+              pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
+              pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
+            });
 
-						var ratios    = [],
-								colorMap  = {
-									more: '#415e6b',
-									even: '#ba6a24',
-									less: '#a0a0a0'
-								},
-								colors    = [],
-								xratios   = [];
+            function pieMaker ($id, id, _ratios)
+            {
+              setTimeout( function ()
+              {
+                if ($.browser.msie && $.browser.version == '8.0')
+                {
+                  $('#' + $id + id).html('');
+                }
+                else
+                {
+                  if (document.getElementById($id + id))
+                  {
+                    document.getElementById($id + id).innerHTML = '';
+                  }
+                }
 
-						angular.forEach(_ratios, function (ratio, index)
-						{
-							if (ratio !== 0)
-							{
-								ratios.push({
-									ratio: ratio,
-									color: colorMap[index]
-								});
-							}
-						});
+                var ratios    = [],
+                  colorMap  = {
+                    more: '#415e6b',
+                    even: '#ba6a24',
+                    less: '#a0a0a0'
+                  },
+                  colors    = [],
+                  xratios   = [];
 
-						ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
+                angular.forEach(_ratios, function (ratio, index)
+                {
+                  if (ratio !== 0)
+                  {
+                    ratios.push({
+                      ratio: ratio,
+                      color: colorMap[index]
+                    });
+                  }
+                });
 
-						angular.forEach(ratios, function (ratio, index)
-						{
-							colors.push(ratio.color);
-							xratios.push(ratio.ratio);
-						});
+                ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
 
-						var r   = new Raphael($id + id),
-								pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                angular.forEach(ratios, function (ratio)
+                {
+                  colors.push(ratio.color);
+                  xratios.push(ratio.ratio);
+                });
 
-					}, 100);
-				}
-			});
+                var r   = new Raphael($id + id),
+                  pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+
+              }, 100);
+            }
+
+          });
+      }
+      else
+      {
+        $rootScope.statusBar.off();
+      }
+
 		}
 
 
@@ -220,22 +264,33 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 */
 		$scope.saveOverviewWidget = function (selection)
 		{
-			$rootScope.statusBar.display($rootScope.ui.settings.saving);
+      $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+      // console.log('selection ->', selection);
+
+      angular.forEach(selection, function (selected)
+      {
+        if (!selected.status)
+        {
+          selected.divisions = false;
+        }
+      });
 
 			Settings.save($rootScope.app.resources.uuid, {
 				user: Storage.local.settings().user,
 				app: {
+          group: Storage.local.settings().app.group,
 					widgets: {
 						groups: selection
 					}
 				}
 			})
-			.then(function (result)
+			.then(function ()
 			{
 				$rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
 				Profile.get($rootScope.app.resources.uuid, true)
-				.then(function (resources)
+				.then(function ()
 				{
 					getOverviews();
 				});
@@ -246,7 +301,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.getP2000 = function  ()
 		{
 			/**
-			 * P2000 annnouncements
+			 * P2000 announcements
 			 */
 			Dashboard.p2000().
 			then(function (result)
@@ -269,7 +324,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 					$scope.synced.alarms = result.synced;
 				// }
 			});
-		}
+		};
 
 
 		/**
@@ -315,7 +370,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 				$window.clearInterval($window.alarmSync);
 			}
-	  }
+	  };
 
 
 	  /**
@@ -335,5 +390,24 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 			$scope.more.status = !$scope.more.status;
 		};
+
+
+    /**
+     * Fix popover position
+     */
+    $scope.fixPopoverPos = function ()
+    {
+      setTimeout(function ()
+      {
+        var spanWidth = $('#dashboard .span9').css('width'),
+            popWidth  = $('#dashboard .popover').css('width');
+
+        $('.popover').css({
+          top: $('#dashboardPopoverBtn').css('top'),
+          left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
+                + 'px'
+        });
+      }, 100);
+    }
 	}
 ]);

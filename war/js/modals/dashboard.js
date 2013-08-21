@@ -38,23 +38,37 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 			var deferred  = $q.defer(),
 					groups    = angular.fromJson(Storage.get('groups')),
 					settings  = Storage.local.settings().app.widgets.groups,
-					list      = [],
-					now       = new Date.now().getTime(),
 					calls     = [];
 
 			if (settings.length === 0) console.warn('no settings');
 
-			angular.forEach(groups, function(group, index)
+      angular.forEach(groups, function(group)
 			{
-				if (settings[group.uuid]) list.push({ id: group.uuid, name: group.name});
-			});
-
-			angular.forEach(list, function (group, index)
-			{
-				calls.push(Slots.pie({
-					id:     group.id,
-					name:   group.name
-				}));
+        if (settings[group.uuid] && settings[group.uuid].status)
+        {
+          if (!settings[group.uuid].divisions)
+          {
+            calls.push(Slots.pie({
+              id:         group.uuid,
+              name:       group.name,
+              division:   'both'
+            }));
+          }
+          else
+          {
+            angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+            {
+              if (division.id !== 'all')
+              {
+                calls.push(Slots.pie({
+                  id:         group.uuid,
+                  name:       group.name,
+                  division:   division.id
+                }));
+              }
+            })
+          }
+        }
 			});
 
 			$q.all(calls)

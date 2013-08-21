@@ -383,15 +383,16 @@
                 <select ng-model="timeline.current.group" 
                         ng-options="group.uuid as group.name for group in groups"
                         ng-selected="timeline.current.group"
-                        ng-change="requestTimeline()">
+                        ng-change="requestTimeline()"
+                        ng-show="timeline.current.layouts.group">
                 </select>
                 <!-- end groups list -->
 
                 <!-- divisions list -->
-                <select ng-model="timeline.current.division" 
+                <select ng-model="timeline.current.division"
                         ng-options="division.id as division.label for division in divisions"
                         ng-selected="timeline.current.division"
-                        ng-change="requestTimeline()"
+                        ng-change="changeDivision()"
                         ng-show="divisions.length > 0">
                 </select>
                 <!-- end divisions list -->
@@ -401,8 +402,18 @@
               <!-- groups members controls -->
               <div class="pull-right">
 
-                <!-- timeline bar charts -->
+                <!-- legenda -->
                 <div  class="btn-group">
+                  <button type="button"
+                          ng-click="showLegenda()"
+                          class="btn {{(timeline.config.legendarer==true) && 'active'}}"
+                          ng-model="timeline.config.legendarer">{{ui.planboard.legenda}}</button>
+                </div>
+                <!-- end legenda -->
+
+                <!-- timeline bar charts -->
+                <div  class="btn-group"
+                      ng-show="timeline.current.layouts.group">
                   <button type="button" 
                           ng-click="barCharts()" 
                           class="btn {{(timeline.config.bar==true) && 'active'}}" 
@@ -411,22 +422,14 @@
                 <!-- end timeline bar charts -->
 
                 <!-- group wishes -->
-                <div  class="btn-group">
-                  <button type="button" 
+                <div  class="btn-group"
+                      ng-show="timeline.current.layouts.group">
+                  <button type="button"
                           ng-click="groupWishes()"
-                          class="btn {{(timeline.config.wishes==true) && 'active'}}" 
+                          class="btn {{(timeline.config.wishes==true) && 'active'}}"
                           ng-model="timeline.config.wishes">{{ui.planboard.wishes}}</button>
                 </div>
                 <!-- end group wishes -->
-
-                <!-- legenda -->
-                <div  class="btn-group">
-                  <button type="button" 
-                          ng-click="showLegenda()"
-                          class="btn {{(timeline.config.legendarer==true) && 'active'}}" 
-                          ng-model="timeline.config.legendarer">{{ui.planboard.legenda}}</button>
-                </div>
-                <!-- end legenda -->
 
                 <!-- timeline layout manager -->
                 <div  class="btn-group">
@@ -555,10 +558,10 @@
               <!-- end groups list -->
 
               <!-- divisions list -->
-              <select ng-model="timeline.current.division" 
+              <select ng-model="timeline.current.division"
                       ng-options="division.id as division.label for division in divisions"
                       ng-selected="timeline.current.division"
-                      ng-change="requestTimeline()"
+                      ng-change="changeDivision()"
                       ng-show="divisions.length > 0">
               </select>
               <!-- end divisions list -->
@@ -622,64 +625,80 @@
           <!-- statistics -->
           <div id="stats">
 
+
+
+
+
+
             <!-- group charts -->
-            <div id="groupStats">
-              <div id="groupPie"></div>
-              
-              <div class="groupStatInfo">
-                <h3>{{data.aggs.id | groupIdToName}}</h3>
+            <div id="groupStats"
+                 ng-repeat="agg in data.aggs">
+
+              <div ng-show="groupPieHide[agg.division.id] || (timeline.current.division == 'all')">
+
+                <div id="groupPie-{{agg.division.id}}" class="groupPies"></div>
+
+                <div class="groupStatInfo">
+                <h3>{{agg.id | groupIdToName}} <span ng-hide="!agg.division.label">&nbsp; ({{ agg.division.label }})</span></h3>
                 <hr>
                 <ul>
                   <li>
                     <div class="ratios more">
-                      <span class="ratio">{{data.aggs.ratios.more}}</span>
+                      <span class="ratio">{{agg.ratios.more}}</span>
                       <span class="percentage">%</span>
                     </div>
                     <div class="info">                    
                       <h4>{{ui.planboard.statPeopleMore}}</h4>
-                      <h5>{{data.aggs.durations.more | calculateTimeInDays}}</h5>&nbsp;
+                      <h5>{{agg.durations.more | calculateTimeInDays}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statDays}}</small>,&nbsp;
-                      <h5>{{data.aggs.durations.more | calculateTimeInHours}}</h5>&nbsp;
+                      <h5>{{agg.durations.more | calculateTimeInHours}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statHours}}</small>,&nbsp;
-                      <h5>{{data.aggs.durations.more | calculateTimeInMinutes}}</h5>&nbsp;
+                      <h5>{{agg.durations.more | calculateTimeInMinutes}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statMinutes}}</small>
                     </div>
                   </li>
                   <li>
                     <div class="ratios even">
-                      <span class="ratio">{{data.aggs.ratios.even}}</span>
+                      <span class="ratio">{{agg.ratios.even}}</span>
                       <span class="percentage">%</span>
                     </div>
                     <div class="info">                    
                       <h4>{{ui.planboard.statPeopleEven}}</h4>
-                      <h5>{{data.aggs.durations.even | calculateTimeInDays}}</h5>&nbsp;
+                      <h5>{{agg.durations.even | calculateTimeInDays}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statDays}}</small>,&nbsp;
-                      <h5>{{data.aggs.durations.even | calculateTimeInHours}}</h5>&nbsp;
+                      <h5>{{agg.durations.even | calculateTimeInHours}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statHours}}</small>,&nbsp;
-                      <h5>{{data.aggs.durations.even | calculateTimeInMinutes}}</h5>&nbsp;
+                      <h5>{{agg.durations.even | calculateTimeInMinutes}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statMinutes}}</small>
                     </div>
                   </li>
                   <li>
                     <div class="ratios less">
-                      <span class="ratio">{{data.aggs.ratios.less}}</span>
+                      <span class="ratio">{{agg.ratios.less}}</span>
                       <span class="percentage">%</span>
                     </div>
                     <div class="info">
                       <h4>{{ui.planboard.statPeopleLess}}</h4>
-                      <h5>{{data.aggs.durations.less | calculateTimeInDays}}</h5>&nbsp;
+                      <h5>{{agg.durations.less | calculateTimeInDays}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statDays}}</small>,&nbsp;
-                      <h5>{{data.aggs.durations.less | calculateTimeInHours}}</h5>&nbsp;
+                      <h5>{{agg.durations.less | calculateTimeInHours}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statHours}}</small>,&nbsp;
-                      <h5>{{data.aggs.durations.less | calculateTimeInMinutes}}</h5>&nbsp;
+                      <h5>{{agg.durations.less | calculateTimeInMinutes}}</h5>&nbsp;
                       <small class="muted">{{ui.planboard.statMinutes}}</small>
                     </div>
                   </li>
                 </ul>
               </div>
 
+              </div>
+
             </div>
             <!-- end group charts -->
+
+
+
+
+
 
             <!-- member bars -->
             <div id="memberBars">

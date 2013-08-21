@@ -11,10 +11,15 @@
 
 ## Versions
 
+  2.3.5
+
   2.3.4
+	  * Deployed for 100T, 110K, 120G and 130B 21-8-2013
+	  * Addressed monitoring when used with multiple divisions, enhancing division monitoring in both agenda and dashboard view (#14)  21-8-2013
 
 	2.3.3
 	  * Deployed for 100T, 110K, 120G and 130B 26-7-2013
+	  * Fixed issues with IE8 (not displaying title and missing data in planboard) 26-7-2013
 		* Improved translations (#33) 12-7-2013
 		* Implement the moving of time-slots starting in the past and ending in the future by slicing them 10-7-2013
 		* Enabling changing of group member passwords for planners 9-7-2013
