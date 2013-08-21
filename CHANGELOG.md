@@ -11,6 +11,8 @@
 
 ## Versions
 
+  2.3.5
+
   2.3.4
 	  * Deployed for 100T, 110K, 120G and 130B 21-8-2013
 	  * Addressed monitoring when used with multiple divisions, enhancing division monitoring in both agenda and dashboard view (#14)  21-8-2013
