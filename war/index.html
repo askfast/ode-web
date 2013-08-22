@@ -246,16 +246,19 @@
           <!-- end ask & version -->
 
           <!-- download mobile app -->
-          <div id="download-footer" ng-show="config.profile.mobileApp.status">
-
+          <div id="download-footer">
             <ul>
-              <li>
-                <button class="btn btn-success btn-large" type="button" ng-click="downloadMobileApp('regular')">
+              <li ng-show="config.profile.mobileApp.status">
+                <button class="btn btn-success btn-large"
+                        type="button"
+                        ng-click="downloadMobileApp('regular')">
                   Download Mobiele App
                 </button>
               </li>
-              <li>
-                <button class="btn btn-success btn-large" type="button" ng-click="downloadMobileApp('experimental')">
+              <li ng-show="config.profile.mobileApp.experimental">
+                <button class="btn btn-success btn-large"
+                        type="button"
+                        ng-click="downloadMobileApp('experimental')">
                   Download Experimenteele App
                 </button>
               </li>
@@ -267,8 +270,6 @@
                 </span>
               </li>
             </ul>
-
-
           </div>
           <!-- end download mobile app -->
 
