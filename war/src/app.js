@@ -12920,6 +12920,25 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 
 
+    $scope.reverse = true;
+
+
+//    $scope.reverser = function (basedOn)
+//    {
+//      $scope.$apply('basedOn', function ()
+//      {
+//        $scope.basedOn = {
+//          firstName: false,
+//          lastName: false,
+//          role: false,
+//          phoneAddress: false
+//        };
+//
+//        $scope.basedOn[basedOn] = true;
+//      });
+//
+//      $scope.reverse = !$scope.reverse;
+//    };
 
 
 
