@@ -1360,8 +1360,7 @@ angular.module('WebPaige')
 
 
     /**
-     * TODO
-     * Move these checks to jquery.browser
+     * TODO (Move these checks to jquery.browser)
      * 
      * Pass Jquery browser data to angular
      */
@@ -1374,19 +1373,22 @@ angular.module('WebPaige')
     if ($rootScope.browser.ios)
     {
       angular.extend($rootScope.browser, {
-        landscape:    Math.abs($window.orientation) == 90 ? true : false,
-        portrait:     Math.abs($window.orientation) != 90 ? true : false
+        landscape:    !!(Math.abs ($window.orientation) == 90),
+        portrait:     !!(Math.abs ($window.orientation) != 90)
       });
     }
     else
     {
       angular.extend($rootScope.browser, {
-        landscape:    Math.abs($window.orientation) != 90 ? true : false,
-        portrait:     Math.abs($window.orientation) == 90 ? true : false
+        landscape:    !!(Math.abs ($window.orientation) != 90),
+        portrait:     !!(Math.abs ($window.orientation) == 90)
       });
     }
 
-    $window.onresize = function () { $rootScope.browser.screen = $window.screen; };
+    $window.onresize = function ()
+    {
+      $rootScope.browser.screen = $window.screen;
+    };
 
     $window.onorientationchange = function ()
     {
@@ -1395,15 +1397,15 @@ angular.module('WebPaige')
         if ($rootScope.browser.ios)
         {
           angular.extend($rootScope.browser, {
-            landscape:    Math.abs($window.orientation) == 90 ? true : false,
-            portrait:     Math.abs($window.orientation) != 90 ? true : false
+            landscape:    !!(Math.abs ($window.orientation) == 90),
+            portrait:     !!(Math.abs ($window.orientation) != 90)
           });
         }
         else
         {
           angular.extend($rootScope.browser, {
-            landscape:    Math.abs($window.orientation) != 90 ? true : false,
-            portrait:     Math.abs($window.orientation) == 90 ? true : false
+            landscape:    !!(Math.abs ($window.orientation) != 90),
+            portrait:     !!(Math.abs ($window.orientation) == 90)
           });
         }
       });
@@ -1423,7 +1425,10 @@ angular.module('WebPaige')
     /**
      * If periods are not present calculate them
      */
-    if (!Storage.get('periods')) Dater.registerPeriods();
+    if (!Storage.get('periods'))
+    {
+      Dater.registerPeriods();
+    }
 
 
     /**
@@ -1441,7 +1446,10 @@ angular.module('WebPaige')
     /**
      * Count unread messages
      */
-    if (!$rootScope.app.unreadMessages) Messages.unreadCount();
+    if (!$rootScope.app.unreadMessages)
+    {
+      Messages.unreadCount();
+    }
 
 
     /**
@@ -1519,14 +1527,20 @@ angular.module('WebPaige')
       {
         this.init(true, 'alert-success', message);
 
-        if (!permanent) this.destroy();
+        if (!permanent)
+        {
+          this.destroy();
+        }
       },
 
       error: function (message, permanent)
       {
         this.init(true, 'alert-danger', message);
 
-        if (!permanent) this.destroy();
+        if (!permanent)
+        {
+          this.destroy();
+        }
       },
 
       destroy: function ()
@@ -1596,8 +1610,10 @@ angular.module('WebPaige')
 
     /**
      * Detect route change start
+     *
+     * Callback function accepts <event, next, current>
      */
-    $rootScope.$on('$routeChangeStart', function (event, next, current)
+    $rootScope.$on('$routeChangeStart', function ()
     {
       function resetLoaders ()
       {
@@ -1670,9 +1686,11 @@ angular.module('WebPaige')
 
 
     /**
-     * Route change successfull
+     * Route change successful
+     *
+     * Callback function accepts <event, current, previous>
      */
-    $rootScope.$on('$routeChangeSuccess', function (event, current, previous)
+    $rootScope.$on('$routeChangeSuccess', function ()
     {
       $rootScope.newLocation = $location.path();
 
@@ -1685,8 +1703,7 @@ angular.module('WebPaige')
 
 
     /**
-     * TODO
-     * A better way of dealing with this error!
+     * TODO (A better way of dealing with this error!)
      * 
      * Route change is failed!
      */
@@ -1712,9 +1729,7 @@ angular.module('WebPaige')
             contentHeight = $('.tabs-left .tab-content #' + $this).height();
 
         /**
-         * TODO
-         * 
-         * Append left border fix
+         * TODO (Append left border fix)
          */
         // $parent.append('<div class="left-border-fix"></div>');
         // console.log('parent ->', $parent);
@@ -1736,7 +1751,7 @@ angular.module('WebPaige')
         {
           // console.log('content is taller than tabs ->', $this);
           // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
-        };
+        }
       });
 
       /**
@@ -1760,7 +1775,10 @@ angular.module('WebPaige')
     /**
      * Experimental full screen ability
      */
-    $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]); };
+    $rootScope.fullScreen = function ()
+    {
+      screenfull.toggle($('html')[0]);
+    };
 
 
     /**
