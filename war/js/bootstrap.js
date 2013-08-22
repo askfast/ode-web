@@ -457,11 +457,11 @@ angular.module('WebPaige')
     /**
      * Download mobile app button
      */
-    $rootScope.downloadMobileApp = function ()
+    $rootScope.downloadMobileApp = function (type)
     {
       $rootScope.statusBar.display('Instructies aan het verzenden...');
 
-      Messages.email()
+      Messages.email(type)
       .then(function ()
       {
         $rootScope.notifier.success('Controleer uw inbox voor de instructies.');

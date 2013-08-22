@@ -1793,11 +1793,11 @@ angular.module('WebPaige')
     /**
      * Download mobile app button
      */
-    $rootScope.downloadMobileApp = function ()
+    $rootScope.downloadMobileApp = function (type)
     {
       $rootScope.statusBar.display('Instructies aan het verzenden...');
 
-      Messages.email()
+      Messages.email(type)
       .then(function ()
       {
         $rootScope.notifier.success('Controleer uw inbox voor de instructies.');
@@ -3601,13 +3601,26 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  /**
 	   * Send a message
 	   */
-	  Messages.prototype.email = function () 
+	  Messages.prototype.email = function (type)
 	  {
 	    var deferred 	= $q.defer();
 
+      var mailTemplate;
+
+      if (type == 'regular')
+      {
+        mailTemplate = '/mail/mobile_app.html';
+      }
+      else if (type == 'experimental')
+      {
+        mailTemplate = '/mail/mobile_app_experimental.html';
+      }
+
 	    $http({
-			  method: 'GET', 
-			  url: 		'../profiles/' + $config.profile.meta + '/mail/mobile_app.html'
+			  method: 'GET',
+			  url: 		'../profiles/' +
+                $config.profile.meta +
+                mailTemplate
 			}).
 		  success(function (content, status, headers, config)
 		  {
@@ -3623,7 +3636,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		    Messages.send(
           null,
           message,
-		      function (result) 
+		      function (result)
 		      {
 		        var returned = '';
 
