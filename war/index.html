@@ -238,18 +238,37 @@
         <div id="copyrights">
 
           <!-- ask & version -->
-          <span class="muted" ng-style="(!config.profile.mobileApp.status) && 'right:0'">
-            <small>
-              Ask Community Systems, 2013<br><i>WebPaige <a href="version.html" target="_blank">v{{config.version}}</a></i>
-            </small>
-          </span>
+          <!--<span class="muted" ng-style="(!config.profile.mobileApp.status) && 'right:0'">-->
+            <!--<small>-->
+              <!--Ask Community Systems, 2013<br><i>WebPaige <a href="version.html" target="_blank">v{{config.version}}</a></i>-->
+            <!--</small>-->
+          <!--</span>-->
           <!-- end ask & version -->
 
           <!-- download mobile app -->
           <div id="download-footer" ng-show="config.profile.mobileApp.status">
-            <button class="btn btn-success btn-large" type="button" ng-click="downloadMobileApp()">
-              Download Mobiele App
-            </button>
+
+            <ul>
+              <li>
+                <button class="btn btn-success btn-large" type="button" ng-click="downloadMobileApp('regular')">
+                  Download Mobiele App
+                </button>
+              </li>
+              <li>
+                <button class="btn btn-success btn-large" type="button" ng-click="downloadMobileApp('experimental')">
+                  Download Experimenteele App
+                </button>
+              </li>
+              <li>
+                <span class="muted" ng-style="(!config.profile.mobileApp.status) && 'right:0'">
+                  <small>
+                    Ask Community Systems, 2013<br><i>WebPaige <a href="version.html" target="_blank">v{{config.version}}</a></i>
+                  </small>
+                </span>
+              </li>
+            </ul>
+
+
           </div>
           <!-- end download mobile app -->
 

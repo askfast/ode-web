@@ -135,9 +135,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		      {
 		      	Storage.add('notifications', angular.toJson(result));
 
-		      	angular.forEach(result, function (scheadule, index)
+		      	angular.forEach(result, function (scheadule)
 		      	{
-		      		angular.forEach(scheadule.types, function (type, ind)
+		      		angular.forEach(scheadule.types, function (type)
 		      		{
 		      			if (type == 'sms') scheadule.sms = true;
 		      			if (type == 'email') scheadule.mail = true;
@@ -169,7 +169,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		      {
 		        var returned = '';
 
-		        angular.forEach(result, function (chr, i)
+		        angular.forEach(result, function (chr)
 		        {
 		          returned += chr;
 		        });
@@ -234,7 +234,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  {
 		    var gem;
 
-		    angular.forEach(this.local(), function (notification, index)
+		    angular.forEach(this.local(), function (notification)
 		    {
 		      if (notification.uuid == id) gem = notification;
 		    });
@@ -282,7 +282,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      trash: []
 	    };
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      if (message.subject == '') message.subject = '-No Subject-';
 
@@ -342,7 +342,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
-	    angular.forEach(Messages.prototype.local(), function (message, index)
+	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
 	      if (message.uuid == id) gem = message;
 	    });
@@ -360,7 +360,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        groups    = angular.fromJson(Storage.get('groups')),
 	        receivers = [];
 
-	    angular.forEach(members, function(member, index)
+	    angular.forEach(members, function(member)
 	    {
 	        receivers.push({
 	        id: member.uuid,
@@ -369,7 +369,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      });
 	    });
 
-	    angular.forEach(groups, function(group, index)
+	    angular.forEach(groups, function(group)
 	    {
 	        receivers.push({
 	        id: group.uuid,
@@ -391,7 +391,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        members = [],
 	        types = [];
 
-	    angular.forEach(message.receivers, function (receiver, index)
+	    angular.forEach(message.receivers, function (receiver)
 	    {
 	      members.push(receiver.id);
 	    });
@@ -453,12 +453,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 					contenttype: 	'text/html'
 				};
 
-		    Messages.send(null, message, 
+		    Messages.send(
+          null,
+          message,
 		      function (result) 
 		      {
 		        var returned = '';
 
-		        angular.forEach(result, function (chr, i)
+		        angular.forEach(result, function (chr)
 		        {
 		          returned += chr;
 		        });
@@ -489,7 +491,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    var messages = Messages.prototype.local(),
 	        unread = [];
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      if (message.box == 'inbox' && message.state == 'NEW') unread.push(message);
 	    });
@@ -506,7 +508,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  	var messages = Messages.prototype.local(),
 	        counter = 0;
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      if (message.box == 'inbox' && message.state == 'NEW')
 	      {
@@ -565,9 +567,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      var messages = angular.fromJson(Storage.get('messages')),
 	          converted = [];
 
-	      angular.forEach(messages, function (message, index)
+	      angular.forEach(messages, function (message)
 	      {
-	        angular.forEach(ids, function (id, i)
+	        angular.forEach(ids, function (id)
 	        {
 	          if (message.uuid == id) message.state = 'READ';
 	        });
@@ -629,7 +631,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        messages = Messages.prototype.local(),
 	        bulk = [];
 
-	    angular.forEach(messages, function(message, index)
+	    angular.forEach(messages, function(message)
 	    {
 	      if ((message.box == 'inbox' || message.box == 'outbox') && message.state == 'TRASH') bulk.push(message.uuid);
 	    });
@@ -660,11 +662,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    var deferred 	= $q.defer(),
 	        calls 		= [];
 
-	    angular.forEach(box, function (bulk, id)
+	    angular.forEach(box, function (bulk)
 	    {
 	    	var ids = [];
 
-	    	angular.forEach(bulk, function (message, index)
+	    	angular.forEach(bulk, function (message)
 	    	{
 	    		ids.push(message.uuid);
 	    	});
