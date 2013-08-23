@@ -52,7 +52,7 @@ var profile = {
 
   mobileApp: {
     status:   true,
-    experimental: true
+    experimental: false
   },
 
   analytics: {
