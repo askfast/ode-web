@@ -54,7 +54,8 @@ var profile = {
   },
 
   mobileApp: {
-    status:   false
+    status:   false,
+    experimental: false
   },
 
   analytics: {

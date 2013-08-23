@@ -466,17 +466,21 @@ angular.module('WebPaige')
     }
 
 
-
-
-
+    /**
+     * TODO (Still functioning since there is a second download button?)
+     */
     if (!$config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
 
-    $rootScope.downloadMobileApp = function ()
+
+    /**
+     * Download mobile app button
+     */
+    $rootScope.downloadMobileApp = function (type)
     {
       $rootScope.statusBar.display('Instructies aan het verzenden...');
 
-      Messages.email()
-      .then(function (result)
+      Messages.email(type)
+      .then(function ()
       {
         $rootScope.notifier.success('Controleer uw inbox voor de instructies.');
 
