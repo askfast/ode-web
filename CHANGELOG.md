@@ -11,7 +11,13 @@
 
 ## Versions
 
+  2.3.6
+    *
+
   2.3.5
+	  * Deployed for 100T, 110K, 120G and 130B 26-8-2013
+    * Sorting on last name in agenda, message receivers and groups&users listings (#44) 26-8-2013
+    * Added the possibility to download an experimental version of the app, with geofencing functionality 23-8-2013
 
   2.3.4
 	  * Deployed for 100T, 110K, 120G and 130B 21-8-2013

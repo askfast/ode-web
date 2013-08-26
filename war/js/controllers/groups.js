@@ -23,8 +23,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 		/**
 		 * Self this
 		 */
-		var self = this,
-				params = $location.search();
+		var self    = this,
+				params  = $location.search();
 
 
 		/**
@@ -95,12 +95,32 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		function setGroupView (id)
 		{
-			angular.forEach(data.groups, function (group, index)
+			angular.forEach(data.groups, function (group)
 			{
 				if (group.uuid == id) $scope.group = group;
 			});
 
 			$scope.members = data.members[id];
+
+      $scope.members.sort(
+        function (a, b)
+        {
+          var aName = a.resources.lastName.toLowerCase(),
+              bName = b.resources.lastName.toLowerCase();
+
+          if (aName < bName)
+          {
+            return -1;
+          }
+
+          if (aName > bName)
+          {
+            return 1;
+          }
+
+          return 0;
+        }
+      );
 
 			$scope.current = id;
 
@@ -132,8 +152,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.saveWish = function (id, wish)
 		{
-			// console.warn('setting the wish:' + wish + ' for the group:', id);
-
 			$rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
 
 			Slots.setWish(
@@ -178,7 +196,10 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 			if (switched)
 			{
-				if ($location.hash() != 'view') $location.hash('view');
+				if ($location.hash() != 'view')
+        {
+          $location.hash('view');
+        }
 
 				setView('view');
 			}
@@ -435,8 +456,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			});
 
 			/**
-			 * TODO
-			 * not working to reset master checkbox!
+			 * TODO (Not working to reset master checkbox!)
 			 */
 			//$scope.selectionMaster = {};
 		};
@@ -477,29 +497,30 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 							$scope.data = data;
 
-							angular.forEach(data.groups, function (group, index)
+							angular.forEach(data.groups, function (group)
 							{
-							if (group.uuid == returned)
-							{
-								$scope.groups = data.groups;
+                if (group.uuid == returned)
+                {
+                  $scope.groups = data.groups;
 
-								angular.forEach(data.groups, function (g, index)
-								{
-									if (g.uuid == group.uuid) $scope.group = g;
-								});
+                  angular.forEach(data.groups, function (g)
+                  {
+                    if (g.uuid == group.uuid)
+                    {
+                      $scope.group = g;
+                    }
+                  });
 
-								$scope.members = data.members[group.uuid];
+                  $scope.members = data.members[group.uuid];
 
-								$scope.current = group.uuid;
+                  $scope.current = group.uuid;
 
-								$scope.$watch($location.search(), function ()
-								{
-									$location.search({uuid: group.uuid});
-								}); // end of watch
-
-							} // end of if
-
-							}); // end of foreach
+                  $scope.$watch($location.search(), function ()
+                  {
+                    $location.search({uuid: group.uuid});
+                  });
+                }
+							});
 
 							$rootScope.statusBar.off();
 						}
@@ -597,6 +618,9 @@ angular.module('WebPaige.Controllers.Groups', [])
 						{
 							$scope.data = data;
 
+              /**
+               * TODO (Is this really supposed to be like this?)
+               */
 							angular.forEach(data.groups, function (group, index)
 							{
 								$scope.groups = data.groups;
@@ -612,8 +636,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 									{
 										$location.search({uuid: data.groups[0].uuid});
 									}
-								); // end of watch
-							}); // end of foreach
+								);
+							});
 
 							$rootScope.statusBar.off();
 						}
@@ -624,22 +648,26 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 
 		/**
-		 * Selection toggler
+		 * Selection toggle
 		 */
 		$scope.toggleSelection = function (group, master)
 		{
-			var flag = (master) ? true : false,
+			var flag    = (master) ? true : false,
 					members = angular.fromJson(Storage.get(group.uuid));
 
-			angular.forEach(members, function (member, index)
+			angular.forEach(members, function (member)
 			{
 				$scope.selection[member.uuid] = flag;
 			});
 		};
 
 
+
+
+
+
 		/**
-		 * Not used in groups yet but login uses modal call..
+		 * TODO (Not used in groups yet but login uses modal call..)
 		 * 
 		 * Fetch parent groups
 		 */
@@ -653,7 +681,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 		/**
-		 * Not used in groups yet..
+		 * TODO (Not used in groups yet..)
 		 * 
 		 * Fetch parent groups
 		 */
@@ -667,11 +695,47 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 
+    /**
+     * Set some defaults for sorting
+     */
+    $scope.reverse = false;
+    $scope.sorter = 'resources.lastName';
 
 
+    /**
+     * Toggle sorting
+     */
+    $scope.toggleSorter = function (sorter)
+    {
+      if ($scope.sorter == sorter)
+      {
+        $scope.reverse = !$scope.reverse;
+      }
+      else
+      {
+        $scope.reverse = false;
+      }
+
+      $scope.sorter = sorter;
+    };
 
 
-
+//    $scope.reverser = function (basedOn)
+//    {
+//      $scope.$apply('basedOn', function ()
+//      {
+//        $scope.basedOn = {
+//          firstName: false,
+//          lastName: false,
+//          role: false,
+//          phoneAddress: false
+//        };
+//
+//        $scope.basedOn[basedOn] = true;
+//      });
+//
+//      $scope.reverse = !$scope.reverse;
+//    };
 
 
 

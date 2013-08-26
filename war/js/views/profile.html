@@ -115,12 +115,21 @@
         <!-- edit profile form -->
         <form class="form-vertical">
           <div class="control-group">
-            <label class="control-label">{{ui.profile.name}}</label>
+            <label class="control-label">{{ui.groups.firstName}}</label>
             <div class="controls">
-              <input  type="text" 
-                      class="span4" 
-                      ng-model="profilemeta.name"
-                      value="{{data.resources.name}}">
+              <input  type="text"
+                      class="span4"
+                      ng-model="profilemeta.firstName"
+                      value="{{data.resources.firstName}}">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ui.groups.lastName}}</label>
+            <div class="controls">
+              <input  type="text"
+                      class="span4"
+                      ng-model="profilemeta.lastName"
+                      value="{{data.resources.lastName}}">
             </div>
           </div>
           <div class="control-group">
@@ -169,7 +178,8 @@
             </div>
           </div>
 
-          <div class="control-group" ng-hide="app.resources.role > 1">
+          <div class="control-group"
+               ng-hide="app.resources.role > 1 || views.user">
             <label class="control-label">{{ui.profile.password}}</label>
             <div class="controls">
               <input  type="text" 

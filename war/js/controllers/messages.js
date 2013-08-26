@@ -50,7 +50,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * PAginate engine
+	   * Paginate engine
 	   */
 	  $scope.paginate = {
 
@@ -236,7 +236,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      var _inbox = [];
 
-	      angular.forEach($scope.messages.inbox, function (message, index)
+	      angular.forEach($scope.messages.inbox, function (message)
 	      {
 	        if (message.uuid == $scope.message.uuid) message.state = "READ";
 
@@ -269,16 +269,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
   	/**
-  	 * Count the scheadules
+  	 * Count the schedules
   	 */
   	$scope.scheaduleCounter = function ()
   	{
   		var count = 0;
 
-  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+  		angular.forEach($scope.scheaduled.offsets, function (offset)
+      {
+        count++;
+      });
 
 	  	$scope.scheaduleCount = count;
-  	}
+  	};
 
 
 	  /**
@@ -292,7 +295,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    var scheaduled = Messages.scheaduled.find(id);
 
-	    angular.forEach(scheaduled.types, function (type, index)
+	    angular.forEach(scheaduled.types, function (type)
 	  	{
 	  		if (type == 'sms') 		$scope.broadcast.sms 		= true;
 	  		if (type == 'email') 	$scope.broadcast.email 	= true;
@@ -302,7 +305,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    		groups 		= angular.fromJson(Storage.get('groups')),
 	    		receivers = [];
 
-	    angular.forEach(scheaduled.recipients, function (recipient, index)
+	    angular.forEach(scheaduled.recipients, function (recipient)
 	  	{
 	  		var name;
 
@@ -318,7 +321,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  		}
 	  		else
 	  		{
-	  			angular.forEach(groups, function (group, index)
+	  			angular.forEach(groups, function (group)
 	  			{
 	  				if (group.uuid == recipient)
 	  				{  					
@@ -340,9 +343,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      receivers: 	receivers
 	    };
 
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
 	    {
-	    	angular.forEach(scheaduled.recipients, function (recipient, ind)
+	    	angular.forEach(scheaduled.recipients, function (recipient)
 	    	{
 		  		if (members[recipient])
 		  		{
@@ -350,7 +353,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 		    	}
 		    	else
 		    	{
-		  			angular.forEach(groups, function (group, index)
+		  			angular.forEach(groups, function (group)
 		  			{
 		  				if (group.uuid == recipient)
 		  				{
@@ -383,7 +386,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
   		var count = 0;
 
-  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+  		angular.forEach($scope.scheaduled.offsets, function (offset)
+      {
+        count++;
+      });
 
 	  	$scope.scheaduleCount = count;
 
@@ -414,7 +420,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Compose message view toggler
+	   * Compose message view toggle
 	   */
 	  $scope.composeMessage = function ()
 	  {
@@ -445,7 +451,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      $scope.scheadulerPane = false;
 
-		    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+		    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
 		    {
 		    	option.selected = false;
 		    });
@@ -489,7 +495,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  {
 	    var flag = (master) ? true : false;
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      $scope.selection[inbox][message.uuid] = flag;
 	    });
@@ -698,7 +704,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Reply a amessage
+	   * Reply a message
 	   */
 	  $scope.reply = function(message)
 	  {
@@ -821,7 +827,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    setTimeout (function ()
 	    {
-	      angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	      angular.forEach($("div#composeTab select.chzn-select option"), function (option)
 	      {
 	        if (option.innerHTML == name) option.selected = true;
 	      });
@@ -886,7 +892,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 		    var members = [],
 		        types 	= [];
 
-		    angular.forEach(message.receivers, function (receiver, index) { members.push(receiver.id); });
+		    angular.forEach(message.receivers, function (receiver)
+        {
+          members.push(receiver.id);
+        });
 
 		    types.push('paige');
 
@@ -1037,7 +1046,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Remove a scheadule job
+	  	 * Remove a schedule job
 	  	 */
 	  	remove: function (uuid)
 	  	{

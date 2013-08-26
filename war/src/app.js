@@ -251,13 +251,15 @@ var ui = {
         groups: 'Groups',
         newGroup: 'New Group',
         newMember: 'New Member',
-        serach: 'Search',
+        search: 'Search',
         addNewGroup: 'Add New Group',
         editGroup: 'Edit Group',
         searchResults: 'Search results',
         group: 'Group',
         close: 'Close',
         name: 'Name',
+        firstName: 'First Name',
+        lastName: 'Last Name',
         saveGroup: 'Save Group',
         registerMember: 'Register Member',
         role: 'Role',
@@ -272,7 +274,7 @@ var ui = {
         userName: 'Username',
         password: 'Password',
         saveMember: 'Save Member',
-        serachFor: 'Search results for ',
+        searchedFor: 'Search results for ',
         sorryCanNotFind: 'Sorry but we couldn\'t find what you are looking for.',
         // troubled
         // selectGroup: '-- select a group --',
@@ -298,7 +300,7 @@ var ui = {
         deleting: 'Deleting group..',
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
-        searchfor: 'firstname, lastname..',
+        searchFor: 'firstname, lastname..',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
         requiredPeople: 'Required'
@@ -554,7 +556,7 @@ var ui = {
         statPeopleEven: 'Precies genoeg mensen',
         statPeopleMore: 'Meer mensen',
         getWishes: 'Groep behoefte getal aan het ophalen...',
-        daterangerToday: 'Vandaag sddf',
+        daterangerToday: 'Vandaag',
         daterangerTomorrow: 'Morgen',
         daterangerYesterday: 'Gisteren',
         daterangerNext3Days: 'Komende 3 dagen',
@@ -670,15 +672,17 @@ var ui = {
       },
       groups: {
         groups: 'Groepen',
-        newGroup: 'Nieuwe Group',
+        newGroup: 'Nieuwe groep',
         newMember: 'Nieuw lid',
-        serach: 'Zoeken',
+        search: 'Zoeken',
         addNewGroup: 'Nieuwe groep toevoegen',
         editGroup: 'Groep wijzigen',
         searchResults: 'Zoekresultaten',
         group: 'Groep',
         close: 'Sluiten',
         name: 'Naam',
+        firstName: 'Voornaam',
+        lastName: 'Achternaam',
         saveGroup: 'Groep opslaan',
         registerMember: 'Lid registreren',
         role: 'Functie',
@@ -695,7 +699,7 @@ var ui = {
         userName: 'Gebruikersnaam',
         password: 'Wachtwoord',
         saveMember: 'Lid opslaan',
-        serachFor: 'Zoekresultaten voor ',
+        searchedFor: 'Zoekresultaten voor ',
         sorryCanNotFind: 'Sorry, geen resultaten.',
         addToGroup: 'Aan groep toevoegen',
         addMemberToGroup: 'Voeg geselecteerde leden aan groep toe',
@@ -718,7 +722,7 @@ var ui = {
         deleting: 'Groep verwijderen...',
         deleted: 'Groep succesvol verwijderd.',
         filterMembers: 'Leden filteren...',
-        searchfor: 'voornaam, achternaam..',
+        searchFor: 'voornaam, achternaam..',
         widgetSave: 'Opslaan',
         widgetCancel: 'Annuleren',
         requiredPeople: 'Behoefte'
@@ -940,7 +944,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.4',
+    version:  '2.3.5',
     lang:     'nl',
 
     fullscreen: true,
@@ -1356,8 +1360,7 @@ angular.module('WebPaige')
 
 
     /**
-     * TODO
-     * Move these checks to jquery.browser
+     * TODO (Move these checks to jquery.browser)
      * 
      * Pass Jquery browser data to angular
      */
@@ -1370,19 +1373,22 @@ angular.module('WebPaige')
     if ($rootScope.browser.ios)
     {
       angular.extend($rootScope.browser, {
-        landscape:    Math.abs($window.orientation) == 90 ? true : false,
-        portrait:     Math.abs($window.orientation) != 90 ? true : false
+        landscape:    !!(Math.abs ($window.orientation) == 90),
+        portrait:     !!(Math.abs ($window.orientation) != 90)
       });
     }
     else
     {
       angular.extend($rootScope.browser, {
-        landscape:    Math.abs($window.orientation) != 90 ? true : false,
-        portrait:     Math.abs($window.orientation) == 90 ? true : false
+        landscape:    !!(Math.abs ($window.orientation) != 90),
+        portrait:     !!(Math.abs ($window.orientation) == 90)
       });
     }
 
-    $window.onresize = function () { $rootScope.browser.screen = $window.screen; };
+    $window.onresize = function ()
+    {
+      $rootScope.browser.screen = $window.screen;
+    };
 
     $window.onorientationchange = function ()
     {
@@ -1391,15 +1397,15 @@ angular.module('WebPaige')
         if ($rootScope.browser.ios)
         {
           angular.extend($rootScope.browser, {
-            landscape:    Math.abs($window.orientation) == 90 ? true : false,
-            portrait:     Math.abs($window.orientation) != 90 ? true : false
+            landscape:    !!(Math.abs ($window.orientation) == 90),
+            portrait:     !!(Math.abs ($window.orientation) != 90)
           });
         }
         else
         {
           angular.extend($rootScope.browser, {
-            landscape:    Math.abs($window.orientation) != 90 ? true : false,
-            portrait:     Math.abs($window.orientation) == 90 ? true : false
+            landscape:    !!(Math.abs ($window.orientation) != 90),
+            portrait:     !!(Math.abs ($window.orientation) == 90)
           });
         }
       });
@@ -1419,7 +1425,10 @@ angular.module('WebPaige')
     /**
      * If periods are not present calculate them
      */
-    if (!Storage.get('periods')) Dater.registerPeriods();
+    if (!Storage.get('periods'))
+    {
+      Dater.registerPeriods();
+    }
 
 
     /**
@@ -1437,7 +1446,10 @@ angular.module('WebPaige')
     /**
      * Count unread messages
      */
-    if (!$rootScope.app.unreadMessages) Messages.unreadCount();
+    if (!$rootScope.app.unreadMessages)
+    {
+      Messages.unreadCount();
+    }
 
 
     /**
@@ -1515,14 +1527,20 @@ angular.module('WebPaige')
       {
         this.init(true, 'alert-success', message);
 
-        if (!permanent) this.destroy();
+        if (!permanent)
+        {
+          this.destroy();
+        }
       },
 
       error: function (message, permanent)
       {
         this.init(true, 'alert-danger', message);
 
-        if (!permanent) this.destroy();
+        if (!permanent)
+        {
+          this.destroy();
+        }
       },
 
       destroy: function ()
@@ -1592,8 +1610,10 @@ angular.module('WebPaige')
 
     /**
      * Detect route change start
+     *
+     * Callback function accepts <event, next, current>
      */
-    $rootScope.$on('$routeChangeStart', function (event, next, current)
+    $rootScope.$on('$routeChangeStart', function ()
     {
       function resetLoaders ()
       {
@@ -1666,9 +1686,11 @@ angular.module('WebPaige')
 
 
     /**
-     * Route change successfull
+     * Route change successful
+     *
+     * Callback function accepts <event, current, previous>
      */
-    $rootScope.$on('$routeChangeSuccess', function (event, current, previous)
+    $rootScope.$on('$routeChangeSuccess', function ()
     {
       $rootScope.newLocation = $location.path();
 
@@ -1681,8 +1703,7 @@ angular.module('WebPaige')
 
 
     /**
-     * TODO
-     * A better way of dealing with this error!
+     * TODO (A better way of dealing with this error!)
      * 
      * Route change is failed!
      */
@@ -1708,9 +1729,7 @@ angular.module('WebPaige')
             contentHeight = $('.tabs-left .tab-content #' + $this).height();
 
         /**
-         * TODO
-         * 
-         * Append left border fix
+         * TODO (Append left border fix)
          */
         // $parent.append('<div class="left-border-fix"></div>');
         // console.log('parent ->', $parent);
@@ -1732,7 +1751,7 @@ angular.module('WebPaige')
         {
           // console.log('content is taller than tabs ->', $this);
           // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
-        };
+        }
       });
 
       /**
@@ -1756,7 +1775,10 @@ angular.module('WebPaige')
     /**
      * Experimental full screen ability
      */
-    $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]); };
+    $rootScope.fullScreen = function ()
+    {
+      screenfull.toggle($('html')[0]);
+    };
 
 
     /**
@@ -1780,17 +1802,21 @@ angular.module('WebPaige')
     }
 
 
-
-
-
+    /**
+     * TODO (Still functioning since there is a second download button?)
+     */
     if (!$config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
 
-    $rootScope.downloadMobileApp = function ()
+
+    /**
+     * Download mobile app button
+     */
+    $rootScope.downloadMobileApp = function (type)
     {
       $rootScope.statusBar.display('Instructies aan het verzenden...');
 
-      Messages.email()
-      .then(function (result)
+      Messages.email(type)
+      .then(function ()
       {
         $rootScope.notifier.success('Controleer uw inbox voor de instructies.');
 
@@ -1877,10 +1903,20 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  );
 
 
-	  // var changePassword = $resource($config.host+'/passwordReset', 
-	  //   {uuid: uuid,
-	  //    pass: newpass,
-	  //    key: key});
+	  var changePassword = $resource(
+      $config.host + '/passwordReset',
+      {
+      },
+	    {
+        reset: {
+          method: 'GET',
+          params: {
+            uuid: '',
+            pass: '',
+            key:  ''
+          }
+        }
+      });
 	  
 	  
 	  /**
@@ -1926,7 +1962,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  {    
 	    var deferred = $q.defer();
 
-	    Login.process({uuid: uuid, pass: pass}, 
+	    Login.process(
+        {
+          uuid: uuid,
+          pass: pass
+        },
 	      function (result) 
 	      {
 	        if (angular.equals(result, [])) 
@@ -1959,7 +1999,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    /**
 	     * RE-FACTORY
 	     */
-	    changePassword.get(
+	    changePassword.get({
+          uuid: uuid,
+          pass: newpass,
+          key: key
+        },
 	      function (result)
 	      {
 	        deferred.resolve(result);
@@ -1981,7 +2025,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  {    
 	    var deferred = $q.defer();
 
-	    Logout.process(null, 
+	    Logout.process(
+        null,
 	      function (result) 
 	      {
 	        deferred.resolve(result);
@@ -2003,7 +2048,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  {    
 	    var deferred = $q.defer();
 
-	    Resources.get(null, 
+	    Resources.get(
+        null,
 	      function (result) 
 	      {
 	        if (angular.equals(result, [])) 
@@ -2671,8 +2717,11 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	          	 */
 	            if (options.layouts.members)
 	            {
-	              var members = angular.fromJson(Storage.get(options.groupId)),
+	              var allMembers = angular.fromJson(Storage.get(options.groupId)),
 	                  calls   = [];
+
+
+                // console.log('all members ->', allMembers);
 
 	              /**
 	               * New bundled call
@@ -2695,12 +2744,24 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 						      			tslot.text = tslot.state;	
 						      		});
 
+                      var lastName;
+
+                      angular.forEach(allMembers, function (mem)
+                      {
+                        if (index == mem.uuid)
+                        {
+                          lastName = mem.resources.lastName;
+                        }
+                      });
+
 						      		mems.push({
 							          id:     index,
+                        lastName: lastName,
 							          data:   mdata,
 							          stats:  Stats.member(mdata)
 							        })
 						      	});
+
 
 		                deferred.resolve({
 		                  user:     user,
@@ -3294,9 +3355,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		      {
 		      	Storage.add('notifications', angular.toJson(result));
 
-		      	angular.forEach(result, function (scheadule, index)
+		      	angular.forEach(result, function (scheadule)
 		      	{
-		      		angular.forEach(scheadule.types, function (type, ind)
+		      		angular.forEach(scheadule.types, function (type)
 		      		{
 		      			if (type == 'sms') scheadule.sms = true;
 		      			if (type == 'email') scheadule.mail = true;
@@ -3328,7 +3389,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		      {
 		        var returned = '';
 
-		        angular.forEach(result, function (chr, i)
+		        angular.forEach(result, function (chr)
 		        {
 		          returned += chr;
 		        });
@@ -3393,7 +3454,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  {
 		    var gem;
 
-		    angular.forEach(this.local(), function (notification, index)
+		    angular.forEach(this.local(), function (notification)
 		    {
 		      if (notification.uuid == id) gem = notification;
 		    });
@@ -3441,7 +3502,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      trash: []
 	    };
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      if (message.subject == '') message.subject = '-No Subject-';
 
@@ -3501,7 +3562,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
-	    angular.forEach(Messages.prototype.local(), function (message, index)
+	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
 	      if (message.uuid == id) gem = message;
 	    });
@@ -3519,21 +3580,39 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        groups    = angular.fromJson(Storage.get('groups')),
 	        receivers = [];
 
-	    angular.forEach(members, function(member, index)
+	    angular.forEach(members, function(member)
 	    {
 	        receivers.push({
-	        id: member.uuid,
-	        name: member.name,
-	        group: $rootScope.ui.message.receiversUsers
+	          id: member.uuid,
+	          name: member.name,
+            lastName: member.resources.lastName,
+            firstName: member.resources.firstName,
+	          group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
-	    angular.forEach(groups, function(group, index)
+//      console.log('groups ->')
+//
+//      groups.sort(function (a, b)
+//      {
+//        var aName = a.name.toLowerCase();
+//        var bName = b.name.toLowerCase();
+//        if (aName < bName) return -1;
+//        if (aName > bName) return 1;
+//        return 0;
+//      });
+//
+//
+//      console.log('groups sorted ->', groups);
+
+
+	    angular.forEach(groups, function(group)
 	    {
 	        receivers.push({
-	        id: group.uuid,
-	        name: group.name,
-	        group: $rootScope.ui.message.receiversGroups
+	          id: group.uuid,
+	          name: group.name,
+            lastName: group.name,
+	          group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 
@@ -3550,7 +3629,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        members = [],
 	        types = [];
 
-	    angular.forEach(message.receivers, function (receiver, index)
+	    angular.forEach(message.receivers, function (receiver)
 	    {
 	      members.push(receiver.id);
 	    });
@@ -3593,13 +3672,26 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  /**
 	   * Send a message
 	   */
-	  Messages.prototype.email = function () 
+	  Messages.prototype.email = function (type)
 	  {
 	    var deferred 	= $q.defer();
 
+      var mailTemplate;
+
+      if (type == 'regular')
+      {
+        mailTemplate = '/mail/mobile_app.html';
+      }
+      else if (type == 'experimental')
+      {
+        mailTemplate = '/mail/mobile_app_experimental.html';
+      }
+
 	    $http({
-			  method: 'GET', 
-			  url: 		'../profiles/' + $config.profile.meta + '/mail/mobile_app.html'
+			  method: 'GET',
+			  url: 		'../profiles/' +
+                $config.profile.meta +
+                mailTemplate
 			}).
 		  success(function (content, status, headers, config)
 		  {
@@ -3612,12 +3704,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 					contenttype: 	'text/html'
 				};
 
-		    Messages.send(null, message, 
-		      function (result) 
+		    Messages.send(
+          null,
+          message,
+		      function (result)
 		      {
 		        var returned = '';
 
-		        angular.forEach(result, function (chr, i)
+		        angular.forEach(result, function (chr)
 		        {
 		          returned += chr;
 		        });
@@ -3648,7 +3742,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    var messages = Messages.prototype.local(),
 	        unread = [];
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      if (message.box == 'inbox' && message.state == 'NEW') unread.push(message);
 	    });
@@ -3665,7 +3759,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  	var messages = Messages.prototype.local(),
 	        counter = 0;
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      if (message.box == 'inbox' && message.state == 'NEW')
 	      {
@@ -3724,9 +3818,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      var messages = angular.fromJson(Storage.get('messages')),
 	          converted = [];
 
-	      angular.forEach(messages, function (message, index)
+	      angular.forEach(messages, function (message)
 	      {
-	        angular.forEach(ids, function (id, i)
+	        angular.forEach(ids, function (id)
 	        {
 	          if (message.uuid == id) message.state = 'READ';
 	        });
@@ -3788,7 +3882,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	        messages = Messages.prototype.local(),
 	        bulk = [];
 
-	    angular.forEach(messages, function(message, index)
+	    angular.forEach(messages, function(message)
 	    {
 	      if ((message.box == 'inbox' || message.box == 'outbox') && message.state == 'TRASH') bulk.push(message.uuid);
 	    });
@@ -3819,11 +3913,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    var deferred 	= $q.defer(),
 	        calls 		= [];
 
-	    angular.forEach(box, function (bulk, id)
+	    angular.forEach(box, function (bulk)
 	    {
 	    	var ids = [];
 
-	    	angular.forEach(bulk, function (message, index)
+	    	angular.forEach(bulk, function (message)
 	    	{
 	    		ids.push(message.uuid);
 	    	});
@@ -3929,7 +4023,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    {
 	      query: {
 	        method: 'GET',
-	        // params: {id:'', fields: '[role, latlong, latlong_final, settingsWebPaige]'},
 	        params: {id:'', fields: '[role, settingsWebPaige]'},
 	        isArray: true
 	      },
@@ -3966,8 +4059,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      {
 	        if (!all)
 	        {
-	          // console.warn('returned ===>', result.length);
-
 	          if (result.length == 0)
 	          {
 	            deferred.resolve(null);
@@ -3993,8 +4084,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Extract only the groups which are in the local list
+	   * TODO (Extract only the groups which are in the local list)
 	   * 
 	   * Get container (parent) group data
 	   */
@@ -4004,7 +4094,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        cons      = [];
 
 	    Containers.get(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        /**
@@ -4041,8 +4133,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Members.add(
 	      { 
-	        id: candidate.group.uuid, 
-	        mid: candidate.id 
+	        id:   candidate.group.uuid,
+	        mid:  candidate.id
 	      }, 
 	      {}, 
 	      function (result) 
@@ -4068,8 +4160,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Members.remove(
 	      { 
-	        id: groupId, 
-	        mid: memberId 
+	        id:   groupId,
+	        mid:  memberId
 	      }, 
 	      function (result) 
 	      {
@@ -4090,12 +4182,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	   */
 	  Groups.prototype.removeMembers = function (selection, group)
 	  {
-	    var deferred = $q.defer(),
-	        calls = [];
+	    var deferred  = $q.defer(),
+	        calls     = [];
 
 	    angular.forEach(selection, function (value, id)
 	    {
-	      if (id) calls.push(Groups.prototype.removeMember(id, group.uuid));
+	      if (id)
+        {
+          calls.push(Groups.prototype.removeMember(id, group.uuid));
+        }
 	    });
 
 	    $q.all(calls)
@@ -4114,14 +4209,19 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        count     = 0;
 
 	    Slots.wishes({
-	      id: id,
+	      id:     id,
 	      start:  255600,
 	      end:    860400
 	    }).then(function (results)
 	    {
-	      angular.forEach(results, function (slot, index)
+	      angular.forEach(results, function (slot)
 	      {
-	        if (slot.start == 255600 && slot.end == 860400 && slot.count != null) count = slot.count;
+	        if (slot.start == 255600 &&
+              slot.end == 860400 &&
+              slot.count != null)
+          {
+            count = slot.count;
+          }
 	      });
 
 	      deferred.resolve({
@@ -4149,7 +4249,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	        {
 	          var calls = [];
 
-	          angular.forEach(groups, function (group, index)
+	          angular.forEach(groups, function (group)
 	          {
 	            calls.push(Groups.prototype.get(group.uuid));
 	          });
@@ -4163,13 +4263,13 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	            data.members = {};
 
-	            angular.forEach(groups, function (group, gindex)
+	            angular.forEach(groups, function (group)
 	            {
 	              data.groups = groups;
 
 	              data.members[group.uuid] = [];
 
-	              angular.forEach(results, function (result, mindex)
+	              angular.forEach(results, function (result)
 	              {
 	                if (result.id == group.uuid) data.members[group.uuid] = result.data;
 	              });
@@ -4201,7 +4301,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred = $q.defer();
 
 	    Members.query(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        /**
@@ -4241,15 +4343,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * Make an inuque list of members
+	   * Make an unique list of members
 	   */
 	  Groups.prototype.uniqueMembers = function ()
 	  {
-	    angular.forEach(angular.fromJson(Storage.get('groups')), function (group, index)
+	    angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
 	    {
 	      var members = angular.fromJson(Storage.get('members')) || {};
 
-	      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member, index)
+	      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
 	      {
 	        members[member.uuid] = member;
 	      });
@@ -4272,15 +4374,25 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	     */
 	    if (group.id)
 	    {
-	      Groups.edit({id: group.id}, {name: group.name}, function (result) 
-	      {
-	        deferred.resolve(group.id);
-	      });
+	      Groups.edit(
+          {
+            id: group.id
+          },
+          {
+            name: group.name
+          },
+          function ()
+          {
+            deferred.resolve(group.id);
+          }
+        );
 	    }
 	    else
 	    {
 	      Groups.save(
-	        { id: $rootScope.app.resources.uuid }, 
+	        {
+            id: $rootScope.app.resources.uuid
+          },
 	        group, 
 	        function (result) 
 	        {
@@ -4316,7 +4428,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred = $q.defer();
 
 	    Groups.remove(
-	      {id: id}, 
+	      {
+          id: id
+        },
 	      function (result) 
 	      {
 	        deferred.resolve(result);
@@ -4332,7 +4446,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 
 	  /**
-	   * Search candidate mambers
+	   * Search candidate members
 	   */
 	  Groups.prototype.search = function (query) 
 	  {
@@ -4340,16 +4454,18 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	    Groups.search(
 	      null, 
-	      {key: query}, 
+	      {
+          key: query
+        },
 	      function (results) 
 	      {
 	        var processed = [];
 
-	        angular.forEach(results, function (result, index)
+	        angular.forEach(results, function (result)
 	        {
 	          processed.push({
-	            id: result.id,
-	            name: result.name,
+	            id:     result.id,
+	            name:   result.name,
 	            groups: Groups.prototype.getMemberGroups(result.id)
 	          });
 	        });
@@ -4371,20 +4487,22 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	   */
 	  Groups.prototype.getMemberGroups = function (id)
 	  {
-	    var groups = angular.fromJson(Storage.get('groups')),
-	        memberGroups = [];
+	    var groups        = angular.fromJson(Storage.get('groups')),
+	        memberGroups  = [];
 
-	    angular.forEach(groups, function (group, index)
+	    angular.forEach(groups, function (group)
 	    {
 	      var localGroup = angular.fromJson(Storage.get(group.uuid));
 
-	      angular.forEach(localGroup, function (member, index)
+	      angular.forEach(localGroup, function (member)
 	      {
 	        if (member.uuid === id)
-	          memberGroups.push({
-	            uuid: group.uuid,
-	            name: group.name
-	          });
+          {
+            memberGroups.push({
+              uuid: group.uuid,
+              name: group.name
+            });
+          }
 	      });
 	    });
 
@@ -4477,7 +4595,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      {
 	        uuid: 	profile.username,
 	        pass: 	MD5(profile.password),
-	        name: 	profile.name,
+	        name: 	String(profile.firstName + ' ' + profile.lastName),
 	        phone: 	profile.PhoneAddress
 	      }, 
 	      function (registered) 
@@ -4486,6 +4604,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	        .then(function (roled)
 	        {
 	          Profile.prototype.save(profile.username, {
+              firstName:    profile.firstName,
+              lastName:     profile.lastName,
 	            EmailAddress: profile.EmailAddress,
 	            PostAddress: 	profile.PostAddress,
 	            PostZip: 			profile.PostZip,
@@ -4494,7 +4614,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	          {
 	            var calls = [];
 
-	            angular.forEach(profile.groups, function (group, index)
+	            angular.forEach(profile.groups, function (group)
 	            {
 	              calls.push(Groups.addMember({
 	                id: 		profile.username,
@@ -4619,8 +4739,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            end: 		params.end * 1000
 	          }
 	        }));        
-	      }); // user slots
-	    }); // profile get
+	      });
+	    });
 
 	    return deferred.promise;
 	  };
@@ -4638,8 +4758,6 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      user:   id,
 	      start: 	params.start / 1000,
 	      end: 		params.end / 1000
-	      // start:  params.start,
-	      // end:    params.end
 	    }).then(function (slots)
 	    {
 	      deferred.resolve({
@@ -4669,10 +4787,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	  {
 	    var deferred = $q.defer();
 
+      resources.name = resources.firstName + ' ' + resources.lastName;
+
 	    Profile.save(
-	      {id: id}, 
-	      resources, 
-	      function (result) 
+	      {
+          id: id
+        },
+	      resources,
+	      function (result)
 	      {
 	        deferred.resolve(result);
 	      },
@@ -4687,44 +4809,46 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
 	  /**
+     * DEPRECIATED
+     *
 	   * Create settings resources for user if it is missing
 	   */
-	  Profile.prototype.createSettings_ = function (id) 
-	  {
-	    var deferred = $q.defer();
-
-	    Profile.prototype.get(id, false)
-	    .then(function (result) 
-	    {
-	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
-	      {
-	        Profile.save(
-	          {id: result.resources.uuid}, 
-	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }), 
-	          function (result)
-	          {
-	            deferred.resolve({
-	              status: 'modified',
-	              resources: result
-	            });
-	          },
-	          function (error)
-	          {
-	            deferred.resolve({error: error});
-	          }
-	        );
-	      }
-	      else
-	      {
-	        deferred.resolve({
-	          status: 'full',
-	          resources: result
-	        });
-	      }
-	    });
-
-	    return deferred.promise;
-	  };
+//	  Profile.prototype.createSettings_ = function (id)
+//	  {
+//	    var deferred = $q.defer();
+//
+//	    Profile.prototype.get(id, false)
+//	    .then(function (result)
+//	    {
+//	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
+//	      {
+//	        Profile.save(
+//	          {id: result.resources.uuid},
+//	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }),
+//	          function (result)
+//	          {
+//	            deferred.resolve({
+//	              status: 'modified',
+//	              resources: result
+//	            });
+//	          },
+//	          function (error)
+//	          {
+//	            deferred.resolve({error: error});
+//	          }
+//	        );
+//	      }
+//	      else
+//	      {
+//	        deferred.resolve({
+//	          status: 'full',
+//	          resources: result
+//	        });
+//	      }
+//	    });
+//
+//	    return deferred.promise;
+//	  };
 
 
 	  return new Profile;
@@ -6351,7 +6475,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var groups = {};
 
-          angular.forEach(Storage.local.groups(), function (group, index)
+          angular.forEach(Storage.local.groups(), function (group)
           {
             groups[group.uuid] = group.name;
           });
@@ -6363,7 +6487,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var members = {};
 
-          angular.forEach(Storage.local.members(), function (member, index)
+          angular.forEach(Storage.local.members(), function (member)
           {
             members[member.uuid] = member.name;
           });
@@ -6790,19 +6914,40 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         var _this   = this,
             members = this.get.members();
 
-        angular.forEach(data.members, function (member, index)
+
+        data.members.sort(
+          function (a, b)
+          {
+            var aName = a.lastName.toLowerCase(),
+                bName = b.lastName.toLowerCase();
+
+            if (aName < bName)
+            {
+              return -1;
+            }
+
+            if (aName > bName)
+            {
+              return 1;
+            }
+
+            return 0;
+          }
+        );
+
+        angular.forEach(data.members, function (member)
         {
-          var link = (privilage == 1) ? 
-                        _this.wrapper('d') + 
+          var link = (privilage == 1) ?
+                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                         '<a href="#/profile/' + 
                         member.id + 
                         '#timeline">' + 
                         members[member.id] + 
                         '</a>' :
-                        _this.wrapper('d') + 
+                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                         members[member.id];
 
-          angular.forEach(member.data, function (slot, i)
+          angular.forEach(member.data, function (slot)
           {
             angular.forEach(config.legenda, function (value, legenda)
             {
@@ -7348,7 +7493,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
         {
           var urole;
 
-          angular.forEach($config.roles, function (prole, index)
+          angular.forEach($config.roles, function (prole)
           {
             if (prole.id == role) urole = prole.label;
           });
@@ -9997,9 +10142,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    // }
 
 	    /**
-	     * TODO
-	     * 
-	     * Not working!!
+	     * TODO (Not working!!)
 	     */
 	    // $scope.self.timeline.cancelAdd();
 
@@ -10035,8 +10178,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    else
 		    {
 		      /**
-		       * TODO
-		       * Convert to resetview?
+		       * TODO (Convert to resetview?)
 		       */
 		      $scope.forms = {
 		        add:  false,
@@ -10074,8 +10216,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      };
 
 		      /**
-		       * TODO
-		       * Check if this can be combined with switch later on!
+		       * TODO (Check if this can be combined with switch later on!)
+           *
 		       * Set extra data based slot type for inline form
 		       */
 		      if ($scope.timeline.main)
@@ -10198,7 +10340,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  
 
 	  /**
-	   * Group wishes toggler
+	   * Group wishes toggle
 	   */
 	  $scope.groupWishes = function ()
 	  {
@@ -11088,7 +11230,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * PAginate engine
+	   * Paginate engine
 	   */
 	  $scope.paginate = {
 
@@ -11274,7 +11416,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      var _inbox = [];
 
-	      angular.forEach($scope.messages.inbox, function (message, index)
+	      angular.forEach($scope.messages.inbox, function (message)
 	      {
 	        if (message.uuid == $scope.message.uuid) message.state = "READ";
 
@@ -11307,16 +11449,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
   	/**
-  	 * Count the scheadules
+  	 * Count the schedules
   	 */
   	$scope.scheaduleCounter = function ()
   	{
   		var count = 0;
 
-  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+  		angular.forEach($scope.scheaduled.offsets, function (offset)
+      {
+        count++;
+      });
 
 	  	$scope.scheaduleCount = count;
-  	}
+  	};
 
 
 	  /**
@@ -11330,7 +11475,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    var scheaduled = Messages.scheaduled.find(id);
 
-	    angular.forEach(scheaduled.types, function (type, index)
+	    angular.forEach(scheaduled.types, function (type)
 	  	{
 	  		if (type == 'sms') 		$scope.broadcast.sms 		= true;
 	  		if (type == 'email') 	$scope.broadcast.email 	= true;
@@ -11340,7 +11485,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    		groups 		= angular.fromJson(Storage.get('groups')),
 	    		receivers = [];
 
-	    angular.forEach(scheaduled.recipients, function (recipient, index)
+	    angular.forEach(scheaduled.recipients, function (recipient)
 	  	{
 	  		var name;
 
@@ -11356,7 +11501,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  		}
 	  		else
 	  		{
-	  			angular.forEach(groups, function (group, index)
+	  			angular.forEach(groups, function (group)
 	  			{
 	  				if (group.uuid == recipient)
 	  				{  					
@@ -11378,9 +11523,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      receivers: 	receivers
 	    };
 
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
 	    {
-	    	angular.forEach(scheaduled.recipients, function (recipient, ind)
+	    	angular.forEach(scheaduled.recipients, function (recipient)
 	    	{
 		  		if (members[recipient])
 		  		{
@@ -11388,7 +11533,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 		    	}
 		    	else
 		    	{
-		  			angular.forEach(groups, function (group, index)
+		  			angular.forEach(groups, function (group)
 		  			{
 		  				if (group.uuid == recipient)
 		  				{
@@ -11421,7 +11566,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
   		var count = 0;
 
-  		angular.forEach($scope.scheaduled.offsets, function (offset, index) { count++; });
+  		angular.forEach($scope.scheaduled.offsets, function (offset)
+      {
+        count++;
+      });
 
 	  	$scope.scheaduleCount = count;
 
@@ -11452,7 +11600,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Compose message view toggler
+	   * Compose message view toggle
 	   */
 	  $scope.composeMessage = function ()
 	  {
@@ -11483,7 +11631,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      $scope.scheadulerPane = false;
 
-		    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+		    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
 		    {
 		    	option.selected = false;
 		    });
@@ -11527,7 +11675,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  {
 	    var flag = (master) ? true : false;
 
-	    angular.forEach(messages, function (message, index)
+	    angular.forEach(messages, function (message)
 	    {
 	      $scope.selection[inbox][message.uuid] = flag;
 	    });
@@ -11736,7 +11884,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Reply a amessage
+	   * Reply a message
 	   */
 	  $scope.reply = function(message)
 	  {
@@ -11859,7 +12007,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    setTimeout (function ()
 	    {
-	      angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	      angular.forEach($("div#composeTab select.chzn-select option"), function (option)
 	      {
 	        if (option.innerHTML == name) option.selected = true;
 	      });
@@ -11924,7 +12072,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 		    var members = [],
 		        types 	= [];
 
-		    angular.forEach(message.receivers, function (receiver, index) { members.push(receiver.id); });
+		    angular.forEach(message.receivers, function (receiver)
+        {
+          members.push(receiver.id);
+        });
 
 		    types.push('paige');
 
@@ -12075,7 +12226,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Remove a scheadule job
+	  	 * Remove a schedule job
 	  	 */
 	  	remove: function (uuid)
 	  	{
@@ -12233,8 +12384,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 		/**
 		 * Self this
 		 */
-		var self = this,
-				params = $location.search();
+		var self    = this,
+				params  = $location.search();
 
 
 		/**
@@ -12305,12 +12456,32 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		function setGroupView (id)
 		{
-			angular.forEach(data.groups, function (group, index)
+			angular.forEach(data.groups, function (group)
 			{
 				if (group.uuid == id) $scope.group = group;
 			});
 
 			$scope.members = data.members[id];
+
+      $scope.members.sort(
+        function (a, b)
+        {
+          var aName = a.resources.lastName.toLowerCase(),
+              bName = b.resources.lastName.toLowerCase();
+
+          if (aName < bName)
+          {
+            return -1;
+          }
+
+          if (aName > bName)
+          {
+            return 1;
+          }
+
+          return 0;
+        }
+      );
 
 			$scope.current = id;
 
@@ -12342,8 +12513,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.saveWish = function (id, wish)
 		{
-			// console.warn('setting the wish:' + wish + ' for the group:', id);
-
 			$rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
 
 			Slots.setWish(
@@ -12388,7 +12557,10 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 			if (switched)
 			{
-				if ($location.hash() != 'view') $location.hash('view');
+				if ($location.hash() != 'view')
+        {
+          $location.hash('view');
+        }
 
 				setView('view');
 			}
@@ -12645,8 +12817,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 			});
 
 			/**
-			 * TODO
-			 * not working to reset master checkbox!
+			 * TODO (Not working to reset master checkbox!)
 			 */
 			//$scope.selectionMaster = {};
 		};
@@ -12687,29 +12858,30 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 							$scope.data = data;
 
-							angular.forEach(data.groups, function (group, index)
+							angular.forEach(data.groups, function (group)
 							{
-							if (group.uuid == returned)
-							{
-								$scope.groups = data.groups;
+                if (group.uuid == returned)
+                {
+                  $scope.groups = data.groups;
 
-								angular.forEach(data.groups, function (g, index)
-								{
-									if (g.uuid == group.uuid) $scope.group = g;
-								});
+                  angular.forEach(data.groups, function (g)
+                  {
+                    if (g.uuid == group.uuid)
+                    {
+                      $scope.group = g;
+                    }
+                  });
 
-								$scope.members = data.members[group.uuid];
+                  $scope.members = data.members[group.uuid];
 
-								$scope.current = group.uuid;
+                  $scope.current = group.uuid;
 
-								$scope.$watch($location.search(), function ()
-								{
-									$location.search({uuid: group.uuid});
-								}); // end of watch
-
-							} // end of if
-
-							}); // end of foreach
+                  $scope.$watch($location.search(), function ()
+                  {
+                    $location.search({uuid: group.uuid});
+                  });
+                }
+							});
 
 							$rootScope.statusBar.off();
 						}
@@ -12807,6 +12979,9 @@ angular.module('WebPaige.Controllers.Groups', [])
 						{
 							$scope.data = data;
 
+              /**
+               * TODO (Is this really supposed to be like this?)
+               */
 							angular.forEach(data.groups, function (group, index)
 							{
 								$scope.groups = data.groups;
@@ -12822,8 +12997,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 									{
 										$location.search({uuid: data.groups[0].uuid});
 									}
-								); // end of watch
-							}); // end of foreach
+								);
+							});
 
 							$rootScope.statusBar.off();
 						}
@@ -12834,22 +13009,26 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 
 		/**
-		 * Selection toggler
+		 * Selection toggle
 		 */
 		$scope.toggleSelection = function (group, master)
 		{
-			var flag = (master) ? true : false,
+			var flag    = (master) ? true : false,
 					members = angular.fromJson(Storage.get(group.uuid));
 
-			angular.forEach(members, function (member, index)
+			angular.forEach(members, function (member)
 			{
 				$scope.selection[member.uuid] = flag;
 			});
 		};
 
 
+
+
+
+
 		/**
-		 * Not used in groups yet but login uses modal call..
+		 * TODO (Not used in groups yet but login uses modal call..)
 		 * 
 		 * Fetch parent groups
 		 */
@@ -12863,7 +13042,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 		/**
-		 * Not used in groups yet..
+		 * TODO (Not used in groups yet..)
 		 * 
 		 * Fetch parent groups
 		 */
@@ -12877,11 +13056,47 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 
+    /**
+     * Set some defaults for sorting
+     */
+    $scope.reverse = false;
+    $scope.sorter = 'resources.lastName';
 
 
+    /**
+     * Toggle sorting
+     */
+    $scope.toggleSorter = function (sorter)
+    {
+      if ($scope.sorter == sorter)
+      {
+        $scope.reverse = !$scope.reverse;
+      }
+      else
+      {
+        $scope.reverse = false;
+      }
+
+      $scope.sorter = sorter;
+    };
 
 
-
+//    $scope.reverser = function (basedOn)
+//    {
+//      $scope.$apply('basedOn', function ()
+//      {
+//        $scope.basedOn = {
+//          firstName: false,
+//          lastName: false,
+//          role: false,
+//          phoneAddress: false
+//        };
+//
+//        $scope.basedOn[basedOn] = true;
+//      });
+//
+//      $scope.reverse = !$scope.reverse;
+//    };
 
 
 
@@ -13003,9 +13218,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 		$scope.self = this;
 
 
-		// console.warn('data ->', data);
-
-
 	  /**
 	   * Pass periods
 	   */
@@ -13021,16 +13233,32 @@ angular.module('WebPaige.Controllers.Profile', [])
       month:  new Date().getMonth() + 1
     };
 
-
 	  /**
 	   * Set data for view
 	   */
-	  if (data.slots) 
-	  	data.user = data.slots.data;
+    console.log('uuid ->', $rootScope.app.resources.uuid);
+    console.log('userId ->', $route.current.params.userId);
+    console.log('absUrl ->', $location.absUrl());
+
+    if ($location.absUrl().match(/$rootScope.app.resources.uuid/))
+    {
+      console.log('this is user');
+    }
+
+    if (!!($rootScope.app.resources.uuid != $route.current.params.userId))
+    {
+
+      console.log('initing -->', !!($rootScope.app.resources.uuid != $route.current.params.userId));
+
+      if (data.slots)
+      {
+        data.user = data.slots.data;
+      }
+    }
 
 
 	  /**
-	   * PAss data container
+	   * Pass data container
 	   */
 	  $scope.data = data;
 
@@ -13067,7 +13295,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-	   * Slot form toggler
+	   * Slot form toggle
 	   */
 	  $scope.toggleSlotForm = function ()
 	  {
@@ -13144,7 +13372,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-	   * Switch between the views and set hash ccordingly
+	   * Switch between the views and set hash accordingly
 	   */
 	  $scope.setViewTo = function (hash)
 	  {
@@ -13167,7 +13395,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    /**
 	     * Convert given other user's password to MD5
 	     */
-	    if (resources.Password) resources.askPass = MD5(resources.Password);
+	    if (resources.Password)
+      {
+        resources.askPass = MD5(resources.Password);
+      }
 
 	    Profile.save($route.current.params.userId, resources)
 	    .then(function (result)
@@ -13198,9 +13429,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	            $scope.data = data;
 
 	            $rootScope.statusBar.off();
-	          };
+	          }
 	        });
-	      };
+	      }
 	    });
 
 	  };
@@ -13216,7 +13447,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
 	      return false;
-	    };
+	    }
 
 	    if (passwords.new1 != passwords.new2)
 	    {
@@ -13255,33 +13486,30 @@ angular.module('WebPaige.Controllers.Profile', [])
 	              $scope.data = data;
 
 	              $rootScope.statusBar.off();
-	            };
+	            }
 	          });
-	        };
+	        }
 	      });
 	    }
 	    else
 	    {
 	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
-	    };
+	    }
 	  };
 	  
 
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  // if ($location.hash() == 'timeline')
 	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
 	  {
 	  	timelinebooter();
-	  };
+	  }
 
 
 
 	  /**
-     * TODO
-     * Is it really needed?
-     * Since the timelinebooter is disabled
+     * TODO (Is it really needed? Since the timelinebooter is disabled)
      *
 	   * Redraw timeline
 	   */
@@ -13289,12 +13517,11 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  {
 	  	setTimeout(function ()
 	  	{
-	  		//timelinebooter();
 	  		if($scope.self.timeline)
-	  			$scope.self.timeline.redraw();
-		     //console.warn('timeline ->', $scope.timeline);
+        {
+          $scope.self.timeline.redraw();
+        }
 	  	}, 100);
-	  	console.log("redraw timeline here??");
 		};
 
 
@@ -13342,7 +13569,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
 	                      Dater.readable.date($scope.timeline.range.end);
 
-	                      
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');

@@ -151,7 +151,7 @@
                       style="width:530px" 
                       chosen
                       ng-model="message.receivers" 
-                      ng-options="receiver.name group by receiver.group for receiver in receviersList | orderBy:'name'">
+                      ng-options="receiver.name group by receiver.group for receiver in receviersList | orderBy:'lastName'">
               </select>
               <!-- <p ng-repeat="receiver in message.receivers"><strong>Chosen: {{receiver.id}}</strong></p> -->
               <!-- <p ng-repeat="receiver in recipients"><strong>Recipients: {{receiver}}</strong></p> -->

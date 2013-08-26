@@ -38,9 +38,9 @@
     <div class="input-append">
       <input type="text" 
               class="span2 search-query" 
-              placeholder="{{ui.groups.searchfor}}" 
+              placeholder="{{ui.groups.searchFor}}"
               ng-model="search.query">
-      <button type="submit" class="btn"><i class="icon-search"></i>&nbsp;{{ui.groups.serach}}</button>
+      <button type="submit" class="btn"><i class="icon-search"></i>&nbsp;{{ui.groups.search}}</button>
     </div>
   </form>
   <!-- end search members -->
@@ -50,7 +50,7 @@
 <div class="tabbable tabs-left">
 
   <!-- tabs links -->
-  <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
+  <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0;">
     <!-- add group tab link -->
     <li class="{{(views.add==true) && 'active'}}"
         ng-show="views.add">
@@ -112,6 +112,8 @@
   <!-- tabs content -->
   <div class="tab-content">
 
+
+
     <!-- add group tab -->
     <div class="tab-pane {{(views.add==true) && 'active'}}" 
           id="addGroupTab" 
@@ -145,6 +147,8 @@
     </div>
     <!-- end add group tab -->
 
+
+
     <!-- edit group tab -->
     <div class="tab-pane {{(views.edit==true) && 'active'}}" 
           id="editGroupTab" 
@@ -177,6 +181,8 @@
         <!-- end group form -->
     </div>
     <!-- edit group tab -->
+
+
 
     <!-- new member tab -->
     <div class="tab-pane {{(views.member==true) && 'active'}}" 
@@ -217,11 +223,19 @@
             </div>
             <hr>
             <div class="control-group">
-              <label class="control-label">{{ui.groups.name}}</label>
+              <label class="control-label">{{ui.groups.firstName}}</label>
               <div class="controls">
-                <input  type="text" 
-                        class="span4" 
-                        ng-model="memberForm.name">
+                <input  type="text"
+                        class="span4"
+                        ng-model="memberForm.firstName">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">{{ui.groups.lastName}}</label>
+              <div class="controls">
+                <input  type="text"
+                        class="span4"
+                        ng-model="memberForm.lastName">
               </div>
             </div>
             <div class="control-group">
@@ -292,10 +306,12 @@
     </div>
     <!-- end new member tab -->
 
+
+
     <!-- search tab -->
     <div class="tab-pane {{(views.search==true) && 'active'}}" id="searchTab" ng-show="views.search">
       <div class="tab-header">
-        <h3 class="pull-left">{{ui.groups.serachFor}} '{{search.queried}}'</h3>
+        <h3 class="pull-left">{{ui.groups.searchedFor}} '{{search.queried}}'</h3>
         <button type="button" 
                 ng-click="closeTabs()" 
                 class="btn pull-right">{{ui.groups.close}}</button>
@@ -346,6 +362,8 @@
     </div>
     <!-- end search tab -->
 
+
+
     <!-- group tab -->
     <div  class="tab-pane {{(views.view==true) && 'active'}}"
           id="groupTab">
@@ -355,7 +373,7 @@
           <select ng-model="current" 
                   ng-options="group.uuid as group.name for group in groups"
                   ng-selected="current"
-                  ng-change="requestGroup(current)">
+                  ng-change="requestGroup(current); sorter='resources.lastName'; reverse=false;">
           </select>
         </div>
         <!-- end groups list -->
@@ -389,6 +407,7 @@
       <p ng-hide="(data.members[group.uuid]|filter:filtered).length > 0">
         {{ui.groups.noMembers}}
       </p>
+
       <div ng-show="(data.members[group.uuid]|filter:filtered).length > 0">
         <table class="table table-striped">
           <thead>
@@ -398,26 +417,55 @@
                         ng-model="selectionMaster"
                         ng-click="toggleSelection(group, selectionMaster)">
               </th>
-              <th><a ng-click="sorter='name'">{{ui.groups.name}}</a></th>
-              <th><a ng-click="sorter='resources.role'">{{ui.groups.role}}</a></th>
-              <th><a ng-click="sorter='resources.phoneAddress'">{{ui.groups.tel}}</a></th>
+              <th>
+                <a ng-click="toggleSorter('resources.firstName')">{{ui.groups.firstName}}</a>&nbsp;
+                <span ng-show="(sorter=='resources.firstName')">
+                  <span ng-hide="reverse">&#9650;</span>
+                  <span ng-show="reverse">&#9660;</span>
+                </span>
+              </th>
+              <th>
+                <a ng-click="toggleSorter('resources.lastName')">{{ui.groups.lastName}}</a>&nbsp;
+                <span ng-show="(sorter=='resources.lastName')">
+                  <span ng-hide="reverse">&#9650;</span>
+                  <span ng-show="reverse">&#9660;</span>
+                </span>
+              </th>
+              <th>
+                <a ng-click="toggleSorter('resources.role')">{{ui.groups.role}}</a>&nbsp;
+                <span ng-show="(sorter=='resources.role')">
+                  <span ng-hide="reverse">&#9650;</span>
+                  <span ng-show="reverse">&#9660;</span>
+                </span>
+              </th>
+              <th>
+                {{ui.groups.tel}}
+                <!--<a ng-click="toggleSorter('resources.phoneAddress')">{{ui.groups.tel}}</a>&nbsp;-->
+                <!--<span ng-show="(sorter=='resources.phoneAddress')">-->
+                  <!--<span ng-hide="reverse">&#9650;</span>-->
+                  <!--<span ng-show="reverse">&#9660;</span>-->
+                <!--</span>-->
+              </th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:true">
+            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse">
               <td>
                 <input type="checkbox"
                         ng-model="selection[member.uuid]"
                         ng-checked="selectionMaster">
               </td>
-              <td><a href="#/profile/{{member.uuid}}#profile">{{member.name}}</a></td>
-              <td>{{member.resources.role|translateRole}}</td>
+              <td>{{member.resources.firstName}}</td>
+              <td>{{member.resources.lastName}}</td>
+              <td>{{member.resources.role | translateRole}}</td>
               <td>{{member.resources.PhoneAddress}}</td>
               <td>
                 <div class="pull-right">
-                  <a href="#/profile/{{member.uuid}}#edit" 
-                    class="btn btn-mini"><i class="icon-edit"></i></a>&nbsp;
+                  <a href="#/profile/{{member.uuid}}#profile"
+                     class="btn btn-mini"><i class="icon-user"></i></a>&nbsp;
+                  <a href="#/profile/{{member.uuid}}#edit"
+                     class="btn btn-mini"><i class="icon-edit"></i></a>&nbsp;
                   <button type="submit" 
                           ng-click="removeMember(member.uuid, group.uuid)" 
                           class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
@@ -436,6 +484,8 @@
       </div>
     </div>
     <!-- end group tab -->
+
+
 
   </div>
   <!-- end tabs content -->

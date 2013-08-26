@@ -711,35 +711,32 @@ label {
     margin-top: 0px;
     text-align: right;
     line-height: 14px; }
-    #footer #copyrights span.muted {
-      position: absolute;
-      top: 5px;
-      right: 255px;
-      float: right;
-      width: 200px; }
-      #footer #copyrights span.muted a {
-        color: #ddd; }
 
-#download-footer button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  float: right;
-  /* padding-top: 10px; */
-  /* padding-bottom: 8px; */
-  width: 240px; }
-  #download-footer button span.entypo {
-    margin-right: 5px;
-    height: 24px;
-    /* text-shadow: 1px 1px 0 black; */
-    /* text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25); */
-    text-shadow: none;
-    font-size: 32px;
-    /* line-height: 30px; */ }
-  #download-footer button span.msg {
-    position: relative;
-    top: -5px;
-    font-size: 14px; }
+#download-footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+  #download-footer ul li {
+    display: inline;
+    float: right;
+    margin-left: 10px; }
+    #download-footer ul li button {
+      /* padding-top: 10px; */
+      /* padding-bottom: 8px; */ }
+      #download-footer ul li button span.entypo {
+        margin-right: 5px;
+        height: 24px;
+        /* text-shadow: 1px 1px 0 black; */
+        /* text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25); */
+        text-shadow: none;
+        font-size: 32px;
+        /* line-height: 30px; */ }
+      #download-footer ul li button span.msg {
+        position: relative;
+        top: -5px;
+        font-size: 14px; }
+      #download-footer ul li button span.muted a {
+        color: #ddd; }
 
 .page {
   overflow: hidden;

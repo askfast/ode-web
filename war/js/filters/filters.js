@@ -16,7 +16,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
         {
           var urole;
 
-          angular.forEach($config.roles, function (prole, index)
+          angular.forEach($config.roles, function (prole)
           {
             if (prole.id == role) urole = prole.label;
           });

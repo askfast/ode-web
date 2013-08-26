@@ -9,8 +9,10 @@ var profile = {
 
   host: function ()
   {
+    // Cape
+    // return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://askpack.ask-cs.com/second/ns_knrmtest';
     return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
-    // return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://192.168.128.246\\:9000/ns_knrm';
+    // return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://192.168.128.197\\:8888/ns_knrmtest';
   },
 
   states: [
@@ -64,7 +66,8 @@ var profile = {
   },
 
   mobileApp: {
-    status:   true
+    status:   true,
+    experimental: true
   },
 
   analytics: {

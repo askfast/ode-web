@@ -81,7 +81,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      {
 	        uuid: 	profile.username,
 	        pass: 	MD5(profile.password),
-	        name: 	profile.name,
+	        name: 	String(profile.firstName + ' ' + profile.lastName),
 	        phone: 	profile.PhoneAddress
 	      }, 
 	      function (registered) 
@@ -90,6 +90,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	        .then(function (roled)
 	        {
 	          Profile.prototype.save(profile.username, {
+              firstName:    profile.firstName,
+              lastName:     profile.lastName,
 	            EmailAddress: profile.EmailAddress,
 	            PostAddress: 	profile.PostAddress,
 	            PostZip: 			profile.PostZip,
@@ -98,7 +100,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	          {
 	            var calls = [];
 
-	            angular.forEach(profile.groups, function (group, index)
+	            angular.forEach(profile.groups, function (group)
 	            {
 	              calls.push(Groups.addMember({
 	                id: 		profile.username,
@@ -223,8 +225,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            end: 		params.end * 1000
 	          }
 	        }));        
-	      }); // user slots
-	    }); // profile get
+	      });
+	    });
 
 	    return deferred.promise;
 	  };
@@ -242,8 +244,6 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      user:   id,
 	      start: 	params.start / 1000,
 	      end: 		params.end / 1000
-	      // start:  params.start,
-	      // end:    params.end
 	    }).then(function (slots)
 	    {
 	      deferred.resolve({
@@ -273,10 +273,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	  {
 	    var deferred = $q.defer();
 
+      resources.name = resources.firstName + ' ' + resources.lastName;
+
 	    Profile.save(
-	      {id: id}, 
-	      resources, 
-	      function (result) 
+	      {
+          id: id
+        },
+	      resources,
+	      function (result)
 	      {
 	        deferred.resolve(result);
 	      },
@@ -291,44 +295,46 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
 	  /**
+     * DEPRECIATED
+     *
 	   * Create settings resources for user if it is missing
 	   */
-	  Profile.prototype.createSettings_ = function (id) 
-	  {
-	    var deferred = $q.defer();
-
-	    Profile.prototype.get(id, false)
-	    .then(function (result) 
-	    {
-	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
-	      {
-	        Profile.save(
-	          {id: result.resources.uuid}, 
-	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }), 
-	          function (result)
-	          {
-	            deferred.resolve({
-	              status: 'modified',
-	              resources: result
-	            });
-	          },
-	          function (error)
-	          {
-	            deferred.resolve({error: error});
-	          }
-	        );
-	      }
-	      else
-	      {
-	        deferred.resolve({
-	          status: 'full',
-	          resources: result
-	        });
-	      }
-	    });
-
-	    return deferred.promise;
-	  };
+//	  Profile.prototype.createSettings_ = function (id)
+//	  {
+//	    var deferred = $q.defer();
+//
+//	    Profile.prototype.get(id, false)
+//	    .then(function (result)
+//	    {
+//	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
+//	      {
+//	        Profile.save(
+//	          {id: result.resources.uuid},
+//	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }),
+//	          function (result)
+//	          {
+//	            deferred.resolve({
+//	              status: 'modified',
+//	              resources: result
+//	            });
+//	          },
+//	          function (error)
+//	          {
+//	            deferred.resolve({error: error});
+//	          }
+//	        );
+//	      }
+//	      else
+//	      {
+//	        deferred.resolve({
+//	          status: 'full',
+//	          resources: result
+//	        });
+//	      }
+//	    });
+//
+//	    return deferred.promise;
+//	  };
 
 
 	  return new Profile;
