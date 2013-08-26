@@ -11,6 +11,9 @@
 
 ## Versions
 
+  2.3.6
+    *
+
   2.3.5
 	  * Deployed for 100T, 110K, 120G and 130B 26-8-2013
     * Sorting on last name in agenda, message receivers and groups&users listings (#44) 26-8-2013
