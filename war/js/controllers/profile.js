@@ -41,13 +41,27 @@ angular.module('WebPaige.Controllers.Profile', [])
       month:  new Date().getMonth() + 1
     };
 
-
 	  /**
 	   * Set data for view
 	   */
-	  if (data.slots)
+    console.log('uuid ->', $rootScope.app.resources.uuid);
+    console.log('userId ->', $route.current.params.userId);
+    console.log('absUrl ->', $location.absUrl());
+
+    if ($location.absUrl().match(/$rootScope.app.resources.uuid/))
     {
-      data.user = data.slots.data;
+      console.log('this is user');
+    }
+
+    if (!!($rootScope.app.resources.uuid != $route.current.params.userId))
+    {
+
+      console.log('initing -->', !!($rootScope.app.resources.uuid != $route.current.params.userId));
+
+      if (data.slots)
+      {
+        data.user = data.slots.data;
+      }
     }
 
 

@@ -102,6 +102,26 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 			$scope.members = data.members[id];
 
+      $scope.members.sort(
+        function (a, b)
+        {
+          var aName = a.resources.lastName.toLowerCase(),
+              bName = b.resources.lastName.toLowerCase();
+
+          if (aName < bName)
+          {
+            return -1;
+          }
+
+          if (aName > bName)
+          {
+            return 1;
+          }
+
+          return 0;
+        }
+      );
+
 			$scope.current = id;
 
 			wisher(id);
@@ -675,8 +695,29 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 
+    /**
+     * Set some defaults for sorting
+     */
+    $scope.reverse = false;
+    $scope.sorter = 'resources.lastName';
 
-    $scope.reverse = true;
+
+    /**
+     * Toggle sorting
+     */
+    $scope.toggleSorter = function (sorter)
+    {
+      if ($scope.sorter == sorter)
+      {
+        $scope.reverse = !$scope.reverse;
+      }
+      else
+      {
+        $scope.reverse = false;
+      }
+
+      $scope.sorter = sorter;
+    };
 
 
 //    $scope.reverser = function (basedOn)

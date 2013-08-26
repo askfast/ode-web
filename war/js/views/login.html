@@ -12,7 +12,7 @@
 	<!-- end preloader -->
 
 	<!-- loginForm -->
-	<div id="login" class="boxed" ng-show="views.login" ng-hide="views.help">
+	<div id="login" class="boxed" ng-show="views.login" ng-hide="views.help || views.changePass">
 		<form ng-submit="login()">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.login.header}}</h4>
@@ -41,7 +41,7 @@
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.button_login}}</button>
 		  <p>
 		  	<small>
-		  		<a ng-click="views.forgot=true; views.login=false">{{ui.login.forgot_password}}</a>
+		  		<a ng-click="views.forgot=true; views.login=false;">{{ui.login.forgot_password}}</a>
 		  		&nbsp;|&nbsp;
 		  		<a ng-click="views.help=true">{{ui.help.help}}</a>
 		  	</small>
@@ -59,7 +59,7 @@
 	<!-- end loginForm -->
 
 	<!-- help -->
-	<div id="login" class="boxed" ng-show="views.help" ng-hide="views.login">
+	<div id="login" class="boxed" ng-show="views.help" ng-hide="views.login || views.forgot || views.changePass">
 		<form ng-submit="">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
 		  <h4 class="form-signin-heading">{{ui.help.help}}</h4>

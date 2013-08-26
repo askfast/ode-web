@@ -363,18 +363,36 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    angular.forEach(members, function(member)
 	    {
 	        receivers.push({
-	        id: member.uuid,
-	        name: member.name,
-	        group: $rootScope.ui.message.receiversUsers
+	          id: member.uuid,
+	          name: member.name,
+            lastName: member.resources.lastName,
+            firstName: member.resources.firstName,
+	          group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
+
+//      console.log('groups ->')
+//
+//      groups.sort(function (a, b)
+//      {
+//        var aName = a.name.toLowerCase();
+//        var bName = b.name.toLowerCase();
+//        if (aName < bName) return -1;
+//        if (aName > bName) return 1;
+//        return 0;
+//      });
+//
+//
+//      console.log('groups sorted ->', groups);
+
 
 	    angular.forEach(groups, function(group)
 	    {
 	        receivers.push({
-	        id: group.uuid,
-	        name: group.name,
-	        group: $rootScope.ui.message.receiversGroups
+	          id: group.uuid,
+	          name: group.name,
+            lastName: group.name,
+	          group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 

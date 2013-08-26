@@ -556,7 +556,7 @@ var ui = {
         statPeopleEven: 'Precies genoeg mensen',
         statPeopleMore: 'Meer mensen',
         getWishes: 'Groep behoefte getal aan het ophalen...',
-        daterangerToday: 'Vandaag sddf',
+        daterangerToday: 'Vandaag',
         daterangerTomorrow: 'Morgen',
         daterangerYesterday: 'Gisteren',
         daterangerNext3Days: 'Komende 3 dagen',

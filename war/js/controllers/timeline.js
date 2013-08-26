@@ -474,9 +474,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    // }
 
 	    /**
-	     * TODO
-	     * 
-	     * Not working!!
+	     * TODO (Not working!!)
 	     */
 	    // $scope.self.timeline.cancelAdd();
 
@@ -512,8 +510,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    else
 		    {
 		      /**
-		       * TODO
-		       * Convert to resetview?
+		       * TODO (Convert to resetview?)
 		       */
 		      $scope.forms = {
 		        add:  false,
@@ -551,8 +548,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      };
 
 		      /**
-		       * TODO
-		       * Check if this can be combined with switch later on!
+		       * TODO (Check if this can be combined with switch later on!)
+           *
 		       * Set extra data based slot type for inline form
 		       */
 		      if ($scope.timeline.main)
@@ -675,7 +672,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  
 
 	  /**
-	   * Group wishes toggler
+	   * Group wishes toggle
 	   */
 	  $scope.groupWishes = function ()
 	  {

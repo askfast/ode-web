@@ -70,10 +70,20 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  );
 
 
-	  // var changePassword = $resource($config.host+'/passwordReset', 
-	  //   {uuid: uuid,
-	  //    pass: newpass,
-	  //    key: key});
+	  var changePassword = $resource(
+      $config.host + '/passwordReset',
+      {
+      },
+	    {
+        reset: {
+          method: 'GET',
+          params: {
+            uuid: '',
+            pass: '',
+            key:  ''
+          }
+        }
+      });
 	  
 	  
 	  /**
@@ -119,7 +129,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  {    
 	    var deferred = $q.defer();
 
-	    Login.process({uuid: uuid, pass: pass}, 
+	    Login.process(
+        {
+          uuid: uuid,
+          pass: pass
+        },
 	      function (result) 
 	      {
 	        if (angular.equals(result, [])) 
@@ -152,7 +166,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    /**
 	     * RE-FACTORY
 	     */
-	    changePassword.get(
+	    changePassword.get({
+          uuid: uuid,
+          pass: newpass,
+          key: key
+        },
 	      function (result)
 	      {
 	        deferred.resolve(result);
@@ -174,7 +192,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  {    
 	    var deferred = $q.defer();
 
-	    Logout.process(null, 
+	    Logout.process(
+        null,
 	      function (result) 
 	      {
 	        deferred.resolve(result);
@@ -196,7 +215,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  {    
 	    var deferred = $q.defer();
 
-	    Resources.get(null, 
+	    Resources.get(
+        null,
 	      function (result) 
 	      {
 	        if (angular.equals(result, [])) 

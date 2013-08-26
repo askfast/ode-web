@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.4',
+    version:  '2.3.5',
     lang:     'nl',
 
     fullscreen: true,

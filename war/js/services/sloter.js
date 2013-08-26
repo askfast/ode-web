@@ -22,7 +22,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var groups = {};
 
-          angular.forEach(Storage.local.groups(), function (group, index)
+          angular.forEach(Storage.local.groups(), function (group)
           {
             groups[group.uuid] = group.name;
           });
@@ -34,7 +34,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var members = {};
 
-          angular.forEach(Storage.local.members(), function (member, index)
+          angular.forEach(Storage.local.members(), function (member)
           {
             members[member.uuid] = member.name;
           });
@@ -461,19 +461,40 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         var _this   = this,
             members = this.get.members();
 
-        angular.forEach(data.members, function (member, index)
+
+        data.members.sort(
+          function (a, b)
+          {
+            var aName = a.lastName.toLowerCase(),
+                bName = b.lastName.toLowerCase();
+
+            if (aName < bName)
+            {
+              return -1;
+            }
+
+            if (aName > bName)
+            {
+              return 1;
+            }
+
+            return 0;
+          }
+        );
+
+        angular.forEach(data.members, function (member)
         {
-          var link = (privilage == 1) ? 
-                        _this.wrapper('d') + 
+          var link = (privilage == 1) ?
+                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                         '<a href="#/profile/' + 
                         member.id + 
                         '#timeline">' + 
                         members[member.id] + 
                         '</a>' :
-                        _this.wrapper('d') + 
+                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                         members[member.id];
 
-          angular.forEach(member.data, function (slot, i)
+          angular.forEach(member.data, function (slot)
           {
             angular.forEach(config.legenda, function (value, legenda)
             {

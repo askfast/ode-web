@@ -373,7 +373,7 @@
           <select ng-model="current" 
                   ng-options="group.uuid as group.name for group in groups"
                   ng-selected="current"
-                  ng-change="requestGroup(current)">
+                  ng-change="requestGroup(current); sorter='resources.lastName'; reverse=false;">
           </select>
         </div>
         <!-- end groups list -->
@@ -417,10 +417,34 @@
                         ng-model="selectionMaster"
                         ng-click="toggleSelection(group, selectionMaster)">
               </th>
-              <th><a ng-click="reverse=!reverse; sorter='resources.firstName'">{{ui.groups.firstName}}</a></th>
-              <th><a ng-click="reverse=!reverse; sorter='resources.lastName'">{{ui.groups.lastName}}</a></th>
-              <th><a ng-click="reverse=!reverse; sorter='resources.role'">{{ui.groups.role}}</a></th>
-              <th><a ng-click="reverse=!reverse; sorter='resources.phoneAddress'">{{ui.groups.tel}}</a></th>
+              <th>
+                <a ng-click="toggleSorter('resources.firstName')">{{ui.groups.firstName}}</a>&nbsp;
+                <span ng-show="(sorter=='resources.firstName')">
+                  <span ng-hide="reverse">&#9650;</span>
+                  <span ng-show="reverse">&#9660;</span>
+                </span>
+              </th>
+              <th>
+                <a ng-click="toggleSorter('resources.lastName')">{{ui.groups.lastName}}</a>&nbsp;
+                <span ng-show="(sorter=='resources.lastName')">
+                  <span ng-hide="reverse">&#9650;</span>
+                  <span ng-show="reverse">&#9660;</span>
+                </span>
+              </th>
+              <th>
+                <a ng-click="toggleSorter('resources.role')">{{ui.groups.role}}</a>&nbsp;
+                <span ng-show="(sorter=='resources.role')">
+                  <span ng-hide="reverse">&#9650;</span>
+                  <span ng-show="reverse">&#9660;</span>
+                </span>
+              </th>
+              <th>
+                <a ng-click="toggleSorter('resources.phoneAddress')">{{ui.groups.tel}}</a>&nbsp;
+                <span ng-show="(sorter=='resources.phoneAddress')">
+                  <span ng-hide="reverse">&#9650;</span>
+                  <span ng-show="reverse">&#9660;</span>
+                </span>
+              </th>
               <th></th>
             </tr>
           </thead>
