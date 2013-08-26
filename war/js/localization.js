@@ -672,7 +672,7 @@ var ui = {
       },
       groups: {
         groups: 'Groepen',
-        newGroup: 'Nieuwe Group',
+        newGroup: 'Nieuwe groep',
         newMember: 'Nieuw lid',
         search: 'Zoeken',
         addNewGroup: 'Nieuwe groep toevoegen',
