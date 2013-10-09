@@ -44,9 +44,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Set data for view
 	   */
-    console.log('uuid ->', $rootScope.app.resources.uuid);
-    console.log('userId ->', $route.current.params.userId);
-    console.log('absUrl ->', $location.absUrl());
+    // console.log('uuid ->', $rootScope.app.resources.uuid);
+    // console.log('userId ->', $route.current.params.userId);
+    // console.log('absUrl ->', $location.absUrl());
 
     if ($location.absUrl().match(/$rootScope.app.resources.uuid/))
     {

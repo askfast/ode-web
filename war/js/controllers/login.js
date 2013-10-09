@@ -237,13 +237,15 @@ angular.module('WebPaige.Controllers.Login', [])
 	                _groups   = function (groups)
                               {
                                 var _groups = {};
-                                angular.forEach(groups, function (group)
-                                                        {
-                                                          _groups[group.uuid] = {
-                                                            status:     true,
-                                                            divisions:  false
-                                                          };
-                                                        }
+                                angular.forEach(
+                                  groups,
+                                  function (group)
+                                  {
+                                    _groups[group.uuid] = {
+                                      status:     true,
+                                      divisions:  false
+                                    };
+                                  }
                                 );
                                 return _groups;
                               };
@@ -391,7 +393,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('SAVE ME (with parenting) ->', defaults);
 
 	                  Settings.save(resources.uuid, defaults)
-	                  .then(function (setted)
+	                  .then(function ()
 	                  {
 	                    User.resources()
 	                    .then(function (got)
@@ -412,7 +414,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                defaults.app.group = groups[0].uuid;
 
 	                Settings.save(resources.uuid, defaults)
-	                .then(function (setted)
+	                .then(function ()
 	                {
 	                  User.resources()
 	                  .then(function (got)

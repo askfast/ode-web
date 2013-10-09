@@ -273,7 +273,10 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	  {
 	    var deferred = $q.defer();
 
-      resources.name = resources.firstName + ' ' + resources.lastName;
+      if (resources.firstName != undefined || resources.lastName != undefined)
+      {
+        resources.name = resources.firstName + ' ' + resources.lastName;
+      }
 
 	    Profile.save(
 	      {

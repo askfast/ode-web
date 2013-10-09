@@ -2002,7 +2002,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    changePassword.get({
           uuid: uuid,
           pass: newpass,
-          key: key
+          key:  key
         },
 	      function (result)
 	      {
@@ -4787,7 +4787,10 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	  {
 	    var deferred = $q.defer();
 
-      resources.name = resources.firstName + ' ' + resources.lastName;
+      if (resources.firstName != undefined || resources.lastName != undefined)
+      {
+        resources.name = resources.firstName + ' ' + resources.lastName;
+      }
 
 	    Profile.save(
 	      {
@@ -8488,13 +8491,15 @@ angular.module('WebPaige.Controllers.Login', [])
 	                _groups   = function (groups)
                               {
                                 var _groups = {};
-                                angular.forEach(groups, function (group)
-                                                        {
-                                                          _groups[group.uuid] = {
-                                                            status:     true,
-                                                            divisions:  false
-                                                          };
-                                                        }
+                                angular.forEach(
+                                  groups,
+                                  function (group)
+                                  {
+                                    _groups[group.uuid] = {
+                                      status:     true,
+                                      divisions:  false
+                                    };
+                                  }
                                 );
                                 return _groups;
                               };
@@ -8642,7 +8647,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('SAVE ME (with parenting) ->', defaults);
 
 	                  Settings.save(resources.uuid, defaults)
-	                  .then(function (setted)
+	                  .then(function ()
 	                  {
 	                    User.resources()
 	                    .then(function (got)
@@ -8663,7 +8668,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                defaults.app.group = groups[0].uuid;
 
 	                Settings.save(resources.uuid, defaults)
-	                .then(function (setted)
+	                .then(function ()
 	                {
 	                  User.resources()
 	                  .then(function (got)
@@ -9403,6 +9408,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   * Pass time slots data
 	   */
 	  $scope.data = data;
+
+
+    console.warn('data ->', angular.toJson(data));
 
 	  
 	  /**
@@ -13236,9 +13244,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Set data for view
 	   */
-    console.log('uuid ->', $rootScope.app.resources.uuid);
-    console.log('userId ->', $route.current.params.userId);
-    console.log('absUrl ->', $location.absUrl());
+    // console.log('uuid ->', $rootScope.app.resources.uuid);
+    // console.log('userId ->', $route.current.params.userId);
+    // console.log('absUrl ->', $location.absUrl());
 
     if ($location.absUrl().match(/$rootScope.app.resources.uuid/))
     {

@@ -11,8 +11,8 @@
 
 ## Versions
 
-  2.3.6
-    *
+  2.3.6 (Snapshot)
+    * Bug fix for 'undefined undefined' names 9-10-2013
 
   2.3.5
 	  * Deployed for 100T, 110K, 120G and 130B 26-8-2013
