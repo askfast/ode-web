@@ -4787,7 +4787,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	  {
 	    var deferred = $q.defer();
 
-      if (resources.firstName != undefined || resources.lastName != undefined)
+      if (resources.firstName != undefined && resources.lastName != undefined)
       {
         resources.name = resources.firstName + ' ' + resources.lastName;
       }
