@@ -11,6 +11,9 @@
 
 ## Versions
 
+  2.3.7 (Snapshot)
+    *
+
   2.3.6
 	  * Deployed for 100T, 110K, 120G and 130B 11-10-2013
     * Bug fix for lower cased user names on registering 11-10-2013
