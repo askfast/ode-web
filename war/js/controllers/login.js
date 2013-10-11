@@ -51,7 +51,10 @@ angular.module('WebPaige.Controllers.Login', [])
 	  /**
 	   * KNRM users for testing
 	   */
-	  if ($rootScope.config.demo_users) $scope.demo_users = demo_users;
+	  if ($rootScope.config.demo_users && demo_users.length > 0)
+    {
+      $scope.demo_users = demo_users;
+    }
 
 
 	  /**
@@ -155,6 +158,17 @@ angular.module('WebPaige.Controllers.Login', [])
 	      remember: $scope.logindata.remember
 	    }));
 
+      /**
+       * Create storage for smart alarming guard values
+       */
+      if ($rootScope.config.smartAlarm)
+      {
+        Storage.add('guard', angular.toJson({
+          monitor:  '',
+          role:     ''
+        }));
+      }
+
 	    self.auth( $scope.logindata.username, MD5($scope.logindata.password ));
 	  };
 
@@ -237,13 +251,15 @@ angular.module('WebPaige.Controllers.Login', [])
 	                _groups   = function (groups)
                               {
                                 var _groups = {};
-                                angular.forEach(groups, function (group)
-                                                        {
-                                                          _groups[group.uuid] = {
-                                                            status:     true,
-                                                            divisions:  false
-                                                          };
-                                                        }
+                                angular.forEach(
+                                  groups,
+                                  function (group)
+                                  {
+                                    _groups[group.uuid] = {
+                                      status:     true,
+                                      divisions:  false
+                                    };
+                                  }
                                 );
                                 return _groups;
                               };
@@ -391,7 +407,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                  // console.warn('SAVE ME (with parenting) ->', defaults);
 
 	                  Settings.save(resources.uuid, defaults)
-	                  .then(function (setted)
+	                  .then(function ()
 	                  {
 	                    User.resources()
 	                    .then(function (got)
@@ -412,7 +428,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	                defaults.app.group = groups[0].uuid;
 
 	                Settings.save(resources.uuid, defaults)
-	                .then(function (setted)
+	                .then(function ()
 	                {
 	                  User.resources()
 	                  .then(function (got)
@@ -452,8 +468,27 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.getMessages();
 
-	    self.getMembers();    
+	    self.getMembers();
+
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        self.getGuard();
+      }
 	  }
+
+
+    /**
+     * Get guard value for smart alarming
+     */
+    self.getGuard = function ()
+    {
+      Groups.guardMonitor()
+        .then(function ()
+        {
+          Groups.guardRole();
+        });
+    };
+
 
 	  /**
 	   * TODO
@@ -463,22 +498,19 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  self.getMembers = function ()
 	  {
-	    var groups = Storage.local.groups();
-
 	    Groups.query()
 	    .then(function (groups)
 	    {
 	      var calls = [];
 
-	      angular.forEach(groups, function (group, index)
+	      angular.forEach(groups, function (group)
 	      {
 	        calls.push(Groups.get(group.uuid));
 	      });
 
 	      $q.all(calls)
-	      .then(function (result)
+	      .then(function ()
 	      {
-	        // console.warn('members ->', result);
 	        Groups.uniqueMembers();
 	      });
 	    });

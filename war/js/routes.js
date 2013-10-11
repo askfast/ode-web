@@ -136,7 +136,7 @@ angular.module('WebPaige')
           '$rootScope', 'Profile', '$route', '$location',
           function ($rootScope, Profile, $route, $location)
           {
-            if ($route.current.params.userId != $rootScope.app.resources.uuid)
+            if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
             {
               // IE route fix
               var onejan = new Date(new Date().getFullYear(),0,1);
@@ -154,11 +154,11 @@ angular.module('WebPaige')
                     end:    periods.weeks[current].last.timeStamp / 1000
                   };
 
-              return Profile.getWithSlots($route.current.params.userId, false, ranges);
+              return Profile.getWithSlots($route.current.params.userId.toLowerCase(), false, ranges);
             }
             else
             {
-              return Profile.get($route.current.params.userId, false);
+              return Profile.get($route.current.params.userId.toLowerCase(), false);
             }
           }
         ]

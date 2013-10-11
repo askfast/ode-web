@@ -9,7 +9,6 @@ var profile = {
 
   host: function ()
   {
-    // Cape
     // return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://askpack.ask-cs.com/second/ns_knrmtest';
     return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
     // return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://192.168.128.197\\:8888/ns_knrmtest';
@@ -85,7 +84,9 @@ var profile = {
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     }
-  }
+  },
+
+  smartAlarm: false
 };
 
 

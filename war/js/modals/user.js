@@ -169,7 +169,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    changePassword.get({
           uuid: uuid,
           pass: newpass,
-          key: key
+          key:  key
         },
 	      function (result)
 	      {

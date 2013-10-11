@@ -115,6 +115,22 @@ angular.module('WebPaige')
       Messages.unreadCount();
     }
 
+    /**
+     * Initialize empty guard data container for smart alarming
+     */
+    if (angular.fromJson(Storage.get('guard')))
+    {
+     $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
+    }
+    else
+    {
+      $rootScope.app.guard = {
+        monitor: '',
+        role: '',
+        currentState: ''
+      };
+    }
+
 
     /**
      * Show action loading messages

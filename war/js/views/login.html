@@ -91,7 +91,7 @@
 		    class="" 
 		    type="text" 
 		    ng-model="remember.id"
-		    placeholder="{{ui.login.emailAddress}}">
+		    placeholder="{{ui.login.placeholder_username}}">
 
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
 		  <p><small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small></p>
@@ -101,10 +101,9 @@
 	<!-- end remember login -->
 	
 	<!-- change pass --> 
-	<div id="changePass" ng-show="views.changePass">
+	<div id="changePass" class="boxed" ng-show="views.changePass">
 		<form ng-submit="changePass()">
 			<img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
-			<br>
 			<h4 class="form-signin-heading">{{changepass.uuid}}</h4>
 			<div class="alert {{alert.changePass.type}}" ng-show="alert.changePass.display">
 				<button class="close" type="button" ng-click="alert.changePass=false">×</button>
