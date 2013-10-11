@@ -491,9 +491,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get members list (SILENTLY)
 	   */
 	  self.getMembers = function ()
@@ -518,9 +516,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get messages (SILENTLY)
 	   */
 	  self.getMessages = function ()
@@ -573,11 +569,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
-	   * TODO
-	   * Make button state change!
-	   * Finish it!
-	   * 
+	   * TODO: RE-FACTORY Make button state change! Finish it!
 	   * Forgot password
 	   */
 		$scope.forgot = function ()
@@ -616,7 +608,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		self.changePass =  function (uuid, newpass, key)
@@ -655,7 +647,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		$scope.changePass = function ()

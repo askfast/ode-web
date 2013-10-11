@@ -148,7 +148,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           Storage.add('guard', angular.toJson({
             monitor: returned,
             role:    guard.role,
-            currentState: guard.currentState
+            currentState: guard.currentState,
+            currentStateClass: guard.currentStateClass
           }));
 
 //          $rootScope.$apply(function ()
@@ -184,7 +185,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         },
         function (results)
         {
-          console.log('Guard role ->', results);
+          // console.log('Guard role ->', results);
 
           var predefinedRole = '',
               guard = angular.fromJson(Storage.get('guard'));
@@ -195,7 +196,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             {
               predefinedRole = role;
 
-              console.log('found one ->', role);
+              // console.log('found one ->', role);
             }
           });
 
@@ -204,7 +205,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             Storage.add('guard', angular.toJson({
               monitor: guard.monitor,
               role:    predefinedRole,
-              currentState: guard.currentState
+              currentState: guard.currentState,
+              currentStateClass: guard.currentStateClass
             }));
           }
           else
@@ -213,6 +215,10 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           }
 
           $rootScope.app.guard.role = predefinedRole;
+
+          $rootScope.app.guard.currentState = Slots.currentState();
+
+          if ($rootScope.app.guard.currentState == 'Beschikbaar')
 
           $rootScope.app.guard.currentState = Slots.currentState();
 

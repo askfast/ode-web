@@ -127,7 +127,8 @@ angular.module('WebPaige')
       $rootScope.app.guard = {
         monitor: '',
         role: '',
-        currentState: ''
+        currentState: '',
+        currentStateClass: ''
       };
     }
 

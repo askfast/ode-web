@@ -489,7 +489,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
       Slots.query(params,
         function (result)
         {
-          deferred.resolve($rootScope.config.statesall[result[0]['text']].label);
+          deferred.resolve($rootScope.config.statesall[result[0]['text']]);
         });
 
       return deferred.promise;
@@ -732,8 +732,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Add back-end
+	   * TODO: Add back-end
 	   *
 	   * Check whether slot is being replaced on top of an another
 	   * slot of same sort. If so combine them silently and show them as

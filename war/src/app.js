@@ -963,7 +963,8 @@ angular.module('WebPaige')
       },
       background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000:      profile.p2000,
-      mobileApp:  profile.mobileApp
+      mobileApp:  profile.mobileApp,
+      smartAlarm: profile.smartAlarm
     },
 
     statesall: {
@@ -1465,7 +1466,8 @@ angular.module('WebPaige')
       $rootScope.app.guard = {
         monitor: '',
         role: '',
-        currentState: ''
+        currentState: '',
+        currentStateClass: ''
       };
     }
 
@@ -2717,7 +2719,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
       Slots.query(params,
         function (result)
         {
-          deferred.resolve($rootScope.config.statesall[result[0]['text']].label);
+          deferred.resolve($rootScope.config.statesall[result[0]['text']]);
         });
 
       return deferred.promise;
@@ -2960,8 +2962,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Add back-end
+	   * TODO: Add back-end
 	   *
 	   * Check whether slot is being replaced on top of an another
 	   * slot of same sort. If so combine them silently and show them as
@@ -4138,7 +4139,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           Storage.add('guard', angular.toJson({
             monitor: returned,
             role:    guard.role,
-            currentState: guard.currentState
+            currentState: guard.currentState,
+            currentStateClass: guard.currentStateClass
           }));
 
 //          $rootScope.$apply(function ()
@@ -4174,7 +4176,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         },
         function (results)
         {
-          console.log('Guard role ->', results);
+          // console.log('Guard role ->', results);
 
           var predefinedRole = '',
               guard = angular.fromJson(Storage.get('guard'));
@@ -4185,7 +4187,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             {
               predefinedRole = role;
 
-              console.log('found one ->', role);
+              // console.log('found one ->', role);
             }
           });
 
@@ -4194,7 +4196,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             Storage.add('guard', angular.toJson({
               monitor: guard.monitor,
               role:    predefinedRole,
-              currentState: guard.currentState
+              currentState: guard.currentState,
+              currentStateClass: guard.currentStateClass
             }));
           }
           else
@@ -4203,6 +4206,10 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           }
 
           $rootScope.app.guard.role = predefinedRole;
+
+          $rootScope.app.guard.currentState = Slots.currentState();
+
+          if ($rootScope.app.guard.currentState == 'Beschikbaar')
 
           $rootScope.app.guard.currentState = Slots.currentState();
 
@@ -8919,9 +8926,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get members list (SILENTLY)
 	   */
 	  self.getMembers = function ()
@@ -8946,9 +8951,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get messages (SILENTLY)
 	   */
 	  self.getMessages = function ()
@@ -9001,11 +9004,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
-	   * TODO
-	   * Make button state change!
-	   * Finish it!
-	   * 
+	   * TODO: RE-FACTORY Make button state change! Finish it!
 	   * Forgot password
 	   */
 		$scope.forgot = function ()
@@ -9044,7 +9043,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		self.changePass =  function (uuid, newpass, key)
@@ -9083,7 +9082,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		$scope.changePass = function ()
