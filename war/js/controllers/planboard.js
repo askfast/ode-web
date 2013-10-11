@@ -29,7 +29,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.data = data;
 
 
-    console.warn('data ->', angular.toJson(data));
+    // console.warn('data ->', angular.toJson(data));
 
 	  
 	  /**

@@ -11,8 +11,10 @@
 
 ## Versions
 
-  2.3.6 (Snapshot)
-    * Bug fix for 'undefined undefined' names 9-10-2013
+  2.3.6
+	  * Deployed for 100T, 110K, 120G and 130B 11-10-2013
+    * Bug fix for lower cased user names on registering 11-10-2013
+    * Bug fix for re-setting name during the login 9-10-2013
 
   2.3.5
 	  * Deployed for 100T, 110K, 120G and 130B 26-8-2013

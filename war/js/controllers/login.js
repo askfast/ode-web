@@ -51,7 +51,10 @@ angular.module('WebPaige.Controllers.Login', [])
 	  /**
 	   * KNRM users for testing
 	   */
-	  if ($rootScope.config.demo_users) $scope.demo_users = demo_users;
+	  if ($rootScope.config.demo_users && demo_users.length > 0)
+    {
+      $scope.demo_users = demo_users;
+    }
 
 
 	  /**
@@ -154,6 +157,17 @@ angular.module('WebPaige.Controllers.Login', [])
 	      password: $scope.logindata.password,
 	      remember: $scope.logindata.remember
 	    }));
+
+      /**
+       * Create storage for smart alarming guard values
+       */
+      if ($rootScope.config.smartAlarm)
+      {
+        Storage.add('guard', angular.toJson({
+          monitor:  '',
+          role:     ''
+        }));
+      }
 
 	    self.auth( $scope.logindata.username, MD5($scope.logindata.password ));
 	  };
@@ -454,8 +468,27 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.getMessages();
 
-	    self.getMembers();    
+	    self.getMembers();
+
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        self.getGuard();
+      }
 	  }
+
+
+    /**
+     * Get guard value for smart alarming
+     */
+    self.getGuard = function ()
+    {
+      Groups.guardMonitor()
+        .then(function ()
+        {
+          Groups.guardRole();
+        });
+    };
+
 
 	  /**
 	   * TODO
@@ -465,22 +498,19 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  self.getMembers = function ()
 	  {
-	    var groups = Storage.local.groups();
-
 	    Groups.query()
 	    .then(function (groups)
 	    {
 	      var calls = [];
 
-	      angular.forEach(groups, function (group, index)
+	      angular.forEach(groups, function (group)
 	      {
 	        calls.push(Groups.get(group.uuid));
 	      });
 
 	      $q.all(calls)
-	      .then(function (result)
+	      .then(function ()
 	      {
-	        // console.warn('members ->', result);
 	        Groups.uniqueMembers();
 	      });
 	    });

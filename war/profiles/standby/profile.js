@@ -9,16 +9,12 @@ var profile = {
 
 	host: function ()
 	{
-    return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
+    return ($.browser.msie) ? '/proxy/standby' : 'http://backend.ask-cs.com/standby';
 	},
 
   states: [
     'com.ask-cs.State.Available',
-    'com.ask-cs.State.KNRM.BeschikbaarNoord',
-    'com.ask-cs.State.KNRM.BeschikbaarZuid',
-    'com.ask-cs.State.Unavailable',
-    'com.ask-cs.State.KNRM.SchipperVanDienst',
-    'com.ask-cs.State.Unreached'
+    'com.ask-cs.State.Unavailable'
   ],
 
   timeline: {
@@ -65,5 +61,5 @@ var profile = {
     }
   },
 
-  smartAlarm: false
+  smartAlarm: true
 };
