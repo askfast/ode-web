@@ -12,13 +12,15 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.6 (Snapshot)',
+    version:  '2.3.6',
     lang:     'nl',
 
     fullscreen: true,
 
     // REMOVE
-    demo_users: false,
+    demo_users: true,
+
+    smartAlarm: profile.smartAlarm,
 
     profile: {
       meta:   profile.meta,

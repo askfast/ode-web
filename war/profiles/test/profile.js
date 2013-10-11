@@ -84,7 +84,9 @@ var profile = {
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     }
-  }
+  },
+
+  smartAlarm: false
 };
 
 

@@ -67,7 +67,9 @@ var profile = {
       ga('create', 'UA-41638717-1', 'ask-cs.com');
       ga('send', 'pageview');
     }
-  }
+  },
+
+  smartAlarm: false
 };
 
 

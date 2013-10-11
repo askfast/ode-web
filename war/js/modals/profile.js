@@ -77,19 +77,21 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	  {    
 	    var deferred = $q.defer();
 
+      var uuid = profile.username.toLowerCase();
+
 	    Register.profile(
 	      {
-	        uuid: 	profile.username,
+	        uuid: 	uuid,
 	        pass: 	MD5(profile.password),
 	        name: 	String(profile.firstName + ' ' + profile.lastName),
 	        phone: 	profile.PhoneAddress
 	      }, 
 	      function (registered) 
 	      {
-	        Profile.prototype.role(profile.username, profile.role.id)
+	        Profile.prototype.role(uuid, profile.role.id)
 	        .then(function (roled)
 	        {
-	          Profile.prototype.save(profile.username, {
+	          Profile.prototype.save(uuid, {
               firstName:    profile.firstName,
               lastName:     profile.lastName,
 	            EmailAddress: profile.EmailAddress,
@@ -103,7 +105,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            angular.forEach(profile.groups, function (group)
 	            {
 	              calls.push(Groups.addMember({
-	                id: 		profile.username,
+	                id: 		uuid,
 	                group: 	group
 	              }));
 	            });

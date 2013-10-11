@@ -14,11 +14,7 @@ var profile = {
 
   states: [
     'com.ask-cs.State.Available',
-    'com.ask-cs.State.KNRM.BeschikbaarNoord',
-    'com.ask-cs.State.KNRM.BeschikbaarZuid',
-    'com.ask-cs.State.Unavailable',
-    'com.ask-cs.State.KNRM.SchipperVanDienst',
-    'com.ask-cs.State.Unreached'
+    'com.ask-cs.State.Unavailable'
   ],
 
   timeline: {
@@ -63,5 +59,7 @@ var profile = {
     code:   function ()
     {
     }
-  }
+  },
+
+  smartAlarm: true
 };

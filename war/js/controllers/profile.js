@@ -53,10 +53,10 @@ angular.module('WebPaige.Controllers.Profile', [])
       console.log('this is user');
     }
 
-    if (!!($rootScope.app.resources.uuid != $route.current.params.userId))
+    if (!!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
     {
 
-      console.log('initing -->', !!($rootScope.app.resources.uuid != $route.current.params.userId));
+      console.log('initing -->', !!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId));
 
       if (data.slots)
       {
@@ -80,7 +80,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Get groups of user
 	   */
-	  $scope.groups = Groups.getMemberGroups($route.current.params.userId);
+	  $scope.groups = Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
 
 	  /**
@@ -175,7 +175,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 	    $scope.views[hash] = true;
 
-	    $scope.views.user = ($rootScope.app.resources.uuid == $route.current.params.userId) ? true : false;
+	    $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId) ? true : false;
 	  }
 
 
@@ -220,9 +220,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	      {
 	        $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
-	        var flag = ($route.current.params.userId == $rootScope.app.resources.uuid) ? true : false;
+	        var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid) ? true : false;
 
-	        Profile.get($route.current.params.userId, flag)
+	        Profile.get($route.current.params.userId.toLowerCase(), flag)
 	        .then(function (data)
 	        {
 	          if (data.error)
@@ -309,7 +309,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  if ($rootScope.app.resources.uuid != $route.current.params.userId)
+	  if ($rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase())
 	  {
 	  	timelinebooter();
 	  }

@@ -8,6 +8,14 @@
 
   <div class="well well-large greetings">
     <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
+
+    <div ng-show="config.smartAlarm">
+      <h4>Current State</h4>
+      <p>
+        Beschikbaar: {{ app.guard.currentState }} <br>
+        StandBy as {{ app.guard.role }}
+      </p>
+    </div>
   </div>
 
   <!-- row-fluid -->

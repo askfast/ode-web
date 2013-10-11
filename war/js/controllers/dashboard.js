@@ -12,8 +12,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile',
-	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile)
+	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups',
+	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups)
 	{
 		/**
 		 * Fix styles
@@ -259,6 +259,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		getOverviews();
 
 
+    /**
+     * Get guard role
+     */
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      Groups.guardRole();
+    }
+
+
 		/**
 		 * Save widget settings
 		 */
@@ -356,6 +365,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 						$scope.$apply()
 						{
 							$scope.getP2000();
+
+              // console.log('working in the background');
+
+              if ($rootScope.config.profile.smartAlarm)
+              {
+                Groups.guardRole();
+              }
+
+              // $scope.getGuard.global();
 						}
 					}
 				// Sync periodically for a minute

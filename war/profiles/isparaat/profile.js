@@ -63,5 +63,7 @@ var profile = {
     code:   function ()
     {
     }
-  }
+  },
+
+  smartAlarm: false
 };

@@ -61,18 +61,18 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	  );
 
 
-	  var Parents = $resource(
-	    $config.host + '/parent',
-	    {
-	    },
-	    {
-	      get: {
-	        method: 'GET',
-	        params: {},
-	        isArray: true
-	      }
-	    }
-	  );
+    var Parents = $resource(
+      $config.host + '/parent',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
 
 
 	  var Members = $resource(
@@ -105,41 +105,164 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	  );
 
 
-	  /**
-	   * Get parent group data
-	   */
-	  Groups.prototype.parents = function (all) 
-	  {   
-	    var deferred = $q.defer();
+    /**
+     * Smart Alarming
+     */
+    var Guards = $resource(
+      $config.host + '/network/guard/:id/:team',
+      {
+      },
+      {
+        global: {
+          method: 'GET',
+          isArray: true
+        },
+        position: {
+          method: 'GET',
+          params: {id: '', team: ''}
+        }
+      }
+    );
 
-	    Parents.get(
-	      null, 
-	      function (result) 
-	      {
-	        if (!all)
-	        {
-	          if (result.length == 0)
-	          {
-	            deferred.resolve(null);
-	          }
-	          else
-	          {
-	            deferred.resolve(result[0].uuid);
-	          }
-	        }
-	        else
-	        {
-	          deferred.resolve(result);
-	        }
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
 
-	    return deferred.promise;
-	  };
+    /**
+     * Get current smart alarming guard data
+     */
+    Groups.prototype.guardMonitor = function ()
+    {
+      var deferred = $q.defer();
+
+      var guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.global(
+        null,
+        function (result)
+        {
+          var returned = '';
+
+          angular.forEach(result[0], function (chr)
+          {
+            returned += chr
+          });
+
+          Storage.add('guard', angular.toJson({
+            monitor: returned,
+            role:    guard.role,
+            currentState: guard.currentState
+          }));
+
+//          $rootScope.$apply(function ()
+//          {
+            $rootScope.app.guard.monitor = returned;
+//          });
+
+          deferred.resolve(returned);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get guard role for smart alarming
+     */
+    Groups.prototype.guardRole = function ()
+    {
+      var deferred = $q.defer();
+
+      var guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.position(
+        {
+          id:   guard.monitor,
+          team: 'team'
+        },
+        function (results)
+        {
+          console.log('Guard role ->', results);
+
+          var predefinedRole = '',
+              guard = angular.fromJson(Storage.get('guard'));
+
+          angular.forEach(results, function (person, role)
+          {
+            if (person == $rootScope.app.resources.uuid)
+            {
+              predefinedRole = role;
+
+              console.log('found one ->', role);
+            }
+          });
+
+          if (predefinedRole != '')
+          {
+            Storage.add('guard', angular.toJson({
+              monitor: guard.monitor,
+              role:    predefinedRole,
+              currentState: guard.currentState
+            }));
+          }
+          else
+          {
+            predefinedRole = 'no role assigned';
+          }
+
+          $rootScope.app.guard.role = predefinedRole;
+
+          $rootScope.app.guard.currentState = Slots.currentState();
+
+          deferred.resolve(results);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get parent group data
+     */
+    Groups.prototype.parents = function (all)
+    {
+      var deferred = $q.defer();
+
+      Parents.get(
+        null,
+        function (result)
+        {
+          if (!all)
+          {
+            if (result.length == 0)
+            {
+              deferred.resolve(null);
+            }
+            else
+            {
+              deferred.resolve(result[0].uuid);
+            }
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
 
 
 	  /**

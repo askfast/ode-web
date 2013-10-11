@@ -465,6 +465,37 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	  };
 
 
+    /**
+     * Get current state of the user
+     */
+    Slots.prototype.currentState = function ()
+    {
+      /**
+       * TODO: Use mathematical formula to calculate it
+       */
+      var now;
+      now = String(Date.now().getTime());
+      now = Number(now.substr(0, now.length - 3));
+
+      var deferred  = $q.defer(),
+          params    = {
+            user:   angular.fromJson(Storage.get('resources')).uuid,
+            start:  now,
+            end:    now + 1
+          };
+
+      // console.log('states ->', );
+
+      Slots.query(params,
+        function (result)
+        {
+          deferred.resolve($rootScope.config.statesall[result[0]['text']].label);
+        });
+
+      return deferred.promise;
+    };
+
+
 	  /**
 	   * Get slot bundels; user, group aggs and members
 	   */
