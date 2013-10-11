@@ -18,7 +18,7 @@ angular.module('WebPaige')
     fullscreen: true,
 
     // REMOVE
-    demo_users: true,
+    demo_users: false,
 
     smartAlarm: profile.smartAlarm,
 
