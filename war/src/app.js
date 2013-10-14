@@ -3369,14 +3369,25 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        Messages.prototype.scheaduled.list()
-	        .then(function (scheadules)
-	      	{
-	        	deferred.resolve({
-	        		messages: 			Messages.prototype.filter(result),
-	        		scheadules: 		scheadules
-	        	});
-	      	});
+          if (!$rootScope.config.profile.smartAlarm)
+          {
+            Messages.prototype.scheaduled.list()
+              .then(function (scheadules)
+              {
+                deferred.resolve({
+                  messages: 			Messages.prototype.filter(result),
+                  scheadules: 		scheadules
+                });
+              });
+          }
+          else
+          {
+            deferred.resolve({
+              messages: 			Messages.prototype.filter(result),
+              scheadules: 		{}
+            });
+          }
+
 	      },
 	      function (error)
 	      {
@@ -3570,7 +3581,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	                message.state == 'TRASH')
 	      {
 	        filtered.trash.push(message);
-	      };
+	      }
 	    });
 
 
@@ -3586,7 +3597,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
 
 					offset ++;
-		  	};
+		  	}
 
 		  	return newarr;
 	    };
@@ -3632,12 +3643,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    angular.forEach(members, function(member)
 	    {
-	        receivers.push({
-	          id: member.uuid,
-	          name: member.name,
-            lastName: member.resources.lastName,
-            firstName: member.resources.firstName,
-	          group: $rootScope.ui.message.receiversUsers
+        receivers.push({
+          id: member.uuid,
+          name: member.name,
+          lastName: member.resources.lastName,
+          firstName: member.resources.firstName,
+          group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
@@ -3658,11 +3669,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    angular.forEach(groups, function(group)
 	    {
-	        receivers.push({
-	          id: group.uuid,
-	          name: group.name,
-            lastName: group.name,
-	          group: $rootScope.ui.message.receiversGroups
+        receivers.push({
+          id: group.uuid,
+          name: group.name,
+          lastName: group.name,
+          group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 
@@ -3702,7 +3713,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      {
 	        var returned = '';
 
-	        angular.forEach(result, function (chr, i)
+	        angular.forEach(result, function (chr)
 	        {
 	          returned += chr;
 	        });
@@ -3830,7 +3841,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 				    //   }
 				    // );
 		      // };
-		    };
+		    }
 	    });
 
 	    $rootScope.app.unreadMessages = counter;
@@ -3860,8 +3871,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    );
 
 	    /**
-	     * Change message state locally as well
-	     * if it is READ
+	     * Change message state locally as well if it is READ
 	     */
 	    if (state == 'READ')
 	    {
@@ -3883,7 +3893,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      Storage.add(angular.toJson('messages', converted));
 
 	      Messages.prototype.unreadCount();
-	    };
+	    }
 
 	    return deferred.promise;
 	  };
@@ -3984,7 +3994,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    });
 
 	    return deferred.promise;
-	  }
+	  };
 
 
 	  return new Messages;
@@ -7714,12 +7724,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
     ])
 
 
-
-
-
-
-
-
 /**
  * Main range filter
  */
@@ -7797,12 +7801,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
  * Main range week filter
  */
@@ -7841,12 +7839,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 ])
-
-
-
-
-
-
 
 
 /**
@@ -7904,11 +7896,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Range info week filter
  */
@@ -7927,19 +7914,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
- * BUG!
- * Maybe not replace bar- ?
- * 
- * TODO
- * Implement state conversion from config later on!
- * 
+ * TODO: POSSIBLE BUG? Maybe not replace bar- ?
+ * TODO: Implement state conversion from config later on!
  * Convert ratios to readable formats
  */
 .filter('convertRatios', 
@@ -7971,12 +7948,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /** 
  * Calculate time in days
  */
@@ -7999,12 +7970,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
-
 /**
  * Calculate time in hours
  */
@@ -8025,11 +7990,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		};
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -8057,32 +8017,32 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
  * Convert eve urls to ids
  */
-.filter('convertEve', 
-	function ()
-	{
-	  return function (url)
-	  {
-	  	var eve = url;
+.filter('convertEve',
+  [
+    '$config',
+    function ($config)
+    {
+      return function (url)
+      {
+        if ($config.profile.smartAlarm)
+        {
+          return url;
+        }
+        else
+        {
+          var eve = url;
 
-	  	eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
+          eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
-	    return eve[eve.length-2];
-	  };
-	}
+          return eve[eve.length-2];
+        }
+      };
+    }
+  ]
 )
-
-
-
-
-
 
 
 /** 
@@ -8110,11 +8070,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Convert timeStamps to dates
  */
@@ -8133,17 +8088,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
- * TODO
- * Not used probably!
- *
+ * TODO: Not used probably!
  * Combine this either with nicelyDate or terminate!
- * 
  * Convert timeStamp to readable date and time
  */
 .filter('convertTimeStamp', 
@@ -8159,15 +8106,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
- * TODO
- * Still used?
- * 
+ * TODO: Still used?
  * No title filter
  */
 .filter('noTitle',
@@ -8181,15 +8121,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
- * TODO
- * Finish it!
- * 
+ * TODO: Finish it!
  * Strip span tags
  */
 .filter('stripSpan', 
@@ -8201,11 +8134,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -8220,11 +8148,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -8248,15 +8171,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
- * TODO
- * Unknown filter
+ * TODO: Unknown filter
  */
 .filter('i18n_spec',
 [
@@ -8275,11 +8191,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Truncate group titles for dashboard pie widget
  */
@@ -8296,30 +8207,20 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Make first letter capital
  */
 .filter('toTitleCase', 
-[
-	'Strings', 
-	function (Strings) 
-	{
-		return function (txt)
-		{
-	     return Strings.toTitleCase(txt);
-	  }
-	}
-])
-
-
-
-
-
+  [
+  'Strings',
+    function (Strings)
+    {
+      return function (txt)
+      {
+        return Strings.toTitleCase(txt);
+      }
+    }
+  ])
 
 
 /**
@@ -8332,7 +8233,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		{
 			var total = 0;
 
-			angular.forEach(box, function (bulk, index)
+			angular.forEach(box, function (bulk)
 			{
 				total = total + bulk.length;
 			});
@@ -8343,14 +8244,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
-
 /**
- * Convert offsets array to nicely format in scheaduled jobs
+ * Convert offsets array to nicely format in scheduled jobs
  */
 .filter('nicelyOffsets', 
 [
@@ -8362,7 +8257,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			var offsets 	= Offsetter.factory(data),
 					compiled 	= '';
 
-			angular.forEach(offsets, function (offset, index)
+			angular.forEach(offsets, function (offset)
 			{
 				compiled += '<div style="display:block; margin-bottom: 5px;">';
 
@@ -8391,12 +8286,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
  * Convert array of audience to a nice list
  */
@@ -8411,7 +8300,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    		groups 		= angular.fromJson(Storage.get('groups')),
 	    		audience 	= [];
 
-			angular.forEach(data, function (recipient, index)
+			angular.forEach(data, function (recipient)
 			{
 	  		var name;
 
@@ -8421,7 +8310,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  		}
 	  		else
 	  		{
-	  			angular.forEach(groups, function (group, index)
+	  			angular.forEach(groups, function (group)
 	  			{
 	  				if (group.uuid == recipient) name = group.name;
 	  			});
@@ -11429,6 +11318,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  $rootScope.fixStyles();
 
 	  /**
+     * TODO: Still being used?
 	   * Self this
 	   */
 	  var self = this;
@@ -11512,7 +11402,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Default scheaduled config
+	   * Default scheduled config
 	   */
 		$scope.scheaduled = {
 			title: 		'',
@@ -11543,7 +11433,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    $scope.views[hash] = true;
-	  };
+	  }
 
 
 	  /**
@@ -11604,10 +11494,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * TODO
-	   * Possible bug..
-	   * Still issues with changing state of the message
-	   * 
+	   * TODO: Possible bug.. Still issues with changing state of the message
 	   * Set given group for view
 	   */
 	  function setMessageView (id)
@@ -11785,11 +11672,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    /**
-	     * FIX
-	     * Counter is hard coded because calling counter script is not working!
-	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
-	     * when console log is produced at the time of compilation it is observable that $scope object
-	     * did not include all the functions in the controller
+	     * TODO: FIX Counter is hard coded because calling counter script is not working! Maybe it is because that it is
+       * $scope function and angular needs some time to wrap the things, when console log is produced at the time of
+       * compilation it is observable that $scope object did not include all the functions in the controller
 	     */
 	    // $scope.scheaduleCounter();
 
@@ -11846,10 +11731,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    else
 	    {
 	    	/**
-	    	 * TODO
-	    	 * Why not working properly? Look into this one
-	    	 * 
-	    	 * Reset'em
+	    	 * TODO: Why not working properly? Look into this one
+	    	 * Reset them
 	    	 */
 	    	$location.search({});
 
@@ -12084,7 +11967,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
-	        console.warn('error ->', result);s
+	        console.warn('error ->', result);
 	      }
 	      else
 	      {
@@ -12193,7 +12076,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 		/**
-	   * Fix for not displaying original sender in multiple receivers selector
+	   * TODO: Fix for not displaying original sender in multiple receivers selector
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
@@ -12284,12 +12167,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-
-
-
 	  /**
-	   * Scheaduler jobs manager
+	   * Scheduler jobs manager
 	   */
 	  $scope.scheaduler = {
 
@@ -12326,7 +12205,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Scheaduler jobs lister
+	  	 * Scheduler jobs lister
 	  	 */
 	  	list: function (callback)
 	  	{
@@ -12353,9 +12232,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * NOT IN USE
-	  	 * 
-	  	 * Get a scheaduler job
+	  	 * TODO: NOT IN USE!
+	  	 * Get a scheduler job
 	  	 */
 	  	get: function (uuid)
 	  	{
@@ -12378,7 +12256,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Save a scheadule job
+	  	 * Save a schedule job
 	  	 */
 	  	save: function (message, broadcast, scheaduled)
 	  	{
@@ -12394,7 +12272,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Add a scheadule job
+	  	 * Add a schedule job
 	  	 */
 	  	add: function (message, broadcast, scheaduled)
 	  	{

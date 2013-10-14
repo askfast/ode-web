@@ -20,6 +20,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  $rootScope.fixStyles();
 
 	  /**
+     * TODO: Still being used?
 	   * Self this
 	   */
 	  var self = this;
@@ -103,7 +104,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Default scheaduled config
+	   * Default scheduled config
 	   */
 		$scope.scheaduled = {
 			title: 		'',
@@ -134,7 +135,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    $scope.views[hash] = true;
-	  };
+	  }
 
 
 	  /**
@@ -195,10 +196,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * TODO
-	   * Possible bug..
-	   * Still issues with changing state of the message
-	   * 
+	   * TODO: Possible bug.. Still issues with changing state of the message
 	   * Set given group for view
 	   */
 	  function setMessageView (id)
@@ -376,11 +374,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    /**
-	     * FIX
-	     * Counter is hard coded because calling counter script is not working!
-	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
-	     * when console log is produced at the time of compilation it is observable that $scope object
-	     * did not include all the functions in the controller
+	     * TODO: FIX Counter is hard coded because calling counter script is not working! Maybe it is because that it is
+       * $scope function and angular needs some time to wrap the things, when console log is produced at the time of
+       * compilation it is observable that $scope object did not include all the functions in the controller
 	     */
 	    // $scope.scheaduleCounter();
 
@@ -437,10 +433,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    else
 	    {
 	    	/**
-	    	 * TODO
-	    	 * Why not working properly? Look into this one
-	    	 * 
-	    	 * Reset'em
+	    	 * TODO: Why not working properly? Look into this one
+	    	 * Reset them
 	    	 */
 	    	$location.search({});
 
@@ -675,7 +669,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
-	        console.warn('error ->', result);s
+	        console.warn('error ->', result);
 	      }
 	      else
 	      {
@@ -784,7 +778,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 		/**
-	   * Fix for not displaying original sender in multiple receivers selector
+	   * TODO: Fix for not displaying original sender in multiple receivers selector
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
@@ -875,12 +869,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-
-
-
 	  /**
-	   * Scheaduler jobs manager
+	   * Scheduler jobs manager
 	   */
 	  $scope.scheaduler = {
 
@@ -917,7 +907,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Scheaduler jobs lister
+	  	 * Scheduler jobs lister
 	  	 */
 	  	list: function (callback)
 	  	{
@@ -944,9 +934,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * NOT IN USE
-	  	 * 
-	  	 * Get a scheaduler job
+	  	 * TODO: NOT IN USE!
+	  	 * Get a scheduler job
 	  	 */
 	  	get: function (uuid)
 	  	{
@@ -969,7 +958,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Save a scheadule job
+	  	 * Save a schedule job
 	  	 */
 	  	save: function (message, broadcast, scheaduled)
 	  	{
@@ -985,7 +974,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Add a scheadule job
+	  	 * Add a schedule job
 	  	 */
 	  	add: function (message, broadcast, scheaduled)
 	  	{

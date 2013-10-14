@@ -99,14 +99,25 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        Messages.prototype.scheaduled.list()
-	        .then(function (scheadules)
-	      	{
-	        	deferred.resolve({
-	        		messages: 			Messages.prototype.filter(result),
-	        		scheadules: 		scheadules
-	        	});
-	      	});
+          if (!$rootScope.config.profile.smartAlarm)
+          {
+            Messages.prototype.scheaduled.list()
+              .then(function (scheadules)
+              {
+                deferred.resolve({
+                  messages: 			Messages.prototype.filter(result),
+                  scheadules: 		scheadules
+                });
+              });
+          }
+          else
+          {
+            deferred.resolve({
+              messages: 			Messages.prototype.filter(result),
+              scheadules: 		{}
+            });
+          }
+
 	      },
 	      function (error)
 	      {
@@ -300,7 +311,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	                message.state == 'TRASH')
 	      {
 	        filtered.trash.push(message);
-	      };
+	      }
 	    });
 
 
@@ -316,7 +327,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
 
 					offset ++;
-		  	};
+		  	}
 
 		  	return newarr;
 	    };
@@ -362,12 +373,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    angular.forEach(members, function(member)
 	    {
-	        receivers.push({
-	          id: member.uuid,
-	          name: member.name,
-            lastName: member.resources.lastName,
-            firstName: member.resources.firstName,
-	          group: $rootScope.ui.message.receiversUsers
+        receivers.push({
+          id: member.uuid,
+          name: member.name,
+          lastName: member.resources.lastName,
+          firstName: member.resources.firstName,
+          group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
@@ -388,11 +399,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    angular.forEach(groups, function(group)
 	    {
-	        receivers.push({
-	          id: group.uuid,
-	          name: group.name,
-            lastName: group.name,
-	          group: $rootScope.ui.message.receiversGroups
+        receivers.push({
+          id: group.uuid,
+          name: group.name,
+          lastName: group.name,
+          group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 
@@ -432,7 +443,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      {
 	        var returned = '';
 
-	        angular.forEach(result, function (chr, i)
+	        angular.forEach(result, function (chr)
 	        {
 	          returned += chr;
 	        });
@@ -560,7 +571,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 				    //   }
 				    // );
 		      // };
-		    };
+		    }
 	    });
 
 	    $rootScope.app.unreadMessages = counter;
@@ -590,8 +601,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    );
 
 	    /**
-	     * Change message state locally as well
-	     * if it is READ
+	     * Change message state locally as well if it is READ
 	     */
 	    if (state == 'READ')
 	    {
@@ -613,7 +623,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      Storage.add(angular.toJson('messages', converted));
 
 	      Messages.prototype.unreadCount();
-	    };
+	    }
 
 	    return deferred.promise;
 	  };
@@ -714,7 +724,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    });
 
 	    return deferred.promise;
-	  }
+	  };
 
 
 	  return new Messages;
