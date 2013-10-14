@@ -132,6 +132,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
+      console.log('Guard MONITOR has been asked');
+
       var guard = angular.fromJson(Storage.get('guard'));
 
       Guards.global(
@@ -175,6 +177,10 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     Groups.prototype.guardRole = function ()
     {
       var deferred = $q.defer();
+
+      console.log('Guard ROLE has been asked');
+
+      console.count();
 
       var guard = angular.fromJson(Storage.get('guard'));
 

@@ -262,10 +262,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     /**
      * Get guard role
      */
-    if ($rootScope.config.profile.smartAlarm)
-    {
-      Groups.guardRole();
-    }
+//    if ($rootScope.config.profile.smartAlarm)
+//    {
+//      Groups.guardRole();
+//    }
 
 
 		/**
