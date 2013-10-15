@@ -535,6 +535,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.memberSubmit = function (member)
 		{
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        member.role = 1;
+      }
+
 			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
 			Profile.register(member).

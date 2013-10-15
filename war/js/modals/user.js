@@ -38,7 +38,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      process: {
 	        method: 'GET',
-	        params: {}
+	        params: {},
+          isArray: true
 	      }
 	    }
 	  );

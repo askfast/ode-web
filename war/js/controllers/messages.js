@@ -205,6 +205,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    setView('message');
 
+      console.log('Getting message! ->', id);
+
 	    $scope.setViewTo('message');
 
 	    $scope.message = Messages.find(id);
@@ -607,7 +609,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -647,7 +649,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -687,7 +689,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          }
 	          else
 	          {
-	            $scope.messages = messages;
+	            $scope.messages = messages.messages;
 
 	            $rootScope.statusBar.off();
 	          }
@@ -756,7 +758,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            }
 	            else
 	            {
-	              $scope.messages = messages;
+	              $scope.messages = messages.messages;
 
 	              $scope.closeTabs();
 

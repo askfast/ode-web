@@ -31,7 +31,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Defaults for toggler
+		 * Defaults for toggle
 		 */
 		$scope.more = {
 			status: false,
@@ -40,7 +40,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Default values for syned pointer values
+		 * Default values for synced pointer values
 		 */
 		$scope.synced = {
 			alarms: new Date().getTime(),
@@ -49,10 +49,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * TODO
-		 * Check somewhere that user-settings widget-groups are synced with the
-		 * real groups list and if a group is missing in settings-groups add by
-		 * default!
+		 * TODO: Check somewhere that user-settings widget-groups are synced with the
+		 * real groups list and if a group is missing in settings-groups add by default!
 		 */
 		var groups    = Storage.local.groups(),
 				selection = {};
@@ -260,12 +258,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
-     * Get guard role
+     * TODO: DEPRECIATED! Get guard role
      */
-//    if ($rootScope.config.profile.smartAlarm)
-//    {
-//      Groups.guardRole();
-//    }
+    /*
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      Groups.guardRole();
+    }
+    */
 
 
 		/**
@@ -307,6 +307,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
+    /**
+     * Fetcher for p2000 alarm messages
+     */
 		$scope.getP2000 = function  ()
 		{
 			/**
@@ -343,7 +346,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Alarm syncer
+		 * Alarm sync
 		 */
 	  $rootScope.alarmSync = {
 	  	/**
@@ -392,7 +395,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 	  /**
-	   * Init the syncer
+	   * Init the sync process
 	   */
 		$rootScope.alarmSync.start();
 

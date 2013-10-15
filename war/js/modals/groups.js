@@ -132,7 +132,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      console.log('Guard MONITOR has been asked');
+      // console.log('Guard MONITOR has been asked');
 
       var guard = angular.fromJson(Storage.get('guard'));
 
@@ -154,10 +154,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             currentStateClass: guard.currentStateClass
           }));
 
-//          $rootScope.$apply(function ()
-//          {
-            $rootScope.app.guard.monitor = returned;
-//          });
+          $rootScope.app.guard.monitor = returned;
 
           deferred.resolve(returned);
         },
@@ -178,9 +175,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      console.log('Guard ROLE has been asked');
+      // console.log('Guard ROLE has been asked');
 
-      console.count();
+      // console.count();
 
       var guard = angular.fromJson(Storage.get('guard'));
 
@@ -217,7 +214,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           }
           else
           {
-            predefinedRole = 'no role assigned';
+            predefinedRole = 'no roles assigned';
           }
 
           $rootScope.app.guard.role = predefinedRole;

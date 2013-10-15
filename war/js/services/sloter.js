@@ -58,7 +58,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       addLoading: function (data, timedata, rows)
       {
-        angular.forEach(rows, function (row, index)
+        angular.forEach(rows, function (row)
         {
           timedata.push({
             start:  data.periods.end,
@@ -413,7 +413,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         title += ' <span class="label">Behoefte (elke divisie)</span>';
 
-        angular.forEach(data.aggs.wishes, function (wish, index)
+        angular.forEach(data.aggs.wishes, function (wish)
         {
           var cn;
 

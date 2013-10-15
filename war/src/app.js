@@ -1891,7 +1891,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      process: {
 	        method: 'GET',
-	        params: {}
+	        params: {},
+          isArray: true
 	      }
 	    }
 	  );
@@ -4133,7 +4134,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      console.log('Guard MONITOR has been asked');
+      // console.log('Guard MONITOR has been asked');
 
       var guard = angular.fromJson(Storage.get('guard'));
 
@@ -4155,10 +4156,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             currentStateClass: guard.currentStateClass
           }));
 
-//          $rootScope.$apply(function ()
-//          {
-            $rootScope.app.guard.monitor = returned;
-//          });
+          $rootScope.app.guard.monitor = returned;
 
           deferred.resolve(returned);
         },
@@ -4179,9 +4177,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      console.log('Guard ROLE has been asked');
+      // console.log('Guard ROLE has been asked');
 
-      console.count();
+      // console.count();
 
       var guard = angular.fromJson(Storage.get('guard'));
 
@@ -4218,7 +4216,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           }
           else
           {
-            predefinedRole = 'no role assigned';
+            predefinedRole = 'no roles assigned';
           }
 
           $rootScope.app.guard.role = predefinedRole;
@@ -4751,7 +4749,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    {
 	      profile: {
 	        method: 'GET',
-	        params: {uuid: '', pass: '', name: '', phone: ''}
+	        params: {uuid: '', pass: '', name: '', phone: ''},
+          isArray: true
 	      }
 	    }
 	  );
@@ -4823,7 +4822,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            .then(function (grouped)
 	            {
 	              deferred.resolve({
-	                registered: registered,
+	                registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
 	                roled: 			roled,
 	                resourced: 	resourced,
 	                grouped: 		grouped
@@ -6711,7 +6710,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       addLoading: function (data, timedata, rows)
       {
-        angular.forEach(rows, function (row, index)
+        angular.forEach(rows, function (row)
         {
           timedata.push({
             start:  data.periods.end,
@@ -7066,7 +7065,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         title += ' <span class="label">Behoefte (elke divisie)</span>';
 
-        angular.forEach(data.aggs.wishes, function (wish, index)
+        angular.forEach(data.aggs.wishes, function (wish)
         {
           var cn;
 
@@ -7684,50 +7683,50 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Translate roles
  */
-  .filter('translateRole',
-    [
-      '$config',
-      function ($config)
+.filter('translateRole',
+[
+  '$config',
+  function ($config)
+  {
+    return function (role)
+    {
+      var urole;
+
+      angular.forEach($config.roles, function (prole)
       {
-        return function (role)
-        {
-          var urole;
+        if (prole.id == role) urole = prole.label;
+      });
 
-          angular.forEach($config.roles, function (prole)
-          {
-            if (prole.id == role) urole = prole.label;
-          });
-
-          return urole;
-        }
-      }
-    ])
+      return urole;
+    }
+  }
+])
 
 
 /**
  * Translate division ids to names
  */
-  .filter('translateDivision',
-    [
-      '$config',
-      function ($config)
+.filter('translateDivision',
+[
+  '$config',
+  function ($config)
+  {
+    return function (divid)
+    {
+      var filtered;
+
+      angular.forEach($config.timeline.config.divisions, function (division)
       {
-        return function (divid)
+        if (division.id == divid)
         {
-          var filtered;
-
-          angular.forEach($config.timeline.config.divisions, function (division)
-          {
-            if (division.id == divid)
-            {
-              filtered = division.label;
-            }
-          });
-
-          return filtered;
+          filtered = division.label;
         }
-      }
-    ])
+      });
+
+      return filtered;
+    }
+  }
+])
 
 
 /**
@@ -8217,16 +8216,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * Make first letter capital
  */
 .filter('toTitleCase', 
-  [
-  'Strings',
-    function (Strings)
+[
+'Strings',
+  function (Strings)
+  {
+    return function (txt)
     {
-      return function (txt)
-      {
-        return Strings.toTitleCase(txt);
-      }
+      return Strings.toTitleCase(txt);
     }
-  ])
+  }
+])
 
 
 /**
@@ -9098,7 +9097,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Defaults for toggler
+		 * Defaults for toggle
 		 */
 		$scope.more = {
 			status: false,
@@ -9107,7 +9106,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Default values for syned pointer values
+		 * Default values for synced pointer values
 		 */
 		$scope.synced = {
 			alarms: new Date().getTime(),
@@ -9116,10 +9115,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * TODO
-		 * Check somewhere that user-settings widget-groups are synced with the
-		 * real groups list and if a group is missing in settings-groups add by
-		 * default!
+		 * TODO: Check somewhere that user-settings widget-groups are synced with the
+		 * real groups list and if a group is missing in settings-groups add by default!
 		 */
 		var groups    = Storage.local.groups(),
 				selection = {};
@@ -9327,12 +9324,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
-     * Get guard role
+     * TODO: DEPRECIATED! Get guard role
      */
-//    if ($rootScope.config.profile.smartAlarm)
-//    {
-//      Groups.guardRole();
-//    }
+    /*
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      Groups.guardRole();
+    }
+    */
 
 
 		/**
@@ -9374,6 +9373,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
+    /**
+     * Fetcher for p2000 alarm messages
+     */
 		$scope.getP2000 = function  ()
 		{
 			/**
@@ -9410,7 +9412,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Alarm syncer
+		 * Alarm sync
 		 */
 	  $rootScope.alarmSync = {
 	  	/**
@@ -9459,7 +9461,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 	  /**
-	   * Init the syncer
+	   * Init the sync process
 	   */
 		$rootScope.alarmSync.start();
 
@@ -11509,6 +11511,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    setView('message');
 
+      console.log('Getting message! ->', id);
+
 	    $scope.setViewTo('message');
 
 	    $scope.message = Messages.find(id);
@@ -11911,7 +11915,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -11951,7 +11955,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -11991,7 +11995,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          }
 	          else
 	          {
-	            $scope.messages = messages;
+	            $scope.messages = messages.messages;
 
 	            $rootScope.statusBar.off();
 	          }
@@ -12060,7 +12064,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            }
 	            else
 	            {
-	              $scope.messages = messages;
+	              $scope.messages = messages.messages;
 
 	              $scope.closeTabs();
 
@@ -13009,6 +13013,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.memberSubmit = function (member)
 		{
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        member.role = 1;
+      }
+
 			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
 			Profile.register(member).

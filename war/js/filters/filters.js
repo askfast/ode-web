@@ -7,50 +7,50 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Translate roles
  */
-  .filter('translateRole',
-    [
-      '$config',
-      function ($config)
+.filter('translateRole',
+[
+  '$config',
+  function ($config)
+  {
+    return function (role)
+    {
+      var urole;
+
+      angular.forEach($config.roles, function (prole)
       {
-        return function (role)
-        {
-          var urole;
+        if (prole.id == role) urole = prole.label;
+      });
 
-          angular.forEach($config.roles, function (prole)
-          {
-            if (prole.id == role) urole = prole.label;
-          });
-
-          return urole;
-        }
-      }
-    ])
+      return urole;
+    }
+  }
+])
 
 
 /**
  * Translate division ids to names
  */
-  .filter('translateDivision',
-    [
-      '$config',
-      function ($config)
+.filter('translateDivision',
+[
+  '$config',
+  function ($config)
+  {
+    return function (divid)
+    {
+      var filtered;
+
+      angular.forEach($config.timeline.config.divisions, function (division)
       {
-        return function (divid)
+        if (division.id == divid)
         {
-          var filtered;
-
-          angular.forEach($config.timeline.config.divisions, function (division)
-          {
-            if (division.id == divid)
-            {
-              filtered = division.label;
-            }
-          });
-
-          return filtered;
+          filtered = division.label;
         }
-      }
-    ])
+      });
+
+      return filtered;
+    }
+  }
+])
 
 
 /**
@@ -540,16 +540,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * Make first letter capital
  */
 .filter('toTitleCase', 
-  [
-  'Strings',
-    function (Strings)
+[
+'Strings',
+  function (Strings)
+  {
+    return function (txt)
     {
-      return function (txt)
-      {
-        return Strings.toTitleCase(txt);
-      }
+      return Strings.toTitleCase(txt);
     }
-  ])
+  }
+])
 
 
 /**

@@ -198,7 +198,9 @@
         <!-- member form -->
         <form>
           <fieldset>
-            <div class="control-group">
+
+            <div class="control-group"
+                  ng-hide="config.profile.smartAlarm">
               <label class="control-label">{{ui.groups.role}}</label>
               <div class="controls">
                 <select ng-model="memberForm.role"
@@ -207,6 +209,7 @@
                 </select>
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.groups}}</label>
               <div class="controls">

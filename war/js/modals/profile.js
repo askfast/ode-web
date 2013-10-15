@@ -42,7 +42,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    {
 	      profile: {
 	        method: 'GET',
-	        params: {uuid: '', pass: '', name: '', phone: ''}
+	        params: {uuid: '', pass: '', name: '', phone: ''},
+          isArray: true
 	      }
 	    }
 	  );
@@ -114,7 +115,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            .then(function (grouped)
 	            {
 	              deferred.resolve({
-	                registered: registered,
+	                registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
 	                roled: 			roled,
 	                resourced: 	resourced,
 	                grouped: 		grouped
