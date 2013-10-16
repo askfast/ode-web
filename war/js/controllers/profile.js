@@ -250,22 +250,26 @@ angular.module('WebPaige.Controllers.Profile', [])
 	   */
 	  $scope.change = function (passwords)
 	  {
-	    if (passwords.new1 == '' || passwords.new2 == '')
+      if (passwords.new1 == '' || passwords.new2 == '')
 	    {
 	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
 	      return false;
 	    }
 
-	    if (passwords.new1 != passwords.new2)
+      if (passwords.new1 != passwords.new2)
 	    {
-	      $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
+        $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
 
 	      return false;
 	    }
-	    else if ($rootScope.app.resources.askPass == MD5(passwords.current))
+
+      console.log('askPass ->', $rootScope.app.resources.askPass);
+      console.log('current ->', passwords.current, MD5(passwords.current));
+
+      if ($rootScope.app.resources.askPass == MD5(passwords.current))
 	    {
-	      $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
+        $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
 	      Profile.changePassword(passwords)
 	      .then(function (result)
@@ -301,6 +305,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    }
 	    else
 	    {
+        console.log('passwrong ->', $rootScope.ui.profile.passwrong);
+
 	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
 	    }
 	  };
