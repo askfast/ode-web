@@ -1361,6 +1361,7 @@ angular.module('WebPaige')
 
     $rootScope.config.init();
 
+    $('#notification').removeClass('ng-cloak');
 
     /**
      * TODO (Move these checks to jquery.browser)
@@ -3383,16 +3384,16 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
               .then(function (scheadules)
               {
                 deferred.resolve({
-                  messages: 			Messages.prototype.filter(result),
-                  scheadules: 		scheadules
+                  messages: 	Messages.prototype.filter(result),
+                  scheadules: scheadules
                 });
               });
           }
           else
           {
             deferred.resolve({
-              messages: 			Messages.prototype.filter(result),
-              scheadules: 		{}
+              messages: 	Messages.prototype.filter(result),
+              scheadules: {}
             });
           }
 
@@ -4741,7 +4742,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      role: {
 	        method: 'PUT',
-	        params: {section: 'role'}
+	        params: {section: 'role'},
+          isArray: true
 	      }
 	    }
 	  );
@@ -4803,7 +4805,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      }, 
 	      function (registered) 
 	      {
-	        Profile.prototype.role(uuid, profile.role.id)
+          Profile.prototype.role( uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id )
 	        .then(function (roled)
 	        {
 	          Profile.prototype.save(uuid, {
@@ -8438,7 +8440,8 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  $('.navbar').hide();
 	  $('#footer').hide();
-	  $('#watermark').hide();
+    $('#watermark').hide();
+    // $('#notification').hide();
 	  $('body').css({
 	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
 	    'backgroundSize': 'cover'
@@ -8884,7 +8887,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    setTimeout(function ()
 	    {
 	      $('body').css({ 'background': 'none' });
-	      $('.navbar').show();
+        $('.navbar').show();
 	      // $('#mobile-status-bar').show();
 	      // $('#notification').show();
 	      if (!$rootScope.browser.mobile) $('#footer').show();
@@ -9048,7 +9051,8 @@ angular.module('WebPaige.Controllers.Logout', [])
 	function ($rootScope, $scope, $window, Session, User, Storage) 
 	{
 	  $('.navbar').hide();
-	  $('#footer').hide();
+    $('#footer').hide();
+    // $('#notification').hide();
 
 	  var logindata = angular.fromJson(Storage.get('logindata'));
 

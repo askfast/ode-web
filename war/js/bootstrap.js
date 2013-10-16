@@ -22,6 +22,7 @@ angular.module('WebPaige')
 
     $rootScope.config.init();
 
+    $('#notification').removeClass('ng-cloak');
 
     /**
      * TODO (Move these checks to jquery.browser)

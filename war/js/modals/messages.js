@@ -105,16 +105,16 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
               .then(function (scheadules)
               {
                 deferred.resolve({
-                  messages: 			Messages.prototype.filter(result),
-                  scheadules: 		scheadules
+                  messages: 	Messages.prototype.filter(result),
+                  scheadules: scheadules
                 });
               });
           }
           else
           {
             deferred.resolve({
-              messages: 			Messages.prototype.filter(result),
-              scheadules: 		{}
+              messages: 	Messages.prototype.filter(result),
+              scheadules: {}
             });
           }
 

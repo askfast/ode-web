@@ -27,7 +27,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      role: {
 	        method: 'PUT',
-	        params: {section: 'role'}
+	        params: {section: 'role'},
+          isArray: true
 	      }
 	    }
 	  );
@@ -89,7 +90,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      }, 
 	      function (registered) 
 	      {
-	        Profile.prototype.role(uuid, profile.role.id)
+          Profile.prototype.role( uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id )
 	        .then(function (roled)
 	        {
 	          Profile.prototype.save(uuid, {

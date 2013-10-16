@@ -15,7 +15,8 @@ angular.module('WebPaige.Controllers.Logout', [])
 	function ($rootScope, $scope, $window, Session, User, Storage) 
 	{
 	  $('.navbar').hide();
-	  $('#footer').hide();
+    $('#footer').hide();
+    // $('#notification').hide();
 
 	  var logindata = angular.fromJson(Storage.get('logindata'));
 

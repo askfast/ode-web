@@ -102,7 +102,8 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  $('.navbar').hide();
 	  $('#footer').hide();
-	  $('#watermark').hide();
+    $('#watermark').hide();
+    // $('#notification').hide();
 	  $('body').css({
 	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
 	    'backgroundSize': 'cover'
@@ -548,7 +549,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    setTimeout(function ()
 	    {
 	      $('body').css({ 'background': 'none' });
-	      $('.navbar').show();
+        $('.navbar').show();
 	      // $('#mobile-status-bar').show();
 	      // $('#notification').show();
 	      if (!$rootScope.browser.mobile) $('#footer').show();
