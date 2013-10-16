@@ -2747,8 +2747,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
-          console.log('user slots ->', user);
-
           angular.forEach(user, function (slot)
           {
             if (!slot.recursive)
@@ -2779,8 +2777,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	          	 */
 	            if (options.layouts.members)
 	            {
-	              var allMembers = angular.fromJson(Storage.get(options.groupId)),
-	                  calls   = [];
+	              var allMembers  = angular.fromJson(Storage.get(options.groupId)),
+	                  calls       = [];
 
 
                 // console.log('all members ->', allMembers);
@@ -2801,7 +2799,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 						        angular.forEach(members, function (mdata, index)
 						      	{
-						      		angular.forEach(mdata, function (tslot, ind)
+						      		angular.forEach(mdata, function (tslot)
 						      		{
 						      			tslot.text = tslot.state;	
 						      		});
@@ -2974,7 +2972,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 	  /**
 	   * TODO: Add back-end
-	   *
 	   * Check whether slot is being replaced on top of an another
 	   * slot of same sort. If so combine them silently and show them as
 	   * one slot but keep aligned with back-end, like two or more slots 
@@ -3052,9 +3049,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * Check for overlaping slots exists?
+	   * Check for overlapping slots exists?
 	   * 
-	   * Prevent any overlaping slots by adding new slots or changing
+	   * Prevent any overlapping slots by adding new slots or changing
 	   * the current ones in front-end so back-end is almost always aligned with
 	   * front-end.
 	   */
