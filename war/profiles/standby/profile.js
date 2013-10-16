@@ -9,7 +9,8 @@ var profile = {
 
 	host: function ()
 	{
-    return ($.browser.msie) ? '/proxy/standby' : 'http://backend.ask-cs.com/standby';
+    // return ($.browser.msie) ? '/proxy/standby' : 'http://backend.ask-cs.com/standby';
+    return ($.browser.msie) ? '/proxy/standby' : 'http://backend.ask-cs.com/standby-test';
 	},
 
   states: [
