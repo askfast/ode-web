@@ -12,9 +12,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
   {
     return {
       /**
-       * TODO
-       * Modify p2000 script in ask70 for date conversions!!
-       *
+       * TODO: Modify p2000 script in ask70 for date conversions!!
        * p2000 messages processor
        */
       process: function (results)

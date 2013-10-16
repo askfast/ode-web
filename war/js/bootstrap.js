@@ -22,11 +22,15 @@ angular.module('WebPaige')
 
     $rootScope.config.init();
 
-    $('#notification').removeClass('ng-cloak');
 
     /**
-     * TODO (Move these checks to jquery.browser)
-     * 
+     * Turn off the display of notification on refresh @ login page
+     */
+    $('#notification').removeClass('ng-cloak');
+
+
+    /**
+     * TODO: Move these checks to jquery.browser
      * Pass Jquery browser data to angular
      */
     $rootScope.browser = $.browser;
@@ -84,9 +88,6 @@ angular.module('WebPaige')
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
-    // console.log('-->', $rootScope.ui);
-
-
     /**
      * If periods are not present calculate them
      */
@@ -126,10 +127,10 @@ angular.module('WebPaige')
     else
     {
       $rootScope.app.guard = {
-        monitor: '',
-        role: '',
-        currentState: '',
-        currentStateClass: ''
+        monitor:            '',
+        role:               '',
+        currentState:       '',
+        currentStateClass:  ''
       };
     }
 
@@ -155,8 +156,6 @@ angular.module('WebPaige')
 
       display: function (message)
       {
-        // $rootScope.app.preloader || {status: false};
-
         $rootScope.app.preloader.status = false;
 
         $rootScope.loading = {

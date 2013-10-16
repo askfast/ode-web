@@ -1181,10 +1181,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
-	   * TODO
-	   * Stress-test this!
-	   * 
-	   * hotfix against not-dom-ready problem for timeline
+	   * TODO: Stress-test this!
+	   * Hot fix against not-dom-ready problem for timeline
 	   */
 	  if ($scope.timeline && $scope.timeline.main)
 		{

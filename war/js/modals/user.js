@@ -88,9 +88,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  
 	  
 	  /**
-	   * TODO
-	   * RE-FACTORY
-	   * 
+	   * TODO: RE-FACTORY
 	   * User login
 	   */
 	  User.prototype.password = function (uuid)

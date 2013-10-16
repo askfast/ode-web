@@ -95,9 +95,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Lose this jQuery stuff later on!
-	   * 
+	   * TODO:  Lose this jQuery stuff later on!
 	   * Jquery solution of toggling between login and app view
 	   */
 	  $('.navbar').hide();
@@ -111,8 +109,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * use native JSON functions of angular and Store service
+	   * TODO: Use native JSON functions of angular and Store service
 	   */
 	  var logindata = angular.fromJson(Storage.get('logindata'));
 
@@ -120,8 +117,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Remove unneccessary DOM manipulation
+	   * TODO: Remove unneccessary DOM manipulation
 	   * Use cookies for user credentials
 	   * 
 	   * Login trigger
@@ -209,8 +205,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * What happens if preloader stucks?
+	   * TODO: What happens if preloader stucks?
 	   * Optimize preloader and messages
 	   * 
 	   * Initialize preloader

@@ -122,8 +122,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       },
     
       /**
-       * TODO
-       * Look for ways to combine with user
+       * TODO: Look for ways to combine with user
        * 
        * Profile timeline data processing
        */
@@ -530,8 +529,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
           timedata = _this.addLoading(data, timedata, [ link ]);
 
           /**
-           * TODO
-           * Good place to host this here?
+           * TODO: Good place to host this here?
            */
           angular.forEach(member.stats, function (stat)
           {

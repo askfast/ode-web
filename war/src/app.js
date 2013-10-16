@@ -1361,11 +1361,15 @@ angular.module('WebPaige')
 
     $rootScope.config.init();
 
-    $('#notification').removeClass('ng-cloak');
 
     /**
-     * TODO (Move these checks to jquery.browser)
-     * 
+     * Turn off the display of notification on refresh @ login page
+     */
+    $('#notification').removeClass('ng-cloak');
+
+
+    /**
+     * TODO: Move these checks to jquery.browser
      * Pass Jquery browser data to angular
      */
     $rootScope.browser = $.browser;
@@ -1423,9 +1427,6 @@ angular.module('WebPaige')
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
-    // console.log('-->', $rootScope.ui);
-
-
     /**
      * If periods are not present calculate them
      */
@@ -1465,10 +1466,10 @@ angular.module('WebPaige')
     else
     {
       $rootScope.app.guard = {
-        monitor: '',
-        role: '',
-        currentState: '',
-        currentStateClass: ''
+        monitor:            '',
+        role:               '',
+        currentState:       '',
+        currentStateClass:  ''
       };
     }
 
@@ -1494,8 +1495,6 @@ angular.module('WebPaige')
 
       display: function (message)
       {
-        // $rootScope.app.preloader || {status: false};
-
         $rootScope.app.preloader.status = false;
 
         $rootScope.loading = {
@@ -1942,9 +1941,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  
 	  
 	  /**
-	   * TODO
-	   * RE-FACTORY
-	   * 
+	   * TODO: RE-FACTORY
 	   * User login
 	   */
 	  User.prototype.password = function (uuid)
@@ -5287,8 +5284,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         element.attr('data-toggle', 'daterangepicker');
 
         /**
-         * TODO
-         * Investigate if its really needed!!
+         * TODO: Investigate if its really needed!!
          */
         element.daterangepicker({
           autoclose: true
@@ -5870,9 +5866,7 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
 
 
 /**
- * TODO
- * Implement a call registering system with general error handling
- * 
+ * TODO: Implement a call registering system with general error handling *
  * Intercepts *all* angular ajax http calls
  */
 .factory('Interceptor', 
@@ -5897,8 +5891,7 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
       function (response) 
       {
         /**
-         * TODO
-         * Possible bug !
+         * TODO: Possible bug !
          */
         // if (response.status == 403)
         // {
@@ -6537,9 +6530,7 @@ angular.module('WebPaige.Services.Strings', ['ngResource'])
 
 
 /**
- * TODO
- * Add example usage!
- * 
+ * TODO: Add example usage!
  * String manupulators
  */
 .factory('Strings', 
@@ -6583,9 +6574,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
   {
     return {
       /**
-       * TODO
-       * Modify p2000 script in ask70 for date conversions!!
-       *
+       * TODO: Modify p2000 script in ask70 for date conversions!!
        * p2000 messages processor
        */
       process: function (results)
@@ -6783,8 +6772,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       },
     
       /**
-       * TODO
-       * Look for ways to combine with user
+       * TODO: Look for ways to combine with user
        * 
        * Profile timeline data processing
        */
@@ -7191,8 +7179,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
           timedata = _this.addLoading(data, timedata, [ link ]);
 
           /**
-           * TODO
-           * Good place to host this here?
+           * TODO: Good place to host this here?
            */
           angular.forEach(member.stats, function (stat)
           {
@@ -8433,9 +8420,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Lose this jQuery stuff later on!
-	   * 
+	   * TODO:  Lose this jQuery stuff later on!
 	   * Jquery solution of toggling between login and app view
 	   */
 	  $('.navbar').hide();
@@ -8449,8 +8434,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * use native JSON functions of angular and Store service
+	   * TODO: Use native JSON functions of angular and Store service
 	   */
 	  var logindata = angular.fromJson(Storage.get('logindata'));
 
@@ -8458,8 +8442,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Remove unneccessary DOM manipulation
+	   * TODO: Remove unneccessary DOM manipulation
 	   * Use cookies for user credentials
 	   * 
 	   * Login trigger
@@ -8547,8 +8530,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * What happens if preloader stucks?
+	   * TODO: What happens if preloader stucks?
 	   * Optimize preloader and messages
 	   * 
 	   * Initialize preloader
@@ -10986,10 +10968,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
-	   * TODO
-	   * Stress-test this!
-	   * 
-	   * hotfix against not-dom-ready problem for timeline
+	   * TODO: Stress-test this!
+	   * Hot fix against not-dom-ready problem for timeline
 	   */
 	  if ($scope.timeline && $scope.timeline.main)
 		{
