@@ -84,7 +84,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    Register.profile(
 	      {
 	        uuid: 	uuid,
-	        pass: 	MD5(profile.password),
+          // pass: 	($rootScope.config.profile.smartAlarm) ? profile.password : MD5(profile.password),
+          pass: 	MD5(profile.password),
 	        name: 	String(profile.firstName + ' ' + profile.lastName),
 	        phone: 	profile.PhoneAddress
 	      }, 

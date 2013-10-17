@@ -117,7 +117,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO: Remove unneccessary DOM manipulation
+	   * TODO: Remove unnecessary DOM manipulation
 	   * Use cookies for user credentials
 	   * 
 	   * Login trigger
