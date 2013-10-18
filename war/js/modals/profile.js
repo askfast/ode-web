@@ -91,6 +91,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      }, 
 	      function (registered) 
 	      {
+          console.log('registered ->', registered);
+
           Profile.prototype.role( uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id )
 	        .then(function (roled)
 	        {
@@ -130,7 +132,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      function (error)
 	      {
-	        deferred.resolve({error: error});
+          deferred.resolve({error: error});
 	      }
 	    ); // register
 	   

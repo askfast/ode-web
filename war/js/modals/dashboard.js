@@ -98,10 +98,16 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				success: function (results)
 				{
 					$rootScope.statusBar.off();
+
+          console.log('p2000 ==>', results);
+
+          var processed = Announcer.process(results);
+
+          console.log('Announcer.process(results) ==>', processed);
 					
 					deferred.resolve(
 					{
-						alarms: 	Announcer.process(results),
+						alarms: 	processed,
 						synced:   new Date().getTime()
 					});
 				},

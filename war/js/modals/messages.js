@@ -353,8 +353,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
+      console.log('== asked message id ->', id);
+
+      console.log('printing local messages ->', Messages.prototype.local());
+
 	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
+        console.log('== listing message ->', message.uuid);
+
 	      if (message.uuid == id) gem = message;
 	    });
 

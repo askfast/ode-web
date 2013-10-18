@@ -2193,10 +2193,16 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				success: function (results)
 				{
 					$rootScope.statusBar.off();
+
+          console.log('p2000 ==>', results);
+
+          var processed = Announcer.process(results);
+
+          console.log('Announcer.process(results) ==>', processed);
 					
 					deferred.resolve(
 					{
-						alarms: 	Announcer.process(results),
+						alarms: 	processed,
 						synced:   new Date().getTime()
 					});
 				},
@@ -3629,8 +3635,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
+      console.log('== asked message id ->', id);
+
+      console.log('printing local messages ->', Messages.prototype.local());
+
 	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
+        console.log('== listing message ->', message.uuid);
+
 	      if (message.uuid == id) gem = message;
 	    });
 
@@ -4283,7 +4295,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	  /**
 	   * TODO (Extract only the groups which are in the local list)
-	   * 
 	   * Get container (parent) group data
 	   */
 	  Groups.prototype.containers = function (id) 
@@ -4803,6 +4814,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      }, 
 	      function (registered) 
 	      {
+          console.log('registered ->', registered);
+
           Profile.prototype.role( uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id )
 	        .then(function (roled)
 	        {
@@ -4842,7 +4855,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      function (error)
 	      {
-	        deferred.resolve({error: error});
+          deferred.resolve({error: error});
 	      }
 	    ); // register
 	   
@@ -11509,6 +11522,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.message = Messages.find(id);
 
+      console.log('Found message ->', $scope.message);
+
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
@@ -11536,7 +11551,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      angular.forEach($scope.messages.inbox, function (message)
 	      {
-	        if (message.uuid == $scope.message.uuid) message.state = "READ";
+	        if (message.uuid == $scope.message.uuid)
+          {
+            message.state = "READ";
+          }
 
 	        _inbox.push(message);
 	      });
@@ -12082,7 +12100,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function (item)
+	  .change(function ()
 	  {
 	  	$.each($(this).next().find("ul li.result-selected"), function (i, li)
 	    {
@@ -12151,6 +12169,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+     * DASHBOARD
 	   * Bulk cleaners for mailboxes
 	   */
 	  $scope.clean = {
@@ -12598,6 +12617,9 @@ angular.module('WebPaige.Controllers.Groups', [])
 		}
 
 
+    /**
+     * Set wish
+     */
 		function wisher (id)
 		{
 			$scope.wished = false;
@@ -13025,6 +13047,19 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 						$rootScope.statusBar.off();
 					}
+          else if (result.error.status === 403)
+          {
+            /**
+             * If 403 Forbidden is thrown initialize the process again
+             */
+            $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+            // $scope.memberForm = {};
+            $rootScope.statusBar.off();
+
+            $('body').scrollTop(0);
+
+            // console.log('403 by controller');
+          }
 					else
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
@@ -13137,10 +13172,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 
-
-
-
-
 		/**
 		 * TODO (Not used in groups yet but login uses modal call..)
 		 * 
@@ -13193,115 +13224,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 
       $scope.sorter = sorter;
     };
-
-
-//    $scope.reverser = function (basedOn)
-//    {
-//      $scope.$apply('basedOn', function ()
-//      {
-//        $scope.basedOn = {
-//          firstName: false,
-//          lastName: false,
-//          role: false,
-//          phoneAddress: false
-//        };
-//
-//        $scope.basedOn[basedOn] = true;
-//      });
-//
-//      $scope.reverse = !$scope.reverse;
-//    };
-
-
-
-      // var filesTreeGrid;
-      // var foldersTreeGrid;
-
-      // // Called when the page is loaded
-      // function draw() {
-      //   // randomly generate some files
-      //   var files = [];
-      //   for (var i = 0; i < 50; i++) {
-      //     files.push({
-      //       'name': 'File ' + i,
-      //       'size': (Math.round(Math.random() * 50) * 10 + 100) + ' kB',
-      //       'date': (new Date()).toDateString(),
-      //       '_id': i     // this is a hidden field, as it starts with an underscore
-      //     });
-      //   }
-        
-      //   // randomly generate folders, containing a dataconnector which supports
-      //   // drag and drop
-      //   var folders = [];
-      //   var chars = 'ABCDE';
-      //   for (var i in chars) {
-      //     var c = chars[i];
-      //     var options = {
-      //       'dataTransfer' : {
-      //         'allowedEffect': 'move',
-      //         'dropEffect': 'move'
-      //       }
-      //     };
-      //     var dataConnector = new links.DataTable([], options);
-      //     var item = {
-      //       'name': 'Folder ' + c, 
-      //       'files': dataConnector, 
-      //       '_id': c
-      //     };
-      //     folders.push(item);
-      //   }
-      //   folders.push({'name': 'File X', '_id': 'X'});
-      //   folders.push({'name': 'File Y', '_id': 'Y'});
-      //   folders.push({'name': 'File Z', '_id': 'Z'});
-
-      //   // specify options
-      //   var treeGridOptions = {
-      //     'width': '350px',
-      //     'height': '400px'
-      //   };  
-
-      //   // Instantiate treegrid object with files
-      //   var filesContainer = document.getElementById('files');
-      //   var filesOptions = {
-      //     'columns': [
-      //       {'name': 'name', 'text': 'Name', 'title': 'Name of the files'},
-      //       {'name': 'size', 'text': 'Size', 'title': 'Size of the files in kB (kilo bytes)'},
-      //       {'name': 'date', 'text': 'Date', 'title': 'Date the file is last updated'}
-      //     ],
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'none'
-      //     }
-      //   };
-      //   filesTreeGrid = new links.TreeGrid(filesContainer, treeGridOptions);
-      //   var filesDataConnector = new links.DataTable(files, filesOptions);
-      //   /*
-      //   filesDataConnector.setFilters([{
-      //     'field': 'size',
-      //     'order': 'ASC'
-      //     //'startValue': '300 kB',
-      //     //'endValue': '500 kB',
-      //   }]);
-      //   //*/
-      //   filesTreeGrid.draw(filesDataConnector);    
-
-      //   // Instantiate treegrid object with folders
-      //   var foldersOptions = {};
-      //   //* TDOO: cleanup temporary foldersOptions
-      //   var foldersOptions = {
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'move'
-      //     }
-      //   };
-      //   //*/
-      //   var foldersContainer = document.getElementById('folders');
-      //   var foldersDataConnector = new links.DataTable(folders, foldersOptions);
-      //   foldersTreeGrid = new links.TreeGrid(foldersContainer, treeGridOptions);
-      //   foldersTreeGrid.draw(foldersDataConnector);
-      // }
-
-      // draw();
 
 	}
 ]);;/*jslint node: true */

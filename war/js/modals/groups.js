@@ -276,7 +276,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	  /**
 	   * TODO (Extract only the groups which are in the local list)
-	   * 
 	   * Get container (parent) group data
 	   */
 	  Groups.prototype.containers = function (id) 

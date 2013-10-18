@@ -211,6 +211,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.message = Messages.find(id);
 
+      console.log('Found message ->', $scope.message);
+
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
@@ -238,7 +240,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      angular.forEach($scope.messages.inbox, function (message)
 	      {
-	        if (message.uuid == $scope.message.uuid) message.state = "READ";
+	        if (message.uuid == $scope.message.uuid)
+          {
+            message.state = "READ";
+          }
 
 	        _inbox.push(message);
 	      });
@@ -784,7 +789,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function (item)
+	  .change(function ()
 	  {
 	  	$.each($(this).next().find("ul li.result-selected"), function (i, li)
 	    {
@@ -853,6 +858,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+     * DASHBOARD
 	   * Bulk cleaners for mailboxes
 	   */
 	  $scope.clean = {
