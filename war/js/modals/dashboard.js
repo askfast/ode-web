@@ -99,12 +99,8 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				{
 					$rootScope.statusBar.off();
 
-          console.log('p2000 ==>', results);
-
           var processed = Announcer.process(results);
 
-          console.log('Announcer.process(results) ==>', processed);
-					
 					deferred.resolve(
 					{
 						alarms: 	processed,
@@ -117,20 +113,20 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				}
 			});
 
-			// $http({
-			// 	method: 'jsonp',
-			// 	url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
-			// })
-			// .success(function (data, status)
-			// {
-			// 	console.log('results ->', data);
-
-			// 	deferred.resolve( Announcer.process(data) );
-			// })
-			// .error(function (error)
-			// {
-			// 	deferred.resolve({error: error});
-			// });
+//			$http({
+//				method: 'jsonp',
+//				url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
+//			})
+//			.success(function (data, status)
+//			{
+//				console.log('results ->', data);
+//
+//				deferred.resolve( Announcer.process(data) );
+//			})
+//			.error(function (error)
+//			{
+//				deferred.resolve({error: error});
+//			});
 
 			return deferred.promise;
 		};

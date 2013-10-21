@@ -11,8 +11,8 @@ angular.module('WebPaige.Controllers.Login', [])
  */
 .controller('login', 
 [
-	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5', 
-	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) 
+	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5',
+	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
 	{
 	  /**
 	   * Self this
@@ -178,7 +178,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    User.login(uuid.toLowerCase(), pass)
 	    .then(function (result)
 		  {
-	      if (result.status == 400 || result.status == 404)
+	      if (result.status == 400 || result.status == 40)
 	      {
 	        $scope.alert = {
 	          login: {
