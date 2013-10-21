@@ -214,7 +214,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           }
           else
           {
-            predefinedRole = 'no roles assigned';
+            predefinedRole = 'niet ingedeeld';
           }
 
           $rootScope.app.guard.role = predefinedRole;
