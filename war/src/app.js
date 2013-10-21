@@ -12820,6 +12820,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 							$scope.data = data;
 
 							$rootScope.statusBar.off();
+
+              if ($location.hash() == 'search')
+              {
+                $scope.searchMembers($scope.search.query);
+              }
 						}
 					});
 				}
@@ -13136,7 +13141,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 		/**
 		 * TODO (Not used in groups yet but login uses modal call..)
-		 * 
 		 * Fetch parent groups
 		 */
 		$scope.fetchParent = function ()
@@ -13150,7 +13154,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 		/**
 		 * TODO (Not used in groups yet..)
-		 * 
 		 * Fetch parent groups
 		 */
 		$scope.fetchContainers = function (id)
@@ -13175,14 +13178,7 @@ angular.module('WebPaige.Controllers.Groups', [])
      */
     $scope.toggleSorter = function (sorter)
     {
-      if ($scope.sorter == sorter)
-      {
-        $scope.reverse = !$scope.reverse;
-      }
-      else
-      {
-        $scope.reverse = false;
-      }
+      $scope.reverse = ($scope.sorter == sorter) ? !$scope.reverse : false;
 
       $scope.sorter = sorter;
     };
