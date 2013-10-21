@@ -8517,7 +8517,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    User.login(uuid.toLowerCase(), pass)
 	    .then(function (result)
 		  {
-	      if (result.status == 400)
+	      if (result.status == 400 || result.status == 404)
 	      {
 	        $scope.alert = {
 	          login: {
