@@ -9188,6 +9188,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               angular.forEach(pies, function (pie)
               {
+                // Check whether if it is an array what data processor gives back
+                if (pie.weeks.current.state instanceof Array)
+                {
+                  pie.weeks.current.state = pie.weeks.current.state[0];
+                }
+
                 if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
                 if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
@@ -9207,12 +9213,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                   new Date(pie.weeks.current.state.start * 1000)
                     .toString($rootScope.config.formats.datetime) :
-                  'undefined';
+                  'Geen planning';
 
                 pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
                   new Date(pie.weeks.current.state.end * 1000)
                     .toString($rootScope.config.formats.datetime) :
-                  'undefined';
+                  'Geen planning';
 
                 pie.shortages = {
                   current:  pie.weeks.current.shortages,
