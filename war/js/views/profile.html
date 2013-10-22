@@ -31,8 +31,7 @@
         </a>
       </li>
       <li class="{{(views.password==true) && 'active'}}"
-          ng-show="views.user"
-          ng-hide="config.profile.smartAlarm">
+          ng-show="views.user">
         <a href="#passwordTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('passwordTab'); setViewTo('password')">
@@ -183,7 +182,7 @@
           </div>
 
           <div class="control-group"
-               ng-hide="app.resources.role > 1 || views.user || config.profile.smartAlarm">
+               ng-hide="app.resources.role > 1 || views.user">
             <label class="control-label">{{ui.profile.password}}</label>
             <div class="controls">
               <input  type="text" 
