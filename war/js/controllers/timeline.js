@@ -111,12 +111,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         start: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString()
+          datetime: new Date().toISOString().replace("Z", "")
         },
         end: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().addHours(1).toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString()
+          datetime: new Date().toISOString().replace("Z", "")
         },
         state:      'com.ask-cs.State.Available',
         recursive:  false,
@@ -535,12 +535,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        start: {
 		          date: new Date(values.start).toString($rootScope.config.formats.date),
 		          time: new Date(values.start).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.start).toISOString()
+		          datetime: new Date(values.start).toISOString().replace("Z", "")
 		        },
 		        end: {
 		          date: new Date(values.end).toString($rootScope.config.formats.date),
 		          time: new Date(values.end).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.end).toISOString()
+		          datetime: new Date(values.end).toISOString().replace("Z", "")
 		        },
 		        state:      content.state,
 		        recursive:  content.recursive,

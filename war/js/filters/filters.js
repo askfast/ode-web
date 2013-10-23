@@ -5,26 +5,41 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 /**
+ * Convert date to object
+ */
+  .filter('convertToDateObj',
+    [
+      function ()
+      {
+        return function (date)
+        {
+          return Date(date);
+        }
+      }
+    ])
+
+
+/**
  * Translate roles
  */
-.filter('translateRole',
-[
-  '$config',
-  function ($config)
-  {
-    return function (role)
-    {
-      var urole;
-
-      angular.forEach($config.roles, function (prole)
+  .filter('translateRole',
+    [
+      '$config',
+      function ($config)
       {
-        if (prole.id == role) urole = prole.label;
-      });
+        return function (role)
+        {
+          var urole;
 
-      return urole;
-    }
-  }
-])
+          angular.forEach($config.roles, function (prole)
+          {
+            if (prole.id == role) urole = prole.label;
+          });
+
+          return urole;
+        }
+      }
+    ])
 
 
 /**
