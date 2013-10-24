@@ -824,10 +824,16 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  function rerenderReceiversList ()
 	  {
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
+      angular.forEach($scope.message.receivers, function (receiver)
+      {
+        angular.forEach($("div#composeTab select.chzn-select option"), function (option)
+        {
+          if (option.innerHTML == receiver.name)
+          {
+            option.selected = true;
+          }
+        });
+      });
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 	  }

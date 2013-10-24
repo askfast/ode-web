@@ -246,11 +246,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     /**
      * Fetch smartAlarm information
      */
-    Groups.guardMonitor()
-      .then(function ()
-      {
-        Groups.guardRole();
-      });
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      Groups.guardMonitor()
+        .then(function ()
+        {
+          Groups.guardRole();
+        });
+    }
 
 
 		/**

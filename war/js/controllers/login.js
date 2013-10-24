@@ -466,24 +466,24 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.getMembers();
 
-      if ($rootScope.config.profile.smartAlarm)
-      {
-        // self.getGuard();
-      }
+//      if ($rootScope.config.profile.smartAlarm)
+//      {
+//        self.getGuard();
+//      }
 	  }
 
 
     /**
      * Get guard value for smart alarming
      */
-    self.getGuard = function ()
-    {
-      Groups.guardMonitor()
-        .then(function ()
-        {
-          Groups.guardRole();
-        });
-    };
+//    self.getGuard = function ()
+//    {
+//      Groups.guardMonitor()
+//        .then(function ()
+//        {
+//          Groups.guardRole();
+//        });
+//    };
 
 
 	  /**

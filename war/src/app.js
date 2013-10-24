@@ -8817,24 +8817,24 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.getMembers();
 
-      if ($rootScope.config.profile.smartAlarm)
-      {
-        // self.getGuard();
-      }
+//      if ($rootScope.config.profile.smartAlarm)
+//      {
+//        self.getGuard();
+//      }
 	  }
 
 
     /**
      * Get guard value for smart alarming
      */
-    self.getGuard = function ()
-    {
-      Groups.guardMonitor()
-        .then(function ()
-        {
-          Groups.guardRole();
-        });
-    };
+//    self.getGuard = function ()
+//    {
+//      Groups.guardMonitor()
+//        .then(function ()
+//        {
+//          Groups.guardRole();
+//        });
+//    };
 
 
 	  /**
@@ -9331,11 +9331,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     /**
      * Fetch smartAlarm information
      */
-    Groups.guardMonitor()
-      .then(function ()
-      {
-        Groups.guardRole();
-      });
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      Groups.guardMonitor()
+        .then(function ()
+        {
+          Groups.guardRole();
+        });
+    }
 
 
 		/**
@@ -12129,10 +12132,16 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  function rerenderReceiversList ()
 	  {
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
+      angular.forEach($scope.message.receivers, function (receiver)
+      {
+        angular.forEach($("div#composeTab select.chzn-select option"), function (option)
+        {
+          if (option.innerHTML == receiver.name)
+          {
+            option.selected = true;
+          }
+        });
+      });
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 	  }
