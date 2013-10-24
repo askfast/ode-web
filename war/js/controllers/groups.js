@@ -439,7 +439,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				}
 				else
 				{
-					$rootScope.notifier.success($rootScope.ui.groups.removed);
+					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
 					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
