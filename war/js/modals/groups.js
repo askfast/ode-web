@@ -651,6 +651,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      {
 	        var processed = [];
 
+          results.sort(function (a, b)
+          {
+            var aName = a.name.toLowerCase();
+            var bName = b.name.toLowerCase();
+            if (aName < bName) return -1;
+            if (aName > bName) return 1;
+            return 0;
+          });
+
 	        angular.forEach(results, function (result)
 	        {
 	          processed.push({

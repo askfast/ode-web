@@ -314,7 +314,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      }
 	    });
 
-
 	    var butcher = function (box)
 	    {
 		    var limit 	= 50,
@@ -353,13 +352,13 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
-      console.log('== asked message id ->', id);
+      // console.log('== asked message id ->', id);
 
-      console.log('printing local messages ->', Messages.prototype.local());
+      // console.log('printing local messages ->', Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
-        console.log('== listing message ->', message.uuid);
+        // console.log('== listing message ->', message.uuid);
 
 	      if (message.uuid == id) gem = message;
 	    });
@@ -399,9 +398,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 //        return 0;
 //      });
 //
-//
 //      console.log('groups sorted ->', groups);
-
 
 	    angular.forEach(groups, function(group)
 	    {
@@ -523,7 +520,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  }).
 		  error(function (data, status, headers, config)
 		  {
-		  	console.log('smth went wrong');
+		  	console.log('Something went wrong terribly with emailing the message!', data, status, headers, config);
 		  });
 
 

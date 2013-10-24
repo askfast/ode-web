@@ -3592,7 +3592,6 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      }
 	    });
 
-
 	    var butcher = function (box)
 	    {
 		    var limit 	= 50,
@@ -3631,13 +3630,13 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
-      console.log('== asked message id ->', id);
+      // console.log('== asked message id ->', id);
 
-      console.log('printing local messages ->', Messages.prototype.local());
+      // console.log('printing local messages ->', Messages.prototype.local());
 
 	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
-        console.log('== listing message ->', message.uuid);
+        // console.log('== listing message ->', message.uuid);
 
 	      if (message.uuid == id) gem = message;
 	    });
@@ -3677,9 +3676,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 //        return 0;
 //      });
 //
-//
 //      console.log('groups sorted ->', groups);
-
 
 	    angular.forEach(groups, function(group)
 	    {
@@ -3801,7 +3798,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  }).
 		  error(function (data, status, headers, config)
 		  {
-		  	console.log('smth went wrong');
+		  	console.log('Something went wrong terribly with emailing the message!', data, status, headers, config);
 		  });
 
 
@@ -4665,6 +4662,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      function (results) 
 	      {
 	        var processed = [];
+
+          results.sort(function (a, b)
+          {
+            var aName = a.name.toLowerCase();
+            var bName = b.name.toLowerCase();
+            if (aName < bName) return -1;
+            if (aName > bName) return 1;
+            return 0;
+          });
 
 	        angular.forEach(results, function (result)
 	        {
@@ -11315,7 +11321,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	  /**
      * TODO: Still being used?
-	   * Self this
 	   */
 	  var self = this;
 
@@ -11330,7 +11335,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Set messages
 	   */
 	  $scope.messages 	= data.messages;
-
 	  $scope.scheadules = data.scheadules;
 
 
@@ -11363,7 +11367,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	before: function (box)
 	  	{
 	  		if ($scope.page[box] != 0)
-	  			$scope.page[box]--;
+        {
+          $scope.page[box]--;
+        }
 	  	}
 	  };
 
@@ -11499,19 +11505,18 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    setView('message');
 
-      console.log('Getting message! ->', id);
+      // console.log('Getting message! ->', id);
 
 	    $scope.setViewTo('message');
 
 	    $scope.message = Messages.find(id);
 
-      console.log('Found message ->', $scope.message);
+      // console.log('Found message ->', $scope.message);
 
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
 	     * can have 'NEW' state as well but those states are not shown
-	     *
 	     * Maybe only for 'trash' box to show state in later stages
 	     */
 	    if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
@@ -11574,7 +11579,7 @@ angular.module('WebPaige.Controllers.Messages', [])
   	{
   		var count = 0;
 
-  		angular.forEach($scope.scheaduled.offsets, function (offset)
+  		angular.forEach($scope.scheaduled.offsets, function ()
       {
         count++;
       });
@@ -11664,7 +11669,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    });
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
-
 
 	    $scope.scheaduled = {
 	    	uuid: 		scheaduled.uuid,
@@ -11814,6 +11818,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -11860,6 +11865,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -11897,6 +11903,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -11937,6 +11944,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -11970,6 +11978,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -11984,6 +11993,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          if (messages.error)
 	          {
 	            $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
 	            console.warn('error ->', messages);
 	          }
 	          else
@@ -12039,6 +12049,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        if (uuid.error)
 	        {
 	          $rootScope.notifier.error($rootScope.ui.errors.messages.send);
+
 	          console.warn('error ->', uuid);
 	        }
 	        else
@@ -12053,6 +12064,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            if (messages.error)
 	            {
 	              $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
 	              console.warn('error ->', messages);
 	            }
 	            else
@@ -12290,6 +12302,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  if (result.error)
 				  {
 				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
+
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -12320,6 +12333,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  if (result.error)
 				  {
 				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
+
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -12329,6 +12343,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          self.list(function ()
 	        	{
 	        		$scope.setViewTo('notifications');
+
 					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
 	        	});
 				  }
@@ -12351,6 +12366,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 		      if (result.error)
 		      {
 		        $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
+
 		        console.warn('error ->', result);
 		      }
 		      else
@@ -12368,7 +12384,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 	}
-]);/*jslint node: true */
+]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
