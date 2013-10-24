@@ -4801,13 +4801,15 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
       var uuid = profile.username.toLowerCase();
 
+      console.log('profile ->', profile);
+
 	    Register.profile(
 	      {
 	        uuid: 	uuid,
           // pass: 	($rootScope.config.profile.smartAlarm) ? profile.password : MD5(profile.password),
           pass: 	MD5(profile.password),
 	        name: 	String(profile.firstName + ' ' + profile.lastName),
-	        phone: 	profile.PhoneAddress
+	        phone: 	profile.PhoneAddress || ''
 	      }, 
 	      function (registered) 
 	      {
@@ -12025,19 +12027,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('compose');
 
-	    var members 	= angular.fromJson(Storage.get('members'));
+	    var members = angular.fromJson(Storage.get('members'));
 
-      console.log('requester ->', message.requester);
+      // console.log('requester ->', message.requester);
 
-	    var senderId 	= ($rootScope.config.profile.smartAlarm) ?
+	    var senderId = ($rootScope.config.profile.smartAlarm) ?
                         message.requester :
                         message.requester.split('personalagent/')[1].split('/')[0];
 
-      console.log('processed requester ->', senderId);
+      // console.log('processed requester ->', senderId);
 
-      var name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+      var name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
 
-      console.log('name ->', name);
+      // console.log('name ->', name);
 
 	    $scope.message = {
 	      subject: 		'RE: ' + message.subject,
@@ -12048,7 +12050,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }]
 	    };
 
-	    rerenderReceiversList();
+	    renderReceiversList();
 	  };
 
 
@@ -12109,7 +12111,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 		/**
-	   * TODO: Fix for not displaying original sender in multiple receivers selector
+	   * TODO: Is it still working? Fix for not displaying original sender in multiple receivers selector
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
@@ -12130,7 +12132,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Re-render receivers list
 	   */
-	  function rerenderReceiversList ()
+	  function renderReceiversList ()
 	  {
       angular.forEach($scope.message.receivers, function (receiver)
       {
@@ -13062,6 +13064,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.memberSubmit = function (member)
 		{
+      // console.log('profile info to save ->', angular.toJson(member));
+
       if ($rootScope.config.profile.smartAlarm)
       {
         member.role = 1;
@@ -13078,18 +13082,12 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
-						// $scope.memberForm = {};
-
 						$rootScope.statusBar.off();
 					}
           else if (result.error.status === 403)
           {
-            /**
-             * If 403 Forbidden is thrown initialize the process again
-             */
+            // If 403 Forbidden is thrown initialize the process again
             $rootScope.notifier.error('Registering a new user is failed. Please try again.');
-
-            // $scope.memberForm = {};
 
             $rootScope.statusBar.off();
 

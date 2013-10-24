@@ -717,19 +717,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('compose');
 
-	    var members 	= angular.fromJson(Storage.get('members'));
+	    var members = angular.fromJson(Storage.get('members'));
 
-      console.log('requester ->', message.requester);
+      // console.log('requester ->', message.requester);
 
-	    var senderId 	= ($rootScope.config.profile.smartAlarm) ?
+	    var senderId = ($rootScope.config.profile.smartAlarm) ?
                         message.requester :
                         message.requester.split('personalagent/')[1].split('/')[0];
 
-      console.log('processed requester ->', senderId);
+      // console.log('processed requester ->', senderId);
 
-      var name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+      var name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
 
-      console.log('name ->', name);
+      // console.log('name ->', name);
 
 	    $scope.message = {
 	      subject: 		'RE: ' + message.subject,
@@ -740,7 +740,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }]
 	    };
 
-	    rerenderReceiversList();
+	    renderReceiversList();
 	  };
 
 
@@ -801,7 +801,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 		/**
-	   * TODO: Fix for not displaying original sender in multiple receivers selector
+	   * TODO: Is it still working? Fix for not displaying original sender in multiple receivers selector
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
@@ -822,7 +822,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Re-render receivers list
 	   */
-	  function rerenderReceiversList ()
+	  function renderReceiversList ()
 	  {
       angular.forEach($scope.message.receivers, function (receiver)
       {

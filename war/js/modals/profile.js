@@ -81,13 +81,15 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
       var uuid = profile.username.toLowerCase();
 
+      console.log('profile ->', profile);
+
 	    Register.profile(
 	      {
 	        uuid: 	uuid,
           // pass: 	($rootScope.config.profile.smartAlarm) ? profile.password : MD5(profile.password),
           pass: 	MD5(profile.password),
 	        name: 	String(profile.firstName + ' ' + profile.lastName),
-	        phone: 	profile.PhoneAddress
+	        phone: 	profile.PhoneAddress || ''
 	      }, 
 	      function (registered) 
 	      {

@@ -550,6 +550,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.memberSubmit = function (member)
 		{
+      // console.log('profile info to save ->', angular.toJson(member));
+
       if ($rootScope.config.profile.smartAlarm)
       {
         member.role = 1;
@@ -566,18 +568,12 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
-						// $scope.memberForm = {};
-
 						$rootScope.statusBar.off();
 					}
           else if (result.error.status === 403)
           {
-            /**
-             * If 403 Forbidden is thrown initialize the process again
-             */
+            // If 403 Forbidden is thrown initialize the process again
             $rootScope.notifier.error('Registering a new user is failed. Please try again.');
-
-            // $scope.memberForm = {};
 
             $rootScope.statusBar.off();
 
