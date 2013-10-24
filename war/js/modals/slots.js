@@ -474,6 +474,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
        * TODO: Use mathematical formula to calculate it
        */
       var now;
+
       now = String(Date.now().getTime());
       now = Number(now.substr(0, now.length - 3));
 
@@ -484,12 +485,17 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             end:    now + 1
           };
 
-      // console.log('states ->', );
-
       Slots.query(params,
         function (result)
         {
-          deferred.resolve($rootScope.config.statesall[result[0]['text']]);
+          deferred.resolve(
+            (result.length > 0) ?
+              $rootScope.config.statesall[result[0]['text']] :
+              {
+                color: 'gray',
+                label: 'Geen planning'
+              }
+          );
         });
 
       return deferred.promise;

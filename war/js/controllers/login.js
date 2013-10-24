@@ -468,7 +468,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
       if ($rootScope.config.profile.smartAlarm)
       {
-        self.getGuard();
+        // self.getGuard();
       }
 	  }
 

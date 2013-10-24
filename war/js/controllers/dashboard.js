@@ -243,6 +243,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		getOverviews();
 
 
+    /**
+     * Fetch smartAlarm information
+     */
+    Groups.guardMonitor()
+      .then(function ()
+      {
+        Groups.guardRole();
+      });
+
+
 		/**
 		 * Save widget settings
 		 */

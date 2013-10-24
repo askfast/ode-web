@@ -16,6 +16,9 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', '$http',
 	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer, $http)
 	{
+    /**
+     * TODO: Still being used?
+     */
 		var Dashboard = $resource(
 			'http://knrm.myask.me/rpc/client/p2000.php',
 			{

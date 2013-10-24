@@ -2111,6 +2111,9 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', '$http',
 	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer, $http)
 	{
+    /**
+     * TODO: Still being used?
+     */
 		var Dashboard = $resource(
 			'http://knrm.myask.me/rpc/client/p2000.php',
 			{
@@ -2705,6 +2708,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
        * TODO: Use mathematical formula to calculate it
        */
       var now;
+
       now = String(Date.now().getTime());
       now = Number(now.substr(0, now.length - 3));
 
@@ -2715,12 +2719,17 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             end:    now + 1
           };
 
-      // console.log('states ->', );
-
       Slots.query(params,
         function (result)
         {
-          deferred.resolve($rootScope.config.statesall[result[0]['text']]);
+          deferred.resolve(
+            (result.length > 0) ?
+              $rootScope.config.statesall[result[0]['text']] :
+              {
+                color: 'gray',
+                label: 'Geen planning'
+              }
+          );
         });
 
       return deferred.promise;
@@ -4144,8 +4153,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      // console.log('Guard MONITOR has been asked');
-
       var guard = angular.fromJson(Storage.get('guard'));
 
       Guards.global(
@@ -4187,10 +4194,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      // console.log('Guard ROLE has been asked');
-
-      // console.count();
-
       var guard = angular.fromJson(Storage.get('guard'));
 
       Guards.position(
@@ -4200,8 +4203,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         },
         function (results)
         {
-          // console.log('Guard role ->', results);
-
           var predefinedRole = '',
               guard = angular.fromJson(Storage.get('guard'));
 
@@ -4210,8 +4211,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             if (person == $rootScope.app.resources.uuid)
             {
               predefinedRole = role;
-
-              // console.log('found one ->', role);
             }
           });
 
@@ -4230,10 +4229,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           }
 
           $rootScope.app.guard.role = predefinedRole;
-
-          $rootScope.app.guard.currentState = Slots.currentState();
-
-          if ($rootScope.app.guard.currentState == 'Beschikbaar')
 
           $rootScope.app.guard.currentState = Slots.currentState();
 
@@ -8824,7 +8819,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
       if ($rootScope.config.profile.smartAlarm)
       {
-        self.getGuard();
+        // self.getGuard();
       }
 	  }
 
@@ -9331,6 +9326,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * Get pie overviews
 		 */
 		getOverviews();
+
+
+    /**
+     * Fetch smartAlarm information
+     */
+    Groups.guardMonitor()
+      .then(function ()
+      {
+        Groups.guardRole();
+      });
 
 
 		/**
@@ -12669,6 +12674,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					if (result.error)
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
+
 						console.warn('error ->', result);
 					}
 					else
@@ -12846,6 +12852,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -12860,6 +12867,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -12892,6 +12900,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -12906,6 +12915,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -12981,6 +12991,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (returned.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
+
 					console.warn('error ->', returned);
 				}
 				else
@@ -12995,6 +13006,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -13067,12 +13079,12 @@ angular.module('WebPaige.Controllers.Groups', [])
              * If 403 Forbidden is thrown initialize the process again
              */
             $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+
             // $scope.memberForm = {};
+
             $rootScope.statusBar.off();
 
             $('body').scrollTop(0);
-
-            // console.log('403 by controller');
           }
 					else
 					{
@@ -13122,6 +13134,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -13136,6 +13149,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -13143,7 +13157,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 							$scope.data = data;
 
               /**
-               * TODO (Is this really supposed to be like this?)
+               * TODO: Is this really supposed to be like this?
                */
 							angular.forEach(data.groups, function (group, index)
 							{
@@ -13187,7 +13201,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 
 		/**
-		 * TODO (Not used in groups yet but login uses modal call..)
+		 * TODO: Not used in groups yet but login uses modal call..
 		 * Fetch parent groups
 		 */
 		$scope.fetchParent = function ()
@@ -13200,7 +13214,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 		/**
-		 * TODO (Not used in groups yet..)
+		 * TODO: Not used in groups yet..
 		 * Fetch parent groups
 		 */
 		$scope.fetchContainers = function (id)

@@ -171,6 +171,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					if (result.error)
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
+
 						console.warn('error ->', result);
 					}
 					else
@@ -348,6 +349,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -362,6 +364,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -394,6 +397,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -408,6 +412,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -483,6 +488,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (returned.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
+
 					console.warn('error ->', returned);
 				}
 				else
@@ -497,6 +503,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -569,12 +576,12 @@ angular.module('WebPaige.Controllers.Groups', [])
              * If 403 Forbidden is thrown initialize the process again
              */
             $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+
             // $scope.memberForm = {};
+
             $rootScope.statusBar.off();
 
             $('body').scrollTop(0);
-
-            // console.log('403 by controller');
           }
 					else
 					{
@@ -624,6 +631,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -638,6 +646,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -645,7 +654,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 							$scope.data = data;
 
               /**
-               * TODO (Is this really supposed to be like this?)
+               * TODO: Is this really supposed to be like this?
                */
 							angular.forEach(data.groups, function (group, index)
 							{
@@ -689,7 +698,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 
 		/**
-		 * TODO (Not used in groups yet but login uses modal call..)
+		 * TODO: Not used in groups yet but login uses modal call..
 		 * Fetch parent groups
 		 */
 		$scope.fetchParent = function ()
@@ -702,7 +711,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 		/**
-		 * TODO (Not used in groups yet..)
+		 * TODO: Not used in groups yet..
 		 * Fetch parent groups
 		 */
 		$scope.fetchContainers = function (id)
