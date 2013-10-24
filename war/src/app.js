@@ -8534,7 +8534,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    User.login(uuid.toLowerCase(), pass)
 	    .then(function (result)
 		  {
-	      if (result.status == 400 || result.status == 40)
+	      if (result.status == 400 || result.status == 404)
 	      {
 	        $scope.alert = {
 	          login: {
@@ -12017,9 +12017,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('compose');
 
-	    var members 	= angular.fromJson(Storage.get('members')),
-	        senderId 	= message.requester.split('personalagent/')[1].split('/')[0],
-	        name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+	    var members 	= angular.fromJson(Storage.get('members'));
+
+      console.log('requester ->', message.requester);
+
+	    var senderId 	= ($rootScope.config.profile.smartAlarm) ?
+                        message.requester :
+                        message.requester.split('personalagent/')[1].split('/')[0];
+
+      console.log('processed requester ->', senderId);
+
+      var name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+
+      console.log('name ->', name);
 
 	    $scope.message = {
 	      subject: 		'RE: ' + message.subject,
@@ -12114,7 +12124,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  function rerenderReceiversList ()
 	  {
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
+	    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
 	    {
 	      if (option.innerHTML == name) option.selected = true;
 	    });
