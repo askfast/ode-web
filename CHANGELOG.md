@@ -17,6 +17,7 @@
       daylight saving periods as well. 25-10-2013
     * Sorting alphabetically on search results 24-10-2013
     * Fix on not displaying receiver names on replying a message 24-10-2013
+    * Fix on not displaying success message by removing multiple users from a group. 24-10-2013
     * Fix on 'undefined' values by registering new users with empty phone fields. 24-10-2013
     * IOS7 corrections and enhancements targeting iPad users 23-10-2013
     * Fix on not displaying correct error message on wrong credential login attempts. 21-10-2013
