@@ -112,6 +112,13 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
+
+
+
+
+    console.warn('timeline scope ->', $scope.timeline.scope);
+
+
 	  
 
 	  /**

@@ -28,6 +28,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
       }
       */
 
+
+
+
+
+
+
+
+
+
 			/**
 			 * If main timeline
 			 */
@@ -35,15 +44,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 
-				diff  = Dater.calculate.diff(range);
+        var period = {
+          hour: 1000 * 60 * 60,
+          day:  1000 * 60 * 60 * 24,
+          week: 1000 * 60 * 60 * 24 * 7
+        };
+
+				diff  = Dater.calculate.diff(range) - period.hour;
 
 				/**
 				 * Scope is a day
-				 * 
-				 * TODO (try later on!)
-				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
 				 */
-				if (diff <= 86400000)
+				if (diff <= period.day)
 				{
 					$scope.timeline.scope = {
 						day:    true,
@@ -54,7 +66,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				/**
 				 * Scope is less than a week
 				 */
-				else if (diff < 604800000)
+				else if (diff <= period.week)
 				{
 					$scope.timeline.scope = {
 						day:    false,
@@ -65,7 +77,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				/**
 				 * Scope is more than a week
 				 */
-				else if (diff > 604800000)
+        else
 				{
 					$scope.timeline.scope = {
 						day:    false,
