@@ -12,7 +12,16 @@
 ## Versions
 
   2.3.7 (Snapshot)
-    *
+    * Fix for not correctly switching timeline navigational scope buttons (day-week-month).
+      Fix made in this week where the daylight time saving occurs so this fix will cover other
+      daylight saving periods as well. 25-10-2013
+    * Sorting alphabetically on search results 24-10-2013
+    * Fix on not displaying receiver names on replying a message 24-10-2013
+    * Fix on 'undefined' values by registering new users with empty phone fields. 24-10-2013
+    * IOS7 corrections and enhancements targeting iPad users 23-10-2013
+    * Fix on not displaying correct error message on wrong credential login attempts. 21-10-2013
+    * Enhancement of forcing search results to refresh after adding user to an another group 21-1-2013
+    * Enhancement of smart alarming functionality in the web application 14-10-2013
 
   2.3.6
 	  * Deployed for 100T, 110K, 120G and 130B 11-10-2013
