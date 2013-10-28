@@ -11,8 +11,8 @@ angular.module('WebPaige.Controllers.Login', [])
  */
 .controller('login', 
 [
-	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5', 
-	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) 
+	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5',
+	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
 	{
 	  /**
 	   * Self this
@@ -95,14 +95,13 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Lose this jQuery stuff later on!
-	   * 
+	   * TODO:  Lose this jQuery stuff later on!
 	   * Jquery solution of toggling between login and app view
 	   */
 	  $('.navbar').hide();
 	  $('#footer').hide();
-	  $('#watermark').hide();
+    $('#watermark').hide();
+    // $('#notification').hide();
 	  $('body').css({
 	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
 	    'backgroundSize': 'cover'
@@ -110,8 +109,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * use native JSON functions of angular and Store service
+	   * TODO: Use native JSON functions of angular and Store service
 	   */
 	  var logindata = angular.fromJson(Storage.get('logindata'));
 
@@ -119,8 +117,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Remove unneccessary DOM manipulation
+	   * TODO: Remove unnecessary DOM manipulation
 	   * Use cookies for user credentials
 	   * 
 	   * Login trigger
@@ -181,7 +178,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    User.login(uuid.toLowerCase(), pass)
 	    .then(function (result)
 		  {
-	      if (result.status == 400)
+	      if (result.status == 400 || result.status == 404)
 	      {
 	        $scope.alert = {
 	          login: {
@@ -208,8 +205,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * What happens if preloader stucks?
+	   * TODO: What happens if preloader stucks?
 	   * Optimize preloader and messages
 	   * 
 	   * Initialize preloader
@@ -470,30 +466,28 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.getMembers();
 
-      if ($rootScope.config.profile.smartAlarm)
-      {
-        self.getGuard();
-      }
+//      if ($rootScope.config.profile.smartAlarm)
+//      {
+//        self.getGuard();
+//      }
 	  }
 
 
     /**
      * Get guard value for smart alarming
      */
-    self.getGuard = function ()
-    {
-      Groups.guardMonitor()
-        .then(function ()
-        {
-          Groups.guardRole();
-        });
-    };
+//    self.getGuard = function ()
+//    {
+//      Groups.guardMonitor()
+//        .then(function ()
+//        {
+//          Groups.guardRole();
+//        });
+//    };
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get members list (SILENTLY)
 	   */
 	  self.getMembers = function ()
@@ -518,9 +512,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get messages (SILENTLY)
 	   */
 	  self.getMessages = function ()
@@ -552,7 +544,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    setTimeout(function ()
 	    {
 	      $('body').css({ 'background': 'none' });
-	      $('.navbar').show();
+        $('.navbar').show();
 	      // $('#mobile-status-bar').show();
 	      // $('#notification').show();
 	      if (!$rootScope.browser.mobile) $('#footer').show();
@@ -573,11 +565,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
-	   * TODO
-	   * Make button state change!
-	   * Finish it!
-	   * 
+	   * TODO: RE-FACTORY Make button state change! Finish it!
 	   * Forgot password
 	   */
 		$scope.forgot = function ()
@@ -616,7 +604,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		self.changePass =  function (uuid, newpass, key)
@@ -655,7 +643,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		$scope.changePass = function ()

@@ -58,7 +58,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       addLoading: function (data, timedata, rows)
       {
-        angular.forEach(rows, function (row, index)
+        angular.forEach(rows, function (row)
         {
           timedata.push({
             start:  data.periods.end,
@@ -122,8 +122,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       },
     
       /**
-       * TODO
-       * Look for ways to combine with user
+       * TODO: Look for ways to combine with user
        * 
        * Profile timeline data processing
        */
@@ -413,7 +412,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         title += ' <span class="label">Behoefte (elke divisie)</span>';
 
-        angular.forEach(data.aggs.wishes, function (wish, index)
+        angular.forEach(data.aggs.wishes, function (wish)
         {
           var cn;
 
@@ -530,8 +529,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
           timedata = _this.addLoading(data, timedata, [ link ]);
 
           /**
-           * TODO
-           * Good place to host this here?
+           * TODO: Good place to host this here?
            */
           angular.forEach(member.stats, function (stat)
           {

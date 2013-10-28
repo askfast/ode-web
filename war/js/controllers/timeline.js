@@ -28,6 +28,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
       }
       */
 
+
+
+
+
+
+
+
+
+
 			/**
 			 * If main timeline
 			 */
@@ -35,15 +44,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 
-				diff  = Dater.calculate.diff(range);
+        var period = {
+          hour: 1000 * 60 * 60,
+          day:  1000 * 60 * 60 * 24,
+          week: 1000 * 60 * 60 * 24 * 7
+        };
+
+				diff  = Dater.calculate.diff(range) - period.hour;
 
 				/**
 				 * Scope is a day
-				 * 
-				 * TODO (try later on!)
-				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
 				 */
-				if (diff <= 86400000)
+				if (diff <= period.day)
 				{
 					$scope.timeline.scope = {
 						day:    true,
@@ -54,7 +66,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				/**
 				 * Scope is less than a week
 				 */
-				else if (diff < 604800000)
+				else if (diff <= period.week)
 				{
 					$scope.timeline.scope = {
 						day:    false,
@@ -65,7 +77,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				/**
 				 * Scope is more than a week
 				 */
-				else if (diff > 604800000)
+        else
 				{
 					$scope.timeline.scope = {
 						day:    false,
@@ -111,12 +123,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         start: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString()
+          datetime: new Date().toISOString().replace("Z", "")
         },
         end: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().addHours(1).toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString()
+          datetime: new Date().toISOString().replace("Z", "")
         },
         state:      'com.ask-cs.State.Available',
         recursive:  false,
@@ -535,12 +547,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        start: {
 		          date: new Date(values.start).toString($rootScope.config.formats.date),
 		          time: new Date(values.start).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.start).toISOString()
+		          datetime: new Date(values.start).toISOString().replace("Z", "")
 		        },
 		        end: {
 		          date: new Date(values.end).toString($rootScope.config.formats.date),
 		          time: new Date(values.end).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.end).toISOString()
+		          datetime: new Date(values.end).toISOString().replace("Z", "")
 		        },
 		        state:      content.state,
 		        recursive:  content.recursive,
@@ -1181,10 +1193,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
-	   * TODO
-	   * Stress-test this!
-	   * 
-	   * hotfix against not-dom-ready problem for timeline
+	   * TODO: Stress-test this!
+	   * Hot fix against not-dom-ready problem for timeline
 	   */
 	  if ($scope.timeline && $scope.timeline.main)
 		{

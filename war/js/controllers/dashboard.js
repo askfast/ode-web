@@ -12,8 +12,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups',
-	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups)
+	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
+	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
 		/**
 		 * Fix styles
@@ -31,7 +31,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Defaults for toggler
+		 * Defaults for toggle
 		 */
 		$scope.more = {
 			status: false,
@@ -40,7 +40,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Default values for syned pointer values
+		 * Default values for synced pointer values
 		 */
 		$scope.synced = {
 			alarms: new Date().getTime(),
@@ -49,10 +49,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * TODO
-		 * Check somewhere that user-settings widget-groups are synced with the
-		 * real groups list and if a group is missing in settings-groups add by
-		 * default!
+		 * TODO: Check somewhere that user-settings widget-groups are synced with the
+		 * real groups list and if a group is missing in settings-groups add by default!
 		 */
 		var groups    = Storage.local.groups(),
 				selection = {};
@@ -121,6 +119,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               angular.forEach(pies, function (pie)
               {
+                // Check whether if it is an array what data processor gives back
+                if (pie.weeks.current.state instanceof Array)
+                {
+                  pie.weeks.current.state = pie.weeks.current.state[0];
+                }
+
                 if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
                 if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
@@ -140,12 +144,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                   new Date(pie.weeks.current.state.start * 1000)
                     .toString($rootScope.config.formats.datetime) :
-                  'undefined';
+                  'Geen planning';
 
                 pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
                   new Date(pie.weeks.current.state.end * 1000)
                     .toString($rootScope.config.formats.datetime) :
-                  'undefined';
+                  'Geen planning';
 
                 pie.shortages = {
                   current:  pie.weeks.current.shortages,
@@ -160,26 +164,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                 $scope.shortageHolders['shortages-' + pie.id] = false;
               });
-
-
-              // angular.forEach(pies, function (pie, index)
-              // {
-              // 	console.log('pie ->', pie);
-
-              // 	angular.forEach(pie.shortages.current, function (slot, index)
-              // 	{
-              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
-
-              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-              // 	});
-
-              // 	angular.forEach(pie.shortages.next, function (slot, index)
-              // 	{
-              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
-
-              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-              // 	});
-              // });
 
               $scope.pies = pies;
             }
@@ -238,7 +222,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 });
 
                 var r   = new Raphael($id + id),
-                  pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                    pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
               }, 100);
             }
@@ -260,11 +244,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
-     * Get guard role
+     * Fetch smartAlarm information
      */
     if ($rootScope.config.profile.smartAlarm)
     {
-      Groups.guardRole();
+      Groups.guardMonitor()
+        .then(function ()
+        {
+          Groups.guardRole();
+        });
     }
 
 
@@ -274,8 +262,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.saveOverviewWidget = function (selection)
 		{
       $rootScope.statusBar.display($rootScope.ui.settings.saving);
-
-      // console.log('selection ->', selection);
 
       angular.forEach(selection, function (selected)
       {
@@ -307,92 +293,56 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
+    /**
+     * Fetcher for p2000 alarm messages
+     */
 		$scope.getP2000 = function  ()
 		{
-			/**
-			 * P2000 announcements
-			 */
-			Dashboard.p2000().
+      Dashboard.p2000().
 			then(function (result)
 			{
-				// console.log('result ->', result);
+        $scope.loading.alerts = false;
 
-				$scope.loading.alerts = false;
+        $scope.alarms = result.alarms;
 
-				// if (result.error)
-				// {
-				// 	$rootScope.notifier.error('Error with getting p2000 alarm messages.');
-				// 	console.warn('error ->', result);
-				// 	}
-				// else
-				// {
-					$scope.alarms = result.alarms;
+        $scope.alarms.list = $scope.alarms.short;
 
-					$scope.alarms.list = $scope.alarms.short;
-
-					$scope.synced.alarms = result.synced;
-				// }
+        $scope.synced.alarms = result.synced;
 			});
 		};
 
 
 		/**
-		 * Get alarms
-		 */
-		$scope.getP2000();
-
-
-		/**
-		 * Alarm syncer
+		 * Alarm sync
 		 */
 	  $rootScope.alarmSync = {
-	  	/**
-	  	 * Start planboard sync
-	  	 */
 	  	start: function ()
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					// console.log('syncing started for p2000 alerts..');
-
-					/**
-					 * Update planboard only in planboard is selected
-					 */
 					if ($location.path() == '/dashboard')
 					{
-						// console.log('yes it is the dashboard');
-
 						$scope.$apply()
 						{
 							$scope.getP2000();
-
-              // console.log('working in the background');
 
               if ($rootScope.config.profile.smartAlarm)
               {
                 Groups.guardRole();
               }
-
-              // $scope.getGuard.global();
 						}
 					}
-				// Sync periodically for a minute
-				}, 60000); // one minute
+				}, 60000);
 			},
-			/**
-			 * Clear planboard sync
-			 */
 			clear: function ()
 			{
-				// console.log('syncing for p2000 alerts stopped..');
-
 				$window.clearInterval($window.alarmSync);
 			}
 	  };
 
 
 	  /**
-	   * Init the syncer
+	   * Init the sync process
 	   */
 		$rootScope.alarmSync.start();
 
@@ -427,5 +377,43 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         });
       }, 100);
     }
+
+
+    /**
+     * Get alarms for the first time
+     */
+    // $scope.getP2000();
+    $.ajax({
+      url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
+      dataType: 'jsonp',
+      success: function (results)
+      {
+        $rootScope.statusBar.off();
+
+        var processed = Announcer.process(results);
+
+        var result = {
+          alarms: 	processed,
+          synced:   new Date().getTime()
+        };
+
+        $scope.$apply(function ()
+        {
+          $scope.loading.alerts = false;
+
+          $scope.alarms = result.alarms;
+
+          $scope.alarms.list = $scope.alarms.short;
+
+          $scope.synced.alarms = result.synced;
+        })
+      },
+      error: function ()
+      {
+        console.log('ERROR with getting p2000 for the first time!');
+      }
+    });
+
+
 	}
 ]);

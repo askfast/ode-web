@@ -291,7 +291,7 @@ var ui = {
         memberAdded: 'Member added to group successfully.',
         refreshingGroupMember: 'Refreshing groups and members list..',
         removingMember: 'Removing member from group..',
-        memberRemoved: 'Member removed from group successfully.',
+        memberRemoved: 'Member(s) removed from group successfully.',
         removingSelected: 'Removing selected members..',
         saving: 'Saving group..',
         groupSaved: 'Group saved successfully.',
@@ -713,7 +713,7 @@ var ui = {
         memberAdded: 'Lid succesvol aan groep toegevoegd.',
         refreshingGroupMember: 'Groepen- en ledenlijst vernieuwen...',
         removingMember: 'Lid van groep verwijderen...',
-        memberRemoved: 'Lid succesvol van groep verwijderd.',
+        memberRemoved: 'Lid/leden succesvol van groep verwijderd.',
         removingSelected: 'Geselecteerde leden verwijderen...',
         saving: 'Groep opslaan...',
         groupSaved: 'Groep succesvol opgeslagen.',
@@ -944,7 +944,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.7 (Snapshot)',
+    version:  '2.3.7',
     lang:     'nl',
 
     fullscreen: true,
@@ -963,7 +963,8 @@ angular.module('WebPaige')
       },
       background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000:      profile.p2000,
-      mobileApp:  profile.mobileApp
+      mobileApp:  profile.mobileApp,
+      smartAlarm: profile.smartAlarm
     },
 
     statesall: {
@@ -1166,14 +1167,9 @@ angular.module('WebPaige')
             var periods   = Storage.local.periods(),
                 settings  = Storage.local.settings();
 
-            // console.log('group to be asked ->', Storage.local.settings());
-
             return  Slots.all({
                       groupId:  settings.app.group,
                       stamps: {
-                        /**
-                         * Initial start up is next 7 days
-                         */
                         start:  periods.days[Dater.current.today()].last.timeStamp,
                         end:    periods.days[Dater.current.today() + 7].last.timeStamp
                       },
@@ -1362,8 +1358,13 @@ angular.module('WebPaige')
 
 
     /**
-     * TODO (Move these checks to jquery.browser)
-     * 
+     * Turn off the display of notification on refresh @ login page
+     */
+    $('#notification').removeClass('ng-cloak');
+
+
+    /**
+     * TODO: Move these checks to jquery.browser
      * Pass Jquery browser data to angular
      */
     $rootScope.browser = $.browser;
@@ -1421,9 +1422,6 @@ angular.module('WebPaige')
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
-    // console.log('-->', $rootScope.ui);
-
-
     /**
      * If periods are not present calculate them
      */
@@ -1463,9 +1461,10 @@ angular.module('WebPaige')
     else
     {
       $rootScope.app.guard = {
-        monitor: '',
-        role: '',
-        currentState: ''
+        monitor:            '',
+        role:               '',
+        currentState:       '',
+        currentStateClass:  ''
       };
     }
 
@@ -1491,8 +1490,6 @@ angular.module('WebPaige')
 
       display: function (message)
       {
-        // $rootScope.app.preloader || {status: false};
-
         $rootScope.app.preloader.status = false;
 
         $rootScope.loading = {
@@ -1876,7 +1873,10 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      process: {
 	        method: 'GET',
-	        params: {uuid:'', pass:''}
+	        params: {
+            uuid:'',
+            pass:''
+          }
 	      }
 	    }
 	  );
@@ -1889,7 +1889,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      process: {
 	        method: 'GET',
-	        params: {}
+	        params: {},
+          isArray: true
 	      }
 	    }
 	  );
@@ -1915,7 +1916,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      password: {
 	        method: 'GET',
-	        params: {uuid: '', path:''}
+	        params: {
+            uuid: '',
+            path:''
+          },
+          isArray: true
 	      }
 	    }
 	  );
@@ -1938,9 +1943,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  
 	  
 	  /**
-	   * TODO
-	   * RE-FACTORY
-	   * 
+	   * TODO: RE-FACTORY
 	   * User login
 	   */
 	  User.prototype.password = function (uuid)
@@ -1954,7 +1957,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	      }, 
 	      function (result)
 	      {
-	        if (angular.equals(result, []))
+	        if (angular.equals(result, []) || angular.equals(result, [{}]))
 	        {
 	          deferred.resolve("ok");
 	        }
@@ -2110,6 +2113,9 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', '$http',
 	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer, $http)
 	{
+    /**
+     * TODO: Still being used?
+     */
 		var Dashboard = $resource(
 			'http://knrm.myask.me/rpc/client/p2000.php',
 			{
@@ -2192,10 +2198,12 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				success: function (results)
 				{
 					$rootScope.statusBar.off();
-					
+
+          var processed = Announcer.process(results);
+
 					deferred.resolve(
 					{
-						alarms: 	Announcer.process(results),
+						alarms: 	processed,
 						synced:   new Date().getTime()
 					});
 				},
@@ -2205,20 +2213,20 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				}
 			});
 
-			// $http({
-			// 	method: 'jsonp',
-			// 	url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
-			// })
-			// .success(function (data, status)
-			// {
-			// 	console.log('results ->', data);
-
-			// 	deferred.resolve( Announcer.process(data) );
-			// })
-			// .error(function (error)
-			// {
-			// 	deferred.resolve({error: error});
-			// });
+//			$http({
+//				method: 'jsonp',
+//				url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
+//			})
+//			.success(function (data, status)
+//			{
+//				console.log('results ->', data);
+//
+//				deferred.resolve( Announcer.process(data) );
+//			})
+//			.error(function (error)
+//			{
+//				deferred.resolve({error: error});
+//			});
 
 			return deferred.promise;
 		};
@@ -2702,6 +2710,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
        * TODO: Use mathematical formula to calculate it
        */
       var now;
+
       now = String(Date.now().getTime());
       now = Number(now.substr(0, now.length - 3));
 
@@ -2712,12 +2721,17 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             end:    now + 1
           };
 
-      // console.log('states ->', );
-
       Slots.query(params,
         function (result)
         {
-          deferred.resolve($rootScope.config.statesall[result[0]['text']].label);
+          deferred.resolve(
+            (result.length > 0) ?
+              $rootScope.config.statesall[result[0]['text']] :
+              {
+                color: 'gray',
+                label: 'Geen planning'
+              }
+          );
         });
 
       return deferred.promise;
@@ -2744,6 +2758,14 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
+          angular.forEach(user, function (slot)
+          {
+            if (!slot.recursive)
+            {
+              slot.recursive = false;
+            }
+          });
+
 	      	/**
 	      	 * If group is on
 	      	 */
@@ -2766,8 +2788,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	          	 */
 	            if (options.layouts.members)
 	            {
-	              var allMembers = angular.fromJson(Storage.get(options.groupId)),
-	                  calls   = [];
+	              var allMembers  = angular.fromJson(Storage.get(options.groupId)),
+	                  calls       = [];
 
 
                 // console.log('all members ->', allMembers);
@@ -2788,7 +2810,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 						        angular.forEach(members, function (mdata, index)
 						      	{
-						      		angular.forEach(mdata, function (tslot, ind)
+						      		angular.forEach(mdata, function (tslot)
 						      		{
 						      			tslot.text = tslot.state;	
 						      		});
@@ -2960,9 +2982,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Add back-end
-	   *
+	   * TODO: Add back-end
 	   * Check whether slot is being replaced on top of an another
 	   * slot of same sort. If so combine them silently and show them as
 	   * one slot but keep aligned with back-end, like two or more slots 
@@ -3040,9 +3060,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * Check for overlaping slots exists?
+	   * Check for overlapping slots exists?
 	   * 
-	   * Prevent any overlaping slots by adding new slots or changing
+	   * Prevent any overlapping slots by adding new slots or changing
 	   * the current ones in front-end so back-end is almost always aligned with
 	   * front-end.
 	   */
@@ -3368,14 +3388,25 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        Messages.prototype.scheaduled.list()
-	        .then(function (scheadules)
-	      	{
-	        	deferred.resolve({
-	        		messages: 			Messages.prototype.filter(result),
-	        		scheadules: 		scheadules
-	        	});
-	      	});
+          if (!$rootScope.config.profile.smartAlarm)
+          {
+            Messages.prototype.scheaduled.list()
+              .then(function (scheadules)
+              {
+                deferred.resolve({
+                  messages: 	Messages.prototype.filter(result),
+                  scheadules: scheadules
+                });
+              });
+          }
+          else
+          {
+            deferred.resolve({
+              messages: 	Messages.prototype.filter(result),
+              scheadules: {}
+            });
+          }
+
 	      },
 	      function (error)
 	      {
@@ -3569,9 +3600,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	                message.state == 'TRASH')
 	      {
 	        filtered.trash.push(message);
-	      };
+	      }
 	    });
-
 
 	    var butcher = function (box)
 	    {
@@ -3585,7 +3615,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
 
 					offset ++;
-		  	};
+		  	}
 
 		  	return newarr;
 	    };
@@ -3611,8 +3641,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
+      // console.log('== asked message id ->', id);
+
+      // console.log('printing local messages ->', Messages.prototype.local());
+
 	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
+        // console.log('== listing message ->', message.uuid);
+
 	      if (message.uuid == id) gem = message;
 	    });
 
@@ -3631,12 +3667,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    angular.forEach(members, function(member)
 	    {
-	        receivers.push({
-	          id: member.uuid,
-	          name: member.name,
-            lastName: member.resources.lastName,
-            firstName: member.resources.firstName,
-	          group: $rootScope.ui.message.receiversUsers
+        receivers.push({
+          id: member.uuid,
+          name: member.name,
+          lastName: member.resources.lastName,
+          firstName: member.resources.firstName,
+          group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
@@ -3651,17 +3687,15 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 //        return 0;
 //      });
 //
-//
 //      console.log('groups sorted ->', groups);
-
 
 	    angular.forEach(groups, function(group)
 	    {
-	        receivers.push({
-	          id: group.uuid,
-	          name: group.name,
-            lastName: group.name,
-	          group: $rootScope.ui.message.receiversGroups
+        receivers.push({
+          id: group.uuid,
+          name: group.name,
+          lastName: group.name,
+          group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 
@@ -3701,7 +3735,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      {
 	        var returned = '';
 
-	        angular.forEach(result, function (chr, i)
+	        angular.forEach(result, function (chr)
 	        {
 	          returned += chr;
 	        });
@@ -3775,7 +3809,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  }).
 		  error(function (data, status, headers, config)
 		  {
-		  	console.log('smth went wrong');
+		  	console.log('Something went wrong terribly with emailing the message!', data, status, headers, config);
 		  });
 
 
@@ -3829,7 +3863,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 				    //   }
 				    // );
 		      // };
-		    };
+		    }
 	    });
 
 	    $rootScope.app.unreadMessages = counter;
@@ -3859,8 +3893,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    );
 
 	    /**
-	     * Change message state locally as well
-	     * if it is READ
+	     * Change message state locally as well if it is READ
 	     */
 	    if (state == 'READ')
 	    {
@@ -3882,7 +3915,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      Storage.add(angular.toJson('messages', converted));
 
 	      Messages.prototype.unreadCount();
-	    };
+	    }
 
 	    return deferred.promise;
 	  };
@@ -3983,7 +4016,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    });
 
 	    return deferred.promise;
-	  }
+	  };
 
 
 	  return new Messages;
@@ -4138,13 +4171,11 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           Storage.add('guard', angular.toJson({
             monitor: returned,
             role:    guard.role,
-            currentState: guard.currentState
+            currentState: guard.currentState,
+            currentStateClass: guard.currentStateClass
           }));
 
-//          $rootScope.$apply(function ()
-//          {
-            $rootScope.app.guard.monitor = returned;
-//          });
+          $rootScope.app.guard.monitor = returned;
 
           deferred.resolve(returned);
         },
@@ -4174,8 +4205,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         },
         function (results)
         {
-          console.log('Guard role ->', results);
-
           var predefinedRole = '',
               guard = angular.fromJson(Storage.get('guard'));
 
@@ -4184,8 +4213,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             if (person == $rootScope.app.resources.uuid)
             {
               predefinedRole = role;
-
-              console.log('found one ->', role);
             }
           });
 
@@ -4194,12 +4221,13 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             Storage.add('guard', angular.toJson({
               monitor: guard.monitor,
               role:    predefinedRole,
-              currentState: guard.currentState
+              currentState: guard.currentState,
+              currentStateClass: guard.currentStateClass
             }));
           }
           else
           {
-            predefinedRole = 'no role assigned';
+            predefinedRole = 'niet ingedeeld';
           }
 
           $rootScope.app.guard.role = predefinedRole;
@@ -4257,7 +4285,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	  /**
 	   * TODO (Extract only the groups which are in the local list)
-	   * 
 	   * Get container (parent) group data
 	   */
 	  Groups.prototype.containers = function (id) 
@@ -4633,6 +4660,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      {
 	        var processed = [];
 
+          results.sort(function (a, b)
+          {
+            var aName = a.name.toLowerCase();
+            var bName = b.name.toLowerCase();
+            if (aName < bName) return -1;
+            if (aName > bName) return 1;
+            return 0;
+          });
+
 	        angular.forEach(results, function (result)
 	        {
 	          processed.push({
@@ -4713,7 +4749,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      role: {
 	        method: 'PUT',
-	        params: {section: 'role'}
+	        params: {section: 'role'},
+          isArray: true
 	      }
 	    }
 	  );
@@ -4728,7 +4765,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    {
 	      profile: {
 	        method: 'GET',
-	        params: {uuid: '', pass: '', name: '', phone: ''}
+	        params: {uuid: '', pass: '', name: '', phone: ''},
+          isArray: true
 	      }
 	    }
 	  );
@@ -4765,16 +4803,21 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
       var uuid = profile.username.toLowerCase();
 
+      console.log('profile ->', profile);
+
 	    Register.profile(
 	      {
 	        uuid: 	uuid,
-	        pass: 	MD5(profile.password),
+          // pass: 	($rootScope.config.profile.smartAlarm) ? profile.password : MD5(profile.password),
+          pass: 	MD5(profile.password),
 	        name: 	String(profile.firstName + ' ' + profile.lastName),
-	        phone: 	profile.PhoneAddress
+	        phone: 	profile.PhoneAddress || ''
 	      }, 
 	      function (registered) 
 	      {
-	        Profile.prototype.role(uuid, profile.role.id)
+          console.log('registered ->', registered);
+
+          Profile.prototype.role( uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id )
 	        .then(function (roled)
 	        {
 	          Profile.prototype.save(uuid, {
@@ -4800,7 +4843,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            .then(function (grouped)
 	            {
 	              deferred.resolve({
-	                registered: registered,
+	                registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
 	                roled: 			roled,
 	                resourced: 	resourced,
 	                grouped: 		grouped
@@ -4813,7 +4856,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      function (error)
 	      {
-	        deferred.resolve({error: error});
+          deferred.resolve({error: error});
 	      }
 	    ); // register
 	   
@@ -5256,8 +5299,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         element.attr('data-toggle', 'daterangepicker');
 
         /**
-         * TODO
-         * Investigate if its really needed!!
+         * TODO: Investigate if its really needed!!
          */
         element.daterangepicker({
           autoclose: true
@@ -5839,9 +5881,7 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
 
 
 /**
- * TODO
- * Implement a call registering system with general error handling
- * 
+ * TODO: Implement a call registering system with general error handling *
  * Intercepts *all* angular ajax http calls
  */
 .factory('Interceptor', 
@@ -5866,8 +5906,7 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
       function (response) 
       {
         /**
-         * TODO
-         * Possible bug !
+         * TODO: Possible bug !
          */
         // if (response.status == 403)
         // {
@@ -6506,9 +6545,7 @@ angular.module('WebPaige.Services.Strings', ['ngResource'])
 
 
 /**
- * TODO
- * Add example usage!
- * 
+ * TODO: Add example usage!
  * String manupulators
  */
 .factory('Strings', 
@@ -6552,9 +6589,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
   {
     return {
       /**
-       * TODO
-       * Modify p2000 script in ask70 for date conversions!!
-       *
+       * TODO: Modify p2000 script in ask70 for date conversions!!
        * p2000 messages processor
        */
       process: function (results)
@@ -6688,7 +6723,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
        */
       addLoading: function (data, timedata, rows)
       {
-        angular.forEach(rows, function (row, index)
+        angular.forEach(rows, function (row)
         {
           timedata.push({
             start:  data.periods.end,
@@ -6752,8 +6787,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       },
     
       /**
-       * TODO
-       * Look for ways to combine with user
+       * TODO: Look for ways to combine with user
        * 
        * Profile timeline data processing
        */
@@ -7043,7 +7077,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         title += ' <span class="label">Behoefte (elke divisie)</span>';
 
-        angular.forEach(data.aggs.wishes, function (wish, index)
+        angular.forEach(data.aggs.wishes, function (wish)
         {
           var cn;
 
@@ -7160,8 +7194,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
           timedata = _this.addLoading(data, timedata, [ link ]);
 
           /**
-           * TODO
-           * Good place to host this here?
+           * TODO: Good place to host this here?
            */
           angular.forEach(member.stats, function (stat)
           {
@@ -7659,6 +7692,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 /**
+ * Convert date to object
+ */
+  .filter('convertToDateObj',
+    [
+      function ()
+      {
+        return function (date)
+        {
+          return Date(date);
+        }
+      }
+    ])
+
+
+/**
  * Translate roles
  */
   .filter('translateRole',
@@ -7684,33 +7732,27 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Translate division ids to names
  */
-  .filter('translateDivision',
-    [
-      '$config',
-      function ($config)
+.filter('translateDivision',
+[
+  '$config',
+  function ($config)
+  {
+    return function (divid)
+    {
+      var filtered;
+
+      angular.forEach($config.timeline.config.divisions, function (division)
       {
-        return function (divid)
+        if (division.id == divid)
         {
-          var filtered;
-
-          angular.forEach($config.timeline.config.divisions, function (division)
-          {
-            if (division.id == divid)
-            {
-              filtered = division.label;
-            }
-          });
-
-          return filtered;
+          filtered = division.label;
         }
-      }
-    ])
+      });
 
-
-
-
-
-
+      return filtered;
+    }
+  }
+])
 
 
 /**
@@ -7790,12 +7832,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
  * Main range week filter
  */
@@ -7834,12 +7870,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 ])
-
-
-
-
-
-
 
 
 /**
@@ -7897,11 +7927,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Range info week filter
  */
@@ -7920,19 +7945,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
- * BUG!
- * Maybe not replace bar- ?
- * 
- * TODO
- * Implement state conversion from config later on!
- * 
+ * TODO: POSSIBLE BUG? Maybe not replace bar- ?
+ * TODO: Implement state conversion from config later on!
  * Convert ratios to readable formats
  */
 .filter('convertRatios', 
@@ -7964,12 +7979,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /** 
  * Calculate time in days
  */
@@ -7992,12 +8001,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
-
 /**
  * Calculate time in hours
  */
@@ -8018,11 +8021,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		};
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -8050,32 +8048,32 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
  * Convert eve urls to ids
  */
-.filter('convertEve', 
-	function ()
-	{
-	  return function (url)
-	  {
-	  	var eve = url;
+.filter('convertEve',
+  [
+    '$config',
+    function ($config)
+    {
+      return function (url)
+      {
+        if ($config.profile.smartAlarm)
+        {
+          return url;
+        }
+        else
+        {
+          var eve = url;
 
-	  	eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
+          eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
-	    return eve[eve.length-2];
-	  };
-	}
+          return eve[eve.length-2];
+        }
+      };
+    }
+  ]
 )
-
-
-
-
-
 
 
 /** 
@@ -8103,11 +8101,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Convert timeStamps to dates
  */
@@ -8126,17 +8119,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
- * TODO
- * Not used probably!
- *
+ * TODO: Not used probably!
  * Combine this either with nicelyDate or terminate!
- * 
  * Convert timeStamp to readable date and time
  */
 .filter('convertTimeStamp', 
@@ -8152,15 +8137,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
- * TODO
- * Still used?
- * 
+ * TODO: Still used?
  * No title filter
  */
 .filter('noTitle',
@@ -8174,15 +8152,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
- * TODO
- * Finish it!
- * 
+ * TODO: Finish it!
  * Strip span tags
  */
 .filter('stripSpan', 
@@ -8194,11 +8165,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -8213,11 +8179,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -8241,15 +8202,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
- * TODO
- * Unknown filter
+ * TODO: Unknown filter
  */
 .filter('i18n_spec',
 [
@@ -8268,11 +8222,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Truncate group titles for dashboard pie widget
  */
@@ -8289,30 +8238,20 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Make first letter capital
  */
 .filter('toTitleCase', 
 [
-	'Strings', 
-	function (Strings) 
-	{
-		return function (txt)
-		{
-	     return Strings.toTitleCase(txt);
-	  }
-	}
+'Strings',
+  function (Strings)
+  {
+    return function (txt)
+    {
+      return Strings.toTitleCase(txt);
+    }
+  }
 ])
-
-
-
-
-
 
 
 /**
@@ -8325,7 +8264,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		{
 			var total = 0;
 
-			angular.forEach(box, function (bulk, index)
+			angular.forEach(box, function (bulk)
 			{
 				total = total + bulk.length;
 			});
@@ -8336,14 +8275,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
-
 /**
- * Convert offsets array to nicely format in scheaduled jobs
+ * Convert offsets array to nicely format in scheduled jobs
  */
 .filter('nicelyOffsets', 
 [
@@ -8355,7 +8288,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			var offsets 	= Offsetter.factory(data),
 					compiled 	= '';
 
-			angular.forEach(offsets, function (offset, index)
+			angular.forEach(offsets, function (offset)
 			{
 				compiled += '<div style="display:block; margin-bottom: 5px;">';
 
@@ -8384,12 +8317,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
  * Convert array of audience to a nice list
  */
@@ -8404,7 +8331,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    		groups 		= angular.fromJson(Storage.get('groups')),
 	    		audience 	= [];
 
-			angular.forEach(data, function (recipient, index)
+			angular.forEach(data, function (recipient)
 			{
 	  		var name;
 
@@ -8414,7 +8341,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  		}
 	  		else
 	  		{
-	  			angular.forEach(groups, function (group, index)
+	  			angular.forEach(groups, function (group)
 	  			{
 	  				if (group.uuid == recipient) name = group.name;
 	  			});
@@ -8439,8 +8366,8 @@ angular.module('WebPaige.Controllers.Login', [])
  */
 .controller('login', 
 [
-	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5', 
-	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) 
+	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5',
+	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
 	{
 	  /**
 	   * Self this
@@ -8523,14 +8450,13 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Lose this jQuery stuff later on!
-	   * 
+	   * TODO:  Lose this jQuery stuff later on!
 	   * Jquery solution of toggling between login and app view
 	   */
 	  $('.navbar').hide();
 	  $('#footer').hide();
-	  $('#watermark').hide();
+    $('#watermark').hide();
+    // $('#notification').hide();
 	  $('body').css({
 	    'background': 'url(./' + $rootScope.config.profile.background + ') no-repeat center center fixed',
 	    'backgroundSize': 'cover'
@@ -8538,8 +8464,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * use native JSON functions of angular and Store service
+	   * TODO: Use native JSON functions of angular and Store service
 	   */
 	  var logindata = angular.fromJson(Storage.get('logindata'));
 
@@ -8547,8 +8472,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Remove unneccessary DOM manipulation
+	   * TODO: Remove unnecessary DOM manipulation
 	   * Use cookies for user credentials
 	   * 
 	   * Login trigger
@@ -8609,7 +8533,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    User.login(uuid.toLowerCase(), pass)
 	    .then(function (result)
 		  {
-	      if (result.status == 400)
+	      if (result.status == 400 || result.status == 404)
 	      {
 	        $scope.alert = {
 	          login: {
@@ -8636,8 +8560,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * What happens if preloader stucks?
+	   * TODO: What happens if preloader stucks?
 	   * Optimize preloader and messages
 	   * 
 	   * Initialize preloader
@@ -8898,30 +8821,28 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.getMembers();
 
-      if ($rootScope.config.profile.smartAlarm)
-      {
-        self.getGuard();
-      }
+//      if ($rootScope.config.profile.smartAlarm)
+//      {
+//        self.getGuard();
+//      }
 	  }
 
 
     /**
      * Get guard value for smart alarming
      */
-    self.getGuard = function ()
-    {
-      Groups.guardMonitor()
-        .then(function ()
-        {
-          Groups.guardRole();
-        });
-    };
+//    self.getGuard = function ()
+//    {
+//      Groups.guardMonitor()
+//        .then(function ()
+//        {
+//          Groups.guardRole();
+//        });
+//    };
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get members list (SILENTLY)
 	   */
 	  self.getMembers = function ()
@@ -8946,9 +8867,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * TODO
-	   * Implement an error handling
-	   *
+	   * TODO: Implement an error handling
 	   * Get messages (SILENTLY)
 	   */
 	  self.getMessages = function ()
@@ -8980,7 +8899,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    setTimeout(function ()
 	    {
 	      $('body').css({ 'background': 'none' });
-	      $('.navbar').show();
+        $('.navbar').show();
 	      // $('#mobile-status-bar').show();
 	      // $('#notification').show();
 	      if (!$rootScope.browser.mobile) $('#footer').show();
@@ -9001,11 +8920,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
-	   * TODO
-	   * Make button state change!
-	   * Finish it!
-	   * 
+	   * TODO: RE-FACTORY Make button state change! Finish it!
 	   * Forgot password
 	   */
 		$scope.forgot = function ()
@@ -9044,7 +8959,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		self.changePass =  function (uuid, newpass, key)
@@ -9083,7 +8998,7 @@ angular.module('WebPaige.Controllers.Login', [])
 
 
 	  /**
-	   * RE-FACTORY
+	   * TODO: RE-FACTORY
 	   * Change password
 	   */
 		$scope.changePass = function ()
@@ -9148,7 +9063,8 @@ angular.module('WebPaige.Controllers.Logout', [])
 	function ($rootScope, $scope, $window, Session, User, Storage) 
 	{
 	  $('.navbar').hide();
-	  $('#footer').hide();
+    $('#footer').hide();
+    // $('#notification').hide();
 
 	  var logindata = angular.fromJson(Storage.get('logindata'));
 
@@ -9185,8 +9101,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups',
-	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups)
+	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
+	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
 		/**
 		 * Fix styles
@@ -9204,7 +9120,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Defaults for toggler
+		 * Defaults for toggle
 		 */
 		$scope.more = {
 			status: false,
@@ -9213,7 +9129,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * Default values for syned pointer values
+		 * Default values for synced pointer values
 		 */
 		$scope.synced = {
 			alarms: new Date().getTime(),
@@ -9222,10 +9138,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
 		/**
-		 * TODO
-		 * Check somewhere that user-settings widget-groups are synced with the
-		 * real groups list and if a group is missing in settings-groups add by
-		 * default!
+		 * TODO: Check somewhere that user-settings widget-groups are synced with the
+		 * real groups list and if a group is missing in settings-groups add by default!
 		 */
 		var groups    = Storage.local.groups(),
 				selection = {};
@@ -9294,6 +9208,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               angular.forEach(pies, function (pie)
               {
+                // Check whether if it is an array what data processor gives back
+                if (pie.weeks.current.state instanceof Array)
+                {
+                  pie.weeks.current.state = pie.weeks.current.state[0];
+                }
+
                 if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
                 if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
@@ -9313,12 +9233,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                   new Date(pie.weeks.current.state.start * 1000)
                     .toString($rootScope.config.formats.datetime) :
-                  'undefined';
+                  'Geen planning';
 
                 pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
                   new Date(pie.weeks.current.state.end * 1000)
                     .toString($rootScope.config.formats.datetime) :
-                  'undefined';
+                  'Geen planning';
 
                 pie.shortages = {
                   current:  pie.weeks.current.shortages,
@@ -9333,26 +9253,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                 $scope.shortageHolders['shortages-' + pie.id] = false;
               });
-
-
-              // angular.forEach(pies, function (pie, index)
-              // {
-              // 	console.log('pie ->', pie);
-
-              // 	angular.forEach(pie.shortages.current, function (slot, index)
-              // 	{
-              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
-
-              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-              // 	});
-
-              // 	angular.forEach(pie.shortages.next, function (slot, index)
-              // 	{
-              // 		if (typeof slot.start == 'string') slot.start = Date.parse(slot.start, "dd-MM-yyyy HH:mm").getTime() / 1000;
-
-              // 		if (typeof slot.end == 'string') slot.end = Date.parse(slot.end, "dd-MM-yyyy HH:mm").getTime() / 1000;
-              // 	});
-              // });
 
               $scope.pies = pies;
             }
@@ -9411,7 +9311,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 });
 
                 var r   = new Raphael($id + id),
-                  pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                    pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
               }, 100);
             }
@@ -9433,11 +9333,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
-     * Get guard role
+     * Fetch smartAlarm information
      */
     if ($rootScope.config.profile.smartAlarm)
     {
-      Groups.guardRole();
+      Groups.guardMonitor()
+        .then(function ()
+        {
+          Groups.guardRole();
+        });
     }
 
 
@@ -9447,8 +9351,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.saveOverviewWidget = function (selection)
 		{
       $rootScope.statusBar.display($rootScope.ui.settings.saving);
-
-      // console.log('selection ->', selection);
 
       angular.forEach(selection, function (selected)
       {
@@ -9480,92 +9382,56 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		};
 
 
+    /**
+     * Fetcher for p2000 alarm messages
+     */
 		$scope.getP2000 = function  ()
 		{
-			/**
-			 * P2000 announcements
-			 */
-			Dashboard.p2000().
+      Dashboard.p2000().
 			then(function (result)
 			{
-				// console.log('result ->', result);
+        $scope.loading.alerts = false;
 
-				$scope.loading.alerts = false;
+        $scope.alarms = result.alarms;
 
-				// if (result.error)
-				// {
-				// 	$rootScope.notifier.error('Error with getting p2000 alarm messages.');
-				// 	console.warn('error ->', result);
-				// 	}
-				// else
-				// {
-					$scope.alarms = result.alarms;
+        $scope.alarms.list = $scope.alarms.short;
 
-					$scope.alarms.list = $scope.alarms.short;
-
-					$scope.synced.alarms = result.synced;
-				// }
+        $scope.synced.alarms = result.synced;
 			});
 		};
 
 
 		/**
-		 * Get alarms
-		 */
-		$scope.getP2000();
-
-
-		/**
-		 * Alarm syncer
+		 * Alarm sync
 		 */
 	  $rootScope.alarmSync = {
-	  	/**
-	  	 * Start planboard sync
-	  	 */
 	  	start: function ()
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					// console.log('syncing started for p2000 alerts..');
-
-					/**
-					 * Update planboard only in planboard is selected
-					 */
 					if ($location.path() == '/dashboard')
 					{
-						// console.log('yes it is the dashboard');
-
 						$scope.$apply()
 						{
 							$scope.getP2000();
-
-              // console.log('working in the background');
 
               if ($rootScope.config.profile.smartAlarm)
               {
                 Groups.guardRole();
               }
-
-              // $scope.getGuard.global();
 						}
 					}
-				// Sync periodically for a minute
-				}, 60000); // one minute
+				}, 60000);
 			},
-			/**
-			 * Clear planboard sync
-			 */
 			clear: function ()
 			{
-				// console.log('syncing for p2000 alerts stopped..');
-
 				$window.clearInterval($window.alarmSync);
 			}
 	  };
 
 
 	  /**
-	   * Init the syncer
+	   * Init the sync process
 	   */
 		$rootScope.alarmSync.start();
 
@@ -9600,6 +9466,44 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         });
       }, 100);
     }
+
+
+    /**
+     * Get alarms for the first time
+     */
+    // $scope.getP2000();
+    $.ajax({
+      url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
+      dataType: 'jsonp',
+      success: function (results)
+      {
+        $rootScope.statusBar.off();
+
+        var processed = Announcer.process(results);
+
+        var result = {
+          alarms: 	processed,
+          synced:   new Date().getTime()
+        };
+
+        $scope.$apply(function ()
+        {
+          $scope.loading.alerts = false;
+
+          $scope.alarms = result.alarms;
+
+          $scope.alarms.list = $scope.alarms.short;
+
+          $scope.synced.alarms = result.synced;
+        })
+      },
+      error: function ()
+      {
+        console.log('ERROR with getting p2000 for the first time!');
+      }
+    });
+
+
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -9926,6 +9830,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
       }
       */
 
+
+
+
+
+
+
+
+
+
 			/**
 			 * If main timeline
 			 */
@@ -9933,15 +9846,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			{
 				range = $scope.self.timeline.getVisibleChartRange();
 
-				diff  = Dater.calculate.diff(range);
+        var period = {
+          hour: 1000 * 60 * 60,
+          day:  1000 * 60 * 60 * 24,
+          week: 1000 * 60 * 60 * 24 * 7
+        };
+
+				diff  = Dater.calculate.diff(range) - period.hour;
 
 				/**
 				 * Scope is a day
-				 * 
-				 * TODO (try later on!)
-				 * new Date(range.start).toString('d') == new Date(range.end).toString('d')
 				 */
-				if (diff <= 86400000)
+				if (diff <= period.day)
 				{
 					$scope.timeline.scope = {
 						day:    true,
@@ -9952,7 +9868,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				/**
 				 * Scope is less than a week
 				 */
-				else if (diff < 604800000)
+				else if (diff <= period.week)
 				{
 					$scope.timeline.scope = {
 						day:    false,
@@ -9963,7 +9879,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				/**
 				 * Scope is more than a week
 				 */
-				else if (diff > 604800000)
+        else
 				{
 					$scope.timeline.scope = {
 						day:    false,
@@ -10009,12 +9925,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         start: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString()
+          datetime: new Date().toISOString().replace("Z", "")
         },
         end: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().addHours(1).toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString()
+          datetime: new Date().toISOString().replace("Z", "")
         },
         state:      'com.ask-cs.State.Available',
         recursive:  false,
@@ -10433,12 +10349,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        start: {
 		          date: new Date(values.start).toString($rootScope.config.formats.date),
 		          time: new Date(values.start).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.start).toISOString()
+		          datetime: new Date(values.start).toISOString().replace("Z", "")
 		        },
 		        end: {
 		          date: new Date(values.end).toString($rootScope.config.formats.date),
 		          time: new Date(values.end).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.end).toISOString()
+		          datetime: new Date(values.end).toISOString().replace("Z", "")
 		        },
 		        state:      content.state,
 		        recursive:  content.recursive,
@@ -11079,10 +10995,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 
 	  /**
-	   * TODO
-	   * Stress-test this!
-	   * 
-	   * hotfix against not-dom-ready problem for timeline
+	   * TODO: Stress-test this!
+	   * Hot fix against not-dom-ready problem for timeline
 	   */
 	  if ($scope.timeline && $scope.timeline.main)
 		{
@@ -11430,7 +11344,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  $rootScope.fixStyles();
 
 	  /**
-	   * Self this
+     * TODO: Still being used?
 	   */
 	  var self = this;
 
@@ -11445,7 +11359,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Set messages
 	   */
 	  $scope.messages 	= data.messages;
-
 	  $scope.scheadules = data.scheadules;
 
 
@@ -11478,7 +11391,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	before: function (box)
 	  	{
 	  		if ($scope.page[box] != 0)
-	  			$scope.page[box]--;
+        {
+          $scope.page[box]--;
+        }
 	  	}
 	  };
 
@@ -11513,7 +11428,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Default scheaduled config
+	   * Default scheduled config
 	   */
 		$scope.scheaduled = {
 			title: 		'',
@@ -11544,7 +11459,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    $scope.views[hash] = true;
-	  };
+	  }
 
 
 	  /**
@@ -11605,10 +11520,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * TODO
-	   * Possible bug..
-	   * Still issues with changing state of the message
-	   * 
+	   * TODO: Possible bug.. Still issues with changing state of the message
 	   * Set given group for view
 	   */
 	  function setMessageView (id)
@@ -11617,15 +11529,18 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    setView('message');
 
+      // console.log('Getting message! ->', id);
+
 	    $scope.setViewTo('message');
 
 	    $scope.message = Messages.find(id);
+
+      // console.log('Found message ->', $scope.message);
 
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
 	     * can have 'NEW' state as well but those states are not shown
-	     *
 	     * Maybe only for 'trash' box to show state in later stages
 	     */
 	    if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
@@ -11648,7 +11563,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      angular.forEach($scope.messages.inbox, function (message)
 	      {
-	        if (message.uuid == $scope.message.uuid) message.state = "READ";
+	        if (message.uuid == $scope.message.uuid)
+          {
+            message.state = "READ";
+          }
 
 	        _inbox.push(message);
 	      });
@@ -11685,7 +11603,7 @@ angular.module('WebPaige.Controllers.Messages', [])
   	{
   		var count = 0;
 
-  		angular.forEach($scope.scheaduled.offsets, function (offset)
+  		angular.forEach($scope.scheaduled.offsets, function ()
       {
         count++;
       });
@@ -11776,7 +11694,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
-
 	    $scope.scheaduled = {
 	    	uuid: 		scheaduled.uuid,
 	    	sender: 	scheaduled.sender,
@@ -11786,11 +11703,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    /**
-	     * FIX
-	     * Counter is hard coded because calling counter script is not working!
-	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
-	     * when console log is produced at the time of compilation it is observable that $scope object
-	     * did not include all the functions in the controller
+	     * TODO: FIX Counter is hard coded because calling counter script is not working! Maybe it is because that it is
+       * $scope function and angular needs some time to wrap the things, when console log is produced at the time of
+       * compilation it is observable that $scope object did not include all the functions in the controller
 	     */
 	    // $scope.scheaduleCounter();
 
@@ -11847,10 +11762,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    else
 	    {
 	    	/**
-	    	 * TODO
-	    	 * Why not working properly? Look into this one
-	    	 * 
-	    	 * Reset'em
+	    	 * TODO: Why not working properly? Look into this one
+	    	 * Reset them
 	    	 */
 	    	$location.search({});
 
@@ -11929,6 +11842,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -11975,6 +11889,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -12012,6 +11927,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -12023,7 +11939,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -12052,6 +11968,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -12063,7 +11980,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -12085,7 +12002,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
-	        console.warn('error ->', result);s
+
+	        console.warn('error ->', result);
 	      }
 	      else
 	      {
@@ -12099,11 +12017,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          if (messages.error)
 	          {
 	            $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
 	            console.warn('error ->', messages);
 	          }
 	          else
 	          {
-	            $scope.messages = messages;
+	            $scope.messages = messages.messages;
 
 	            $rootScope.statusBar.off();
 	          }
@@ -12122,9 +12041,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('compose');
 
-	    var members 	= angular.fromJson(Storage.get('members')),
-	        senderId 	= message.requester.split('personalagent/')[1].split('/')[0],
-	        name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+	    var members = angular.fromJson(Storage.get('members'));
+
+      // console.log('requester ->', message.requester);
+
+	    var senderId = ($rootScope.config.profile.smartAlarm) ?
+                        message.requester :
+                        message.requester.split('personalagent/')[1].split('/')[0];
+
+      // console.log('processed requester ->', senderId);
+
+      var name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+
+      // console.log('name ->', name);
 
 	    $scope.message = {
 	      subject: 		'RE: ' + message.subject,
@@ -12135,7 +12064,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }]
 	    };
 
-	    rerenderReceiversList();
+	    renderReceiversList();
 	  };
 
 
@@ -12154,6 +12083,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        if (uuid.error)
 	        {
 	          $rootScope.notifier.error($rootScope.ui.errors.messages.send);
+
 	          console.warn('error ->', uuid);
 	        }
 	        else
@@ -12168,11 +12098,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            if (messages.error)
 	            {
 	              $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
 	              console.warn('error ->', messages);
 	            }
 	            else
 	            {
-	              $scope.messages = messages;
+	              $scope.messages = messages.messages;
 
 	              $scope.closeTabs();
 
@@ -12194,11 +12125,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 		/**
-	   * Fix for not displaying original sender in multiple receivers selector
+	   * TODO: Is it still working? Fix for not displaying original sender in multiple receivers selector
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function (item)
+	  .change(function ()
 	  {
 	  	$.each($(this).next().find("ul li.result-selected"), function (i, li)
 	    {
@@ -12215,12 +12146,18 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Re-render receivers list
 	   */
-	  function rerenderReceiversList ()
+	  function renderReceiversList ()
 	  {
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
+      angular.forEach($scope.message.receivers, function (receiver)
+      {
+        angular.forEach($("div#composeTab select.chzn-select option"), function (option)
+        {
+          if (option.innerHTML == receiver.name)
+          {
+            option.selected = true;
+          }
+        });
+      });
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 	  }
@@ -12267,6 +12204,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+     * DASHBOARD
 	   * Bulk cleaners for mailboxes
 	   */
 	  $scope.clean = {
@@ -12285,12 +12223,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-
-
-
 	  /**
-	   * Scheaduler jobs manager
+	   * Scheduler jobs manager
 	   */
 	  $scope.scheaduler = {
 
@@ -12327,7 +12261,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Scheaduler jobs lister
+	  	 * Scheduler jobs lister
 	  	 */
 	  	list: function (callback)
 	  	{
@@ -12354,9 +12288,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * NOT IN USE
-	  	 * 
-	  	 * Get a scheaduler job
+	  	 * TODO: NOT IN USE!
+	  	 * Get a scheduler job
 	  	 */
 	  	get: function (uuid)
 	  	{
@@ -12379,7 +12312,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Save a scheadule job
+	  	 * Save a schedule job
 	  	 */
 	  	save: function (message, broadcast, scheaduled)
 	  	{
@@ -12395,7 +12328,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Add a scheadule job
+	  	 * Add a schedule job
 	  	 */
 	  	add: function (message, broadcast, scheaduled)
 	  	{
@@ -12409,6 +12342,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  if (result.error)
 				  {
 				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
+
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -12439,6 +12373,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  if (result.error)
 				  {
 				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
+
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -12448,6 +12383,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          self.list(function ()
 	        	{
 	        		$scope.setViewTo('notifications');
+
 					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
 	        	});
 				  }
@@ -12470,6 +12406,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 		      if (result.error)
 		      {
 		        $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
+
 		        console.warn('error ->', result);
 		      }
 		      else
@@ -12487,7 +12424,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 	}
-]);/*jslint node: true */
+]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -12719,6 +12656,9 @@ angular.module('WebPaige.Controllers.Groups', [])
 		}
 
 
+    /**
+     * Set wish
+     */
 		function wisher (id)
 		{
 			$scope.wished = false;
@@ -12759,6 +12699,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					if (result.error)
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
+
 						console.warn('error ->', result);
 					}
 					else
@@ -12936,6 +12877,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -12950,6 +12892,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -12957,6 +12900,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 							$scope.data = data;
 
 							$rootScope.statusBar.off();
+
+              if ($location.hash() == 'search')
+              {
+                $scope.searchMembers($scope.search.query);
+              }
 						}
 					});
 				}
@@ -12977,6 +12925,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -12991,6 +12940,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -13022,7 +12972,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				}
 				else
 				{
-					$rootScope.notifier.success($rootScope.ui.groups.removed);
+					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
 					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
@@ -13066,6 +13016,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (returned.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
+
 					console.warn('error ->', returned);
 				}
 				else
@@ -13080,6 +13031,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -13126,6 +13078,13 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.memberSubmit = function (member)
 		{
+      // console.log('profile info to save ->', angular.toJson(member));
+
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        member.role = 1;
+      }
+
 			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
 			Profile.register(member).
@@ -13137,10 +13096,17 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
-						// $scope.memberForm = {};
-
 						$rootScope.statusBar.off();
 					}
+          else if (result.error.status === 403)
+          {
+            // If 403 Forbidden is thrown initialize the process again
+            $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+
+            $rootScope.statusBar.off();
+
+            $('body').scrollTop(0);
+          }
 					else
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
@@ -13189,6 +13155,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -13203,6 +13170,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -13210,7 +13178,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 							$scope.data = data;
 
               /**
-               * TODO (Is this really supposed to be like this?)
+               * TODO: Is this really supposed to be like this?
                */
 							angular.forEach(data.groups, function (group, index)
 							{
@@ -13253,13 +13221,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 
-
-
-
-
 		/**
-		 * TODO (Not used in groups yet but login uses modal call..)
-		 * 
+		 * TODO: Not used in groups yet but login uses modal call..
 		 * Fetch parent groups
 		 */
 		$scope.fetchParent = function ()
@@ -13272,8 +13235,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 		/**
-		 * TODO (Not used in groups yet..)
-		 * 
+		 * TODO: Not used in groups yet..
 		 * Fetch parent groups
 		 */
 		$scope.fetchContainers = function (id)
@@ -13298,126 +13260,10 @@ angular.module('WebPaige.Controllers.Groups', [])
      */
     $scope.toggleSorter = function (sorter)
     {
-      if ($scope.sorter == sorter)
-      {
-        $scope.reverse = !$scope.reverse;
-      }
-      else
-      {
-        $scope.reverse = false;
-      }
+      $scope.reverse = ($scope.sorter == sorter) ? !$scope.reverse : false;
 
       $scope.sorter = sorter;
     };
-
-
-//    $scope.reverser = function (basedOn)
-//    {
-//      $scope.$apply('basedOn', function ()
-//      {
-//        $scope.basedOn = {
-//          firstName: false,
-//          lastName: false,
-//          role: false,
-//          phoneAddress: false
-//        };
-//
-//        $scope.basedOn[basedOn] = true;
-//      });
-//
-//      $scope.reverse = !$scope.reverse;
-//    };
-
-
-
-      // var filesTreeGrid;
-      // var foldersTreeGrid;
-
-      // // Called when the page is loaded
-      // function draw() {
-      //   // randomly generate some files
-      //   var files = [];
-      //   for (var i = 0; i < 50; i++) {
-      //     files.push({
-      //       'name': 'File ' + i,
-      //       'size': (Math.round(Math.random() * 50) * 10 + 100) + ' kB',
-      //       'date': (new Date()).toDateString(),
-      //       '_id': i     // this is a hidden field, as it starts with an underscore
-      //     });
-      //   }
-        
-      //   // randomly generate folders, containing a dataconnector which supports
-      //   // drag and drop
-      //   var folders = [];
-      //   var chars = 'ABCDE';
-      //   for (var i in chars) {
-      //     var c = chars[i];
-      //     var options = {
-      //       'dataTransfer' : {
-      //         'allowedEffect': 'move',
-      //         'dropEffect': 'move'
-      //       }
-      //     };
-      //     var dataConnector = new links.DataTable([], options);
-      //     var item = {
-      //       'name': 'Folder ' + c, 
-      //       'files': dataConnector, 
-      //       '_id': c
-      //     };
-      //     folders.push(item);
-      //   }
-      //   folders.push({'name': 'File X', '_id': 'X'});
-      //   folders.push({'name': 'File Y', '_id': 'Y'});
-      //   folders.push({'name': 'File Z', '_id': 'Z'});
-
-      //   // specify options
-      //   var treeGridOptions = {
-      //     'width': '350px',
-      //     'height': '400px'
-      //   };  
-
-      //   // Instantiate treegrid object with files
-      //   var filesContainer = document.getElementById('files');
-      //   var filesOptions = {
-      //     'columns': [
-      //       {'name': 'name', 'text': 'Name', 'title': 'Name of the files'},
-      //       {'name': 'size', 'text': 'Size', 'title': 'Size of the files in kB (kilo bytes)'},
-      //       {'name': 'date', 'text': 'Date', 'title': 'Date the file is last updated'}
-      //     ],
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'none'
-      //     }
-      //   };
-      //   filesTreeGrid = new links.TreeGrid(filesContainer, treeGridOptions);
-      //   var filesDataConnector = new links.DataTable(files, filesOptions);
-      //   /*
-      //   filesDataConnector.setFilters([{
-      //     'field': 'size',
-      //     'order': 'ASC'
-      //     //'startValue': '300 kB',
-      //     //'endValue': '500 kB',
-      //   }]);
-      //   //*/
-      //   filesTreeGrid.draw(filesDataConnector);    
-
-      //   // Instantiate treegrid object with folders
-      //   var foldersOptions = {};
-      //   //* TDOO: cleanup temporary foldersOptions
-      //   var foldersOptions = {
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'move'
-      //     }
-      //   };
-      //   //*/
-      //   var foldersContainer = document.getElementById('folders');
-      //   var foldersDataConnector = new links.DataTable(folders, foldersOptions);
-      //   foldersTreeGrid = new links.TreeGrid(foldersContainer, treeGridOptions);
-      //   foldersTreeGrid.draw(foldersDataConnector);
-      // }
-
-      // draw();
 
 	}
 ]);;/*jslint node: true */
@@ -13470,15 +13316,16 @@ angular.module('WebPaige.Controllers.Profile', [])
     // console.log('userId ->', $route.current.params.userId);
     // console.log('absUrl ->', $location.absUrl());
 
+    /*
     if ($location.absUrl().match(/$rootScope.app.resources.uuid/))
     {
       console.log('this is user');
     }
+    */
 
     if (!!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
     {
-
-      console.log('initing -->', !!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId));
+      // console.log('initing -->', !!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId));
 
       if (data.slots)
       {
@@ -13672,22 +13519,26 @@ angular.module('WebPaige.Controllers.Profile', [])
 	   */
 	  $scope.change = function (passwords)
 	  {
-	    if (passwords.new1 == '' || passwords.new2 == '')
+      if (passwords.new1 == '' || passwords.new2 == '')
 	    {
 	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
 	      return false;
 	    }
 
-	    if (passwords.new1 != passwords.new2)
+      if (passwords.new1 != passwords.new2)
 	    {
-	      $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
+        $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
 
 	      return false;
 	    }
-	    else if ($rootScope.app.resources.askPass == MD5(passwords.current))
+
+      // console.log('askPass ->', $rootScope.app.resources.askPass);
+      // console.log('current ->', passwords.current, MD5(passwords.current));
+
+      if ($rootScope.app.resources.askPass == MD5(passwords.current))
 	    {
-	      $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
+        $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
 	      Profile.changePassword(passwords)
 	      .then(function (result)
@@ -13723,6 +13574,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    }
 	    else
 	    {
+        // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
 	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
 	    }
 	  };
@@ -13739,8 +13591,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-     * TODO (Is it really needed? Since the timelinebooter is disabled)
-     *
+     * TODO: Is it really needed? Since the timeline-booter is disabled
 	   * Redraw timeline
 	   */
 	  $scope.redraw = function ()
@@ -13793,16 +13644,16 @@ angular.module('WebPaige.Controllers.Profile', [])
       });
 
 
-	  /**
-	   * Prepeare timeline range for dateranger widget
-	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
-	                      Dater.readable.date($scope.timeline.range.end);
+      /**
+       * Prepare timeline range for date-ranger widget
+       */
+      $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' +
+                          Dater.readable.date($scope.timeline.range.end);
 
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');
-	  };
+	  }
 
 	}
 ]);;/*jslint node: true */

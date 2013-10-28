@@ -30,7 +30,8 @@
           <span class="entypo">&#9998;</span> {{ui.profile.edit}}
         </a>
       </li>
-      <li class="{{(views.password==true) && 'active'}}" ng-show="views.user">
+      <li class="{{(views.password==true) && 'active'}}"
+          ng-show="views.user">
         <a href="#passwordTab" 
             data-toggle="tab"
             ng-click="fixTabHeight('passwordTab'); setViewTo('password')">
@@ -77,8 +78,10 @@
                 <span ng-show="app.resources.role > 1">{{group.name}}, </span>
               </span>
           </dd>
-          <dt>{{ui.profile.role}}</dt>
-            <dd>{{data.resources.role|translateRole}}</dd>
+
+          <dt ng-hide="config.profile.smartAlarm">{{ui.profile.role}}</dt>
+            <dd ng-hide="config.profile.smartAlarm">{{data.resources.role|translateRole}}</dd>
+
           <dt>{{ui.profile.email}}</dt>
             <dd>{{data.resources.EmailAddress}}</dd>
           <dt>{{ui.profile.phone}}</dt>

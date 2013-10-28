@@ -59,14 +59,9 @@ angular.module('WebPaige')
             var periods   = Storage.local.periods(),
                 settings  = Storage.local.settings();
 
-            // console.log('group to be asked ->', Storage.local.settings());
-
             return  Slots.all({
                       groupId:  settings.app.group,
                       stamps: {
-                        /**
-                         * Initial start up is next 7 days
-                         */
                         start:  periods.days[Dater.current.today()].last.timeStamp,
                         end:    periods.days[Dater.current.today() + 7].last.timeStamp
                       },

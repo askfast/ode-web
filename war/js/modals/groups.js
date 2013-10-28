@@ -148,13 +148,11 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           Storage.add('guard', angular.toJson({
             monitor: returned,
             role:    guard.role,
-            currentState: guard.currentState
+            currentState: guard.currentState,
+            currentStateClass: guard.currentStateClass
           }));
 
-//          $rootScope.$apply(function ()
-//          {
-            $rootScope.app.guard.monitor = returned;
-//          });
+          $rootScope.app.guard.monitor = returned;
 
           deferred.resolve(returned);
         },
@@ -184,8 +182,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         },
         function (results)
         {
-          console.log('Guard role ->', results);
-
           var predefinedRole = '',
               guard = angular.fromJson(Storage.get('guard'));
 
@@ -194,8 +190,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             if (person == $rootScope.app.resources.uuid)
             {
               predefinedRole = role;
-
-              console.log('found one ->', role);
             }
           });
 
@@ -204,12 +198,13 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             Storage.add('guard', angular.toJson({
               monitor: guard.monitor,
               role:    predefinedRole,
-              currentState: guard.currentState
+              currentState: guard.currentState,
+              currentStateClass: guard.currentStateClass
             }));
           }
           else
           {
-            predefinedRole = 'no role assigned';
+            predefinedRole = 'niet ingedeeld';
           }
 
           $rootScope.app.guard.role = predefinedRole;
@@ -267,7 +262,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
 	  /**
 	   * TODO (Extract only the groups which are in the local list)
-	   * 
 	   * Get container (parent) group data
 	   */
 	  Groups.prototype.containers = function (id) 
@@ -642,6 +636,15 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      function (results) 
 	      {
 	        var processed = [];
+
+          results.sort(function (a, b)
+          {
+            var aName = a.name.toLowerCase();
+            var bName = b.name.toLowerCase();
+            if (aName < bName) return -1;
+            if (aName > bName) return 1;
+            return 0;
+          });
 
 	        angular.forEach(results, function (result)
 	        {

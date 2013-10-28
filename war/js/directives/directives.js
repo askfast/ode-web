@@ -171,8 +171,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         element.attr('data-toggle', 'daterangepicker');
 
         /**
-         * TODO
-         * Investigate if its really needed!!
+         * TODO: Investigate if its really needed!!
          */
         element.daterangepicker({
           autoclose: true

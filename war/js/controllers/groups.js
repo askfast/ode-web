@@ -128,6 +128,9 @@ angular.module('WebPaige.Controllers.Groups', [])
 		}
 
 
+    /**
+     * Set wish
+     */
 		function wisher (id)
 		{
 			$scope.wished = false;
@@ -168,6 +171,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 					if (result.error)
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
+
 						console.warn('error ->', result);
 					}
 					else
@@ -345,6 +349,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -359,6 +364,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -366,6 +372,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 							$scope.data = data;
 
 							$rootScope.statusBar.off();
+
+              if ($location.hash() == 'search')
+              {
+                $scope.searchMembers($scope.search.query);
+              }
 						}
 					});
 				}
@@ -386,6 +397,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -400,6 +412,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -431,7 +444,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				}
 				else
 				{
-					$rootScope.notifier.success($rootScope.ui.groups.removed);
+					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
 					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
@@ -475,6 +488,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (returned.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
+
 					console.warn('error ->', returned);
 				}
 				else
@@ -489,6 +503,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -535,6 +550,13 @@ angular.module('WebPaige.Controllers.Groups', [])
 		 */
 		$scope.memberSubmit = function (member)
 		{
+      // console.log('profile info to save ->', angular.toJson(member));
+
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        member.role = 1;
+      }
+
 			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
 			Profile.register(member).
@@ -546,10 +568,17 @@ angular.module('WebPaige.Controllers.Groups', [])
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
-						// $scope.memberForm = {};
-
 						$rootScope.statusBar.off();
 					}
+          else if (result.error.status === 403)
+          {
+            // If 403 Forbidden is thrown initialize the process again
+            $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+
+            $rootScope.statusBar.off();
+
+            $('body').scrollTop(0);
+          }
 					else
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
@@ -598,6 +627,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 				if (result.error)
 				{
 					$rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
+
 					console.warn('error ->', result);
 				}
 				else
@@ -612,6 +642,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 						if (data.error)
 						{
 							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
 							console.warn('error ->', data);
 						}
 						else
@@ -619,7 +650,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 							$scope.data = data;
 
               /**
-               * TODO (Is this really supposed to be like this?)
+               * TODO: Is this really supposed to be like this?
                */
 							angular.forEach(data.groups, function (group, index)
 							{
@@ -662,13 +693,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 
-
-
-
-
 		/**
-		 * TODO (Not used in groups yet but login uses modal call..)
-		 * 
+		 * TODO: Not used in groups yet but login uses modal call..
 		 * Fetch parent groups
 		 */
 		$scope.fetchParent = function ()
@@ -681,8 +707,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 		/**
-		 * TODO (Not used in groups yet..)
-		 * 
+		 * TODO: Not used in groups yet..
 		 * Fetch parent groups
 		 */
 		$scope.fetchContainers = function (id)
@@ -707,126 +732,10 @@ angular.module('WebPaige.Controllers.Groups', [])
      */
     $scope.toggleSorter = function (sorter)
     {
-      if ($scope.sorter == sorter)
-      {
-        $scope.reverse = !$scope.reverse;
-      }
-      else
-      {
-        $scope.reverse = false;
-      }
+      $scope.reverse = ($scope.sorter == sorter) ? !$scope.reverse : false;
 
       $scope.sorter = sorter;
     };
-
-
-//    $scope.reverser = function (basedOn)
-//    {
-//      $scope.$apply('basedOn', function ()
-//      {
-//        $scope.basedOn = {
-//          firstName: false,
-//          lastName: false,
-//          role: false,
-//          phoneAddress: false
-//        };
-//
-//        $scope.basedOn[basedOn] = true;
-//      });
-//
-//      $scope.reverse = !$scope.reverse;
-//    };
-
-
-
-      // var filesTreeGrid;
-      // var foldersTreeGrid;
-
-      // // Called when the page is loaded
-      // function draw() {
-      //   // randomly generate some files
-      //   var files = [];
-      //   for (var i = 0; i < 50; i++) {
-      //     files.push({
-      //       'name': 'File ' + i,
-      //       'size': (Math.round(Math.random() * 50) * 10 + 100) + ' kB',
-      //       'date': (new Date()).toDateString(),
-      //       '_id': i     // this is a hidden field, as it starts with an underscore
-      //     });
-      //   }
-        
-      //   // randomly generate folders, containing a dataconnector which supports
-      //   // drag and drop
-      //   var folders = [];
-      //   var chars = 'ABCDE';
-      //   for (var i in chars) {
-      //     var c = chars[i];
-      //     var options = {
-      //       'dataTransfer' : {
-      //         'allowedEffect': 'move',
-      //         'dropEffect': 'move'
-      //       }
-      //     };
-      //     var dataConnector = new links.DataTable([], options);
-      //     var item = {
-      //       'name': 'Folder ' + c, 
-      //       'files': dataConnector, 
-      //       '_id': c
-      //     };
-      //     folders.push(item);
-      //   }
-      //   folders.push({'name': 'File X', '_id': 'X'});
-      //   folders.push({'name': 'File Y', '_id': 'Y'});
-      //   folders.push({'name': 'File Z', '_id': 'Z'});
-
-      //   // specify options
-      //   var treeGridOptions = {
-      //     'width': '350px',
-      //     'height': '400px'
-      //   };  
-
-      //   // Instantiate treegrid object with files
-      //   var filesContainer = document.getElementById('files');
-      //   var filesOptions = {
-      //     'columns': [
-      //       {'name': 'name', 'text': 'Name', 'title': 'Name of the files'},
-      //       {'name': 'size', 'text': 'Size', 'title': 'Size of the files in kB (kilo bytes)'},
-      //       {'name': 'date', 'text': 'Date', 'title': 'Date the file is last updated'}
-      //     ],
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'none'
-      //     }
-      //   };
-      //   filesTreeGrid = new links.TreeGrid(filesContainer, treeGridOptions);
-      //   var filesDataConnector = new links.DataTable(files, filesOptions);
-      //   /*
-      //   filesDataConnector.setFilters([{
-      //     'field': 'size',
-      //     'order': 'ASC'
-      //     //'startValue': '300 kB',
-      //     //'endValue': '500 kB',
-      //   }]);
-      //   //*/
-      //   filesTreeGrid.draw(filesDataConnector);    
-
-      //   // Instantiate treegrid object with folders
-      //   var foldersOptions = {};
-      //   //* TDOO: cleanup temporary foldersOptions
-      //   var foldersOptions = {
-      //     'dataTransfer' : {
-      //       'allowedEffect': 'move',
-      //       'dropEffect': 'move'
-      //     }
-      //   };
-      //   //*/
-      //   var foldersContainer = document.getElementById('folders');
-      //   var foldersDataConnector = new links.DataTable(folders, foldersOptions);
-      //   foldersTreeGrid = new links.TreeGrid(foldersContainer, treeGridOptions);
-      //   foldersTreeGrid.draw(foldersDataConnector);
-      // }
-
-      // draw();
 
 	}
 ]);

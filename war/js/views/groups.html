@@ -1,21 +1,3 @@
-
-      
-    <!-- <h1>TreeGrid Demo - drag and drop</h1>
-    <p>Assign files to folders by dragging them to a folder.
-    Keep Ctrl down to select multiple files, 
-    or Shift to select a range of files.</p>
-    <table id="main">
-      <tr>
-        <th>Uncategorized files</th>
-        <th>Folders</th>
-      </tr>      
-      <tr>
-        <td id="files"></td>
-        <td id="folders"></td>
-      </tr>
-    </table> -->
-
-
 <div class="page-header">
   <h2 ng-hide="views.add || views.member">{{group.name}}</h2>
   <h2 ng-show="views.add">{{ui.groups.newGroup}}</h2>
@@ -198,7 +180,9 @@
         <!-- member form -->
         <form>
           <fieldset>
-            <div class="control-group">
+
+            <div class="control-group"
+                  ng-hide="config.profile.smartAlarm">
               <label class="control-label">{{ui.groups.role}}</label>
               <div class="controls">
                 <select ng-model="memberForm.role"
@@ -207,6 +191,7 @@
                 </select>
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.groups}}</label>
               <div class="controls">
@@ -257,24 +242,24 @@
             <div class="control-group">
               <label class="control-label">{{ui.groups.address}}</label>
               <div class="controls">
-                <input  type="text" 
-                        class="span5" 
+                <input  type="text"
+                        class="span5"
                         ng-model="memberForm.PostAddress">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">{{ui.groups.postCode}}</label>
               <div class="controls">
-                <input  type="text" 
-                        class="span2" 
+                <input  type="text"
+                        class="span2"
                         ng-model="memberForm.PostZip">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label">{{ui.groups.city}}</label>
               <div class="controls">
-                <input  type="text" 
-                        class="span3" 
+                <input  type="text"
+                        class="span3"
                         ng-model="memberForm.PostCity">
               </div>
             </div>
@@ -431,7 +416,7 @@
                   <span ng-show="reverse">&#9660;</span>
                 </span>
               </th>
-              <th>
+              <th ng-hide="config.profile.smartAlarm">
                 <a ng-click="toggleSorter('resources.role')">{{ui.groups.role}}</a>&nbsp;
                 <span ng-show="(sorter=='resources.role')">
                   <span ng-hide="reverse">&#9650;</span>
@@ -458,7 +443,7 @@
               </td>
               <td>{{member.resources.firstName}}</td>
               <td>{{member.resources.lastName}}</td>
-              <td>{{member.resources.role | translateRole}}</td>
+              <td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>
               <td>{{member.resources.PhoneAddress}}</td>
               <td>
                 <div class="pull-right">

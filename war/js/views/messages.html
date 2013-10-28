@@ -54,7 +54,8 @@
         </a>
       </li>
 
-      <li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}">
+      <li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}"
+        ng-hide="config.profile.smartAlarm">
         <a href="#notificationsTab" 
             data-toggle="tab"
             ng-click="resetViews(); setViewTo('notifications')">
@@ -117,6 +118,7 @@
 
             <!-- broadcasting types -->
             <div class="control-group">
+                 <!--ng-hide="config.profile.smartAlarm">-->
               <label class="control-label">{{ui.message.broadcast}}</label>
 
               <div  class="btn-group"  
@@ -177,8 +179,9 @@
             </div>
             <!-- end subject -->
 
-            <!-- scheadulerPane toggle -->
-            <div class="control-group" ng-hide="scheadulerPane">
+            <!-- schedulerPane toggle -->
+            <div class="control-group"
+                 ng-hide="scheadulerPane || config.profile.smartAlarm">
               <label class="control-label">{{ui.message.repeat}}</label>
 
               <div  class="btn-group"  
@@ -193,12 +196,12 @@
 
               </div>
             </div>
-            <!-- end scheaduler toggle -->
+            <!-- end scheduler toggle -->
 
-            <!-- scheaduler -->
+            <!-- scheduler -->
             <section id="scheaduler-pane" ng-show="scheadulerPane">
 
-              <!-- scheaduler header -->
+              <!-- scheduler header -->
               <header>
                 <h4>{{ui.message.repeat}}</h4>
                 <div class="pull-right">
@@ -207,7 +210,7 @@
                   </button>
                 </div>
               </header>
-              <!-- end scheaduler header -->
+              <!-- end scheduler header -->
 
               <hr>
 
@@ -263,7 +266,7 @@
                           ng-click="scheaduled.status = false">{{ui.message.repeatOff}}</button>
 
                 </div>
-                <!-- end status toggler -->
+                <!-- end status toggle -->
 
                 <!-- status indicator -->
                 <div style="margin-left: 10px; display: inline;">
@@ -273,15 +276,15 @@
                 <!-- end status indicator -->
 
               </div>
-              <!-- end scheaduler status -->
+              <!-- end scheduler status -->
 
             </section>
-            <!-- end scheaduler -->
+            <!-- end scheduler -->
 
             <!-- compose form actions -->
             <div class="form-actions">
 
-              <!-- scheadular action buttons -->
+              <!-- scheduler action buttons -->
               <div ng-show="scheadulerPane">
                 <button type="submit" 
                         ng-hide="scheaduleCount > 0"
@@ -292,7 +295,7 @@
                         ng-show="scheaduleCount > 0"
                         class="btn btn-success">{{ui.message.notificationSave}}</button>
               </div>
-              <!-- end scheadular action buttons -->
+              <!-- end scheduler action buttons -->
 
               <!-- message action buttons -->
               <button type="submit" 

@@ -27,7 +27,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      role: {
 	        method: 'PUT',
-	        params: {section: 'role'}
+	        params: {section: 'role'},
+          isArray: true
 	      }
 	    }
 	  );
@@ -42,7 +43,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	    {
 	      profile: {
 	        method: 'GET',
-	        params: {uuid: '', pass: '', name: '', phone: ''}
+	        params: {uuid: '', pass: '', name: '', phone: ''},
+          isArray: true
 	      }
 	    }
 	  );
@@ -79,16 +81,21 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
       var uuid = profile.username.toLowerCase();
 
+      console.log('profile ->', profile);
+
 	    Register.profile(
 	      {
 	        uuid: 	uuid,
-	        pass: 	MD5(profile.password),
+          // pass: 	($rootScope.config.profile.smartAlarm) ? profile.password : MD5(profile.password),
+          pass: 	MD5(profile.password),
 	        name: 	String(profile.firstName + ' ' + profile.lastName),
-	        phone: 	profile.PhoneAddress
+	        phone: 	profile.PhoneAddress || ''
 	      }, 
 	      function (registered) 
 	      {
-	        Profile.prototype.role(uuid, profile.role.id)
+          console.log('registered ->', registered);
+
+          Profile.prototype.role( uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id )
 	        .then(function (roled)
 	        {
 	          Profile.prototype.save(uuid, {
@@ -114,7 +121,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	            .then(function (grouped)
 	            {
 	              deferred.resolve({
-	                registered: registered,
+	                registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
 	                roled: 			roled,
 	                resourced: 	resourced,
 	                grouped: 		grouped
@@ -127,7 +134,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 	      },
 	      function (error)
 	      {
-	        deferred.resolve({error: error});
+          deferred.resolve({error: error});
 	      }
 	    ); // register
 	   

@@ -5,6 +5,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 /**
+ * Convert date to object
+ */
+  .filter('convertToDateObj',
+    [
+      function ()
+      {
+        return function (date)
+        {
+          return Date(date);
+        }
+      }
+    ])
+
+
+/**
  * Translate roles
  */
   .filter('translateRole',
@@ -30,33 +45,27 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Translate division ids to names
  */
-  .filter('translateDivision',
-    [
-      '$config',
-      function ($config)
+.filter('translateDivision',
+[
+  '$config',
+  function ($config)
+  {
+    return function (divid)
+    {
+      var filtered;
+
+      angular.forEach($config.timeline.config.divisions, function (division)
       {
-        return function (divid)
+        if (division.id == divid)
         {
-          var filtered;
-
-          angular.forEach($config.timeline.config.divisions, function (division)
-          {
-            if (division.id == divid)
-            {
-              filtered = division.label;
-            }
-          });
-
-          return filtered;
+          filtered = division.label;
         }
-      }
-    ])
+      });
 
-
-
-
-
-
+      return filtered;
+    }
+  }
+])
 
 
 /**
@@ -136,12 +145,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
  * Main range week filter
  */
@@ -180,12 +183,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		}
 	}
 ])
-
-
-
-
-
-
 
 
 /**
@@ -243,11 +240,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Range info week filter
  */
@@ -266,19 +258,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
- * BUG!
- * Maybe not replace bar- ?
- * 
- * TODO
- * Implement state conversion from config later on!
- * 
+ * TODO: POSSIBLE BUG? Maybe not replace bar- ?
+ * TODO: Implement state conversion from config later on!
  * Convert ratios to readable formats
  */
 .filter('convertRatios', 
@@ -310,12 +292,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /** 
  * Calculate time in days
  */
@@ -338,12 +314,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
-
 /**
  * Calculate time in hours
  */
@@ -364,11 +334,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		};
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -396,32 +361,32 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
  * Convert eve urls to ids
  */
-.filter('convertEve', 
-	function ()
-	{
-	  return function (url)
-	  {
-	  	var eve = url;
+.filter('convertEve',
+  [
+    '$config',
+    function ($config)
+    {
+      return function (url)
+      {
+        if ($config.profile.smartAlarm)
+        {
+          return url;
+        }
+        else
+        {
+          var eve = url;
 
-	  	eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
+          eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
-	    return eve[eve.length-2];
-	  };
-	}
+          return eve[eve.length-2];
+        }
+      };
+    }
+  ]
 )
-
-
-
-
-
 
 
 /** 
@@ -449,11 +414,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Convert timeStamps to dates
  */
@@ -472,17 +432,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
- * TODO
- * Not used probably!
- *
+ * TODO: Not used probably!
  * Combine this either with nicelyDate or terminate!
- * 
  * Convert timeStamp to readable date and time
  */
 .filter('convertTimeStamp', 
@@ -498,15 +450,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
- * TODO
- * Still used?
- * 
+ * TODO: Still used?
  * No title filter
  */
 .filter('noTitle',
@@ -520,15 +465,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
 /**
- * TODO
- * Finish it!
- * 
+ * TODO: Finish it!
  * Strip span tags
  */
 .filter('stripSpan', 
@@ -540,11 +478,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -559,11 +492,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  }
 	}
 )
-
-
-
-
-
 
 
 /**
@@ -587,15 +515,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
- * TODO
- * Unknown filter
+ * TODO: Unknown filter
  */
 .filter('i18n_spec',
 [
@@ -614,11 +535,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Truncate group titles for dashboard pie widget
  */
@@ -635,30 +551,20 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
 /**
  * Make first letter capital
  */
 .filter('toTitleCase', 
 [
-	'Strings', 
-	function (Strings) 
-	{
-		return function (txt)
-		{
-	     return Strings.toTitleCase(txt);
-	  }
-	}
+'Strings',
+  function (Strings)
+  {
+    return function (txt)
+    {
+      return Strings.toTitleCase(txt);
+    }
+  }
 ])
-
-
-
-
-
 
 
 /**
@@ -671,7 +577,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 		{
 			var total = 0;
 
-			angular.forEach(box, function (bulk, index)
+			angular.forEach(box, function (bulk)
 			{
 				total = total + bulk.length;
 			});
@@ -682,14 +588,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-
-
-
-
-
-
 /**
- * Convert offsets array to nicely format in scheaduled jobs
+ * Convert offsets array to nicely format in scheduled jobs
  */
 .filter('nicelyOffsets', 
 [
@@ -701,7 +601,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 			var offsets 	= Offsetter.factory(data),
 					compiled 	= '';
 
-			angular.forEach(offsets, function (offset, index)
+			angular.forEach(offsets, function (offset)
 			{
 				compiled += '<div style="display:block; margin-bottom: 5px;">';
 
@@ -730,12 +630,6 @@ angular.module('WebPaige.Filters', ['ngResource'])
 ])
 
 
-
-
-
-
-
-
 /**
  * Convert array of audience to a nice list
  */
@@ -750,7 +644,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	    		groups 		= angular.fromJson(Storage.get('groups')),
 	    		audience 	= [];
 
-			angular.forEach(data, function (recipient, index)
+			angular.forEach(data, function (recipient)
 			{
 	  		var name;
 
@@ -760,7 +654,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	  		}
 	  		else
 	  		{
-	  			angular.forEach(groups, function (group, index)
+	  			angular.forEach(groups, function (group)
 	  			{
 	  				if (group.uuid == recipient) name = group.name;
 	  			});

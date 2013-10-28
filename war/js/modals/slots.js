@@ -474,6 +474,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
        * TODO: Use mathematical formula to calculate it
        */
       var now;
+
       now = String(Date.now().getTime());
       now = Number(now.substr(0, now.length - 3));
 
@@ -484,12 +485,17 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             end:    now + 1
           };
 
-      // console.log('states ->', );
-
       Slots.query(params,
         function (result)
         {
-          deferred.resolve($rootScope.config.statesall[result[0]['text']].label);
+          deferred.resolve(
+            (result.length > 0) ?
+              $rootScope.config.statesall[result[0]['text']] :
+              {
+                color: 'gray',
+                label: 'Geen planning'
+              }
+          );
         });
 
       return deferred.promise;
@@ -516,6 +522,14 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
+          angular.forEach(user, function (slot)
+          {
+            if (!slot.recursive)
+            {
+              slot.recursive = false;
+            }
+          });
+
 	      	/**
 	      	 * If group is on
 	      	 */
@@ -538,8 +552,8 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	          	 */
 	            if (options.layouts.members)
 	            {
-	              var allMembers = angular.fromJson(Storage.get(options.groupId)),
-	                  calls   = [];
+	              var allMembers  = angular.fromJson(Storage.get(options.groupId)),
+	                  calls       = [];
 
 
                 // console.log('all members ->', allMembers);
@@ -560,7 +574,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 						        angular.forEach(members, function (mdata, index)
 						      	{
-						      		angular.forEach(mdata, function (tslot, ind)
+						      		angular.forEach(mdata, function (tslot)
 						      		{
 						      			tslot.text = tslot.state;	
 						      		});
@@ -732,9 +746,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * TODO
-	   * Add back-end
-	   *
+	   * TODO: Add back-end
 	   * Check whether slot is being replaced on top of an another
 	   * slot of same sort. If so combine them silently and show them as
 	   * one slot but keep aligned with back-end, like two or more slots 
@@ -812,9 +824,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * Check for overlaping slots exists?
+	   * Check for overlapping slots exists?
 	   * 
-	   * Prevent any overlaping slots by adding new slots or changing
+	   * Prevent any overlapping slots by adding new slots or changing
 	   * the current ones in front-end so back-end is almost always aligned with
 	   * front-end.
 	   */

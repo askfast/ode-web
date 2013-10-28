@@ -48,15 +48,16 @@ angular.module('WebPaige.Controllers.Profile', [])
     // console.log('userId ->', $route.current.params.userId);
     // console.log('absUrl ->', $location.absUrl());
 
+    /*
     if ($location.absUrl().match(/$rootScope.app.resources.uuid/))
     {
       console.log('this is user');
     }
+    */
 
     if (!!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
     {
-
-      console.log('initing -->', !!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId));
+      // console.log('initing -->', !!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId));
 
       if (data.slots)
       {
@@ -250,22 +251,26 @@ angular.module('WebPaige.Controllers.Profile', [])
 	   */
 	  $scope.change = function (passwords)
 	  {
-	    if (passwords.new1 == '' || passwords.new2 == '')
+      if (passwords.new1 == '' || passwords.new2 == '')
 	    {
 	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
 	      return false;
 	    }
 
-	    if (passwords.new1 != passwords.new2)
+      if (passwords.new1 != passwords.new2)
 	    {
-	      $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
+        $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
 
 	      return false;
 	    }
-	    else if ($rootScope.app.resources.askPass == MD5(passwords.current))
+
+      // console.log('askPass ->', $rootScope.app.resources.askPass);
+      // console.log('current ->', passwords.current, MD5(passwords.current));
+
+      if ($rootScope.app.resources.askPass == MD5(passwords.current))
 	    {
-	      $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
+        $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
 	      Profile.changePassword(passwords)
 	      .then(function (result)
@@ -301,6 +306,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 	    }
 	    else
 	    {
+        // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
 	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
 	    }
 	  };
@@ -317,8 +323,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
 
 	  /**
-     * TODO (Is it really needed? Since the timelinebooter is disabled)
-     *
+     * TODO: Is it really needed? Since the timeline-booter is disabled
 	   * Redraw timeline
 	   */
 	  $scope.redraw = function ()
@@ -371,16 +376,16 @@ angular.module('WebPaige.Controllers.Profile', [])
       });
 
 
-	  /**
-	   * Prepeare timeline range for dateranger widget
-	   */
-	  $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' + 
-	                      Dater.readable.date($scope.timeline.range.end);
+      /**
+       * Prepare timeline range for date-ranger widget
+       */
+      $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' +
+                          Dater.readable.date($scope.timeline.range.end);
 
 
       $('#timeline').html('');
       $('#timeline').append('<div id="userTimeline"></div>');
-	  };
+	  }
 
 	}
 ]);

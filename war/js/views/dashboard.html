@@ -6,17 +6,28 @@
     <button id="activation" class="btn btn-small btn-success" ng-click="allowWebkitNotifications()" data-dismiss="alert">Activate Notifications</button>
   </div> -->
 
-  <div class="well well-large greetings">
+  <div class="well well-large greetings"
+       ng-hide="config.smartAlarm">
     <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
+  </div>
 
-    <div ng-show="config.smartAlarm">
-      <h4>Current State</h4>
-      <p>
-        Beschikbaar: {{ app.guard.currentState }} <br>
-        StandBy as {{ app.guard.role }}
-      </p>
+  <!--Smart Alarm greetings-->
+  <div class="row-fluid">
+    <div class="well greetings span9"
+         ng-show="config.smartAlarm"
+         style="height: 100px;">
+      <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
+    </div>
+
+    <div class="well greetings span3"
+         ng-show="config.smartAlarm"
+         style="height: 100px;">
+      <h4 style="margin: -5px 0 10px 0; padding: 0;">Huidige Status</h4>
+      <span style="color: {{ app.guard.currentState.color }}">{{ app.guard.currentState.label }}</span><br>
+      StandBy als <span class="label label-inverse" style="margin-left: 5px;">{{ app.guard.role.toUpperCase() }}</span>
     </div>
   </div>
+  <!--end Smart Alarm greetings-->
 
   <!-- row-fluid -->
   <div class="row-fluid">

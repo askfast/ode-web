@@ -16,6 +16,9 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', '$http',
 	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer, $http)
 	{
+    /**
+     * TODO: Still being used?
+     */
 		var Dashboard = $resource(
 			'http://knrm.myask.me/rpc/client/p2000.php',
 			{
@@ -98,10 +101,12 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				success: function (results)
 				{
 					$rootScope.statusBar.off();
-					
+
+          var processed = Announcer.process(results);
+
 					deferred.resolve(
 					{
-						alarms: 	Announcer.process(results),
+						alarms: 	processed,
 						synced:   new Date().getTime()
 					});
 				},
@@ -111,20 +116,20 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 				}
 			});
 
-			// $http({
-			// 	method: 'jsonp',
-			// 	url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
-			// })
-			// .success(function (data, status)
-			// {
-			// 	console.log('results ->', data);
-
-			// 	deferred.resolve( Announcer.process(data) );
-			// })
-			// .error(function (error)
-			// {
-			// 	deferred.resolve({error: error});
-			// });
+//			$http({
+//				method: 'jsonp',
+//				url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
+//			})
+//			.success(function (data, status)
+//			{
+//				console.log('results ->', data);
+//
+//				deferred.resolve( Announcer.process(data) );
+//			})
+//			.error(function (error)
+//			{
+//				deferred.resolve({error: error});
+//			});
 
 			return deferred.promise;
 		};

@@ -5,9 +5,7 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
 
 
 /**
- * TODO
- * Implement a call registering system with general error handling
- * 
+ * TODO: Implement a call registering system with general error handling *
  * Intercepts *all* angular ajax http calls
  */
 .factory('Interceptor', 
@@ -32,8 +30,7 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
       function (response) 
       {
         /**
-         * TODO
-         * Possible bug !
+         * TODO: Possible bug !
          */
         // if (response.status == 403)
         // {

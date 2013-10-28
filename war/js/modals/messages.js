@@ -99,14 +99,25 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	        Messages.prototype.unreadCount();
 
-	        Messages.prototype.scheaduled.list()
-	        .then(function (scheadules)
-	      	{
-	        	deferred.resolve({
-	        		messages: 			Messages.prototype.filter(result),
-	        		scheadules: 		scheadules
-	        	});
-	      	});
+          if (!$rootScope.config.profile.smartAlarm)
+          {
+            Messages.prototype.scheaduled.list()
+              .then(function (scheadules)
+              {
+                deferred.resolve({
+                  messages: 	Messages.prototype.filter(result),
+                  scheadules: scheadules
+                });
+              });
+          }
+          else
+          {
+            deferred.resolve({
+              messages: 	Messages.prototype.filter(result),
+              scheadules: {}
+            });
+          }
+
 	      },
 	      function (error)
 	      {
@@ -300,9 +311,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	                message.state == 'TRASH')
 	      {
 	        filtered.trash.push(message);
-	      };
+	      }
 	    });
-
 
 	    var butcher = function (box)
 	    {
@@ -316,7 +326,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
 
 					offset ++;
-		  	};
+		  	}
 
 		  	return newarr;
 	    };
@@ -342,8 +352,14 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	  {
 	    var gem;
 
+      // console.log('== asked message id ->', id);
+
+      // console.log('printing local messages ->', Messages.prototype.local());
+
 	    angular.forEach(Messages.prototype.local(), function (message)
 	    {
+        // console.log('== listing message ->', message.uuid);
+
 	      if (message.uuid == id) gem = message;
 	    });
 
@@ -362,12 +378,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    angular.forEach(members, function(member)
 	    {
-	        receivers.push({
-	          id: member.uuid,
-	          name: member.name,
-            lastName: member.resources.lastName,
-            firstName: member.resources.firstName,
-	          group: $rootScope.ui.message.receiversUsers
+        receivers.push({
+          id: member.uuid,
+          name: member.name,
+          lastName: member.resources.lastName,
+          firstName: member.resources.firstName,
+          group: $rootScope.ui.message.receiversUsers
 	      });
 	    });
 
@@ -382,17 +398,15 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 //        return 0;
 //      });
 //
-//
 //      console.log('groups sorted ->', groups);
-
 
 	    angular.forEach(groups, function(group)
 	    {
-	        receivers.push({
-	          id: group.uuid,
-	          name: group.name,
-            lastName: group.name,
-	          group: $rootScope.ui.message.receiversGroups
+        receivers.push({
+          id: group.uuid,
+          name: group.name,
+          lastName: group.name,
+          group: $rootScope.ui.message.receiversGroups
 	      });
 	    });
 
@@ -432,7 +446,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      {
 	        var returned = '';
 
-	        angular.forEach(result, function (chr, i)
+	        angular.forEach(result, function (chr)
 	        {
 	          returned += chr;
 	        });
@@ -506,7 +520,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 		  }).
 		  error(function (data, status, headers, config)
 		  {
-		  	console.log('smth went wrong');
+		  	console.log('Something went wrong terribly with emailing the message!', data, status, headers, config);
 		  });
 
 
@@ -560,7 +574,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 				    //   }
 				    // );
 		      // };
-		    };
+		    }
 	    });
 
 	    $rootScope.app.unreadMessages = counter;
@@ -590,8 +604,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    );
 
 	    /**
-	     * Change message state locally as well
-	     * if it is READ
+	     * Change message state locally as well if it is READ
 	     */
 	    if (state == 'READ')
 	    {
@@ -613,7 +626,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	      Storage.add(angular.toJson('messages', converted));
 
 	      Messages.prototype.unreadCount();
-	    };
+	    }
 
 	    return deferred.promise;
 	  };
@@ -714,7 +727,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 	    });
 
 	    return deferred.promise;
-	  }
+	  };
 
 
 	  return new Messages;

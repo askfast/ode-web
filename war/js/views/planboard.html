@@ -18,7 +18,9 @@
 
 
   <!-- timeline controls -->
-  <div class="row-fluid" id="timeline-controls" ng-controller="timeline-navigation">
+  <div class="row-fluid"
+       id="timeline-controls"
+       ng-controller="timeline-navigation">
   
 
     <!-- core timeline controls -->
@@ -73,7 +75,8 @@
     <!-- end core timeline controls -->
 
     <!-- range indicator -->
-    <div class="pull-right" style="text-align: right">
+    <div class="{{ (browser.mobile) &&  'pull-left' || 'pull-right' }}"
+         style="text-align: {{ (browser.mobile) &&  'left' || 'right' }}">
       <h4 style="font-weight: normal">
         {{timeline.range | rangeMainFilter}}<br>
         <!-- timeline scope info -->
@@ -96,7 +99,8 @@
 
 
   <!-- slot controls -->
-  <div class="row-fluid" ng-show="views.slot.add || views.slot.edit || views.group || views.wish || views.member">
+  <div class="row-fluid"
+       ng-show="views.slot.add || views.slot.edit || views.group || views.wish || views.member">
 
     <form class="form-inline form-toggled well">
 
@@ -113,27 +117,29 @@
       <hr>
 
       <!-- slot start -->
+
+      <!--mobile-->
       <div class="form-elements-group" ng-show="browser.mobile">
         <label>{{ui.planboard.from}}</label>
-
         <!-- datetime -->
         <div class="control-group dater-mobile" ng-show="views.slot.add || views.slot.edit || views.wish">
-          <input  name="date-start" 
-                  type="datetime"
+          <input  name="date-start"
+                  type="datetime-local"
                   ng-model="slot.start.datetime">
         </div>
-        <div class="control-group dater-mobile" ng-show="views.group || views.member">
-          <input  name="date-start" 
-                  type="datetime"
+        <div class="control-group dater-mobile"
+             ng-show="views.group || views.member">
+          <input  name="date-start"
+                  type="datetime-local"
                   ng-model="slot.start.datetime"
                   disabled>
         </div>
         <!-- end datetime -->
-
       </div>
+      <!--end mobile-->
+
       <div class="form-elements-group" ng-hide="browser.mobile">
         <label>{{ui.planboard.from}}</label>
-
         <!-- date -->
         <div class="control-group dater" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-start" 
@@ -151,7 +157,6 @@
           <i class="icon-calendar"></i>
         </div>
         <!-- end date -->
-
         <!-- time -->
         <div class="control-group timer" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="time-start" 
@@ -168,32 +173,35 @@
           <i class="icon-time"></i>
         </div>
         <!-- end time -->
-
       </div>
+
       <!-- end slot start -->
 
       <!-- slot end -->
+
+      <!--mobile-->
       <div class="form-elements-group" ng-show="browser.mobile">
         <label>{{ui.planboard.from}}</label>
-
         <!-- datetime -->
         <div class="control-group dater-mobile" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-start" 
-                  type="datetime"
+                  type="datetime-local"
                   ng-model="slot.end.datetime">
         </div>
         <div class="control-group dater-mobile" ng-show="views.group || views.member">
           <input  name="date-start" 
-                  type="datetime"
+                  type="datetime-local"
                   ng-model="slot.end.datetime"
                   disabled>
         </div>
         <!-- end datetime -->
 
+        <br/><br/>
       </div>
+      <!--end mobile-->
+
       <div class="form-elements-group" ng-hide="browser.mobile">
         <label>{{ui.planboard.till}}</label>
-
         <!-- date -->
         <div class="control-group dater" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-end" 
@@ -211,7 +219,6 @@
           <i class="icon-calendar"></i>
         </div>
         <!-- end date -->
-
         <!-- time -->
         <div class="control-group timer" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="time-end" 
@@ -228,8 +235,8 @@
           <i class="icon-time"></i>
         </div>
         <!-- end time -->
-
       </div>
+
       <!-- end slot end -->
 
       <!-- slot state -->
@@ -368,13 +375,20 @@
 
 
         <!-- timelines -->
-        <div class="tab-pane active" id="timelineTab">
+        <div class="tab-pane active"
+             id="timelineTab">
 
           <!-- timeline -->
           <div id="timeline">
 
+
+
+
+
+
             <!-- timeline-toolbar -->
-            <div id="timeline-toolbar">
+            <div id="timeline-toolbar"
+                 style="{{ (browser.mobile) && 'height: auto' }}">
 
               <!-- groups members controls -->
               <div class="pull-left">
@@ -399,8 +413,12 @@
 
               </div>
 
+              <br ng-show="browser.mobile">
+              <br ng-show="browser.mobile">
+
               <!-- groups members controls -->
-              <div class="pull-right">
+              <div class="{{ (browser.mobile) && 'pull-left' || 'pull-right' }}"
+                   style="{{ (browser.mobile) && 'margin-left: -10px;' }}">
 
                 <!-- legenda -->
                 <div  class="btn-group">
@@ -451,6 +469,11 @@
 
             </div>
             <!-- end timeline-toolbar -->
+
+
+
+
+
 
             <hr>
 

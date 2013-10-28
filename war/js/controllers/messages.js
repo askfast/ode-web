@@ -20,7 +20,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  $rootScope.fixStyles();
 
 	  /**
-	   * Self this
+     * TODO: Still being used?
 	   */
 	  var self = this;
 
@@ -35,7 +35,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   * Set messages
 	   */
 	  $scope.messages 	= data.messages;
-
 	  $scope.scheadules = data.scheadules;
 
 
@@ -68,7 +67,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	before: function (box)
 	  	{
 	  		if ($scope.page[box] != 0)
-	  			$scope.page[box]--;
+        {
+          $scope.page[box]--;
+        }
 	  	}
 	  };
 
@@ -103,7 +104,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * Default scheaduled config
+	   * Default scheduled config
 	   */
 		$scope.scheaduled = {
 			title: 		'',
@@ -134,7 +135,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    $scope.views[hash] = true;
-	  };
+	  }
 
 
 	  /**
@@ -195,10 +196,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
-	   * TODO
-	   * Possible bug..
-	   * Still issues with changing state of the message
-	   * 
+	   * TODO: Possible bug.. Still issues with changing state of the message
 	   * Set given group for view
 	   */
 	  function setMessageView (id)
@@ -207,15 +205,18 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    setView('message');
 
+      // console.log('Getting message! ->', id);
+
 	    $scope.setViewTo('message');
 
 	    $scope.message = Messages.find(id);
+
+      // console.log('Found message ->', $scope.message);
 
 	    /**
 	     * Change to read if message not seen yet
 	     * Check only in inbox because other box messages
 	     * can have 'NEW' state as well but those states are not shown
-	     *
 	     * Maybe only for 'trash' box to show state in later stages
 	     */
 	    if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
@@ -238,7 +239,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	      angular.forEach($scope.messages.inbox, function (message)
 	      {
-	        if (message.uuid == $scope.message.uuid) message.state = "READ";
+	        if (message.uuid == $scope.message.uuid)
+          {
+            message.state = "READ";
+          }
 
 	        _inbox.push(message);
 	      });
@@ -275,7 +279,7 @@ angular.module('WebPaige.Controllers.Messages', [])
   	{
   		var count = 0;
 
-  		angular.forEach($scope.scheaduled.offsets, function (offset)
+  		angular.forEach($scope.scheaduled.offsets, function ()
       {
         count++;
       });
@@ -366,7 +370,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
-
 	    $scope.scheaduled = {
 	    	uuid: 		scheaduled.uuid,
 	    	sender: 	scheaduled.sender,
@@ -376,11 +379,9 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    };
 
 	    /**
-	     * FIX
-	     * Counter is hard coded because calling counter script is not working!
-	     * Maybe it is because that it is $scope function and angular needs some time to wrap the things,
-	     * when console log is produced at the time of compilation it is observable that $scope object
-	     * did not include all the functions in the controller
+	     * TODO: FIX Counter is hard coded because calling counter script is not working! Maybe it is because that it is
+       * $scope function and angular needs some time to wrap the things, when console log is produced at the time of
+       * compilation it is observable that $scope object did not include all the functions in the controller
 	     */
 	    // $scope.scheaduleCounter();
 
@@ -437,10 +438,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	    else
 	    {
 	    	/**
-	    	 * TODO
-	    	 * Why not working properly? Look into this one
-	    	 * 
-	    	 * Reset'em
+	    	 * TODO: Why not working properly? Look into this one
+	    	 * Reset them
 	    	 */
 	    	$location.search({});
 
@@ -519,6 +518,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -565,6 +565,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -602,6 +603,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -613,7 +615,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -642,6 +644,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
+
 	        console.warn('error ->', result);
 	      }
 	      else
@@ -653,7 +656,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        Messages.query()
 	        .then(function(messages)
 	        {
-	          $scope.messages = messages;
+	          $scope.messages = messages.messages;
 
 	          $rootScope.statusBar.off();
 	        });
@@ -675,7 +678,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      if (result.error)
 	      {
 	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
-	        console.warn('error ->', result);s
+
+	        console.warn('error ->', result);
 	      }
 	      else
 	      {
@@ -689,11 +693,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          if (messages.error)
 	          {
 	            $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
 	            console.warn('error ->', messages);
 	          }
 	          else
 	          {
-	            $scope.messages = messages;
+	            $scope.messages = messages.messages;
 
 	            $rootScope.statusBar.off();
 	          }
@@ -712,9 +717,19 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 	    $scope.setViewTo('compose');
 
-	    var members 	= angular.fromJson(Storage.get('members')),
-	        senderId 	= message.requester.split('personalagent/')[1].split('/')[0],
-	        name 			= (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+	    var members = angular.fromJson(Storage.get('members'));
+
+      // console.log('requester ->', message.requester);
+
+	    var senderId = ($rootScope.config.profile.smartAlarm) ?
+                        message.requester :
+                        message.requester.split('personalagent/')[1].split('/')[0];
+
+      // console.log('processed requester ->', senderId);
+
+      var name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+
+      // console.log('name ->', name);
 
 	    $scope.message = {
 	      subject: 		'RE: ' + message.subject,
@@ -725,7 +740,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      }]
 	    };
 
-	    rerenderReceiversList();
+	    renderReceiversList();
 	  };
 
 
@@ -744,6 +759,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	        if (uuid.error)
 	        {
 	          $rootScope.notifier.error($rootScope.ui.errors.messages.send);
+
 	          console.warn('error ->', uuid);
 	        }
 	        else
@@ -758,11 +774,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 	            if (messages.error)
 	            {
 	              $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
 	              console.warn('error ->', messages);
 	            }
 	            else
 	            {
-	              $scope.messages = messages;
+	              $scope.messages = messages.messages;
 
 	              $scope.closeTabs();
 
@@ -784,11 +801,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 		/**
-	   * Fix for not displaying original sender in multiple receivers selector
+	   * TODO: Is it still working? Fix for not displaying original sender in multiple receivers selector
 	   * in the case that user wants to add more receivers to the list  
 	   */
 	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function (item)
+	  .change(function ()
 	  {
 	  	$.each($(this).next().find("ul li.result-selected"), function (i, li)
 	    {
@@ -805,12 +822,18 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  /**
 	   * Re-render receivers list
 	   */
-	  function rerenderReceiversList ()
+	  function renderReceiversList ()
 	  {
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option, index)
-	    {
-	      if (option.innerHTML == name) option.selected = true;
-	    });
+      angular.forEach($scope.message.receivers, function (receiver)
+      {
+        angular.forEach($("div#composeTab select.chzn-select option"), function (option)
+        {
+          if (option.innerHTML == receiver.name)
+          {
+            option.selected = true;
+          }
+        });
+      });
 
 	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
 	  }
@@ -857,6 +880,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  /**
+     * DASHBOARD
 	   * Bulk cleaners for mailboxes
 	   */
 	  $scope.clean = {
@@ -875,12 +899,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 
-
-
-
-
 	  /**
-	   * Scheaduler jobs manager
+	   * Scheduler jobs manager
 	   */
 	  $scope.scheaduler = {
 
@@ -917,7 +937,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Scheaduler jobs lister
+	  	 * Scheduler jobs lister
 	  	 */
 	  	list: function (callback)
 	  	{
@@ -944,9 +964,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * NOT IN USE
-	  	 * 
-	  	 * Get a scheaduler job
+	  	 * TODO: NOT IN USE!
+	  	 * Get a scheduler job
 	  	 */
 	  	get: function (uuid)
 	  	{
@@ -969,7 +988,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Save a scheadule job
+	  	 * Save a schedule job
 	  	 */
 	  	save: function (message, broadcast, scheaduled)
 	  	{
@@ -985,7 +1004,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
 	  	/**
-	  	 * Add a scheadule job
+	  	 * Add a schedule job
 	  	 */
 	  	add: function (message, broadcast, scheaduled)
 	  	{
@@ -999,6 +1018,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  if (result.error)
 				  {
 				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
+
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -1029,6 +1049,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 				  if (result.error)
 				  {
 				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
+
 				    console.warn('error ->', result);
 				  }
 				  else
@@ -1038,6 +1059,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	          self.list(function ()
 	        	{
 	        		$scope.setViewTo('notifications');
+
 					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
 	        	});
 				  }
@@ -1060,6 +1082,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 		      if (result.error)
 		      {
 		        $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
+
 		        console.warn('error ->', result);
 		      }
 		      else
@@ -1077,4 +1100,4 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  };
 
 	}
-])
+]);

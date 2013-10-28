@@ -5,9 +5,7 @@ angular.module('WebPaige.Services.Strings', ['ngResource'])
 
 
 /**
- * TODO
- * Add example usage!
- * 
+ * TODO: Add example usage!
  * String manupulators
  */
 .factory('Strings', 
