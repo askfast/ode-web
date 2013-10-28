@@ -11,7 +11,7 @@
 
 ## Versions
 
-  2.3.7 (Snapshot)
+  2.3.7
     * Fix for not correctly switching timeline navigational scope buttons (day-week-month).
       Fix made in this week where the daylight time saving occurs so this fix will cover other
       daylight saving periods as well. 25-10-2013

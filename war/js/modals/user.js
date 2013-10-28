@@ -25,7 +25,10 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      process: {
 	        method: 'GET',
-	        params: {uuid:'', pass:''}
+	        params: {
+            uuid:'',
+            pass:''
+          }
 	      }
 	    }
 	  );
@@ -65,7 +68,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      password: {
 	        method: 'GET',
-	        params: {uuid: '', path:''}
+	        params: {
+            uuid: '',
+            path:''
+          },
+          isArray: true
 	      }
 	    }
 	  );
@@ -102,7 +109,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	      }, 
 	      function (result)
 	      {
-	        if (angular.equals(result, []))
+	        if (angular.equals(result, []) || angular.equals(result, [{}]))
 	        {
 	          deferred.resolve("ok");
 	        }

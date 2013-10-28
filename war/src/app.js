@@ -944,7 +944,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.7 (Snapshot)',
+    version:  '2.3.7',
     lang:     'nl',
 
     fullscreen: true,
@@ -1873,7 +1873,10 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      process: {
 	        method: 'GET',
-	        params: {uuid:'', pass:''}
+	        params: {
+            uuid:'',
+            pass:''
+          }
 	      }
 	    }
 	  );
@@ -1913,7 +1916,11 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    {
 	      password: {
 	        method: 'GET',
-	        params: {uuid: '', path:''}
+	        params: {
+            uuid: '',
+            path:''
+          },
+          isArray: true
 	      }
 	    }
 	  );
@@ -1950,7 +1957,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	      }, 
 	      function (result)
 	      {
-	        if (angular.equals(result, []))
+	        if (angular.equals(result, []) || angular.equals(result, [{}]))
 	        {
 	          deferred.resolve("ok");
 	        }
@@ -9612,13 +9619,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	      densities:  $rootScope.config.timeline.config.densities
 	    }
 	  };
-
-
-
-
-    console.warn('timeline scope ->', $scope.timeline.scope);
-
-
 	  
 
 	  /**
