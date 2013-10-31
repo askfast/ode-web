@@ -87,10 +87,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	     * Initial start up is next 7 days
 	     */
 	    options: {
-        start:  $scope.periods.days[Dater.current.today()].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 7].last.day,
-        min:  	$scope.periods.days[Dater.current.today()].last.day,
-        max:    $scope.periods.days[Dater.current.today() + 7].last.day
+        start:  $scope.periods.days[Dater.current.today() - 1].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 6].last.day,
+        min:  	$scope.periods.days[Dater.current.today() - 1].last.day,
+        max:    $scope.periods.days[Dater.current.today() + 6].last.day
 	    },
 	    range: {
         start:  $scope.periods.days[Dater.current.today()].last.day,

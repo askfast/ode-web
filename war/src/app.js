@@ -944,7 +944,8 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.8 (Snapshot)',
+    // version:  '2.3.8 (Snapshot)',
+    version:  '2.3.7',
     lang:     'nl',
 
     fullscreen: true,
@@ -1170,8 +1171,8 @@ angular.module('WebPaige')
             return  Slots.all({
                       groupId:  settings.app.group,
                       stamps: {
-                        start:  periods.days[Dater.current.today()].last.timeStamp,
-                        end:    periods.days[Dater.current.today() + 7].last.timeStamp
+                        start:  periods.days[Dater.current.today() - 1].last.timeStamp,
+                        end:    periods.days[Dater.current.today() + 6].last.timeStamp
                       },
                       month: Dater.current.month(),
                       layouts: {
@@ -9594,10 +9595,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	     * Initial start up is next 7 days
 	     */
 	    options: {
-        start:  $scope.periods.days[Dater.current.today()].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 7].last.day,
-        min:  	$scope.periods.days[Dater.current.today()].last.day,
-        max:    $scope.periods.days[Dater.current.today() + 7].last.day
+        start:  $scope.periods.days[Dater.current.today() - 1].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 6].last.day,
+        min:  	$scope.periods.days[Dater.current.today() - 1].last.day,
+        max:    $scope.periods.days[Dater.current.today() + 6].last.day
 	    },
 	    range: {
         start:  $scope.periods.days[Dater.current.today()].last.day,

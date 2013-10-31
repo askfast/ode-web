@@ -62,8 +62,8 @@ angular.module('WebPaige')
             return  Slots.all({
                       groupId:  settings.app.group,
                       stamps: {
-                        start:  periods.days[Dater.current.today()].last.timeStamp,
-                        end:    periods.days[Dater.current.today() + 7].last.timeStamp
+                        start:  periods.days[Dater.current.today() - 1].last.timeStamp,
+                        end:    periods.days[Dater.current.today() + 6].last.timeStamp
                       },
                       month: Dater.current.month(),
                       layouts: {
