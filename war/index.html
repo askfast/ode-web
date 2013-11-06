@@ -218,6 +218,7 @@
 
       </div>
       <!-- end container-fluid -->
+
       <div id="push"></div>
     </div>
     <!-- end wrap -->
@@ -228,6 +229,30 @@
       <img src="img/ajax-loader.gif"><small>{{loading.message}}</small>
     </div>
     <!-- end mobile status bar -->
+
+    <div ng-show="browser.mobile && config.profile.mobileApp.status && config.profile.smartAlarm"
+         class="ng-cloak text-center">
+      <ul style="list-style: none; position: relative; z-index: 20000; margin: 0;">
+        <li style="display: inline;">
+          <button class="btn btn-success btn-large"
+                  type="button"
+                  href="https://play.google.com/store/apps/details?id=com.askcs.standby">
+            Download Android App
+          </button>
+        </li>
+        <br ng-show="browser.screen.width < 768" />
+        <br ng-show="browser.screen.width < 768" />
+        <li style="display: inline">
+          <a class="btn btn-success btn-large"
+             href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+             target="itunes_store">
+            Download iPhone App
+          </a>
+        </li>
+        <br ng-show="browser.screen.width < 768" />
+        <br ng-show="browser.screen.width < 768" />
+      </ul>
+    </div>
 
 
     <!-- footer -->
@@ -248,7 +273,21 @@
           <!-- download mobile app -->
           <div id="download-footer">
             <ul>
-              <li ng-show="config.profile.mobileApp.status">
+              <li ng-show="config.profile.mobileApp.status && config.profile.smartAlarm">
+                <button class="btn btn-success btn-large"
+                        type="button"
+                        href="https://play.google.com/store/apps/details?id=com.askcs.standby">
+                  Download Android App
+                </button>
+              </li>
+              <li ng-show="config.profile.mobileApp.status && config.profile.smartAlarm">
+                <a class="btn btn-success btn-large"
+                   href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+                   target="itunes_store">
+                  Download iPhone App
+                </a>
+              </li>
+              <li ng-show="config.profile.mobileApp.status && !config.profile.smartAlarm">
                 <button class="btn btn-success btn-large"
                         type="button"
                         ng-click="downloadMobileApp('regular')">

@@ -209,7 +209,6 @@
 
         <div class="head">
           <h4>{{ui.dashboard.announcements}}</h4>
-          <!-- <button class="btn btn-small"><i class="icon-cog"></i></button> -->
         </div>
         <hr>
 
@@ -259,6 +258,11 @@
           <small class="pull-left">
             <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
             <span class="muted">{{synced.alarms | nicelyDate}}</span>
+          </small>
+          <br/>
+          <small class="pull-left">
+            <span class="text-warning">Capcode(s):</span>&nbsp;
+            <span class="muted">{{config.profile.p2000.codes}}</span>
           </small>
         </p>
         <!-- end p2000 footer -->
