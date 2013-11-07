@@ -39,7 +39,7 @@
           <h4>{{ui.dashboard.overview}}</h4>
           <button id="dashboardPopoverBtn"
                   class="btn btn-small"
-                  bs-popover="'dist/views/dashboard-pies.html'" 
+                  bs-popover="'dist/views/dashboard-pies.html'"
                   data-placement="{{(browser.mobile) && 'left' || 'bottom'}}"
                   data-title="Overzicht instellingen"
                   ng-click="fixPopoverPos()"><i class="icon-cog"></i></button>
@@ -146,8 +146,8 @@
 
               <!-- <span class="remove">{{shortageHolders['shortages-' + pie.id]}}</span> -->
 
-              <!-- <div id="shortages-{{pie.id}}" 
-                    class="shortages span12" 
+              <!-- <div id="shortages-{{pie.id}}"
+                    class="shortages span12"
                     ng-show="pie.weeks.current.shortages.length > 0 || pie.weeks.next.shortages.length > 0"
                     ng-hide="shortageHolders['shortages-' + pie.id] == false">
 
@@ -156,23 +156,23 @@
                   <ul>
                     <li ng-repeat="shortage in pie.shortages.current">
                       <span class="label">{{shortage.diff}}</span>
-                      <h5>{{shortage.start * 1000 | nicelyDate}}</h5> 
-                      <small class="muted">van</small>, 
-                      <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
+                      <h5>{{shortage.start * 1000 | nicelyDate}}</h5>
+                      <small class="muted">van</small>,
+                      <h5>{{shortage.end * 1000 | nicelyDate}}</h5>
                       <small class="muted">tot</small>
                       <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
                     </li>
                   </ul>
                 </div>
-                
+
                 <div class="span4" ng-show="pie.shortages.next.length > 0">
                   <h4>Next week shortages ({{pie.shortages.next.length}})</h4>
                   <ul>
                     <li ng-repeat="shortage in pie.shortages.next">
                       <span class="label">{{shortage.diff}}</span>
-                      <h5>{{shortage.start * 1000 | nicelyDate}}</h5> 
-                      <small class="muted">van</small>, 
-                      <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
+                      <h5>{{shortage.start * 1000 | nicelyDate}}</h5>
+                      <small class="muted">van</small>,
+                      <h5>{{shortage.end * 1000 | nicelyDate}}</h5>
                       <small class="muted">tot</small>
                       <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
                     </li>

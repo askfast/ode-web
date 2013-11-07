@@ -48,8 +48,8 @@ var profile = {
   p2000: {
     status: true,
     url:    'http://backend.ask-cs.com/p2000/ob.php',
-    // codes:  '1201999'
-    codes:  '1201958'
+    codes:  '1201999'
+    // codes:  '1201958'
   },
 
   mobileApp: {
