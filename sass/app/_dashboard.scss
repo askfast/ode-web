@@ -117,13 +117,8 @@
       list-style: none;
 
       li {
-        // background-color: #ddd;
         border-bottom: 1px solid #ddd;
-        // margin-bottom: 20px;
-        // padding: 10px;
         overflow: hidden;
-
-        // padding-bottom: 5px;
         height: 100%;
 
         &:nth-child(odd) {
@@ -163,7 +158,6 @@
           }
 
           .block {
-            // min-width: 310px;
             width: 100%;
             height: 100%;
             display: block;
@@ -361,7 +355,6 @@
   
 }
 
-
 #widget-pies {
   padding-bottom: 0;
 
@@ -402,3 +395,114 @@
   font-weight: bold;
 }
 
+
+
+
+
+#sa {
+
+  position:relative;
+
+  #sa-state {
+    position: absolute;
+    top:10px;
+    right: 0;
+  }
+
+  ul#sa-setup {
+    margin: 0;
+    padding: 0;
+    margin-top: -20px;
+    list-style: none;
+
+    li {
+      border-bottom: 1px solid #ddd;
+      overflow: hidden;
+      height: 100%;
+
+      &:nth-child(odd) {
+        background-color: #f2f1ed;
+      }
+
+      &:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .sa-member {
+        display: inline;
+        float: left;
+        padding: 15px;
+        min-width: 170px;
+        margin-right: 15px;
+
+        .sa-member-icon {
+          margin-right: 15px;
+          float: left;
+          display: block;
+          min-width: 54px;
+          height: 36px;
+          text-align: center;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+          color: #fff;
+          margin-bottom: 5px;
+          padding-top: 18px;
+          background-color: #415e6b;
+          strong {
+            font-size: 24px;
+          }
+        }
+
+        .sa-icon-driver {
+          background-color: #253943;
+        }
+
+        .sa-icon-commander {
+          background-color: #344c58;
+        }
+
+        .sa-icon-reserve {
+          background-color: #a0a0a0;
+        }
+
+        .sa-member-card {
+          float: left;
+
+          h5 {
+            margin-top: 0px;
+            margin-bottom: 5px;
+          }
+
+          hr {
+            margin: 0;
+            padding: 0;
+            margin-bottom: 5px;
+          }
+
+          span {
+            font-size: 13px;
+          }
+        }
+      }
+
+    }
+
+    li#sa-truck {
+      margin-top: 25px;
+    }
+
+    li#sa-reserves {
+
+    }
+  }
+
+  button {
+    margin-top: 10px;
+  }
+
+}

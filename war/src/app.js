@@ -8544,7 +8544,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        };
 
 	        $('#login button[type=submit]')
-	          .text($rootScope.ui.login.button_loggingIn)
+	          .text($rootScope.ui.login.button_login)
 	          .removeAttr('disabled');
 
 	        return false;
@@ -9502,6 +9502,62 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         console.log('ERROR with getting p2000 for the first time!');
       }
     });
+
+
+
+
+
+    $scope.saMembers = {
+      truck: [
+        {
+          icon: 'C',
+          role: 'Chauffeur',
+          class: 'sa-icon-driver',
+          name: 'Pieter de Groot'
+        },
+        {
+          icon: 'B',
+          role: 'Bevelvoerder',
+          class: 'sa-icon-commander',
+          name: 'Jan Smit'
+        },
+        {
+          icon: 'M1',
+          role: 'Manschap 1',
+          name: 'Henk Kook'
+        },
+        {
+          icon: 'M2',
+          role: 'Manschap 2',
+          name: 'Tom Viergever'
+        },
+        {
+          icon: 'M3',
+          role: 'Manschap 3',
+          name: 'Ruud de Haan'
+        },
+        {
+          icon: 'M4',
+          role: 'Manschap 4',
+          name: 'Thijs van Dalen'
+        }
+      ],
+
+      reserves: [
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+      ]
+    }
 
 
 	}
