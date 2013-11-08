@@ -9340,7 +9340,96 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       Groups.guardMonitor()
         .then(function ()
         {
-          Groups.guardRole();
+          Groups.guardRole()
+            .then(function (setup)
+            {
+              $scope.saMembers = {
+                truck:    [],
+                reserves: []
+              };
+
+              var members = {};
+
+              angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
+              {
+                angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
+                {
+                  members[member.uuid] = member;
+                });
+              });
+
+              $scope.saMembers.truck.push({
+                icon: 'C',
+                role: 'Chauffeur',
+                class: 'sa-icon-driver',
+                name: members[setup.chauffeurs].name
+              });
+
+              delete members[setup.chauffeurs];
+
+              $scope.saMembers.truck.push({
+                icon: 'B',
+                role: 'Bevelvoerder',
+                class: 'sa-icon-commander',
+                name: members[setup.bevelvoerders].name
+              });
+
+              delete members[setup.bevelvoerders];
+
+              var mans = {};
+
+              angular.forEach(setup, function (man, role)
+              {
+                switch (role)
+                {
+                  case 'manschappen.1':
+                    mans[1] = members[man].name;
+                    delete members[man];
+                    break;
+                  case 'manschappen.2':
+                    mans[2] = members[man].name;
+                    delete members[man];
+                    break;
+                  case 'manschappen.3':
+                    mans[3] = members[man].name;
+                    delete members[man];
+                    break;
+                  case 'manschappen.4':
+                    mans[4] = members[man].name;
+                    delete members[man];
+                    break;
+                }
+              });
+
+              $scope.saMembers.truck.push({
+                icon: 'M1',
+                role: 'Manschap 1',
+                name: mans[1]
+              });
+
+              $scope.saMembers.truck.push({
+                icon: 'M2',
+                role: 'Manschap 2',
+                name: mans[2]
+              });
+
+              $scope.saMembers.truck.push({
+                icon: 'M3',
+                role: 'Manschap 3',
+                name: mans[3]
+              });
+
+              $scope.saMembers.truck.push({
+                icon: 'M4',
+                role: 'Manschap 4',
+                name: mans[4]
+              });
+
+              angular.forEach(members, function (member)
+              {
+                $scope.saMembers.reserves.push(member.name);
+              });
+            });
         });
     }
 
@@ -9504,60 +9593,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     });
 
 
-
-
-
-    $scope.saMembers = {
-      truck: [
-        {
-          icon: 'C',
-          role: 'Chauffeur',
-          class: 'sa-icon-driver',
-          name: 'Pieter de Groot'
-        },
-        {
-          icon: 'B',
-          role: 'Bevelvoerder',
-          class: 'sa-icon-commander',
-          name: 'Jan Smit'
-        },
-        {
-          icon: 'M1',
-          role: 'Manschap 1',
-          name: 'Henk Kook'
-        },
-        {
-          icon: 'M2',
-          role: 'Manschap 2',
-          name: 'Tom Viergever'
-        },
-        {
-          icon: 'M3',
-          role: 'Manschap 3',
-          name: 'Ruud de Haan'
-        },
-        {
-          icon: 'M4',
-          role: 'Manschap 4',
-          name: 'Thijs van Dalen'
-        }
-      ],
-
-      reserves: [
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-        'Pieter de Groot',
-      ]
-    }
 
 
 	}

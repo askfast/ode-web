@@ -5,7 +5,7 @@
   </div>
 
 
-
+  <!--smartAlarming-->
   <div class="row-fluid">
     <div id="sa"
          class="widget span12"
@@ -18,15 +18,21 @@
               class="pull-right">
           <small ng-show="app.guard.role && app.guard.currentState">
             <i class="icon-fire"></i>&nbsp;Status </small>&nbsp;&nbsp;
-          <span class="label" style="background-color:{{app.guard.currentState.color}}">{{ app.guard.currentState.label.toUpperCase() }}</span>
-          <span class="label label-inverse" style="margin-left: 5px;">{{ app.guard.role.toUpperCase() }}</span>
+          <span class="label" style="background-color:{{app.guard.currentState.color}}">
+            {{app.guard.currentState.label.toUpperCase()}}
+          </span>
+          <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
         </div>
 
       </div>
       <hr/>
 
-      <ul id="sa-setup">
+      <p ng-hide="app.guard.role">Indeling SlimAlarmeren lijst laden...</p>
 
+      <!--smartAlarming listing-->
+      <ul id="sa-setup"
+          ng-show="app.guard.role">
+        <!--truck personnel-->
         <li id="sa-truck">
           <div class="sa-member"
                 ng-repeat="trucker in saMembers.truck">
@@ -40,7 +46,9 @@
             </div>
           </div>
         </li>
+        <!--end truck personnel-->
 
+        <!--reserves personnel-->
         <li id="sa-reserves"
             ng-show="toggleReserves">
           <div class="sa-member"
@@ -55,21 +63,21 @@
             </div>
           </div>
         </li>
+        <!--end reserves personnel-->
 
       </ul>
+      <!--end smartAlarming listing-->
 
       <button ng-click="toggleReserves=!toggleReserves"
-              class="btn btn-mini pull-right">
-        <span ng-show="toggleReserves">Toon reserves</span>
-        <span ng-hide="toggleReserves">Verberg reserves</span>
+              class="btn btn-mini pull-right"
+              ng-show="app.guard.role">
+        <span ng-hide="toggleReserves">Toon reserves</span>
+        <span ng-show="toggleReserves">Verberg reserves</span>
       </button>
 
     </div>
   </div>
-
-
-
-
+  <!--end smartAlarming-->
 
 
   <!-- row-fluid -->
