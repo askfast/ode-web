@@ -8544,7 +8544,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        };
 
 	        $('#login button[type=submit]')
-	          .text($rootScope.ui.login.button_loggingIn)
+	          .text($rootScope.ui.login.button_login)
 	          .removeAttr('disabled');
 
 	        return false;
