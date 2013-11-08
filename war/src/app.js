@@ -9504,6 +9504,62 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     });
 
 
+
+
+
+    $scope.saMembers = {
+      truck: [
+        {
+          icon: 'C',
+          role: 'Chauffeur',
+          class: 'sa-icon-driver',
+          name: 'Pieter de Groot'
+        },
+        {
+          icon: 'B',
+          role: 'Bevelvoerder',
+          class: 'sa-icon-commander',
+          name: 'Jan Smit'
+        },
+        {
+          icon: 'M1',
+          role: 'Manschap 1',
+          name: 'Henk Kook'
+        },
+        {
+          icon: 'M2',
+          role: 'Manschap 2',
+          name: 'Tom Viergever'
+        },
+        {
+          icon: 'M3',
+          role: 'Manschap 3',
+          name: 'Ruud de Haan'
+        },
+        {
+          icon: 'M4',
+          role: 'Manschap 4',
+          name: 'Thijs van Dalen'
+        }
+      ],
+
+      reserves: [
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+        'Pieter de Groot',
+      ]
+    }
+
+
 	}
 ]);;/*jslint node: true */
 /*global angular */
