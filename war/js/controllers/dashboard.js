@@ -25,8 +25,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * Defaults for loaders
 		 */
 		$scope.loading = {
-			pies:   true,
-			alerts: true
+			pies:       true,
+			alerts:     true,
+      smartAlarm: true
 		};
 
 
@@ -273,19 +274,19 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 icon: 'C',
                 role: 'Chauffeur',
                 class: 'sa-icon-driver',
-                name: members[setup.chauffeurs].name
+                name: (setup.chauffeur !== null) ? members[setup.chauffeur].name : 'Niet ingedeeld'
               });
 
-              delete members[setup.chauffeurs];
+              if (setup.chauffeur !== null) delete members[setup.chauffeur];
 
               $scope.saMembers.truck.push({
                 icon: 'B',
                 role: 'Bevelvoerder',
                 class: 'sa-icon-commander',
-                name: members[setup.bevelvoerders].name
+                name: (setup.bevelvoerder !== null) ? members[setup.bevelvoerder].name : 'Niet ingedeeld'
               });
 
-              delete members[setup.bevelvoerders];
+              if (setup.bevelvoerder !== null) delete members[setup.bevelvoerder];
 
               var mans = {};
 
@@ -293,20 +294,20 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               {
                 switch (role)
                 {
-                  case 'manschappen.1':
-                    mans[1] = members[man].name;
+                  case 'manschap.1':
+                    mans[1] = (man !== null) ? members[man].name : 'Niet ingedeeld';
                     delete members[man];
                     break;
-                  case 'manschappen.2':
-                    mans[2] = members[man].name;
+                  case 'manschap.2':
+                    mans[2] = (man !== null) ? members[man].name : 'Niet ingedeeld';
                     delete members[man];
                     break;
-                  case 'manschappen.3':
-                    mans[3] = members[man].name;
+                  case 'manschap.3':
+                    mans[3] = (man !== null) ? members[man].name : 'Niet ingedeeld';
                     delete members[man];
                     break;
-                  case 'manschappen.4':
-                    mans[4] = members[man].name;
+                  case 'manschap.4':
+                    mans[4] = (man !== null) ? members[man].name : 'Niet ingedeeld';
                     delete members[man];
                     break;
                 }
@@ -340,6 +341,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               {
                 $scope.saMembers.reserves.push(member.name);
               });
+
+              $scope.loading.smartAlarm = false;
             });
         });
     }

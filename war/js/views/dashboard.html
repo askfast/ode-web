@@ -27,11 +27,11 @@
       </div>
       <hr/>
 
-      <p ng-hide="app.guard.role">Indeling SlimAlarmeren lijst laden...</p>
+      <p ng-show="loading.smartAlarm">Indeling SlimAlarmeren lijst laden...</p>
 
       <!--smartAlarming listing-->
       <ul id="sa-setup"
-          ng-show="app.guard.role">
+          ng-hide="loading.smartAlarm">
         <!--truck personnel-->
         <li id="sa-truck">
           <div class="sa-member"
@@ -70,7 +70,7 @@
 
       <button ng-click="toggleReserves=!toggleReserves"
               class="btn btn-mini pull-right"
-              ng-show="app.guard.role">
+              ng-hide="loading.smartAlarm">
         <span ng-hide="toggleReserves">Toon reserves</span>
         <span ng-show="toggleReserves">Verberg reserves</span>
       </button>
