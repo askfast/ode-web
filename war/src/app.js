@@ -2184,6 +2184,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
 
 		/**
+     * TODO: Still being used since harcoded in controller itself?
 		 * Get p2000 announcements
 		 */
 		Dashboard.prototype.p2000 = function ()
@@ -2192,41 +2193,53 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
 			$rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
-			$.ajax({
-				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
-				dataType: 'jsonp',
-				success: function (results)
-				{
-					$rootScope.statusBar.off();
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        $.ajax({
+          url: $rootScope.config.profile.p2000.url,
+          dataType: 'json',
+          success: function (results)
+          {
+            $rootScope.statusBar.off();
 
-          var processed = Announcer.process(results);
+            var processed = Announcer.process(results, true);
 
-					deferred.resolve(
-					{
-						alarms: 	processed,
-						synced:   new Date().getTime()
-					});
-				},
-				error: function ()
-				{
-					deferred.resolve({error: error});
-				}
-			});
+            deferred.resolve(
+              {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              });
+          },
+          error: function ()
+          {
+            deferred.resolve({error: error});
+          }
+        });
 
-//			$http({
-//				method: 'jsonp',
-//				url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
-//			})
-//			.success(function (data, status)
-//			{
-//				console.log('results ->', data);
-//
-//				deferred.resolve( Announcer.process(data) );
-//			})
-//			.error(function (error)
-//			{
-//				deferred.resolve({error: error});
-//			});
+      }
+      else
+      {
+        $.ajax({
+          url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
+          dataType: 'jsonp',
+          success: function (results)
+          {
+            $rootScope.statusBar.off();
+
+            var processed = Announcer.process(results);
+
+            deferred.resolve(
+              {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              });
+          },
+          error: function ()
+          {
+            deferred.resolve({error: error});
+          }
+        });
+      }
 
 			return deferred.promise;
 		};
@@ -6584,15 +6597,16 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
 /**
  * Announcer
  */
-.factory('Announcer', 
-  function ()
+.factory('Announcer',
+  ['$rootScope',
+  function ($rootScope)
   {
     return {
       /**
        * TODO: Modify p2000 script in ask70 for date conversions!!
        * p2000 messages processor
        */
-      process: function (results)
+      process: function (results, couchdb)
       {
         var alarms  = {
               short:  [],
@@ -6601,7 +6615,24 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
             limit   = 4,
             count   = 0;
 
-        angular.forEach(results, function (alarm, index)
+        if (couchdb)
+        {
+          var processed = [];
+
+          angular.forEach(results.rows, function (alarm)
+          {
+            processed.push({
+              msgCode:  $rootScope.config.profile.p2000.codes,
+              day:      new Date(alarm.value.timestamp).toString('dd-MM-yy'),
+              time:     new Date(alarm.value.timestamp).toString('HH:mm:ss'),
+              body:     alarm.value.message
+            });
+          });
+
+          results = processed;
+        }
+
+        angular.forEach(results, function (alarm)
         {
           if (alarm.body)
           {
@@ -6612,7 +6643,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 1:    true,
                 test: false
               };
-            };
+            }
 
             if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
             {
@@ -6621,7 +6652,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 2:    true,
                 test: false
               };
-            };
+            }
 
             if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
             {
@@ -6630,14 +6661,14 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 3:    true,
                 test: false
               }
-            };
+            }
 
             if (alarm.body.match(/PROEFALARM/))
             {
               alarm.prio = {
                 test: true
               };
-            };
+            }
 
             // var dates     = alarm.day.split('-'),
             //     swap      = dates[0] + 
@@ -6663,7 +6694,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
       }
     }
   }
-);;'use strict';
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Services.Sloter', ['ngResource'])
@@ -7772,35 +7803,35 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			var cFirst = function (str)
 			{
-			    return str.charAt(0).toUpperCase() + str.substr(1);
+        return str.charAt(0).toUpperCase() + str.substr(1);
 			};
 
 			var ndates = {
-						start: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
-						},
-						end: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
-						}
-					};
+            start: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
+            },
+            end: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
+            }
+          };
 
 			var dates = {
-						start: {
-							real: 	new Date(dates.start).toString('dddd d MMMM'),
-							month: 	new Date(dates.start).toString('MMMM'),
-							day: 		new Date(dates.start).toString('d')
-						},
-						end: {
-							real: 	new Date(dates.end).toString('dddd d MMMM'),
-							month: 	new Date(dates.end).toString('MMMM'),
-							day: 		new Date(dates.end).toString('d')
-						}
-					},
-					monthNumber = Date.getMonthNumberFromName(dates.start.month);
+            start: {
+              real: 	new Date(dates.start).toString('dddd d MMMM'),
+              month: 	new Date(dates.start).toString('MMMM'),
+              day: 		new Date(dates.start).toString('d')
+            },
+            end: {
+              real: 	new Date(dates.end).toString('dddd d MMMM'),
+              month: 	new Date(dates.end).toString('MMMM'),
+              day: 		new Date(dates.end).toString('d')
+            }
+          },
+          monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
 			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && 
 					dates.start.month == dates.end.month)
@@ -9564,36 +9595,76 @@ angular.module('WebPaige.Controllers.Dashboard', [])
      * Get alarms for the first time
      */
     // $scope.getP2000();
-    $.ajax({
-      url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
-      dataType: 'jsonp',
-      success: function (results)
-      {
-        $rootScope.statusBar.off();
 
-        var processed = Announcer.process(results);
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      $.ajax({
+        url: $rootScope.config.profile.p2000.url,
+        dataType: 'json',
+        success: function (results)
+        {
+          $rootScope.statusBar.off();
 
-        var result = {
+          var processed = Announcer.process(results, true);
+
+          var result = {
+            alarms: 	processed,
+            synced:   new Date().getTime()
+          };
+
+          $scope.$apply(function ()
+          {
+            $scope.loading.alerts = false;
+
+            $scope.alarms = result.alarms;
+
+            $scope.alarms.list = $scope.alarms.short;
+
+            $scope.synced.alarms = result.synced;
+          });
+        },
+        error: function ()
+        {
+          console.log('ERROR with getting p2000 for the first time!');
+        }
+      });
+    }
+    else
+    {
+      $.ajax({
+        url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
+        dataType: 'jsonp',
+        success: function (results)
+        {
+          $rootScope.statusBar.off();
+
+          var processed = Announcer.process(results);
+
+          var result = {
           alarms: 	processed,
           synced:   new Date().getTime()
-        };
+          };
 
-        $scope.$apply(function ()
+          $scope.$apply(function ()
+          {
+            $scope.loading.alerts = false;
+
+            $scope.alarms = result.alarms;
+
+            $scope.alarms.list = $scope.alarms.short;
+
+            $scope.synced.alarms = result.synced;
+          });
+        },
+        error: function ()
         {
-          $scope.loading.alerts = false;
+          console.log('ERROR with getting p2000 for the first time!');
+        }
+      });
+    }
 
-          $scope.alarms = result.alarms;
 
-          $scope.alarms.list = $scope.alarms.short;
 
-          $scope.synced.alarms = result.synced;
-        })
-      },
-      error: function ()
-      {
-        console.log('ERROR with getting p2000 for the first time!');
-      }
-    });
 
 
 

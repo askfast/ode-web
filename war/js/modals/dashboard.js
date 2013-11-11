@@ -87,6 +87,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
 
 		/**
+     * TODO: Still being used since harcoded in controller itself?
 		 * Get p2000 announcements
 		 */
 		Dashboard.prototype.p2000 = function ()
@@ -95,41 +96,53 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
 			$rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
-			$.ajax({
-				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
-				dataType: 'jsonp',
-				success: function (results)
-				{
-					$rootScope.statusBar.off();
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        $.ajax({
+          url: $rootScope.config.profile.p2000.url,
+          dataType: 'json',
+          success: function (results)
+          {
+            $rootScope.statusBar.off();
 
-          var processed = Announcer.process(results);
+            var processed = Announcer.process(results, true);
 
-					deferred.resolve(
-					{
-						alarms: 	processed,
-						synced:   new Date().getTime()
-					});
-				},
-				error: function ()
-				{
-					deferred.resolve({error: error});
-				}
-			});
+            deferred.resolve(
+              {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              });
+          },
+          error: function ()
+          {
+            deferred.resolve({error: error});
+          }
+        });
 
-//			$http({
-//				method: 'jsonp',
-//				url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
-//			})
-//			.success(function (data, status)
-//			{
-//				console.log('results ->', data);
-//
-//				deferred.resolve( Announcer.process(data) );
-//			})
-//			.error(function (error)
-//			{
-//				deferred.resolve({error: error});
-//			});
+      }
+      else
+      {
+        $.ajax({
+          url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
+          dataType: 'jsonp',
+          success: function (results)
+          {
+            $rootScope.statusBar.off();
+
+            var processed = Announcer.process(results);
+
+            deferred.resolve(
+              {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              });
+          },
+          error: function ()
+          {
+            deferred.resolve({error: error});
+          }
+        });
+      }
 
 			return deferred.promise;
 		};

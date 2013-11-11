@@ -475,36 +475,76 @@ angular.module('WebPaige.Controllers.Dashboard', [])
      * Get alarms for the first time
      */
     // $scope.getP2000();
-    $.ajax({
-      url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
-      dataType: 'jsonp',
-      success: function (results)
-      {
-        $rootScope.statusBar.off();
 
-        var processed = Announcer.process(results);
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      $.ajax({
+        url: $rootScope.config.profile.p2000.url,
+        dataType: 'json',
+        success: function (results)
+        {
+          $rootScope.statusBar.off();
 
-        var result = {
+          var processed = Announcer.process(results, true);
+
+          var result = {
+            alarms: 	processed,
+            synced:   new Date().getTime()
+          };
+
+          $scope.$apply(function ()
+          {
+            $scope.loading.alerts = false;
+
+            $scope.alarms = result.alarms;
+
+            $scope.alarms.list = $scope.alarms.short;
+
+            $scope.synced.alarms = result.synced;
+          });
+        },
+        error: function ()
+        {
+          console.log('ERROR with getting p2000 for the first time!');
+        }
+      });
+    }
+    else
+    {
+      $.ajax({
+        url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
+        dataType: 'jsonp',
+        success: function (results)
+        {
+          $rootScope.statusBar.off();
+
+          var processed = Announcer.process(results);
+
+          var result = {
           alarms: 	processed,
           synced:   new Date().getTime()
-        };
+          };
 
-        $scope.$apply(function ()
+          $scope.$apply(function ()
+          {
+            $scope.loading.alerts = false;
+
+            $scope.alarms = result.alarms;
+
+            $scope.alarms.list = $scope.alarms.short;
+
+            $scope.synced.alarms = result.synced;
+          });
+        },
+        error: function ()
         {
-          $scope.loading.alerts = false;
+          console.log('ERROR with getting p2000 for the first time!');
+        }
+      });
+    }
 
-          $scope.alarms = result.alarms;
 
-          $scope.alarms.list = $scope.alarms.short;
 
-          $scope.synced.alarms = result.synced;
-        })
-      },
-      error: function ()
-      {
-        console.log('ERROR with getting p2000 for the first time!');
-      }
-    });
 
 
 

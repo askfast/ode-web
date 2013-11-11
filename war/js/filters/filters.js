@@ -85,35 +85,35 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 			var cFirst = function (str)
 			{
-			    return str.charAt(0).toUpperCase() + str.substr(1);
+        return str.charAt(0).toUpperCase() + str.substr(1);
 			};
 
 			var ndates = {
-						start: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
-						},
-						end: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
-						}
-					};
+            start: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
+            },
+            end: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
+            }
+          };
 
 			var dates = {
-						start: {
-							real: 	new Date(dates.start).toString('dddd d MMMM'),
-							month: 	new Date(dates.start).toString('MMMM'),
-							day: 		new Date(dates.start).toString('d')
-						},
-						end: {
-							real: 	new Date(dates.end).toString('dddd d MMMM'),
-							month: 	new Date(dates.end).toString('MMMM'),
-							day: 		new Date(dates.end).toString('d')
-						}
-					},
-					monthNumber = Date.getMonthNumberFromName(dates.start.month);
+            start: {
+              real: 	new Date(dates.start).toString('dddd d MMMM'),
+              month: 	new Date(dates.start).toString('MMMM'),
+              day: 		new Date(dates.start).toString('d')
+            },
+            end: {
+              real: 	new Date(dates.end).toString('dddd d MMMM'),
+              month: 	new Date(dates.end).toString('MMMM'),
+              day: 		new Date(dates.end).toString('d')
+            }
+          },
+          monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
 			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && 
 					dates.start.month == dates.end.month)

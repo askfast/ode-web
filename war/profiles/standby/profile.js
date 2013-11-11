@@ -47,9 +47,10 @@ var profile = {
 
   p2000: {
     status: true,
-    url:    'http://backend.ask-cs.com/p2000/ob.php',
-    codes:  '1201999'
-    // codes:  '1201958'
+    // url:    'http://backend.ask-cs.com/p2000/ob.php',
+    url:    'http://couchdb.ask-cs.com:5984/p2000/_design/search/_view/standby?limit=4&descending=true',
+    // codes:  '1201999'
+    codes:  '1201958'
   },
 
   mobileApp: {
