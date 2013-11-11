@@ -80,18 +80,6 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
               };
             }
 
-            // var dates     = alarm.day.split('-'),
-            //     swap      = dates[0] + 
-            //                 '-' + 
-            //                 dates[1] + 
-            //                 '-' + 
-            //                 dates[2],
-            //     dstr      = swap + ' ' + alarm.time,
-            //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
-            //     timeStamp = new Date(datetime).getTime();
-            // alarm.datetime = datetime;
-            // alarm.timeStamp = timeStamp;
-
             if (count < 4) alarms.short.push(alarm);
 
             alarms.long.push(alarm);

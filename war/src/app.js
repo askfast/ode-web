@@ -4229,19 +4229,14 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             }
           });
 
-          if (predefinedRole != '')
-          {
-            Storage.add('guard', angular.toJson({
-              monitor: guard.monitor,
-              role:    predefinedRole,
-              currentState: guard.currentState,
-              currentStateClass: guard.currentStateClass
-            }));
-          }
-          else
-          {
-            predefinedRole = 'niet ingedeeld';
-          }
+          Storage.add('guard', angular.toJson({
+            monitor:          guard.monitor,
+            role:             (predefinedRole != '') ? predefinedRole : 'niet ingedeeld',
+            currentState:     guard.currentState,
+            currentStateClass:guard.currentStateClass,
+            team:             results,
+            synced:           new Date().getTime()
+          }));
 
           $rootScope.app.guard.role = predefinedRole;
 
@@ -6670,18 +6665,6 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
               };
             }
 
-            // var dates     = alarm.day.split('-'),
-            //     swap      = dates[0] + 
-            //                 '-' + 
-            //                 dates[1] + 
-            //                 '-' + 
-            //                 dates[2],
-            //     dstr      = swap + ' ' + alarm.time,
-            //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
-            //     timeStamp = new Date(datetime).getTime();
-            // alarm.datetime = datetime;
-            // alarm.timeStamp = timeStamp;
-
             if (count < 4) alarms.short.push(alarm);
 
             alarms.long.push(alarm);
@@ -7868,11 +7851,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeMainWeekFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'Dater',
+	function (Dater)
 	{
-		var periods = Dater.getPeriods();
-
 		return function (dates)
 		{
 			if (dates)
@@ -7882,22 +7863,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				  return str.charAt(0).toUpperCase() + str.substr(1);
 				};
 
-				var dates = {
-					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-					end: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+				var newDates = {
+					start: 	cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+					end: 		cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
 				};
 
-				// var dates = {
-				// 	start: 	new Date(dates.start).toString('dddd d MMMM'),
-				// 	end: 		new Date(dates.end).toString('dddd d MMMM')
-				// };
-
-				return 	dates.start + 
-								' / ' + 
-								dates.end + 
+				return 	newDates.start +
+								' / ' +
+                newDates.end +
 								', ' + 
 								Dater.getThisYear();
 			}
+      else
+      {
+        return false;
+      }
 		}
 	}
 ])
@@ -9354,7 +9334,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       {
         $rootScope.statusBar.off();
       }
-
 		}
 
 
@@ -9365,104 +9344,122 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
+     * Process Smart Alarm team members for view
+     */
+    function prepareSaMembers (setup)
+    {
+      $scope.saMembers = {
+        truck:    [],
+        reserves: []
+      };
+
+      $scope.saSynced = angular.fromJson(Storage.get('guard')).synced;
+
+      var members = {};
+
+      angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
+      {
+        angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
+        {
+          members[member.uuid] = member;
+        });
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'C',
+        role: 'Chauffeur',
+        class: 'sa-icon-driver',
+        name: (setup.chauffeur !== null) ? members[setup.chauffeur].name : 'Niet ingedeeld'
+      });
+
+      if (setup.chauffeur !== null) delete members[setup.chauffeur];
+
+      $scope.saMembers.truck.push({
+        icon: 'B',
+        role: 'Bevelvoerder',
+        class: 'sa-icon-commander',
+        name: (setup.bevelvoerder !== null) ? members[setup.bevelvoerder].name : 'Niet ingedeeld'
+      });
+
+      if (setup.bevelvoerder !== null) delete members[setup.bevelvoerder];
+
+      var mans = {};
+
+      angular.forEach(setup, function (man, role)
+      {
+        switch (role)
+        {
+          case 'manschap.1':
+            mans[1] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+          case 'manschap.2':
+            mans[2] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+          case 'manschap.3':
+            mans[3] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+          case 'manschap.4':
+            mans[4] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+        }
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M1',
+        role: 'Manschap 1',
+        name: mans[1]
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M2',
+        role: 'Manschap 2',
+        name: mans[2]
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M3',
+        role: 'Manschap 3',
+        name: mans[3]
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M4',
+        role: 'Manschap 4',
+        name: mans[4]
+      });
+
+      angular.forEach(members, function (member)
+      {
+        $scope.saMembers.reserves.push(member.name);
+      });
+
+      $scope.loading.smartAlarm = false;
+    }
+
+
+    /**
      * Fetch smartAlarm information
      */
     if ($rootScope.config.profile.smartAlarm)
     {
+      if (angular.fromJson(Storage.get('guard')).team)
+      {
+        $scope.loading.smartAlarm = false;
+
+        prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+      }
+
       Groups.guardMonitor()
         .then(function ()
         {
           Groups.guardRole()
             .then(function (setup)
             {
-              $scope.saMembers = {
-                truck:    [],
-                reserves: []
-              };
-
-              var members = {};
-
-              angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
-              {
-                angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
-                {
-                  members[member.uuid] = member;
-                });
-              });
-
-              $scope.saMembers.truck.push({
-                icon: 'C',
-                role: 'Chauffeur',
-                class: 'sa-icon-driver',
-                name: (setup.chauffeur !== null) ? members[setup.chauffeur].name : 'Niet ingedeeld'
-              });
-
-              if (setup.chauffeur !== null) delete members[setup.chauffeur];
-
-              $scope.saMembers.truck.push({
-                icon: 'B',
-                role: 'Bevelvoerder',
-                class: 'sa-icon-commander',
-                name: (setup.bevelvoerder !== null) ? members[setup.bevelvoerder].name : 'Niet ingedeeld'
-              });
-
-              if (setup.bevelvoerder !== null) delete members[setup.bevelvoerder];
-
-              var mans = {};
-
-              angular.forEach(setup, function (man, role)
-              {
-                switch (role)
-                {
-                  case 'manschap.1':
-                    mans[1] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-                    delete members[man];
-                    break;
-                  case 'manschap.2':
-                    mans[2] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-                    delete members[man];
-                    break;
-                  case 'manschap.3':
-                    mans[3] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-                    delete members[man];
-                    break;
-                  case 'manschap.4':
-                    mans[4] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-                    delete members[man];
-                    break;
-                }
-              });
-
-              $scope.saMembers.truck.push({
-                icon: 'M1',
-                role: 'Manschap 1',
-                name: mans[1]
-              });
-
-              $scope.saMembers.truck.push({
-                icon: 'M2',
-                role: 'Manschap 2',
-                name: mans[2]
-              });
-
-              $scope.saMembers.truck.push({
-                icon: 'M3',
-                role: 'Manschap 3',
-                name: mans[3]
-              });
-
-              $scope.saMembers.truck.push({
-                icon: 'M4',
-                role: 'Manschap 4',
-                name: mans[4]
-              });
-
-              angular.forEach(members, function (member)
-              {
-                $scope.saMembers.reserves.push(member.name);
-              });
-
-              $scope.loading.smartAlarm = false;
+              prepareSaMembers(setup);
             });
         });
     }
@@ -9540,7 +9537,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               if ($rootScope.config.profile.smartAlarm)
               {
-                Groups.guardRole();
+                if (angular.fromJson(Storage.get('guard')).team)
+                {
+                  prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+                }
+
+                Groups.guardRole()
+                  .then(function (setup)
+                  {
+                    prepareSaMembers(setup);
+                  });
               }
 						}
 					}
@@ -9588,7 +9594,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 + 'px'
         });
       }, 100);
-    }
+    };
 
 
     /**
@@ -9662,13 +9668,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
       });
     }
-
-
-
-
-
-
-
 	}
 ]);;/*jslint node: true */
 /*global angular */

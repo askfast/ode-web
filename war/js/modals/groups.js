@@ -193,19 +193,14 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             }
           });
 
-          if (predefinedRole != '')
-          {
-            Storage.add('guard', angular.toJson({
-              monitor: guard.monitor,
-              role:    predefinedRole,
-              currentState: guard.currentState,
-              currentStateClass: guard.currentStateClass
-            }));
-          }
-          else
-          {
-            predefinedRole = 'niet ingedeeld';
-          }
+          Storage.add('guard', angular.toJson({
+            monitor:          guard.monitor,
+            role:             (predefinedRole != '') ? predefinedRole : 'niet ingedeeld',
+            currentState:     guard.currentState,
+            currentStateClass:guard.currentStateClass,
+            team:             results,
+            synced:           new Date().getTime()
+          }));
 
           $rootScope.app.guard.role = predefinedRole;
 

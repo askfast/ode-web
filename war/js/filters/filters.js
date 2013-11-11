@@ -150,11 +150,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeMainWeekFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'Dater',
+	function (Dater)
 	{
-		var periods = Dater.getPeriods();
-
 		return function (dates)
 		{
 			if (dates)
@@ -164,22 +162,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				  return str.charAt(0).toUpperCase() + str.substr(1);
 				};
 
-				var dates = {
-					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-					end: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+				var newDates = {
+					start: 	cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+					end: 		cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
 				};
 
-				// var dates = {
-				// 	start: 	new Date(dates.start).toString('dddd d MMMM'),
-				// 	end: 		new Date(dates.end).toString('dddd d MMMM')
-				// };
-
-				return 	dates.start + 
-								' / ' + 
-								dates.end + 
+				return 	newDates.start +
+								' / ' +
+                newDates.end +
 								', ' + 
 								Dater.getThisYear();
 			}
+      else
+      {
+        return false;
+      }
 		}
 	}
 ])

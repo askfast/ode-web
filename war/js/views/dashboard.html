@@ -68,6 +68,15 @@
       </ul>
       <!--end smartAlarming listing-->
 
+      <!-- p2000 footer -->
+      <p ng-hide="loading.smartAlarm">
+        <small class="pull-left">
+          <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
+          <span class="muted">{{saSynced | nicelyDate}}</span>
+        </small>
+      </p>
+      <!-- end p2000 footer -->
+
       <button ng-click="toggleReserves=!toggleReserves"
               class="btn btn-mini pull-right"
               ng-hide="loading.smartAlarm">
