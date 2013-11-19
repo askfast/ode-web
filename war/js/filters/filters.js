@@ -80,8 +80,10 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 		return function (dates)
 		{
-			if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
-				dates.start = new Date(dates.end).addDays(-1);
+      if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+      {
+        dates.start = new Date(dates.end).addDays(-1);
+      }
 
 			var cFirst = function (str)
 			{
@@ -92,12 +94,14 @@ angular.module('WebPaige.Filters', ['ngResource'])
             start: {
               real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
               month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d'))),
+              year:   new Date(dates.start).toString('yyyy')
             },
             end: {
               real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
               month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d'))),
+              year:   new Date(dates.end).toString('yyyy')
             }
           };
 
@@ -115,29 +119,28 @@ angular.module('WebPaige.Filters', ['ngResource'])
           },
           monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && 
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
 					dates.start.month == dates.end.month)
 			{
-				return 	ndates.start.real;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+				return 	ndates.start.real +
+								', ' +
+								ndates.start.year;
 			}
 			else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
 			{
-				return 	ndates.start.month;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+				return 	ndates.start.month +
+								', ' +
+                ndates.start.year;
 			}
 			else
 			{
-				return 	ndates.start.real + 
+				return 	ndates.start.real +
+                ', ' +
+                ndates.start.year +
 								' / ' + 
-								ndates.end.real;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+								ndates.end.real +
+								', ' +
+                ndates.end.year;
 			}
 
 		}
