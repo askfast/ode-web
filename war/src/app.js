@@ -10960,9 +10960,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    	if (old < now) return false;
 
-	    	if (curr < now) return false;
-
-	    	return true;
+	    	return curr >= now;
 	    };
 
 	    /**
