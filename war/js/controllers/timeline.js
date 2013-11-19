@@ -19,24 +19,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		 */
 		$scope.$watch(function ()
 		{
-       /*
-      if (!$scope.timeline.current.layouts.group)
-      {
-        // timeline.current.layouts.group
-        $scope.timeline.config.wishes = false;
-        $scope.groupWishes();
-      }
-      */
-
-
-
-
-
-
-
-
-
-
 			/**
 			 * If main timeline
 			 */
@@ -110,6 +92,45 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					};
 				}
 			}
+
+      if (
+        $scope.timeline.current.year === Number(Dater.current.year()) + 1
+          &&
+        ($scope.timeline.current.month === 12 ||
+         $scope.timeline.current.week === 53 ||
+         $scope.timeline.current.day === 365)
+        )
+      {
+        $('#timelineAfterBtn').attr('disabled', 'disabled');
+      }
+      else if (
+        $scope.timeline.current.year == Dater.current.year()
+          &&
+          ($scope.timeline.current.month === 1 ||
+            $scope.timeline.current.week === 1 ||
+            $scope.timeline.current.day === 1)
+        )
+      {
+        $('#timelineBeforeBtn').attr('disabled', 'disabled');
+      }
+      else
+      {
+        var timelineBeforeBtn     = $('#timelineBeforeBtn'),
+            timelineAfterBtn      = $('#timelineAfterBtn'),
+            timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
+            timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
+
+        if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
+        {
+          timelineBeforeBtn.removeAttr('disabled');
+        }
+
+        if (typeof timelineAfterBtnAttr  !== 'undefined' && timelineAfterBtnAttr   !== false)
+        {
+          timelineAfterBtn.removeAttr('disabled');
+        }
+      }
+
 		});
 
 	  /**
@@ -173,21 +194,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     */
 	    render: function (options, remember)
 	    {
-        /**
-         * First setup comes with undefined
-         */
-        /*
-        if (remember === undefined)
-        {
-          remember = true;
-        }
-        */
-
         var start,
             end;
 
 	    	/**
-	    	 * Hotfix for not converted Date objects initially given by timeline
+	    	 * Hot fix for not converted Date objects initially given by timeline
 	    	 */
         if ($scope.timeline.range)
         {
@@ -201,19 +212,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
             $scope.timeline.range.end = new Date($scope.timeline.range.end);
           }
 
-          // console.log('RANGE GOOD !!');
           start = $scope.timeline.range.start;
           end   = $scope.timeline.range.end;
         }
         else
         {
-          // console.log('NOOOO RANGE !!');
           start = new Date(options.start);
           end   = new Date(options.end);
         }
-
-        // console.log('range in timeline ->', $scope.timeline.range);
-        // console.log('REMEMBER ->', remember);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,

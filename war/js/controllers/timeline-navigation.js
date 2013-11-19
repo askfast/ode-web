@@ -67,7 +67,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	  /**
 	   * Go one period in past
 	   */
-	  $scope.timelineBefore = function (timelineScope)
+	  $scope.timelineBefore = function ()
 	  {
 	    if ($scope.timeline.scope.day)
 	    {
@@ -79,7 +79,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
 	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
 	        });
-	      };
+	      }
 	    }
 	    else if ($scope.timeline.scope.week)
 	    {
@@ -91,7 +91,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
 	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
 	        });
-	      };
+	      }
 	    }
 	    else if ($scope.timeline.scope.month)
 	    {
@@ -103,55 +103,134 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
 	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
 	        });
-	      };
-	    };
+	      }
+	    }
 	  };
 
 
 	  /**
 	   * Go one period in future
 	   */
-	  $scope.timelineAfter = function (timelineScope)
+	  $scope.timelineAfter = function ()
 	  {
+      var thisYear = new Date().toString('yyyy');
+
 	    if ($scope.timeline.scope.day)
 	    {
-	      /**
-	       * Total days in a month can change so get it start periods cache
-	       */
-	      if ($scope.timeline.current.day != $scope.periods.days.total)
-	      {
-	        $scope.timeline.current.day++;
+        if ($scope.timeline.current.year == thisYear)
+        {
+          /**
+           * Total days in a month can change so get it start periods cache
+           */
+          if ($scope.timeline.current.day != $scope.periods.days.total)
+          {
+            $scope.timeline.current.day++;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
-	        });
-	      };
+            $scope.timeliner.load({
+              start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.year = Number(thisYear) + 1;
+
+            $scope.timeline.current.day = 1;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          $scope.timeline.current.day++;
+
+          $scope.timeliner.load({
+            start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
+            end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp
+          });
+        }
 	    }
 	    else if ($scope.timeline.scope.week)
 	    {
-	      if ($scope.timeline.current.week != 53)
-	      {
-	        $scope.timeline.current.week++;
+        if ($scope.timeline.current.year == thisYear)
+        {
+          if ($scope.timeline.current.week != 53)
+          {
+            $scope.timeline.current.week++;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	        });
-	      };
+            $scope.timeliner.load({
+              start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.year = Number(thisYear) + 1;
+
+            $scope.timeline.current.week = 1;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periodsNext.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.week != 53)
+          {
+            $scope.timeline.current.week++;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periodsNext.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
+
+
 	    }
 	    else if ($scope.timeline.scope.month)
 	    {
-	      if ($scope.timeline.current.month != 12)
-	      {
-	        $scope.timeline.current.month++;
+        if ($scope.timeline.current.year == thisYear)
+        {
+          if ($scope.timeline.current.month != 12)
+          {
+            $scope.timeline.current.month++;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
-	        });
-	      };
-	    };
+            $scope.timeliner.load({
+              start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.year = Number(thisYear) + 1;
+
+            $scope.timeline.current.month = 1;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periodsNext.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.month != 12)
+          {
+            $scope.timeline.current.month++;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periodsNext.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
+	    }
 	  };
 
 
@@ -189,7 +268,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
 	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
 	      });
-	    };
+	    }
 
 	    $scope.timeline.range = {
 	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
@@ -211,7 +290,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
 	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
 	      });
-	    };
+	    }
 
 	  	$scope.timeline.range = {
 	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,

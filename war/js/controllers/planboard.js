@@ -28,9 +28,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-
-    // console.warn('data ->', angular.toJson(data));
-
 	  
 	  /**
 	   * Get groups and settings
@@ -54,6 +51,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
+      year:     Dater.current.year(),
       group:    settings.app.group,
       division: 'all'
     };
@@ -62,7 +60,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Pass periods
 	   */
-	  $scope.periods = Dater.getPeriods();
+    $scope.periods      = Dater.getPeriods();
+    $scope.periodsNext  = Dater.getPeriods(true);
 
 
 	  /**

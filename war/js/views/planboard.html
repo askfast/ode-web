@@ -56,16 +56,20 @@
 
       <!-- timeline navigation -->
       <div class="btn-group pull-left" style="margin-right: 5px">
-        <button type="button" 
+        <button type="button"
+                id="timelineBeforeBtn"
                 class="btn"
                 ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
-        <button type="button" 
+        <button type="button"
+                id="timelineZoomInBtn"
                 class="btn"
                 ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
-        <button type="button" 
+        <button type="button"
+                id="timelineZoomOutBtn"
                 class="btn"
                 ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button>
-        <button type="button" 
+        <button type="button"
+                id="timelineAfterBtn"
                 class="btn"
                 ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
       </div>

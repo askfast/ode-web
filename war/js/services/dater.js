@@ -39,6 +39,11 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         month: function ()
         {
           return new Date().getMonth() + 1;
+        },
+
+        year: function ()
+        {
+          return new Date().toString('yyyy');
         }
       },
 
@@ -95,10 +100,9 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
        * Get begin and end timestamps of months
        * in the current year
        */
-      getMonthTimeStamps: function ()
+      getMonthTimeStamps: function (year)
       {
-        var months  = {}, 
-            year    = this.getThisYear();
+        var months  = {};
 
         for (var i = 0; i < 12; i++)
         {
@@ -117,7 +121,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
               };
 
           months[i+1] = month;
-        };
+        }
 
         return months;
       },
@@ -125,13 +129,13 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
       /**
        * Get begin and end timestamps of weeks
        */
-      getWeekTimeStamps: function()
+      getWeekTimeStamps: function(year)
       {
         var nweeks    = [],
             weeks     = {},
-            nextMonday,
-            year      = this.getThisYear(), 
-            firstDayInYear    = new Date(year, 0).moveToFirstDayOfMonth(),
+            nextMonday;
+
+        var firstDayInYear    = new Date(year, 0).moveToFirstDayOfMonth(),
             firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
             firstMonday       = new Date(firstMondayOfYear);
 
@@ -144,31 +148,31 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
           else
           {
             nextMonday = new Date(nweeks[i-1]).addWeeks(1);
-          };
+          }
 
           nweeks.push(new Date(nextMonday));
-        };
+        }
 
         nweeks.unshift(firstMonday);
 
         var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
 
-        for (var i = 0; i < 55; i++)
+        for (var n = 0; n < 55; n++)
         {
-          weeks[i+1] = {
+          weeks[n+1] = {
             first: {
-              day: nweeks[i],
-              timeStamp: new Date(nweeks[i]).getTime()
+              day: nweeks[n],
+              timeStamp: new Date(nweeks[n]).getTime()
             },
             last: {
-              day: nweeks[i+1],
-              timeStamp: new Date(nweeks[i+1]).getTime()
+              day: nweeks[n+1],
+              timeStamp: new Date(nweeks[n+1]).getTime()
             }
           }
-        };
+        }
 
         /**
-         * Remove unneccessary periods
+         * Remove unnecessary periods
          */
         delete weeks[54];
         delete weeks[55];
@@ -178,12 +182,11 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
       /**
        */
-      getDayTimeStamps: function()
+      getDayTimeStamps: function(year)
       {
         var nextDay,
             ndays = [],
-            days = {},
-            year = this.getThisYear(),
+            days  = {},
             firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
         
         for (var i = 0; i < 366; i++)
@@ -195,24 +198,24 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
           else
           {
             nextDay = new Date(ndays[i-1]).addDays(1);
-          };
+          }
 
           ndays.push(new Date(nextDay));
-        };
+        }
 
-        for (var i = 0; i < 366; i++)
+        for (var n = 0; n < 366; n++)
         {
-          days[i+1] = {
+          days[n+1] = {
             first: {
-              day: ndays[i],
-              timeStamp: new Date(ndays[i]).getTime()
+              day: ndays[n],
+              timeStamp: new Date(ndays[n]).getTime()
             },
             last: {
-              day: ndays[i+1],
-              timeStamp: new Date(ndays[i+1]).getTime()
+              day: ndays[n+1],
+              timeStamp: new Date(ndays[n+1]).getTime()
             }
           };
-        };
+        }
 
         /**
          * Remove not existing date
@@ -226,25 +229,36 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         else
         {
           days.total = 366;
-        };
+        }
 
         return days;
       },
 
       registerPeriods: function ()
       {
-        var periods = angular.fromJson(Storage.get('periods') || '{}');
+        var periods     = angular.fromJson(Storage.get('periods') || '{}'),
+            periodsNext = angular.fromJson(Storage.get('periodsNext') || '{}');
+
+        var thisYear = this.getThisYear(),
+            nextYear = Number(thisYear) + 1;
 
         Storage.add('periods', angular.toJson({
-          months: this.getMonthTimeStamps(),
-          weeks:  this.getWeekTimeStamps(),
-          days:   this.getDayTimeStamps()
-        }));      
+          months: this.getMonthTimeStamps(thisYear),
+          weeks:  this.getWeekTimeStamps(thisYear),
+          days:   this.getDayTimeStamps(thisYear)
+        }));
+
+        Storage.add('periodsNext', angular.toJson({
+          months: this.getMonthTimeStamps(nextYear),
+          weeks:  this.getWeekTimeStamps(nextYear),
+          days:   this.getDayTimeStamps(nextYear)
+        }));
+
       },
 
-      getPeriods: function ()
+      getPeriods: function (next)
       {
-        return angular.fromJson(Storage.get('periods'));
+        return angular.fromJson(Storage.get((!next) ? 'periods' : 'periodsNext'));
       },
 
       translateToDutch: function (date)
@@ -275,7 +289,10 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         if (date)
         {
-          angular.forEach(conversions, function (conversion, index) { date = date.replace(new RegExp(index, 'gi'), conversion) });
+          angular.forEach(conversions, function (conversion, index)
+          {
+            date = date.replace(new RegExp(index, 'gi'), conversion)
+          });
 
           return date;
         }
