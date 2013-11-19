@@ -139,7 +139,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
             firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
             firstMonday       = new Date(firstMondayOfYear);
 
-        for (var i = 0; i < 53; i++)
+        for (var i = 0; i < 54; i++)
         {
           if (i == 0)
           {
@@ -155,7 +155,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         nweeks.unshift(firstMonday);
 
-        var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
+        var firstMondayofNextYear = new Date(nweeks[54].addWeeks(1));
 
         for (var n = 0; n < 55; n++)
         {

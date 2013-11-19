@@ -5671,7 +5671,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
             firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
             firstMonday       = new Date(firstMondayOfYear);
 
-        for (var i = 0; i < 53; i++)
+        for (var i = 0; i < 54; i++)
         {
           if (i == 0)
           {
@@ -5687,7 +5687,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         nweeks.unshift(firstMonday);
 
-        var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
+        var firstMondayofNextYear = new Date(nweeks[54].addWeeks(1));
 
         for (var n = 0; n < 55; n++)
         {
@@ -9736,7 +9736,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       /**
        * Fix for timeline scope to day
        */
-      day:      Dater.current.today() + 1,
+      day:      Dater.current.today(),
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       year:     Dater.current.year(),
@@ -10112,7 +10112,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
           timelineAfterBtn.removeAttr('disabled');
         }
       }
-
 		});
 
 	  /**
@@ -10262,7 +10261,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-	      
 	    },
 
 	    /**
@@ -10327,7 +10325,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        }
 		      });
 		    }
-
 	    },
 
 	    /**
@@ -10890,28 +10887,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      };
     	});
 
-
-    	/**
-    	 * DEPRECIATED
-    	 */
-    	
-			// console.log('content ->', options.content);
-
-			// if ($scope.mode == 'edit')
-			// {
-			// 	if (options.content.id != $scope.slotid)
-			// 	{
-			// 		$scope.self.timeline.cancelChange();
-			// 	}
-			// }
-			// else
-			// {
-			// 	$scope.mode = 'edit';
-			// 	$scope.slotid = options.content.id;
-			// }
-
 	  };
-
 
 
 	  /**
@@ -10926,19 +10902,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	/**
 	    	 * Through timeline
 	    	 */
-	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
-	          options = {
-	            start:    values.start,
-	            end:      values.end,
-	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
-	          };
+	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+
+        options = {
+          start:    values.start,
+          end:      values.end,
+          content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+        };
 	    }
 	    else
 	    {
 	    	/**
 	    	 * Through form
 	    	 */
-	    	var options = {
+	    	options = {
 		      start:  ($rootScope.browser.mobile) ?
 		                new Date(slot.start.datetime).getTime() : 
 		                Dater.convert.absolute(slot.start.date, slot.start.time, false),
@@ -10976,7 +10953,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			    $scope.original.start < Date.now().getTime()
 		     )
 	    {
-	    	// change slot
 	      Slots.change($scope.original, {
 
 		      start:  new Date($scope.original.start).getTime(),
@@ -10999,7 +10975,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          }
 	          else
 	          {
-		          // add new slot
 				      Slots.add(
 					      {
 	                start:      options.start / 1000,
@@ -11030,8 +11005,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          }
 	        }
 	      );
-
-
 	    }
 	   	else
 	   	{
@@ -11043,8 +11016,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			     )
 		    {
 		      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
-
-		      console.log('changing allowed!');
 
 		      Slots.change($scope.original, options, $scope.timeline.user.id)
 		      .then(
@@ -11067,7 +11038,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          $rootScope.planboardSync.start();
 		        }
 		      );
-
 		    }
 		    else
 		    {
@@ -11078,7 +11048,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      $scope.timeliner.refresh();
 		    }
 	   	}
-
 	  };
 
 
@@ -11202,8 +11171,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					// console.log('planboard sync started..', new Date.now());
-
 					/**
 					 * Update planboard only in planboard is selected
 					 */
@@ -11212,19 +11179,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						$scope.slot = {};
 
 						$rootScope.$broadcast('resetPlanboardViews');
-						// $scope.resetViews();
-
-						// if ($scope.views.slot.add) $scope.views.slot.add = true;
-						// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
 						$scope.timeliner.load({
 						  start:  $scope.data.periods.start,
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				// Sync periodically for a minute
-				}, 60000); // 1 minute
-				// }, 5000); //  10 seconds
+				}, 60000);
 			},
 
 			/**
@@ -11232,17 +11193,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			clear: function ()
 			{
-				// console.log('planboard sync STOPPED');
-
-				// if ($window.planboardSync)
-				// {
-				// 	console.log('it exists', $window);
-				// }
-				// else
-				// {
-				// 	console.log('NOT existing !');
-				// }
-
 				$window.clearInterval($window.planboardSync);
 			}
 	  };
@@ -11286,7 +11236,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	        $scope.timeliner.load({
 	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
 	        });
 	      break;
 
@@ -11299,7 +11249,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	        $scope.timeliner.load({
 	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	        });
 	      break;
 
@@ -11312,10 +11262,10 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	        $scope.timeliner.load({
 	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
+	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
 	        });
 	      break;
-	    };
+	    }
 	  };
 
 
@@ -11324,41 +11274,121 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	   */
 	  $scope.timelineBefore = function ()
 	  {
+      var thisYear = new Date().toString('yyyy');
+
 	    if ($scope.timeline.scope.day)
 	    {
-	      if ($scope.timeline.current.day != 1)
-	      {
-	        $scope.timeline.current.day--;
+        if ($scope.timeline.current.year === Number(thisYear) + 1)
+        {
+          if ($scope.timeline.current.day === 1)
+          {
+            $scope.timeline.current.year = thisYear;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
-	        });
-	      }
+            $scope.timeline.current.day = $scope.periods.days.total;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.day--;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp,
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.day != 1)
+          {
+            $scope.timeline.current.day--;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+            });
+          }
+        }
 	    }
 	    else if ($scope.timeline.scope.week)
 	    {
-	      if ($scope.timeline.current.week != 1)
-	      {
-	        $scope.timeline.current.week--;
+        if ($scope.timeline.current.year === Number(thisYear) + 1)
+        {
+          if ($scope.timeline.current.week === 1)
+          {
+            $scope.timeline.current.year = thisYear;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	        });
-	      }
+            $scope.timeline.current.week = 52;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.week--;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periodsNext.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.week != 1)
+          {
+            $scope.timeline.current.week--;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
 	    }
 	    else if ($scope.timeline.scope.month)
 	    {
-	      if ($scope.timeline.current.month != 1)
-	      {
-	        $scope.timeline.current.month--;
+        if ($scope.timeline.current.year === Number(thisYear) + 1)
+        {
+          if ($scope.timeline.current.month === 1)
+          {
+            $scope.timeline.current.year = thisYear;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
-	        });
-	      }
+            $scope.timeline.current.month = 12;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.month--;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periodsNext.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.month != 1)
+          {
+            $scope.timeline.current.month--;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
 	    }
 	  };
 
@@ -11372,7 +11402,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	    if ($scope.timeline.scope.day)
 	    {
-        if ($scope.timeline.current.year == thisYear)
+        if ($scope.timeline.current.year === thisYear)
         {
           /**
            * Total days in a month can change so get it start periods cache
@@ -11400,6 +11430,8 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
         }
         else
         {
+          $scope.timeline.current.year = Number(thisYear) + 1;
+
           $scope.timeline.current.day++;
 
           $scope.timeliner.load({
@@ -11425,7 +11457,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
           {
             $scope.timeline.current.year = Number(thisYear) + 1;
 
-            $scope.timeline.current.week = 1;
+            $scope.timeline.current.week = 2;
 
             $scope.timeliner.load({
               start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
@@ -11445,8 +11477,6 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
             });
           }
         }
-
-
 	    }
 	    else if ($scope.timeline.scope.month)
 	    {
@@ -11487,7 +11517,6 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
         }
 	    }
 	  };
-
 
 
 	  /**
