@@ -116,30 +116,32 @@
         <form ng-controller="scheaduler">
           <fieldset>
 
-            <!-- broadcasting types -->
             <div class="control-group">
-                 <!--ng-hide="config.profile.smartAlarm">-->
+
               <label class="control-label">{{ui.message.broadcast}}</label>
 
-              <div  class="btn-group"  
-                    bs-buttons-checkbox="" 
-                    data-toggle="buttons-checkbox">
+              <input type="checkbox"
+                     ng-model="broadcast.sms"
+                     ng-hide="app.resources.role > 2"
+                     style="margin:-3px 5px 0 0"
+                     id="broadcastSmsCheckBox" />
 
-                <button type="button" 
-                        class="btn btn-small" 
-                        ng-model="broadcast.sms" 
-                        ng-click=""
-                        bs-button=""
-                        ng-hide="app.resources.role > 2">{{ui.message.sms}}</button>
+              <label for="broadcastSmsCheckBox"
+                     style="display: inline">
+                <span ng-hide="app.resources.role > 2">{{ui.message.sms}}</span>
+              </label>
 
-                <button type="button" 
-                        class="btn btn-small" 
-                        ng-model="broadcast.email" 
-                        ng-click=""
-                        bs-button="">{{ui.message.email}}</button>
+              <input type="checkbox"
+                     ng-model="broadcast.email"
+                     style="margin:-3px 5px 0 15px"
+                     id="broadcastEmailCheckBox"/>
 
-              </div>
+              <label for="broadcastEmailCheckBox"
+                     style="display: inline">{{ui.message.email}}</label>
+
             </div>
+
+
             <!-- end broadcasting types -->
 
             <!-- receivers -->

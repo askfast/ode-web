@@ -7,15 +7,16 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
 /**
  * Announcer
  */
-.factory('Announcer', 
-  function ()
+.factory('Announcer',
+  ['$rootScope',
+  function ($rootScope)
   {
     return {
       /**
        * TODO: Modify p2000 script in ask70 for date conversions!!
        * p2000 messages processor
        */
-      process: function (results)
+      process: function (results, couchdb)
       {
         var alarms  = {
               short:  [],
@@ -24,7 +25,24 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
             limit   = 4,
             count   = 0;
 
-        angular.forEach(results, function (alarm, index)
+        if (couchdb)
+        {
+          var processed = [];
+
+          angular.forEach(results.rows, function (alarm)
+          {
+            processed.push({
+              msgCode:  $rootScope.config.profile.p2000.codes,
+              day:      new Date(alarm.value.timestamp).toString('dd-MM-yy'),
+              time:     new Date(alarm.value.timestamp).toString('HH:mm:ss'),
+              body:     alarm.value.message
+            });
+          });
+
+          results = processed;
+        }
+
+        angular.forEach(results, function (alarm)
         {
           if (alarm.body)
           {
@@ -35,7 +53,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 1:    true,
                 test: false
               };
-            };
+            }
 
             if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
             {
@@ -44,7 +62,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 2:    true,
                 test: false
               };
-            };
+            }
 
             if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
             {
@@ -53,26 +71,14 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 3:    true,
                 test: false
               }
-            };
+            }
 
             if (alarm.body.match(/PROEFALARM/))
             {
               alarm.prio = {
                 test: true
               };
-            };
-
-            // var dates     = alarm.day.split('-'),
-            //     swap      = dates[0] + 
-            //                 '-' + 
-            //                 dates[1] + 
-            //                 '-' + 
-            //                 dates[2],
-            //     dstr      = swap + ' ' + alarm.time,
-            //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
-            //     timeStamp = new Date(datetime).getTime();
-            // alarm.datetime = datetime;
-            // alarm.timeStamp = timeStamp;
+            }
 
             if (count < 4) alarms.short.push(alarm);
 
@@ -86,4 +92,4 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
       }
     }
   }
-);
+  ]);

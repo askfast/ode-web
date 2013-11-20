@@ -15,8 +15,6 @@
 
 
 
-
-
   <!-- timeline controls -->
   <div class="row-fluid"
        id="timeline-controls"
@@ -56,16 +54,20 @@
 
       <!-- timeline navigation -->
       <div class="btn-group pull-left" style="margin-right: 5px">
-        <button type="button" 
+        <button type="button"
+                id="timelineBeforeBtn"
                 class="btn"
                 ng-click="timelineBefore(timeline.scope)"><i class="icon-arrow-left"></i></button>
-        <button type="button" 
+        <button type="button"
+                id="timelineZoomInBtn"
                 class="btn"
                 ng-click="timelineZoomIn()"><i class="icon-zoom-in"></i></button>
-        <button type="button" 
+        <button type="button"
+                id="timelineZoomOutBtn"
                 class="btn"
                 ng-click="timelineZoomOut()"><i class="icon-zoom-out"></i></button>
-        <button type="button" 
+        <button type="button"
+                id="timelineAfterBtn"
                 class="btn"
                 ng-click="timelineAfter(timeline.scope)"><i class="icon-arrow-right"></i></button>
       </div>
@@ -76,7 +78,7 @@
 
     <!-- range indicator -->
     <div class="{{ (browser.mobile) &&  'pull-left' || 'pull-right' }}"
-         style="text-align: {{ (browser.mobile) &&  'left' || 'right' }}">
+         style="text-align: {{(browser.mobile) &&  'left' || 'right' }}">
       <h4 style="font-weight: normal">
         {{timeline.range | rangeMainFilter}}<br>
         <!-- timeline scope info -->
@@ -90,7 +92,6 @@
 
   </div>
   <!-- end timeline controls -->
-
 
 
 
@@ -125,7 +126,7 @@
         <div class="control-group dater-mobile" ng-show="views.slot.add || views.slot.edit || views.wish">
           <input  name="date-start"
                   type="datetime-local"
-                  ng-model="slot.start.datetime">
+                  ng-model="slot.start.datetime" />
         </div>
         <div class="control-group dater-mobile"
              ng-show="views.group || views.member">

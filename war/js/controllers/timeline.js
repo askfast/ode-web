@@ -19,24 +19,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		 */
 		$scope.$watch(function ()
 		{
-       /*
-      if (!$scope.timeline.current.layouts.group)
-      {
-        // timeline.current.layouts.group
-        $scope.timeline.config.wishes = false;
-        $scope.groupWishes();
-      }
-      */
-
-
-
-
-
-
-
-
-
-
 			/**
 			 * If main timeline
 			 */
@@ -110,6 +92,44 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					};
 				}
 			}
+
+      if (
+        $scope.timeline.current.year === Number(Dater.current.year()) + 1
+          &&
+        ($scope.timeline.current.month === 12 ||
+         $scope.timeline.current.week === 53 ||
+         $scope.timeline.current.day === 365)
+        )
+      {
+        $('#timelineAfterBtn').attr('disabled', 'disabled');
+      }
+      else if (
+        $scope.timeline.current.year == Dater.current.year()
+          &&
+          ($scope.timeline.current.month === 1 ||
+            $scope.timeline.current.week === 1 ||
+            $scope.timeline.current.day === 1)
+        )
+      {
+        $('#timelineBeforeBtn').attr('disabled', 'disabled');
+      }
+      else
+      {
+        var timelineBeforeBtn     = $('#timelineBeforeBtn'),
+            timelineAfterBtn      = $('#timelineAfterBtn'),
+            timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
+            timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
+
+        if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
+        {
+          timelineBeforeBtn.removeAttr('disabled');
+        }
+
+        if (typeof timelineAfterBtnAttr  !== 'undefined' && timelineAfterBtnAttr   !== false)
+        {
+          timelineAfterBtn.removeAttr('disabled');
+        }
+      }
 		});
 
 	  /**
@@ -173,21 +193,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     */
 	    render: function (options, remember)
 	    {
-        /**
-         * First setup comes with undefined
-         */
-        /*
-        if (remember === undefined)
-        {
-          remember = true;
-        }
-        */
-
         var start,
             end;
 
 	    	/**
-	    	 * Hotfix for not converted Date objects initially given by timeline
+	    	 * Hot fix for not converted Date objects initially given by timeline
 	    	 */
         if ($scope.timeline.range)
         {
@@ -201,19 +211,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
             $scope.timeline.range.end = new Date($scope.timeline.range.end);
           }
 
-          // console.log('RANGE GOOD !!');
           start = $scope.timeline.range.start;
           end   = $scope.timeline.range.end;
         }
         else
         {
-          // console.log('NOOOO RANGE !!');
           start = new Date(options.start);
           end   = new Date(options.end);
         }
-
-        // console.log('range in timeline ->', $scope.timeline.range);
-        // console.log('REMEMBER ->', remember);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
@@ -274,7 +279,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-	      
 	    },
 
 	    /**
@@ -339,7 +343,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        }
 		      });
 		    }
-
 	    },
 
 	    /**
@@ -902,28 +905,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      };
     	});
 
-
-    	/**
-    	 * DEPRECIATED
-    	 */
-    	
-			// console.log('content ->', options.content);
-
-			// if ($scope.mode == 'edit')
-			// {
-			// 	if (options.content.id != $scope.slotid)
-			// 	{
-			// 		$scope.self.timeline.cancelChange();
-			// 	}
-			// }
-			// else
-			// {
-			// 	$scope.mode = 'edit';
-			// 	$scope.slotid = options.content.id;
-			// }
-
 	  };
-
 
 
 	  /**
@@ -938,19 +920,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	/**
 	    	 * Through timeline
 	    	 */
-	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
-	          options = {
-	            start:    values.start,
-	            end:      values.end,
-	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
-	          };
+	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+
+        options = {
+          start:    values.start,
+          end:      values.end,
+          content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+        };
 	    }
 	    else
 	    {
 	    	/**
 	    	 * Through form
 	    	 */
-	    	var options = {
+	    	options = {
 		      start:  ($rootScope.browser.mobile) ?
 		                new Date(slot.start.datetime).getTime() : 
 		                Dater.convert.absolute(slot.start.date, slot.start.time, false),
@@ -972,9 +955,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    	if (old < now) return false;
 
-	    	if (curr < now) return false;
-
-	    	return true;
+	    	return curr >= now;
 	    };
 
 	    /**
@@ -990,7 +971,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			    $scope.original.start < Date.now().getTime()
 		     )
 	    {
-	    	// change slot
 	      Slots.change($scope.original, {
 
 		      start:  new Date($scope.original.start).getTime(),
@@ -1013,7 +993,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          }
 	          else
 	          {
-		          // add new slot
 				      Slots.add(
 					      {
 	                start:      options.start / 1000,
@@ -1044,8 +1023,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          }
 	        }
 	      );
-
-
 	    }
 	   	else
 	   	{
@@ -1057,8 +1034,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			     )
 		    {
 		      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
-
-		      console.log('changing allowed!');
 
 		      Slots.change($scope.original, options, $scope.timeline.user.id)
 		      .then(
@@ -1081,7 +1056,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          $rootScope.planboardSync.start();
 		        }
 		      );
-
 		    }
 		    else
 		    {
@@ -1092,7 +1066,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      $scope.timeliner.refresh();
 		    }
 	   	}
-
 	  };
 
 
@@ -1216,8 +1189,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					// console.log('planboard sync started..', new Date.now());
-
 					/**
 					 * Update planboard only in planboard is selected
 					 */
@@ -1226,19 +1197,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						$scope.slot = {};
 
 						$rootScope.$broadcast('resetPlanboardViews');
-						// $scope.resetViews();
-
-						// if ($scope.views.slot.add) $scope.views.slot.add = true;
-						// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
 						$scope.timeliner.load({
 						  start:  $scope.data.periods.start,
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				// Sync periodically for a minute
-				}, 60000); // 1 minute
-				// }, 5000); //  10 seconds
+				}, 60000);
 			},
 
 			/**
@@ -1246,17 +1211,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			clear: function ()
 			{
-				// console.log('planboard sync STOPPED');
-
-				// if ($window.planboardSync)
-				// {
-				// 	console.log('it exists', $window);
-				// }
-				// else
-				// {
-				// 	console.log('NOT existing !');
-				// }
-
 				$window.clearInterval($window.planboardSync);
 			}
 	  };

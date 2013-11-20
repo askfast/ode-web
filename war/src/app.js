@@ -944,7 +944,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.7',
+    version:  '2.3.8',
     lang:     'nl',
 
     fullscreen: true,
@@ -1170,8 +1170,8 @@ angular.module('WebPaige')
             return  Slots.all({
                       groupId:  settings.app.group,
                       stamps: {
-                        start:  periods.days[Dater.current.today()].last.timeStamp,
-                        end:    periods.days[Dater.current.today() + 7].last.timeStamp
+                        start:  periods.days[Dater.current.today() - 1].last.timeStamp,
+                        end:    periods.days[Dater.current.today() + 6].last.timeStamp
                       },
                       month: Dater.current.month(),
                       layouts: {
@@ -2184,6 +2184,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
 
 		/**
+     * TODO: Still being used since harcoded in controller itself?
 		 * Get p2000 announcements
 		 */
 		Dashboard.prototype.p2000 = function ()
@@ -2192,41 +2193,53 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
 			$rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
-			$.ajax({
-				url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
-				dataType: 'jsonp',
-				success: function (results)
-				{
-					$rootScope.statusBar.off();
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        $.ajax({
+          url: $rootScope.config.profile.p2000.url,
+          dataType: 'json',
+          success: function (results)
+          {
+            $rootScope.statusBar.off();
 
-          var processed = Announcer.process(results);
+            var processed = Announcer.process(results, true);
 
-					deferred.resolve(
-					{
-						alarms: 	processed,
-						synced:   new Date().getTime()
-					});
-				},
-				error: function ()
-				{
-					deferred.resolve({error: error});
-				}
-			});
+            deferred.resolve(
+              {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              });
+          },
+          error: function ()
+          {
+            deferred.resolve({error: error});
+          }
+        });
 
-//			$http({
-//				method: 'jsonp',
-//				url: 		$config.profile.p2000.url + '?code=' + $config.profile.p2000.codes
-//			})
-//			.success(function (data, status)
-//			{
-//				console.log('results ->', data);
-//
-//				deferred.resolve( Announcer.process(data) );
-//			})
-//			.error(function (error)
-//			{
-//				deferred.resolve({error: error});
-//			});
+      }
+      else
+      {
+        $.ajax({
+          url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
+          dataType: 'jsonp',
+          success: function (results)
+          {
+            $rootScope.statusBar.off();
+
+            var processed = Announcer.process(results);
+
+            deferred.resolve(
+              {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              });
+          },
+          error: function ()
+          {
+            deferred.resolve({error: error});
+          }
+        });
+      }
 
 			return deferred.promise;
 		};
@@ -4216,19 +4229,14 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             }
           });
 
-          if (predefinedRole != '')
-          {
-            Storage.add('guard', angular.toJson({
-              monitor: guard.monitor,
-              role:    predefinedRole,
-              currentState: guard.currentState,
-              currentStateClass: guard.currentStateClass
-            }));
-          }
-          else
-          {
-            predefinedRole = 'niet ingedeeld';
-          }
+          Storage.add('guard', angular.toJson({
+            monitor:          guard.monitor,
+            role:             (predefinedRole != '') ? predefinedRole : 'niet ingedeeld',
+            currentState:     guard.currentState,
+            currentStateClass:guard.currentStateClass,
+            team:             results,
+            synced:           new Date().getTime()
+          }));
 
           $rootScope.app.guard.role = predefinedRole;
 
@@ -5563,6 +5571,11 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         month: function ()
         {
           return new Date().getMonth() + 1;
+        },
+
+        year: function ()
+        {
+          return new Date().toString('yyyy');
         }
       },
 
@@ -5619,10 +5632,9 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
        * Get begin and end timestamps of months
        * in the current year
        */
-      getMonthTimeStamps: function ()
+      getMonthTimeStamps: function (year)
       {
-        var months  = {}, 
-            year    = this.getThisYear();
+        var months  = {};
 
         for (var i = 0; i < 12; i++)
         {
@@ -5641,7 +5653,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
               };
 
           months[i+1] = month;
-        };
+        }
 
         return months;
       },
@@ -5649,17 +5661,17 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
       /**
        * Get begin and end timestamps of weeks
        */
-      getWeekTimeStamps: function()
+      getWeekTimeStamps: function(year)
       {
         var nweeks    = [],
             weeks     = {},
-            nextMonday,
-            year      = this.getThisYear(), 
-            firstDayInYear    = new Date(year, 0).moveToFirstDayOfMonth(),
+            nextMonday;
+
+        var firstDayInYear    = new Date(year, 0).moveToFirstDayOfMonth(),
             firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
             firstMonday       = new Date(firstMondayOfYear);
 
-        for (var i = 0; i < 53; i++)
+        for (var i = 0; i < 54; i++)
         {
           if (i == 0)
           {
@@ -5668,31 +5680,31 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
           else
           {
             nextMonday = new Date(nweeks[i-1]).addWeeks(1);
-          };
+          }
 
           nweeks.push(new Date(nextMonday));
-        };
+        }
 
         nweeks.unshift(firstMonday);
 
-        var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
+        var firstMondayofNextYear = new Date(nweeks[54].addWeeks(1));
 
-        for (var i = 0; i < 55; i++)
+        for (var n = 0; n < 55; n++)
         {
-          weeks[i+1] = {
+          weeks[n+1] = {
             first: {
-              day: nweeks[i],
-              timeStamp: new Date(nweeks[i]).getTime()
+              day: nweeks[n],
+              timeStamp: new Date(nweeks[n]).getTime()
             },
             last: {
-              day: nweeks[i+1],
-              timeStamp: new Date(nweeks[i+1]).getTime()
+              day: nweeks[n+1],
+              timeStamp: new Date(nweeks[n+1]).getTime()
             }
           }
-        };
+        }
 
         /**
-         * Remove unneccessary periods
+         * Remove unnecessary periods
          */
         delete weeks[54];
         delete weeks[55];
@@ -5702,12 +5714,11 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
       /**
        */
-      getDayTimeStamps: function()
+      getDayTimeStamps: function(year)
       {
         var nextDay,
             ndays = [],
-            days = {},
-            year = this.getThisYear(),
+            days  = {},
             firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
         
         for (var i = 0; i < 366; i++)
@@ -5719,24 +5730,24 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
           else
           {
             nextDay = new Date(ndays[i-1]).addDays(1);
-          };
+          }
 
           ndays.push(new Date(nextDay));
-        };
+        }
 
-        for (var i = 0; i < 366; i++)
+        for (var n = 0; n < 366; n++)
         {
-          days[i+1] = {
+          days[n+1] = {
             first: {
-              day: ndays[i],
-              timeStamp: new Date(ndays[i]).getTime()
+              day: ndays[n],
+              timeStamp: new Date(ndays[n]).getTime()
             },
             last: {
-              day: ndays[i+1],
-              timeStamp: new Date(ndays[i+1]).getTime()
+              day: ndays[n+1],
+              timeStamp: new Date(ndays[n+1]).getTime()
             }
           };
-        };
+        }
 
         /**
          * Remove not existing date
@@ -5750,25 +5761,36 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         else
         {
           days.total = 366;
-        };
+        }
 
         return days;
       },
 
       registerPeriods: function ()
       {
-        var periods = angular.fromJson(Storage.get('periods') || '{}');
+        var periods     = angular.fromJson(Storage.get('periods') || '{}'),
+            periodsNext = angular.fromJson(Storage.get('periodsNext') || '{}');
+
+        var thisYear = this.getThisYear(),
+            nextYear = Number(thisYear) + 1;
 
         Storage.add('periods', angular.toJson({
-          months: this.getMonthTimeStamps(),
-          weeks:  this.getWeekTimeStamps(),
-          days:   this.getDayTimeStamps()
-        }));      
+          months: this.getMonthTimeStamps(thisYear),
+          weeks:  this.getWeekTimeStamps(thisYear),
+          days:   this.getDayTimeStamps(thisYear)
+        }));
+
+        Storage.add('periodsNext', angular.toJson({
+          months: this.getMonthTimeStamps(nextYear),
+          weeks:  this.getWeekTimeStamps(nextYear),
+          days:   this.getDayTimeStamps(nextYear)
+        }));
+
       },
 
-      getPeriods: function ()
+      getPeriods: function (next)
       {
-        return angular.fromJson(Storage.get('periods'));
+        return angular.fromJson(Storage.get((!next) ? 'periods' : 'periodsNext'));
       },
 
       translateToDutch: function (date)
@@ -5799,7 +5821,10 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 
         if (date)
         {
-          angular.forEach(conversions, function (conversion, index) { date = date.replace(new RegExp(index, 'gi'), conversion) });
+          angular.forEach(conversions, function (conversion, index)
+          {
+            date = date.replace(new RegExp(index, 'gi'), conversion)
+          });
 
           return date;
         }
@@ -6584,15 +6609,16 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
 /**
  * Announcer
  */
-.factory('Announcer', 
-  function ()
+.factory('Announcer',
+  ['$rootScope',
+  function ($rootScope)
   {
     return {
       /**
        * TODO: Modify p2000 script in ask70 for date conversions!!
        * p2000 messages processor
        */
-      process: function (results)
+      process: function (results, couchdb)
       {
         var alarms  = {
               short:  [],
@@ -6601,7 +6627,24 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
             limit   = 4,
             count   = 0;
 
-        angular.forEach(results, function (alarm, index)
+        if (couchdb)
+        {
+          var processed = [];
+
+          angular.forEach(results.rows, function (alarm)
+          {
+            processed.push({
+              msgCode:  $rootScope.config.profile.p2000.codes,
+              day:      new Date(alarm.value.timestamp).toString('dd-MM-yy'),
+              time:     new Date(alarm.value.timestamp).toString('HH:mm:ss'),
+              body:     alarm.value.message
+            });
+          });
+
+          results = processed;
+        }
+
+        angular.forEach(results, function (alarm)
         {
           if (alarm.body)
           {
@@ -6612,7 +6655,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 1:    true,
                 test: false
               };
-            };
+            }
 
             if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
             {
@@ -6621,7 +6664,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 2:    true,
                 test: false
               };
-            };
+            }
 
             if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
             {
@@ -6630,26 +6673,14 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
                 3:    true,
                 test: false
               }
-            };
+            }
 
             if (alarm.body.match(/PROEFALARM/))
             {
               alarm.prio = {
                 test: true
               };
-            };
-
-            // var dates     = alarm.day.split('-'),
-            //     swap      = dates[0] + 
-            //                 '-' + 
-            //                 dates[1] + 
-            //                 '-' + 
-            //                 dates[2],
-            //     dstr      = swap + ' ' + alarm.time,
-            //     datetime  = new Date(alarm.day + ' ' + alarm.time).toString('dd-MM-yy HH:mm:ss'),
-            //     timeStamp = new Date(datetime).getTime();
-            // alarm.datetime = datetime;
-            // alarm.timeStamp = timeStamp;
+            }
 
             if (count < 4) alarms.short.push(alarm);
 
@@ -6663,7 +6694,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
       }
     }
   }
-);;'use strict';
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Services.Sloter', ['ngResource'])
@@ -7767,64 +7798,67 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 		return function (dates)
 		{
-			if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
-				dates.start = new Date(dates.end).addDays(-1);
+      if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+      {
+        dates.start = new Date(dates.end).addDays(-1);
+      }
 
 			var cFirst = function (str)
 			{
-			    return str.charAt(0).toUpperCase() + str.substr(1);
+        return str.charAt(0).toUpperCase() + str.substr(1);
 			};
 
 			var ndates = {
-						start: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
-						},
-						end: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
-						}
-					};
+            start: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d'))),
+              year:   new Date(dates.start).toString('yyyy')
+            },
+            end: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d'))),
+              year:   new Date(dates.end).toString('yyyy')
+            }
+          };
 
 			var dates = {
-						start: {
-							real: 	new Date(dates.start).toString('dddd d MMMM'),
-							month: 	new Date(dates.start).toString('MMMM'),
-							day: 		new Date(dates.start).toString('d')
-						},
-						end: {
-							real: 	new Date(dates.end).toString('dddd d MMMM'),
-							month: 	new Date(dates.end).toString('MMMM'),
-							day: 		new Date(dates.end).toString('d')
-						}
-					},
-					monthNumber = Date.getMonthNumberFromName(dates.start.month);
+            start: {
+              real: 	new Date(dates.start).toString('dddd d MMMM'),
+              month: 	new Date(dates.start).toString('MMMM'),
+              day: 		new Date(dates.start).toString('d')
+            },
+            end: {
+              real: 	new Date(dates.end).toString('dddd d MMMM'),
+              month: 	new Date(dates.end).toString('MMMM'),
+              day: 		new Date(dates.end).toString('d')
+            }
+          },
+          monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && 
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
 					dates.start.month == dates.end.month)
 			{
-				return 	ndates.start.real;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+				return 	ndates.start.real +
+								', ' +
+								ndates.start.year;
 			}
 			else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
 			{
-				return 	ndates.start.month;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+				return 	ndates.start.month +
+								', ' +
+                ndates.start.year;
 			}
 			else
 			{
-				return 	ndates.start.real + 
+				return 	ndates.start.real +
+                ', ' +
+                ndates.start.year +
 								' / ' + 
-								ndates.end.real;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+								ndates.end.real +
+								', ' +
+                ndates.end.year;
 			}
 
 		}
@@ -7837,11 +7871,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeMainWeekFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'Dater',
+	function (Dater)
 	{
-		var periods = Dater.getPeriods();
-
 		return function (dates)
 		{
 			if (dates)
@@ -7851,22 +7883,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				  return str.charAt(0).toUpperCase() + str.substr(1);
 				};
 
-				var dates = {
-					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-					end: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+				var newDates = {
+					start: 	cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+					end: 		cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
 				};
 
-				// var dates = {
-				// 	start: 	new Date(dates.start).toString('dddd d MMMM'),
-				// 	end: 		new Date(dates.end).toString('dddd d MMMM')
-				// };
-
-				return 	dates.start + 
-								' / ' + 
-								dates.end + 
+				return 	newDates.start +
+								' / ' +
+                newDates.end +
 								', ' + 
 								Dater.getThisYear();
 			}
+      else
+      {
+        return false;
+      }
 		}
 	}
 ])
@@ -8544,7 +8575,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	        };
 
 	        $('#login button[type=submit]')
-	          .text($rootScope.ui.login.button_loggingIn)
+	          .text($rootScope.ui.login.button_login)
 	          .removeAttr('disabled');
 
 	        return false;
@@ -9114,8 +9145,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * Defaults for loaders
 		 */
 		$scope.loading = {
-			pies:   true,
-			alerts: true
+			pies:       true,
+			alerts:     true,
+      smartAlarm: true
 		};
 
 
@@ -9322,7 +9354,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       {
         $rootScope.statusBar.off();
       }
-
 		}
 
 
@@ -9333,14 +9364,123 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
     /**
+     * Process Smart Alarm team members for view
+     */
+    function prepareSaMembers (setup)
+    {
+      $scope.saMembers = {
+        truck:    [],
+        reserves: []
+      };
+
+      $scope.saSynced = angular.fromJson(Storage.get('guard')).synced;
+
+      var members = {};
+
+      angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
+      {
+        angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
+        {
+          members[member.uuid] = member;
+        });
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'C',
+        role: 'Chauffeur',
+        class: 'sa-icon-driver',
+        name: (setup.chauffeur !== null) ? members[setup.chauffeur].name : 'Niet ingedeeld'
+      });
+
+      if (setup.chauffeur !== null) delete members[setup.chauffeur];
+
+      $scope.saMembers.truck.push({
+        icon: 'B',
+        role: 'Bevelvoerder',
+        class: 'sa-icon-commander',
+        name: (setup.bevelvoerder !== null) ? members[setup.bevelvoerder].name : 'Niet ingedeeld'
+      });
+
+      if (setup.bevelvoerder !== null) delete members[setup.bevelvoerder];
+
+      var mans = {};
+
+      angular.forEach(setup, function (man, role)
+      {
+        switch (role)
+        {
+          case 'manschap.1':
+            mans[1] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+          case 'manschap.2':
+            mans[2] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+          case 'manschap.3':
+            mans[3] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+          case 'manschap.4':
+            mans[4] = (man !== null) ? members[man].name : 'Niet ingedeeld';
+            delete members[man];
+            break;
+        }
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M1',
+        role: 'Manschap 1',
+        name: mans[1]
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M2',
+        role: 'Manschap 2',
+        name: mans[2]
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M3',
+        role: 'Manschap 3',
+        name: mans[3]
+      });
+
+      $scope.saMembers.truck.push({
+        icon: 'M4',
+        role: 'Manschap 4',
+        name: mans[4]
+      });
+
+      angular.forEach(members, function (member)
+      {
+        $scope.saMembers.reserves.push(member.name);
+      });
+
+      $scope.loading.smartAlarm = false;
+    }
+
+
+    /**
      * Fetch smartAlarm information
      */
     if ($rootScope.config.profile.smartAlarm)
     {
+      if (angular.fromJson(Storage.get('guard')).team)
+      {
+        $scope.loading.smartAlarm = false;
+
+        prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+      }
+
       Groups.guardMonitor()
         .then(function ()
         {
-          Groups.guardRole();
+          Groups.guardRole()
+            .then(function (setup)
+            {
+              prepareSaMembers(setup);
+            });
         });
     }
 
@@ -9417,7 +9557,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               if ($rootScope.config.profile.smartAlarm)
               {
-                Groups.guardRole();
+                if (angular.fromJson(Storage.get('guard')).team)
+                {
+                  prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+                }
+
+                Groups.guardRole()
+                  .then(function (setup)
+                  {
+                    prepareSaMembers(setup);
+                  });
               }
 						}
 					}
@@ -9465,45 +9614,80 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 + 'px'
         });
       }, 100);
-    }
+    };
 
 
     /**
      * Get alarms for the first time
      */
     // $scope.getP2000();
-    $.ajax({
-      url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
-      dataType: 'jsonp',
-      success: function (results)
-      {
-        $rootScope.statusBar.off();
 
-        var processed = Announcer.process(results);
+    if ($rootScope.config.profile.smartAlarm)
+    {
+      $.ajax({
+        url: $rootScope.config.profile.p2000.url,
+        dataType: 'json',
+        success: function (results)
+        {
+          $rootScope.statusBar.off();
 
-        var result = {
+          var processed = Announcer.process(results, true);
+
+          var result = {
+            alarms: 	processed,
+            synced:   new Date().getTime()
+          };
+
+          $scope.$apply(function ()
+          {
+            $scope.loading.alerts = false;
+
+            $scope.alarms = result.alarms;
+
+            $scope.alarms.list = $scope.alarms.short;
+
+            $scope.synced.alarms = result.synced;
+          });
+        },
+        error: function ()
+        {
+          console.log('ERROR with getting p2000 for the first time!');
+        }
+      });
+    }
+    else
+    {
+      $.ajax({
+        url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
+        dataType: 'jsonp',
+        success: function (results)
+        {
+          $rootScope.statusBar.off();
+
+          var processed = Announcer.process(results);
+
+          var result = {
           alarms: 	processed,
           synced:   new Date().getTime()
-        };
+          };
 
-        $scope.$apply(function ()
+          $scope.$apply(function ()
+          {
+            $scope.loading.alerts = false;
+
+            $scope.alarms = result.alarms;
+
+            $scope.alarms.list = $scope.alarms.short;
+
+            $scope.synced.alarms = result.synced;
+          });
+        },
+        error: function ()
         {
-          $scope.loading.alerts = false;
-
-          $scope.alarms = result.alarms;
-
-          $scope.alarms.list = $scope.alarms.short;
-
-          $scope.synced.alarms = result.synced;
-        })
-      },
-      error: function ()
-      {
-        console.log('ERROR with getting p2000 for the first time!');
-      }
-    });
-
-
+          console.log('ERROR with getting p2000 for the first time!');
+        }
+      });
+    }
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -9535,9 +9719,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-
-    // console.warn('data ->', angular.toJson(data));
-
 	  
 	  /**
 	   * Get groups and settings
@@ -9558,9 +9739,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
       /**
        * Fix for timeline scope to day
        */
-      day:      Dater.current.today() + 1,
+      day:      Dater.current.today(),
       week:     Dater.current.week(),
       month:    Dater.current.month(),
+      year:     Dater.current.year(),
       group:    settings.app.group,
       division: 'all'
     };
@@ -9569,7 +9751,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Pass periods
 	   */
-	  $scope.periods = Dater.getPeriods();
+    $scope.periods      = Dater.getPeriods();
+    $scope.periodsNext  = Dater.getPeriods(true);
 
 
 	  /**
@@ -9594,10 +9777,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	     * Initial start up is next 7 days
 	     */
 	    options: {
-        start:  $scope.periods.days[Dater.current.today()].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 7].last.day,
-        min:  	$scope.periods.days[Dater.current.today()].last.day,
-        max:    $scope.periods.days[Dater.current.today() + 7].last.day
+        start:  $scope.periods.days[Dater.current.today() - 1].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 6].last.day,
+        min:  	$scope.periods.days[Dater.current.today() - 1].last.day,
+        max:    $scope.periods.days[Dater.current.today() + 6].last.day
 	    },
 	    range: {
         start:  $scope.periods.days[Dater.current.today()].last.day,
@@ -9821,24 +10004,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		 */
 		$scope.$watch(function ()
 		{
-       /*
-      if (!$scope.timeline.current.layouts.group)
-      {
-        // timeline.current.layouts.group
-        $scope.timeline.config.wishes = false;
-        $scope.groupWishes();
-      }
-      */
-
-
-
-
-
-
-
-
-
-
 			/**
 			 * If main timeline
 			 */
@@ -9912,6 +10077,44 @@ angular.module('WebPaige.Controllers.Timeline', [])
 					};
 				}
 			}
+
+      if (
+        $scope.timeline.current.year === Number(Dater.current.year()) + 1
+          &&
+        ($scope.timeline.current.month === 12 ||
+         $scope.timeline.current.week === 53 ||
+         $scope.timeline.current.day === 365)
+        )
+      {
+        $('#timelineAfterBtn').attr('disabled', 'disabled');
+      }
+      else if (
+        $scope.timeline.current.year == Dater.current.year()
+          &&
+          ($scope.timeline.current.month === 1 ||
+            $scope.timeline.current.week === 1 ||
+            $scope.timeline.current.day === 1)
+        )
+      {
+        $('#timelineBeforeBtn').attr('disabled', 'disabled');
+      }
+      else
+      {
+        var timelineBeforeBtn     = $('#timelineBeforeBtn'),
+            timelineAfterBtn      = $('#timelineAfterBtn'),
+            timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
+            timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
+
+        if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
+        {
+          timelineBeforeBtn.removeAttr('disabled');
+        }
+
+        if (typeof timelineAfterBtnAttr  !== 'undefined' && timelineAfterBtnAttr   !== false)
+        {
+          timelineAfterBtn.removeAttr('disabled');
+        }
+      }
 		});
 
 	  /**
@@ -9975,21 +10178,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	     */
 	    render: function (options, remember)
 	    {
-        /**
-         * First setup comes with undefined
-         */
-        /*
-        if (remember === undefined)
-        {
-          remember = true;
-        }
-        */
-
         var start,
             end;
 
 	    	/**
-	    	 * Hotfix for not converted Date objects initially given by timeline
+	    	 * Hot fix for not converted Date objects initially given by timeline
 	    	 */
         if ($scope.timeline.range)
         {
@@ -10003,19 +10196,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
             $scope.timeline.range.end = new Date($scope.timeline.range.end);
           }
 
-          // console.log('RANGE GOOD !!');
           start = $scope.timeline.range.start;
           end   = $scope.timeline.range.end;
         }
         else
         {
-          // console.log('NOOOO RANGE !!');
           start = new Date(options.start);
           end   = new Date(options.end);
         }
-
-        // console.log('range in timeline ->', $scope.timeline.range);
-        // console.log('REMEMBER ->', remember);
 
 	    	$scope.timeline = {
 	      	id: 			$scope.timeline.id,
@@ -10076,7 +10264,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 
 	      $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
-	      
 	    },
 
 	    /**
@@ -10141,7 +10328,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		        }
 		      });
 		    }
-
 	    },
 
 	    /**
@@ -10704,28 +10890,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      };
     	});
 
-
-    	/**
-    	 * DEPRECIATED
-    	 */
-    	
-			// console.log('content ->', options.content);
-
-			// if ($scope.mode == 'edit')
-			// {
-			// 	if (options.content.id != $scope.slotid)
-			// 	{
-			// 		$scope.self.timeline.cancelChange();
-			// 	}
-			// }
-			// else
-			// {
-			// 	$scope.mode = 'edit';
-			// 	$scope.slotid = options.content.id;
-			// }
-
 	  };
-
 
 
 	  /**
@@ -10740,19 +10905,20 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	    	/**
 	    	 * Through timeline
 	    	 */
-	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row),
-	          options = {
-	            start:    values.start,
-	            end:      values.end,
-	            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
-	          };
+	      var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+
+        options = {
+          start:    values.start,
+          end:      values.end,
+          content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+        };
 	    }
 	    else
 	    {
 	    	/**
 	    	 * Through form
 	    	 */
-	    	var options = {
+	    	options = {
 		      start:  ($rootScope.browser.mobile) ?
 		                new Date(slot.start.datetime).getTime() : 
 		                Dater.convert.absolute(slot.start.date, slot.start.time, false),
@@ -10774,9 +10940,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
 	    	if (old < now) return false;
 
-	    	if (curr < now) return false;
-
-	    	return true;
+	    	return curr >= now;
 	    };
 
 	    /**
@@ -10792,7 +10956,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			    $scope.original.start < Date.now().getTime()
 		     )
 	    {
-	    	// change slot
 	      Slots.change($scope.original, {
 
 		      start:  new Date($scope.original.start).getTime(),
@@ -10815,7 +10978,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          }
 	          else
 	          {
-		          // add new slot
 				      Slots.add(
 					      {
 	                start:      options.start / 1000,
@@ -10846,8 +11008,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	          }
 	        }
 	      );
-
-
 	    }
 	   	else
 	   	{
@@ -10859,8 +11019,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			     )
 		    {
 		      $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
-
-		      console.log('changing allowed!');
 
 		      Slots.change($scope.original, options, $scope.timeline.user.id)
 		      .then(
@@ -10883,7 +11041,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		          $rootScope.planboardSync.start();
 		        }
 		      );
-
 		    }
 		    else
 		    {
@@ -10894,7 +11051,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		      $scope.timeliner.refresh();
 		    }
 	   	}
-
 	  };
 
 
@@ -11018,8 +11174,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		  {
 				$window.planboardSync = $window.setInterval(function ()
 				{
-					// console.log('planboard sync started..', new Date.now());
-
 					/**
 					 * Update planboard only in planboard is selected
 					 */
@@ -11028,19 +11182,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						$scope.slot = {};
 
 						$rootScope.$broadcast('resetPlanboardViews');
-						// $scope.resetViews();
-
-						// if ($scope.views.slot.add) $scope.views.slot.add = true;
-						// if ($scope.views.slot.edit) $scope.views.slot.edit = true;
 
 						$scope.timeliner.load({
 						  start:  $scope.data.periods.start,
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				// Sync periodically for a minute
-				}, 60000); // 1 minute
-				// }, 5000); //  10 seconds
+				}, 60000);
 			},
 
 			/**
@@ -11048,17 +11196,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			 */
 			clear: function ()
 			{
-				// console.log('planboard sync STOPPED');
-
-				// if ($window.planboardSync)
-				// {
-				// 	console.log('it exists', $window);
-				// }
-				// else
-				// {
-				// 	console.log('NOT existing !');
-				// }
-
 				$window.clearInterval($window.planboardSync);
 			}
 	  };
@@ -11091,6 +11228,8 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	    $scope.timeline.current.week  = $scope.current.week;
 	    $scope.timeline.current.month = $scope.current.month;
 
+      $scope.timeline.current.year = Number(new Date().toString('yyyy'));
+
 	    switch (period)
 	    {
 	      case 'day':
@@ -11102,7 +11241,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	        $scope.timeliner.load({
 	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
 	        });
 	      break;
 
@@ -11115,7 +11254,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	        $scope.timeliner.load({
 	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	        });
 	      break;
 
@@ -11128,103 +11267,261 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	        $scope.timeliner.load({
 	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
+	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
 	        });
 	      break;
-	    };
+	    }
 	  };
 
 
 	  /**
 	   * Go one period in past
 	   */
-	  $scope.timelineBefore = function (timelineScope)
+	  $scope.timelineBefore = function ()
 	  {
+      var thisYear = new Date().toString('yyyy');
+
 	    if ($scope.timeline.scope.day)
 	    {
-	      if ($scope.timeline.current.day != 1)
-	      {
-	        $scope.timeline.current.day--;
+        if ($scope.timeline.current.year === Number(thisYear) + 1)
+        {
+          if ($scope.timeline.current.day === 1)
+          {
+            $scope.timeline.current.year = thisYear;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
-	        });
-	      };
+            $scope.timeline.current.day = $scope.periods.days.total;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.day--;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp,
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.day != 1)
+          {
+            $scope.timeline.current.day--;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+            });
+          }
+        }
 	    }
 	    else if ($scope.timeline.scope.week)
 	    {
-	      if ($scope.timeline.current.week != 1)
-	      {
-	        $scope.timeline.current.week--;
+        if ($scope.timeline.current.year === Number(thisYear) + 1)
+        {
+          if ($scope.timeline.current.week === 1)
+          {
+            $scope.timeline.current.year = thisYear;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	        });
-	      };
+            $scope.timeline.current.week = 52;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.week--;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periodsNext.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.week != 1)
+          {
+            $scope.timeline.current.week--;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
 	    }
 	    else if ($scope.timeline.scope.month)
 	    {
-	      if ($scope.timeline.current.month != 1)
-	      {
-	        $scope.timeline.current.month--;
+        if ($scope.timeline.current.year === Number(thisYear) + 1)
+        {
+          if ($scope.timeline.current.month === 1)
+          {
+            $scope.timeline.current.year = thisYear;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
-	        });
-	      };
-	    };
+            $scope.timeline.current.month = 12;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.month--;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periodsNext.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.month != 1)
+          {
+            $scope.timeline.current.month--;
+
+            $scope.timeliner.load({
+              start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
+	    }
 	  };
 
 
 	  /**
 	   * Go one period in future
 	   */
-	  $scope.timelineAfter = function (timelineScope)
+	  $scope.timelineAfter = function ()
 	  {
+      var thisYear = new Date().toString('yyyy');
+
 	    if ($scope.timeline.scope.day)
 	    {
-	      /**
-	       * Total days in a month can change so get it start periods cache
-	       */
-	      if ($scope.timeline.current.day != $scope.periods.days.total)
-	      {
-	        $scope.timeline.current.day++;
+        if ($scope.timeline.current.year === thisYear)
+        {
+          /**
+           * Total days in a month can change so get it start periods cache
+           */
+          if ($scope.timeline.current.day != $scope.periods.days.total)
+          {
+            $scope.timeline.current.day++;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-	          end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
-	        });
-	      };
+            $scope.timeliner.load({
+              start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.year = Number(thisYear) + 1;
+
+            $scope.timeline.current.day = 1;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
+              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          $scope.timeline.current.year = Number(thisYear) + 1;
+
+          $scope.timeline.current.day++;
+
+          $scope.timeliner.load({
+            start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
+            end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp
+          });
+        }
 	    }
 	    else if ($scope.timeline.scope.week)
 	    {
-	      if ($scope.timeline.current.week != 53)
-	      {
-	        $scope.timeline.current.week++;
+        if ($scope.timeline.current.year == thisYear)
+        {
+          if ($scope.timeline.current.week != 53)
+          {
+            $scope.timeline.current.week++;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	          end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
-	        });
-	      };
+            $scope.timeliner.load({
+              start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.year = Number(thisYear) + 1;
+
+            $scope.timeline.current.week = 2;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periodsNext.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.week != 53)
+          {
+            $scope.timeline.current.week++;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
+              end:    $scope.periodsNext.weeks[$scope.timeline.current.week].last.timeStamp
+            });
+          }
+        }
 	    }
 	    else if ($scope.timeline.scope.month)
 	    {
-	      if ($scope.timeline.current.month != 12)
-	      {
-	        $scope.timeline.current.month++;
+        if ($scope.timeline.current.year == thisYear)
+        {
+          if ($scope.timeline.current.month != 12)
+          {
+            $scope.timeline.current.month++;
 
-	        $scope.timeliner.load({
-	          start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
-	          end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp,
-	        });
-	      };
-	    };
+            $scope.timeliner.load({
+              start:  $scope.periods.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periods.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+          else
+          {
+            $scope.timeline.current.year = Number(thisYear) + 1;
+
+            $scope.timeline.current.month = 1;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periodsNext.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
+        else
+        {
+          if ($scope.timeline.current.month != 12)
+          {
+            $scope.timeline.current.month++;
+
+            $scope.timeliner.load({
+              start:  $scope.periodsNext.months[$scope.timeline.current.month].first.timeStamp,
+              end:    $scope.periodsNext.months[$scope.timeline.current.month].last.timeStamp
+            });
+          }
+        }
+	    }
 	  };
-
 
 
 	  /**
@@ -11260,7 +11557,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
 	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
 	      });
-	    };
+	    }
 
 	    $scope.timeline.range = {
 	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,
@@ -11282,7 +11579,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
 	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
 	      });
-	    };
+	    }
 
 	  	$scope.timeline.range = {
 	      start:  $scope.periods.weeks[$scope.timeline.current.week].first.day,

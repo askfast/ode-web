@@ -80,64 +80,67 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 		return function (dates)
 		{
-			if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
-				dates.start = new Date(dates.end).addDays(-1);
+      if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+      {
+        dates.start = new Date(dates.end).addDays(-1);
+      }
 
 			var cFirst = function (str)
 			{
-			    return str.charAt(0).toUpperCase() + str.substr(1);
+        return str.charAt(0).toUpperCase() + str.substr(1);
 			};
 
 			var ndates = {
-						start: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d')))
-						},
-						end: {
-							real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
-							month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-							day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d')))
-						}
-					};
+            start: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d'))),
+              year:   new Date(dates.start).toString('yyyy')
+            },
+            end: {
+              real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+              month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d'))),
+              year:   new Date(dates.end).toString('yyyy')
+            }
+          };
 
 			var dates = {
-						start: {
-							real: 	new Date(dates.start).toString('dddd d MMMM'),
-							month: 	new Date(dates.start).toString('MMMM'),
-							day: 		new Date(dates.start).toString('d')
-						},
-						end: {
-							real: 	new Date(dates.end).toString('dddd d MMMM'),
-							month: 	new Date(dates.end).toString('MMMM'),
-							day: 		new Date(dates.end).toString('d')
-						}
-					},
-					monthNumber = Date.getMonthNumberFromName(dates.start.month);
+            start: {
+              real: 	new Date(dates.start).toString('dddd d MMMM'),
+              month: 	new Date(dates.start).toString('MMMM'),
+              day: 		new Date(dates.start).toString('d')
+            },
+            end: {
+              real: 	new Date(dates.end).toString('dddd d MMMM'),
+              month: 	new Date(dates.end).toString('MMMM'),
+              day: 		new Date(dates.end).toString('d')
+            }
+          },
+          monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) && 
+			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
 					dates.start.month == dates.end.month)
 			{
-				return 	ndates.start.real;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+				return 	ndates.start.real +
+								', ' +
+								ndates.start.year;
 			}
 			else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
 			{
-				return 	ndates.start.month;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+				return 	ndates.start.month +
+								', ' +
+                ndates.start.year;
 			}
 			else
 			{
-				return 	ndates.start.real + 
+				return 	ndates.start.real +
+                ', ' +
+                ndates.start.year +
 								' / ' + 
-								ndates.end.real;
-								//  + 
-								// ', ' + 
-								// Dater.getThisYear();
+								ndates.end.real +
+								', ' +
+                ndates.end.year;
 			}
 
 		}
@@ -150,11 +153,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
 .filter('rangeMainWeekFilter', 
 [
-	'Dater', 'Storage', 
-	function (Dater, Storage)
+	'Dater',
+	function (Dater)
 	{
-		var periods = Dater.getPeriods();
-
 		return function (dates)
 		{
 			if (dates)
@@ -164,22 +165,21 @@ angular.module('WebPaige.Filters', ['ngResource'])
 				  return str.charAt(0).toUpperCase() + str.substr(1);
 				};
 
-				var dates = {
-					start: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-					end: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+				var newDates = {
+					start: 	cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+					end: 		cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
 				};
 
-				// var dates = {
-				// 	start: 	new Date(dates.start).toString('dddd d MMMM'),
-				// 	end: 		new Date(dates.end).toString('dddd d MMMM')
-				// };
-
-				return 	dates.start + 
-								' / ' + 
-								dates.end + 
+				return 	newDates.start +
+								' / ' +
+                newDates.end +
 								', ' + 
 								Dater.getThisYear();
 			}
+      else
+      {
+        return false;
+      }
 		}
 	}
 ])

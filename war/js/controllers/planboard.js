@@ -28,9 +28,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  $scope.data = data;
 
-
-    // console.warn('data ->', angular.toJson(data));
-
 	  
 	  /**
 	   * Get groups and settings
@@ -51,9 +48,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
       /**
        * Fix for timeline scope to day
        */
-      day:      Dater.current.today() + 1,
+      day:      Dater.current.today(),
       week:     Dater.current.week(),
       month:    Dater.current.month(),
+      year:     Dater.current.year(),
       group:    settings.app.group,
       division: 'all'
     };
@@ -62,7 +60,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  /**
 	   * Pass periods
 	   */
-	  $scope.periods = Dater.getPeriods();
+    $scope.periods      = Dater.getPeriods();
+    $scope.periodsNext  = Dater.getPeriods(true);
 
 
 	  /**
@@ -87,10 +86,10 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	     * Initial start up is next 7 days
 	     */
 	    options: {
-        start:  $scope.periods.days[Dater.current.today()].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 7].last.day,
-        min:  	$scope.periods.days[Dater.current.today()].last.day,
-        max:    $scope.periods.days[Dater.current.today() + 7].last.day
+        start:  $scope.periods.days[Dater.current.today() - 1].last.day,
+        end:    $scope.periods.days[Dater.current.today() + 6].last.day,
+        min:  	$scope.periods.days[Dater.current.today() - 1].last.day,
+        max:    $scope.periods.days[Dater.current.today() + 6].last.day
 	    },
 	    range: {
         start:  $scope.periods.days[Dater.current.today()].last.day,

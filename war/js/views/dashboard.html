@@ -1,33 +1,93 @@
 <section id="dashboard">
 
-  <!-- <div class="alert alert-block" ng-hide="config.notifications.webkit.app || !config.notifications.webkit.user || !browser.webkit">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    WebPaige can display notifications. Would you like to turn that on?
-    <button id="activation" class="btn btn-small btn-success" ng-click="allowWebkitNotifications()" data-dismiss="alert">Activate Notifications</button>
-  </div> -->
-
-  <div class="well well-large greetings"
-       ng-hide="config.smartAlarm">
+  <div class="well well-large greetings">
     <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
   </div>
 
-  <!--Smart Alarm greetings-->
-  <div class="row-fluid">
-    <div class="well greetings span9"
-         ng-show="config.smartAlarm"
-         style="height: 100px;">
-      <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
-    </div>
 
-    <div class="well greetings span3"
-         ng-show="config.smartAlarm"
-         style="height: 100px;">
-      <h4 style="margin: -5px 0 10px 0; padding: 0;">Huidige Status</h4>
-      <span style="color: {{ app.guard.currentState.color }}">{{ app.guard.currentState.label }}</span><br>
-      StandBy als <span class="label label-inverse" style="margin-left: 5px;">{{ app.guard.role.toUpperCase() }}</span>
+  <!--smartAlarming-->
+  <div class="row-fluid">
+    <div id="sa"
+         class="widget span12"
+         ng-show="config.profile.smartAlarm">
+
+      <div class="head">
+        <h4>SlimAlarmeren</h4>
+
+        <div id="sa-state"
+              class="pull-right">
+          <small ng-show="app.guard.role && app.guard.currentState">
+            <i class="icon-fire"></i>&nbsp;Status </small>&nbsp;&nbsp;
+          <span class="label" style="background-color:{{app.guard.currentState.color}}">
+            {{app.guard.currentState.label.toUpperCase()}}
+          </span>
+          <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
+        </div>
+
+      </div>
+      <hr/>
+
+      <p ng-show="loading.smartAlarm">Indeling SlimAlarmeren lijst laden...</p>
+
+      <!--smartAlarming listing-->
+      <ul id="sa-setup"
+          ng-hide="loading.smartAlarm">
+        <!--truck personnel-->
+        <li id="sa-truck">
+          <div class="sa-member"
+                ng-repeat="trucker in saMembers.truck">
+            <span class="sa-member-icon {{(trucker.class) && trucker.class}}">
+              <strong>{{trucker.icon}}</strong>
+            </span>
+            <div class="sa-member-card">
+              <h5>{{trucker.role}}</h5>
+              <hr/>
+              <span>{{trucker.name}}</span>
+            </div>
+          </div>
+        </li>
+        <!--end truck personnel-->
+
+        <!--reserves personnel-->
+        <li id="sa-reserves"
+            ng-show="toggleReserves">
+          <div class="sa-member"
+               ng-repeat="reserve in saMembers.reserves">
+            <span class="sa-member-icon sa-icon-reserve">
+              <strong>R{{$index+1}}</strong>
+            </span>
+            <div class="sa-member-card">
+              <h5>Reserve {{$index+1}}</h5>
+              <hr/>
+              <span>{{reserve}}</span>
+            </div>
+          </div>
+        </li>
+        <!--end reserves personnel-->
+
+      </ul>
+      <!--end smartAlarming listing-->
+
+      <!-- p2000 footer -->
+      <p ng-hide="loading.smartAlarm">
+        <small class="pull-left">
+          <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
+          <span class="muted">{{saSynced | nicelyDate}}</span>
+        </small>
+      </p>
+      <!-- end p2000 footer -->
+
+      <button ng-click="toggleReserves=!toggleReserves"
+              class="btn btn-mini pull-right"
+              ng-hide="loading.smartAlarm">
+        <span ng-hide="toggleReserves">Toon reserves</span>
+        <span ng-show="toggleReserves">Verberg reserves</span>
+      </button>
+
     </div>
   </div>
-  <!--end Smart Alarm greetings-->
+  <!--end smartAlarming-->
+
 
   <!-- row-fluid -->
   <div class="row-fluid">
@@ -39,7 +99,7 @@
           <h4>{{ui.dashboard.overview}}</h4>
           <button id="dashboardPopoverBtn"
                   class="btn btn-small"
-                  bs-popover="'dist/views/dashboard-pies.html'" 
+                  bs-popover="'dist/views/dashboard-pies.html'"
                   data-placement="{{(browser.mobile) && 'left' || 'bottom'}}"
                   data-title="Overzicht instellingen"
                   ng-click="fixPopoverPos()"><i class="icon-cog"></i></button>
@@ -52,15 +112,13 @@
         <p ng-show="loadingPies">{{ui.dashboard.groupOverviews}}</p>
 
         <!-- pie loop -->
-        <ul id="pies" ng-hide="loadingPies || checkAnyPies()">
-          <!--<li ng-repeat="pie in pies | orderBy:'shortages.total':true">-->
+        <ul id="pies" ng-hide="loadingPies || checkAnyPies()" >
           <li ng-repeat="pie in pies">
 
             <header>
               <h4>{{pie.name}}
                 <span ng-show="(pie.division != 'both')">&nbsp;({{ pie.division | translateDivision }})</span>
               </h4>
-              <!-- <button type="button" class="close">&times;</button> -->
             </header>
 
             <div class="blocks">
@@ -127,61 +185,6 @@
 
             </div>
 
-            <footer>
-
-              <div class="shorter" ng-show="pie.shortages.current.length > 0 || pie.shortages.next.length > 0">
-                <div class="btn-group">
-                  <!-- <button class="btn btn-mini"
-                          ng-click="shortageHolders['shortages-' + pie.id] = true"
-                          ng-hide="shortageHolders['shortages-' + pie.id]">
-                          Tekorten ({{pie.shortages.total}}) <i class="icon-chevron-down"></i>
-                  </button>
-                  <button class="btn btn-mini"
-                          ng-click="shortageHolders['shortages-' + pie.id] = false"
-                          ng-show="shortageHolders['shortages-' + pie.id]">
-                          Tekorten ({{pie.shortages.total}}) <i class="icon-chevron-up"></i>
-                  </button> -->
-                </div>
-              </div>
-
-              <!-- <span class="remove">{{shortageHolders['shortages-' + pie.id]}}</span> -->
-
-              <!-- <div id="shortages-{{pie.id}}" 
-                    class="shortages span12" 
-                    ng-show="pie.weeks.current.shortages.length > 0 || pie.weeks.next.shortages.length > 0"
-                    ng-hide="shortageHolders['shortages-' + pie.id] == false">
-
-                <div class="span4 offset4" ng-show="pie.shortages.current.length > 0">
-                  <h4>This week shortages ({{pie.shortages.current.length}})</h4>
-                  <ul>
-                    <li ng-repeat="shortage in pie.shortages.current">
-                      <span class="label">{{shortage.diff}}</span>
-                      <h5>{{shortage.start * 1000 | nicelyDate}}</h5> 
-                      <small class="muted">van</small>, 
-                      <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
-                      <small class="muted">tot</small>
-                      <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div class="span4" ng-show="pie.shortages.next.length > 0">
-                  <h4>Next week shortages ({{pie.shortages.next.length}})</h4>
-                  <ul>
-                    <li ng-repeat="shortage in pie.shortages.next">
-                      <span class="label">{{shortage.diff}}</span>
-                      <h5>{{shortage.start * 1000 | nicelyDate}}</h5> 
-                      <small class="muted">van</small>, 
-                      <h5>{{shortage.end * 1000 | nicelyDate}}</h5> 
-                      <small class="muted">tot</small>
-                      <button class="btn btn-mini pull-right"><i class="icon-chevron-right"></i></button>
-                    </li>
-                  </ul>
-                </div>
-              </div> -->
-
-            </footer>
-
           </li>
         </ul>
         <!-- end pie loop -->
@@ -209,7 +212,6 @@
 
         <div class="head">
           <h4>{{ui.dashboard.announcements}}</h4>
-          <!-- <button class="btn btn-small"><i class="icon-cog"></i></button> -->
         </div>
         <hr>
 
@@ -248,17 +250,16 @@
 
         <hr ng-hide="loading.alerts" class="lastline">
 
-        <!--<p ng-hide="loading.alerts" ng-show="alarms.list.length > 4">-->
-          <!--<small>-->
-            <!--<a class="pull-right" ng-click="toggle(more.status)">{{more.text}}</a>-->
-          <!--</small>-->
-        <!--</p>-->
-
         <!-- p2000 footer -->
         <p ng-hide="loading.alerts">
           <small class="pull-left">
             <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
             <span class="muted">{{synced.alarms | nicelyDate}}</span>
+          </small>
+          <br/>
+          <small class="pull-left">
+            <span class="text-warning">Capcode(s):</span>&nbsp;
+            <span class="muted">{{config.profile.p2000.codes}}</span>
           </small>
         </p>
         <!-- end p2000 footer -->
