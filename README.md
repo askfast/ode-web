@@ -1,3 +1,3 @@
 WebPaige Base
 
-v2.3.7
+v2.3.8
