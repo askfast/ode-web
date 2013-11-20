@@ -20,10 +20,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	    $scope.timeline.current.week  = $scope.current.week;
 	    $scope.timeline.current.month = $scope.current.month;
 
-
       $scope.timeline.current.year = Number(new Date().toString('yyyy'));
-
-
 
 	    switch (period)
 	    {

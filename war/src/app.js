@@ -944,7 +944,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.8 (Snapshot)',
+    version:  '2.3.8',
     lang:     'nl',
 
     fullscreen: true,
@@ -11228,10 +11228,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	    $scope.timeline.current.week  = $scope.current.week;
 	    $scope.timeline.current.month = $scope.current.month;
 
-
       $scope.timeline.current.year = Number(new Date().toString('yyyy'));
-
-
 
 	    switch (period)
 	    {
