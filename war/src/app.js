@@ -1443,6 +1443,27 @@ angular.module('WebPaige')
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
 
 
+    var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+
+    if (registeredNotifications)
+    {
+      $rootScope.registeredNotifications = registeredNotifications;
+    }
+    else
+    {
+      Storage.add('registeredNotifications', angular.toJson({
+        timeLineDragging: true
+      }));
+    }
+
+    $rootScope.registerNotification = function (setting, value)
+    {
+      $rootScope.registeredNotifications[setting] = value;
+
+      Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
+    };
+
+
     /**
      * Count unread messages
      */
@@ -6232,7 +6253,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     }
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -6263,7 +6284,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     } 
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -6288,9 +6309,9 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
         } 
         catch (e) {
           return false;
-        };
-      };
-    };
+        }
+      }
+    }
 
     return true;
   };
@@ -6324,7 +6345,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     }
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -6357,7 +6378,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     } 
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -6382,9 +6403,9 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
         } 
         catch (e) {
           return false;
-        };
-      };
-    };
+        }
+      }
+    }
 
     return true;
   };
@@ -6422,14 +6443,14 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
         $config.cookie.expiry = -1;
 
         value = '';
-      };
+      }
 
       if ($config.cookie.expiry !== 0) 
       {
         expiryDate.setTime(expiryDate.getTime() + ($config.cookie.expiry * 60 * 60 * 1000));
 
         expiry = "; expires=" + expiryDate.toGMTString();
-      };
+      }
 
       document.cookie = $config.title + 
                         key + 
@@ -6442,7 +6463,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     } 
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -6469,7 +6490,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
 
       if (thisCookie.indexOf($config.title + key + '=') == 0)
         return decodeURIComponent(thisCookie.substring($config.title.length + key.length + 1, thisCookie.length));
-    };
+    }
 
     return null;
   };
@@ -6498,7 +6519,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
       key = thisCookie.substring(prefixLength, thisCookie.indexOf('='));
 
       removeFromCookies(key);
-    };
+    }
   };
 
 
@@ -9097,7 +9118,8 @@ angular.module('WebPaige.Controllers.Logout', [])
     $('#footer').hide();
     // $('#notification').hide();
 
-	  var logindata = angular.fromJson(Storage.get('logindata'));
+    var logindata = angular.fromJson(Storage.get('logindata'));
+    var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
 		User.logout()
 		.then(function (result)
@@ -9112,7 +9134,8 @@ angular.module('WebPaige.Controllers.Logout', [])
 
 	      Storage.session.clearAll();
 
-	      Storage.add('logindata', angular.toJson(logindata));
+        Storage.add('logindata', angular.toJson(logindata));
+        Storage.add('registeredNotifications', angular.toJson(registeredNotifications));
 
 	      $window.location.href = 'logout.html';
 	    }

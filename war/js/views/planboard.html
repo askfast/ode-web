@@ -472,11 +472,18 @@
             <!-- end timeline-toolbar -->
 
 
-
-
-
-
             <hr>
+
+            <div class="alert alert-warning"
+                  ng-show="registeredNotifications.timeLineDragging">
+              <button type="button"
+                      class="close"
+                      ng-click="registerNotification('timeLineDragging', false)"
+                      data-dismiss="alert">&times;</button>
+              <small>U kunt ook uw <strong><i>beschikbaarheid wijzigen</i></strong> door te dubbelklikken op reeds
+                bestaande blokken of <strong><i>door te slepen</i></strong> met uw muis met de rechtermuisknop en de
+                <strong>SHIFT (Mac)</strong> of <strong>CTRL (Windows)</strong> knop tegelijkertijd ingedrukt.</small>
+            </div>
 
             <!-- timeline legenda content -->
             <div class="legenda" ng-show="timeline.config.legendarer">
@@ -538,7 +545,7 @@
 
           <hr>
 
-          <!-- planbaord footer -->
+          <!-- planboard footer -->
           <p>
             <small class="pull-left">
               <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;

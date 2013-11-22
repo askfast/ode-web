@@ -109,6 +109,27 @@ angular.module('WebPaige')
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
 
 
+    var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+
+    if (registeredNotifications)
+    {
+      $rootScope.registeredNotifications = registeredNotifications;
+    }
+    else
+    {
+      Storage.add('registeredNotifications', angular.toJson({
+        timeLineDragging: true
+      }));
+    }
+
+    $rootScope.registerNotification = function (setting, value)
+    {
+      $rootScope.registeredNotifications[setting] = value;
+
+      Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
+    };
+
+
     /**
      * Count unread messages
      */
