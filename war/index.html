@@ -210,12 +210,8 @@
       <!-- container-fluid -->
       <div class="container-fluid">
         <div ng-view></div>
-
-        <!--indicator: {{timelineLoaded}}-->
-
       </div>
       <!-- end container-fluid -->
-
       <div id="push"></div>
     </div>
     <!-- end wrap -->
@@ -227,24 +223,37 @@
     </div>
     <!-- end mobile status bar -->
 
-    <div ng-show="browser.mobile && config.profile.mobileApp.status && config.profile.smartAlarm && (config.profile.meta=='monster')"
+    <div ng-show="browser.mobile && config.profile.mobileApp.status && ((config.profile.meta=='standby') || (config.profile.meta=='monster'))"
          class="ng-cloak text-center">
       <ul style="list-style: none; position: relative; z-index: 20000; margin: 0;">
+
         <li style="display: inline;">
           <a class="btn btn-success btn-large"
              href="https://play.google.com/store/apps/details?id=com.askcs.standby">
             Download Android App
           </a>
         </li>
+
         <br ng-show="browser.screen.width < 768" />
         <br ng-show="browser.screen.width < 768" />
+
         <li style="display: inline">
-          <a class="btn btn-success btn-large"
+          <a ng-show="(config.profile.meta=='standby')"
+             class="btn btn-success btn-large"
              href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
              target="itunes_store">
             Download iPhone App
           </a>
+          <a ng-show="(config.profile.meta=='monster')"
+             id="popupBtn" class="btn btn-success btn-large"
+             data-toggle="popover"
+             data-placement="top"
+             data-content="Binnenkort te downloaden."
+             title=""
+             data-original-title="Download iPhone App"
+             onclick="console.log($(this).popover())">Download iPhone App</a>
         </li>
+
         <br ng-show="browser.screen.width < 768" />
         <br ng-show="browser.screen.width < 768" />
       </ul>
