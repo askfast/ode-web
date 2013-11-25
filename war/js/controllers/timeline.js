@@ -147,7 +147,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         },
         end: {
           date: new Date().toString($rootScope.config.formats.date),
-          time: new Date().addHours(1).toString('HH:00'), //$rootScope.config.formats.time,
+          // time: new Date().addHours(1).toString($rootScope.config.formats.time),
+          time: new Date().toString('HH:00'), //$rootScope.config.formats.time,
           datetime: new Date().toISOString().replace("Z", "")
         },
         state:      'com.ask-cs.State.Available',
