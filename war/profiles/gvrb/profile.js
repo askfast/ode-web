@@ -9,8 +9,7 @@ var profile = {
 
 	host: function ()
 	{
-    // return ($.browser.msie) ? '/proxy/ns_gvrb' : 'http://3rc2.ask-services.appspot.com/ns_gvrb';
-    return ($.browser.msie) ? '/proxy/rb_monster' : 'http://backend.ask-cs.com/rb_monster';
+    return ($.browser.msie) ? '/proxy/ns_gvrb' : 'http://3rc2.ask-services.appspot.com/ns_gvrb';
 	},
 
   states: [

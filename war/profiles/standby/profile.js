@@ -3,7 +3,7 @@
  */
 var profile = {
 
-  meta: 'isparaat',
+  meta: 'standby',
 
   title: 'BRANDWEER',
 
