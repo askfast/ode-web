@@ -37,7 +37,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/standby/profile.js"></script>
+    <script src="profiles/monster/profile.js"></script>
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
     <!--[if IE 8]>    <link rel="stylesheet" href="css/ie8.css">                                 <![endif]-->
@@ -278,14 +278,13 @@
                   Download Android App
                 </a>
               </li>
+
               <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
-                <a id="popupBtn" class="btn btn-success btn-large"
-                   data-toggle="popover"
-                   data-placement="top"
-                   data-content="Binnenkort te downloaden."
-                   title=""
-                   data-original-title="Download iPhone App"
-                   onclick="console.log($(this).popover())">Download iPhone App</a>
+                <a class="btn btn-success btn-large"
+                   href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+                   target="itunes_store">
+                  Download iPhone App
+                </a>
               </li>
               <!--end Monster-->
 
