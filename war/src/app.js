@@ -9939,80 +9939,29 @@ angular.module('WebPaige.Controllers.TV', [])
 		};
 
 
-		/**
-		 * Alarm sync
-		 */
-	  $rootScope.alarmSync = {
-	  	start: function ()
-		  {
-				$window.planboardSync = $window.setInterval(function ()
-				{
-					if ($location.path() == '/dashboard')
-					{
-						$scope.$apply()
-						{
-							$scope.getP2000();
 
-              if ($rootScope.config.profile.smartAlarm)
-              {
-                if (angular.fromJson(Storage.get('guard')).team)
-                {
-                  prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
-                }
-
-                Groups.guardRole()
-                  .then(function (setup)
-                  {
-                    prepareSaMembers(setup);
-                  });
-              }
-						}
-					}
-				}, 60000);
-			},
-			clear: function ()
-			{
-				$window.clearInterval($window.alarmSync);
-			}
-	  };
-
-
-	  /**
-	   * Init the sync process
-	   */
-		$rootScope.alarmSync.start();
-
-
-		/**
-		 * Show more or less alarms
-		 */
-		$scope.toggle = function (more)
-		{
-			$scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
-
-			$scope.more.text = (more) ? $rootScope.ui.dashboard.showMore : $rootScope.ui.dashboard.showLess;
-
-			$scope.more.status = !$scope.more.status;
-		};
-
-
-    /**
-     * Fix popover position
-     */
-    $scope.fixPopoverPos = function ()
+    $window.setInterval(function ()
     {
-      setTimeout(function ()
+      $scope.$apply()
       {
-        var spanWidth = $('#dashboard .span9').css('width'),
-            popWidth  = $('#dashboard .popover').css('width');
+        $scope.getP2000();
 
-        $('.popover').css({
-          top: $('#dashboardPopoverBtn').css('top'),
-          left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
-                + 'px'
-        });
-      }, 100);
-    };
+        if ($rootScope.config.profile.smartAlarm)
+        {
+          if (angular.fromJson(Storage.get('guard')).team)
+          {
+            prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+          }
+
+          Groups.guardRole()
+            .then(function (setup)
+            {
+              prepareSaMembers(setup);
+            });
+        }
+      }
+    }, 60000);
+
 
 
     /**
