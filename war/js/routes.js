@@ -44,6 +44,16 @@ angular.module('WebPaige')
 
 
     /**
+     * TV Monitor / Dashboard router
+     */
+    .when('/tv',
+    {
+      templateUrl: 'dist/views/tv.html',
+      controller: 'tv'
+    })
+
+
+    /**
      * Planboard router
      */
     .when('/planboard',
