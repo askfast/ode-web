@@ -12,8 +12,8 @@ angular.module('WebPaige.Controllers.TV', [])
  */
 .controller('tv',
 [
-	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
-	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
+	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
+	function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
 		/**
 		 * Fix styles
@@ -122,9 +122,6 @@ angular.module('WebPaige.Controllers.TV', [])
             break;
         }
 
-        $rootScope.app.guard.role = setup.role;
-        $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
-
         var reserves = {};
 
         var states = ['available', 'unavailable', 'noplanning'];
@@ -156,25 +153,41 @@ angular.module('WebPaige.Controllers.TV', [])
     /**
      * Fetch smartAlarm information
      */
-    if ($rootScope.config.profile.smartAlarm)
-    {
-      if (angular.fromJson(Storage.get('guard')).selection)
+    Groups.query()
+      .then(function (groups)
       {
-        $scope.loading.smartAlarm = false;
+        var calls = [];
 
-        prepareSaMembers(angular.fromJson(Storage.get('guard')));
-      }
-
-      Groups.guardMonitor()
-        .then(function ()
+        angular.forEach(groups, function (group)
         {
-          Groups.guardRole()
-            .then(function (setup)
-            {
-              prepareSaMembers(setup);
-            });
+          calls.push(Groups.get(group.uuid));
         });
-    }
+
+        $q.all(calls)
+          .then(function ()
+          {
+            Groups.uniqueMembers();
+
+            var guard = angular.fromJson(Storage.get('guard'));
+
+            if (guard && guard.selection)
+            {
+              $scope.loading.smartAlarm = false;
+
+              prepareSaMembers(angular.fromJson(Storage.get('guard')));
+            }
+
+            Groups.guardMonitor()
+              .then(function ()
+              {
+                Groups.guardRole()
+                  .then(function (setup)
+                  {
+                    prepareSaMembers(setup);
+                  });
+              });
+          });
+      });
 
 
     /**
@@ -202,7 +215,9 @@ angular.module('WebPaige.Controllers.TV', [])
       {
         $scope.getP2000();
 
-        if (angular.fromJson(Storage.get('guard')).selection)
+        var guard = angular.fromJson(Storage.get('guard'));
+
+        if (guard && guard.selection)
         {
           prepareSaMembers(angular.fromJson(Storage.get('guard')));
         }

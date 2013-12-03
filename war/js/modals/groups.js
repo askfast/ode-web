@@ -9,8 +9,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
  */
 .factory('Groups', 
 [
-	'$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots',
-	function ($resource, $config, $q, Storage, $rootScope, Slots) 
+	'$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location',
+	function ($resource, $config, $q, Storage, $rootScope, Slots, $location)
 	{
 	  var Groups = $resource(
 	    $config.host + '/network/:action/:id',
@@ -132,7 +132,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      var guard = angular.fromJson(Storage.get('guard'));
+      var guard = angular.fromJson(Storage.get('guard')) || {};
 
       Guards.global(
         null,
@@ -152,105 +152,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           $rootScope.app.guard.monitor = returned;
 
           deferred.resolve(returned);
-        },
-        function (error)
-        {
-          deferred.resolve({error: error});
-        }
-      );
-
-      return deferred.promise;
-    };
-
-
-    /**
-     * Get current smart alarming guard data
-     */
-    Groups.prototype.guardMonitor_ = function ()
-    {
-      var deferred = $q.defer();
-
-      var guard = angular.fromJson(Storage.get('guard'));
-
-      Guards.global(
-        null,
-        function (result)
-        {
-          var returned = '';
-
-          angular.forEach(result[0], function (chr)
-          {
-            returned += chr
-          });
-
-          Storage.add('guard', angular.toJson({
-            monitor: returned,
-            role:    guard.role,
-            currentState: guard.currentState,
-            currentStateClass: guard.currentStateClass
-          }));
-
-          $rootScope.app.guard.monitor = returned;
-
-          deferred.resolve(returned);
-        },
-        function (error)
-        {
-          deferred.resolve({error: error});
-        }
-      );
-
-      return deferred.promise;
-    };
-
-
-    /**
-     * Get guard role for smart alarming
-     */
-    Groups.prototype.guardRole_ = function ()
-    {
-      var deferred = $q.defer();
-
-      var guard = angular.fromJson(Storage.get('guard'));
-
-      Guards.position(
-        {
-          id:   guard.monitor,
-          team: 'team'
-        },
-        function (results)
-        {
-          var predefinedRole = '',
-            guard = angular.fromJson(Storage.get('guard'));
-
-          angular.forEach(results, function (person, role)
-          {
-            if (person == $rootScope.app.resources.uuid)
-            {
-              predefinedRole = role;
-            }
-          });
-
-          Groups.prototype.guardReserves()
-            .then(function (reserves)
-            {
-              console.log('reserves info ->', reserves);
-            });
-
-          Storage.add('guard', angular.toJson({
-            monitor:          guard.monitor,
-            role:             (predefinedRole != '') ? predefinedRole : 'niet ingedeeld',
-            currentState:     guard.currentState,
-            currentStateClass:guard.currentStateClass,
-            team:             results,
-            synced:           new Date().getTime()
-          }));
-
-          $rootScope.app.guard.role = predefinedRole;
-
-          $rootScope.app.guard.currentState = Slots.currentState();
-
-          deferred.resolve(results);
         },
         function (error)
         {
@@ -311,9 +212,12 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               _this.guard.truck.push(selected.agentID);
             }
 
-            if (selected.agentID == $rootScope.app.resources.uuid)
+            if ($location.path() != '/tv')
             {
-              _this.guard.role = results.map[id].name;
+              if (selected.agentID == $rootScope.app.resources.uuid)
+              {
+                _this.guard.role = results.map[id].name;
+              }
             }
           });
 
@@ -342,34 +246,6 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           Storage.add('guard', angular.toJson(_this.guard));
 
           deferred.resolve(_this.guard);
-        },
-        function (error)
-        {
-          deferred.resolve({error: error});
-        }
-      );
-
-      return deferred.promise;
-    };
-
-
-    /**
-     * Get guard role for smart alarming
-     */
-    Groups.prototype.guardReserves = function ()
-    {
-      var deferred = $q.defer();
-
-      var guard = angular.fromJson(Storage.get('guard'));
-
-      Guards.position(
-        {
-          id:   guard.monitor,
-          team: 'status'
-        },
-        function (results)
-        {
-          deferred.resolve(results);
         },
         function (error)
         {

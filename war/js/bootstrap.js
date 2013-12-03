@@ -147,6 +147,7 @@ angular.module('WebPaige')
     }
     else
     {
+      // TODO: Some changes in the constructor. Review this later on
       $rootScope.app.guard = {
         monitor:            '',
         role:               '',
@@ -192,7 +193,6 @@ angular.module('WebPaige')
     };
 
     $rootScope.statusBar.init();
-
 
 
     $rootScope.notification = {
@@ -280,7 +280,6 @@ angular.module('WebPaige')
     //                           title, 
     //                           message
     //                         );
-
     //     notification.onclick = function () 
     //     {
     //       $rootScope.$apply(function ()
@@ -303,11 +302,9 @@ angular.module('WebPaige')
     //         }
     //       });
     //     };
-
     //     notification.show();
     //   };     
     // };
-
 
 
     /**
@@ -362,7 +359,7 @@ angular.module('WebPaige')
           $rootScope.loaderIcons.settings = true;
 
           $rootScope.location = 'settings';
-        break;
+          break;
 
         default:
           if ($location.path().match(/profile/))
@@ -377,7 +374,18 @@ angular.module('WebPaige')
           }
       }
 
-      if (!Session.check()) $location.path("/login");
+
+      /**
+       * Prevent deeplinking
+       */
+      if ($location.path() != '/tv')
+      {
+        if (!Session.check())
+        {
+          $location.path("/login");
+        }
+      }
+
 
       $rootScope.loadingBig = true;
 

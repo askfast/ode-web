@@ -49,7 +49,17 @@ angular.module('WebPaige')
     .when('/tv',
     {
       templateUrl: 'dist/views/tv.html',
-      controller: 'tv'
+      controller: 'tv',
+      resolve: {
+        data:
+          [
+            '$route', '$http',
+            function ($route, $http)
+            {
+              $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
+            }
+          ]
+      }
     })
 
 
