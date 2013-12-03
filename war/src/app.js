@@ -1869,8 +1869,7 @@ angular.module('WebPaige')
 
         $rootScope.statusBar.off();
       })
-    }
-
+    };
   }
 ]);
 
@@ -9534,6 +9533,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		getOverviews();
 
 
+//    $scope.$watch(function ()
+//    {
+//      $scope.loading.smartAlarm = true;
+//    });
+
+
     /**
      * Process Smart Alarm team members for view
      */
@@ -9548,7 +9553,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       $scope.saSynced = cached.synced;
 
-      angular.forEach(setup.selection, function (selection, id)
+      angular.forEach(setup.selection, function (selection)
       {
         function translateName (user)
         {
@@ -9625,7 +9630,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         {
           reserves[state] = [];
 
-          angular.forEach(setup.reserves[state], function (member, id)
+          angular.forEach(setup.reserves[state], function (member)
           {
             angular.forEach(member, function (meta, userID)
             {
@@ -9641,7 +9646,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $scope.saMembers.reserves = reserves;
 
         $scope.loading.smartAlarm = false;
-
       });
     }
 
@@ -9651,7 +9655,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
      */
     if ($rootScope.config.profile.smartAlarm)
     {
-      if (angular.fromJson(Storage.get('guard')))
+      if (angular.fromJson(Storage.get('guard')).selection)
       {
         $scope.loading.smartAlarm = false;
 
@@ -9742,7 +9746,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               if ($rootScope.config.profile.smartAlarm)
               {
-                if (angular.fromJson(Storage.get('guard')))
+                if (angular.fromJson(Storage.get('guard').selection))
                 {
                   prepareSaMembers(angular.fromJson(Storage.get('guard')));
                 }

@@ -524,8 +524,7 @@ angular.module('WebPaige')
 
         $rootScope.statusBar.off();
       })
-    }
-
+    };
   }
 ]);
 
