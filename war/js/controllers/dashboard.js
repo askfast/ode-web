@@ -171,7 +171,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           })
           .then( function ()
           {
-
             angular.forEach($scope.pies, function (pie)
             {
               pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
@@ -227,7 +226,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               }, 100);
             }
-
           });
       }
       else
@@ -248,96 +246,110 @@ angular.module('WebPaige.Controllers.Dashboard', [])
      */
     function prepareSaMembers (setup)
     {
+      var cached = angular.fromJson(Storage.get('guard'));
+
       $scope.saMembers = {
         truck:    [],
         reserves: []
       };
 
-      $scope.saSynced = angular.fromJson(Storage.get('guard')).synced;
+      $scope.saSynced = cached.synced;
 
-      var members = {};
-
-      angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
+      angular.forEach(setup.selection, function (selection, id)
       {
-        angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
+        function translateName (user)
         {
-          members[member.uuid] = member;
-        });
-      });
+          return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
+        }
 
-      $scope.saMembers.truck.push({
-        icon: 'C',
-        role: 'Chauffeur',
-        class: 'sa-icon-driver',
-        name: (setup.chauffeur !== null) ? members[setup.chauffeur].name : 'Niet ingedeeld'
-      });
-
-      if (setup.chauffeur !== null) delete members[setup.chauffeur];
-
-      $scope.saMembers.truck.push({
-        icon: 'B',
-        role: 'Bevelvoerder',
-        class: 'sa-icon-commander',
-        name: (setup.bevelvoerder !== null) ? members[setup.bevelvoerder].name : 'Niet ingedeeld'
-      });
-
-      if (setup.bevelvoerder !== null) delete members[setup.bevelvoerder];
-
-      var mans = {};
-
-      angular.forEach(setup, function (man, role)
-      {
-        switch (role)
+        switch (selection.role)
         {
+          case 'bevelvoerder':
+            $scope.saMembers.truck.push({
+              rank: 1,
+              icon: 'B',
+              role: 'Bevelvoerder',
+              class: 'sa-icon-commander',
+              name: translateName(selection.user)
+            });
+            break;
+
+          case 'chauffeur':
+            $scope.saMembers.truck.push({
+              rank: 0,
+              icon: 'C',
+              role: 'Chauffeur',
+              class: 'sa-icon-driver',
+              name: translateName(selection.user)
+            });
+            break;
+
           case 'manschap.1':
-            mans[1] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 2,
+              icon: 'M1',
+              role: 'Manschap 1',
+              name: translateName(selection.user)
+            });
             break;
+
           case 'manschap.2':
-            mans[2] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 3,
+              icon: 'M2',
+              role: 'Manschap 2',
+              name: translateName(selection.user)
+            });
             break;
+
           case 'manschap.3':
-            mans[3] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 4,
+              icon: 'M3',
+              role: 'Manschap 3',
+              name: translateName(selection.user)
+            });
             break;
+
           case 'manschap.4':
-            mans[4] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 5,
+              icon: 'M4',
+              role: 'Manschap 4',
+              name: translateName(selection.user)
+            });
             break;
         }
-      });
 
-      $scope.saMembers.truck.push({
-        icon: 'M1',
-        role: 'Manschap 1',
-        name: mans[1]
-      });
+        $rootScope.app.guard.role = setup.role;
+        $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
 
-      $scope.saMembers.truck.push({
-        icon: 'M2',
-        role: 'Manschap 2',
-        name: mans[2]
-      });
+        var reserves = {};
 
-      $scope.saMembers.truck.push({
-        icon: 'M3',
-        role: 'Manschap 3',
-        name: mans[3]
-      });
+        var states = ['available', 'unavailable', 'noplanning'];
 
-      $scope.saMembers.truck.push({
-        icon: 'M4',
-        role: 'Manschap 4',
-        name: mans[4]
-      });
+        angular.forEach(states, function (state)
+        {
+          reserves[state] = [];
 
-      angular.forEach(members, function (member)
-      {
-        $scope.saMembers.reserves.push(member.name);
-      });
+          angular.forEach(setup.reserves[state], function (member, id)
+          {
+            angular.forEach(member, function (meta, userID)
+            {
+              reserves[state].push({
+                id:    userID,
+                name:  meta.name,
+                state: meta.state
+              });
+            });
+          });
+        });
 
-      $scope.loading.smartAlarm = false;
+        $scope.saMembers.reserves = reserves;
+
+        $scope.loading.smartAlarm = false;
+
+      });
     }
 
 
@@ -346,11 +358,11 @@ angular.module('WebPaige.Controllers.Dashboard', [])
      */
     if ($rootScope.config.profile.smartAlarm)
     {
-      if (angular.fromJson(Storage.get('guard')).team)
+      if (angular.fromJson(Storage.get('guard')))
       {
         $scope.loading.smartAlarm = false;
 
-        prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+        prepareSaMembers(angular.fromJson(Storage.get('guard')));
       }
 
       Groups.guardMonitor()
@@ -437,9 +449,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               if ($rootScope.config.profile.smartAlarm)
               {
-                if (angular.fromJson(Storage.get('guard')).team)
+                if (angular.fromJson(Storage.get('guard')))
                 {
-                  prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+                  prepareSaMembers(angular.fromJson(Storage.get('guard')));
                 }
 
                 Groups.guardRole()
@@ -514,8 +526,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           var processed = Announcer.process(results, true);
 
           var result = {
-            alarms: 	processed,
-            synced:   new Date().getTime()
+            alarms: processed,
+            synced: new Date().getTime()
           };
 
           $scope.$apply(function ()

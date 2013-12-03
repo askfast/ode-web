@@ -436,7 +436,7 @@
         display: inline;
         float: left;
         padding: 15px;
-        min-width: 170px;
+        min-width: 185px;
         margin-right: 15px;
 
         .sa-member-icon {
@@ -466,7 +466,15 @@
           background-color: #ba6a24;
         }
 
-        .sa-icon-reserve {
+        .sa-icon-reserve-available {
+          background-color: #4f824f;
+        }
+
+        .sa-icon-reserve-unavailable {
+          background-color: #a93232;
+        }
+
+        .sa-icon-reserve-noplanning {
           background-color: #a0a0a0;
         }
 

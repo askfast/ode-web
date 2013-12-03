@@ -4213,6 +4213,44 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             returned += chr
           });
 
+          guard.monitor = returned;
+
+          Storage.add('guard', angular.toJson(guard));
+
+          $rootScope.app.guard.monitor = returned;
+
+          deferred.resolve(returned);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get current smart alarming guard data
+     */
+    Groups.prototype.guardMonitor_ = function ()
+    {
+      var deferred = $q.defer();
+
+      var guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.global(
+        null,
+        function (result)
+        {
+          var returned = '';
+
+          angular.forEach(result[0], function (chr)
+          {
+            returned += chr
+          });
+
           Storage.add('guard', angular.toJson({
             monitor: returned,
             role:    guard.role,
@@ -4237,7 +4275,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     /**
      * Get guard role for smart alarming
      */
-    Groups.prototype.guardRole = function ()
+    Groups.prototype.guardRole_ = function ()
     {
       var deferred = $q.defer();
 
@@ -4251,7 +4289,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         function (results)
         {
           var predefinedRole = '',
-              guard = angular.fromJson(Storage.get('guard'));
+            guard = angular.fromJson(Storage.get('guard'));
 
           angular.forEach(results, function (person, role)
           {
@@ -4260,6 +4298,12 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               predefinedRole = role;
             }
           });
+
+          Groups.prototype.guardReserves()
+            .then(function (reserves)
+            {
+              console.log('reserves info ->', reserves);
+            });
 
           Storage.add('guard', angular.toJson({
             monitor:          guard.monitor,
@@ -4274,6 +4318,125 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
           $rootScope.app.guard.currentState = Slots.currentState();
 
+          deferred.resolve(results);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get guard role for smart alarming
+     */
+    Groups.prototype.guardRole = function ()
+    {
+      var deferred = $q.defer(),
+          _this    = this;
+
+      _this.guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.position(
+        {
+          id:   _this.guard.monitor,
+          team: 'status'
+        },
+        function (results)
+        {
+          var members = angular.fromJson(Storage.get('members'));
+
+          _this.guard.synced = new Date().getTime();
+
+          _this.guard.users = {};
+
+          angular.forEach(results.station, function (user)
+          {
+            if (user[0] != 'agent' || user[1] != 'state')
+            {
+              _this.guard.users[user[0]] = {
+                name:   (members[user[0]] && members[user[0]].name) || user[0],
+                state:  user[1]
+              };
+            }
+          });
+
+          _this.guard.truck = [];
+
+          _this.guard.selection = {};
+
+          angular.forEach(results.selection, function (selected, id)
+          {
+            _this.guard.selection[id] = {
+              user: selected.agentID
+            };
+
+            if (selected.agentID != null)
+            {
+              _this.guard.truck.push(selected.agentID);
+            }
+
+            if (selected.agentID == $rootScope.app.resources.uuid)
+            {
+              _this.guard.role = results.map[id].name;
+            }
+          });
+
+          angular.forEach(results.map, function (mapped, id)
+          {
+            _this.guard.selection[id].role = mapped.name;
+          });
+
+          _this.guard.reserves = {
+            available:    [],
+            unavailable:  [],
+            noplanning:   []
+          };
+
+          angular.forEach(_this.guard.users, function (user, id)
+          {
+            if (_this.guard.truck.indexOf(id) == -1)
+            {
+              var obj = {};
+              obj[id] = user;
+
+              _this.guard.reserves[user.state].push(obj);
+            }
+          });
+
+          Storage.add('guard', angular.toJson(_this.guard));
+
+          deferred.resolve(_this.guard);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get guard role for smart alarming
+     */
+    Groups.prototype.guardReserves = function ()
+    {
+      var deferred = $q.defer();
+
+      var guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.position(
+        {
+          id:   guard.monitor,
+          team: 'status'
+        },
+        function (results)
+        {
           deferred.resolve(results);
         },
         function (error)
@@ -8481,7 +8644,6 @@ angular.module('WebPaige.Controllers.Login', [])
 	   $scope.knrmLogin = function (user)
 	   {
 	     $('#login button[type=submit]')
-	       // .text('Login..')
 	       .text($rootScope.ui.login.button_loggingIn)
 	       .attr('disabled', 'disabled');
 
@@ -8871,11 +9033,6 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  function finalize ()
 	  {
-	    // console.warn( 'settings ->',
-	    //               'user ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).user,
-	    //               'widgets ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.widgets,
-	    //               'group ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.group);
-
 	    self.progress(100, $rootScope.ui.login.loading_everything);
 
 	    self.redirectToDashboard();
@@ -8883,25 +9040,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    self.getMessages();
 
 	    self.getMembers();
-
-//      if ($rootScope.config.profile.smartAlarm)
-//      {
-//        self.getGuard();
-//      }
 	  }
-
-
-    /**
-     * Get guard value for smart alarming
-     */
-//    self.getGuard = function ()
-//    {
-//      Groups.guardMonitor()
-//        .then(function ()
-//        {
-//          Groups.guardRole();
-//        });
-//    };
 
 
 	  /**
@@ -9325,7 +9464,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           })
           .then( function ()
           {
-
             angular.forEach($scope.pies, function (pie)
             {
               pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
@@ -9381,7 +9519,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               }, 100);
             }
-
           });
       }
       else
@@ -9402,96 +9539,110 @@ angular.module('WebPaige.Controllers.Dashboard', [])
      */
     function prepareSaMembers (setup)
     {
+      var cached = angular.fromJson(Storage.get('guard'));
+
       $scope.saMembers = {
         truck:    [],
         reserves: []
       };
 
-      $scope.saSynced = angular.fromJson(Storage.get('guard')).synced;
+      $scope.saSynced = cached.synced;
 
-      var members = {};
-
-      angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
+      angular.forEach(setup.selection, function (selection, id)
       {
-        angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
+        function translateName (user)
         {
-          members[member.uuid] = member;
-        });
-      });
+          return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
+        }
 
-      $scope.saMembers.truck.push({
-        icon: 'C',
-        role: 'Chauffeur',
-        class: 'sa-icon-driver',
-        name: (setup.chauffeur !== null) ? members[setup.chauffeur].name : 'Niet ingedeeld'
-      });
-
-      if (setup.chauffeur !== null) delete members[setup.chauffeur];
-
-      $scope.saMembers.truck.push({
-        icon: 'B',
-        role: 'Bevelvoerder',
-        class: 'sa-icon-commander',
-        name: (setup.bevelvoerder !== null) ? members[setup.bevelvoerder].name : 'Niet ingedeeld'
-      });
-
-      if (setup.bevelvoerder !== null) delete members[setup.bevelvoerder];
-
-      var mans = {};
-
-      angular.forEach(setup, function (man, role)
-      {
-        switch (role)
+        switch (selection.role)
         {
+          case 'bevelvoerder':
+            $scope.saMembers.truck.push({
+              rank: 1,
+              icon: 'B',
+              role: 'Bevelvoerder',
+              class: 'sa-icon-commander',
+              name: translateName(selection.user)
+            });
+            break;
+
+          case 'chauffeur':
+            $scope.saMembers.truck.push({
+              rank: 0,
+              icon: 'C',
+              role: 'Chauffeur',
+              class: 'sa-icon-driver',
+              name: translateName(selection.user)
+            });
+            break;
+
           case 'manschap.1':
-            mans[1] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 2,
+              icon: 'M1',
+              role: 'Manschap 1',
+              name: translateName(selection.user)
+            });
             break;
+
           case 'manschap.2':
-            mans[2] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 3,
+              icon: 'M2',
+              role: 'Manschap 2',
+              name: translateName(selection.user)
+            });
             break;
+
           case 'manschap.3':
-            mans[3] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 4,
+              icon: 'M3',
+              role: 'Manschap 3',
+              name: translateName(selection.user)
+            });
             break;
+
           case 'manschap.4':
-            mans[4] = (man !== null) ? members[man].name : 'Niet ingedeeld';
-            delete members[man];
+            $scope.saMembers.truck.push({
+              rank: 5,
+              icon: 'M4',
+              role: 'Manschap 4',
+              name: translateName(selection.user)
+            });
             break;
         }
-      });
 
-      $scope.saMembers.truck.push({
-        icon: 'M1',
-        role: 'Manschap 1',
-        name: mans[1]
-      });
+        $rootScope.app.guard.role = setup.role;
+        $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
 
-      $scope.saMembers.truck.push({
-        icon: 'M2',
-        role: 'Manschap 2',
-        name: mans[2]
-      });
+        var reserves = {};
 
-      $scope.saMembers.truck.push({
-        icon: 'M3',
-        role: 'Manschap 3',
-        name: mans[3]
-      });
+        var states = ['available', 'unavailable', 'noplanning'];
 
-      $scope.saMembers.truck.push({
-        icon: 'M4',
-        role: 'Manschap 4',
-        name: mans[4]
-      });
+        angular.forEach(states, function (state)
+        {
+          reserves[state] = [];
 
-      angular.forEach(members, function (member)
-      {
-        $scope.saMembers.reserves.push(member.name);
-      });
+          angular.forEach(setup.reserves[state], function (member, id)
+          {
+            angular.forEach(member, function (meta, userID)
+            {
+              reserves[state].push({
+                id:    userID,
+                name:  meta.name,
+                state: meta.state
+              });
+            });
+          });
+        });
 
-      $scope.loading.smartAlarm = false;
+        $scope.saMembers.reserves = reserves;
+
+        $scope.loading.smartAlarm = false;
+
+      });
     }
 
 
@@ -9500,11 +9651,11 @@ angular.module('WebPaige.Controllers.Dashboard', [])
      */
     if ($rootScope.config.profile.smartAlarm)
     {
-      if (angular.fromJson(Storage.get('guard')).team)
+      if (angular.fromJson(Storage.get('guard')))
       {
         $scope.loading.smartAlarm = false;
 
-        prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+        prepareSaMembers(angular.fromJson(Storage.get('guard')));
       }
 
       Groups.guardMonitor()
@@ -9591,9 +9742,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               if ($rootScope.config.profile.smartAlarm)
               {
-                if (angular.fromJson(Storage.get('guard')).team)
+                if (angular.fromJson(Storage.get('guard')))
                 {
-                  prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
+                  prepareSaMembers(angular.fromJson(Storage.get('guard')));
                 }
 
                 Groups.guardRole()
@@ -9668,8 +9819,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           var processed = Announcer.process(results, true);
 
           var result = {
-            alarms: 	processed,
-            synced:   new Date().getTime()
+            alarms: processed,
+            synced: new Date().getTime()
           };
 
           $scope.$apply(function ()
@@ -9754,18 +9905,8 @@ angular.module('WebPaige.Controllers.TV', [])
 		 * Defaults for loaders
 		 */
 		$scope.loading = {
-			pies:       true,
 			alerts:     true,
       smartAlarm: true
-		};
-
-
-		/**
-		 * Defaults for toggle
-		 */
-		$scope.more = {
-			status: true,
-			text:   $rootScope.ui.dashboard.showMore
 		};
 
 
@@ -9773,29 +9914,8 @@ angular.module('WebPaige.Controllers.TV', [])
 		 * Default values for synced pointer values
 		 */
 		$scope.synced = {
-			alarms: new Date().getTime(),
-			pies: 	new Date().getTime()
+			alarms: new Date().getTime()
 		};
-
-
-		/**
-		 * TODO: Check somewhere that user-settings widget-groups are synced with the
-		 * real groups list and if a group is missing in settings-groups add by default!
-		 */
-		var groups    = Storage.local.groups(),
-				selection = {};
-
-		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
-		{
-			selection[group] = value;
-		});
-
-		$scope.popover = {
-			groups:     groups,
-			selection:  selection,
-      divisions:  !!($rootScope.config.timeline.config.divisions.length > 0)
-		};
-
 
 
     /**
@@ -9939,102 +10059,60 @@ angular.module('WebPaige.Controllers.TV', [])
 		};
 
 
-
     $window.setInterval(function ()
     {
       $scope.$apply()
       {
         $scope.getP2000();
 
-        if ($rootScope.config.profile.smartAlarm)
+        if (angular.fromJson(Storage.get('guard')).team)
         {
-          if (angular.fromJson(Storage.get('guard')).team)
-          {
-            prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
-          }
-
-          Groups.guardRole()
-            .then(function (setup)
-            {
-              prepareSaMembers(setup);
-            });
+          prepareSaMembers(angular.fromJson(Storage.get('guard')).team);
         }
+
+        Groups.guardRole()
+          .then(function (setup)
+          {
+            prepareSaMembers(setup);
+          });
       }
     }, 60000);
-
 
 
     /**
      * Get alarms for the first time
      */
-    // $scope.getP2000();
+    $.ajax({
+      url: $rootScope.config.profile.p2000.url,
+      dataType: 'json',
+      success: function (results)
+      {
+        $rootScope.statusBar.off();
 
-    if ($rootScope.config.profile.smartAlarm)
-    {
-      $.ajax({
-        url: $rootScope.config.profile.p2000.url,
-        dataType: 'json',
-        success: function (results)
-        {
-          $rootScope.statusBar.off();
+        var processed = Announcer.process(results, true);
 
-          var processed = Announcer.process(results, true);
-
-          var result = {
-            alarms: 	processed,
-            synced:   new Date().getTime()
-          };
-
-          $scope.$apply(function ()
-          {
-            $scope.loading.alerts = false;
-
-            $scope.alarms = result.alarms;
-
-            $scope.alarms.list = $scope.alarms.short;
-
-            $scope.synced.alarms = result.synced;
-          });
-        },
-        error: function ()
-        {
-          console.log('ERROR with getting p2000 for the first time!');
-        }
-      });
-    }
-    else
-    {
-      $.ajax({
-        url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
-        dataType: 'jsonp',
-        success: function (results)
-        {
-          $rootScope.statusBar.off();
-
-          var processed = Announcer.process(results);
-
-          var result = {
+        var result = {
           alarms: 	processed,
           synced:   new Date().getTime()
-          };
+        };
 
-          $scope.$apply(function ()
-          {
-            $scope.loading.alerts = false;
-
-            $scope.alarms = result.alarms;
-
-            $scope.alarms.list = $scope.alarms.short;
-
-            $scope.synced.alarms = result.synced;
-          });
-        },
-        error: function ()
+        $scope.$apply(function ()
         {
-          console.log('ERROR with getting p2000 for the first time!');
-        }
-      });
-    }
+          $scope.loading.alerts = false;
+
+          $scope.alarms = result.alarms;
+
+          $scope.alarms.list = $scope.alarms.short;
+
+          $scope.synced.alarms = result.synced;
+        });
+      },
+      error: function ()
+      {
+        console.log('ERROR with getting p2000 for the first time!');
+      }
+    });
+
 	}
 ]);;/*jslint node: true */
 /*global angular */

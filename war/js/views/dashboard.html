@@ -16,12 +16,23 @@
 
         <div id="sa-state"
               class="pull-right">
-          <small ng-show="app.guard.role && app.guard.currentState">
+          <small ng-show="app.guard.currentState">
             <i class="icon-fire"></i>&nbsp;Status </small>&nbsp;&nbsp;
-          <span class="label" style="background-color:{{app.guard.currentState.color}}">
-            {{app.guard.currentState.label.toUpperCase()}}
-          </span>
-          <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
+
+            <span ng-show="app.guard.currentState=='available'"
+                  class="label"
+                  style="background-color: #4f824f">BESCHIKBAAR</span>
+
+            <span ng-show="app.guard.currentState=='noplanning'"
+                  class="label"
+                  style="background-color: #a0a0a0">GEEN PLANNING</span>
+
+            <span ng-show="app.guard.currentState=='unavailable'"
+                  class="label"
+                  style="background-color: #a93232">NIET BESCHIKBAAR</span>
+
+            <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
+          </small>
         </div>
 
       </div>
@@ -35,7 +46,7 @@
         <!--truck personnel-->
         <li id="sa-truck">
           <div class="sa-member"
-                ng-repeat="trucker in saMembers.truck">
+                ng-repeat="trucker in saMembers.truck | orderBy:'rank'">
             <span class="sa-member-icon {{(trucker.class) && trucker.class}}">
               <strong>{{trucker.icon}}</strong>
             </span>
@@ -51,17 +62,44 @@
         <!--reserves personnel-->
         <li id="sa-reserves"
             ng-show="toggleReserves">
+
           <div class="sa-member"
-               ng-repeat="reserve in saMembers.reserves">
-            <span class="sa-member-icon sa-icon-reserve">
-              <strong>R{{$index+1}}</strong>
+               ng-repeat="reserve in saMembers.reserves.available">
+            <span class="sa-member-icon sa-icon-reserve-available">
+              <strong>B{{$index+1}}</strong>
             </span>
             <div class="sa-member-card">
-              <h5>Reserve {{$index+1}}</h5>
+              <h5>Beschikbaar</h5>
               <hr/>
-              <span>{{reserve}}</span>
+              <span>{{reserve.name}}</span>
             </div>
           </div>
+
+          <div class="sa-member"
+               ng-repeat="reserve in saMembers.reserves.noplanning">
+            <span class="sa-member-icon sa-icon-reserve-noplanning">
+              <strong>G{{$index+1}}</strong>
+            </span>
+            <div class="sa-member-card">
+              <h5>Geen planning</h5>
+              <hr/>
+              <span>{{reserve.name}}</span>
+            </div>
+          </div>
+
+          <div class="sa-member"
+               ng-repeat="reserve in saMembers.reserves.unavailable">
+            <span class="sa-member-icon sa-icon-reserve-unavailable">
+              <strong>N{{$index+1}}</strong>
+            </span>
+            <div class="sa-member-card">
+              <h5>Niet beschikbaar</h5>
+              <hr/>
+              <span>{{reserve.name}}</span>
+            </div>
+          </div>
+
+
         </li>
         <!--end reserves personnel-->
 

@@ -145,6 +145,44 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             returned += chr
           });
 
+          guard.monitor = returned;
+
+          Storage.add('guard', angular.toJson(guard));
+
+          $rootScope.app.guard.monitor = returned;
+
+          deferred.resolve(returned);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get current smart alarming guard data
+     */
+    Groups.prototype.guardMonitor_ = function ()
+    {
+      var deferred = $q.defer();
+
+      var guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.global(
+        null,
+        function (result)
+        {
+          var returned = '';
+
+          angular.forEach(result[0], function (chr)
+          {
+            returned += chr
+          });
+
           Storage.add('guard', angular.toJson({
             monitor: returned,
             role:    guard.role,
@@ -169,7 +207,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     /**
      * Get guard role for smart alarming
      */
-    Groups.prototype.guardRole = function ()
+    Groups.prototype.guardRole_ = function ()
     {
       var deferred = $q.defer();
 
@@ -183,7 +221,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         function (results)
         {
           var predefinedRole = '',
-              guard = angular.fromJson(Storage.get('guard'));
+            guard = angular.fromJson(Storage.get('guard'));
 
           angular.forEach(results, function (person, role)
           {
@@ -192,6 +230,12 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               predefinedRole = role;
             }
           });
+
+          Groups.prototype.guardReserves()
+            .then(function (reserves)
+            {
+              console.log('reserves info ->', reserves);
+            });
 
           Storage.add('guard', angular.toJson({
             monitor:          guard.monitor,
@@ -206,6 +250,125 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
           $rootScope.app.guard.currentState = Slots.currentState();
 
+          deferred.resolve(results);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get guard role for smart alarming
+     */
+    Groups.prototype.guardRole = function ()
+    {
+      var deferred = $q.defer(),
+          _this    = this;
+
+      _this.guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.position(
+        {
+          id:   _this.guard.monitor,
+          team: 'status'
+        },
+        function (results)
+        {
+          var members = angular.fromJson(Storage.get('members'));
+
+          _this.guard.synced = new Date().getTime();
+
+          _this.guard.users = {};
+
+          angular.forEach(results.station, function (user)
+          {
+            if (user[0] != 'agent' || user[1] != 'state')
+            {
+              _this.guard.users[user[0]] = {
+                name:   (members[user[0]] && members[user[0]].name) || user[0],
+                state:  user[1]
+              };
+            }
+          });
+
+          _this.guard.truck = [];
+
+          _this.guard.selection = {};
+
+          angular.forEach(results.selection, function (selected, id)
+          {
+            _this.guard.selection[id] = {
+              user: selected.agentID
+            };
+
+            if (selected.agentID != null)
+            {
+              _this.guard.truck.push(selected.agentID);
+            }
+
+            if (selected.agentID == $rootScope.app.resources.uuid)
+            {
+              _this.guard.role = results.map[id].name;
+            }
+          });
+
+          angular.forEach(results.map, function (mapped, id)
+          {
+            _this.guard.selection[id].role = mapped.name;
+          });
+
+          _this.guard.reserves = {
+            available:    [],
+            unavailable:  [],
+            noplanning:   []
+          };
+
+          angular.forEach(_this.guard.users, function (user, id)
+          {
+            if (_this.guard.truck.indexOf(id) == -1)
+            {
+              var obj = {};
+              obj[id] = user;
+
+              _this.guard.reserves[user.state].push(obj);
+            }
+          });
+
+          Storage.add('guard', angular.toJson(_this.guard));
+
+          deferred.resolve(_this.guard);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Get guard role for smart alarming
+     */
+    Groups.prototype.guardReserves = function ()
+    {
+      var deferred = $q.defer();
+
+      var guard = angular.fromJson(Storage.get('guard'));
+
+      Guards.position(
+        {
+          id:   guard.monitor,
+          team: 'status'
+        },
+        function (results)
+        {
           deferred.resolve(results);
         },
         function (error)
