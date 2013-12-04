@@ -56,7 +56,10 @@ angular.module('WebPaige')
             '$route', '$http',
             function ($route, $http)
             {
-              $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
+              if ($route.current.params.sessionID)
+              {
+                $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
+              }
             }
           ]
       }

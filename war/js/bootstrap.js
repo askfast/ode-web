@@ -258,58 +258,7 @@ angular.module('WebPaige')
 
 
     /**
-     * Allow webkit desktop notifications
-     */
-    // $rootScope.allowWebkitNotifications = function ()
-    // {
-    //   // Callback so it will work in Safari 
-    //   $window.webkitNotifications.requestPermission(function () {});     
-    // };
-
-
-    /**
-     * Set webkit notification
-     */
-    // $rootScope.setWebkitNotification = function (title, message, params)
-    // {
-    //   if ($window.webkitNotifications && $config.notifications.webkit.app)
-    //   {
-    //     var notification =  $window.webkitNotifications.createNotification(
-    //                           location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + 
-    //                           '/js/profiles/' + $config.profile.meta + '/img/ico/apple-touch-icon-144x144-precomposed.png', 
-    //                           title, 
-    //                           message
-    //                         );
-    //     notification.onclick = function () 
-    //     {
-    //       $rootScope.$apply(function ()
-    //       {            
-    //         if (params.search && !params.hash)
-    //         {
-    //           $location.path('/' + params.path).search(params.search);
-    //         }
-    //         else if (!params.search && params.hash)
-    //         {
-    //           $location.path('/' + params.path).hash(params.hash); 
-    //         }
-    //         else if (!params.search && !params.hash)
-    //         {
-    //           $location.path('/' + params.path); 
-    //         }
-    //         else if (params.search && params.hash)
-    //         {
-    //           $location.path('/' + params.path).search(params.search).hash(params.hash); 
-    //         }
-    //       });
-    //     };
-    //     notification.show();
-    //   };     
-    // };
-
-
-    /**
      * Detect route change start
-     *
      * Callback function accepts <event, next, current>
      */
     $rootScope.$on('$routeChangeStart', function ()
@@ -374,10 +323,7 @@ angular.module('WebPaige')
           }
       }
 
-
-      /**
-       * Prevent deeplinking
-       */
+      //Prevent deep linking
       if ($location.path() != '/tv')
       {
         if (!Session.check())
@@ -385,7 +331,6 @@ angular.module('WebPaige')
           $location.path("/login");
         }
       }
-
 
       $rootScope.loadingBig = true;
 
@@ -397,7 +342,6 @@ angular.module('WebPaige')
 
     /**
      * Route change successful
-     *
      * Callback function accepts <event, current, previous>
      */
     $rootScope.$on('$routeChangeSuccess', function ()
@@ -413,8 +357,7 @@ angular.module('WebPaige')
 
 
     /**
-     * TODO (A better way of dealing with this error!)
-     * 
+     * TODO: A better way of dealing with this error!
      * Route change is failed!
      */
     $rootScope.$on('$routeChangeError', function (event, current, previous, rejection)
@@ -423,9 +366,7 @@ angular.module('WebPaige')
     });
 
 
-    /**
-     * Fix styles
-     */
+    // TODO: Fix styles
     $rootScope.fixStyles = function ()
     {
       $rootScope.timelineLoaded = false;
@@ -438,29 +379,12 @@ angular.module('WebPaige')
             $this = $(this).attr('id'),
             contentHeight = $('.tabs-left .tab-content #' + $this).height();
 
-        /**
-         * TODO (Append left border fix)
-         */
-        // $parent.append('<div class="left-border-fix"></div>');
-        // console.log('parent ->', $parent);
-        // $('#' + $this + ' .left-border-fix').css({
-        //   height: contentHeight
-        // });
-        /**
-         * Check if one is bigger than another
-         */
-
+        // Check if one is bigger than another
         if (tabHeight > contentHeight)
         {
-          // console.log('tab is taller than content ->', $this);
           $('.tabs-left .tab-content #' + $this).css({
             height: $('.tabs-left .nav-tabs').height() - 41
           });
-        }
-        else if (contentHeight > tabHeight)
-        {
-          // console.log('content is taller than tabs ->', $this);
-          // $('.tabs-left .nav-tabs').css( { height: contentHeight } );
         }
       });
 
@@ -473,11 +397,6 @@ angular.module('WebPaige')
           paddingTop: '10px',
           marginBottom: '0px'
         });
-
-        // $('#loading').css({
-        //   //marginTop: '-160px'
-        //   display: 'none'
-        // });
       }
     };
 
@@ -535,9 +454,3 @@ angular.module('WebPaige')
     };
   }
 ]);
-
-
-/**
- * Sticky timeline header
- */
-// $('#mainTimeline .timeline-frame div:first div:first').css({'top': '0px'})
