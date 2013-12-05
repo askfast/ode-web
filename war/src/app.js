@@ -9867,7 +9867,7 @@ angular.module('WebPaige.Controllers.TV', [])
               prepareSaMembers(angular.fromJson(Storage.get('guard')));
             }
 
-            
+
             Groups.guardMonitor()
               .then(function ()
               {
