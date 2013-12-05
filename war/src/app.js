@@ -4192,7 +4192,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             if (user[0] != 'agent' || user[1] != 'state')
             {
               _this.guard.users[user[0]] = {
-                name:   (members[user[0]] && members[user[0]].name) || user[0],
+                name:   (members && members[user[0]] && members[user[0]].name) || user[0],
                 state:  user[1]
               };
             }
