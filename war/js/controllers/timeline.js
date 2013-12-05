@@ -1250,7 +1250,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				}, 60000);
+				}, 60 * 1000);
 			},
 
 			/**

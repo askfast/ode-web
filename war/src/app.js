@@ -11503,7 +11503,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				}, 60000);
+				}, 60 * 1000);
 			},
 
 			/**
@@ -13308,6 +13308,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 			.then(
 				function (result)
 				{
+          $rootScope.statusBar.off();
+
 					if (result.error)
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
