@@ -204,7 +204,6 @@
 
 
 .page-header {
-  overflow: hidden;
   min-height: 40px;
   border-bottom: 1px solid $hrBorder;
 
@@ -220,5 +219,19 @@
 
   form.form-search {
     display: inline;
+  }
+
+  .square {
+    margin-top: 5px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .available {
+    background-color: #406940;
+  }
+
+  .unavailable {
+    background-color: #8f2b2b;
   }
 }

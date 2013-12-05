@@ -1037,7 +1037,6 @@ label {
 }
 
 .page-header {
-  overflow: hidden;
   min-height: 40px;
   border-bottom: 1px solid #c6c3b6;
 }
@@ -1051,6 +1050,17 @@ label {
 }
 .page-header form.form-search {
   display: inline;
+}
+.page-header .square {
+  margin-top: 5px;
+  width: 10px;
+  height: 10px;
+}
+.page-header .available {
+  background-color: #406940;
+}
+.page-header .unavailable {
+  background-color: #8f2b2b;
 }
 
 #alertDiv {
