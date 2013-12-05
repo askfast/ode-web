@@ -417,7 +417,7 @@ var ui = {
           notificationsDelete: 'Error with deleting scheduled notification!'
         },
         timeline: {
-          query: 'Error with gettings timeslots!',
+          query: 'There has been some problems with syncing planboard information. Please refresh your browser for getting the latest planboard information.',
           pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
           add: 'Error with adding a new timeslot!',
           change: 'Error with changing timeslot!',
@@ -837,7 +837,7 @@ var ui = {
           notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
         },
         timeline: {
-          query: 'Error with gettings timeslots!',
+          query: 'Er is iets fout gegaan bij het laden van de tijdlijndata. Vernieuw deze webpagina om het nogmaals te proberen.',
           pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
           add: 'Error with adding a new timeslot!',
           change: 'Error with changing timeslot!',
