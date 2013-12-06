@@ -945,7 +945,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.8',
+    version:  '2.3.9',
     lang:     'nl',
 
     fullscreen: true,
@@ -3583,7 +3583,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    var butcher = function (box)
 	    {
-		    var limit 	= 5,
+		    var limit 	= 50,
 		    		total 	= box.length,
 		  			offset 	= 0,
 		  			newarr 	= [];
