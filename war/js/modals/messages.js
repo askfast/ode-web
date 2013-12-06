@@ -316,7 +316,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 	    var butcher = function (box)
 	    {
-		    var limit 	= 50,
+		    var limit 	= 5,
 		    		total 	= box.length,
 		  			offset 	= 0,
 		  			newarr 	= [];

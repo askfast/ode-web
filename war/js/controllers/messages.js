@@ -19,6 +19,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	   */
 	  $rootScope.fixStyles();
 
+
 	  /**
      * TODO: Still being used?
 	   */
@@ -1098,6 +1099,5 @@ angular.module('WebPaige.Controllers.Messages', [])
 	  	}
 
 	  };
-
 	}
 ]);
