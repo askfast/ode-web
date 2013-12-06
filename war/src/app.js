@@ -9163,6 +9163,17 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 			selection[group] = value;
 		});
 
+    angular.forEach(groups, function (group)
+    {
+      if (!selection[group.uuid])
+      {
+        selection[group.uuid] = {
+          divisions: !!($rootScope.config.timeline.config.divisions.length > 0),
+          status: false
+        };
+      }
+    });
+
 		$scope.popover = {
 			groups:     groups,
 			selection:  selection,
@@ -9341,12 +9352,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		 * Get pie overviews
 		 */
 		getOverviews();
-
-
-//    $scope.$watch(function ()
-//    {
-//      $scope.loading.smartAlarm = true;
-//    });
 
 
     /**
@@ -9619,8 +9624,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     /**
      * Get alarms for the first time
      */
-    // $scope.getP2000();
-
     if ($rootScope.config.profile.smartAlarm)
     {
       $.ajax({
