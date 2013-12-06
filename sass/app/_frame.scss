@@ -19,7 +19,6 @@
   }
 }
 
-
 /* Wrapper for page content to push down footer */
 #wrap {
   z-index: 99;
@@ -40,12 +39,10 @@
   }
 }
 
-
 /* Set the fixed height of the footer here */
 #push {
   height: 60px;
 }
-
 
 .header {
   display: table;
@@ -63,7 +60,7 @@
     margin-top: 5px;
   }
 }
- 
+
 
 #download {
   margin: 5px auto;
@@ -94,8 +91,6 @@
     font-size: 18px;
   }
 }
-
-
 
 #footer {
   position: fixed;
@@ -135,7 +130,6 @@
     line-height: 14px;
   }
 }
-
 
 #download-footer {
   ul {
@@ -187,7 +181,6 @@
   }
 }
 
-
 .page {
   overflow: hidden;
   /* margin-top: 15px; */
@@ -200,8 +193,6 @@
     padding: 20px;
   }
 }
-
-
 
 .page-header {
   min-height: 40px;

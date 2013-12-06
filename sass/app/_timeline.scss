@@ -2,12 +2,10 @@
   
 }
 
-
 #timeline-controls {
   padding-bottom: 20px;
   overflow: hidden;
 }
-
 
 #timeline-toolbar {
   overflow: hidden;
@@ -28,7 +26,6 @@
     margin-left: 10px;
   }
 }
-
 
 #stats {
   overflow: hidden;
@@ -124,7 +121,6 @@
   }
 }
 
-
 #memberBars {
   ul {
     list-style: none;
@@ -217,14 +213,12 @@
   }
 }
 
-
 /*legenda*/
 .legenda {
   background-color: #f5f4ee;
   padding-top: 10px;
   margin-top: -20px;
 }
-
 
 .legenda-row {
   overflow: hidden;
@@ -285,9 +279,6 @@
   margin-bottom: -5px;
 }
 
-
-
-
 .legenda-row .legenda-state-available .square {
   background-color: #4f824f;
 }
@@ -324,11 +315,6 @@
   background-color: #a0a0a0;  
 }
 
-
-
-
-
-
 #legends {
   display: block;
   overflow: hidden;
@@ -357,29 +343,9 @@
   height: 14px;
 }
 
-
-
-
-
-
-
-
 div.bar span {
     font-size: 9px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 div.timeline-frame {
     border: 1px solid #ddd;
@@ -590,20 +556,6 @@ div.timeline-navigation-move-right {
     background: url('../img/timeline/16/moveright.png') no-repeat center;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*.available {
   margin:0;*/
   /* padding: 5px; */
@@ -683,11 +635,6 @@ div.timeline-navigation-move-right {
 }
 */
 
-
-
-
-
-
 div.timeline-event.state-available {
     margin:0;
     background-color: #4f824f;
@@ -724,36 +671,15 @@ div.timeline-event.state-unavailable {
     text-indent: -9999px;
 }
 
-
 div.timeline-event.state-new {
     margin:0;
     background-color: #ddd;
     text-indent: -9999px;
 }
 
-
-
-
-
 div.timeline-event div.timeline-event-content span.secret {
   font-size: 1px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .state-loading-left {
     margin:0;
@@ -773,28 +699,11 @@ div.timeline-event div.timeline-event-content span.secret {
     text-align: left;
 }
 
-
-
-
-
-
-
-
 .group-aggs {
     border: none;
     padding: 0;
     height: 100px;
 }
-
-
-
-
-
-
-
-
-
-
 
 div.timeline-event.agg-less {
     margin:0;
@@ -803,6 +712,7 @@ div.timeline-event.agg-less {
     /*border-bottom: 10px solid #a0a0a0;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-even {
     margin:0;
     background-color: #ba6a24;
@@ -810,6 +720,7 @@ div.timeline-event.agg-even {
     /*border-bottom: 10px solid #ba6a24;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-1 {
     margin:0;
     background-color: #415e6b;
@@ -817,6 +728,7 @@ div.timeline-event.agg-1 {
     /*border-bottom: 10px solid #415e6b;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-2 {
     margin:0;
     background-color: #3d5865;
@@ -824,6 +736,7 @@ div.timeline-event.agg-2 {
     /*border-bottom: 10px solid #3d5865;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-3 {
     margin:0;
     background-color: #344c58;
@@ -831,6 +744,7 @@ div.timeline-event.agg-3 {
     /*border-bottom: 10px solid #344c58;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-4 {
     margin:0;
     background-color: #2f4550;
@@ -838,6 +752,7 @@ div.timeline-event.agg-4 {
     /*border-bottom: 10px solid #2f4550;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-5 {
     margin:0;
     background-color: #2c424c;
@@ -845,6 +760,7 @@ div.timeline-event.agg-5 {
     /*border-bottom: 10px solid #2c424c;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-6 {
     margin:0;
     background-color: #253943;
@@ -852,6 +768,7 @@ div.timeline-event.agg-6 {
     /*border-bottom: 10px solid #253943;*/
     text-indent: -9999px;
 }
+
 div.timeline-event.agg-more {
     margin:0;
     background-color: #486877;
@@ -859,20 +776,6 @@ div.timeline-event.agg-more {
     /*border-bottom: 10px solid #486877;*/
     text-indent: -9999px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 div.timeline-event.wishes-less {
     margin:0;
@@ -882,6 +785,7 @@ div.timeline-event.wishes-less {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-even {
     margin:0;
     background-color: #ba6a24;
@@ -890,6 +794,7 @@ div.timeline-event.wishes-even {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-1 {
     margin:0;
     background-color: #415e6b;
@@ -898,6 +803,7 @@ div.timeline-event.wishes-1 {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-2 {
     margin:0;
     background-color: #3d5865;
@@ -906,6 +812,7 @@ div.timeline-event.wishes-2 {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-3 {
     margin:0;
     background-color: #344c58;
@@ -914,6 +821,7 @@ div.timeline-event.wishes-3 {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-4 {
     margin:0;
     background-color: #2f4550;
@@ -922,6 +830,7 @@ div.timeline-event.wishes-4 {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-5 {
     margin:0;
     background-color: #2c424c;
@@ -930,6 +839,7 @@ div.timeline-event.wishes-5 {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-6 {
     margin:0;
     background-color: #253943;
@@ -938,6 +848,7 @@ div.timeline-event.wishes-6 {
     /*text-indent: -9999px;*/
     text-align: center;
 }
+
 div.timeline-event.wishes-more {
     margin:0;
     background-color: #486877;
@@ -946,17 +857,6 @@ div.timeline-event.wishes-more {
     /*text-indent: -9999px;*/
     text-align: center;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 div.bar {
@@ -977,17 +877,6 @@ div.requirement {
     opacity: 0.5;
 }
 */
-    
-
-
-
-
-
-
-
-
-
-
 
 /*#groupTimeline {
     z-index:10;
@@ -1009,10 +898,6 @@ div.requirement {
     border:none;
 }*/
 
-
-
-
-
 div.timeline-event-range {
     position: relative;
     overflow: visible;
@@ -1023,6 +908,7 @@ div.timeline-event-range {
     border: none;
     border-radius: 0;
 }
+
 .timeline-frame .bar {
     position: absolute;
     bottom: 0;
@@ -1033,6 +919,7 @@ div.timeline-event-range {
     /* height and color is set for each individual bar */
     text-align: center;
 }
+
 .timeline-frame .requirement {
     position: absolute;
     bottom: 0;
@@ -1043,67 +930,6 @@ div.timeline-event-range {
     text-align: center;
     opacity: 0.5;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .daterangepicker.dropdown-menu {
   max-width: none;
@@ -1328,77 +1154,6 @@ div.timeline-event-range {
     color: #ccc;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
   Datepicker for Bootstrap
   Copyright 2012 Stefan Petre
@@ -1569,77 +1324,6 @@ div.timeline-event-range {
   height: 16px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .bootstrap-timepicker.dropdown-menu {
     border-radius: 4px 4px 4px 4px;
     display: none;
@@ -1650,9 +1334,11 @@ div.timeline-event-range {
     min-width: 10px;
     z-index: 99999;
 }
+
 .bootstrap-timepicker.dropdown-menu.open {
     display: inline-block;
 }
+
 .bootstrap-timepicker.dropdown-menu:before {
     border-bottom: 7px solid rgba(0, 0, 0, 0.2);
     border-left: 7px solid transparent;
@@ -1662,6 +1348,7 @@ div.timeline-event-range {
     position: absolute;
     top: -7px;
 }
+
 .bootstrap-timepicker.dropdown-menu:after {
     border-bottom: 6px solid #FFFFFF;
     border-left: 6px solid transparent;
@@ -1671,28 +1358,34 @@ div.timeline-event-range {
     position: absolute;
     top: -6px;
 }
+
 .bootstrap-timepicker.modal {
     margin-left: -100px;
     margin-top: 0;
     top: 30%;
     width: 200px;
 }
+
 .bootstrap-timepicker.modal .modal-content {
     padding: 0;
 }
+
 .bootstrap-timepicker table {
     margin: 0;
     width: 100%;
 }
+
 .bootstrap-timepicker table td {
     height: 30px;
     margin: 0;
     padding: 2px;
     text-align: center;
 }
+
 .bootstrap-timepicker table td span {
     width: 100%;
 }
+
 .bootstrap-timepicker table td a {
     border: 1px solid transparent;
     display: inline-block;
@@ -1701,22 +1394,27 @@ div.timeline-event-range {
     padding: 8px 0;
     width: 3em;
 }
+
 .bootstrap-timepicker table td a:hover {
     background-color: #EEEEEE;
     border-color: #DDDDDD;
     border-radius: 4px 4px 4px 4px;
 }
+
 .bootstrap-timepicker table td a i {
     margin-top: 2px;
 }
+
 .bootstrap-timepicker table td input {
     margin: 0;
     text-align: center;
     width: 25px;
 }
+
 .bootstrap-timepicker-component .add-on {
     cursor: pointer;
 }
+
 .bootstrap-timepicker-component .add-on i {
     display: block;
     height: 16px;
