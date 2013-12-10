@@ -3,15 +3,15 @@
  */
 var profile = {
 
-  meta: 'isparaat',
+  meta: 'standby',
 
   title: 'BRANDWEER',
 
 	host: function ()
 	{
     // return ($.browser.msie) ? '/proxy/standby' : 'http://backend.ask-cs.com/standby';
-    return ($.browser.msie) ? '/proxy/standby-test' : 'http://backend.ask-cs.com/standby-test';
-    // return ($.browser.msie) ? '/proxy/standby-dev' : 'http://askpack.ask-cs.com/standby-dev';
+    // return ($.browser.msie) ? '/proxy/standby-test' : 'http://backend.ask-cs.com/standby-test';
+    return ($.browser.msie) ? '/proxy' : 'http://askpack.ask-cs.com/standby-dev';
 	},
 
   states: [

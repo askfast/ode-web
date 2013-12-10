@@ -63,7 +63,6 @@ angular.module('WebPaige.Controllers.Login', [])
 	   $scope.knrmLogin = function (user)
 	   {
 	     $('#login button[type=submit]')
-	       // .text('Login..')
 	       .text($rootScope.ui.login.button_loggingIn)
 	       .attr('disabled', 'disabled');
 
@@ -453,11 +452,6 @@ angular.module('WebPaige.Controllers.Login', [])
 	   */
 	  function finalize ()
 	  {
-	    // console.warn( 'settings ->',
-	    //               'user ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).user,
-	    //               'widgets ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.widgets,
-	    //               'group ->', angular.fromJson($rootScope.app.resources.settingsWebPaige).app.group);
-
 	    self.progress(100, $rootScope.ui.login.loading_everything);
 
 	    self.redirectToDashboard();
@@ -465,25 +459,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    self.getMessages();
 
 	    self.getMembers();
-
-//      if ($rootScope.config.profile.smartAlarm)
-//      {
-//        self.getGuard();
-//      }
 	  }
-
-
-    /**
-     * Get guard value for smart alarming
-     */
-//    self.getGuard = function ()
-//    {
-//      Groups.guardMonitor()
-//        .then(function ()
-//        {
-//          Groups.guardRole();
-//        });
-//    };
 
 
 	  /**

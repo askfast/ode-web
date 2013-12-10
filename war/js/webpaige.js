@@ -21,6 +21,7 @@ angular.module('WebPaige',[
   'WebPaige.Controllers.Login',
   'WebPaige.Controllers.Logout',
   'WebPaige.Controllers.Dashboard',
+  'WebPaige.Controllers.TV',
   'WebPaige.Controllers.Planboard',
   'WebPaige.Controllers.Timeline',
   'WebPaige.Controllers.Timeline.Navigation',

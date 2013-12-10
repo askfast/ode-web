@@ -8,9 +8,8 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>{{config.profile.title}}</title>
-    
-    <meta name="description"  content="WebPaige v2">
+    <title>StandBy</title>
+
     <meta name="viewport"     content="width=device-width">
     
     <!-- favicons -->
@@ -37,14 +36,13 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/test/profile.js"></script>
+    <script src="profiles/standby/profile.js"></script>
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
     <!--[if IE 8]>    <link rel="stylesheet" href="css/ie8.css">                                 <![endif]-->
     <!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
     <!--[if gt IE 7]> <script src="libs/angular-ui/0.4.0/angular-ui-ieshiv.min.js"></script>     <![endif]-->
 
-    <!--<script src="libs/modernizr/2.6.2/modernizr-2.6.2.min.js"></script>-->
   </head>
   <body>
 
@@ -209,12 +207,8 @@
       <!-- container-fluid -->
       <div class="container-fluid">
         <div ng-view></div>
-
-        <!--indicator: {{timelineLoaded}}-->
-
       </div>
       <!-- end container-fluid -->
-
       <div id="push"></div>
     </div>
     <!-- end wrap -->
@@ -226,24 +220,37 @@
     </div>
     <!-- end mobile status bar -->
 
-    <div ng-show="browser.mobile && config.profile.mobileApp.status && config.profile.smartAlarm"
+    <div ng-show="browser.mobile && config.profile.mobileApp.status && ((config.profile.meta=='standby') || (config.profile.meta=='monster'))"
          class="ng-cloak text-center">
       <ul style="list-style: none; position: relative; z-index: 20000; margin: 0;">
+
         <li style="display: inline;">
           <a class="btn btn-success btn-large"
              href="https://play.google.com/store/apps/details?id=com.askcs.standby">
             Download Android App
           </a>
         </li>
+
         <br ng-show="browser.screen.width < 768" />
         <br ng-show="browser.screen.width < 768" />
+
         <li style="display: inline">
-          <a class="btn btn-success btn-large"
+          <a ng-show="(config.profile.meta=='standby')"
+             class="btn btn-success btn-large"
              href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
              target="itunes_store">
             Download iPhone App
           </a>
+          <a ng-show="(config.profile.meta=='monster')"
+             id="popupBtn" class="btn btn-success btn-large"
+             data-toggle="popover"
+             data-placement="top"
+             data-content="Binnenkort te downloaden."
+             title=""
+             data-original-title="Download iPhone App"
+             onclick="console.log($(this).popover())">Download iPhone App</a>
         </li>
+
         <br ng-show="browser.screen.width < 768" />
         <br ng-show="browser.screen.width < 768" />
       </ul>
@@ -257,31 +264,46 @@
         <!-- copyrights -->
         <div id="copyrights">
 
-          <!-- ask & version -->
-          <!--<span class="muted" ng-style="(!config.profile.mobileApp.status) && 'right:0'">-->
-            <!--<small>-->
-              <!--Ask Community Systems, 2013<br><i>WebPaige <a href="version.html" target="_blank">v{{config.version}}</a></i>-->
-            <!--</small>-->
-          <!--</span>-->
-          <!-- end ask & version -->
-
           <!-- download mobile app -->
           <div id="download-footer">
             <ul>
-              <li ng-show="config.profile.mobileApp.status && config.profile.smartAlarm">
+
+              <!--Monster-->
+              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
                 <a class="btn btn-success btn-large"
                    href="https://play.google.com/store/apps/details?id=com.askcs.standby">
                   Download Android App
                 </a>
               </li>
-              <li ng-show="config.profile.mobileApp.status && config.profile.smartAlarm">
+
+              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
                 <a class="btn btn-success btn-large"
                    href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
                    target="itunes_store">
                   Download iPhone App
                 </a>
               </li>
-              <li ng-show="config.profile.mobileApp.status && !config.profile.smartAlarm">
+              <!--end Monster-->
+
+              <!--StandBy Firedep-->
+              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'standby')">
+                <a class="btn btn-success btn-large"
+                   href="https://play.google.com/store/apps/details?id=com.askcs.standby">
+                  Download Android App
+                </a>
+              </li>
+
+              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'standby')">
+                <a class="btn btn-success btn-large"
+                   href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+                   target="itunes_store">
+                  Download iPhone App
+                </a>
+              </li>
+              <!--end StandBy Firedep-->
+
+              <li ng-show="config.profile.mobileApp.status"
+                  ng-hide="(config.profile.meta == 'standby') || (config.profile.meta == 'monster')">
                 <button class="btn btn-success btn-large"
                         type="button"
                         ng-click="downloadMobileApp('regular')">
@@ -295,10 +317,11 @@
                   Download Experimentele App
                 </button>
               </li>
+
               <li>
                 <span class="muted">
                   <small>
-                    Ask Community Systems, 2013<br><i>WebPaige <a href="version.html" target="_blank" style="color: #dddddd;">v{{config.version}}</a></i>
+                    Ask Community Systems, 2013<br><i><a href="version.html" target="_blank" style="color: #dddddd;">StandBy v{{config.version}}</a></i>
                   </small>
                 </span>
               </li>
@@ -326,20 +349,14 @@
     <script src="libs/angular/1.0.5/angular-resource.min.js"></script>
     <script src="libs/bootstrap/bootstrap.min.js"></script>
     
-    <!-- <script src="dist/app.min.js"></script> -->
+    <!--<script src="dist/app.min.js"></script>-->
     <script src="src/app.js"></script>
     <!--<![endif]-->
 
     
     <script type="text/javascript">
-      /**
-       * Profile based analytics
-       */
       if (window.profile.analytics.status) window.profile.analytics.code();
 
-      /**
-       * Livereload only on localhost
-       */
       if (location.host.split(':')[0] == 'localhost')
         document.write(
             '<script src="http://' + 

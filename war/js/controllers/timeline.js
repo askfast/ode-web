@@ -147,7 +147,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         },
         end: {
           date: new Date().toString($rootScope.config.formats.date),
-          time: new Date().addHours(1).toString($rootScope.config.formats.time),
+          time: new Date().addHours(1).toString('HH:00'), //$rootScope.config.formats.time,
           datetime: new Date().toISOString().replace("Z", "")
         },
         state:      'com.ask-cs.State.Available',
@@ -762,6 +762,53 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  };
 
 
+    /**
+     * Add prefixed availability periods in agenda
+     */
+    $scope.setAvailability = function (availability, period)
+    {
+      var now   = Math.abs(Math.floor(Date.now().getTime() / 1000)),
+          hour  = 60 * 60;
+
+      var periods = {
+        start:  now,
+        end:    Number(now + period * hour),
+        state:  (availability) ? 'com.ask-cs.State.Available' : 'com.ask-cs.State.Unavailable'
+      };
+
+      var values = {
+        start: periods.start,
+        end: periods.end,
+        recursive: false,
+        text: periods.state
+      };
+
+      $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+
+      Slots.add(values, $scope.timeline.user.id)
+        .then(
+        function (result)
+        {
+          $rootScope.$broadcast('resetPlanboardViews');
+
+          if (result.error)
+          {
+            $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
+            console.warn('error ->', result);
+          }
+          else
+          {
+            $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+          }
+
+          $scope.timeliner.refresh();
+
+          $rootScope.planboardSync.start();
+        }
+      );
+    };
+
+
 	  /**
 	   * Add slot trigger start view
 	   */
@@ -1203,7 +1250,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				}, 60000);
+				}, 60 * 1000);
 			},
 
 			/**

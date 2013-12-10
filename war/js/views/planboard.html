@@ -6,9 +6,52 @@
   <div class="page-header">
     <h2>{{ui.planboard.planboard}}</h2>
     <div class="btn-group pull-right">
-      <button type="submit" 
-              ng-click="toggleSlotForm()" 
-              class="btn btn-success {{(views.slot.add==true) && 'active'}}">{{ui.planboard.newAvail}}</button>
+
+      <div class="btn-group">
+
+        <button type="submit"
+                ng-click="toggleSlotForm()"
+                class="btn btn-success {{(views.slot.add==true) && 'active'}}">{{ui.planboard.newAvail}}</button>
+
+        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+
+        <ul class="dropdown-menu fast-availability"
+            style="right:0; font-size: 13px;">
+          <li>
+            <a ng-click="setAvailability(true, 1)">
+              <div class="square available"></div> Beschikbaar (1 uur)
+            </a>
+          </li>
+          <li>
+            <a ng-click="setAvailability(true, 6)">
+              <div class="square available"></div> Beschikbaar (6 uur)
+            </a>
+          </li>
+          <li>
+            <a ng-click="setAvailability(true, 24)">
+              <div class="square available"></div> Beschikbaar (24 uur)
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a ng-click="setAvailability(false, 1)">
+              <div class="square unavailable"></div> Niet beschikbaar (1 uur)
+            </a>
+          </li>
+          <li>
+            <a ng-click="setAvailability(false, 6)">
+              <div class="square unavailable"></div> Niet beschikbaar (6 uur)
+            </a>
+          </li>
+          <li>
+            <a ng-click="setAvailability(false, 24)">
+              <div class="square unavailable"></div> Niet beschikbaar (24 uur)
+            </a>
+          </li>
+        </ul>
+
+      </div>
+
     </div>
   </div>
   <!-- end page header -->
@@ -472,11 +515,18 @@
             <!-- end timeline-toolbar -->
 
 
-
-
-
-
             <hr>
+
+            <div class="alert alert-warning"
+                  ng-show="registeredNotifications.timeLineDragging">
+              <button type="button"
+                      class="close"
+                      ng-click="registerNotification('timeLineDragging', false)"
+                      data-dismiss="alert">&times;</button>
+              <small>U kunt ook uw <strong><i>beschikbaarheid wijzigen</i></strong> door te dubbelklikken op reeds
+                bestaande blokken of <strong><i>door te slepen</i></strong> met uw muis met de rechtermuisknop en de
+                <strong>SHIFT (Mac)</strong> of <strong>CTRL (Windows)</strong> knop tegelijkertijd ingedrukt.</small>
+            </div>
 
             <!-- timeline legenda content -->
             <div class="legenda" ng-show="timeline.config.legendarer">
@@ -538,7 +588,7 @@
 
           <hr>
 
-          <!-- planbaord footer -->
+          <!-- planboard footer -->
           <p>
             <small class="pull-left">
               <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;

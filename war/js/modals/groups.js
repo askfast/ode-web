@@ -9,8 +9,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
  */
 .factory('Groups', 
 [
-	'$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots',
-	function ($resource, $config, $q, Storage, $rootScope, Slots) 
+	'$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location',
+	function ($resource, $config, $q, Storage, $rootScope, Slots, $location)
 	{
 	  var Groups = $resource(
 	    $config.host + '/network/:action/:id',
@@ -132,7 +132,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var deferred = $q.defer();
 
-      var guard = angular.fromJson(Storage.get('guard'));
+      var guard = angular.fromJson(Storage.get('guard')) || {};
 
       Guards.global(
         null,
@@ -145,12 +145,9 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             returned += chr
           });
 
-          Storage.add('guard', angular.toJson({
-            monitor: returned,
-            role:    guard.role,
-            currentState: guard.currentState,
-            currentStateClass: guard.currentStateClass
-          }));
+          guard.monitor = returned;
+
+          Storage.add('guard', angular.toJson(guard));
 
           $rootScope.app.guard.monitor = returned;
 
@@ -171,42 +168,84 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
      */
     Groups.prototype.guardRole = function ()
     {
-      var deferred = $q.defer();
+      var deferred = $q.defer(),
+          _this    = this;
 
-      var guard = angular.fromJson(Storage.get('guard'));
+      _this.guard = angular.fromJson(Storage.get('guard'));
 
       Guards.position(
         {
-          id:   guard.monitor,
-          team: 'team'
+          id:   _this.guard.monitor,
+          team: 'status'
         },
         function (results)
         {
-          var predefinedRole = '',
-              guard = angular.fromJson(Storage.get('guard'));
+          var members = angular.fromJson(Storage.get('members'));
 
-          angular.forEach(results, function (person, role)
+          _this.guard.synced = new Date().getTime();
+
+          _this.guard.users = {};
+
+          angular.forEach(results.station, function (user)
           {
-            if (person == $rootScope.app.resources.uuid)
+            if (user[0] != 'agent' || user[1] != 'state')
             {
-              predefinedRole = role;
+              _this.guard.users[user[0]] = {
+                name:   (members && members[user[0]] && members[user[0]].name) || user[0],
+                state:  user[1]
+              };
             }
           });
 
-          Storage.add('guard', angular.toJson({
-            monitor:          guard.monitor,
-            role:             (predefinedRole != '') ? predefinedRole : 'niet ingedeeld',
-            currentState:     guard.currentState,
-            currentStateClass:guard.currentStateClass,
-            team:             results,
-            synced:           new Date().getTime()
-          }));
+          _this.guard.truck = [];
 
-          $rootScope.app.guard.role = predefinedRole;
+          _this.guard.selection = {};
 
-          $rootScope.app.guard.currentState = Slots.currentState();
+          angular.forEach(results.selection, function (selected, id)
+          {
+            _this.guard.selection[id] = {
+              user: selected.agentID
+            };
 
-          deferred.resolve(results);
+            if (selected.agentID != null)
+            {
+              _this.guard.truck.push(selected.agentID);
+            }
+
+            if ($location.path() != '/tv')
+            {
+              if (selected.agentID == $rootScope.app.resources.uuid)
+              {
+                _this.guard.role = results.map[id].name;
+              }
+            }
+          });
+
+          angular.forEach(results.map, function (mapped, id)
+          {
+            _this.guard.selection[id].role = mapped.name;
+          });
+
+          _this.guard.reserves = {
+            available:    [],
+            unavailable:  [],
+            noplanning:   []
+          };
+
+          angular.forEach(_this.guard.users, function (user, id)
+          {
+            if (_this.guard.truck.indexOf(id) == -1)
+            {
+              var obj = {};
+              obj[id] = user;
+
+              _this.guard.reserves[user.state].push(obj);
+            }
+          });
+
+          Storage.add('guard', angular.toJson(_this.guard));
+
+          deferred.resolve(_this.guard);
         },
         function (error)
         {

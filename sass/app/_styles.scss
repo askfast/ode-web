@@ -13,18 +13,15 @@ html,body {
   min-height: 100%;
 }
 
-
 body {
   background: url(../img/bg.jpg) repeat;
 }
-
 
 a {
   &:hover {
     cursor: pointer
   }
 }
-
 
 dl {
   dt {
@@ -34,7 +31,6 @@ dl {
     margin-bottom: 15px;
   }
 }
-
 
 .left-border-fix {
   width: 1px; 
@@ -47,7 +43,6 @@ dl {
   display: block;
   margin-left: -1px;
 }
-
 
 .greetings {
   margin: 25px 0;
@@ -63,36 +58,30 @@ dl {
   height: 400px
 }
 
-
 .label-natural,
 .badge-natural {
   background-color: #433c2d;
 }
-
 
 .label-natural[href],
 .badge-natural[href] {
   background-color: #342f23;
 }
 
-
 .label-more,
 .badge-more {
   background-color: #415e6b;
 }
-
 
 .label-less,
 .badge-less {
   background-color: #a0a0a0;
 }
 
-
 .label-even,
 .badge-even {
   background-color: #ba6a24;
 }
-
 
 .label-inset,
 .badge-inset {
@@ -100,13 +89,11 @@ dl {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.30);
 }
 
-
 .navbar {
   .badge-success {
     background-color: $btnSuccessBackground;
   }
 }
-
 
 .modal-body {
   ul {
@@ -126,6 +113,11 @@ dl {
     }
   }
 }
+
+
+
+
+
 
 
 #versions {
@@ -157,11 +149,47 @@ dl {
   .marketing {
     margin: 60px 0;
 
-    p + h4 {
-      margin-top: 28px;
+    ul {
+      list-style: none;
+
+      li {
+        margin-bottom: 30px;
+
+        ul {
+          li {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+
+    p {
+      min-height: 20px;
+      overflow: hidden;
+
+      i {
+        display: inline;
+        float: right;
+      }
+    }
+
+    h4 {
+      display: inline;
+      float: left;
+      margin-top: 0;
+    }
+
+    hr {
+      margin: 0 0 15px 0;
     }
   }
 }
+
+
+
+
+
+
 
 
 #groups-wish {
@@ -177,7 +205,6 @@ dl {
     }
   }
 }
-
 
 #mobile-status-bar {
   position: fixed;
@@ -199,12 +226,6 @@ dl {
     font-size: 11px;
   }
 }
-
-
-// .navbar, #footer, #notification, #mobile-status-bar {
-//   display: none;
-// }
-
 
 #scheaduler-pane {
   margin-top: 15px;
@@ -279,8 +300,6 @@ dl {
     margin-top: 2px;
   }
 }
-
-
 
 .scheadule-icons {
   width: 48px; 

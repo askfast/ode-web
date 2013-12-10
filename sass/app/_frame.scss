@@ -19,7 +19,6 @@
   }
 }
 
-
 /* Wrapper for page content to push down footer */
 #wrap {
   z-index: 99;
@@ -40,12 +39,10 @@
   }
 }
 
-
 /* Set the fixed height of the footer here */
 #push {
   height: 60px;
 }
-
 
 .header {
   display: table;
@@ -63,7 +60,7 @@
     margin-top: 5px;
   }
 }
- 
+
 
 #download {
   margin: 5px auto;
@@ -94,8 +91,6 @@
     font-size: 18px;
   }
 }
-
-
 
 #footer {
   position: fixed;
@@ -135,7 +130,6 @@
     line-height: 14px;
   }
 }
-
 
 #download-footer {
   ul {
@@ -187,7 +181,6 @@
   }
 }
 
-
 .page {
   overflow: hidden;
   /* margin-top: 15px; */
@@ -201,10 +194,7 @@
   }
 }
 
-
-
 .page-header {
-  overflow: hidden;
   min-height: 40px;
   border-bottom: 1px solid $hrBorder;
 
@@ -220,5 +210,21 @@
 
   form.form-search {
     display: inline;
+  }
+}
+
+.fast-availability {
+  .square {
+    margin-top: 5px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .available {
+    background-color: #406940;
+  }
+
+  .unavailable {
+    background-color: #8f2b2b;
   }
 }

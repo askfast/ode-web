@@ -42,7 +42,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     }
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -73,7 +73,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     } 
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -98,9 +98,9 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
         } 
         catch (e) {
           return false;
-        };
-      };
-    };
+        }
+      }
+    }
 
     return true;
   };
@@ -134,7 +134,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     }
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -167,7 +167,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     } 
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -192,9 +192,9 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
         } 
         catch (e) {
           return false;
-        };
-      };
-    };
+        }
+      }
+    }
 
     return true;
   };
@@ -232,14 +232,14 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
         $config.cookie.expiry = -1;
 
         value = '';
-      };
+      }
 
       if ($config.cookie.expiry !== 0) 
       {
         expiryDate.setTime(expiryDate.getTime() + ($config.cookie.expiry * 60 * 60 * 1000));
 
         expiry = "; expires=" + expiryDate.toGMTString();
-      };
+      }
 
       document.cookie = $config.title + 
                         key + 
@@ -252,7 +252,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     } 
     catch (e) {
       return false;
-    };
+    }
 
     return true;
   };
@@ -279,7 +279,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
 
       if (thisCookie.indexOf($config.title + key + '=') == 0)
         return decodeURIComponent(thisCookie.substring($config.title.length + key.length + 1, thisCookie.length));
-    };
+    }
 
     return null;
   };
@@ -308,7 +308,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
       key = thisCookie.substring(prefixLength, thisCookie.indexOf('='));
 
       removeFromCookies(key);
-    };
+    }
   };
 
 

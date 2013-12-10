@@ -168,6 +168,8 @@ angular.module('WebPaige.Controllers.Groups', [])
 			.then(
 				function (result)
 				{
+          $rootScope.statusBar.off();
+
 					if (result.error)
 					{
 						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
