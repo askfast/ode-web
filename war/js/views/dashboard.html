@@ -32,6 +32,47 @@
                   style="background-color: #a93232">NIET BESCHIKBAAR</span>
 
             <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
+
+            <div class="btn-group"
+                  style="margin: -10px 0 0 8px; display: none;">
+              <button class="btn btn-mini dropdown-toggle"
+                      data-toggle="dropdown">Nieuwe beschikbaarheid <span class="caret"></span></button>
+              <ul class="dropdown-menu pull-right fast-availability"
+                  style="font-size: 10px;">
+                <li>
+                  <a ng-click="setAvailability(true, 1)">
+                    <div class="square available"></div> Beschikbaar (1 uur)
+                  </a>
+                </li>
+                <li>
+                  <a ng-click="setAvailability(true, 6)">
+                    <div class="square available"></div> Beschikbaar (6 uur)
+                  </a>
+                </li>
+                <li>
+                  <a ng-click="setAvailability(true, 24)">
+                    <div class="square available"></div> Beschikbaar (24 uur)
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a ng-click="setAvailability(false, 1)">
+                    <div class="square unavailable"></div> Niet beschikbaar (1 uur)
+                  </a>
+                </li>
+                <li>
+                  <a ng-click="setAvailability(false, 6)">
+                    <div class="square unavailable"></div> Niet beschikbaar (6 uur)
+                  </a>
+                </li>
+                <li>
+                  <a ng-click="setAvailability(false, 24)">
+                    <div class="square unavailable"></div> Niet beschikbaar (24 uur)
+                  </a>
+                </li>
+              </ul>
+            </div>
+
           </small>
         </div>
 

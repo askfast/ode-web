@@ -1067,15 +1067,16 @@ label {
 .page-header form.form-search {
   display: inline;
 }
-.page-header .square {
+
+.fast-availability .square {
   margin-top: 5px;
   width: 10px;
   height: 10px;
 }
-.page-header .available {
+.fast-availability .available {
   background-color: #406940;
 }
-.page-header .unavailable {
+.fast-availability .unavailable {
   background-color: #8f2b2b;
 }
 
