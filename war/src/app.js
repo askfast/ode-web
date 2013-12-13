@@ -6511,7 +6511,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     var item = (key) ? localStorage.key : localStorage;
 
     return ((3 + ((item.length * 16) / (8 * 1024))) * 0.0009765625).toPrecision(2) + ' MB';
-  }
+  };
 
 
   var getPeriods = function ()
@@ -9690,6 +9690,20 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
       });
     }
+
+
+    /**
+     * Broadcast fireSetPrefixedAvailability calls
+     */
+    $scope.setPrefixedAvailability = function (availability, period)
+    {
+      Storage.session.add('setPrefixedAvailability', angular.toJson({
+        availability: availability,
+        period: period
+      }));
+
+      $location.path('/planboard').search({ setPrefixedAvailability: true });
+    }
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -11045,6 +11059,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         .then(
         function (result)
         {
+          Storage.session.remove('setPrefixedAvailability');
+
           $rootScope.$broadcast('resetPlanboardViews');
 
           if (result.error)
@@ -11063,6 +11079,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
         }
       );
     };
+
+
+    /**
+     * Listen for incoming prefixed availability changes
+     */
+    if ($location.search().setPrefixedAvailability)
+    {
+      var options = angular.fromJson(Storage.session.get('setPrefixedAvailability'));
+
+      $scope.setAvailability(options.availability, options.period);
+    }
 
 
 	  /**

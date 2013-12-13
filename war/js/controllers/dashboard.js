@@ -588,5 +588,19 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
       });
     }
+
+
+    /**
+     * Broadcast fireSetPrefixedAvailability calls
+     */
+    $scope.setPrefixedAvailability = function (availability, period)
+    {
+      Storage.session.add('setPrefixedAvailability', angular.toJson({
+        availability: availability,
+        period: period
+      }));
+
+      $location.path('/planboard').search({ setPrefixedAvailability: true });
+    }
 	}
 ]);

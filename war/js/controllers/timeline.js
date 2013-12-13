@@ -789,6 +789,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         .then(
         function (result)
         {
+          Storage.session.remove('setPrefixedAvailability');
+
           $rootScope.$broadcast('resetPlanboardViews');
 
           if (result.error)
@@ -807,6 +809,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
         }
       );
     };
+
+
+    /**
+     * Listen for incoming prefixed availability changes
+     */
+    if ($location.search().setPrefixedAvailability)
+    {
+      var options = angular.fromJson(Storage.session.get('setPrefixedAvailability'));
+
+      $scope.setAvailability(options.availability, options.period);
+    }
 
 
 	  /**

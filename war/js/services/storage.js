@@ -317,7 +317,7 @@ angular.module('WebPaige.Services.Storage', ['ngResource'])
     var item = (key) ? localStorage.key : localStorage;
 
     return ((3 + ((item.length * 16) / (8 * 1024))) * 0.0009765625).toPrecision(2) + ' MB';
-  }
+  };
 
 
   var getPeriods = function ()
