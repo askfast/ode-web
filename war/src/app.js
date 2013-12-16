@@ -10402,6 +10402,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
       }
 		});
 
+
 	  /**
 	   * Timeliner listener
 	   */
@@ -10413,17 +10414,21 @@ angular.module('WebPaige.Controllers.Timeline', [])
         start: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString().replace("Z", "")
+          // datetime: new Date().toISOString().replace("Z", "")
+          datetime: new Date().toString("yyyy-MM-ddTHH:mm:ss")
         },
         end: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().addHours(1).toString('HH:00'), //$rootScope.config.formats.time,
-          datetime: new Date().toISOString().replace("Z", "")
+          datetime: new Date().addHours(1).toString("yyyy-MM-ddTHH:00:00")
+          // datetime: new Date().addHours(1).toISOString().replace("Z", "")
         },
         state:      'com.ask-cs.State.Available',
         recursive:  false,
         id:         ''
       };
+
+      console.log('slot initials ->', $scope.slot);
 	  });
 
 
@@ -10672,7 +10677,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Init timeline
 	   */
-	  if ($scope.timeline) $scope.timeliner.init();
+	  if ($scope.timeline)
+    {
+      $scope.timeliner.init();
+    }
 
 
 	  /**
@@ -11099,6 +11107,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  {
 	  	$rootScope.planboardSync.clear();
 
+      console.log('slot adding values ->', slot);
+
 	  	/**
 	  	 * Make view for new slot
 	  	 */
@@ -11152,11 +11162,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	{
 	  		var now     = Date.now().getTime(),
 		        values  = {
-		                    start:      ($rootScope.browser.mobile) ? 
-		                                  new Date(slot.start.datetime).getTime() / 1000 :
+		                    start:      ($rootScope.browser.mobile) ?
+                                      Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
 		                                  Dater.convert.absolute(slot.start.date, slot.start.time, true),
-		                    end:        ($rootScope.browser.mobile) ? 
-		                                  new Date(slot.end.datetime).getTime() / 1000 : 
+		                    end:        ($rootScope.browser.mobile) ?
+                                      Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
 		                                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
 		                    recursive:  (slot.recursive) ? true : false,
 		                    text:       slot.state

@@ -195,7 +195,9 @@
 
 
     <!-- notifications -->
-    <div id="notification" class="alert {{notification.type}} ng-cloak" ng-show="notification.status">
+    <div id="notification"
+         class="alert {{notification.type}} ng-cloak"
+         ng-show="notification.status">
       <button type="button" class="close" ng-click="notification.status = false">&times;</button>
       {{notification.message}}
     </div>
