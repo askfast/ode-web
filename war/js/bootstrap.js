@@ -207,7 +207,7 @@ angular.module('WebPaige')
      */
     $rootScope.notifier =
     {
-      init: function (status, type, message)
+      init: function (status, type, message, confirm, options)
       {
         $rootScope.notification.status = true;
 
@@ -220,7 +220,9 @@ angular.module('WebPaige')
           $rootScope.notification = {
             status:   status,
             type:     type,
-            message:  message
+            message:  message,
+            confirm:  confirm,
+            options:  options
           };
         }
       },
@@ -245,6 +247,16 @@ angular.module('WebPaige')
         }
       },
 
+      alert: function (message, permanent, confirm, options)
+      {
+        this.init(true, '', message, confirm, options);
+
+        if (!permanent)
+        {
+          this.destroy();
+        }
+      },
+
       destroy: function ()
       {
         setTimeout(function ()
@@ -255,6 +267,20 @@ angular.module('WebPaige')
     };
 
     $rootScope.notifier.init(false, '', '');
+
+
+    /**
+     * Fire delete requests
+     */
+    $rootScope.fireDeleteRequest = function (options)
+    {
+      switch (options.section)
+      {
+        case 'groups':
+          $rootScope.$broadcast('fireGroupDelete', {id: options.id});
+          break;
+      }
+    };
 
 
     /**

@@ -199,7 +199,13 @@
          class="alert {{notification.type}} ng-cloak"
          ng-show="notification.status">
       <button type="button" class="close" ng-click="notification.status = false">&times;</button>
-      {{notification.message}}
+      <span ng-hide="notification.confirm">{{notification.message}}</span>
+      <span ng-show="notification.confirm">
+        {{ui.confirms.remove}}
+        <button
+          ng-click="fireDeleteRequest(notification.options)"
+          class="btn btn-mini btn-danger">Delete</button>
+      </span>
     </div>
     <!-- end notifications -->
 

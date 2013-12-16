@@ -426,6 +426,9 @@ var ui = {
           remove: 'Error with removing timeslot!',
           wisher: 'Error with changing wish value!'
         }
+      },
+      confirms: {
+        remove: 'Are you sure you want to delete it? You can not undo this action.'
       }
     },
     nl: {
@@ -846,6 +849,9 @@ var ui = {
           remove: 'Error with removing timeslot!',
           wisher: 'Error with changing wish value!'
         }
+      },
+      confirms: {
+        remove: 'Weet u zeker dat u dit wilt verwijderen? U kunt dit niet ongedaan maken.'
       }
     }
 };;/*jslint node: true */
@@ -1565,7 +1571,7 @@ angular.module('WebPaige')
      */
     $rootScope.notifier =
     {
-      init: function (status, type, message)
+      init: function (status, type, message, confirm, options)
       {
         $rootScope.notification.status = true;
 
@@ -1578,7 +1584,9 @@ angular.module('WebPaige')
           $rootScope.notification = {
             status:   status,
             type:     type,
-            message:  message
+            message:  message,
+            confirm:  confirm,
+            options:  options
           };
         }
       },
@@ -1603,6 +1611,16 @@ angular.module('WebPaige')
         }
       },
 
+      alert: function (message, permanent, confirm, options)
+      {
+        this.init(true, '', message, confirm, options);
+
+        if (!permanent)
+        {
+          this.destroy();
+        }
+      },
+
       destroy: function ()
       {
         setTimeout(function ()
@@ -1613,6 +1631,20 @@ angular.module('WebPaige')
     };
 
     $rootScope.notifier.init(false, '', '');
+
+
+    /**
+     * Fire delete requests
+     */
+    $rootScope.fireDeleteRequest = function (options)
+    {
+      switch (options.section)
+      {
+        case 'groups':
+          $rootScope.$broadcast('fireGroupDelete', {id: options.id});
+          break;
+      }
+    };
 
 
     /**
@@ -9117,6 +9149,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
 	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
+    $rootScope.notification.status = false;
+
 		/**
 		 * Fix styles
 		 */
@@ -9722,6 +9756,8 @@ angular.module('WebPaige.Controllers.TV', [])
 	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
 	function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
+    $rootScope.notifier.destroy();
+
 		/**
 		 * Fix styles
 		 */
@@ -9987,6 +10023,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage',
 	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage)
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */
@@ -11657,7 +11695,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
             $scope.timeliner.load({
               start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
-              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp,
+              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp
             });
           }
         }
@@ -11669,7 +11707,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
             $scope.timeliner.load({
               start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
             });
           }
         }
@@ -11910,7 +11948,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	      $scope.timeliner.load({
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	      });
 	    }
 
@@ -11932,7 +11970,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	      $scope.timeliner.load({
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	      });
 	    }
 
@@ -11990,6 +12028,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
 	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) 
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */
@@ -13796,6 +13836,24 @@ angular.module('WebPaige.Controllers.Groups', [])
 		};
 
 
+    /**
+     * Confirm deleting a group
+     */
+    $scope.confirmGroupDelete = function (id)
+    {
+      $rootScope.notifier.alert('', false, true, {section: 'groups', id: id});
+    };
+
+
+    /**
+     * Listen for incoming group delete calls
+     */
+    $rootScope.$on('fireGroupDelete', function (event, group)
+    {
+      $scope.deleteGroup(group.id);
+    });
+
+
 		/**
 		 * Delete a group
 		 */
@@ -13936,6 +13994,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 	'$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'MD5', 
 	function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5) 
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */
@@ -14326,6 +14386,8 @@ angular.module('WebPaige.Controllers.Settings', [])
 	'$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile', 'Storage', 
 	function ($rootScope, $scope, $window, data, Settings, Profile, Storage) 
 	{
+    $rootScope.notification.status = false;
+
 		/**
 		 * Fix styles
 		 */
@@ -14438,6 +14500,8 @@ angular.module('WebPaige.Controllers.Help', [])
 	'$rootScope', '$scope', '$location',
 	function ($rootScope, $scope, $location)
 	{
+    $rootScope.notification.status = false;
+
 		/**
 		 * Fix styles
 		 */

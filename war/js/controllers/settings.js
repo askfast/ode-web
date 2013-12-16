@@ -14,6 +14,8 @@ angular.module('WebPaige.Controllers.Settings', [])
 	'$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile', 'Storage', 
 	function ($rootScope, $scope, $window, data, Settings, Profile, Storage) 
 	{
+    $rootScope.notification.status = false;
+
 		/**
 		 * Fix styles
 		 */

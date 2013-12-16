@@ -381,8 +381,8 @@
                   ng-click="editGroup(group)" 
                   style="margin-right:5px"
                   class="btn"><i class="icon-edit"></i>&nbsp;{{ui.groups.editGroup}}</button>
-          <button type="button" 
-                  ng-click="deleteGroup(group.uuid)" 
+          <button type="button"
+                  ng-click="confirmGroupDelete(group.uuid)"
                   class="btn btn-danger"><i class="icon-trash icon-white"></i>&nbsp;{{ui.groups.deleteGroup}}</button>
 
         </div>

@@ -94,7 +94,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
             $scope.timeliner.load({
               start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
-              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp,
+              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp
             });
           }
         }
@@ -106,7 +106,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
             $scope.timeliner.load({
               start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
             });
           }
         }
@@ -347,7 +347,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	      $scope.timeliner.load({
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	      });
 	    }
 
@@ -369,7 +369,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	      $scope.timeliner.load({
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	      });
 	    }
 

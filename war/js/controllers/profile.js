@@ -14,6 +14,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 	'$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'MD5', 
 	function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5) 
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */

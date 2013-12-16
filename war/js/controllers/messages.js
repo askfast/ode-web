@@ -14,6 +14,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
 	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) 
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */

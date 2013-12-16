@@ -15,6 +15,8 @@ angular.module('WebPaige.Controllers.TV', [])
 	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
 	function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
+    $rootScope.notifier.destroy();
+
 		/**
 		 * Fix styles
 		 */

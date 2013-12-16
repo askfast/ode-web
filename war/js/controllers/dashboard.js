@@ -15,6 +15,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
 	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
+    $rootScope.notification.status = false;
+
 		/**
 		 * Fix styles
 		 */

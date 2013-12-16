@@ -11,6 +11,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage',
 	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage)
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */
