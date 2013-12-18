@@ -93,14 +93,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				}
 			}
 
-      /*
-      if (
-        $scope.timeline.current.year === Number(Dater.current.year()) + 1
-          &&
-        ($scope.timeline.current.month === 12 ||
-         $scope.timeline.current.week === 53 ||
-         $scope.timeline.current.day === 365)
-        )
+      var max   = new Date(Number(Dater.current.year()) + 1, 11).moveToLastDayOfMonth().addDays(1),
+          diff  = max - new Date(range.end);
+
+      if (diff <= 0)
       {
         $('#timelineAfterBtn').attr('disabled', 'disabled');
       }
@@ -117,9 +113,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       else
       {
         var timelineBeforeBtn     = $('#timelineBeforeBtn'),
-            timelineAfterBtn      = $('#timelineAfterBtn'),
-            timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
-            timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
+          timelineAfterBtn      = $('#timelineAfterBtn'),
+          timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
+          timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
 
         if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
         {
@@ -131,7 +127,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
           timelineAfterBtn.removeAttr('disabled');
         }
       }
-      */
 		});
 
 
