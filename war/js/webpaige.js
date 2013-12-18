@@ -3,6 +3,12 @@
 /*global basket */
 'use strict';
 
+/**
+ * Temporarily remove calculated periods
+ */
+localStorage.removeItem('WebPaige.periods');
+localStorage.removeItem('WebPaige.periodsNext');
+
 
 /**
  * Declare app level module which depends on filters, and services
