@@ -241,8 +241,7 @@ angular.module('WebPaige')
       {
         this.init(true, 'alert-danger', message);
 
-        if (!permanent)
-        {
+        if (!permanent) {
           this.destroy();
         }
       },

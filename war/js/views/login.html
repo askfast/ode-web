@@ -19,27 +19,34 @@
 	<div id="login" class="boxed" ng-show="views.login" ng-hide="views.help || views.changePass">
 		<form ng-submit="login()">
 		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
+
 		  <h4 class="form-signin-heading">{{ui.login.header}}</h4>
+      <!--<h4 class="form-signin-heading">Maintenance</h4>-->
+
+      <!--<p>Er vindt momenteel een upgrade plaats. De applicatie zal binnenkort weer beschikbaar zijn.-->
+        <!--Bedankt voor uw geduld en excuses voor het ongemak.</p>-->
+      <!--<br/>-->
+
       <!-- alert login -->
       <div class="alert {{alert.login.type}}" ng-show="alert.login.display">
         <button class="close" type="button" ng-click="alert.login=false">×</button>
         {{alert.login.message}}
       </div>
       <!-- end login password -->
-		  <input 
-		    class="" 
-		    type="text" 
+		  <input
+		    class=""
+		    type="text"
 		    ng-model="logindata.username"
-		    placeholder="{{ui.login.placeholder_username}}" 
+		    placeholder="{{ui.login.placeholder_username}}"
 		    autofocus>
-		  <input 
-		      class="" 
-		      type="password" 
+		  <input
+		      class=""
+		      type="password"
 		      ng-model="logindata.password"
 		      placeholder="{{ui.login.placeholder_password}}">
 		  <label class="checkbox span3">
-		    <input 
-		      type="checkbox" 
+		    <input
+		      type="checkbox"
 		      ng-model="logindata.remember">{{ui.login.label_rememberMe}}
 		  </label>
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.button_login}}</button>
@@ -60,6 +67,7 @@
 			  	<a ng-click="changeLanguage('nl')">Nederlands</a>
 		  	</small>
 		  </p>
+
 		  <span class="version"><a href="version.html" target="_blank">StandBy v{{config.version}}</a></span>
 		</form>
 	</div>

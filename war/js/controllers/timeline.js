@@ -93,6 +93,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				}
 			}
 
+      /*
       if (
         $scope.timeline.current.year === Number(Dater.current.year()) + 1
           &&
@@ -130,6 +131,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           timelineAfterBtn.removeAttr('disabled');
         }
       }
+      */
 		});
 
 

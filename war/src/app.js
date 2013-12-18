@@ -1605,8 +1605,7 @@ angular.module('WebPaige')
       {
         this.init(true, 'alert-danger', message);
 
-        if (!permanent)
-        {
+        if (!permanent) {
           this.destroy();
         }
       },
@@ -5675,20 +5674,29 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         for (var i = 0; i < 12; i++)
         {
           var firstDay  = new Date(year, i).moveToFirstDayOfMonth(),
-              lastDay   = new Date(year, i).moveToLastDayOfMonth(),
-              month     = {
-                first: {
-                  day: firstDay,
-                  timeStamp: firstDay.getTime()
-                },
-                last: { 
-                  day: lastDay,
-                  timeStamp: lastDay.getTime() 
-                },
-                totalDays: Date.getDaysInMonth(year, i)
-              };
+              lastDay   = new Date(year, i).moveToLastDayOfMonth();
 
-          months[i+1] = month;
+          /**
+           * Timeline bug
+           * Monkey patch for not displaying last day of the year
+           */
+          if (i == 11)
+          {
+            // TODO: Use local date conversion maybe?
+            lastDay = lastDay.addDays(1);
+          }
+
+          months[i+1] = {
+            first: {
+              day: firstDay,
+              timeStamp: firstDay.getTime()
+            },
+            last: {
+              day: lastDay,
+              timeStamp: lastDay.getTime()
+            },
+            totalDays: Date.getDaysInMonth(year, i)
+          };
         }
 
         return months;
@@ -10401,6 +10409,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				}
 			}
 
+      /*
       if (
         $scope.timeline.current.year === Number(Dater.current.year()) + 1
           &&
@@ -10438,6 +10447,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           timelineAfterBtn.removeAttr('disabled');
         }
       }
+      */
 		});
 
 
