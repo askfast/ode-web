@@ -1203,13 +1203,27 @@ angular.module('WebPaige')
             var periods   = Storage.local.periods(),
                 settings  = Storage.local.settings();
 
+            var stamps = {};
+
+            if (Dater.current.today() > 360)
+            {
+              stamps = {
+                start:  periods.days[358].last.timeStamp,
+                end:    periods.days[365].last.timeStamp
+              }
+            }
+            else
+            {
+              stamps = {
+                start:  periods.days[Dater.current.today() - 1].last.timeStamp,
+                end:    periods.days[Dater.current.today() + 6].last.timeStamp
+              }
+            }
+
             return  Slots.all({
                       groupId:  settings.app.group,
-                      stamps: {
-                        start:  periods.days[Dater.current.today() - 1].last.timeStamp,
-                        end:    periods.days[Dater.current.today() + 6].last.timeStamp
-                      },
-                      month: Dater.current.month(),
+                      stamps:   stamps,
+                      month:    Dater.current.month(),
                       layouts: {
                         user:     true,
                         group:    true,
@@ -10089,6 +10103,27 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.slot = {};
 
 
+    /**
+     * Hot fix for breaking timeline for the end of the year
+     */
+    var stamps = {};
+
+    if (Dater.current.today() > 360)
+    {
+      stamps = {
+        start:  $scope.periods.days[358].last.timeStamp,
+        end:    $scope.periods.days[365].last.timeStamp
+      }
+    }
+    else
+    {
+      stamps = {
+        start:  $scope.eriods.days[Dater.current.today() - 1].last.timeStamp,
+        end:    $scope.periods.days[Dater.current.today() + 6].last.timeStamp
+      }
+    }
+
+
 	  /**
 	   * Set defaults for timeline
 	   */
@@ -10104,14 +10139,16 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	     * Initial start up is next 7 days
 	     */
 	    options: {
-        start:  $scope.periods.days[Dater.current.today() - 1].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 6].last.day,
-        min:  	$scope.periods.days[Dater.current.today() - 1].last.day,
-        max:    $scope.periods.days[Dater.current.today() + 6].last.day
+        start:  stamps.start,
+        end:    stamps.end,
+        min:  	stamps.start,
+        max:    stamps.end
 	    },
 	    range: {
-        start:  $scope.periods.days[Dater.current.today()].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 7].last.day
+        start: stamps.start,
+        end: stamps.end
+        // start:  $scope.periods.days[Dater.current.today()].last.day,
+        // end:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    scope: {
 	      day:    false,
