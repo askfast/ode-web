@@ -104,7 +104,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         $scope.timeline.current.year == Dater.current.year()
           &&
           ($scope.timeline.current.month === 1 ||
-            $scope.timeline.current.week === 1 ||
+            ($scope.timeline.current.week === 1 && $scope.timeline.current.month != 12) ||
             $scope.timeline.current.day === 1)
         )
       {

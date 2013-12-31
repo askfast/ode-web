@@ -11,7 +11,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 [
   '$rootScope', 'Storage', 
   function ($rootScope, Storage)
-  {
+  {  
     return {
 
       current:
@@ -26,7 +26,8 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
           /**
            * IE library does not exist bug
            */
-          if (new Date().getWeek)
+          
+          if (new Date().getWeek())
           {
             return new Date().getWeek();
           }
