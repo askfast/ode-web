@@ -10453,9 +10453,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       else if (
         $scope.timeline.current.year == Dater.current.year()
           &&
-          ($scope.timeline.current.month === 1 ||
-            ($scope.timeline.current.week === 1 && $scope.timeline.current.month != 12) ||
-            $scope.timeline.current.day === 1)
+          (($scope.timeline.scope.month && $scope.timeline.current.month === 1) ||
+            (($scope.timeline.scope.week && $scope.timeline.current.week === 1 && $scope.timeline.current.month != 12)) ||
+            ($scope.timeline.scope.day && $scope.timeline.current.day === 1))
         )
       {
         $('#timelineBeforeBtn').attr('disabled', 'disabled');
