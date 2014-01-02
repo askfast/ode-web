@@ -10119,7 +10119,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
     else
     {
       stamps = {
-        start:  $scope.eriods.days[Dater.current.today() - 1].last.timeStamp,
+        start:  $scope.periods.days[Dater.current.today() - 1].last.timeStamp,
         end:    $scope.periods.days[Dater.current.today() + 6].last.timeStamp
       }
     }
