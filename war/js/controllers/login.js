@@ -438,6 +438,13 @@ angular.module('WebPaige.Controllers.Login', [])
 	            }
 	            else
 	            {
+                console.log('ga ->', ga, $rootScope.config);
+
+                ga('create', 'UA-44867560-2', profile.analytics.url);
+                ga('send', 'pageview', {
+                  'dimension1':  resources.uuid
+                });
+
 	              finalize();
 	            }
 	          }

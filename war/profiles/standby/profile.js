@@ -59,6 +59,11 @@ var profile = {
   },
 
   analytics: {
+    url: 'dev.standby.ask-cs.com',
+    // url: 'test.standby.ask-cs.com',
+    // url: 'brandweer.standby.ask-cs.com',
+
+    // Depreciated
     status: false,
     code:   function ()
     {
