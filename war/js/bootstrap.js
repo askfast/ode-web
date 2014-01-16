@@ -348,9 +348,11 @@ angular.module('WebPaige')
           }
       }
 
+      console.log('$rootScope.location ->', $rootScope.location || 'login');
+
       ga('send', 'pageview', {
-        'page': '/index.html#/' + $rootScope.location,
-        'title': $rootScope.location
+        'page': '/index.html#/' + $rootScope.location || 'login',
+        'title': $rootScope.location || 'login'
       });
 
       //Prevent deep linking
