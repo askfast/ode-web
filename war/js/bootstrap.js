@@ -348,6 +348,11 @@ angular.module('WebPaige')
           }
       }
 
+      ga('send', 'pageview', {
+        'page': '/index.html#/' + $rootScope.location,
+        'title': $rootScope.location
+      });
+
       //Prevent deep linking
       if ($location.path() != '/tv')
       {
