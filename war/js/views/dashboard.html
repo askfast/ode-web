@@ -19,7 +19,7 @@
           <small ng-show="app.guard.currentState">
             <i class="icon-fire"></i>&nbsp;Status </small>&nbsp;&nbsp;
 
-            <span ng-show="app.guard.currentState=='available'"
+            <span ng-show="app.guard.currentState=='available' || app.guard.currentState=='Beschikbaar'"
                   class="label"
                   style="background-color: #4f824f">BESCHIKBAAR</span>
 
@@ -27,7 +27,7 @@
                   class="label"
                   style="background-color: #a0a0a0">GEEN PLANNING</span>
 
-            <span ng-show="app.guard.currentState=='unavailable'"
+            <span ng-show="app.guard.currentState=='unavailable' || app.guard.currentState=='Niet Beschikbaar'"
                   class="label"
                   style="background-color: #a93232">NIET BESCHIKBAAR</span>
 
