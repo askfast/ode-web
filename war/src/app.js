@@ -1732,7 +1732,7 @@ angular.module('WebPaige')
           }
       }
 
-      console.log('$rootScope.location ->', $rootScope.location || 'login');
+      // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
       ga('send', 'pageview', {
         'page': '/index.html#/' + $rootScope.location || 'login',
@@ -9510,7 +9510,19 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
 
         $rootScope.app.guard.role = setup.role;
-        $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
+
+        if (setup.users[$rootScope.app.resources.uuid])
+        {
+          $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
+        }
+        else
+        {
+          Slots.currentState()
+            .then(function (state)
+            {
+              $rootScope.app.guard.currentState = state.label;
+            });
+        }
 
         var reserves = {};
 
