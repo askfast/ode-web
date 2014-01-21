@@ -10487,38 +10487,41 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				}
 			}
 
-      var max   = new Date(Number(Dater.current.year()) + 1, 11).moveToLastDayOfMonth().addDays(1),
+      if ($scope.timeline)
+      {
+        var max   = new Date(Number(Dater.current.year()) + 1, 11).moveToLastDayOfMonth().addDays(1),
           diff  = max - new Date(range.end);
 
-      if (diff <= 0)
-      {
-        $('#timelineAfterBtn').attr('disabled', 'disabled');
-      }
-      else if (
-        $scope.timeline.current.year == Dater.current.year()
-          &&
-          (($scope.timeline.scope.month && $scope.timeline.current.month === 1) ||
-            (($scope.timeline.scope.week && $scope.timeline.current.week === 1 && $scope.timeline.current.month != 12)) ||
-            ($scope.timeline.scope.day && $scope.timeline.current.day === 1))
-        )
-      {
-        $('#timelineBeforeBtn').attr('disabled', 'disabled');
-      }
-      else
-      {
-        var timelineBeforeBtn     = $('#timelineBeforeBtn'),
-          timelineAfterBtn      = $('#timelineAfterBtn'),
-          timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
-          timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
-
-        if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
+        if (diff <= 0)
         {
-          timelineBeforeBtn.removeAttr('disabled');
+          $('#timelineAfterBtn').attr('disabled', 'disabled');
         }
-
-        if (typeof timelineAfterBtnAttr  !== 'undefined' && timelineAfterBtnAttr   !== false)
+        else if (
+          $scope.timeline.current.year == Dater.current.year()
+            &&
+            (($scope.timeline.scope.month && $scope.timeline.current.month === 1) ||
+              (($scope.timeline.scope.week && $scope.timeline.current.week === 1 && $scope.timeline.current.month != 12)) ||
+              ($scope.timeline.scope.day && $scope.timeline.current.day === 1))
+          )
         {
-          timelineAfterBtn.removeAttr('disabled');
+          $('#timelineBeforeBtn').attr('disabled', 'disabled');
+        }
+        else
+        {
+          var timelineBeforeBtn     = $('#timelineBeforeBtn'),
+            timelineAfterBtn      = $('#timelineAfterBtn'),
+            timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
+            timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
+
+          if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
+          {
+            timelineBeforeBtn.removeAttr('disabled');
+          }
+
+          if (typeof timelineAfterBtnAttr  !== 'undefined' && timelineAfterBtnAttr   !== false)
+          {
+            timelineAfterBtn.removeAttr('disabled');
+          }
         }
       }
 		});
