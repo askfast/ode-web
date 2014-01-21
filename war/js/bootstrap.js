@@ -348,6 +348,16 @@ angular.module('WebPaige')
           }
       }
 
+      if ($location.path().match(/logout/))
+      {
+        $rootScope.location = 'logout';
+      }
+
+      if (!$rootScope.location)
+      {
+        ga('send', 'Undefined Page', $location.path());
+      }
+
       // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
       ga('send', 'pageview', {
