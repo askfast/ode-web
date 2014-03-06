@@ -36,7 +36,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/standby/profile.js"></script>
+    <script src="profiles/knrm/profile.js"></script>
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
     <!--[if IE 8]>    <link rel="stylesheet" href="css/ie8.css">                                 <![endif]-->
@@ -294,14 +294,15 @@
               <!--end Monster-->
 
               <!--StandBy Firedep-->
-              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'standby')">
+              <li
+                ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
                 <a class="btn btn-success btn-large"
                    href="https://play.google.com/store/apps/details?id=com.askcs.standby">
                   Download Android App
                 </a>
               </li>
 
-              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'standby')">
+              <li ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
                 <a class="btn btn-success btn-large"
                    href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
                    target="itunes_store">
@@ -311,20 +312,21 @@
               <!--end StandBy Firedep-->
 
               <li ng-show="config.profile.mobileApp.status"
-                  ng-hide="(config.profile.meta == 'standby') || (config.profile.meta == 'monster')">
+                  ng-hide="(config.profile.meta == 'standby') || (config.profile.meta == 'monster') || (config.profile.meta == 'knrm')">
                 <button class="btn btn-success btn-large"
                         type="button"
                         ng-click="downloadMobileApp('regular')">
                   Download Mobiele App
                 </button>
               </li>
-              <li ng-show="config.profile.mobileApp.experimental">
-                <button class="btn btn-success btn-large"
-                        type="button"
-                        ng-click="downloadMobileApp('experimental')">
-                  Download Experimentele App
-                </button>
-              </li>
+
+              <!--<li ng-show="config.profile.mobileApp.experimental">-->
+              <!--<button class="btn btn-success btn-large"-->
+              <!--type="button"-->
+              <!--ng-click="downloadMobileApp('experimental')">-->
+              <!--Download Experimentele App-->
+              <!--</button>-->
+              <!--</li>-->
 
               <li>
                 <span class="muted">
