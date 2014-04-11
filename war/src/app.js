@@ -957,7 +957,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.10',
+    version:  '2.3.11',
     lang:     'nl',
 
     fullscreen: true,
@@ -1066,6 +1066,7 @@ angular.module('WebPaige')
         legendarer: false,
         states:     {},
         divisions:  profile.divisions,
+        //divisions:  [],
         densities: {
           less:   '#a0a0a0',
           even:   '#ba6a24',
@@ -1929,17 +1930,31 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  );
 
 
-	  var Resources = $resource(
-	    $config.host + '/resources',
-	    {
-	    },
-	    {
-	      get: {
-	        method: 'GET',
-	        params: {}
-	      }
-	    }
-	  );
+    var Resources = $resource(
+        $config.host + '/resources',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {}
+        }
+      }
+    );
+
+
+    var Divisions = $resource(
+        $config.host + '/divisions',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
 
 
 	  var Reset = $resource(
@@ -1973,6 +1988,29 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
           }
         }
       });
+
+
+    /**
+     * Divisions
+     */
+    User.prototype.divisions = function ()
+    {
+      var deferred = $q.defer();
+
+      Divisions.get(
+        {},
+        function (result)
+        {
+          deferred.resolve(result);
+        },
+        function (error)
+        {
+          deferred.resolve(error);
+        }
+      );
+
+      return deferred.promise;
+    };
 	  
 	  
 	  /**
@@ -2149,18 +2187,34 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
     /**
      * TODO: Still being used?
      */
-		var Dashboard = $resource(
-			'http://knrm.myask.me/rpc/client/p2000.php',
-			{
-			},
-			{
-				p2000: {
-					method: 'GET',
-					params: {},
-					isArray: true
-				}
-			}
-		);
+    var Dashboard = $resource(
+      'http://knrm.myask.me/rpc/client/p2000.php',
+      {
+      },
+      {
+        p2000: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
+
+
+    /**
+     * TODO: Still being used?
+     */
+    var Backend = $resource(
+      $config.host + '/capcodes',
+      {},
+      {
+        capcodes: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
 		
 
 		/**
@@ -2216,6 +2270,41 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		};
 
 
+    Dashboard.prototype.getCapcodes = function ()
+    {
+      var deferred = $q.defer();
+
+      function concatCode (code)
+      {
+        var _code = '';
+
+        angular.forEach(code, function (_c) { _code += _c; });
+
+        return Number(_code);
+      }
+
+      Backend.capcodes(null,
+        function (results)
+        {
+          var codes = [];
+
+          angular.forEach(results, function (res)
+          {
+            codes.push(concatCode(res));
+          });
+
+          deferred.resolve(codes);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
 		/**
      * TODO: Still being used since harcoded in controller itself?
 		 * Get p2000 announcements
@@ -2252,26 +2341,34 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
       }
       else
       {
-        $.ajax({
-          url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
-          dataType: 'jsonp',
-          success: function (results)
+
+
+        Dashboard.prototype.getCapcodes().
+          then(function (capcodes)
           {
-            $rootScope.statusBar.off();
-
-            var processed = Announcer.process(results);
-
-            deferred.resolve(
+            $.ajax({
+              url: $config.profile.p2000.url + '?code=' + capcodes,
+              dataType: 'jsonp',
+              success: function (results)
               {
-                alarms: 	processed,
-                synced:   new Date().getTime()
-              });
-          },
-          error: function ()
-          {
-            deferred.resolve({error: error});
-          }
-        });
+                $rootScope.statusBar.off();
+
+                var processed = Announcer.process(results);
+
+                deferred.resolve(
+                  {
+                    alarms: 	processed,
+                    synced:   new Date().getTime()
+                  });
+              },
+              error: function ()
+              {
+                deferred.resolve({error: error});
+              }
+            });
+          });
+
+
       }
 
 			return deferred.promise;
@@ -6015,7 +6112,10 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
       });
     }
   }
-]);;'use strict';
+]
+
+
+  );;'use strict';
 
 
 angular.module('WebPaige.Services.MD5', ['ngResource'])
@@ -8675,248 +8775,248 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.progress(30, $rootScope.ui.login.loading_User);
 
-	    User.resources()
-	    .then(function (resources)
-	    {
-	      if (resources.error)
-	      {
-	        console.warn('error ->', resources);
-	      }
-	      else
-	      {
-	        $rootScope.app.resources = resources;
 
-	        self.progress(70, $rootScope.ui.login.loading_Group);
+      User.divisions()
+        .then(function (divisions)
+        {
+          $rootScope.config.timeline.divisions = divisions;
 
-	        Groups.query(true)
-	        .then(function (groups)
-	        {
-	          if (groups.error)
-	          {
-	            console.warn('error ->', groups);
-	          }
-	          else
-	          {
-	            var settings  = angular.fromJson(resources.settingsWebPaige) || {},
-	                sync      = false,
-	                parenting = false,
-	                defaults  = $rootScope.config.defaults.settingsWebPaige,
-	                _groups   = function (groups)
-                              {
-                                var _groups = {};
-                                angular.forEach(
-                                  groups,
-                                  function (group)
-                                  {
-                                    _groups[group.uuid] = {
-                                      status:     true,
-                                      divisions:  false
-                                    };
-                                  }
-                                );
-                                return _groups;
-                              };
+          User.resources()
+            .then(function (resources)
+            {
+              if (resources.error)
+              {
+                console.warn('error ->', resources);
+              }
+              else
+              {
+                $rootScope.app.resources = resources;
 
-	            // Check if there is any settings at all
-	            if (settings != null || settings != undefined)
-	            {
-	              // check for user settings-all
-	              if (settings.user)
-	              {
-	                // check for user-language settings
-	                if (settings.user.language)
-	                {
-	                  // console.warn('user HAS language settings');
-	                  $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
-	                  defaults.user.language = settings.user.language;
-	                }
-	                else
-	                {
-	                  // console.warn('user has NO language!!');
-	                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
-	                  sync = true;
-	                }
-	              }
-	              else
-	              {
-	                // console.log('NO user settings at all !!');
-	                sync = true;
-	              }
+                self.progress(70, $rootScope.ui.login.loading_Group);
 
-	              // check for app settings-all
-	              if (settings.app)
-	              {
-	                // check for app-widget settings
-	                if (settings.app.widgets)
-	                {
-	                  // check for app-widget-groups setting
-	                  if (settings.app.widgets.groups)
+                Groups.query(true)
+                  .then(function (groups)
+                  {
+                    if (groups.error)
                     {
-                      // console.log('settings for groups =>', settings.app.widgets.groups);
-                      var oldGroupSetup = false;
-
-                      if (!jQuery.isEmptyObject(settings.app.widgets.groups))
-                      {
-                        angular.forEach(settings.app.widgets.groups, function (value, id)
+                      console.warn('error ->', groups);
+                    }
+                    else
+                    {
+                      var settings  = angular.fromJson(resources.settingsWebPaige) || {},
+                        sync      = false,
+                        parenting = false,
+                        defaults  = $rootScope.config.defaults.settingsWebPaige,
+                        _groups   = function (groups)
                         {
-                          // console.log('value ->', value);
-                          if (typeof value !== 'object' || value == {})
+                          var _groups = {};
+                          angular.forEach(
+                            groups,
+                            function (group)
+                            {
+                              _groups[group.uuid] = {
+                                status:     true,
+                                divisions:  false
+                              };
+                            }
+                          );
+                          return _groups;
+                        };
+
+                      // Check if there is any settings at all
+                      if (settings != null || settings != undefined)
+                      {
+                        // check for user settings-all
+                        if (settings.user)
+                        {
+                          // check for user-language settings
+                          if (settings.user.language)
                           {
-                            oldGroupSetup = true;
+                            // console.warn('user HAS language settings');
+                            $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+                            defaults.user.language = settings.user.language;
                           }
-                        });
+                          else
+                          {
+                            // console.warn('user has NO language!!');
+                            $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+                            sync = true;
+                          }
+                        }
+                        else
+                        {
+                          // console.log('NO user settings at all !!');
+                          sync = true;
+                        }
+
+                        // check for app settings-all
+                        if (settings.app)
+                        {
+                          // check for app-widget settings
+                          if (settings.app.widgets)
+                          {
+                            // check for app-widget-groups setting
+                            if (settings.app.widgets.groups)
+                            {
+                              // console.log('settings for groups =>', settings.app.widgets.groups);
+                              var oldGroupSetup = false;
+
+                              if (!jQuery.isEmptyObject(settings.app.widgets.groups))
+                              {
+                                angular.forEach(settings.app.widgets.groups, function (value, id)
+                                {
+                                  // console.log('value ->', value);
+                                  if (typeof value !== 'object' || value == {})
+                                  {
+                                    oldGroupSetup = true;
+                                  }
+                                });
+                              }
+                              else
+                              {
+                                oldGroupSetup = true;
+                              }
+
+                              if (oldGroupSetup)
+                              {
+                                // console.warn('OLD SETUP => user has NO app widgets groups!!');
+                                defaults.app.widgets.groups = _groups(groups);
+                                sync = true;
+                              }
+                              else
+                              {
+                                // console.warn('user HAS app widgets groups settings');
+                                defaults.app.widgets.groups = settings.app.widgets.groups;
+                              }
+                            }
+                            else
+                            {
+                              console.warn('user has NO app widgets groups!!');
+                              defaults.app.widgets.groups = _groups(groups);
+                              sync = true;
+                            }
+                          }
+                          else
+                          {
+                            // console.warn('user has NO widget settings!!');
+                            defaults.app.widgets = { groups: _groups(groups) };
+                            sync = true;
+                          }
+
+                          // check for app group setting
+                          if (settings.app.group && settings.app.group != undefined)
+                          {
+                            // console.warn('user HAS app first group setting');
+                            defaults.app.group = settings.app.group;
+                          }
+                          else
+                          {
+                            // console.warn('user has NO first group setting!!');
+                            parenting = true;
+                            sync      = true;
+                          }
+                        }
+                        else
+                        {
+                          // console.log('NO app settings!!');
+                          defaults.app = { widgets: { groups: _groups(groups) } };
+                          sync = true;
+                        }
                       }
                       else
                       {
-                        oldGroupSetup = true;
-                      }
-
-                      if (oldGroupSetup)
-                      {
-                        // console.warn('OLD SETUP => user has NO app widgets groups!!');
-                        defaults.app.widgets.groups = _groups(groups);
+                        // console.log('NO SETTINGS AT ALL!!');
+                        defaults = {
+                          user: $rootScope.config.defaults.settingsWebPaige.user,
+                          app: {
+                            widgets: {
+                              groups: _groups(groups)
+                            },
+                            group: groups[0].uuid
+                          }
+                        };
                         sync = true;
                       }
+
+                      // sync settings with missing parts also parenting check
+                      if (sync)
+                      {
+                        if (parenting)
+                        {
+                          // console.warn('setting up parent group for the user');
+
+                          Groups.parents()
+                            .then(function (_parent)
+                            {
+                              // console.warn('parent group been fetched ->', _parent);
+
+                              if (_parent != null)
+                              {
+                                // console.warn('found parent parent -> ', _parent);
+
+                                defaults.app.group = _parent;
+                              }
+                              else
+                              {
+                                // console.warn('setting the first group in the list for user ->', groups[0].uuid);
+
+                                defaults.app.group = groups[0].uuid;
+                              }
+
+                              // console.warn('SAVE ME (with parenting) ->', defaults);
+
+                              Settings.save(resources.uuid, defaults)
+                                .then(function ()
+                                {
+                                  User.resources()
+                                    .then(function (got)
+                                    {
+                                      // console.log('gotted (with setting parent group) ->', got);
+                                      $rootScope.app.resources = got;
+
+                                      finalize();
+                                    })
+                                });
+
+                            });
+                        }
+                        else
+                        {
+                          // console.warn('SAVE ME ->', defaults);
+
+                          defaults.app.group = groups[0].uuid;
+
+                          Settings.save(resources.uuid, defaults)
+                            .then(function ()
+                            {
+                              User.resources()
+                                .then(function (got)
+                                {
+                                  // console.log('gotted ->', got);
+                                  $rootScope.app.resources = got;
+
+                                  finalize();
+                                })
+                            });
+                        }
+                      }
                       else
                       {
-                        // console.warn('user HAS app widgets groups settings');
-                        defaults.app.widgets.groups = settings.app.widgets.groups;
+                        ga('send', 'pageview', {
+                          'dimension1': resources.uuid
+                        });
+                        ga('send', 'event', 'Login', resources.uuid);
+
+                        finalize();
                       }
-	                  }
-	                  else
-	                  {
-	                    console.warn('user has NO app widgets groups!!');
-	                    defaults.app.widgets.groups = _groups(groups);
-	                    sync = true;
-	                  }
-	                }
-	                else
-	                {
-	                  // console.warn('user has NO widget settings!!');
-	                  defaults.app.widgets = { groups: _groups(groups) };
-	                  sync = true;
-	                }
+                    }
+                  });
+              }
+            });
 
-	                // check for app group setting
-	                if (settings.app.group && settings.app.group != undefined)
-	                {
-	                  // console.warn('user HAS app first group setting');
-	                  defaults.app.group = settings.app.group;
-	                }
-	                else
-	                {
-	                  // console.warn('user has NO first group setting!!');
-	                  parenting = true;
-	                  sync      = true;
-	                }
-	              }
-	              else
-	              {
-	                // console.log('NO app settings!!');
-	                defaults.app = { widgets: { groups: _groups(groups) } };
-	                sync = true;
-	              }
-	            }
-	            else
-	            {
-	              // console.log('NO SETTINGS AT ALL!!');
-	              defaults = {
-	                user: $rootScope.config.defaults.settingsWebPaige.user,
-	                app: {
-	                  widgets: {
-	                    groups: _groups(groups)
-	                  },
-	                  group: groups[0].uuid
-	                }
-	              };
-	              sync = true;
-	            }
+        });
 
-	            // sync settings with missing parts also parenting check
-	            if (sync)
-	            {
-	              if (parenting)
-	              {
-	                // console.warn('setting up parent group for the user');
 
-	                Groups.parents()
-	                .then(function (_parent)
-	                {
-	                  // console.warn('parent group been fetched ->', _parent);
-
-	                  if (_parent != null)
-	                  {
-	                    // console.warn('found parent parent -> ', _parent);
-
-	                    defaults.app.group = _parent;
-	                  }
-	                  else
-	                  {
-	                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
-
-	                    defaults.app.group = groups[0].uuid;
-	                  }
-	                                
-	                  // console.warn('SAVE ME (with parenting) ->', defaults);
-
-	                  Settings.save(resources.uuid, defaults)
-	                  .then(function ()
-	                  {
-	                    User.resources()
-	                    .then(function (got)
-	                    {
-	                      // console.log('gotted (with setting parent group) ->', got);
-	                      $rootScope.app.resources = got;
-
-	                      finalize();
-	                    })
-	                  });
-
-	                });
-	              }
-	              else
-	              {              
-	                // console.warn('SAVE ME ->', defaults);
-	                
-	                defaults.app.group = groups[0].uuid;
-
-	                Settings.save(resources.uuid, defaults)
-	                .then(function ()
-	                {
-	                  User.resources()
-	                  .then(function (got)
-	                  {
-	                    // console.log('gotted ->', got);
-	                    $rootScope.app.resources = got;
-
-	                    finalize();
-	                  })
-	                });
-	              }
-	            }
-	            else
-	            {
-                // console.log('ga ->', ga, $rootScope.config);
-
-                /*
-                ga('create', 'UA-44867560-2', profile.analytics.url);
-                ga('send', 'pageview', {
-                  'dimension1':  resources.uuid,
-                  // 'dimension2':
-                });
-                */
-
-                ga('send', 'pageview', {
-                  'dimension1': resources.uuid
-                });
-                ga('send', 'event', 'Login', resources.uuid);
-
-	              finalize();
-	            }
-	          }
-	        });
-	      }
-	    });
 	  };
 
 
@@ -9629,16 +9729,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.getP2000 = function  ()
 		{
       Dashboard.p2000().
-			then(function (result)
-			{
-        $scope.loading.alerts = false;
+        then(function (result)
+        {
+          $scope.loading.alerts = false;
 
-        $scope.alarms = result.alarms;
+          $scope.alarms = result.alarms;
 
-        $scope.alarms.list = $scope.alarms.short;
+          $scope.alarms.list = $scope.alarms.short;
 
-        $scope.synced.alarms = result.synced;
-			});
+          $scope.synced.alarms = result.synced;
+        });
 		};
 
 
@@ -9756,36 +9856,52 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     }
     else
     {
-      $.ajax({
-        url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
-        dataType: 'jsonp',
-        success: function (results)
+
+      Dashboard.getCapcodes().
+        then(function (capcodes)
         {
-          $rootScope.statusBar.off();
+          var _capcodes = '';
 
-          var processed = Announcer.process(results);
+          capcodes = capcodes.sort();
 
-          var result = {
-          alarms: 	processed,
-          synced:   new Date().getTime()
-          };
-
-          $scope.$apply(function ()
+          angular.forEach(capcodes, function (code)
           {
-            $scope.loading.alerts = false;
-
-            $scope.alarms = result.alarms;
-
-            $scope.alarms.list = $scope.alarms.short;
-
-            $scope.synced.alarms = result.synced;
+            _capcodes += code + ', ';
           });
-        },
-        error: function ()
-        {
-          console.log('ERROR with getting p2000 for the first time!');
-        }
-      });
+
+          $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
+
+          $.ajax({
+            url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
+            dataType: 'jsonp',
+            success: function (results)
+            {
+              $rootScope.statusBar.off();
+
+              var processed = Announcer.process(results);
+
+              var result = {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              };
+
+              $scope.$apply(function ()
+              {
+                $scope.loading.alerts = false;
+
+                $scope.alarms = result.alarms;
+
+                $scope.alarms.list = $scope.alarms.short;
+
+                $scope.synced.alarms = result.synced;
+              });
+            },
+            error: function ()
+            {
+              console.log('ERROR with getting p2000 for the first time!');
+            }
+          });
+        });
     }
 
 

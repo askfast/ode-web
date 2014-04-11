@@ -19,18 +19,34 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
     /**
      * TODO: Still being used?
      */
-		var Dashboard = $resource(
-			'http://knrm.myask.me/rpc/client/p2000.php',
-			{
-			},
-			{
-				p2000: {
-					method: 'GET',
-					params: {},
-					isArray: true
-				}
-			}
-		);
+    var Dashboard = $resource(
+      'http://knrm.myask.me/rpc/client/p2000.php',
+      {
+      },
+      {
+        p2000: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
+
+
+    /**
+     * TODO: Still being used?
+     */
+    var Backend = $resource(
+      $config.host + '/capcodes',
+      {},
+      {
+        capcodes: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
 		
 
 		/**
@@ -86,6 +102,41 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 		};
 
 
+    Dashboard.prototype.getCapcodes = function ()
+    {
+      var deferred = $q.defer();
+
+      function concatCode (code)
+      {
+        var _code = '';
+
+        angular.forEach(code, function (_c) { _code += _c; });
+
+        return Number(_code);
+      }
+
+      Backend.capcodes(null,
+        function (results)
+        {
+          var codes = [];
+
+          angular.forEach(results, function (res)
+          {
+            codes.push(concatCode(res));
+          });
+
+          deferred.resolve(codes);
+        },
+        function (error)
+        {
+          deferred.resolve({error: error});
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
 		/**
      * TODO: Still being used since harcoded in controller itself?
 		 * Get p2000 announcements
@@ -122,26 +173,34 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
       }
       else
       {
-        $.ajax({
-          url: $config.profile.p2000.url + '?code=' + $config.profile.p2000.codes,
-          dataType: 'jsonp',
-          success: function (results)
+
+
+        Dashboard.prototype.getCapcodes().
+          then(function (capcodes)
           {
-            $rootScope.statusBar.off();
-
-            var processed = Announcer.process(results);
-
-            deferred.resolve(
+            $.ajax({
+              url: $config.profile.p2000.url + '?code=' + capcodes,
+              dataType: 'jsonp',
+              success: function (results)
               {
-                alarms: 	processed,
-                synced:   new Date().getTime()
-              });
-          },
-          error: function ()
-          {
-            deferred.resolve({error: error});
-          }
-        });
+                $rootScope.statusBar.off();
+
+                var processed = Announcer.process(results);
+
+                deferred.resolve(
+                  {
+                    alarms: 	processed,
+                    synced:   new Date().getTime()
+                  });
+              },
+              error: function ()
+              {
+                deferred.resolve({error: error});
+              }
+            });
+          });
+
+
       }
 
 			return deferred.promise;

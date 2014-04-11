@@ -42,4 +42,7 @@ angular.module('WebPaige.Services.Interceptor', ['ngResource'])
       });
     }
   }
-]);
+]
+
+
+  );

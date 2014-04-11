@@ -11,6 +11,7 @@ var profile = {
   {
     // return ($.browser.msie) ? '/proxy/ns_knrm' : 'http://3rc2.ask-services.appspot.com/ns_knrm';
     return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com';
+    // return ($.browser.msie) ? '/proxy' : 'http://knrm-backend.ask-cs.com/';
   },
 
   states: [
@@ -33,7 +34,7 @@ var profile = {
 
   divisions: [
     {
-      id: 'knrm.StateGroup.BeschikbaarNoord',
+      id: 'knrm.StateGroup. BeschikbaarNoord',
       label: 'Noord'
     },
     {

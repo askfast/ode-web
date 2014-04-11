@@ -338,7 +338,8 @@
           <br/>
           <small class="pull-left">
             <span class="text-warning">Capcode(s):</span>&nbsp;
-            <span class="muted">{{config.profile.p2000.codes}}</span>
+            <span class="muted">{{capcodes}}</span>
+            <span ng-hide="capcodes" class="muted">{{config.profile.p2000.codes}}</span>
           </small>
         </p>
         <!-- end p2000 footer -->

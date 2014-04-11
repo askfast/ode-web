@@ -444,16 +444,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.getP2000 = function  ()
 		{
       Dashboard.p2000().
-			then(function (result)
-			{
-        $scope.loading.alerts = false;
+        then(function (result)
+        {
+          $scope.loading.alerts = false;
 
-        $scope.alarms = result.alarms;
+          $scope.alarms = result.alarms;
 
-        $scope.alarms.list = $scope.alarms.short;
+          $scope.alarms.list = $scope.alarms.short;
 
-        $scope.synced.alarms = result.synced;
-			});
+          $scope.synced.alarms = result.synced;
+        });
 		};
 
 
@@ -571,36 +571,52 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     }
     else
     {
-      $.ajax({
-        url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
-        dataType: 'jsonp',
-        success: function (results)
+
+      Dashboard.getCapcodes().
+        then(function (capcodes)
         {
-          $rootScope.statusBar.off();
+          var _capcodes = '';
 
-          var processed = Announcer.process(results);
+          capcodes = capcodes.sort();
 
-          var result = {
-          alarms: 	processed,
-          synced:   new Date().getTime()
-          };
-
-          $scope.$apply(function ()
+          angular.forEach(capcodes, function (code)
           {
-            $scope.loading.alerts = false;
-
-            $scope.alarms = result.alarms;
-
-            $scope.alarms.list = $scope.alarms.short;
-
-            $scope.synced.alarms = result.synced;
+            _capcodes += code + ', ';
           });
-        },
-        error: function ()
-        {
-          console.log('ERROR with getting p2000 for the first time!');
-        }
-      });
+
+          $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
+
+          $.ajax({
+            url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
+            dataType: 'jsonp',
+            success: function (results)
+            {
+              $rootScope.statusBar.off();
+
+              var processed = Announcer.process(results);
+
+              var result = {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              };
+
+              $scope.$apply(function ()
+              {
+                $scope.loading.alerts = false;
+
+                $scope.alarms = result.alarms;
+
+                $scope.alarms.list = $scope.alarms.short;
+
+                $scope.synced.alarms = result.synced;
+              });
+            },
+            error: function ()
+            {
+              console.log('ERROR with getting p2000 for the first time!');
+            }
+          });
+        });
     }
 
 
