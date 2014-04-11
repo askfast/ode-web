@@ -426,6 +426,9 @@ var ui = {
           remove: 'Error with removing timeslot!',
           wisher: 'Error with changing wish value!'
         }
+      },
+      confirms: {
+        remove: 'Are you sure you want to delete it? You can not undo this action.'
       }
     },
     nl: {
@@ -846,6 +849,9 @@ var ui = {
           remove: 'Error with removing timeslot!',
           wisher: 'Error with changing wish value!'
         }
+      },
+      confirms: {
+        remove: 'Weet u zeker dat u dit wilt verwijderen? U kunt dit niet ongedaan maken.'
       }
     }
 };

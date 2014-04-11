@@ -48,17 +48,31 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  );
 
 
-	  var Resources = $resource(
-	    $config.host + '/resources',
-	    {
-	    },
-	    {
-	      get: {
-	        method: 'GET',
-	        params: {}
-	      }
-	    }
-	  );
+    var Resources = $resource(
+        $config.host + '/resources',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {}
+        }
+      }
+    );
+
+
+    var Divisions = $resource(
+        $config.host + '/divisions',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
 
 
 	  var Reset = $resource(
@@ -92,6 +106,29 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
           }
         }
       });
+
+
+    /**
+     * Divisions
+     */
+    User.prototype.divisions = function ()
+    {
+      var deferred = $q.defer();
+
+      Divisions.get(
+        {},
+        function (result)
+        {
+          deferred.resolve(result);
+        },
+        function (error)
+        {
+          deferred.resolve(error);
+        }
+      );
+
+      return deferred.promise;
+    };
 	  
 	  
 	  /**

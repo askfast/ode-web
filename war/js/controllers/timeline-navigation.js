@@ -94,7 +94,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
             $scope.timeliner.load({
               start:  $scope.periodsNext.days[$scope.timeline.current.day].first.timeStamp,
-              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp,
+              end:    $scope.periodsNext.days[$scope.timeline.current.day].last.timeStamp
             });
           }
         }
@@ -106,7 +106,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
             $scope.timeliner.load({
               start:  $scope.periods.days[$scope.timeline.current.day].first.timeStamp,
-              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp,
+              end:    $scope.periods.days[$scope.timeline.current.day].last.timeStamp
             });
           }
         }
@@ -146,8 +146,16 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
               start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
               end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
             });
+          }else if($scope.timeline.current.month == 12){
+		      $scope.timeline.current.week = 53;
+		      $scope.timeline.current.week--;
+		        	  
+	    	  $scope.timeliner.load({
+	             start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
+	             end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
+	          });
           }
-        }
+	    }
 	    }
 	    else if ($scope.timeline.scope.month)
 	    {
@@ -199,7 +207,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	    if ($scope.timeline.scope.day)
 	    {
-        if ($scope.timeline.current.year === thisYear)
+        if ($scope.timeline.current.year === Number(thisYear))
         {
           /**
            * Total days in a month can change so get it start periods cache
@@ -241,20 +249,23 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 	    {
         if ($scope.timeline.current.year == thisYear)
         {
+        	if ($scope.timeline.current.week == 1 && $scope.timeline.current.month == 12){ 
+        		// deal with situation that last days in the end of the year share the first week with starting days in the next year. 
+        		$scope.timeline.current.week = 53;
+        	}
+        	
           if ($scope.timeline.current.week != 53)
-          {
-            $scope.timeline.current.week++;
-
+          {            
+	    	$scope.timeline.current.week++;
+	    	
             $scope.timeliner.load({
               start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
               end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
             });
-          }
-          else
-          {
+          }else{
             $scope.timeline.current.year = Number(thisYear) + 1;
 
-            $scope.timeline.current.week = 2;
+            $scope.timeline.current.week = 1;
 
             $scope.timeliner.load({
               start:  $scope.periodsNext.weeks[$scope.timeline.current.week].first.timeStamp,
@@ -347,7 +358,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	      $scope.timeliner.load({
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	      });
 	    }
 
@@ -369,7 +380,7 @@ angular.module('WebPaige.Controllers.Timeline.Navigation', [])
 
 	      $scope.timeliner.load({
 	        start:  $scope.periods.weeks[$scope.timeline.current.week].first.timeStamp,
-	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp,
+	        end:    $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
 	      });
 	    }
 

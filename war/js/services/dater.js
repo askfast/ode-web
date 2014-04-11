@@ -11,7 +11,7 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
 [
   '$rootScope', 'Storage', 
   function ($rootScope, Storage)
-  {
+  {  
     return {
 
       current:
@@ -26,7 +26,8 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
           /**
            * IE library does not exist bug
            */
-          if (new Date().getWeek)
+          
+          if (new Date().getWeek())
           {
             return new Date().getWeek();
           }
@@ -107,20 +108,19 @@ angular.module('WebPaige.Services.Dater', ['ngResource'])
         for (var i = 0; i < 12; i++)
         {
           var firstDay  = new Date(year, i).moveToFirstDayOfMonth(),
-              lastDay   = new Date(year, i).moveToLastDayOfMonth(),
-              month     = {
-                first: {
-                  day: firstDay,
-                  timeStamp: firstDay.getTime()
-                },
-                last: { 
-                  day: lastDay,
-                  timeStamp: lastDay.getTime() 
-                },
-                totalDays: Date.getDaysInMonth(year, i)
-              };
+              lastDay   = new Date(year, i).moveToLastDayOfMonth().addDays(1);
 
-          months[i+1] = month;
+          months[i+1] = {
+            first: {
+              day: firstDay,
+              timeStamp: firstDay.getTime()
+            },
+            last: {
+              day: lastDay,
+              timeStamp: lastDay.getTime()
+            },
+            totalDays: Date.getDaysInMonth(year, i)
+          };
         }
 
         return months;

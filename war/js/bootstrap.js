@@ -207,7 +207,7 @@ angular.module('WebPaige')
      */
     $rootScope.notifier =
     {
-      init: function (status, type, message)
+      init: function (status, type, message, confirm, options)
       {
         $rootScope.notification.status = true;
 
@@ -220,7 +220,9 @@ angular.module('WebPaige')
           $rootScope.notification = {
             status:   status,
             type:     type,
-            message:  message
+            message:  message,
+            confirm:  confirm,
+            options:  options
           };
         }
       },
@@ -239,6 +241,15 @@ angular.module('WebPaige')
       {
         this.init(true, 'alert-danger', message);
 
+        if (!permanent) {
+          this.destroy();
+        }
+      },
+
+      alert: function (message, permanent, confirm, options)
+      {
+        this.init(true, '', message, confirm, options);
+
         if (!permanent)
         {
           this.destroy();
@@ -255,6 +266,20 @@ angular.module('WebPaige')
     };
 
     $rootScope.notifier.init(false, '', '');
+
+
+    /**
+     * Fire delete requests
+     */
+    $rootScope.fireDeleteRequest = function (options)
+    {
+      switch (options.section)
+      {
+        case 'groups':
+          $rootScope.$broadcast('fireGroupDelete', {id: options.id});
+          break;
+      }
+    };
 
 
     /**
@@ -322,6 +347,23 @@ angular.module('WebPaige')
             $rootScope.loaderIcons.general = true;
           }
       }
+
+      if ($location.path().match(/logout/))
+      {
+        $rootScope.location = 'logout';
+      }
+
+      if (!$rootScope.location)
+      {
+        ga('send', 'Undefined Page', $location.path());
+      }
+
+      // console.log('$rootScope.location ->', $rootScope.location || 'login');
+
+      ga('send', 'pageview', {
+        'page': '/index.html#/' + $rootScope.location || 'login',
+        'title': $rootScope.location || 'login'
+      });
 
       //Prevent deep linking
       if ($location.path() != '/tv')

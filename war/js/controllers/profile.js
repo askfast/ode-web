@@ -14,6 +14,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 	'$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'MD5', 
 	function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5) 
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */
@@ -44,22 +46,9 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Set data for view
 	   */
-    // console.log('uuid ->', $rootScope.app.resources.uuid);
-    // console.log('userId ->', $route.current.params.userId);
-    // console.log('absUrl ->', $location.absUrl());
-
-    /*
-    if ($location.absUrl().match(/$rootScope.app.resources.uuid/))
-    {
-      console.log('this is user');
-    }
-    */
-
     if (!!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
     {
-      // console.log('initing -->', !!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId));
-
-      if (data.slots)
+      if (data && data.slots)
       {
         data.user = data.slots.data;
       }
@@ -75,13 +64,13 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Pass profile information
 	   */
-	  $scope.profilemeta = data.resources;
+	  $scope.profilemeta = data && data.resources;
 
 
 	  /**
 	   * Get groups of user
 	   */
-	  $scope.groups = Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+	  $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
 
 	  /**
@@ -315,7 +304,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 	  /**
 	   * Render timeline if hash is timeline
 	   */
-	  if ($rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase())
+	  if ($route.current.params.userId &&
+      $rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase())
 	  {
 	  	timelinebooter();
 	  }

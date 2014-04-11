@@ -19,54 +19,54 @@
           <small ng-show="app.guard.currentState">
             <i class="icon-fire"></i>&nbsp;Status </small>&nbsp;&nbsp;
 
-            <span ng-show="app.guard.currentState=='available'"
+            <span ng-show="app.guard.currentState=='available' || app.guard.currentState=='Beschikbaar'"
                   class="label"
                   style="background-color: #4f824f">BESCHIKBAAR</span>
 
-            <span ng-show="app.guard.currentState=='noplanning'"
+            <span ng-show="app.guard.currentState=='noplanning' || app.guard.currentState=='Geen planning'"
                   class="label"
                   style="background-color: #a0a0a0">GEEN PLANNING</span>
 
-            <span ng-show="app.guard.currentState=='unavailable'"
+            <span ng-show="app.guard.currentState=='unavailable' || app.guard.currentState=='Niet Beschikbaar'"
                   class="label"
                   style="background-color: #a93232">NIET BESCHIKBAAR</span>
 
             <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
 
             <div class="btn-group"
-                  style="margin: -10px 0 0 8px; display: none;">
+                  style="margin: -10px 0 0 8px;">
               <button class="btn btn-mini dropdown-toggle"
                       data-toggle="dropdown">Nieuwe beschikbaarheid <span class="caret"></span></button>
               <ul class="dropdown-menu pull-right fast-availability"
                   style="font-size: 10px;">
                 <li>
-                  <a ng-click="setAvailability(true, 1)">
+                  <a ng-click="setPrefixedAvailability(true, 1)">
                     <div class="square available"></div> Beschikbaar (1 uur)
                   </a>
                 </li>
                 <li>
-                  <a ng-click="setAvailability(true, 6)">
+                  <a ng-click="setPrefixedAvailability(true, 6)">
                     <div class="square available"></div> Beschikbaar (6 uur)
                   </a>
                 </li>
                 <li>
-                  <a ng-click="setAvailability(true, 24)">
+                  <a ng-click="setPrefixedAvailability(true, 24)">
                     <div class="square available"></div> Beschikbaar (24 uur)
                   </a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a ng-click="setAvailability(false, 1)">
+                  <a ng-click="setPrefixedAvailability(false, 1)">
                     <div class="square unavailable"></div> Niet beschikbaar (1 uur)
                   </a>
                 </li>
                 <li>
-                  <a ng-click="setAvailability(false, 6)">
+                  <a ng-click="setPrefixedAvailability(false, 6)">
                     <div class="square unavailable"></div> Niet beschikbaar (6 uur)
                   </a>
                 </li>
                 <li>
-                  <a ng-click="setAvailability(false, 24)">
+                  <a ng-click="setPrefixedAvailability(false, 24)">
                     <div class="square unavailable"></div> Niet beschikbaar (24 uur)
                   </a>
                 </li>
@@ -338,7 +338,8 @@
           <br/>
           <small class="pull-left">
             <span class="text-warning">Capcode(s):</span>&nbsp;
-            <span class="muted">{{config.profile.p2000.codes}}</span>
+            <span class="muted">{{capcodes}}</span>
+            <span ng-hide="capcodes" class="muted">{{config.profile.p2000.codes}}</span>
           </small>
         </p>
         <!-- end p2000 footer -->

@@ -82,13 +82,27 @@ angular.module('WebPaige')
             var periods   = Storage.local.periods(),
                 settings  = Storage.local.settings();
 
+            var stamps = {};
+
+            if (Dater.current.today() > 360)
+            {
+              stamps = {
+                start:  periods.days[358].last.timeStamp,
+                end:    periods.days[365].last.timeStamp
+              }
+            }
+            else
+            {
+              stamps = {
+                start:  periods.days[Dater.current.today() - 1].last.timeStamp,
+                end:    periods.days[Dater.current.today() + 6].last.timeStamp
+              }
+            }
+
             return  Slots.all({
                       groupId:  settings.app.group,
-                      stamps: {
-                        start:  periods.days[Dater.current.today() - 1].last.timeStamp,
-                        end:    periods.days[Dater.current.today() + 6].last.timeStamp
-                      },
-                      month: Dater.current.month(),
+                      stamps:   stamps,
+                      month:    Dater.current.month(),
                       layouts: {
                         user:     true,
                         group:    true,

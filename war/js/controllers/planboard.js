@@ -11,6 +11,8 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	'$rootScope', '$scope', '$q', '$window', '$location', 'data', 'Slots', 'Dater', 'Storage',
 	function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage)
 	{
+    $rootScope.notification.status = false;
+
 	  /**
 	   * Fix styles
 	   */
@@ -71,6 +73,27 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  $scope.slot = {};
 
 
+    /**
+     * Hot fix for breaking timeline for the end of the year
+     */
+    var stamps = {};
+
+    if (Dater.current.today() > 360)
+    {
+      stamps = {
+        start:  $scope.periods.days[358].last.timeStamp,
+        end:    $scope.periods.days[365].last.timeStamp
+      }
+    }
+    else
+    {
+      stamps = {
+        start:  $scope.periods.days[Dater.current.today() - 1].last.timeStamp,
+        end:    $scope.periods.days[Dater.current.today() + 6].last.timeStamp
+      }
+    }
+
+
 	  /**
 	   * Set defaults for timeline
 	   */
@@ -86,14 +109,16 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	     * Initial start up is next 7 days
 	     */
 	    options: {
-        start:  $scope.periods.days[Dater.current.today() - 1].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 6].last.day,
-        min:  	$scope.periods.days[Dater.current.today() - 1].last.day,
-        max:    $scope.periods.days[Dater.current.today() + 6].last.day
+        start:  stamps.start,
+        end:    stamps.end,
+        min:  	stamps.start,
+        max:    stamps.end
 	    },
 	    range: {
-        start:  $scope.periods.days[Dater.current.today()].last.day,
-        end:    $scope.periods.days[Dater.current.today() + 7].last.day
+        start: stamps.start,
+        end: stamps.end
+        // start:  $scope.periods.days[Dater.current.today()].last.day,
+        // end:    $scope.periods.days[Dater.current.today() + 7].last.day
 	    },
 	    scope: {
 	      day:    false,

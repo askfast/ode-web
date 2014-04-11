@@ -14,6 +14,8 @@ angular.module('WebPaige.Controllers.Help', [])
 	'$rootScope', '$scope', '$location',
 	function ($rootScope, $scope, $location)
 	{
+    $rootScope.notification.status = false;
+
 		/**
 		 * Fix styles
 		 */

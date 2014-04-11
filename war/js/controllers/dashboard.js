@@ -15,6 +15,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
 	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
 	{
+    $rootScope.notification.status = false;
+
 		/**
 		 * Fix styles
 		 */
@@ -333,7 +335,19 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
 
         $rootScope.app.guard.role = setup.role;
-        $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
+
+        if (setup.users[$rootScope.app.resources.uuid])
+        {
+          $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
+        }
+        else
+        {
+          Slots.currentState()
+            .then(function (state)
+            {
+              $rootScope.app.guard.currentState = state.label;
+            });
+        }
 
         var reserves = {};
 
@@ -430,16 +444,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 		$scope.getP2000 = function  ()
 		{
       Dashboard.p2000().
-			then(function (result)
-			{
-        $scope.loading.alerts = false;
+        then(function (result)
+        {
+          $scope.loading.alerts = false;
 
-        $scope.alarms = result.alarms;
+          $scope.alarms = result.alarms;
 
-        $scope.alarms.list = $scope.alarms.short;
+          $scope.alarms.list = $scope.alarms.short;
 
-        $scope.synced.alarms = result.synced;
-			});
+          $scope.synced.alarms = result.synced;
+        });
 		};
 
 
@@ -557,36 +571,66 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     }
     else
     {
-      $.ajax({
-        url: $rootScope.config.profile.p2000.url + '?code=' + $rootScope.config.profile.p2000.codes,
-        dataType: 'jsonp',
-        success: function (results)
+
+      Dashboard.getCapcodes().
+        then(function (capcodes)
         {
-          $rootScope.statusBar.off();
+          var _capcodes = '';
 
-          var processed = Announcer.process(results);
+          capcodes = capcodes.sort();
 
-          var result = {
-          alarms: 	processed,
-          synced:   new Date().getTime()
-          };
-
-          $scope.$apply(function ()
+          angular.forEach(capcodes, function (code)
           {
-            $scope.loading.alerts = false;
-
-            $scope.alarms = result.alarms;
-
-            $scope.alarms.list = $scope.alarms.short;
-
-            $scope.synced.alarms = result.synced;
+            _capcodes += code + ', ';
           });
-        },
-        error: function ()
-        {
-          console.log('ERROR with getting p2000 for the first time!');
-        }
-      });
+
+          $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
+
+          $.ajax({
+            url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
+            dataType: 'jsonp',
+            success: function (results)
+            {
+              $rootScope.statusBar.off();
+
+              var processed = Announcer.process(results);
+
+              var result = {
+                alarms: 	processed,
+                synced:   new Date().getTime()
+              };
+
+              $scope.$apply(function ()
+              {
+                $scope.loading.alerts = false;
+
+                $scope.alarms = result.alarms;
+
+                $scope.alarms.list = $scope.alarms.short;
+
+                $scope.synced.alarms = result.synced;
+              });
+            },
+            error: function ()
+            {
+              console.log('ERROR with getting p2000 for the first time!');
+            }
+          });
+        });
+    }
+
+
+    /**
+     * Broadcast fireSetPrefixedAvailability calls
+     */
+    $scope.setPrefixedAvailability = function (availability, period)
+    {
+      Storage.session.add('setPrefixedAvailability', angular.toJson({
+        availability: availability,
+        period: period
+      }));
+
+      $location.path('/planboard').search({ setPrefixedAvailability: true });
     }
 	}
 ]);

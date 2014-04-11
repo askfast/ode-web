@@ -93,44 +93,45 @@ angular.module('WebPaige.Controllers.Timeline', [])
 				}
 			}
 
-      if (
-        $scope.timeline.current.year === Number(Dater.current.year()) + 1
-          &&
-        ($scope.timeline.current.month === 12 ||
-         $scope.timeline.current.week === 53 ||
-         $scope.timeline.current.day === 365)
-        )
+      if ($scope.timeline)
       {
-        $('#timelineAfterBtn').attr('disabled', 'disabled');
-      }
-      else if (
-        $scope.timeline.current.year == Dater.current.year()
-          &&
-          ($scope.timeline.current.month === 1 ||
-            $scope.timeline.current.week === 1 ||
-            $scope.timeline.current.day === 1)
-        )
-      {
-        $('#timelineBeforeBtn').attr('disabled', 'disabled');
-      }
-      else
-      {
-        var timelineBeforeBtn     = $('#timelineBeforeBtn'),
+        var max   = new Date(Number(Dater.current.year()) + 1, 11).moveToLastDayOfMonth().addDays(1),
+          diff  = max - new Date(range.end);
+
+        if (diff <= 0)
+        {
+          $('#timelineAfterBtn').attr('disabled', 'disabled');
+        }
+        else if (
+          $scope.timeline.current.year == Dater.current.year()
+            &&
+            (($scope.timeline.scope.month && $scope.timeline.current.month === 1) ||
+              (($scope.timeline.scope.week && $scope.timeline.current.week === 1 && $scope.timeline.current.month != 12)) ||
+              ($scope.timeline.scope.day && $scope.timeline.current.day === 1))
+          )
+        {
+          $('#timelineBeforeBtn').attr('disabled', 'disabled');
+        }
+        else
+        {
+          var timelineBeforeBtn     = $('#timelineBeforeBtn'),
             timelineAfterBtn      = $('#timelineAfterBtn'),
             timelineBeforeBtnAttr = timelineBeforeBtn.attr('disabled'),
             timelineAfterBtnAttr  = timelineAfterBtn.attr('disabled');
 
-        if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
-        {
-          timelineBeforeBtn.removeAttr('disabled');
-        }
+          if (typeof timelineBeforeBtnAttr !== 'undefined' && timelineBeforeBtnAttr  !== false)
+          {
+            timelineBeforeBtn.removeAttr('disabled');
+          }
 
-        if (typeof timelineAfterBtnAttr  !== 'undefined' && timelineAfterBtnAttr   !== false)
-        {
-          timelineAfterBtn.removeAttr('disabled');
+          if (typeof timelineAfterBtnAttr  !== 'undefined' && timelineAfterBtnAttr   !== false)
+          {
+            timelineAfterBtn.removeAttr('disabled');
+          }
         }
       }
 		});
+
 
 	  /**
 	   * Timeliner listener
@@ -143,17 +144,21 @@ angular.module('WebPaige.Controllers.Timeline', [])
         start: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().toString($rootScope.config.formats.time),
-          datetime: new Date().toISOString().replace("Z", "")
+          // datetime: new Date().toISOString().replace("Z", "")
+          datetime: new Date().toString("yyyy-MM-ddTHH:mm:ss")
         },
         end: {
           date: new Date().toString($rootScope.config.formats.date),
           time: new Date().addHours(1).toString('HH:00'), //$rootScope.config.formats.time,
-          datetime: new Date().toISOString().replace("Z", "")
+          datetime: new Date().addHours(1).toString("yyyy-MM-ddTHH:00:00")
+          // datetime: new Date().addHours(1).toISOString().replace("Z", "")
         },
         state:      'com.ask-cs.State.Available',
         recursive:  false,
         id:         ''
       };
+
+      console.log('slot initials ->', $scope.slot);
 	  });
 
 
@@ -402,7 +407,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  /**
 	   * Init timeline
 	   */
-	  if ($scope.timeline) $scope.timeliner.init();
+	  if ($scope.timeline)
+    {
+      $scope.timeliner.init();
+    }
 
 
 	  /**
@@ -789,6 +797,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         .then(
         function (result)
         {
+          Storage.session.remove('setPrefixedAvailability');
+
           $rootScope.$broadcast('resetPlanboardViews');
 
           if (result.error)
@@ -809,12 +819,25 @@ angular.module('WebPaige.Controllers.Timeline', [])
     };
 
 
+    /**
+     * Listen for incoming prefixed availability changes
+     */
+    if ($location.search().setPrefixedAvailability)
+    {
+      var options = angular.fromJson(Storage.session.get('setPrefixedAvailability'));
+
+      $scope.setAvailability(options.availability, options.period);
+    }
+
+
 	  /**
 	   * Add slot trigger start view
 	   */
 	  $scope.timelineOnAdd = function (form, slot)
 	  {
 	  	$rootScope.planboardSync.clear();
+
+      console.log('slot adding values ->', slot);
 
 	  	/**
 	  	 * Make view for new slot
@@ -869,11 +892,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  	{
 	  		var now     = Date.now().getTime(),
 		        values  = {
-		                    start:      ($rootScope.browser.mobile) ? 
-		                                  new Date(slot.start.datetime).getTime() / 1000 :
+		                    start:      ($rootScope.browser.mobile) ?
+                                      Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
 		                                  Dater.convert.absolute(slot.start.date, slot.start.time, true),
-		                    end:        ($rootScope.browser.mobile) ? 
-		                                  new Date(slot.end.datetime).getTime() / 1000 : 
+		                    end:        ($rootScope.browser.mobile) ?
+                                      Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
 		                                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
 		                    recursive:  (slot.recursive) ? true : false,
 		                    text:       slot.state
