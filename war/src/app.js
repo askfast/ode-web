@@ -8789,6 +8789,7 @@ angular.module('WebPaige.Controllers.Login', [])
 	    $('#preloader').show();
 
 	    self.progress(30, $rootScope.ui.login.loading_User);
+      
 
       User.divisions()
         .then(function (divisions)
