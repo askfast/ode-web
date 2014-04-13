@@ -108,6 +108,7 @@ angular.module('WebPaige')
      */
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
 
+    $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 

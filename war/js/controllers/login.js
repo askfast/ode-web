@@ -217,11 +217,12 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.progress(30, $rootScope.ui.login.loading_User);
 
-
       User.divisions()
         .then(function (divisions)
         {
-          $rootScope.config.timeline.divisions = divisions;
+          $rootScope.config.timeline.config.divisions = divisions;
+
+          Storage.add('divisions', angular.toJson(divisions));
 
           User.resources()
             .then(function (resources)

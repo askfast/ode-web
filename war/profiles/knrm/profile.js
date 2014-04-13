@@ -32,16 +32,7 @@ var profile = {
     }
   },
 
-  divisions: [
-    {
-      id: 'knrm.StateGroup. BeschikbaarNoord',
-      label: 'Noord'
-    },
-    {
-      id: 'knrm.StateGroup.BeschikbaarZuid',
-      label: 'Zuid'
-    }
-  ],
+  divisions: [],
 
   roles: [
     {

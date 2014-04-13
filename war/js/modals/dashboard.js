@@ -65,7 +65,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 			{
         if (settings[group.uuid] && settings[group.uuid].status)
         {
-          if (!settings[group.uuid].divisions)
+          if ($rootScope.config.timeline.config.divisions.length == 0)
           {
             calls.push(Slots.pie({
               id:         group.uuid,
@@ -75,17 +75,28 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
           }
           else
           {
-            angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+            if (settings[group.uuid].divisions)
             {
-              if (division.id !== 'all')
+              angular.forEach($rootScope.config.timeline.config.divisions, function (division)
               {
-                calls.push(Slots.pie({
-                  id:         group.uuid,
-                  name:       group.name,
-                  division:   division.id
-                }));
-              }
-            })
+                if (division.id !== 'all')
+                {
+                  calls.push(Slots.pie({
+                    id:         group.uuid,
+                    name:       group.name,
+                    division:   division.id
+                  }));
+                }
+              });
+            }
+            else
+            {
+              calls.push(Slots.pie({
+                id:         group.uuid,
+                name:       group.name,
+                division:   'both'
+              }));
+            }
           }
         }
 			});

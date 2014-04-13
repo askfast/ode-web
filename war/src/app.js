@@ -1493,6 +1493,7 @@ angular.module('WebPaige')
      */
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
 
+    $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
@@ -2233,7 +2234,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 			{
         if (settings[group.uuid] && settings[group.uuid].status)
         {
-          if (!settings[group.uuid].divisions)
+          if ($rootScope.config.timeline.config.divisions.length == 0)
           {
             calls.push(Slots.pie({
               id:         group.uuid,
@@ -2243,17 +2244,28 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
           }
           else
           {
-            angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+            if (settings[group.uuid].divisions)
             {
-              if (division.id !== 'all')
+              angular.forEach($rootScope.config.timeline.config.divisions, function (division)
               {
-                calls.push(Slots.pie({
-                  id:         group.uuid,
-                  name:       group.name,
-                  division:   division.id
-                }));
-              }
-            })
+                if (division.id !== 'all')
+                {
+                  calls.push(Slots.pie({
+                    id:         group.uuid,
+                    name:       group.name,
+                    division:   division.id
+                  }));
+                }
+              });
+            }
+            else
+            {
+              calls.push(Slots.pie({
+                id:         group.uuid,
+                name:       group.name,
+                division:   'both'
+              }));
+            }
           }
         }
 			});
@@ -8530,30 +8542,33 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	{
 		return function (data)
 		{
-			var members 	= angular.fromJson(Storage.get('members')),
-	    		groups 		= angular.fromJson(Storage.get('groups')),
-	    		audience 	= [];
+      if (data)
+      {
+        var members 	= angular.fromJson(Storage.get('members')),
+          groups 		= angular.fromJson(Storage.get('groups')),
+          audience 	= [];
 
-			angular.forEach(data, function (recipient)
-			{
-	  		var name;
+        angular.forEach(data, function (recipient)
+        {
+          var name;
 
-	  		if (members[recipient])
-	  		{
-		  		name = members[recipient].name;
-	  		}
-	  		else
-	  		{
-	  			angular.forEach(groups, function (group)
-	  			{
-	  				if (group.uuid == recipient) name = group.name;
-	  			});
-	  		}
+          if (members[recipient])
+          {
+            name = members[recipient].name;
+          }
+          else
+          {
+            angular.forEach(groups, function (group)
+            {
+              if (group.uuid == recipient) name = group.name;
+            });
+          }
 
-		  	audience += name + ', ';
-			});
+          audience += name + ', ';
+        });
 
-			return audience.substring(0, audience.length - 2);
+        return audience.substring(0, audience.length - 2);
+      }
 		}
 	}
 ]);;/*jslint node: true */
@@ -8775,11 +8790,12 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.progress(30, $rootScope.ui.login.loading_User);
 
-
       User.divisions()
         .then(function (divisions)
         {
-          $rootScope.config.timeline.divisions = divisions;
+          $rootScope.config.timeline.config.divisions = divisions;
+
+          Storage.add('divisions', angular.toJson(divisions));
 
           User.resources()
             .then(function (resources)
