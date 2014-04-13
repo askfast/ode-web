@@ -640,30 +640,33 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	{
 		return function (data)
 		{
-			var members 	= angular.fromJson(Storage.get('members')),
-	    		groups 		= angular.fromJson(Storage.get('groups')),
-	    		audience 	= [];
+      if (data)
+      {
+        var members 	= angular.fromJson(Storage.get('members')),
+          groups 		= angular.fromJson(Storage.get('groups')),
+          audience 	= [];
 
-			angular.forEach(data, function (recipient)
-			{
-	  		var name;
+        angular.forEach(data, function (recipient)
+        {
+          var name;
 
-	  		if (members[recipient])
-	  		{
-		  		name = members[recipient].name;
-	  		}
-	  		else
-	  		{
-	  			angular.forEach(groups, function (group)
-	  			{
-	  				if (group.uuid == recipient) name = group.name;
-	  			});
-	  		}
+          if (members[recipient])
+          {
+            name = members[recipient].name;
+          }
+          else
+          {
+            angular.forEach(groups, function (group)
+            {
+              if (group.uuid == recipient) name = group.name;
+            });
+          }
 
-		  	audience += name + ', ';
-			});
+          audience += name + ', ';
+        });
 
-			return audience.substring(0, audience.length - 2);
+        return audience.substring(0, audience.length - 2);
+      }
 		}
 	}
 ]);
