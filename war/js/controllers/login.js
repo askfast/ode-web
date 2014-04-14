@@ -225,6 +225,9 @@ angular.module('WebPaige.Controllers.Login', [])
 
           Storage.add('divisions', angular.toJson(divisions));
 
+//          console.log('$rootScope.config.timeline.divisions ->',
+//            $rootScope.config.timeline.divisions);
+
           User.resources()
             .then(function (resources)
             {

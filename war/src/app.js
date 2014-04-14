@@ -957,7 +957,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.12',
+    version:  '2.3.11',
     lang:     'nl',
 
     fullscreen: true,
@@ -1065,8 +1065,8 @@ angular.module('WebPaige')
         legenda:    {},
         legendarer: false,
         states:     {},
-        divisions:  profile.divisions,
-        //divisions:  [],
+        // divisions:  profile.divisions,
+        divisions:  [],
         densities: {
           less:   '#a0a0a0',
           even:   '#ba6a24',
@@ -8797,6 +8797,9 @@ angular.module('WebPaige.Controllers.Login', [])
           $rootScope.config.timeline.config.divisions = divisions;
 
           Storage.add('divisions', angular.toJson(divisions));
+
+//          console.log('$rootScope.config.timeline.divisions ->',
+//            $rootScope.config.timeline.divisions);
 
           User.resources()
             .then(function (resources)
