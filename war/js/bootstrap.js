@@ -84,7 +84,11 @@ angular.module('WebPaige')
     /**
      * Default language and change language
      */
-    $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang]; };
+    $rootScope.changeLanguage = function (lang)
+    {
+      $rootScope.ui = ui[lang];
+    };
+
     $rootScope.ui = ui[$rootScope.config.lang];
 
 

@@ -41,7 +41,16 @@ var ui = {
         passwordChanged: 'Password changed!',
         button_changePassword: 'Change password',
         button_changingPassword: 'Changing password..',
-        checkYourMail: 'Please check your email to reset your password!'
+        checkYourMail: 'Please check your email to reset your password!',
+        help: {
+          content: [
+            'To login and use the availability management system of ASK, you should have valid login credentials. If you do not have these login details just yet, please contact your team leader for more information.',
+            "After filling in your login credentials you may use the 'Remember me' function. When checked, you'll be automatically logged in on every next visit.",
+            'If you forgot your password, you may use the "Forgot password" page to request a new password. The new password will be sent to your own email address.',
+            'By pressing English or Dutch you can change the used language.'
+          ],
+          cta: 'Return to login screen'
+        }
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -467,7 +476,16 @@ var ui = {
         passwordChanged: 'Wachtwoord gewijzigd!',
         button_changePassword: 'Wachtwoord wijzigen',
         button_changingPassword: 'Wachtwoord aan het wijzigen..',
-        checkYourMail: 'Controleer uw mailbox voor de instructies!'
+        checkYourMail: 'Controleer uw mailbox voor de instructies!',
+        help: {
+          content: [
+            'Om in te loggen en gebruik te maken van het paraatheidssysteem van ASK, dient u te beschikken over een juiste login. Heeft u nog geen login, neem dan contact op met uw teamleider voor meer informatie.',
+            'Na het invullen van uw login gegevens kunt u gebruik maken van de “onthoud mij” optie. Wanneer u deze optie aanvinkt, wordt u automatisch ingelogd, elke volgende keer dat u site bezoekt.',
+            'Bent u uw wachtwoord vergeten, dan kunt u door middel van de “wachtwoord vergeten” link een nieuw wachtwoord aanvragen en laten versturen naar uw eigen email adres.',
+            'Door op English of Nederlands te klikken kunt u de taal instellen.'
+          ],
+          cta: 'Terug naar inloggen'
+        }
       },
       dashboard: {
         dashboard: 'Dashboard',

@@ -12,11 +12,7 @@ var profile = {
     return ($.browser.msie) ? '/proxy/rb_monster' : 'http://backend.ask-cs.com/rb_monster';
 	},
 
-  states: [
-    'com.ask-cs.State.Available',
-    'com.ask-cs.State.Unavailable',
-    'com.ask-cs.State.Unreached'
-  ],
+  states: [],
 
   timeline: {
     config: {

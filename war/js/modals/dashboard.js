@@ -13,8 +13,8 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
  */
 .factory('Dashboard',
 [
-	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', '$http',
-	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer, $http)
+	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
+	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer)
 	{
     /**
      * TODO: Still being used?
