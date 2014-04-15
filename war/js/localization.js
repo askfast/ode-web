@@ -855,7 +855,7 @@ var ui = {
           send: 'Fout bij het verzenden van bericht!',
           notificationsList: 'Fout bij het ophalen van de geplande notificaties!',
           notificationsGet: 'Fout bij het ophalen van een geplande notificatie!',
-          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
+          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!'
         },
         timeline: {
           query: 'Er is iets fout gegaan bij het laden van de tijdlijndata. Vernieuw deze webpagina om het nogmaals te proberen.',

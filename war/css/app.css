@@ -1790,6 +1790,7 @@ div.timeline-event.state-new {
 
 div.timeline-event div.timeline-event-content span.secret {
   font-size: 1px;
+  display: none;
 }
 
 .state-loading-left {
