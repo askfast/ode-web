@@ -1,13 +1,8 @@
-# WebPaigeBase Change Log
+# StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
-
-## Installations
-	- 100T		test environment
-	- 110K		knrm live
-	- 120G	gvrb
-	- 130B 	isparaat
-
-## Versions
+2.3.12
+- feature States are dynamically fetched from server based on the profile. 15-4-2014
+- fix Some minor issue fixes. 15-4-2014
 
 2.3.11
 - feature Implementation for dynamic divisions and capcodes 11-4-2014
