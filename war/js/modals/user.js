@@ -75,6 +75,20 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
     );
 
 
+    var States = $resource(
+        $config.host + '/states',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
+
+
 	  var Reset = $resource(
 	    $config.host + '/passwordReset',
 	    {
@@ -120,6 +134,40 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
         function (result)
         {
           deferred.resolve(result);
+        },
+        function (error)
+        {
+          deferred.resolve(error);
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * States
+     */
+    User.prototype.states = function ()
+    {
+      var deferred = $q.defer();
+
+      States.get(
+        {},
+        function (results)
+        {
+          var states = [];
+
+          angular.forEach(results, function (node)
+          {
+            var state = '';
+
+            angular.forEach(node, function (_s) { state += _s; });
+
+            states.push(state);
+          });
+
+          deferred.resolve(states);
         },
         function (error)
         {

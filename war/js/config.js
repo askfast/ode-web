@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.12',
+    version:  '2.3.13',
     lang:     'nl',
 
     fullscreen: true,
@@ -120,8 +120,8 @@ angular.module('WebPaige')
         legenda:    {},
         legendarer: false,
         states:     {},
-        divisions:  profile.divisions,
-        //divisions:  [],
+        // divisions:  profile.divisions,
+        divisions:  [],
         densities: {
           less:   '#a0a0a0',
           even:   '#ba6a24',

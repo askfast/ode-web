@@ -9,19 +9,15 @@ var profile = {
 
   host: function ()
   {
+    // Google
     // return ($.browser.msie) ? '/proxy/ns_knrm' : 'http://3rc2.ask-services.appspot.com/ns_knrm';
+
     return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com';
-    // return ($.browser.msie) ? '/proxy' : 'http://knrm-backend.ask-cs.com/';
+
+    // return ($.browser.msie) ? '/proxy' : 'http://knrm-backend.ask-cs.com';
   },
 
-  states: [
-    'com.ask-cs.State.Available',
-    'com.ask-cs.State.KNRM.BeschikbaarNoord',
-    'com.ask-cs.State.KNRM.BeschikbaarZuid',
-    'com.ask-cs.State.Unavailable',
-    'com.ask-cs.State.KNRM.SchipperVanDienst',
-    'com.ask-cs.State.Unreached'
-  ],
+  states: [],
 
   timeline: {
     config: {
@@ -32,16 +28,7 @@ var profile = {
     }
   },
 
-  divisions: [
-    {
-      id: 'knrm.StateGroup. BeschikbaarNoord',
-      label: 'Noord'
-    },
-    {
-      id: 'knrm.StateGroup.BeschikbaarZuid',
-      label: 'Zuid'
-    }
-  ],
+  divisions: [],
 
   roles: [
     {

@@ -14,10 +14,7 @@ var profile = {
     // return ($.browser.msie) ? '/proxy' : 'http://askpack.ask-cs.com/standby-dev';
 	},
 
-  states: [
-    'com.ask-cs.State.Available',
-    'com.ask-cs.State.Unavailable'
-  ],
+  states: [],
 
   timeline: {
     config: {

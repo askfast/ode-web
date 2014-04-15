@@ -84,7 +84,11 @@ angular.module('WebPaige')
     /**
      * Default language and change language
      */
-    $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang]; };
+    $rootScope.changeLanguage = function (lang)
+    {
+      $rootScope.ui = ui[lang];
+    };
+
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
@@ -108,6 +112,7 @@ angular.module('WebPaige')
      */
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
 
+    $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 

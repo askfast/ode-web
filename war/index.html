@@ -36,7 +36,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/knrm/profile.js"></script>
+    <script src="profiles/standby/profile.js"></script>
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
     <!--[if IE 8]>    <link rel="stylesheet" href="css/ie8.css">                                 <![endif]-->
@@ -311,14 +311,14 @@
               </li>
               <!--end StandBy Firedep-->
 
-              <li ng-show="config.profile.mobileApp.status"
-                  ng-hide="(config.profile.meta == 'standby') || (config.profile.meta == 'monster') || (config.profile.meta == 'knrm')">
-                <button class="btn btn-success btn-large"
-                        type="button"
-                        ng-click="downloadMobileApp('regular')">
-                  Download Mobiele App
-                </button>
-              </li>
+              <!--<li ng-show="config.profile.mobileApp.status"-->
+                  <!--ng-hide="(config.profile.meta == 'standby') || (config.profile.meta == 'monster') || (config.profile.meta == 'knrm')">-->
+                <!--<button class="btn btn-success btn-large"-->
+                        <!--type="button"-->
+                        <!--ng-click="downloadMobileApp('regular')">-->
+                  <!--Download Mobiele App-->
+                <!--</button>-->
+              <!--</li>-->
 
               <!--<li ng-show="config.profile.mobileApp.experimental">-->
               <!--<button class="btn btn-success btn-large"-->
@@ -360,8 +360,8 @@
     <script src="libs/angular/1.0.5/angular-resource.min.js"></script>
     <script src="libs/bootstrap/bootstrap.min.js"></script>
     
-    <!--<script src="dist/app.min.js"></script>-->
-    <script src="src/app.js"></script>
+    <script src="dist/app.min.js"></script>
+    <!--<script src="src/app.js"></script>-->
     <!--<![endif]-->
 
     

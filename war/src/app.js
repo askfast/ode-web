@@ -41,7 +41,16 @@ var ui = {
         passwordChanged: 'Password changed!',
         button_changePassword: 'Change password',
         button_changingPassword: 'Changing password..',
-        checkYourMail: 'Please check your email to reset your password!'
+        checkYourMail: 'Please check your email to reset your password!',
+        help: {
+          content: [
+            'To login and use the availability management system of ASK, you should have valid login credentials. If you do not have these login details just yet, please contact your team leader for more information.',
+            "After filling in your login credentials you may use the 'Remember me' function. When checked, you'll be automatically logged in on every next visit.",
+            'If you forgot your password, you may use the "Forgot password" page to request a new password. The new password will be sent to your own email address.',
+            'By pressing English or Dutch you can change the used language.'
+          ],
+          cta: 'Return to login screen'
+        }
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -467,7 +476,16 @@ var ui = {
         passwordChanged: 'Wachtwoord gewijzigd!',
         button_changePassword: 'Wachtwoord wijzigen',
         button_changingPassword: 'Wachtwoord aan het wijzigen..',
-        checkYourMail: 'Controleer uw mailbox voor de instructies!'
+        checkYourMail: 'Controleer uw mailbox voor de instructies!',
+        help: {
+          content: [
+            'Om in te loggen en gebruik te maken van het paraatheidssysteem van ASK, dient u te beschikken over een juiste login. Heeft u nog geen login, neem dan contact op met uw teamleider voor meer informatie.',
+            'Na het invullen van uw login gegevens kunt u gebruik maken van de “onthoud mij” optie. Wanneer u deze optie aanvinkt, wordt u automatisch ingelogd, elke volgende keer dat u site bezoekt.',
+            'Bent u uw wachtwoord vergeten, dan kunt u door middel van de “wachtwoord vergeten” link een nieuw wachtwoord aanvragen en laten versturen naar uw eigen email adres.',
+            'Door op English of Nederlands te klikken kunt u de taal instellen.'
+          ],
+          cta: 'Terug naar inloggen'
+        }
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -837,7 +855,7 @@ var ui = {
           send: 'Fout bij het verzenden van bericht!',
           notificationsList: 'Fout bij het ophalen van de geplande notificaties!',
           notificationsGet: 'Fout bij het ophalen van een geplande notificatie!',
-          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!',
+          notificationsAdd: 'Fout bij het aanmaken van een geplande notificatie!'
         },
         timeline: {
           query: 'Er is iets fout gegaan bij het laden van de tijdlijndata. Vernieuw deze webpagina om het nogmaals te proberen.',
@@ -957,7 +975,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.12',
+    version:  '2.3.13',
     lang:     'nl',
 
     fullscreen: true,
@@ -1065,8 +1083,8 @@ angular.module('WebPaige')
         legenda:    {},
         legendarer: false,
         states:     {},
-        divisions:  profile.divisions,
-        //divisions:  [],
+        // divisions:  profile.divisions,
+        divisions:  [],
         densities: {
           less:   '#a0a0a0',
           even:   '#ba6a24',
@@ -1469,7 +1487,11 @@ angular.module('WebPaige')
     /**
      * Default language and change language
      */
-    $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang]; };
+    $rootScope.changeLanguage = function (lang)
+    {
+      $rootScope.ui = ui[lang];
+    };
+
     $rootScope.ui = ui[$rootScope.config.lang];
 
 
@@ -1493,6 +1515,7 @@ angular.module('WebPaige')
      */
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
 
+    $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
@@ -1957,6 +1980,20 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
     );
 
 
+    var States = $resource(
+        $config.host + '/states',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
+
+
 	  var Reset = $resource(
 	    $config.host + '/passwordReset',
 	    {
@@ -2002,6 +2039,40 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
         function (result)
         {
           deferred.resolve(result);
+        },
+        function (error)
+        {
+          deferred.resolve(error);
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * States
+     */
+    User.prototype.states = function ()
+    {
+      var deferred = $q.defer();
+
+      States.get(
+        {},
+        function (results)
+        {
+          var states = [];
+
+          angular.forEach(results, function (node)
+          {
+            var state = '';
+
+            angular.forEach(node, function (_s) { state += _s; });
+
+            states.push(state);
+          });
+
+          deferred.resolve(states);
         },
         function (error)
         {
@@ -2181,8 +2252,8 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
  */
 .factory('Dashboard',
 [
-	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer', '$http',
-	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer, $http)
+	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
+	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer)
 	{
     /**
      * TODO: Still being used?
@@ -2233,7 +2304,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 			{
         if (settings[group.uuid] && settings[group.uuid].status)
         {
-          if (!settings[group.uuid].divisions)
+          if ($rootScope.config.timeline.config.divisions.length == 0)
           {
             calls.push(Slots.pie({
               id:         group.uuid,
@@ -2243,17 +2314,28 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
           }
           else
           {
-            angular.forEach($rootScope.config.timeline.config.divisions, function (division)
+            if (settings[group.uuid].divisions)
             {
-              if (division.id !== 'all')
+              angular.forEach($rootScope.config.timeline.config.divisions, function (division)
               {
-                calls.push(Slots.pie({
-                  id:         group.uuid,
-                  name:       group.name,
-                  division:   division.id
-                }));
-              }
-            })
+                if (division.id !== 'all')
+                {
+                  calls.push(Slots.pie({
+                    id:         group.uuid,
+                    name:       group.name,
+                    division:   division.id
+                  }));
+                }
+              });
+            }
+            else
+            {
+              calls.push(Slots.pie({
+                id:         group.uuid,
+                name:       group.name,
+                division:   'both'
+              }));
+            }
           }
         }
 			});
@@ -8530,30 +8612,33 @@ angular.module('WebPaige.Filters', ['ngResource'])
 	{
 		return function (data)
 		{
-			var members 	= angular.fromJson(Storage.get('members')),
-	    		groups 		= angular.fromJson(Storage.get('groups')),
-	    		audience 	= [];
+      if (data)
+      {
+        var members 	= angular.fromJson(Storage.get('members')),
+          groups 		= angular.fromJson(Storage.get('groups')),
+          audience 	= [];
 
-			angular.forEach(data, function (recipient)
-			{
-	  		var name;
+        angular.forEach(data, function (recipient)
+        {
+          var name;
 
-	  		if (members[recipient])
-	  		{
-		  		name = members[recipient].name;
-	  		}
-	  		else
-	  		{
-	  			angular.forEach(groups, function (group)
-	  			{
-	  				if (group.uuid == recipient) name = group.name;
-	  			});
-	  		}
+          if (members[recipient])
+          {
+            name = members[recipient].name;
+          }
+          else
+          {
+            angular.forEach(groups, function (group)
+            {
+              if (group.uuid == recipient) name = group.name;
+            });
+          }
 
-		  	audience += name + ', ';
-			});
+          audience += name + ', ';
+        });
 
-			return audience.substring(0, audience.length - 2);
+        return audience.substring(0, audience.length - 2);
+      }
 		}
 	}
 ]);;/*jslint node: true */
@@ -8775,195 +8860,225 @@ angular.module('WebPaige.Controllers.Login', [])
 
 	    self.progress(30, $rootScope.ui.login.loading_User);
 
-
-      User.divisions()
-        .then(function (divisions)
+      User.states()
+        .then(function (states)
         {
-          $rootScope.config.timeline.divisions = divisions;
+          angular.forEach(states, function (state)
+          {
+            $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+          });
 
-          User.resources()
-            .then(function (resources)
+          User.divisions()
+            .then(function (divisions)
             {
-              if (resources.error)
-              {
-                console.warn('error ->', resources);
-              }
-              else
-              {
-                $rootScope.app.resources = resources;
+              $rootScope.config.timeline.config.divisions = divisions;
 
-                self.progress(70, $rootScope.ui.login.loading_Group);
+              Storage.add('divisions', angular.toJson(divisions));
 
-                Groups.query(true)
-                  .then(function (groups)
+              User.resources()
+                .then(function (resources)
+                {
+                  if (resources.error)
                   {
-                    if (groups.error)
-                    {
-                      console.warn('error ->', groups);
-                    }
-                    else
-                    {
-                      var settings  = angular.fromJson(resources.settingsWebPaige) || {},
-                        sync      = false,
-                        parenting = false,
-                        defaults  = $rootScope.config.defaults.settingsWebPaige,
-                        _groups   = function (groups)
-                        {
-                          var _groups = {};
-                          angular.forEach(
-                            groups,
-                            function (group)
-                            {
-                              _groups[group.uuid] = {
-                                status:     true,
-                                divisions:  false
-                              };
-                            }
-                          );
-                          return _groups;
-                        };
+                    console.warn('error ->', resources);
+                  }
+                  else
+                  {
+                    $rootScope.app.resources = resources;
 
-                      // Check if there is any settings at all
-                      if (settings != null || settings != undefined)
+                    self.progress(70, $rootScope.ui.login.loading_Group);
+
+                    Groups.query(true)
+                      .then(function (groups)
                       {
-                        // check for user settings-all
-                        if (settings.user)
+                        if (groups.error)
                         {
-                          // check for user-language settings
-                          if (settings.user.language)
-                          {
-                            // console.warn('user HAS language settings');
-                            $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
-                            defaults.user.language = settings.user.language;
-                          }
-                          else
-                          {
-                            // console.warn('user has NO language!!');
-                            $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
-                            sync = true;
-                          }
+                          console.warn('error ->', groups);
                         }
                         else
                         {
-                          // console.log('NO user settings at all !!');
-                          sync = true;
-                        }
-
-                        // check for app settings-all
-                        if (settings.app)
-                        {
-                          // check for app-widget settings
-                          if (settings.app.widgets)
-                          {
-                            // check for app-widget-groups setting
-                            if (settings.app.widgets.groups)
+                          var settings  = angular.fromJson(resources.settingsWebPaige) || {},
+                            sync      = false,
+                            parenting = false,
+                            defaults  = $rootScope.config.defaults.settingsWebPaige,
+                            _groups   = function (groups)
                             {
-                              // console.log('settings for groups =>', settings.app.widgets.groups);
-                              var oldGroupSetup = false;
-
-                              if (!jQuery.isEmptyObject(settings.app.widgets.groups))
-                              {
-                                angular.forEach(settings.app.widgets.groups, function (value, id)
+                              var _groups = {};
+                              angular.forEach(
+                                groups,
+                                function (group)
                                 {
-                                  // console.log('value ->', value);
-                                  if (typeof value !== 'object' || value == {})
-                                  {
-                                    oldGroupSetup = true;
-                                  }
-                                });
-                              }
-                              else
-                              {
-                                oldGroupSetup = true;
-                              }
+                                  _groups[group.uuid] = {
+                                    status:     true,
+                                    divisions:  false
+                                  };
+                                }
+                              );
+                              return _groups;
+                            };
 
-                              if (oldGroupSetup)
+                          // Check if there is any settings at all
+                          if (settings != null || settings != undefined)
+                          {
+                            // check for user settings-all
+                            if (settings.user)
+                            {
+                              // check for user-language settings
+                              if (settings.user.language)
                               {
-                                // console.warn('OLD SETUP => user has NO app widgets groups!!');
-                                defaults.app.widgets.groups = _groups(groups);
-                                sync = true;
+                                // console.warn('user HAS language settings');
+                                $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+                                defaults.user.language = settings.user.language;
                               }
                               else
                               {
-                                // console.warn('user HAS app widgets groups settings');
-                                defaults.app.widgets.groups = settings.app.widgets.groups;
+                                // console.warn('user has NO language!!');
+                                $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+                                sync = true;
                               }
                             }
                             else
                             {
-                              console.warn('user has NO app widgets groups!!');
-                              defaults.app.widgets.groups = _groups(groups);
+                              // console.log('NO user settings at all !!');
+                              sync = true;
+                            }
+
+                            // check for app settings-all
+                            if (settings.app)
+                            {
+                              // check for app-widget settings
+                              if (settings.app.widgets)
+                              {
+                                // check for app-widget-groups setting
+                                if (settings.app.widgets.groups)
+                                {
+                                  // console.log('settings for groups =>', settings.app.widgets.groups);
+                                  var oldGroupSetup = false;
+
+                                  if (!jQuery.isEmptyObject(settings.app.widgets.groups))
+                                  {
+                                    angular.forEach(settings.app.widgets.groups, function (value, id)
+                                    {
+                                      // console.log('value ->', value);
+                                      if (typeof value !== 'object' || value == {})
+                                      {
+                                        oldGroupSetup = true;
+                                      }
+                                    });
+                                  }
+                                  else
+                                  {
+                                    oldGroupSetup = true;
+                                  }
+
+                                  if (oldGroupSetup)
+                                  {
+                                    // console.warn('OLD SETUP => user has NO app widgets groups!!');
+                                    defaults.app.widgets.groups = _groups(groups);
+                                    sync = true;
+                                  }
+                                  else
+                                  {
+                                    // console.warn('user HAS app widgets groups settings');
+                                    defaults.app.widgets.groups = settings.app.widgets.groups;
+                                  }
+                                }
+                                else
+                                {
+                                  console.warn('user has NO app widgets groups!!');
+                                  defaults.app.widgets.groups = _groups(groups);
+                                  sync = true;
+                                }
+                              }
+                              else
+                              {
+                                // console.warn('user has NO widget settings!!');
+                                defaults.app.widgets = { groups: _groups(groups) };
+                                sync = true;
+                              }
+
+                              // check for app group setting
+                              if (settings.app.group && settings.app.group != undefined)
+                              {
+                                // console.warn('user HAS app first group setting');
+                                defaults.app.group = settings.app.group;
+                              }
+                              else
+                              {
+                                // console.warn('user has NO first group setting!!');
+                                parenting = true;
+                                sync      = true;
+                              }
+                            }
+                            else
+                            {
+                              // console.log('NO app settings!!');
+                              defaults.app = { widgets: { groups: _groups(groups) } };
                               sync = true;
                             }
                           }
                           else
                           {
-                            // console.warn('user has NO widget settings!!');
-                            defaults.app.widgets = { groups: _groups(groups) };
+                            // console.log('NO SETTINGS AT ALL!!');
+                            defaults = {
+                              user: $rootScope.config.defaults.settingsWebPaige.user,
+                              app: {
+                                widgets: {
+                                  groups: _groups(groups)
+                                },
+                                group: groups[0].uuid
+                              }
+                            };
                             sync = true;
                           }
 
-                          // check for app group setting
-                          if (settings.app.group && settings.app.group != undefined)
+                          // sync settings with missing parts also parenting check
+                          if (sync)
                           {
-                            // console.warn('user HAS app first group setting');
-                            defaults.app.group = settings.app.group;
-                          }
-                          else
-                          {
-                            // console.warn('user has NO first group setting!!');
-                            parenting = true;
-                            sync      = true;
-                          }
-                        }
-                        else
-                        {
-                          // console.log('NO app settings!!');
-                          defaults.app = { widgets: { groups: _groups(groups) } };
-                          sync = true;
-                        }
-                      }
-                      else
-                      {
-                        // console.log('NO SETTINGS AT ALL!!');
-                        defaults = {
-                          user: $rootScope.config.defaults.settingsWebPaige.user,
-                          app: {
-                            widgets: {
-                              groups: _groups(groups)
-                            },
-                            group: groups[0].uuid
-                          }
-                        };
-                        sync = true;
-                      }
-
-                      // sync settings with missing parts also parenting check
-                      if (sync)
-                      {
-                        if (parenting)
-                        {
-                          // console.warn('setting up parent group for the user');
-
-                          Groups.parents()
-                            .then(function (_parent)
+                            if (parenting)
                             {
-                              // console.warn('parent group been fetched ->', _parent);
+                              // console.warn('setting up parent group for the user');
 
-                              if (_parent != null)
-                              {
-                                // console.warn('found parent parent -> ', _parent);
+                              Groups.parents()
+                                .then(function (_parent)
+                                {
+                                  // console.warn('parent group been fetched ->', _parent);
 
-                                defaults.app.group = _parent;
-                              }
-                              else
-                              {
-                                // console.warn('setting the first group in the list for user ->', groups[0].uuid);
+                                  if (_parent != null)
+                                  {
+                                    // console.warn('found parent parent -> ', _parent);
 
-                                defaults.app.group = groups[0].uuid;
-                              }
+                                    defaults.app.group = _parent;
+                                  }
+                                  else
+                                  {
+                                    // console.warn('setting the first group in the list for user ->', groups[0].uuid);
 
-                              // console.warn('SAVE ME (with parenting) ->', defaults);
+                                    defaults.app.group = groups[0].uuid;
+                                  }
+
+                                  // console.warn('SAVE ME (with parenting) ->', defaults);
+
+                                  Settings.save(resources.uuid, defaults)
+                                    .then(function ()
+                                    {
+                                      User.resources()
+                                        .then(function (got)
+                                        {
+                                          // console.log('gotted (with setting parent group) ->', got);
+                                          $rootScope.app.resources = got;
+
+                                          finalize();
+                                        })
+                                    });
+
+                                });
+                            }
+                            else
+                            {
+                              // console.warn('SAVE ME ->', defaults);
+
+                              defaults.app.group = groups[0].uuid;
 
                               Settings.save(resources.uuid, defaults)
                                 .then(function ()
@@ -8971,51 +9086,30 @@ angular.module('WebPaige.Controllers.Login', [])
                                   User.resources()
                                     .then(function (got)
                                     {
-                                      // console.log('gotted (with setting parent group) ->', got);
+                                      // console.log('gotted ->', got);
                                       $rootScope.app.resources = got;
 
                                       finalize();
                                     })
                                 });
-
+                            }
+                          }
+                          else
+                          {
+                            ga('send', 'pageview', {
+                              'dimension1': resources.uuid
                             });
+                            ga('send', 'event', 'Login', resources.uuid);
+
+                            finalize();
+                          }
                         }
-                        else
-                        {
-                          // console.warn('SAVE ME ->', defaults);
+                      });
+                  }
+                });
 
-                          defaults.app.group = groups[0].uuid;
-
-                          Settings.save(resources.uuid, defaults)
-                            .then(function ()
-                            {
-                              User.resources()
-                                .then(function (got)
-                                {
-                                  // console.log('gotted ->', got);
-                                  $rootScope.app.resources = got;
-
-                                  finalize();
-                                })
-                            });
-                        }
-                      }
-                      else
-                      {
-                        ga('send', 'pageview', {
-                          'dimension1': resources.uuid
-                        });
-                        ga('send', 'event', 'Login', resources.uuid);
-
-                        finalize();
-                      }
-                    }
-                  });
-              }
             });
-
         });
-
 
 	  };
 
@@ -9297,8 +9391,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
  */
 .controller('dashboard',
 [
-	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
-	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
+	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer', 'User',
+	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer, User)
 	{
     $rootScope.notification.status = false;
 
