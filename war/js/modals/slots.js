@@ -522,9 +522,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
-          console.log('user data ->', user);
-          console.log('------------------------------------ ->');
-
           angular.forEach(user, function (slot)
           {
             if (!slot.recursive)

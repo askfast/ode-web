@@ -975,7 +975,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.13',
+    version:  '2.3.12',
     lang:     'nl',
 
     fullscreen: true,
@@ -1516,6 +1516,11 @@ angular.module('WebPaige')
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
 
     $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
+
+    angular.forEach(angular.fromJson(Storage.get('states')), function (state)
+    {
+      $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+    });
 
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
@@ -2983,9 +2988,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
-          console.log('user data ->', user);
-          console.log('------------------------------------ ->');
-
           angular.forEach(user, function (slot)
           {
             if (!slot.recursive)
@@ -8866,6 +8868,8 @@ angular.module('WebPaige.Controllers.Login', [])
       User.states()
         .then(function (states)
         {
+          Storage.add('states', angular.toJson(states));
+
           angular.forEach(states, function (state)
           {
             $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
