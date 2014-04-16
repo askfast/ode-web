@@ -503,7 +503,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * Get slot bundels; user, group aggs and members
+	   * Get slot bundels user, group aggs and members
 	   */
 	  Slots.prototype.all = function (options) 
 	  {
@@ -522,6 +522,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 	    Slots.query(params, 
 	      function (user) 
 	      {
+          console.log('user data ->', user);
+          console.log('------------------------------------ ->');
+
           angular.forEach(user, function (slot)
           {
             if (!slot.recursive)
