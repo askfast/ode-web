@@ -1,15 +1,15 @@
 define(
-  ['controllers/controllers', 'services/user'],
+  ['controllers/controllers'],
   function (controllers)
   {
     'use strict';
 
     controllers.controller ('partial1',
       [
-        '$scope', 'User',
-        function ($scope, User)
+        '$scope',
+        function ($scope)
         {
-          $scope.name = User.get();
+          // $scope.name = User.get();
         }
       ]
     );

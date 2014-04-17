@@ -1,22 +1,23 @@
 {
-  "name": "StandBy",
+  "name": "StandByr",
   "version": "2.4.0",
   "dependencies": {
-    "json3": "*",
-    "jquery": "*",
-    "bootstrap-sass": "*",
-    "es5-shim": "*",
     "angular": "*",
+    "jquery": "*",
+    "bootstrap-sass-official": "*",
+    "es5-shim": "*",
     "angular-resource": "*",
     "angular-route": "*",
-    "angular-cookies": "*",
     "angular-sanitize": "*",
-    "angular-mocks": "*",
-    "angular-scenario": "*",
     "requirejs": "*",
     "requirejs-domready": "*",
-    "bootstrap-sass-official": "~3.1.1",
-    "lawnchair": "~0.6.3"
+    "lawnchair": "*",
+    "json3": "*",
+    "angular-cookies": "*",
+    "momentjs": "*"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "angular-mocks": "*",
+    "angular-scenario": "*"
+  }
 }
