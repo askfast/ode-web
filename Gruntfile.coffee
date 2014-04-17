@@ -74,7 +74,7 @@ module.exports = (grunt) ->
     connect:
       options:
         port: 9000
-        hostname: '0.0.0.0' #'localhost'
+        hostname: '0.0.0.0'
       livereload:
         options:
           middleware: (connect) ->
@@ -208,6 +208,15 @@ module.exports = (grunt) ->
       options:
         dirs: ['<%= paths.dist %>']
 
+    svgmin:
+      dist:
+        files: [
+          expand: true
+          cwd: "<%= paths.app %>/images"
+          src: "{,*/}*.svg"
+          dest: "<%= paths.dist %>/images"
+        ]
+
     imagemin:
       dist:
         files: [
@@ -217,14 +226,6 @@ module.exports = (grunt) ->
           dest: '<%= paths.dist %>/images'
         ]
 
-    svgmin:
-      dist:
-        files: [
-          expand: true
-          cwd: "<%= paths.app %>/images"
-          src: "{,*/}*.svg"
-          dest: "<%= paths.dist %>/images"
-        ]
 
     cssmin: {}
   
@@ -419,7 +420,7 @@ module.exports = (grunt) ->
     'jade'
     'useminPrepare'
     'imagemin'
-    'svgmin'
+#    'svgmin'
     'htmlmin'
     'concat'
     'copy'

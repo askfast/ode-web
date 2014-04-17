@@ -1,1 +1,1 @@
-define({app:{version:"1.0.2",released:"Tuesday, August 13th, 2013, 8:38:13 AM"}});
+define({app:{version:"2.4.0",released:"Thursday, April 17th, 2014, 9:14:17 PM"}});

@@ -4,6 +4,7 @@
   "description": "StandBy description",
   "author": "Cengiz Ulusoy",
   "dependencies": {
+    "grunt-svgmin": "^0.4.0"
   },
   "devDependencies": {
     "grunt": "*",
