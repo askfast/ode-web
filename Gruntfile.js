@@ -131,6 +131,7 @@ module.exports = function (grunt)
         },
         files: {
           'war/dist/views/login.html':                    'war/js/views/login.html',
+          'war/dist/views/maintenance.html':              'war/js/views/maintenance.html',
           'war/dist/views/logout.html':                   'war/js/views/logout.html',
           'war/dist/views/dashboard.html':                'war/js/views/dashboard.html',
           'war/dist/views/tv.html':                       'war/js/views/tv.html',
