@@ -1,1 +1,0 @@
-define(["controllers/controllers"],function(e){e.controller("partial1",["$scope",function(e){}])});
