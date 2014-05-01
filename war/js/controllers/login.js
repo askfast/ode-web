@@ -220,6 +220,8 @@ angular.module('WebPaige.Controllers.Login', [])
       User.states()
         .then(function (states)
         {
+          Storage.add('states', angular.toJson(states));
+
           angular.forEach(states, function (state)
           {
             $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];

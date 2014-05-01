@@ -114,6 +114,11 @@ angular.module('WebPaige')
 
     $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
+    angular.forEach(angular.fromJson(Storage.get('states')), function (state)
+    {
+      $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+    });
+
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
     if (registeredNotifications)

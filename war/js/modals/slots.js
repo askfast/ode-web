@@ -503,7 +503,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * Get slot bundels; user, group aggs and members
+	   * Get slot bundels user, group aggs and members
 	   */
 	  Slots.prototype.all = function (options) 
 	  {

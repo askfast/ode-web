@@ -1517,6 +1517,11 @@ angular.module('WebPaige')
 
     $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
+    angular.forEach(angular.fromJson(Storage.get('states')), function (state)
+    {
+      $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+    });
+
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
     if (registeredNotifications)
@@ -2964,7 +2969,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 
 
 	  /**
-	   * Get slot bundels; user, group aggs and members
+	   * Get slot bundels user, group aggs and members
 	   */
 	  Slots.prototype.all = function (options) 
 	  {
@@ -8863,6 +8868,8 @@ angular.module('WebPaige.Controllers.Login', [])
       User.states()
         .then(function (states)
         {
+          Storage.add('states', angular.toJson(states));
+
           angular.forEach(states, function (state)
           {
             $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
@@ -10335,7 +10342,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       /**
        * Fix for timeline scope to day
        */
-      day:      Dater.current.today(),
+      day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       year:     Dater.current.year(),
