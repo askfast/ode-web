@@ -10342,7 +10342,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
       /**
        * Fix for timeline scope to day
        */
-      day:      Dater.current.today(),
+      day:      Dater.current.today() + 1,
       week:     Dater.current.week(),
       month:    Dater.current.month(),
       year:     Dater.current.year(),
