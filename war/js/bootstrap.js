@@ -111,6 +111,8 @@ angular.module('WebPaige')
      * Set up resources
      */
     $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+	
+    $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
 
     $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
