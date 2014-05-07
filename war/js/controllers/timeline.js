@@ -837,19 +837,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  {
 	  	$rootScope.planboardSync.clear();
 
-      console.log('slot adding values ->', slot);
-
 	  	/**
 	  	 * Make view for new slot
 	  	 */
 	  	if (!form)
 	  	{
-        console.log('it is not through the form ->');
-
-	  		var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-
-        console.log('values ->', angular.toJson(values));
-
+        var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
         if (/planning/.test(values.group))
         {
@@ -897,10 +890,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
           $scope.self.timeline.cancelAdd();
 
           $rootScope.notifier.error('Het is alleen toegestaan om uw eigen planboard te wijzigen.');
+
+          $rootScope.$apply();
         }
-
-
-
 	  	}
 	  	/**
 	  	 * Add new slot through the form
