@@ -59,6 +59,19 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
         }
       }
     );
+    
+    var Domain = $resource(
+        $config.host + '/domain',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        }
+      }
+    );
 
 
     var Divisions = $resource(
@@ -305,7 +318,7 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	  User.prototype.resources = function () 
 	  {    
 	    var deferred = $q.defer();
-
+		
 	    Resources.get(
         null,
 	      function (result) 
@@ -319,6 +332,47 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	          Storage.add('resources', angular.toJson(result));
 
 	          deferred.resolve(result);
+	        }
+	      },
+	      function (error)
+	      {
+	        deferred.resolve({error: error});
+	      }
+	    );
+
+	    return deferred.promise;
+	  };
+
+
+	  /**
+	   * Get user domain
+	   */
+	  User.prototype.domain = function ()
+	  {
+	    var deferred = $q.defer();
+
+	    Domain.get(
+        null,
+	      function (results)
+	      {
+	        if (angular.equals(results, []))
+	        {
+	          deferred.reject("User has no domain!");
+	        }
+	        else
+	        {
+	          Storage.add('domain', angular.toJson(results));
+	          
+	          var domainnames = [];
+	          
+	          angular.forEach(results, function (node)
+	          {
+	            var domainname = '';
+	            angular.forEach(node, function (_s) { domainname += _s; });
+	            domainnames.push(domainname);
+	          });
+	          
+	          deferred.resolve(domainnames);
 	        }
 	      },
 	      function (error)
