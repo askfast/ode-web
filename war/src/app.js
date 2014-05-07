@@ -975,7 +975,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.13',
+    version:  '2.3.15',
     lang:     'nl',
 
     fullscreen: true,
@@ -11448,56 +11448,65 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	  {
 	  	$rootScope.planboardSync.clear();
 
-      console.log('slot adding values ->', slot);
-
 	  	/**
 	  	 * Make view for new slot
 	  	 */
 	  	if (!form)
 	  	{
-	  		var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+        var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
-		    if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
+        if (/planning/.test(values.group))
+        {
+          if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
-		    $scope.$apply(function ()
-		    {
-		    	if ($scope.timeline.main)
-		    	{
-			      $rootScope.$broadcast('resetPlanboardViews');
+          $scope.$apply(function ()
+          {
+            if ($scope.timeline.main)
+            {
+              $rootScope.$broadcast('resetPlanboardViews');
 
-			      $scope.views.slot.add = true;
-		    	}
-		    	else
-		    	{
-			      $scope.forms = {
-			        add:  true,
-			        edit: false
-			      };
-			    }
+              $scope.views.slot.add = true;
+            }
+            else
+            {
+              $scope.forms = {
+                add:  true,
+                edit: false
+              };
+            }
 
-		      $scope.slot = {
-		        start: {
-		          date: new Date(values.start).toString($rootScope.config.formats.date),
-		          time: new Date(values.start).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.start).toISOString()
-		        },
-		        end: {
-		          date: new Date(values.end).toString($rootScope.config.formats.date),
-		          time: new Date(values.end).toString($rootScope.config.formats.time),
-		          datetime: new Date(values.end).toISOString()
-		        },
-		        recursive: (values.group.match(/recursive/)) ? true : false,
-		        /**
-		         * INFO
-		         * First state is hard-coded
-		         * Maybe use the first one from array later on?
-		         */
-		        state: 'com.ask-cs.State.Available'
-		      };
-		    });
+            $scope.slot = {
+              start: {
+                date: new Date(values.start).toString($rootScope.config.formats.date),
+                time: new Date(values.start).toString($rootScope.config.formats.time),
+                datetime: new Date(values.start).toISOString()
+              },
+              end: {
+                date: new Date(values.end).toString($rootScope.config.formats.date),
+                time: new Date(values.end).toString($rootScope.config.formats.time),
+                datetime: new Date(values.end).toISOString()
+              },
+              recursive: (values.group.match(/recursive/)) ? true : false,
+              /**
+               * INFO
+               * First state is hard-coded
+               * Maybe use the first one from array later on?
+               */
+              state: 'com.ask-cs.State.Available'
+            };
+          }); 
+        }
+        else
+        {
+          $scope.self.timeline.cancelAdd();
+
+          $rootScope.notifier.error('Het is alleen toegestaan om uw eigen planboard te wijzigen.');
+
+          $rootScope.$apply();
+        }
 	  	}
 	  	/**
-	  	 * Add new slot
+	  	 * Add new slot through the form
 	  	 */
 	  	else
 	  	{
