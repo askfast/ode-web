@@ -46,7 +46,8 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
         {
           if (alarm.body)
           {
-            if (alarm.body.match(/Prio 1/) || alarm.body.match(/PRIO 1/))
+            var alarmBodyLowered = alarm.body.toLowerCase();
+            if (alarmBodyLowered.match(/prio 1/) || alarmBodyLowered.match(/p 1 /) || alarmBodyLowered.match(/A1 / ))
             {
               alarm.body = alarm.body.replace('Prio 1 ', '');
               alarm.prio = {
@@ -55,7 +56,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
               };
             }
 
-            if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
+            if (alarmBodyLowered.match(/prio 2/) || alarmBodyLowered.match(/p 2 /) || alarmBodyLowered.match(/A2 / ))
             {
               alarm.body = alarm.body.replace('Prio 2 ', '');
               alarm.prio = {
@@ -64,7 +65,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
               };
             }
 
-            if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
+            if (alarmBodyLowered.match(/prio 3/) || alarmBodyLowered.match(/p 3 /) || alarmBodyLowered.match(/B1 / ) || alarmBodyLowered.match(/B2 / ))
             {
               alarm.body = alarm.body.replace('Prio 3 ', '');
               alarm.prio = {
