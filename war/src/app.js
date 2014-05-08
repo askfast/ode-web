@@ -6963,7 +6963,8 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
         {
           if (alarm.body)
           {
-            if (alarm.body.match(/Prio 1/) || alarm.body.match(/PRIO 1/))
+            var alarmBodyLowered = alarm.body.toLowerCase();
+            if (alarmBodyLowered.match(/prio 1/) || alarmBodyLowered.match(/p 1 /) || alarmBodyLowered.match(/A1 / ))
             {
               alarm.body = alarm.body.replace('Prio 1 ', '');
               alarm.prio = {
@@ -6972,7 +6973,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
               };
             }
 
-            if (alarm.body.match(/Prio 2/) || alarm.body.match(/PRIO 2/))
+            if (alarmBodyLowered.match(/prio 2/) || alarmBodyLowered.match(/p 2 /) || alarmBodyLowered.match(/A2 / ))
             {
               alarm.body = alarm.body.replace('Prio 2 ', '');
               alarm.prio = {
@@ -6981,7 +6982,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
               };
             }
 
-            if (alarm.body.match(/Prio 3/) || alarm.body.match(/PRIO 3/))
+            if (alarmBodyLowered.match(/prio 3/) || alarmBodyLowered.match(/p 3 /) || alarmBodyLowered.match(/B1 / ) || alarmBodyLowered.match(/B2 / ))
             {
               alarm.body = alarm.body.replace('Prio 3 ', '');
               alarm.prio = {
@@ -11568,7 +11569,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           $scope.self.timeline.cancelAdd();
 
-          $rootScope.notifier.error('Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.');
+          $rootScope.notifier.error('Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen,' +
+            'tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen' +
+            ' door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een ' +
+            'apart scherm de wijzigingen aan te brengen.');
 
           $rootScope.$apply();
         }

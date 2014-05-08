@@ -889,7 +889,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           $scope.self.timeline.cancelAdd();
 
-          $rootScope.notifier.error('Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.');
+          $rootScope.notifier.error('Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen,' +
+            'tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen' +
+            ' door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een ' +
+            'apart scherm de wijzigingen aan te brengen.');
 
           $rootScope.$apply();
         }
