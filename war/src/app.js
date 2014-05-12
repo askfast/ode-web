@@ -6963,7 +6963,7 @@ angular.module('WebPaige.Services.Announcer', ['ngResource'])
         {
           if (alarm.body)
           {
-			var alarmBodyLowered = alarm.body.toLowerCase();
+            var alarmBodyLowered = alarm.body.toLowerCase();
             if (alarmBodyLowered.match(/prio 1/) || alarmBodyLowered.match(/p 1 /) || alarmBodyLowered.match(/A1 / ))
             {
               alarm.body = alarm.body.replace('Prio 1 ', '');
@@ -8810,7 +8810,13 @@ angular.module('WebPaige.Controllers.Login', [])
 	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
 	    'backgroundSize': 'cover'
 	  });
-
+	  
+     /**
+	   * Disable the autocomplete username/password for Firefox users
+	   */
+      if(navigator.userAgent.indexOf("Firefox") >= 0){
+		$('#login form').attr('autocomplete', 'off');
+	  }
 
 	  /**
 	   * TODO: Use native JSON functions of angular and Store service
