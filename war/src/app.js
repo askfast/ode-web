@@ -1070,7 +1070,7 @@ angular.module('WebPaige')
         style:            'box',
         groupsWidth:      '150px',
         eventMarginAxis:  0,
-        showCustomTime:   true,
+        showCustomTime:   false,
         groupsChangeable: false,
         showNavigation:   false,
         intervalMin:      1000 * 60 * 60 * 1
