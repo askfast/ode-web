@@ -28,17 +28,17 @@
         </small>
         &nbsp;&nbsp;
 
-            <span ng-show="app.guard.currentState=='available' || app.guard.currentState=='Beschikbaar'"
-                  class="label"
-                  style="background-color: #4f824f">BESCHIKBAAR</span>
+        <span ng-show="app.guard.currentState=='available' || app.guard.currentState=='Beschikbaar'"
+              class="label"
+              style="background-color: #4f824f">BESCHIKBAAR</span>
 
-            <span ng-show="app.guard.currentState=='noplanning' || app.guard.currentState=='Mogelijk inzetbaar'"
-                  class="label"
-                  style="background-color: #a0a0a0">GEEN PLANNING</span>
+        <span ng-show="app.guard.currentState=='noplanning' || app.guard.currentState=='Mogelijk inzetbaar'"
+              class="label"
+              style="background-color: #a0a0a0">GEEN PLANNING</span>
 
-            <span ng-show="app.guard.currentState=='unavailable' || app.guard.currentState=='Niet Beschikbaar'"
-                  class="label"
-                  style="background-color: #a93232">NIET BESCHIKBAAR</span>
+        <span ng-show="app.guard.currentState=='unavailable' || app.guard.currentState=='Niet Beschikbaar'"
+              class="label"
+              style="background-color: #a93232">NIET BESCHIKBAAR</span>
 
         <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
 
@@ -99,6 +99,7 @@
     <!--smartAlarming listing-->
     <ul class="sa-setup"
         ng-hide="loading.smartAlarm">
+
       <!--truck personnel-->
       <li class="sa-truck">
         <div class="sa-member"
@@ -108,16 +109,16 @@
             </span>
 
           <div class="sa-member-card">
-            <h5>{{trucker.role}}</h5>
+            <h5>{{trucker.name}}</h5>
             <hr/>
-            <span>{{trucker.name}}</span>
+            <span>{{trucker.role}}</span>
           </div>
         </div>
       </li>
       <!--end truck personnel-->
 
       <!--reserves personnel-->
-      <li id="sa-reserves"
+      <li class="sa-reserves"
           ng-show="toggleReserves">
 
         <div class="sa-member"
@@ -127,9 +128,9 @@
             </span>
 
           <div class="sa-member-card">
-            <h5>Beschikbaar</h5>
+            <h5>{{reserve.name}}</h5>
             <hr/>
-            <span>{{reserve.name}}</span>
+            <span>Beschikbaar</span>
           </div>
         </div>
 
@@ -140,9 +141,9 @@
             </span>
 
           <div class="sa-member-card">
-            <h5>Niet beschikbaar</h5>
+            <h5>{{reserve.name}}</h5>
             <hr/>
-            <span>{{reserve.name}}</span>
+            <span>Niet beschikbaar</span>
           </div>
         </div>
 
@@ -151,7 +152,7 @@
       <!--end reserves no-planning personnel-->
 
       <!--reserves personnel-->
-      <li id="sa-reserves"
+      <li class="sa-reserves"
           ng-show="toggleReserves">
 
         <div class="sa-member"
@@ -161,29 +162,9 @@
             </span>
 
           <div class="sa-member-card">
-            <h5>Mogelijk inzetbaar</h5>
+            <h5>{{reserve.name}}</h5>
             <hr/>
-            <span>{{reserve.name}}</span>
-          </div>
-        </div>
-
-      </li>
-      <!--end reserves no-planning personnel-->
-
-      <!--reserves personnel-->
-      <li id="sa-reserves"
-          ng-show="toggleReserves">
-
-        <div class="sa-member"
-             ng-repeat="reserve in saMembers.reserves.noplanning">
-            <span class="sa-member-icon sa-icon-reserve-noplanning">
-              <strong>{{$index+1}}</strong>
-            </span>
-
-          <div class="sa-member-card">
-            <h5>Mogelijk inzetbaar</h5>
-            <hr/>
-            <span>{{reserve.name}}</span>
+            <span>Mogelijk inzetbaar</span>
           </div>
         </div>
 
@@ -221,7 +202,7 @@
 
 <!--Availability list-->
 <div class="row-fluid">
-  <div class="sa widget span12">
+  <div id="availabilities" class="sa widget span12">
 
     <div class="head">
       <h4>
@@ -262,9 +243,10 @@
     <!--Availability listing-->
     <section ng-hide="loadingAvailability">
 
-      <hr/>
-
       <div ng-show="availability.members.available.length > 0">
+
+        <hr/>
+
         <ul class="sa-setup">
           <li class="sa-truck">
 
@@ -277,9 +259,9 @@
                 </span>
 
               <div class="sa-member-card">
-                <h5>{{member.name}}</h5>
+                <h5>{{member.name | toTitleCase}}</h5>
                 <hr/>
-                <small>{{states[member.state].label}}</small>
+                <span>{{states[member.state].label}}</span>
                 <br/>
 
                 <small><strong>{{member.end | calculateDeltaTime}}</strong></small>
@@ -310,9 +292,9 @@
                 </span>
 
               <div class="sa-member-card">
-                <h5>{{member.name}}</h5>
+                <h5>{{member.name | toTitleCase}}</h5>
                 <hr/>
-                <small>{{states[member.state].label}}</small>
+                <span>{{states[member.state].label}}</span>
                 <br/>
 
                 <small><strong>{{member.end | calculateDeltaTime}}</strong></small>
@@ -344,9 +326,9 @@
             </span>
 
               <div class="sa-member-card">
-                <h5>{{member.name}}</h5>
+                <h5>{{member.name | toTitleCase}}</h5>
                 <hr/>
-                <small>{{states[member.state].label}}</small>
+                <span>{{states[member.state].label}}</span>
 
               </div>
             </div>

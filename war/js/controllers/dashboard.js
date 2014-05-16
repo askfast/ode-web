@@ -472,7 +472,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       {
         groups.unshift(
           {
-            'name': 'Alle Groepen',
+            'name': 'Allemaal',
             'uuid': 'all'
           }
         );
