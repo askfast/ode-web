@@ -168,6 +168,93 @@
   <!--end smartAlarming-->
 
 
+
+
+
+
+  <!--Availability list-->
+  <div class="row-fluid">
+    <div id="sa"
+         class="widget span12">
+
+      <div class="head">
+        <h4>Overzicht beschikbaarheid</h4>
+
+        <div class="pull-right">
+          <!-- groups list -->
+          <select ng-model="current.group"
+                  ng-options="group.uuid as group.name for group in groups"
+                  ng-selected="current.group"
+                  ng-change="getAvailability()">
+          </select>
+          <!-- end groups list -->
+
+          <!-- divisions list -->
+          <select ng-model="current.division"
+                  ng-options="division.id as division.label for division in divisions"
+                  ng-selected="current.division"
+                  ng-change="changeDivision()"
+                  ng-show="divisions.length > 0"
+                  style="margin-left: 15px">
+          </select>
+          <!-- end divisions list -->
+        </div>
+
+      </div>
+      <hr/>
+
+      <!--<p ng-show="loading.smartAlarm" style="display:hidden">Beschikbaarheid lijst aan het laden...</p>-->
+
+      <!--smartAlarming listing-->
+      <ul id="sa-setup">
+
+        <li id="sa-truck">
+
+          <div class="sa-member"
+               ng-repeat="member in availability.members">
+            <span class="sa-member-icon"
+              style="background-color: {{states[member.state].color}}">
+              <strong>{{member.label}}{{$index+1}}</strong>
+            </span>
+            <div class="sa-member-card">
+              <h5>{{member.name}}</h5>
+              <hr/>
+              <span>{{states[member.state].label}}</span>
+              <br/>
+              <small><strong>{{member.start}}</strong></small>&nbsp;
+              <small class="muted">van</small>
+              <br>
+              <small><strong>{{member.end}}</strong></small>&nbsp;
+              <small class="muted">tot</small>
+            </div>
+          </div>
+
+        </li>
+
+      </ul>
+      <!--end smartAlarming listing-->
+
+      <!-- p2000 footer -->
+      <p>
+        <hr/>
+        <small class="pull-left"
+          style="margin-top: -15px">
+          <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
+          <span class="muted">{{availability.synced | nicelyDate}}</span>
+        </small>
+      </p>
+      <!-- end p2000 footer -->
+
+    </div>
+  </div>
+  <!--Availability list-->
+
+
+
+
+
+
+
   <!-- row-fluid -->
   <div class="row-fluid">
 
