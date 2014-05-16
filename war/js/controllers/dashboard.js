@@ -609,6 +609,42 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             if (ordered.hasOwnProperty('available')) { ordered.available.sort(sortByEnd) }
             if (ordered.hasOwnProperty('unavailable')) { ordered.unavailable.sort(sortByEnd) }
 
+            var _availables = [];
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst') { _availables.push(available) }
+              }
+            );
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.Available') { _availables.push(available) }
+              }
+            );
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord') { _availables.push(available) }
+              }
+            );
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid') { _availables.push(available) }
+              }
+            );
+
+            ordered.available = _availables;
+
             $scope.availability = {
               members: ordered,
               synced: results.synced * 1000
