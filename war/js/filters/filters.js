@@ -530,7 +530,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
         for (var i in groups)
         {
-          if (groups[i].uuid == id) return groups[i].name;
+          if (groups[i].uuid == id) return ', ' + groups[i].name;
         }
       }
     }

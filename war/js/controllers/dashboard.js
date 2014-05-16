@@ -382,11 +382,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 function (state)
                 {
                   $rootScope.app.guard.currentState = state.label;
-                });
+                }
+              );
             }
 
             var reserves = {};
 
+            // TODO: Kind of duplicate purpose with states
             var states = ['available', 'unavailable', 'noplanning'];
 
             angular.forEach(
@@ -405,14 +407,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                             id:    userID,
                             name:  meta.name,
                             state: meta.state
-                          });
+                          }
+                        );
                       });
                   });
               });
 
             $scope.saMembers.reserves = reserves;
-
-            console.log('saMembers ->', angular.toJson($scope.saMembers));
 
             $scope.loading.smartAlarm = false;
           });
@@ -446,10 +447,31 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
       var groups = Storage.local.groups(),
-          settings = Storage.local.settings(),
           members = Storage.local.members();
 
+      angular.forEach(
+        groups,
+        function (group)
+        {
+          group.name = group.name.replace(
+            /\w\S*/g,
+            function (name)
+            {
+              return name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+            }
+          );
+        }
+      );
+
+      groups.unshift(
+        {
+          'name': 'Alle Groepen',
+          'uuid': 'all'
+        }
+      );
+
       $scope.groups = groups;
+
       $scope.states = $rootScope.config.timeline.config.states;
 
       $scope.states['no-state'] = {
@@ -476,9 +498,11 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
 
       $scope.current = {
-        group:    settings.app.group,
+        group:    'all',
         division: 'all'
       };
+
+      $scope.loadingAvailability = true;
 
       /**
        * Get availability
@@ -538,6 +562,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 }
               }
             );
+
+            $scope.loadingAvailability = false;
 
             $scope.availability = {
               members: ordered,
