@@ -512,7 +512,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
               $rootScope.config.statesall[result[0]['text']] :
               {
                 color: 'gray',
-                label: 'Geen planning'
+                label: 'Mogelijk inzetbaar'
               }
             );
           });

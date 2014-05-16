@@ -30,6 +30,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     {
       $rootScope.notification.status = false;
 
+      var possiblyAvailable = 'Mogelijk inzetbaar';
+
       /**
        * Fix styles
        */
@@ -176,12 +178,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                                                     new Date(pie.weeks.current.state.start * 1000)
                                                       .toString($rootScope.config.formats.datetime) :
-                                                    'Geen planning';
+                                                    possiblyAvailable;
 
                     pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
                                                   new Date(pie.weeks.current.state.end * 1000)
                                                     .toString($rootScope.config.formats.datetime) :
-                                                  'Geen planning';
+                                                  possiblyAvailable;
 
                     pie.shortages = {
                       current: pie.weeks.current.shortages,
@@ -447,6 +449,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
       var groups = Storage.local.groups(),
+          settings = Storage.local.settings(),
           members = Storage.local.members();
 
       angular.forEach(
@@ -463,12 +466,23 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
       );
 
-      groups.unshift(
-        {
-          'name': 'Alle Groepen',
-          'uuid': 'all'
-        }
-      );
+      var initGroup;
+
+      if ($rootScope.config.profile.meta != 'knrm')
+      {
+        groups.unshift(
+          {
+            'name': 'Alle Groepen',
+            'uuid': 'all'
+          }
+        );
+
+        initGroup = 'all';
+      }
+      else
+      {
+        initGroup = settings.app.group;
+      }
 
       $scope.groups = groups;
 
@@ -476,7 +490,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       $scope.states['no-state'] = {
         className: 'no-state',
-        label:     'Geen Planning',
+        label:     possiblyAvailable,
         color:     '#a0a0a0',
         type:      'Geen Planning',
         display:   false
@@ -498,7 +512,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
 
       $scope.current = {
-        group:    'all',
+        group:    initGroup,
         division: 'all'
       };
 
@@ -532,38 +546,68 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 var _member = {
                   id: id,
                   state: (slots.length > 0) ? slots[0].state : 'no-state',
-                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : 'G',
-                  start: (slots.length > 0 && slots[0].start !== undefined) ?
-                         new Date(slots[0].start * 1000).toString($rootScope.config.formats.datetime) :
-                         'Geen planning',
+                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
                   end: (slots.length > 0 && slots[0].end !== undefined) ?
-                       new Date(slots[0].end * 1000).toString($rootScope.config.formats.datetime) :
-                       'Geen planning',
+                       slots[0].end * 1000 :
+                       possiblyAvailable,
                   name: (members && members[id]) ? members[id].name : id
                 };
 
                 if (slots.length > 0)
                 {
-                  if (! ordered[slots[0].state])
+                  if (! ordered.available)
                   {
-                    ordered[slots[0].state] = [];
+                    ordered.available = [];
+                  }
+                  if (! ordered.unavailable)
+                  {
+                    ordered.unavailable = [];
                   }
 
-                  ordered[slots[0].state].push(_member);
+                  if (slots[0].state == 'com.ask-cs.State.Available' ||
+                      slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord' ||
+                      slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid' ||
+                      slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
+                  {
+                    ordered.available.push(_member);
+                  }
+                  else if (slots[0].state == 'com.ask-cs.State.Unavailable' ||
+                           slots[0].state == 'com.ask-cs.State.Unreached')
+                  {
+                    ordered.unavailable.push(_member);
+                  }
                 }
                 else
                 {
-                  if (! ordered['no-state'])
+                  if (! ordered.possible)
                   {
-                    ordered['no-state'] = [];
+                    ordered.possible = [];
                   }
 
-                  ordered['no-state'].push(_member);
+                  ordered.possible.push(_member);
                 }
               }
             );
 
             $scope.loadingAvailability = false;
+
+            var sortByEnd = function (a, b)
+            {
+              if (a.end < b.end)
+              {
+                return - 1;
+              }
+
+              if (a.end > b.end)
+              {
+                return 1;
+              }
+
+              return 0;
+            };
+
+            if (ordered.hasOwnProperty('available')) { ordered.available.sort(sortByEnd) }
+            if (ordered.hasOwnProperty('unavailable')) { ordered.unavailable.sort(sortByEnd) }
 
             $scope.availability = {
               members: ordered,

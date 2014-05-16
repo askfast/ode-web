@@ -395,17 +395,17 @@
   font-weight: bold;
 }
 
-#sa {
+.sa {
 
   position:relative;
 
-  #sa-state {
+  .sa-state {
     position: absolute;
     top:10px;
     right: 0;
   }
 
-  ul#sa-setup {
+  ul.sa-setup {
     margin: 0;
     padding: 0;
     margin-top: -20px;
@@ -496,7 +496,7 @@
 
     }
 
-    li#sa-truck {
+    li.sa-truck {
       margin-top: 25px;
     }
 

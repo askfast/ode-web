@@ -304,6 +304,51 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
 
 /**
+ * Calculate time difference
+ */
+  .filter(
+  'calculateDeltaTime',
+  function ()
+  {
+    return function (stamp)
+    {
+      var delta = Math.abs(stamp - Date.now().getTime()) / 1000;
+
+      var days = Math.floor(delta / 86400);
+      delta -= days * 86400;
+
+      var hours = Math.floor(delta / 3600) % 24;
+      delta -= hours * 3600;
+
+      var minutes = Math.floor(delta / 60) % 60;
+
+      var output = '';
+
+      if (days != 0)
+      {
+        output += days;
+      }
+
+      if (hours != 0)
+      {
+        if (days != 0) { output += ' dagen, ' }
+
+        output += hours;
+      }
+
+      if (minutes != 0)
+      {
+        if (hours != 0) { output += ' uren, ' }
+
+        output += minutes + ' minuten'
+      }
+
+      return output;
+    };
+  }
+)
+
+/**
  * Calculate time in days
  */
   .filter(
