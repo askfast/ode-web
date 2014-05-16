@@ -81,7 +81,7 @@ angular.module('WebPaige')
         className:'state-unreached',
         label:    'Niet Bereikt',
         color:    '#65619b',
-        type:     'Niet Beschikbaar' ,
+        type:     'Niet Beschikbaar',
         display:  false
       }
     },

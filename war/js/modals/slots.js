@@ -716,18 +716,18 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
       /**
        * Get member availabilities
        */
-      Slots.prototype.getMemberAvailabilities = function (groupID)
+      Slots.prototype.getMemberAvailabilities = function (groupID, divisionID)
       {
         var deferred = $q.defer();
 
         var now = Math.floor(Date.now().getTime() / 1000);
 
-        console.log('groupID ->', groupID);
+        // console.log('groupID ->', groupID);
 
         MemberSlots.query(
           {
             id:    groupID,
-            type:  'both',
+            type:  divisionID,
             start: now,
             end: now + 1000
           },

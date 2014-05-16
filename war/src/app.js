@@ -1044,7 +1044,7 @@ angular.module('WebPaige')
         className:'state-unreached',
         label:    'Niet Bereikt',
         color:    '#65619b',
-        type:     'Niet Beschikbaar' ,
+        type:     'Niet Beschikbaar',
         display:  false
       }
     },
@@ -3238,18 +3238,18 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
       /**
        * Get member availabilities
        */
-      Slots.prototype.getMemberAvailabilities = function (groupID)
+      Slots.prototype.getMemberAvailabilities = function (groupID, divisionID)
       {
         var deferred = $q.defer();
 
         var now = Math.floor(Date.now().getTime() / 1000);
 
-        console.log('groupID ->', groupID);
+        // console.log('groupID ->', groupID);
 
         MemberSlots.query(
           {
             id:    groupID,
-            type:  'both',
+            type:  divisionID,
             start: now,
             end: now + 1000
           },
@@ -8112,255 +8112,264 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Convert date to object
  */
-  .filter('convertToDateObj',
-    [
-      function ()
+  .filter(
+  'convertToDateObj',
+  [
+    function ()
+    {
+      return function (date)
       {
-        return function (date)
-        {
-          return Date(date);
-        }
+        return Date(date);
       }
-    ])
+    }
+  ])
 
 
 /**
  * Translate roles
  */
-  .filter('translateRole',
-    [
-      '$config',
-      function ($config)
+  .filter(
+  'translateRole',
+  [
+    '$config',
+    function ($config)
+    {
+      return function (role)
       {
-        return function (role)
-        {
-          var urole;
+        var urole;
 
-          angular.forEach($config.roles, function (prole)
+        angular.forEach(
+          $config.roles, function (prole)
           {
             if (prole.id == role) urole = prole.label;
           });
 
-          return urole;
-        }
+        return urole;
       }
-    ])
+    }
+  ])
 
 
 /**
  * Translate division ids to names
  */
-.filter('translateDivision',
-[
-  '$config',
-  function ($config)
-  {
-    return function (divid)
+  .filter(
+  'translateDivision',
+  [
+    '$config',
+    function ($config)
     {
-      var filtered;
-
-      angular.forEach($config.timeline.config.divisions, function (division)
+      return function (divid)
       {
-        if (division.id == divid)
-        {
-          filtered = division.label;
-        }
-      });
+        var filtered;
 
-      return filtered;
+        angular.forEach(
+          $config.timeline.config.divisions, function (division)
+          {
+            if (division.id == divid)
+            {
+              filtered = division.label;
+            }
+          });
+
+        return filtered;
+      }
     }
-  }
-])
+  ])
 
 
 /**
  * Main range filter
  */
-.filter('rangeMainFilter', 
-[
-	'Dater',
-	function (Dater)
-	{
-		var periods = Dater.getPeriods();
+  .filter(
+  'rangeMainFilter',
+  [
+    'Dater',
+    function (Dater)
+    {
+      var periods = Dater.getPeriods();
 
-		return function (dates)
-		{
-      if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+      return function (dates)
       {
-        dates.start = new Date(dates.end).addDays(-1);
-      }
+        if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+        {
+          dates.start = new Date(dates.end).addDays(- 1);
+        }
 
-			var cFirst = function (str)
-			{
-        return str.charAt(0).toUpperCase() + str.substr(1);
-			};
+        var cFirst = function (str)
+        {
+          return str.charAt(0).toUpperCase() + str.substr(1);
+        };
 
-			var ndates = {
-            start: {
-              real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-              month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d'))),
-              year:   new Date(dates.start).toString('yyyy')
-            },
-            end: {
-              real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
-              month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d'))),
-              year:   new Date(dates.end).toString('yyyy')
-            }
-          };
-
-			var dates = {
-            start: {
-              real: 	new Date(dates.start).toString('dddd d MMMM'),
-              month: 	new Date(dates.start).toString('MMMM'),
-              day: 		new Date(dates.start).toString('d')
-            },
-            end: {
-              real: 	new Date(dates.end).toString('dddd d MMMM'),
-              month: 	new Date(dates.end).toString('MMMM'),
-              day: 		new Date(dates.end).toString('d')
-            }
+        var ndates = {
+          start: {
+            real:  cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+            month: cFirst(Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+            day:   cFirst(Dater.translateToDutch(new Date(dates.start).toString('d'))),
+            year:  new Date(dates.start).toString('yyyy')
           },
-          monthNumber = Date.getMonthNumberFromName(dates.start.month);
+          end:   {
+            real:  cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+            month: cFirst(Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+            day:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('d'))),
+            year:  new Date(dates.end).toString('yyyy')
+          }
+        };
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
-					dates.start.month == dates.end.month)
-			{
-				return 	ndates.start.real +
-								', ' +
-								ndates.start.year;
-			}
-			else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
-			{
-				return 	ndates.start.month +
-								', ' +
-                ndates.start.year;
-			}
-			else
-			{
-				return 	ndates.start.real +
-                ', ' +
-                ndates.start.year +
-								' / ' + 
-								ndates.end.real +
-								', ' +
-                ndates.end.year;
-			}
+        var dates = {
+              start: {
+                real:  new Date(dates.start).toString('dddd d MMMM'),
+                month: new Date(dates.start).toString('MMMM'),
+                day:   new Date(dates.start).toString('d')
+              },
+              end:   {
+                real:  new Date(dates.end).toString('dddd d MMMM'),
+                month: new Date(dates.end).toString('MMMM'),
+                day:   new Date(dates.end).toString('d')
+              }
+            },
+            monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-		}
-	}
-])
+        if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
+            dates.start.month == dates.end.month)
+        {
+          return  ndates.start.real +
+                  ', ' +
+                  ndates.start.year;
+        }
+        else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
+        {
+          return  ndates.start.month +
+                  ', ' +
+                  ndates.start.year;
+        }
+        else
+        {
+          return  ndates.start.real +
+                  ', ' +
+                  ndates.start.year +
+                  ' / ' +
+                  ndates.end.real +
+                  ', ' +
+                  ndates.end.year;
+        }
+
+      }
+    }
+  ])
 
 
 /**
  * Main range week filter
  */
-.filter('rangeMainWeekFilter', 
-[
-	'Dater',
-	function (Dater)
-	{
-		return function (dates)
-		{
-			if (dates)
-			{
-				var cFirst = function (str)
-				{
-				  return str.charAt(0).toUpperCase() + str.substr(1);
-				};
-
-				var newDates = {
-					start: 	cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-					end: 		cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
-				};
-
-				return 	newDates.start +
-								' / ' +
-                newDates.end +
-								', ' + 
-								Dater.getThisYear();
-			}
-      else
+  .filter(
+  'rangeMainWeekFilter',
+  [
+    'Dater',
+    function (Dater)
+    {
+      return function (dates)
       {
-        return false;
+        if (dates)
+        {
+          var cFirst = function (str)
+          {
+            return str.charAt(0).toUpperCase() + str.substr(1);
+          };
+
+          var newDates = {
+            start: cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+            end:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+          };
+
+          return  newDates.start +
+                  ' / ' +
+                  newDates.end +
+                  ', ' +
+                  Dater.getThisYear();
+        }
+        else
+        {
+          return false;
+        }
       }
-		}
-	}
-])
+    }
+  ])
 
 
 /**
  * Range info filter
  */
-.filter('rangeInfoFilter', 
-[
-	'$rootScope', 'Dater', 'Storage', 
-	function ($rootScope, Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
+  .filter(
+  'rangeInfoFilter',
+  [
+    '$rootScope', 'Dater', 'Storage',
+    function ($rootScope, Dater, Storage)
+    {
+      var periods = Dater.getPeriods();
 
-		return function (timeline)
-		{
-			var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
+      return function (timeline)
+      {
+        var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
 
-			if (diff > (2419200000 + 259200000))
-			{
-				return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
-			}
-			else
-			{
-				if (timeline.scope.day)
-				{
-					var hours = {
-						start: 	new Date(timeline.range.start).toString('HH:mm'),
-						end: 		new Date(timeline.range.end).toString('HH:mm')
-					};
+        if (diff > (2419200000 + 259200000))
+        {
+          return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
+        }
+        else
+        {
+          if (timeline.scope.day)
+          {
+            var hours = {
+              start: new Date(timeline.range.start).toString('HH:mm'),
+              end:   new Date(timeline.range.end).toString('HH:mm')
+            };
 
-					/**
-					 *  00:00 fix => 24:00
-					 */
-					if (hours.end == '00:00') hours.end = '24:00';
+            /**
+             *  00:00 fix => 24:00
+             */
+            if (hours.end == '00:00') hours.end = '24:00';
 
-					return 	$rootScope.ui.planboard.rangeInfoTime + 
-									hours.start + 
-									' / ' + 
-									hours.end;
-				}
-				else if (timeline.scope.week)
-				{
-					return 	$rootScope.ui.planboard.rangeInfoWeekNumber + 
-									timeline.current.week;
-				}
-				else if (timeline.scope.month)
-				{
-					return 	$rootScope.ui.planboard.rangeInfoMonth + 
-									timeline.current.month + 
-									$rootScope.ui.planboard.rangeInfoTotalDays + 
-									periods.months[timeline.current.month].totalDays;
-				}
-			}
-		};
-	}
-])
+            return  $rootScope.ui.planboard.rangeInfoTime +
+                    hours.start +
+                    ' / ' +
+                    hours.end;
+          }
+          else if (timeline.scope.week)
+          {
+            return  $rootScope.ui.planboard.rangeInfoWeekNumber +
+                    timeline.current.week;
+          }
+          else if (timeline.scope.month)
+          {
+            return  $rootScope.ui.planboard.rangeInfoMonth +
+                    timeline.current.month +
+                    $rootScope.ui.planboard.rangeInfoTotalDays +
+                    periods.months[timeline.current.month].totalDays;
+          }
+        }
+      };
+    }
+  ])
 
 
 /**
  * Range info week filter
  */
-.filter('rangeInfoWeekFilter', 
-[
-	'$rootScope', 'Dater', 'Storage', 
-	function ($rootScope, Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
+  .filter(
+  'rangeInfoWeekFilter',
+  [
+    '$rootScope', 'Dater', 'Storage',
+    function ($rootScope, Dater, Storage)
+    {
+      var periods = Dater.getPeriods();
 
-		return function (timeline)
-		{
-			if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
-		};
-	}
-])
+      return function (timeline)
+      {
+        if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+      };
+    }
+  ])
 
 
 /**
@@ -8368,108 +8377,114 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * TODO: Implement state conversion from config later on!
  * Convert ratios to readable formats
  */
-.filter('convertRatios', 
-[
-	'$config', 
-	function ($config)
-	{
-		return function (stats)
-		{
-			var ratios = '';
+  .filter(
+  'convertRatios',
+  [
+    '$config',
+    function ($config)
+    {
+      return function (stats)
+      {
+        var ratios = '';
 
-			angular.forEach(stats, function (stat, index)
-			{
-				var state = stat.state.replace(/^bar-+/, '');
+        angular.forEach(
+          stats, function (stat, index)
+          {
+            var state = stat.state.replace(/^bar-+/, '');
 
-				if (state == 'Available') state = 'Beschikbaar';
-				if (state == 'Unavailable') state = 'Niet Beschikbaar';
-				if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
-				if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
-				if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
-				if (state == 'Unreached') state = 'Niet Bereikt';
+            if (state == 'Available') state = 'Beschikbaar';
+            if (state == 'Unavailable') state = 'Niet Beschikbaar';
+            if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
+            if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
+            if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
+            if (state == 'Unreached') state = 'Niet Bereikt';
 
-				ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
-			});
+            ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
+          });
 
-			return ratios.substring(0, ratios.length - 2);
-		};
-	}
-])
+        return ratios.substring(0, ratios.length - 2);
+      };
+    }
+  ])
 
 
-/** 
+/**
  * Calculate time in days
  */
-.filter('calculateTimeInDays', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					days 		= 0,
-					hours 	= 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours;
+  .filter(
+  'calculateTimeInDays',
+  function ()
+  {
+    return function (stamp)
+    {
+      var day = 1000 * 60 * 60 * 24,
+          hour = 1000 * 60 * 60,
+          days = 0,
+          hours = 0,
+          stamp = stamp * 1000,
+          hours = stamp % day,
+          days = stamp - hours;
 
-			return 	Math.floor(days / day);
-		};
-	}
+      return  Math.floor(days / day);
+    };
+  }
 )
 
 
 /**
  * Calculate time in hours
  */
-.filter('calculateTimeInHours', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					days 		= 0,
-					hours 	= 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours;
+  .filter(
+  'calculateTimeInHours',
+  function ()
+  {
+    return function (stamp)
+    {
+      var day = 1000 * 60 * 60 * 24,
+          hour = 1000 * 60 * 60,
+          days = 0,
+          hours = 0,
+          stamp = stamp * 1000,
+          hours = stamp % day,
+          days = stamp - hours;
 
-			return 	Math.floor(hours / hour);
-		};
-	}
+      return  Math.floor(hours / hour);
+    };
+  }
 )
 
 
 /**
  * Calculate time in minutes
  */
-.filter('calculateTimeInMinutes', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					minute 	= 1000 * 60,
-					days 		= 0,
-					hours 	= 0,
-					minutes = 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours,
-					minutes = stamp % hour;
+  .filter(
+  'calculateTimeInMinutes',
+  function ()
+  {
+    return function (stamp)
+    {
+      var day = 1000 * 60 * 60 * 24,
+          hour = 1000 * 60 * 60,
+          minute = 1000 * 60,
+          days = 0,
+          hours = 0,
+          minutes = 0,
+          stamp = stamp * 1000,
+          hours = stamp % day,
+          days = stamp - hours,
+          minutes = stamp % hour;
 
-			return 	Math.floor(minutes / minute);
-		};
-	}
+      return  Math.floor(minutes / minute);
+    };
+  }
 )
 
 
 /**
  * Convert eve urls to ids
  */
-.filter('convertEve',
+  .filter(
+  'convertEve',
   [
     '$config',
     function ($config)
@@ -8486,7 +8501,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
           eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
-          return eve[eve.length-2];
+          return eve[eve.length - 2];
         }
       };
     }
@@ -8494,47 +8509,49 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-/** 
+/**
  * Convert user uuid to name
  */
-.filter('convertUserIdToName', 
-[
-	'Storage', 
-	function (Storage)
-	{
-		var members = angular.fromJson(Storage.get('members'));
+  .filter(
+  'convertUserIdToName',
+  [
+    'Storage',
+    function (Storage)
+    {
+      var members = angular.fromJson(Storage.get('members'));
 
-		return function (id)
-		{	
-	    if (members == null || typeof members[id] == "undefined")
-	    {
-	      return id;
-	    }
-	    else
-	    {
-	      return members[id].name;
-	    }
-		};
-	}
-])
+      return function (id)
+      {
+        if (members == null || typeof members[id] == "undefined")
+        {
+          return id;
+        }
+        else
+        {
+          return members[id].name;
+        }
+      };
+    }
+  ])
 
 
 /**
  * Convert timeStamps to dates
  */
-.filter('nicelyDate', 
-[
-	'$rootScope', 
-	function ($rootScope)
-	{
-	 	return function (date)
-	 	{
-	 		if (typeof date == 'string') date = Number(date);
+  .filter(
+  'nicelyDate',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return function (date)
+      {
+        if (typeof date == 'string') date = Number(date);
 
-	 		return new Date(date).toString($rootScope.config.formats.datetimefull);
-	 	};
-	}
-])
+        return new Date(date).toString($rootScope.config.formats.datetimefull);
+      };
+    }
+  ])
 
 
 /**
@@ -8542,16 +8559,17 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * Combine this either with nicelyDate or terminate!
  * Convert timeStamp to readable date and time
  */
-.filter('convertTimeStamp', 
-	function ()
-	{
-		return function (stamp)
-		{
-			console.warn(typeof stamp);
+  .filter(
+  'convertTimeStamp',
+  function ()
+  {
+    return function (stamp)
+    {
+      console.warn(typeof stamp);
 
-			return new Date(stamp).toString('dd-MM-yyyy HH:mm');
-		};
-	}
+      return new Date(stamp).toString('dd-MM-yyyy HH:mm');
+    };
+  }
 )
 
 
@@ -8559,14 +8577,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * TODO: Still used?
  * No title filter
  */
-.filter('noTitle',
-	function ()
-	{
-		return function (title)
-		{
-			return (title == "") ? "- No Title -" : title;
-		}
-	}
+  .filter(
+  'noTitle',
+  function ()
+  {
+    return function (title)
+    {
+      return (title == "") ? "- No Title -" : title;
+    }
+  }
 )
 
 
@@ -8574,207 +8593,242 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * TODO: Finish it!
  * Strip span tags
  */
-.filter('stripSpan', 
-	function ()
-	{
-	  return function (string)
-	  {
-	    return string.match(/<span class="label">(.*)<\/span>/);
-	  }
-	}
+  .filter(
+  'stripSpan',
+  function ()
+  {
+    return function (string)
+    {
+      return string.match(/<span class="label">(.*)<\/span>/);
+    }
+  }
 )
 
 
 /**
  * Strip html tags
  */
-.filter('stripHtml', 
-	function ()
-	{
-	  return function (string)
-	  {
-	  	if (string) return string.split('>')[1].split('<')[0];
-	  }
-	}
+  .filter(
+  'stripHtml',
+  function ()
+  {
+    return function (string)
+    {
+      if (string) return string.split('>')[1].split('<')[0];
+    }
+  }
 )
 
 
 /**
  * Convert group id to name
  */
-.filter('groupIdToName', 
-[
-	'Storage', 
-	function (Storage)
-	{
-	  return function (id)
-	  {
-	  	var groups = angular.fromJson(Storage.get('groups'));
+  .filter(
+  'groupIdToName',
+  [
+    'Storage',
+    function (Storage)
+    {
+      return function (id)
+      {
+        var groups = angular.fromJson(Storage.get('groups'));
 
-	  	for (var i in groups)
-	  	{
-	  		if (groups[i].uuid == id) return groups[i].name;
-	  	}
-	  }
-	}
-])
+        for (var i in groups)
+        {
+          if (groups[i].uuid == id) return groups[i].name;
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Convert division id to name
+ */
+  .filter(
+  'divisionIdToName',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return function (id)
+      {
+        var divisions = $rootScope.config.timeline.config.divisions;
+
+        for (var i in divisions)
+        {
+          if (divisions[i].id == id) return divisions[i].label;
+        }
+      }
+    }
+  ])
 
 
 /**
  * TODO: Unknown filter
  */
-.filter('i18n_spec',
-[
-	'$rootScope', 
-	function ($rootScope)
-	{
-		return function (string, type)
-		{
-			var types = type.split("."),
-					ret 	= $rootScope.ui[types[0]][types[1]],
-					ret 	= ret.replace('$v',string);
-			
-			return ret;
-		}
-	}
-])
+  .filter(
+  'i18n_spec',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return function (string, type)
+      {
+        var types = type.split("."),
+            ret = $rootScope.ui[types[0]][types[1]],
+            ret = ret.replace('$v', string);
+
+        return ret;
+      }
+    }
+  ])
 
 
 /**
  * Truncate group titles for dashboard pie widget
  */
-.filter('truncateGroupTitle', 
-[
-	'Strings', 
-	function (Strings) 
-	{
-		return function (title)
-		{
-	     return Strings.truncate(title, 20, true);
-	  }
-	}
-])
+  .filter(
+  'truncateGroupTitle',
+  [
+    'Strings',
+    function (Strings)
+    {
+      return function (title)
+      {
+        return Strings.truncate(title, 20, true);
+      }
+    }
+  ])
 
 
 /**
  * Make first letter capital
  */
-.filter('toTitleCase', 
-[
-'Strings',
-  function (Strings)
-  {
-    return function (txt)
+  .filter(
+  'toTitleCase',
+  [
+    'Strings',
+    function (Strings)
     {
-      return Strings.toTitleCase(txt);
+      return function (txt)
+      {
+        return Strings.toTitleCase(txt);
+      }
     }
-  }
-])
+  ])
 
 
 /**
  * Count messages in box
  */
-.filter('countBox',
-	function () 
-	{
-		return function (box)
-		{
-			var total = 0;
+  .filter(
+  'countBox',
+  function ()
+  {
+    return function (box)
+    {
+      var total = 0;
 
-			angular.forEach(box, function (bulk)
-			{
-				total = total + bulk.length;
-			});
+      angular.forEach(
+        box, function (bulk)
+        {
+          total = total + bulk.length;
+        });
 
-	    return total;
-	  }
-	}
+      return total;
+    }
+  }
 )
 
 
 /**
  * Convert offsets array to nicely format in scheduled jobs
  */
-.filter('nicelyOffsets', 
-[
-	'Dater', 'Storage', 'Offsetter',
-	function (Dater, Storage, Offsetter)
-	{
-		return function (data)
-		{
-			var offsets 	= Offsetter.factory(data),
-					compiled 	= '';
+  .filter(
+  'nicelyOffsets',
+  [
+    'Dater', 'Storage', 'Offsetter',
+    function (Dater, Storage, Offsetter)
+    {
+      return function (data)
+      {
+        var offsets = Offsetter.factory(data),
+            compiled = '';
 
-			angular.forEach(offsets, function (offset)
-			{
-				compiled += '<div style="display:block; margin-bottom: 5px;">';
+        angular.forEach(
+          offsets, function (offset)
+          {
+            compiled += '<div style="display:block; margin-bottom: 5px;">';
 
-				compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
+            compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
 
-				if (offset.mon) compiled += '<span class="muted"><small><i> maandag,</i></small></span>';
-				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
-				if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
-				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
-				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
-				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
-				if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+            if (offset.mon) compiled += '<span class="muted"><small><i> maandag,</i></small></span>';
+            if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
+            if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
+            if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
+            if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
+            if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
+            if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
 
-				compiled = compiled.substring(0, compiled.length - 20);
+            compiled = compiled.substring(0, compiled.length - 20);
 
-				compiled = compiled += '</i></small></span>';
+            compiled = compiled += '</i></small></span>';
 
-				compiled += '</div>';
+            compiled += '</div>';
 
-				compiled = compiled.substring(0, compiled.length);
-			});
+            compiled = compiled.substring(0, compiled.length);
+          });
 
-			return compiled;
-		}
-	}
-])
+        return compiled;
+      }
+    }
+  ])
 
 
 /**
  * Convert array of audience to a nice list
  */
-.filter('nicelyAudience', 
-[
-	'Storage',
-	function (Storage)
-	{
-		return function (data)
-		{
-      if (data)
+  .filter(
+  'nicelyAudience',
+  [
+    'Storage',
+    function (Storage)
+    {
+      return function (data)
       {
-        var members 	= angular.fromJson(Storage.get('members')),
-          groups 		= angular.fromJson(Storage.get('groups')),
-          audience 	= [];
-
-        angular.forEach(data, function (recipient)
+        if (data)
         {
-          var name;
+          var members = angular.fromJson(Storage.get('members')),
+              groups = angular.fromJson(Storage.get('groups')),
+              audience = [];
 
-          if (members[recipient])
-          {
-            name = members[recipient].name;
-          }
-          else
-          {
-            angular.forEach(groups, function (group)
+          angular.forEach(
+            data, function (recipient)
             {
-              if (group.uuid == recipient) name = group.name;
+              var name;
+
+              if (members[recipient])
+              {
+                name = members[recipient].name;
+              }
+              else
+              {
+                angular.forEach(
+                  groups, function (group)
+                  {
+                    if (group.uuid == recipient) name = group.name;
+                  });
+              }
+
+              audience += name + ', ';
             });
-          }
 
-          audience += name + ', ';
-        });
-
-        return audience.substring(0, audience.length - 2);
+          return audience.substring(0, audience.length - 2);
+        }
       }
-		}
-	}
-]);;/*jslint node: true */
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -8785,709 +8839,736 @@ angular.module('WebPaige.Controllers.Login', [])
 /**
  * Login controller
  */
-.controller('login', 
-[
-	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5',
-	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
-	{
-	  /**
-	   * Self this
-	   */
-		var self = this;
-
-	  /**
-	   * Redirect to dashboard if logged in
-	   */
-	  // if (Session.check()) redirectToDashboard();
-
-
-	  /**
-	   * Set default views
-	   */
-		if ($routeParams.uuid && $routeParams.key)
-	  {
-			$scope.views = {
-				changePass: true
-			};
-
-			$scope.changepass = {
-				uuid: $routeParams.uuid,
-				key:  $routeParams.key
-			}
-		}
-	  else
-	  {
-			$scope.views = {
-				login:  true,
-				forgot: false
-			};
-		}
-
-
-	  /**
-	   * KNRM users for testing
-	   */
-	  if ($rootScope.config.demo_users && demo_users.length > 0)
+  .controller(
+  'login',
+  [
+    '$rootScope',
+    '$location',
+    '$q',
+    '$scope',
+    'Session',
+    'User',
+    'Groups',
+    'Messages',
+    'Storage',
+    '$routeParams',
+    'Settings',
+    'Profile',
+    'MD5',
+    function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
     {
-      $scope.demo_users = demo_users;
-    }
-
-
-	  /**
-	   * Real KNRM users for testing
-	   */
-	   $scope.knrmLogin = function (user)
-	   {
-	     $('#login button[type=submit]')
-	       .text($rootScope.ui.login.button_loggingIn)
-	       .attr('disabled', 'disabled');
-
-	    self.auth(user.uuid, user.resources.askPass);
-	   };
-
-	  
-	  /**
-	   * Set default alerts
-	   */
-	  $scope.alert = {
-	    login: {
-	      display:  false,
-	      type:     '',
-	      message:  ''
-	    },
-	    forgot: {
-	      display:  false,
-	      type:     '',
-	      message:  ''
-	    }
-	  };
-
-
-	  /**
-	   * Init rootScope app info container
-	   */
-	  if (!Storage.session.get('app')) Storage.session.add('app', '{}');
-
-
-	  /**
-	   * TODO:  Lose this jQuery stuff later on!
-	   * Jquery solution of toggling between login and app view
-	   */
-	  $('.navbar').hide();
-	  $('#footer').hide();
-    $('#watermark').hide();
-    // $('#notification').hide();
-	  $('body').css({
-	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-	    'backgroundSize': 'cover'
-	  });
-	  
-     /**
-	   * Disable the autocomplete username/password for Firefox users
-	   */
-      if(navigator.userAgent.indexOf("Firefox") >= 0){
-		$('#login form').attr('autocomplete', 'off');
-	  }
-
-	  /**
-	   * TODO: Use native JSON functions of angular and Store service
-	   */
-	  var logindata = angular.fromJson(Storage.get('logindata'));
-
-	  if (logindata && logindata.remember) $scope.logindata = logindata;
-
-
-	  /**
-	   * TODO: Remove unnecessary DOM manipulation
-	   * Use cookies for user credentials
-	   * 
-	   * Login trigger
-	   */
-	  $scope.login = function()
-	  {
-	    $('#alertDiv').hide();
-
-	    if (!$scope.logindata ||
-	        !$scope.logindata.username || 
-	        !$scope.logindata.password)
-	    {
-	      $scope.alert = {
-	        login: {
-	          display: true,
-	          type:    'alert-error',
-	          message: $rootScope.ui.login.alert_fillfiled
-	        }
-	      };
-
-	      $('#login button[type=submit]')
-	        .text($rootScope.ui.login.button_login)
-	        .removeAttr('disabled');
-
-	      return false;     
-	    }
-
-	    $('#login button[type=submit]')
-	      .text($rootScope.ui.login.button_loggingIn)
-	      .attr('disabled', 'disabled');
-
-	    Storage.add('logindata', angular.toJson({
-	      username: $scope.logindata.username,
-	      password: $scope.logindata.password,
-	      remember: $scope.logindata.remember
-	    }));
+      /**
+       * Self this
+       */
+      var self = this;
 
       /**
-       * Create storage for smart alarming guard values
+       * Redirect to dashboard if logged in
        */
-      if ($rootScope.config.smartAlarm)
+      // if (Session.check()) redirectToDashboard();
+
+
+      /**
+       * Set default views
+       */
+      if ($routeParams.uuid && $routeParams.key)
       {
-        Storage.add('guard', angular.toJson({
-          monitor:  '',
-          role:     ''
-        }));
+        $scope.views = {
+          changePass: true
+        };
+
+        $scope.changepass = {
+          uuid: $routeParams.uuid,
+          key:  $routeParams.key
+        }
+      }
+      else
+      {
+        $scope.views = {
+          login:  true,
+          forgot: false
+        };
       }
 
-	    self.auth( $scope.logindata.username, MD5($scope.logindata.password ));
-	  };
+
+      /**
+       * KNRM users for testing
+       */
+      if ($rootScope.config.demo_users && demo_users.length > 0)
+      {
+        $scope.demo_users = demo_users;
+      }
 
 
-	  /**
-	   * Authorize user
-	   */
-	  self.auth = function (uuid, pass)
-	  {
-	    User.login(uuid.toLowerCase(), pass)
-	    .then(function (result)
-		  {
-	      if (result.status == 400 || result.status == 404)
-	      {
-	        $scope.alert = {
-	          login: {
-	            display: true,
-	            type: 'alert-error',
-	            message: $rootScope.ui.login.alert_wrongUserPass
-	          }
-	        };
+      /**
+       * Real KNRM users for testing
+       */
+      $scope.knrmLogin = function (user)
+      {
+        $('#login button[type=submit]')
+          .text($rootScope.ui.login.button_loggingIn)
+          .attr('disabled', 'disabled');
 
-	        $('#login button[type=submit]')
-	          .text($rootScope.ui.login.button_login)
-	          .removeAttr('disabled');
-
-	        return false;
-	      }
-	      else
-	      {
-	        Session.set(result["X-SESSION_ID"]);
-
-	        self.preloader();
-	      }
-		  });
-	  };
+        self.auth(user.uuid, user.resources.askPass);
+      };
 
 
-	  /**
-	   * TODO: What happens if preloader stucks?
-	   * Optimize preloader and messages
-	   * 
-	   * Initialize preloader
-	   */
-	  self.preloader = function()
-	  {
-	    $('#login').hide();
-	    $('#download').hide();
-	    $('#preloader').show();
+      /**
+       * Set default alerts
+       */
+      $scope.alert = {
+        login:  {
+          display: false,
+          type:    '',
+          message: ''
+        },
+        forgot: {
+          display: false,
+          type:    '',
+          message: ''
+        }
+      };
 
-	    self.progress(30, $rootScope.ui.login.loading_User);
 
-      User.states()
-        .then(function (states)
+      /**
+       * Init rootScope app info container
+       */
+      if (! Storage.session.get('app')) Storage.session.add('app', '{}');
+
+
+      /**
+       * TODO:  Lose this jQuery stuff later on!
+       * Jquery solution of toggling between login and app view
+       */
+      $('.navbar').hide();
+      $('#footer').hide();
+      $('#watermark').hide();
+      // $('#notification').hide();
+      $('body').css(
         {
-          Storage.add('states', angular.toJson(states));
-
-          angular.forEach(states, function (state)
-          {
-            $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
-          });
-
-          User.divisions()
-            .then(function (divisions)
-            {
-              $rootScope.config.timeline.config.divisions = divisions;
-
-              Storage.add('divisions', angular.toJson(divisions));
-				
-              User.resources()
-                .then(function (resources)
-                {
-                  if (resources.error)
-                  {
-                    console.warn('error ->', resources);
-                  }
-                  else
-                  {
-				  
-					$rootScope.app.resources = resources;
-
-                    self.progress(60, $rootScope.ui.login.loading_Group);
-					User.domain()
-					  .then(function (domainnames)
-					  {
-					  
-						// NOTE: Currently using the first domainname, could be expanded
-						// in case users can be in multiple domains
-						$rootScope.app.domain = domainnames.first();
-						
-						self.progress(70, $rootScope.ui.login.loading_Group);
-						
-						Groups.query(true)
-						  .then(function (groups)
-						  {
-							if (groups.error)
-							{
-							  console.warn('error ->', groups);
-							}
-							else
-							{
-							  var settings  = angular.fromJson(resources.settingsWebPaige) || {},
-								sync      = false,
-								parenting = false,
-								defaults  = $rootScope.config.defaults.settingsWebPaige,
-								_groups   = function (groups)
-								{
-								  var _groups = {};
-								  angular.forEach(
-									groups,
-									function (group)
-									{
-									  _groups[group.uuid] = {
-										status:     true,
-										divisions:  false
-									  };
-									}
-								  );
-								  return _groups;
-								};
-
-							  // Check if there is any settings at all
-							  if (settings != null || settings != undefined)
-							  {
-								// check for user settings-all
-								if (settings.user)
-								{
-								  // check for user-language settings
-								  if (settings.user.language)
-								  {
-									// console.warn('user HAS language settings');
-									$rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
-									defaults.user.language = settings.user.language;
-								  }
-								  else
-								  {
-									// console.warn('user has NO language!!');
-									$rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
-									sync = true;
-								  }
-								}
-								else
-								{
-								  // console.log('NO user settings at all !!');
-								  sync = true;
-								}
-
-								// check for app settings-all
-								if (settings.app)
-								{
-								  // check for app-widget settings
-								  if (settings.app.widgets)
-								  {
-									// check for app-widget-groups setting
-									if (settings.app.widgets.groups)
-									{
-									  // console.log('settings for groups =>', settings.app.widgets.groups);
-									  var oldGroupSetup = false;
-
-									  if (!jQuery.isEmptyObject(settings.app.widgets.groups))
-									  {
-										angular.forEach(settings.app.widgets.groups, function (value, id)
-										{
-										  // console.log('value ->', value);
-										  if (typeof value !== 'object' || value == {})
-										  {
-											oldGroupSetup = true;
-										  }
-										});
-									  }
-									  else
-									  {
-										oldGroupSetup = true;
-									  }
-
-									  if (oldGroupSetup)
-									  {
-										// console.warn('OLD SETUP => user has NO app widgets groups!!');
-										defaults.app.widgets.groups = _groups(groups);
-										sync = true;
-									  }
-									  else
-									  {
-										// console.warn('user HAS app widgets groups settings');
-										defaults.app.widgets.groups = settings.app.widgets.groups;
-									  }
-									}
-									else
-									{
-									  console.warn('user has NO app widgets groups!!');
-									  defaults.app.widgets.groups = _groups(groups);
-									  sync = true;
-									}
-								  }
-								  else
-								  {
-									// console.warn('user has NO widget settings!!');
-									defaults.app.widgets = { groups: _groups(groups) };
-									sync = true;
-								  }
-
-								  // check for app group setting
-								  if (settings.app.group && settings.app.group != undefined)
-								  {
-									// console.warn('user HAS app first group setting');
-									defaults.app.group = settings.app.group;
-								  }
-								  else
-								  {
-									// console.warn('user has NO first group setting!!');
-									parenting = true;
-									sync      = true;
-								  }
-								}
-								else
-								{
-								  // console.log('NO app settings!!');
-								  defaults.app = { widgets: { groups: _groups(groups) } };
-								  sync = true;
-								}
-							  }
-							  else
-							  {
-								// console.log('NO SETTINGS AT ALL!!');
-								defaults = {
-								  user: $rootScope.config.defaults.settingsWebPaige.user,
-								  app: {
-									widgets: {
-									  groups: _groups(groups)
-									},
-									group: groups[0].uuid
-								  }
-								};
-								sync = true;
-							  }
-
-							  // sync settings with missing parts also parenting check
-							  if (sync)
-							  {
-								if (parenting)
-								{
-								  // console.warn('setting up parent group for the user');
-
-								  Groups.parents()
-									.then(function (_parent)
-									{
-									  // console.warn('parent group been fetched ->', _parent);
-
-									  if (_parent != null)
-									  {
-										// console.warn('found parent parent -> ', _parent);
-
-										defaults.app.group = _parent;
-									  }
-									  else
-									  {
-										// console.warn('setting the first group in the list for user ->', groups[0].uuid);
-
-										defaults.app.group = groups[0].uuid;
-									  }
-
-									  // console.warn('SAVE ME (with parenting) ->', defaults);
-
-									  Settings.save(resources.uuid, defaults)
-										.then(function ()
-										{
-										  User.resources()
-											.then(function (got)
-											{
-											  // console.log('gotted (with setting parent group) ->', got);
-											  $rootScope.app.resources = got;
-
-											  finalize();
-											})
-										});
-
-									});
-								}
-								else
-								{
-								  // console.warn('SAVE ME ->', defaults);
-
-								  defaults.app.group = groups[0].uuid;
-
-								  Settings.save(resources.uuid, defaults)
-									.then(function ()
-									{
-									  User.resources()
-										.then(function (got)
-										{
-										  // console.log('gotted ->', got);
-										  $rootScope.app.resources = got;
-
-										  finalize();
-										})
-									});
-								}
-							  }
-							  else
-							  {
-								ga('send', 'pageview', {
-								  'dimension1': resources.uuid,
-								  'dimension2': $rootScope.app.domain
-								});
-								ga('send', 'event', 'Login', resources.uuid);
-
-								finalize();
-							  }
-							}
-						  });
-					  });
-                  }
-                });
-
-            });
+          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+          'backgroundSize': 'cover'
         });
 
-	  };
+      /**
+       * Disable the autocomplete username/password for Firefox users
+       */
+      if (navigator.userAgent.indexOf("Firefox") >= 0)
+      {
+        $('#login form').attr('autocomplete', 'off');
+      }
+
+      /**
+       * TODO: Use native JSON functions of angular and Store service
+       */
+      var logindata = angular.fromJson(Storage.get('logindata'));
+
+      if (logindata && logindata.remember) $scope.logindata = logindata;
 
 
-	  /**
-	   * Finalize the preloading
-	   */
-	  function finalize ()
-	  {
-	    self.progress(100, $rootScope.ui.login.loading_everything);
+      /**
+       * TODO: Remove unnecessary DOM manipulation
+       * Use cookies for user credentials
+       *
+       * Login trigger
+       */
+      $scope.login = function ()
+      {
+        $('#alertDiv').hide();
 
-	    self.redirectToDashboard();
+        if (! $scope.logindata || ! $scope.logindata.username || ! $scope.logindata.password)
+        {
+          $scope.alert = {
+            login: {
+              display: true,
+              type:    'alert-error',
+              message: $rootScope.ui.login.alert_fillfiled
+            }
+          };
 
-	    self.getMessages();
+          $('#login button[type=submit]')
+            .text($rootScope.ui.login.button_login)
+            .removeAttr('disabled');
 
-	    self.getMembers();
-	  }
+          return false;
+        }
 
+        $('#login button[type=submit]')
+          .text($rootScope.ui.login.button_loggingIn)
+          .attr('disabled', 'disabled');
 
-	  /**
-	   * TODO: Implement an error handling
-	   * Get members list (SILENTLY)
-	   */
-	  self.getMembers = function ()
-	  {
-	    Groups.query()
-	    .then(function (groups)
-	    {
-	      var calls = [];
+        Storage.add(
+          'logindata', angular.toJson(
+            {
+              username: $scope.logindata.username,
+              password: $scope.logindata.password,
+              remember: $scope.logindata.remember
+            }));
 
-	      angular.forEach(groups, function (group)
-	      {
-	        calls.push(Groups.get(group.uuid));
-	      });
+        /**
+         * Create storage for smart alarming guard values
+         */
+        if ($rootScope.config.smartAlarm)
+        {
+          Storage.add(
+            'guard', angular.toJson(
+              {
+                monitor: '',
+                role:    ''
+              }));
+        }
 
-	      $q.all(calls)
-	      .then(function ()
-	      {
-	        Groups.uniqueMembers();
-	      });
-	    });
-	  };
-
-
-	  /**
-	   * TODO: Implement an error handling
-	   * Get messages (SILENTLY)
-	   */
-	  self.getMessages = function ()
-	  {
-	    Messages.query()
-	    .then(function (messages)
-	    {
-	      if (messages.error)
-	      {
-	        console.warn('error ->', messages);
-	      }
-	      else
-	      {
-	        $rootScope.app.unreadMessages = Messages.unreadCount();
-
-	        Storage.session.unreadMessages = Messages.unreadCount();
-	      }
-	    });
-	  };
+        self.auth($scope.logindata.username, MD5($scope.logindata.password));
+      };
 
 
-	  /**
-	   * Redirect to dashboard
-	   */
-	  self.redirectToDashboard = function ()
-	  {
-	    $location.path('/dashboard');
+      /**
+       * Authorize user
+       */
+      self.auth = function (uuid, pass)
+      {
+        User.login(uuid.toLowerCase(), pass)
+          .then(
+          function (result)
+          {
+            if (result.status == 400 || result.status == 404)
+            {
+              $scope.alert = {
+                login: {
+                  display: true,
+                  type:    'alert-error',
+                  message: $rootScope.ui.login.alert_wrongUserPass
+                }
+              };
 
-	    setTimeout(function ()
-	    {
-	      $('body').css({ 'background': 'none' });
-        $('.navbar').show();
-	      // $('#mobile-status-bar').show();
-	      // $('#notification').show();
-	      if (!$rootScope.browser.mobile) $('#footer').show();
-	      $('#watermark').show();
-	      $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
-	    }, 100);
-	  };
+              $('#login button[type=submit]')
+                .text($rootScope.ui.login.button_login)
+                .removeAttr('disabled');
 
+              return false;
+            }
+            else
+            {
+              Session.set(result["X-SESSION_ID"]);
 
-	  /**
-	   * Progress bar
-	   */
-	  self.progress = function (ratio, message)
-	  {
-	    $('#preloader .progress .bar').css({ width: ratio + '%' }); 
-	    $('#preloader span').text(message);    
-	  };
-
-
-	  /**
-	   * TODO: RE-FACTORY Make button state change! Finish it!
-	   * Forgot password
-	   */
-		$scope.forgot = function ()
-	  {
-			$('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
-
-			User.password($scope.remember.id)
-	    .then(function (result)
-			{
-				if (result == "ok")
-	      {
-					$scope.alert = {
-						forget: {
-							display: true,
-							type: 'alert-success',
-							message: $rootScope.ui.login.checkYourMail
-						}
-					};
-				}
-	      else 
-	      {
-					$scope.alert = {
-						forget: {
-							display: true,
-							type: 'alert-error',
-							message: $rootScope.ui.errors.login.forgotCantFind
-						}
-					};
-				}
-
-				$('#forgot button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
-			});
-		};
+              self.preloader();
+            }
+          });
+      };
 
 
-	  /**
-	   * TODO: RE-FACTORY
-	   * Change password
-	   */
-		self.changePass =  function (uuid, newpass, key)
-	  {
-			User.changePass(uuid, newpass, key)
-	    .then(function (result)
-	    {
-				if(result.status == 400 || result.status == 500 || result.status == 409)
-	      {
-					$scope.alert = {
-						changePass: {
-							display: true,
-							type: 'alert-error',
-							message: $rootScope.ui.errors.login.changePass
-						}
-					};
-				}
-	      else
-	      { // successfully changed
-					$scope.alert = {
-						changePass: {
-							display: true,
-							type: 'alert-success',
-							message: $rootScope.ui.login.passwordChanged
-						}
-					}; 
-					
-					$location.path( "/message" );
-				}
+      /**
+       * TODO: What happens if preloader stucks?
+       * Optimize preloader and messages
+       *
+       * Initialize preloader
+       */
+      self.preloader = function ()
+      {
+        $('#login').hide();
+        $('#download').hide();
+        $('#preloader').show();
 
-				$('#changePass button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
-			})
-		};
+        self.progress(30, $rootScope.ui.login.loading_User);
+
+        User.states()
+          .then(
+          function (states)
+          {
+            Storage.add('states', angular.toJson(states));
+
+            angular.forEach(
+              states, function (state)
+              {
+                $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+              });
+
+            User.divisions()
+              .then(
+              function (divisions)
+              {
+                $rootScope.config.timeline.config.divisions = divisions;
+
+                Storage.add('divisions', angular.toJson(divisions));
+
+                User.resources()
+                  .then(
+                  function (resources)
+                  {
+                    if (resources.error)
+                    {
+                      console.warn('error ->', resources);
+                    }
+                    else
+                    {
+                      $rootScope.app.resources = resources;
+
+                      self.progress(60, $rootScope.ui.login.loading_Group);
+
+                      User.domain()
+                        .then(
+                        function (domainnames)
+                        {
+                          // NOTE: Currently using the first domainname, could be expanded
+                          // in case users can be in multiple domains
+                          $rootScope.app.domain = domainnames.first();
+
+                          self.progress(70, $rootScope.ui.login.loading_Group);
+
+                          Groups.query(true)
+                            .then(
+                            function (groups)
+                            {
+                              if (groups.error)
+                              {
+                                console.warn('error ->', groups);
+                              }
+                              else
+                              {
+                                var calls = [];
+
+                                angular.forEach(
+                                  groups, function (group)
+                                  {
+                                    calls.push(Groups.get(group.uuid));
+                                  });
+
+                                $q.all(calls)
+                                  .then(
+                                  function ()
+                                  {
+                                    Groups.uniqueMembers();
+
+                                    // TODO: Move settings checkup to a module!
+                                    var settings = angular.fromJson(resources.settingsWebPaige) || {},
+                                        sync = false,
+                                        parenting = false,
+                                        defaults = $rootScope.config.defaults.settingsWebPaige,
+                                        _groups = function (groups)
+                                        {
+                                          var _groups = {};
+                                          angular.forEach(
+                                            groups,
+                                            function (group)
+                                            {
+                                              _groups[group.uuid] = {
+                                                status:    true,
+                                                divisions: false
+                                              };
+                                            }
+                                          );
+                                          return _groups;
+                                        };
+
+                                    // Check if there is any settings at all
+                                    if (settings != null || settings != undefined)
+                                    {
+                                      // check for user settings-all
+                                      if (settings.user)
+                                      {
+                                        // check for user-language settings
+                                        if (settings.user.language)
+                                        {
+                                          // console.warn('user HAS language settings');
+                                          $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+                                          defaults.user.language = settings.user.language;
+                                        }
+                                        else
+                                        {
+                                          // console.warn('user has NO language!!');
+                                          $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+                                          sync = true;
+                                        }
+                                      }
+                                      else
+                                      {
+                                        // console.log('NO user settings at all !!');
+                                        sync = true;
+                                      }
+
+                                      // check for app settings-all
+                                      if (settings.app)
+                                      {
+                                        // check for app-widget settings
+                                        if (settings.app.widgets)
+                                        {
+                                          // check for app-widget-groups setting
+                                          if (settings.app.widgets.groups)
+                                          {
+                                            // console.log('settings for groups =>', settings.app.widgets.groups);
+                                            var oldGroupSetup = false;
+
+                                            if (! jQuery.isEmptyObject(settings.app.widgets.groups))
+                                            {
+                                              angular.forEach(
+                                                settings.app.widgets.groups, function (value, id)
+                                                {
+                                                  // console.log('value ->', value);
+                                                  if (typeof value !== 'object' || value == {})
+                                                  {
+                                                    oldGroupSetup = true;
+                                                  }
+                                                });
+                                            }
+                                            else
+                                            {
+                                              oldGroupSetup = true;
+                                            }
+
+                                            if (oldGroupSetup)
+                                            {
+                                              // console.warn('OLD SETUP => user has NO app widgets groups!!');
+                                              defaults.app.widgets.groups = _groups(groups);
+                                              sync = true;
+                                            }
+                                            else
+                                            {
+                                              // console.warn('user HAS app widgets groups settings');
+                                              defaults.app.widgets.groups = settings.app.widgets.groups;
+                                            }
+                                          }
+                                          else
+                                          {
+                                            console.warn('user has NO app widgets groups!!');
+                                            defaults.app.widgets.groups = _groups(groups);
+                                            sync = true;
+                                          }
+                                        }
+                                        else
+                                        {
+                                          // console.warn('user has NO widget settings!!');
+                                          defaults.app.widgets = { groups: _groups(groups) };
+                                          sync = true;
+                                        }
+
+                                        // check for app group setting
+                                        if (settings.app.group && settings.app.group != undefined)
+                                        {
+                                          // console.warn('user HAS app first group setting');
+                                          defaults.app.group = settings.app.group;
+                                        }
+                                        else
+                                        {
+                                          // console.warn('user has NO first group setting!!');
+                                          parenting = true;
+                                          sync = true;
+                                        }
+                                      }
+                                      else
+                                      {
+                                        // console.log('NO app settings!!');
+                                        defaults.app = { widgets: { groups: _groups(groups) } };
+                                        sync = true;
+                                      }
+                                    }
+                                    else
+                                    {
+                                      // console.log('NO SETTINGS AT ALL!!');
+                                      defaults = {
+                                        user: $rootScope.config.defaults.settingsWebPaige.user,
+                                        app:  {
+                                          widgets: {
+                                            groups: _groups(groups)
+                                          },
+                                          group:   groups[0].uuid
+                                        }
+                                      };
+                                      sync = true;
+                                    }
+
+                                    // sync settings with missing parts also parenting check
+                                    if (sync)
+                                    {
+                                      if (parenting)
+                                      {
+                                        // console.warn('setting up parent group for the user');
+
+                                        Groups.parents()
+                                          .then(
+                                          function (_parent)
+                                          {
+                                            // console.warn('parent group been fetched ->', _parent);
+
+                                            if (_parent != null)
+                                            {
+                                              // console.warn('found parent parent -> ', _parent);
+
+                                              defaults.app.group = _parent;
+                                            }
+                                            else
+                                            {
+                                              // console.warn('setting the first group in the list for user ->', groups[0].uuid);
+
+                                              defaults.app.group = groups[0].uuid;
+                                            }
+
+                                            // console.warn('SAVE ME (with parenting) ->', defaults);
+
+                                            Settings.save(resources.uuid, defaults)
+                                              .then(
+                                              function ()
+                                              {
+                                                User.resources()
+                                                  .then(
+                                                  function (got)
+                                                  {
+                                                    // console.log('gotted (with setting parent group) ->', got);
+                                                    $rootScope.app.resources = got;
+
+                                                    finalize();
+                                                  })
+                                              });
+
+                                          });
+                                      }
+                                      else
+                                      {
+                                        // console.warn('SAVE ME ->', defaults);
+
+                                        defaults.app.group = groups[0].uuid;
+
+                                        Settings.save(resources.uuid, defaults)
+                                          .then(
+                                          function ()
+                                          {
+                                            User.resources()
+                                              .then(
+                                              function (got)
+                                              {
+                                                // console.log('gotted ->', got);
+                                                $rootScope.app.resources = got;
+
+                                                finalize();
+                                              })
+                                          });
+                                      }
+                                    }
+                                    else
+                                    {
+                                      ga(
+                                        'send', 'pageview', {
+                                          'dimension1': resources.uuid,
+                                          'dimension2': $rootScope.app.domain
+                                        });
+                                      ga('send', 'event', 'Login', resources.uuid);
+
+                                      finalize();
+                                    }
+                                  }
+                                );
+                              }
+                            }
+                          );
+                        }
+                      );
+                    }
+                  }
+                );
+              }
+            );
+          });
+
+      };
 
 
-	  /**
-	   * TODO: RE-FACTORY
-	   * Change password
-	   */
-		$scope.changePass = function ()
-	  {
-			$('#alertDiv').hide();
+      /**
+       * Finalize the preloading
+       */
+      function finalize ()
+      {
+        self.progress(100, $rootScope.ui.login.loading_everything);
 
-			if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
-	    {
-				$scope.alert = {
-					changePass: {
-						display: true,
-						type: 'alert-error',
-						message: $rootScope.ui.errors.login.changePassAllFields
-					}
-				};
+        self.redirectToDashboard();
 
-				$('#changePass button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
+        self.getMessages();
+      }
 
-				return false;
-			}
-	    else if ($scope.changeData.newPass != $scope.changeData.retypePass)
-	    {
-				$scope.alert = {
-					changePass: {
-						display: true,
-						type: 'alert-error',
-						message: $rootScope.ui.errors.login.changePassNoMatch
-					}
-				};
 
-				$('#changePass button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
+      /**
+       * TODO: Implement an error handling
+       * Get messages (SILENTLY)
+       */
+      self.getMessages = function ()
+      {
+        Messages.query()
+          .then(
+          function (messages)
+          {
+            if (messages.error)
+            {
+              console.warn('error ->', messages);
+            }
+            else
+            {
+              $rootScope.app.unreadMessages = Messages.unreadCount();
 
-				return false;
-			}
+              Storage.session.unreadMessages = Messages.unreadCount();
+            }
+          });
+      };
 
-			$('#changePass button[type=submit]')
-	      .text($rootScope.ui.login.button_changingPassword)
-	      .attr('disabled', 'disabled');
 
-			self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
-		};
+      /**
+       * Redirect to dashboard
+       */
+      self.redirectToDashboard = function ()
+      {
+        $location.path('/dashboard');
 
-	}
-]);;/*jslint node: true */
+        setTimeout(
+          function ()
+          {
+            $('body').css({ 'background': 'none' });
+            $('.navbar').show();
+            // $('#mobile-status-bar').show();
+            // $('#notification').show();
+            if (! $rootScope.browser.mobile) $('#footer').show();
+            $('#watermark').show();
+            $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
+          }, 100);
+      };
+
+
+      /**
+       * Progress bar
+       */
+      self.progress = function (ratio, message)
+      {
+        $('#preloader .progress .bar').css({ width: ratio + '%' });
+        $('#preloader span').text(message);
+      };
+
+
+      /**
+       * TODO: RE-FACTORY Make button state change! Finish it!
+       * Forgot password
+       */
+      $scope.forgot = function ()
+      {
+        $('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
+
+        User.password($scope.remember.id)
+          .then(
+          function (result)
+          {
+            if (result == "ok")
+            {
+              $scope.alert = {
+                forget: {
+                  display: true,
+                  type:    'alert-success',
+                  message: $rootScope.ui.login.checkYourMail
+                }
+              };
+            }
+            else
+            {
+              $scope.alert = {
+                forget: {
+                  display: true,
+                  type:    'alert-error',
+                  message: $rootScope.ui.errors.login.forgotCantFind
+                }
+              };
+            }
+
+            $('#forgot button[type=submit]')
+              .text($rootScope.ui.login.button_changePassword)
+              .removeAttr('disabled');
+          });
+      };
+
+
+      /**
+       * TODO: RE-FACTORY
+       * Change password
+       */
+      self.changePass = function (uuid, newpass, key)
+      {
+        User.changePass(uuid, newpass, key)
+          .then(
+          function (result)
+          {
+            if (result.status == 400 || result.status == 500 || result.status == 409)
+            {
+              $scope.alert = {
+                changePass: {
+                  display: true,
+                  type:    'alert-error',
+                  message: $rootScope.ui.errors.login.changePass
+                }
+              };
+            }
+            else
+            { // successfully changed
+              $scope.alert = {
+                changePass: {
+                  display: true,
+                  type:    'alert-success',
+                  message: $rootScope.ui.login.passwordChanged
+                }
+              };
+
+              $location.path("/message");
+            }
+
+            $('#changePass button[type=submit]')
+              .text($rootScope.ui.login.button_changePassword)
+              .removeAttr('disabled');
+          })
+      };
+
+
+      /**
+       * TODO: RE-FACTORY
+       * Change password
+       */
+      $scope.changePass = function ()
+      {
+        $('#alertDiv').hide();
+
+        if (! $scope.changeData || ! $scope.changeData.newPass || ! $scope.changeData.retypePass)
+        {
+          $scope.alert = {
+            changePass: {
+              display: true,
+              type:    'alert-error',
+              message: $rootScope.ui.errors.login.changePassAllFields
+            }
+          };
+
+          $('#changePass button[type=submit]')
+            .text($rootScope.ui.login.button_changePassword)
+            .removeAttr('disabled');
+
+          return false;
+        }
+        else if ($scope.changeData.newPass != $scope.changeData.retypePass)
+        {
+          $scope.alert = {
+            changePass: {
+              display: true,
+              type:    'alert-error',
+              message: $rootScope.ui.errors.login.changePassNoMatch
+            }
+          };
+
+          $('#changePass button[type=submit]')
+            .text($rootScope.ui.login.button_changePassword)
+            .removeAttr('disabled');
+
+          return false;
+        }
+
+        $('#changePass button[type=submit]')
+          .text($rootScope.ui.login.button_changingPassword)
+          .attr('disabled', 'disabled');
+
+        self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
+      };
+
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -9977,61 +10058,20 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
 
 
-      var groups  	= Storage.local.groups(),
-          settings 	= Storage.local.settings();
-
-      var members = Storage.local.members();
+      var groups = Storage.local.groups(),
+          settings = Storage.local.settings(),
+          members = Storage.local.members();
 
       $scope.groups = groups;
       $scope.states = $rootScope.config.timeline.config.states;
 
-      /**
-       * Get availability
-       */
-      $scope.getAvailability = function (groupID)
-      {
-        if (! groupID)
-        {
-          groupID = $scope.current.group;
-        }
-
-        Slots.getMemberAvailabilities(groupID)
-          .then(
-          function (results)
-          {
-            var ordered = [];
-
-            angular.forEach(
-              results.members,
-              function (member, id)
-              {
-                console.log(' ->', member, id);
-
-                ordered.push(
-                  {
-                    id:    id,
-                    state: (member.length > 0) ? member[0].state : 'no-state',
-                    label: (member.length > 0) ? $scope.states[member[0].state].label[0] : '-',
-                    start: (member.length > 0 && member[0].start !== undefined) ?
-                           new Date(member[0].start * 1000).toString($rootScope.config.formats.datetime) :
-                           'Geen planning',
-                    end:   (member.length > 0 && member[0].end !== undefined) ?
-                           new Date(member[0].end * 1000).toString($rootScope.config.formats.datetime) :
-                           'Geen planning',
-                    name:  (members[id]) ? members[id].name : false
-                  }
-                );
-              }
-            );
-
-            $scope.availability = {
-              members: ordered,
-              synced: results.synced * 1000
-            };
-          }
-        );
+      $scope.states['no-state'] = {
+        className: 'no-state',
+        label:     'Geen Planning',
+        color:     '#a0a0a0',
+        type:      'Geen Planning',
+        display:   false
       };
-
 
       $scope.divisions = $rootScope.config.timeline.config.divisions;
 
@@ -10053,7 +10093,86 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         division: 'all'
       };
 
-      $scope.getAvailability($scope.current.group);
+      /**
+       * Get availability
+       */
+      $scope.getAvailability = function (groupID, divisionID)
+      {
+        if (! groupID)
+        {
+          groupID = $scope.current.group;
+        }
+
+        if (! divisionID)
+        {
+          divisionID = $scope.current.division;
+        }
+
+        Slots.getMemberAvailabilities(groupID, divisionID)
+          .then(
+          function (results)
+          {
+            var ordered = {};
+
+            angular.forEach(
+              results.members,
+              function (slots, id)
+              {
+                var _member = {
+                  id: id,
+                  state: (slots.length > 0) ? slots[0].state : 'no-state',
+                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : 'G',
+                  start: (slots.length > 0 && slots[0].start !== undefined) ?
+                         new Date(slots[0].start * 1000).toString($rootScope.config.formats.datetime) :
+                         'Geen planning',
+                  end: (slots.length > 0 && slots[0].end !== undefined) ?
+                       new Date(slots[0].end * 1000).toString($rootScope.config.formats.datetime) :
+                       'Geen planning',
+                  name: (members && members[id]) ? members[id].name : id
+                };
+
+                if (slots.length > 0)
+                {
+                  if (! ordered[slots[0].state])
+                  {
+                    ordered[slots[0].state] = [];
+                  }
+
+                  ordered[slots[0].state].push(_member);
+                }
+                else
+                {
+                  if (! ordered['no-state'])
+                  {
+                    ordered['no-state'] = [];
+                  }
+
+                  ordered['no-state'].push(_member);
+                }
+              }
+            );
+
+            $scope.availability = {
+              members: ordered,
+              synced: results.synced * 1000
+            };
+          }
+        );
+      };
+
+      $scope.getGroupAvailability = function ()
+      {
+        $scope.current.division = 'all';
+
+        $scope.getAvailability($scope.current.group, $scope.current.division);
+      };
+
+      $scope.getDivisionAvailability = function ()
+      {
+        $scope.getAvailability($scope.current.group, $scope.current.division);
+      };
+
+      $scope.getGroupAvailability();
 
       /**
        * Save widget settings
@@ -10143,7 +10262,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       function (setup)
                       {
                         prepareSaMembers(setup);
-                      });
+                      }
+                    );
                   }
                   else
                   {
@@ -10153,10 +10273,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               }
             }, 60000);
         },
-        clear: function ()
-        {
-          $window.clearInterval($window.alarmSync);
-        }
+        clear: function () { $window.clearInterval($window.alarmSync) }
       };
 
 

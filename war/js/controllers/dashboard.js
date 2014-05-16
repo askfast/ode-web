@@ -445,61 +445,20 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
 
 
-      var groups  	= Storage.local.groups(),
-          settings 	= Storage.local.settings();
-
-      var members = Storage.local.members();
+      var groups = Storage.local.groups(),
+          settings = Storage.local.settings(),
+          members = Storage.local.members();
 
       $scope.groups = groups;
       $scope.states = $rootScope.config.timeline.config.states;
 
-      /**
-       * Get availability
-       */
-      $scope.getAvailability = function (groupID)
-      {
-        if (! groupID)
-        {
-          groupID = $scope.current.group;
-        }
-
-        Slots.getMemberAvailabilities(groupID)
-          .then(
-          function (results)
-          {
-            var ordered = [];
-
-            angular.forEach(
-              results.members,
-              function (member, id)
-              {
-                console.log(' ->', member, id);
-
-                ordered.push(
-                  {
-                    id:    id,
-                    state: (member.length > 0) ? member[0].state : 'no-state',
-                    label: (member.length > 0) ? $scope.states[member[0].state].label[0] : '-',
-                    start: (member.length > 0 && member[0].start !== undefined) ?
-                           new Date(member[0].start * 1000).toString($rootScope.config.formats.datetime) :
-                           'Geen planning',
-                    end:   (member.length > 0 && member[0].end !== undefined) ?
-                           new Date(member[0].end * 1000).toString($rootScope.config.formats.datetime) :
-                           'Geen planning',
-                    name:  (members[id]) ? members[id].name : false
-                  }
-                );
-              }
-            );
-
-            $scope.availability = {
-              members: ordered,
-              synced: results.synced * 1000
-            };
-          }
-        );
+      $scope.states['no-state'] = {
+        className: 'no-state',
+        label:     'Geen Planning',
+        color:     '#a0a0a0',
+        type:      'Geen Planning',
+        display:   false
       };
-
 
       $scope.divisions = $rootScope.config.timeline.config.divisions;
 
@@ -521,7 +480,86 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         division: 'all'
       };
 
-      $scope.getAvailability($scope.current.group);
+      /**
+       * Get availability
+       */
+      $scope.getAvailability = function (groupID, divisionID)
+      {
+        if (! groupID)
+        {
+          groupID = $scope.current.group;
+        }
+
+        if (! divisionID)
+        {
+          divisionID = $scope.current.division;
+        }
+
+        Slots.getMemberAvailabilities(groupID, divisionID)
+          .then(
+          function (results)
+          {
+            var ordered = {};
+
+            angular.forEach(
+              results.members,
+              function (slots, id)
+              {
+                var _member = {
+                  id: id,
+                  state: (slots.length > 0) ? slots[0].state : 'no-state',
+                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : 'G',
+                  start: (slots.length > 0 && slots[0].start !== undefined) ?
+                         new Date(slots[0].start * 1000).toString($rootScope.config.formats.datetime) :
+                         'Geen planning',
+                  end: (slots.length > 0 && slots[0].end !== undefined) ?
+                       new Date(slots[0].end * 1000).toString($rootScope.config.formats.datetime) :
+                       'Geen planning',
+                  name: (members && members[id]) ? members[id].name : id
+                };
+
+                if (slots.length > 0)
+                {
+                  if (! ordered[slots[0].state])
+                  {
+                    ordered[slots[0].state] = [];
+                  }
+
+                  ordered[slots[0].state].push(_member);
+                }
+                else
+                {
+                  if (! ordered['no-state'])
+                  {
+                    ordered['no-state'] = [];
+                  }
+
+                  ordered['no-state'].push(_member);
+                }
+              }
+            );
+
+            $scope.availability = {
+              members: ordered,
+              synced: results.synced * 1000
+            };
+          }
+        );
+      };
+
+      $scope.getGroupAvailability = function ()
+      {
+        $scope.current.division = 'all';
+
+        $scope.getAvailability($scope.current.group, $scope.current.division);
+      };
+
+      $scope.getDivisionAvailability = function ()
+      {
+        $scope.getAvailability($scope.current.group, $scope.current.division);
+      };
+
+      $scope.getGroupAvailability();
 
       /**
        * Save widget settings
@@ -611,7 +649,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       function (setup)
                       {
                         prepareSaMembers(setup);
-                      });
+                      }
+                    );
                   }
                   else
                   {
@@ -621,10 +660,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               }
             }, 60000);
         },
-        clear: function ()
-        {
-          $window.clearInterval($window.alarmSync);
-        }
+        clear: function () { $window.clearInterval($window.alarmSync) }
       };
 
 

@@ -1,8 +1,11 @@
 <section id="dashboard">
 
-  <div class="well well-large greetings">
-    <h2>{{ui.dashboard.welcome}}, {{app.resources.name}}</h2>
+  <!-- page header -->
+  <div class="page-header">
+    <h2>Dashboard</h2>
+    <br/>
   </div>
+  <!-- end page header -->
 
 
   <!--smartAlarming-->
@@ -178,14 +181,18 @@
          class="widget span12">
 
       <div class="head">
-        <h4>Overzicht beschikbaarheid</h4>
+        <h4>
+          Overzicht beschikbaarheid, {{current.group | groupIdToName}}
+          <span ng-show="(current.division != 'all')">({{current.division | divisionIdToName}})</span>
+        </h4>
 
         <div class="pull-right">
           <!-- groups list -->
           <select ng-model="current.group"
                   ng-options="group.uuid as group.name for group in groups"
                   ng-selected="current.group"
-                  ng-change="getAvailability()">
+                  ng-change="getGroupAvailability()"
+                  style="width:160px">
           </select>
           <!-- end groups list -->
 
@@ -193,9 +200,9 @@
           <select ng-model="current.division"
                   ng-options="division.id as division.label for division in divisions"
                   ng-selected="current.division"
-                  ng-change="changeDivision()"
+                  ng-change="getDivisionAvailability()"
                   ng-show="divisions.length > 0"
-                  style="margin-left: 15px">
+                  style="margin-left: 15px; width:160px">
           </select>
           <!-- end divisions list -->
         </div>
@@ -210,24 +217,72 @@
 
         <li id="sa-truck">
 
-          <div class="sa-member"
-               ng-repeat="member in availability.members">
+          <div ng-repeat="(stateName, state) in states">
+
+            <div class="sa-member"
+                 ng-repeat="member in availability.members[stateName]"
+                 ng-show="(member.state != 'no-state')">
             <span class="sa-member-icon"
-              style="background-color: {{states[member.state].color}}">
+                  style="background-color: {{states[member.state].color}}">
               <strong>{{member.label}}{{$index+1}}</strong>
             </span>
-            <div class="sa-member-card">
-              <h5>{{member.name}}</h5>
-              <hr/>
-              <span>{{states[member.state].label}}</span>
-              <br/>
-              <small><strong>{{member.start}}</strong></small>&nbsp;
-              <small class="muted">van</small>
-              <br>
-              <small><strong>{{member.end}}</strong></small>&nbsp;
-              <small class="muted">tot</small>
+              <div class="sa-member-card">
+                <h5>{{member.name}}</h5>
+                <hr/>
+                <small>{{states[member.state].label}}</small>
+                <br/>
+
+                <section ng-hide="(member.state == 'no-state')">
+                  <small><strong>{{member.start}}</strong></small>&nbsp;
+                  <small class="muted">van</small>
+                  <br>
+                  <small><strong>{{member.end}}</strong></small>&nbsp;
+                  <small class="muted">tot</small>
+                </section>
+
+              </div>
             </div>
+
           </div>
+
+
+        </li>
+
+      </ul>
+
+      <ul id="sa-setup"
+        ng-show="availability.members['no-state'].length > 0">
+
+        <li id="sa-truck">
+
+          <div ng-repeat="(stateName, state) in states">
+
+            <div class="sa-member"
+                 ng-repeat="member in availability.members[stateName]"
+                 ng-hide="(member.state != 'no-state')">
+            <span class="sa-member-icon"
+                  style="background-color: {{states[member.state].color}}">
+              <strong>{{member.label}}{{$index+1}}</strong>
+            </span>
+              <div class="sa-member-card">
+                <h5>{{member.name}}</h5>
+                <hr/>
+                <small>{{states[member.state].label}}</small>
+                <br/>
+
+                <section ng-hide="(member.state == 'no-state')">
+                  <small><strong>{{member.start}}</strong></small>&nbsp;
+                  <small class="muted">van</small>
+                  <br>
+                  <small><strong>{{member.end}}</strong></small>&nbsp;
+                  <small class="muted">tot</small>
+                </section>
+
+              </div>
+            </div>
+
+          </div>
+
 
         </li>
 
