@@ -321,7 +321,7 @@ var ui = {
         timeline: 'Timeline',
         profileView: 'Profile View',
         userGroups: 'User Groups',
-        role: 'Role',
+        role: 'Profile',
         email: 'Email',
         phone: 'Phone',
         address: 'Address',
@@ -755,7 +755,7 @@ var ui = {
         timeline: 'Tijdlijn',
         profileView: 'Profiel weergave',
         userGroups: 'Gebruikersgroepen',
-        role: 'Functie',
+        role: 'Profiel',
         email: 'Email',
         phone: 'Telefoon',
         address: 'Adres',
@@ -1308,28 +1308,25 @@ angular.module('WebPaige')
       controller: 'profile',
       resolve: {
         data: [
-          '$rootScope', 'Profile', '$route', '$location',
-          function ($rootScope, Profile, $route, $location)
+          '$rootScope', 'Profile', '$route',
+          function ($rootScope, Profile, $route)
           {
             if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
             {
               // IE route fix
-              var onejan = new Date(new Date().getFullYear(),0,1);
+              var firstOfJanuary = new Date(new Date().getFullYear(),0,1);
 
-              // var periods = Dater.getPeriods(),
               var periods = angular.fromJson(localStorage.getItem('WebPaige.periods')),
-                  // current = Dater.current.week(),
-                  // current = new Date().getWeek(),
-                  current = Math.ceil((((new Date() - onejan) / 86400000) + onejan.getDay()+1)/7);
+                  current = Math.ceil((((new Date() - firstOfJanuary) / 86400000) + firstOfJanuary.getDay()+1)/7);
 
-              // console.log('---->', current);
-
-              var ranges  = {
-                    start:  periods.weeks[current].first.timeStamp / 1000,
-                    end:    periods.weeks[current].last.timeStamp / 1000
-                  };
-
-              return Profile.getWithSlots($route.current.params.userId.toLowerCase(), false, ranges);
+              return Profile.getWithSlots(
+                $route.current.params.userId.toLowerCase(),
+                false,
+                {
+                  start:  periods.weeks[current].first.timeStamp / 1000,
+                  end:    periods.weeks[current].last.timeStamp / 1000
+                }
+              );
             }
             else
             {
@@ -5119,351 +5116,373 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 /**
  * Profile modal
  */
-.factory('Profile', 
-[
-	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Groups', 'Slots', 'MD5',
-	function ($rootScope, $config, $resource, $q, Storage, Groups, Slots, MD5) 
-	{
-	  var Profile = $resource(
-	    $config.host + '/node/:id/:section',
-	    {
-	    },
-	    {
-	      get: {
-	        method: 'GET',
-	        params: {id: '', section: 'resource'}
-	      },
-	      save: {
-	        method: 'PUT',
-	        params: {section: 'resource'}
-	      },
-	      role: {
-	        method: 'PUT',
-	        params: {section: 'role'},
-          isArray: true
-	      }
-	    }
-	  );
+  .factory(
+  'Profile',
+  [
+    '$rootScope', '$config', '$resource', '$q', 'Storage', 'Groups', 'Slots', 'MD5',
+    function ($rootScope, $config, $resource, $q, Storage, Groups, Slots, MD5)
+    {
+      var Profile = $resource(
+          $config.host + '/node/:id/:section',
+          {
+          },
+          {
+            get:  {
+              method: 'GET',
+              params: { id: '', section: 'resource' }
+            },
+            save: {
+              method: 'PUT',
+              params: { section: 'resource' }
+            },
+            role: {
+              method:  'PUT',
+              params:  { section: 'role' },
+              isArray: true
+            }
+          }
+      );
 
 
-	  var Register = $resource(
-	    $config.host + '/register',
-	    {
-	      direct: 'true',
-	      module: 'default'
-	    },
-	    {
-	      profile: {
-	        method: 'GET',
-	        params: {uuid: '', pass: '', name: '', phone: ''},
-          isArray: true
-	      }
-	    }
-	  );
+      var Register = $resource(
+          $config.host + '/register',
+          {
+            direct: 'true',
+            module: 'default'
+          },
+          {
+            profile: {
+              method:  'GET',
+              params:  {uuid: '', pass: '', name: '', phone: ''},
+              isArray: true
+            }
+          }
+      );
 
 
-	  var Resources = $resource(
-	    $config.host + '/resources',
-	    {
-	    },
-	    {
-	      get: {
-	        method: 'GET',
-	        params: {}
-	      },
-	      save: {
-	        method: 'POST',
-	        params: {
-	          /**
-	           * It seems like backend accepts data in request payload as body as well
-	           */
-	          //tags: ''
-	        }
-	      }
-	    }
-	  );
+      var Resources = $resource(
+          $config.host + '/resources',
+          {
+          },
+          {
+            get:  {
+              method: 'GET',
+              params: {}
+            },
+            save: {
+              method: 'POST',
+              params: {
+                /**
+                 * It seems like backend accepts data in request payload as body as well
+                 */
+                //tags: ''
+              }
+            }
+          }
+      );
 
 
-	  /**
-	   * Change password for user
-	   */
-	  Profile.prototype.register = function (profile) 
-	  {    
-	    var deferred = $q.defer();
-
-      var uuid = profile.username.toLowerCase();
-
-      console.log('profile ->', profile);
-
-	    Register.profile(
-	      {
-	        uuid: 	uuid,
-          // pass: 	($rootScope.config.profile.smartAlarm) ? profile.password : MD5(profile.password),
-          pass: 	MD5(profile.password),
-	        name: 	String(profile.firstName + ' ' + profile.lastName),
-	        phone: 	profile.PhoneAddress || ''
-	      }, 
-	      function (registered) 
-	      {
-          console.log('registered ->', registered);
-
-          Profile.prototype.role( uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id )
-	        .then(function (roled)
-	        {
-	          Profile.prototype.save(uuid, {
-              firstName:    profile.firstName,
-              lastName:     profile.lastName,
-	            EmailAddress: profile.EmailAddress,
-	            PostAddress: 	profile.PostAddress,
-	            PostZip: 			profile.PostZip,
-	            PostCity: 		profile.PostCity
-	          }).then(function (resourced)
-	          {
-	            var calls = [];
-
-	            angular.forEach(profile.groups, function (group)
-	            {
-	              calls.push(Groups.addMember({
-	                id: 		uuid,
-	                group: 	group
-	              }));
-	            });
-
-	            $q.all(calls)
-	            .then(function (grouped)
-	            {
-	              deferred.resolve({
-	                registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
-	                roled: 			roled,
-	                resourced: 	resourced,
-	                grouped: 		grouped
-	              });
-	            });
-
-	          }); // save profile
-
-	        }); // role
-	      },
-	      function (error)
-	      {
-          deferred.resolve({error: error});
-	      }
-	    ); // register
-	   
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Set role of given user
-	   */
-	  Profile.prototype.role = function (id, role) 
-	  {    
-	    var deferred = $q.defer();
-
-	    Profile.role(
-	      {id: id}, 
-	      role, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Change password for user
-	   */
-	  Profile.prototype.changePassword = function (passwords) 
-	  {    
-	    var deferred = $q.defer();
-
-	    Resources.save(
-	      null, 
-	      { askPass: MD5(passwords.new1) }, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get profile of given user
-	   */
-	  Profile.prototype.get = function (id, localize) 
-	  {    
-	    var deferred = $q.defer();
-
-	    Profile.get({id: id}, function (result) 
-	    {
-	      if (id == $rootScope.app.resources.uuid) $rootScope.app.resources = result;
-
-	      if (localize) Storage.add('resources', angular.toJson(result));
-
-	      deferred.resolve({resources: result});
-	    });
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get profile of given user with slots
-	   */
-	  Profile.prototype.getWithSlots = function (id, localize, params) 
-	  {
-	    var deferred = $q.defer();
-
-	    Profile.prototype.get(id, localize)
-	    .then(function (resources)
-	    {
-	      Slots.user({
-	        user: 	id,
-	        start: 	params.start,
-	        end: 		params.end
-	      }).then(function (slots)
-	      {
-	        deferred.resolve(angular.extend(resources, {
-	          slots: 		slots,
-	          synced: 	new Date().getTime(),
-	          periods: {
-	            start: 	params.start * 1000,
-	            end: 		params.end * 1000
-	          }
-	        }));        
-	      });
-	    });
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get user slots
-	   */
-	  Profile.prototype.getSlots = function (id, params) 
-	  {
-	    var deferred = $q.defer();
-
-	    Slots.user(
-	    {
-	      user:   id,
-	      start: 	params.start / 1000,
-	      end: 		params.end / 1000
-	    }).then(function (slots)
-	    {
-	      deferred.resolve({
-	        slots: 	slots,
-	        synced: new Date().getTime(),
-	        periods: {
-	          start: 	params.start,
-	          end: 		params.end
-	        }
-	      });        
-	    });
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get local resource data
-	   */
-	  Profile.prototype.local = function () { return angular.fromJson(Storage.get('resources')) };
-
-
-	  /**
-	   * Save profile
-	   */
-	  Profile.prototype.save = function (id, resources) 
-	  {
-	    var deferred = $q.defer();
-
-      if (resources.firstName != undefined && resources.lastName != undefined)
+      /**
+       * Change password for user
+       */
+      Profile.prototype.register = function (profile)
       {
-        resources.name = resources.firstName + ' ' + resources.lastName;
-      }
+        var deferred = $q.defer();
 
-	    Profile.save(
-	      {
-          id: id
-        },
-	      resources,
-	      function (result)
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        var uuid = profile.username.toLowerCase();
 
-	    return deferred.promise;
-	  };
+        console.log('profile ->', profile);
+
+        Register.profile(
+          {
+            uuid: uuid,
+            // pass: 	($rootScope.config.profile.smartAlarm) ? profile.password : MD5(profile.password),
+            pass: MD5(profile.password),
+            name: String(profile.firstName + ' ' + profile.lastName),
+            phone: profile.PhoneAddress || ''
+          },
+          function (registered)
+          {
+            console.log('registered ->', registered);
+
+            // Profile.prototype.role(uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id)
+            Profile.prototype.role(uuid, profile.role.id)
+              .then(
+              function (roled)
+              {
+                Profile.prototype.save(
+                  uuid, {
+                    firstName:    profile.firstName,
+                    lastName:     profile.lastName,
+                    EmailAddress: profile.EmailAddress,
+                    PostAddress:  profile.PostAddress,
+                    PostZip:      profile.PostZip,
+                    PostCity:     profile.PostCity
+                  }).then(
+                  function (resourced)
+                  {
+                    var calls = [];
+
+                    angular.forEach(
+                      profile.groups, function (group)
+                      {
+                        calls.push(
+                          Groups.addMember(
+                            {
+                              id:    uuid,
+                              group: group
+                            }));
+                      });
+
+                    $q.all(calls)
+                      .then(
+                      function (grouped)
+                      {
+                        deferred.resolve(
+                          {
+                            registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
+                            roled:     roled,
+                            resourced: resourced,
+                            grouped:   grouped
+                          });
+                      });
+
+                  }); // save profile
+
+              }); // role
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        ); // register
+
+        return deferred.promise;
+      };
 
 
-	  /**
-     * DEPRECIATED
-     *
-	   * Create settings resources for user if it is missing
-	   */
-//	  Profile.prototype.createSettings_ = function (id)
-//	  {
-//	    var deferred = $q.defer();
-//
-//	    Profile.prototype.get(id, false)
-//	    .then(function (result)
-//	    {
-//	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
-//	      {
-//	        Profile.save(
-//	          {id: result.resources.uuid},
-//	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }),
-//	          function (result)
-//	          {
-//	            deferred.resolve({
-//	              status: 'modified',
-//	              resources: result
-//	            });
-//	          },
-//	          function (error)
-//	          {
-//	            deferred.resolve({error: error});
-//	          }
-//	        );
-//	      }
-//	      else
-//	      {
-//	        deferred.resolve({
-//	          status: 'full',
-//	          resources: result
-//	        });
-//	      }
-//	    });
-//
-//	    return deferred.promise;
-//	  };
+      /**
+       * Set role of given user
+       */
+      Profile.prototype.role = function (id, role)
+      {
+        var deferred = $q.defer();
+
+        Profile.role(
+          { id: id },
+          role,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
 
 
-	  return new Profile;
-	}
-]);;'use strict';
+      /**
+       * Change password for user
+       */
+      Profile.prototype.changePassword = function (passwords)
+      {
+        var deferred = $q.defer();
+
+        Resources.save(
+          null,
+          { askPass: MD5(passwords.new1) },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get profile of given user
+       */
+      Profile.prototype.get = function (id, localize)
+      {
+        var deferred = $q.defer();
+
+        Profile.get(
+          {
+            id: id
+          },
+          function (result)
+          {
+            if (id == $rootScope.app.resources.uuid) $rootScope.app.resources = result;
+
+            if (localize) Storage.add('resources', angular.toJson(result));
+
+            deferred.resolve({resources: result});
+          });
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get profile of given user with slots
+       */
+      Profile.prototype.getWithSlots = function (id, localize, params)
+      {
+        var deferred = $q.defer();
+
+        Profile.prototype.get(id, localize)
+          .then(
+          function (resources)
+          {
+            Slots.user(
+              {
+                user:  id,
+                start: params.start,
+                end:   params.end
+              }
+            ).then(
+              function (slots)
+              {
+                deferred.resolve(
+                  angular.extend(
+                    resources, {
+                      slots:   slots,
+                      synced:  new Date().getTime(),
+                      periods: {
+                        start: params.start * 1000,
+                        end: params.end * 1000
+                      }
+                    }));
+              });
+          });
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get user slots
+       */
+      Profile.prototype.getSlots = function (id, params)
+      {
+        var deferred = $q.defer();
+
+        Slots.user(
+          {
+            user: id,
+            start: params.start / 1000,
+            end: params.end / 1000
+          }).then(
+          function (slots)
+          {
+            deferred.resolve(
+              {
+                slots:   slots,
+                synced:  new Date().getTime(),
+                periods: {
+                  start: params.start,
+                  end:   params.end
+                }
+              });
+          });
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get local resource data
+       */
+      Profile.prototype.local = function () { return angular.fromJson(Storage.get('resources')) };
+
+
+      /**
+       * Save profile
+       */
+      Profile.prototype.save = function (id, resources)
+      {
+        var deferred = $q.defer();
+
+        if (resources.firstName != undefined && resources.lastName != undefined)
+        {
+          resources.name = resources.firstName + ' ' + resources.lastName;
+        }
+
+        Profile.save(
+          {
+            id: id
+          },
+          resources,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * DEPRECIATED
+       *
+       * Create settings resources for user if it is missing
+       */
+      //	  Profile.prototype.createSettings_ = function (id)
+      //	  {
+      //	    var deferred = $q.defer();
+      //
+      //	    Profile.prototype.get(id, false)
+      //	    .then(function (result)
+      //	    {
+      //	      if (result.settingsWebPaige == undefined || result.settingsWebPaige == null)
+      //	      {
+      //	        Profile.save(
+      //	          {id: result.resources.uuid},
+      //	          angular.toJson({ settingsWebPaige: $rootScope.config.defaults.settingsWebPaige }),
+      //	          function (result)
+      //	          {
+      //	            deferred.resolve({
+      //	              status: 'modified',
+      //	              resources: result
+      //	            });
+      //	          },
+      //	          function (error)
+      //	          {
+      //	            deferred.resolve({error: error});
+      //	          }
+      //	        );
+      //	      }
+      //	      else
+      //	      {
+      //	        deferred.resolve({
+      //	          status: 'full',
+      //	          resources: result
+      //	        });
+      //	      }
+      //	    });
+      //
+      //	    return deferred.promise;
+      //	  };
+
+
+      return new Profile;
+    }
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Modals.Settings', ['ngResource'])
@@ -14960,376 +14979,425 @@ angular.module('WebPaige.Controllers.Profile', [])
 /**
  * Profile controller
  */
-.controller('profile', 
-[
-	'$rootScope', '$scope', '$q', '$location', '$window', '$route', 'data', 'Profile', 'Storage', 'Groups', 'Dater', 'MD5', 
-	function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5) 
-	{
-    $rootScope.notification.status = false;
-
-	  /**
-	   * Fix styles
-	   */
-	  $rootScope.fixStyles();
-
-
-	  /**
-	   * Pass the self
-	   */
-		$scope.self = this;
-
-
-	  /**
-	   * Pass periods
-	   */
-	  $scope.periods = Dater.getPeriods();
-
-
-	  /**
-	   * Pass current
-	   */
-	  $scope.current = {
-      day:    Date.today().getDayOfYear() + 1,
-      week:   new Date().getWeek(),
-      month:  new Date().getMonth() + 1
-    };
-
-	  /**
-	   * Set data for view
-	   */
-    if (!!($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
+  .controller(
+  'profile',
+  [
+    '$rootScope',
+    '$scope',
+    '$q',
+    '$location',
+    '$window',
+    '$route',
+    'data',
+    'Profile',
+    'Storage',
+    'Groups',
+    'Dater',
+    'MD5',
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5)
     {
-      if (data && data.slots)
-      {
-        data.user = data.slots.data;
-      }
-    }
+      $rootScope.notification.status = false;
 
-
-	  /**
-	   * Pass data container
-	   */
-	  $scope.data = data;
-
-
-	  /**
-	   * Pass profile information
-	   */
-	  $scope.profilemeta = data && data.resources;
-
-
-	  /**
-	   * Get groups of user
-	   */
-	  $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
-
-
-	  /**
-	   * Default values for passwords
-	   */
-	  $scope.passwords = {
-	    current: 	'',
-	    new1: 		'',
-	    new2: 		''
-	  };
-
-
-	  /**
-	   * Default form views
-	   */
-	  $scope.forms = {
-	    add:  false,
-	    edit: false
-	  };
-
-
-	  /**
-	   * Slot form toggle
-	   */
-	  $scope.toggleSlotForm = function ()
-	  {
-	    if ($scope.forms.add)
-	    {
-	      $scope.resetInlineForms();
-	    }
-	    else
-	    {
-	      $scope.slot = {};
-
-	      $scope.slot = {
-	        start: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        end: {
-	          date: new Date().toString($rootScope.config.formats.date),
-	          time: new Date().addHours(1).toString($rootScope.config.formats.time),
-	          datetime: new Date().toISOString()
-	        },
-	        state:      '',
-	        recursive:  false,
-	        id:         ''
-	      };
-
-	      $scope.forms = {
-	        add: 	true,
-	        edit: false
-	      };
-	    }
-	  };
-
-
-	  /**
-	   * Reset inline forms
-	   */
-	  $scope.resetInlineForms = function ()
-	  {
-	    $scope.slot = {};
-
-	    $scope.original = {};
-
-	    $scope.forms = {
-	      add:  false,
-	      edit: false
-	    };
-	  };
-
-
-	  /**
-	   * Extract view action from url and set view
-	   */
-	  setView($location.hash());
-
-
-	  /**
-	   * View setter
-	   */
-	  function setView (hash)
-	  {
-	    $scope.views = {
-	      profile:  false,
-	      edit:     false,
-	      password: false,
-	      timeline: false
-	    };
-
-	    $scope.views[hash] = true;
-
-	    $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId) ? true : false;
-	  }
-
-
-	  /**
-	   * Switch between the views and set hash accordingly
-	   */
-	  $scope.setViewTo = function (hash)
-	  {
-	    $scope.$watch($location.hash(), function ()
-	    {
-	      $location.hash(hash);
-
-	      setView(hash);
-	    });
-	  };
-
-
-	  /**
-	   * Save user
-	   */
-	  $scope.save = function (resources)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
-
-	    /**
-	     * Convert given other user's password to MD5
-	     */
-	    if (resources.Password)
-      {
-        resources.askPass = MD5(resources.Password);
-      }
-
-	    Profile.save($route.current.params.userId, resources)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error($rootScope.ui.errors.profile.save);
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
-
-	        var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid) ? true : false;
-
-	        Profile.get($route.current.params.userId.toLowerCase(), flag)
-	        .then(function (data)
-	        {
-	          if (data.error)
-	          {
-	            $rootScope.notifier.error($rootScope.ui.errors.profile.get);
-	            console.warn('error ->', data);
-	          }
-	          else
-	          {
-	            $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
-
-	            $scope.data = data;
-
-	            $rootScope.statusBar.off();
-	          }
-	        });
-	      }
-	    });
-
-	  };
-
-
-	  /**
-	   * Change passwords
-	   */
-	  $scope.change = function (passwords)
-	  {
-      if (passwords.new1 == '' || passwords.new2 == '')
-	    {
-	      $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
-
-	      return false;
-	    }
-
-      if (passwords.new1 != passwords.new2)
-	    {
-        $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
-
-	      return false;
-	    }
-
-      // console.log('askPass ->', $rootScope.app.resources.askPass);
-      // console.log('current ->', passwords.current, MD5(passwords.current));
-
-      if ($rootScope.app.resources.askPass == MD5(passwords.current))
-	    {
-        $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
-
-	      Profile.changePassword(passwords)
-	      .then(function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error($rootScope.ui.errors.profile.changePassword);
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
-
-	          Profile.get($rootScope.app.resources.uuid, true)
-	          .then(function (data)
-	          {
-	            if (data.error)
-	            {
-	              $rootScope.notifier.error($rootScope.ui.errors.profile.get);
-	              console.warn('error ->', data);
-	            }
-	            else
-	            {
-	              $rootScope.notifier.success($rootScope.ui.profile.passChanged);
-
-	              $scope.data = data;
-
-	              $rootScope.statusBar.off();
-	            }
-	          });
-	        }
-	      });
-	    }
-	    else
-	    {
-        // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
-	      $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
-	    }
-	  };
-	  
-
-	  /**
-	   * Render timeline if hash is timeline
-	   */
-	  if ($route.current.params.userId &&
-      $rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase())
-	  {
-	  	timelinebooter();
-	  }
-
-
-
-	  /**
-     * TODO: Is it really needed? Since the timeline-booter is disabled
-	   * Redraw timeline
-	   */
-	  $scope.redraw = function ()
-	  {
-	  	setTimeout(function ()
-	  	{
-	  		if($scope.self.timeline)
-        {
-          $scope.self.timeline.redraw();
-        }
-	  	}, $rootScope.config.timers.TICKER);
-		};
-
-
-	  function timelinebooter ()
-	  {
-      $scope.timeline = {
-      	id: 'userTimeline',
-      	main: false,
-      	user: {
-      		id: $route.current.params.userId
-      	},
-        current: $scope.current,
-        options: {
-          start:  new Date($scope.periods.weeks[$scope.current.week].first.day),
-          end:    new Date($scope.periods.weeks[$scope.current.week].last.day),
-          min:    new Date($scope.periods.weeks[$scope.current.week].first.day),
-          max:    new Date($scope.periods.weeks[$scope.current.week].last.day)
-        },
-        range: {
-          start: 	$scope.periods.weeks[$scope.current.week].first.day,
-          end: 		$scope.periods.weeks[$scope.current.week].last.day
-        },
-        config: {
-          legenda:    {},
-          legendarer: $rootScope.config.timeline.config.legendarer,
-          states:     $rootScope.config.timeline.config.states
-        }
-      };
-
-      var states = {};
-
-      angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
-
-      $scope.states = states;
-
-      angular.forEach($rootScope.config.timeline.config.states, function (state, index)
-      {
-        $scope.timeline.config.legenda[index] = true;
-      });
+      /**
+       * Fix styles
+       */
+      $rootScope.fixStyles();
 
 
       /**
-       * Prepare timeline range for date-ranger widget
+       * Pass the self
        */
-      $scope.daterange =  Dater.readable.date($scope.timeline.range.start) + ' / ' +
-                          Dater.readable.date($scope.timeline.range.end);
+      $scope.self = this;
 
 
-      $('#timeline').html('');
-      $('#timeline').append('<div id="userTimeline"></div>');
-	  }
+      /**
+       * Pass periods
+       */
+      $scope.periods = Dater.getPeriods();
 
-	}
-]);;/*jslint node: true */
+
+      /**
+       * Pass current
+       */
+      $scope.current = {
+        day: Date.today().getDayOfYear() + 1,
+        week: new Date().getWeek(),
+        month: new Date().getMonth() + 1
+      };
+
+      /**
+       * Set data for view
+       */
+      if (! ! ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
+      {
+        if (data && data.slots)
+        {
+          data.user = data.slots.data;
+        }
+      }
+
+
+      /**
+       * Pass data container
+       */
+      $scope.data = data;
+
+      /**
+       * Grab and set roles for view
+       */
+      var roles = {};
+
+      angular.forEach(
+        $rootScope.config.roles,
+        function (role) { roles[role.id] = role.label }
+      );
+
+      $scope.roles = roles;
+
+      $scope.changeRole = function ()
+      {
+        $rootScope.statusBar.display('Gebruiker profiel aan het aanpassen...');
+
+        Profile.role(data.resources.uuid, $scope.data.resources.role)
+          .then(
+          function ()
+          {
+            $rootScope.notifier.success('Gebruiker profiel aangepast.');
+
+            $rootScope.statusBar.off();
+          }
+        )
+      };
+
+
+      /**
+       * Pass profile information
+       */
+      $scope.profilemeta = data && data.resources;
+
+
+      /**
+       * Get groups of user
+       */
+      $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+
+
+      /**
+       * Default values for passwords
+       */
+      $scope.passwords = {
+        current: '',
+        new1:    '',
+        new2:    ''
+      };
+
+
+      /**
+       * Default form views
+       */
+      $scope.forms = {
+        add:  false,
+        edit: false
+      };
+
+
+      /**
+       * Slot form toggle
+       */
+      $scope.toggleSlotForm = function ()
+      {
+        if ($scope.forms.add)
+        {
+          $scope.resetInlineForms();
+        }
+        else
+        {
+          $scope.slot = {};
+
+          $scope.slot = {
+            start:     {
+              date:     new Date().toString($rootScope.config.formats.date),
+              time:     new Date().toString($rootScope.config.formats.time),
+              datetime: new Date().toISOString()
+            },
+            end:       {
+              date:     new Date().toString($rootScope.config.formats.date),
+              time:     new Date().addHours(1).toString($rootScope.config.formats.time),
+              datetime: new Date().toISOString()
+            },
+            state:     '',
+            recursive: false,
+            id:        ''
+          };
+
+          $scope.forms = {
+            add:  true,
+            edit: false
+          };
+        }
+      };
+
+
+      /**
+       * Reset inline forms
+       */
+      $scope.resetInlineForms = function ()
+      {
+        $scope.slot = {};
+
+        $scope.original = {};
+
+        $scope.forms = {
+          add:  false,
+          edit: false
+        };
+      };
+
+
+      /**
+       * Extract view action from url and set view
+       */
+      setView($location.hash());
+
+
+      /**
+       * View setter
+       */
+      function setView (hash)
+      {
+        $scope.views = {
+          profile:  false,
+          edit:     false,
+          password: false,
+          timeline: false
+        };
+
+        $scope.views[hash] = true;
+
+        $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
+      }
+
+
+      /**
+       * Switch between the views and set hash accordingly
+       */
+      $scope.setViewTo = function (hash)
+      {
+        $scope.$watch(
+          $location.hash(),
+          function ()
+          {
+            $location.hash(hash);
+
+            setView(hash);
+          }
+        );
+      };
+
+
+      /**
+       * Save user
+       */
+      $scope.save = function (resources)
+      {
+        $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
+
+        /**
+         * Convert given other user's password to MD5
+         */
+        if (resources.Password)
+        {
+          resources.askPass = MD5(resources.Password);
+        }
+
+        Profile.save($route.current.params.userId, resources)
+          .then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.profile.save);
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+              var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid) ? true : false;
+
+              Profile.get($route.current.params.userId.toLowerCase(), flag)
+                .then(
+                function (data)
+                {
+                  if (data.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.profile.get);
+                    console.warn('error ->', data);
+                  }
+                  else
+                  {
+                    $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
+                    $scope.data = data;
+
+                    $rootScope.statusBar.off();
+                  }
+                });
+            }
+          });
+
+      };
+
+
+      /**
+       * Change passwords
+       */
+      $scope.change = function (passwords)
+      {
+        if (passwords.new1 == '' || passwords.new2 == '')
+        {
+          $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
+
+          return false;
+        }
+
+        if (passwords.new1 != passwords.new2)
+        {
+          $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
+
+          return false;
+        }
+
+        // console.log('askPass ->', $rootScope.app.resources.askPass);
+        // console.log('current ->', passwords.current, MD5(passwords.current));
+
+        if ($rootScope.app.resources.askPass == MD5(passwords.current))
+        {
+          $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
+
+          Profile.changePassword(passwords)
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.profile.changePassword);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+                Profile.get($rootScope.app.resources.uuid, true)
+                  .then(
+                  function (data)
+                  {
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.profile.get);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $rootScope.notifier.success($rootScope.ui.profile.passChanged);
+
+                      $scope.data = data;
+
+                      $rootScope.statusBar.off();
+                    }
+                  });
+              }
+            });
+        }
+        else
+        {
+          // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
+          $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
+        }
+      };
+
+
+      /**
+       * Render timeline if hash is timeline
+       */
+      if ($route.current.params.userId &&
+          $rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase())
+      {
+        timelinebooter();
+      }
+
+
+      /**
+       * TODO: Is it really needed? Since the timeline-booter is disabled
+       * Redraw timeline
+       */
+      $scope.redraw = function ()
+      {
+        setTimeout(
+          function ()
+          {
+            if ($scope.self.timeline)
+            {
+              $scope.self.timeline.redraw();
+            }
+          }, $rootScope.config.timers.TICKER);
+      };
+
+
+      function timelinebooter ()
+      {
+        $scope.timeline = {
+          id:      'userTimeline',
+          main:    false,
+          user:    {
+            id: $route.current.params.userId
+          },
+          current: $scope.current,
+          options: {
+            start: new Date($scope.periods.weeks[$scope.current.week].first.day),
+            end:   new Date($scope.periods.weeks[$scope.current.week].last.day),
+            min:   new Date($scope.periods.weeks[$scope.current.week].first.day),
+            max:   new Date($scope.periods.weeks[$scope.current.week].last.day)
+          },
+          range:   {
+            start: $scope.periods.weeks[$scope.current.week].first.day,
+            end:   $scope.periods.weeks[$scope.current.week].last.day
+          },
+          config:  {
+            legenda:    {},
+            legendarer: $rootScope.config.timeline.config.legendarer,
+            states:     $rootScope.config.timeline.config.states
+          }
+        };
+
+        var states = {};
+
+        angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+
+        $scope.states = states;
+
+        angular.forEach(
+          $rootScope.config.timeline.config.states,
+          function (state, index)
+          {
+            $scope.timeline.config.legenda[index] = true;
+          }
+        );
+
+
+        /**
+         * Prepare timeline range for date-ranger widget
+         */
+        $scope.daterange = Dater.readable.date($scope.timeline.range.start) + ' / ' +
+                           Dater.readable.date($scope.timeline.range.end);
+
+
+        $('#timeline').html('');
+        $('#timeline').append('<div id="userTimeline"></div>');
+      }
+
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 

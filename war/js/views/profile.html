@@ -58,16 +58,13 @@
       <!-- profileTab -->
       <div class="tab-pane {{(views.profile==true) && 'active'}}" id="profileTab">
 
-
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.profileView}}</h3>
         </div>
         <!-- end tab header -->
 
-
         <hr>
-
 
         <!-- profile info -->
         <dl>
@@ -79,8 +76,8 @@
               </span>
           </dd>
 
-          <dt ng-hide="config.profile.smartAlarm">{{ui.profile.role}}</dt>
-            <dd ng-hide="config.profile.smartAlarm">{{data.resources.role|translateRole}}</dd>
+          <dt>{{ui.profile.role}}</dt>
+            <dd>{{data.resources.role|translateRole}}</dd>
 
           <dt>{{ui.profile.email}}</dt>
             <dd>{{data.resources.EmailAddress}}</dd>
@@ -95,7 +92,6 @@
         </dl>
         <!-- end profile info -->
 
-
       </div>
       <!-- end profileTab -->
 
@@ -104,19 +100,29 @@
       <!-- editTab -->
       <div class="tab-pane {{(views.edit==true) && 'active'}}" id="editTab">
 
-
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.editProfile}}</h3>
         </div>
         <!-- end tab header -->
 
-
         <hr>
-
 
         <!-- edit profile form -->
         <form class="form-vertical">
+
+          <div class="control-group">
+            <label class="control-label">Profiel</label>
+            <div class="controls">
+              <select
+                ng-model="data.resources.role"
+                ng-change="changeRole(role)"
+                ng-options="id as label for (id, label) in roles">
+                <option value="">-- kies een profiel --</option>
+              </select>
+            </div>
+          </div>
+
           <div class="control-group">
             <label class="control-label">{{ui.groups.firstName}}</label>
             <div class="controls">
@@ -201,7 +207,6 @@
           </div>
         </form>
         <!-- end edit profile form -->
-
 
       </div>
       <!-- end editTab -->
