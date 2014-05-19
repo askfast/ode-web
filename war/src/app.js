@@ -1044,7 +1044,7 @@ angular.module('WebPaige')
         className:'state-unreached',
         label:    'Niet Bereikt',
         color:    '#65619b',
-        type:     'Niet Beschikbaar' ,
+        type:     'Niet Beschikbaar',
         display:  false
       }
     },
@@ -1128,14 +1128,17 @@ angular.module('WebPaige')
     //   }
     // },
 
+    timers: profile.timers,
+
     init: function ()
     {
-      var _this = this;
-
-      angular.forEach(profile.states, function (state, index)
-      {
-        _this.timeline.config.states[state] = _this.statesall[state];
-      });
+      angular.forEach(
+        profile.states,
+        (function (state, index)
+        {
+          this.timeline.config.states[state] = this.statesall[state];
+        }).bind(this)
+      );
     }
   }
 );;/*jslint node: true */
@@ -1438,9 +1441,7 @@ angular.module('WebPaige')
      */
     $rootScope.browser = $.browser;
 
-    angular.extend($rootScope.browser, {
-      screen: $window.screen
-    });
+    angular.extend($rootScope.browser, { screen: $window.screen });
 
     if ($rootScope.browser.ios)
     {
@@ -1519,10 +1520,13 @@ angular.module('WebPaige')
 
     $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
-    angular.forEach(angular.fromJson(Storage.get('states')), function (state)
-    {
-      $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
-    });
+    angular.forEach(
+      angular.fromJson(Storage.get('states')),
+      function (state)
+      {
+        $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+      }
+    );
 
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
@@ -1532,9 +1536,7 @@ angular.module('WebPaige')
     }
     else
     {
-      Storage.add('registeredNotifications', angular.toJson({
-        timeLineDragging: true
-      }));
+      Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
     }
 
     $rootScope.registerNotification = function (setting, value)
@@ -1601,10 +1603,7 @@ angular.module('WebPaige')
         };
       },
 
-      off: function ()
-      {
-        $rootScope.loading.status = false;
-      }
+      off: function () { $rootScope.loading.status = false }
     };
 
     $rootScope.statusBar.init();
@@ -1676,7 +1675,7 @@ angular.module('WebPaige')
         setTimeout(function ()
         {
           $rootScope.notification.status = false;
-        }, 5000);
+        }, $rootScope.config.timers.NOTIFICATION_DELAY);
       }
     };
 
@@ -1691,7 +1690,7 @@ angular.module('WebPaige')
       switch (options.section)
       {
         case 'groups':
-          $rootScope.$broadcast('fireGroupDelete', {id: options.id});
+          $rootScope.$broadcast('fireGroupDelete', { id: options.id });
           break;
       }
     };
@@ -2529,1051 +2528,1122 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
 /**
  * Slots
  */
-.factory('Slots', 
-[
-	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Dater', 'Sloter', 'Stats',
-	function ($rootScope, $config, $resource, $q, Storage, Dater, Sloter, Stats) 
-	{
-	  /**
-	   * Define Slot Resource from back-end
-	   */
-	  var Slots = $resource(
-	    $config.host + '/askatars/:user/slots',
-	    {
-	      user: ''
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {start:'', end:''},
-	        isArray: true
-	      },
-	      change: {
-	        method: 'PUT',
-	        params: {start:'', end:'', text:'', recursive:''}        
-	      },
-	      save: {
-	        method: 'POST',
-	        params: {}
-	      },
-	      remove: {
-	        method: 'DELETE',
-	        params: {}
-	      }
-	    }
-	  );
-
-
-	  /**
-	   * Group aggs resource
-	   */
-	  var Aggs = $resource(
-	    $config.host + '/calc_planning/:id',
-	    {
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {id: '', start:'', end:''},
-	        isArray: true
-	      }
-	    }
-	  );
-
-
-	  /**
-	   * Wishes resource
-	   */
-	  var Wishes = $resource(
-	    $config.host + '/network/:id/wish',
-	    {
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {id: '', start:'', end:''},
-	        isArray: true
-	      },
-	      save: {
-	        method: 'PUT',
-	        params: {id: ''}
-	      }
-	    }
-	  );
-
-
-	  /**
-     * Members resource
-	   */
-	  var MemberSlots = $resource(
-	    $config.host + '/network/:id/member/slots2',
-	    {
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {id: '', start:'', end:''}
-	        // ,
-	        // isArray: true
-	      }
-	    }
-	  );
-
-
-	  /**
-	   * Get group wishes
-	   */
-	  Slots.prototype.wishes = function (options) 
-	  {
-	    var deferred  = $q.defer(),
-	        params    = {
-	          id:     options.id,
-	          start:  options.start,
-	          end:    options.end
-	        };
-
-	    Wishes.query(params, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Set group wish
-	   */
-	  Slots.prototype.setWish = function (options) 
-	  {
-	    var deferred = $q.defer(),
-	        params = {
-	          start:      options.start,
-	          end:        options.end,
-	          wish:       options.wish,
-	          recurring:  options.recursive
-	        };
-
-	    Wishes.save({id: options.id}, params, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get group aggs
-	   */
-    Slots.prototype.aggs = function (options)
+  .factory(
+  'Slots',
+  [
+    '$rootScope', '$config', '$resource', '$q', 'Storage', 'Dater', 'Sloter', 'Stats',
+    function ($rootScope, $config, $resource, $q, Storage, Dater, Sloter, Stats)
     {
-      var deferred  = $q.defer(),
-          calls     = [];
-
-      if ($rootScope.config.timeline.config.divisions.length > 0)
-      {
-        angular.forEach($rootScope.config.timeline.config.divisions, function (division)
-        {
-          if (division.id !== 'all')
+      /**
+       * Define Slot Resource from back-end
+       */
+      var Slots = $resource(
+          $config.host + '/askatars/:user/slots',
           {
-            var params = {
-              id:     options.id,
-              start:  options.start,
-              end:    options.end,
-              stateGroup: division.id,
-              division: {
-                id:    division.id,
-                label: division.label
-              }
+            user: ''
+          },
+          {
+            query:  {
+              method:  'GET',
+              params:  {start: '', end: ''},
+              isArray: true
+            },
+            change: {
+              method: 'PUT',
+              params: {start: '', end: '', text: '', recursive: ''}
+            },
+            save:   {
+              method: 'POST',
+              params: {}
+            },
+            remove: {
+              method: 'DELETE',
+              params: {}
+            }
+          }
+      );
+
+
+      /**
+       * Group aggs resource
+       */
+      var Aggs = $resource(
+          $config.host + '/calc_planning/:id',
+          {
+          },
+          {
+            query: {
+              method:  'GET',
+              params:  {id: '', start: '', end: ''},
+              isArray: true
+            }
+          }
+      );
+
+
+      /**
+       * Wishes resource
+       */
+      var Wishes = $resource(
+          $config.host + '/network/:id/wish',
+          {
+          },
+          {
+            query: {
+              method:  'GET',
+              params:  {id: '', start: '', end: ''},
+              isArray: true
+            },
+            save:  {
+              method: 'PUT',
+              params: {id: ''}
+            }
+          }
+      );
+
+
+      /**
+       * Members resource
+       */
+      var MemberSlots = $resource(
+          $config.host + '/network/:id/member/slots2',
+          {
+          },
+          {
+            query: {
+              method: 'GET',
+              params: {id: '', start: '', end: ''}
+              // ,
+              // isArray: true
+            }
+          }
+      );
+
+
+      /**
+       * Get group wishes
+       */
+      Slots.prototype.wishes = function (options)
+      {
+        var deferred = $q.defer(),
+            params = {
+              id:    options.id,
+              start: options.start,
+              end:   options.end
             };
 
-            calls.push(Slots.prototype.agg(params));
+        Wishes.query(
+          params,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
           }
-        });
-      }
-      else
-      {
-        calls.push(Slots.prototype.agg({
-          id:     options.id,
-          start:  options.start,
-          end:    options.end
-        }));
-      }
+        );
 
-      $q.all(calls)
-        .then(function (result)
-        {
-          deferred.resolve(result);
-        });
-
-      return deferred.promise;
-    };
-
-
-    /**
-     * Fetch calculated planning of one group
-     */
-    Slots.prototype.agg = function (options)
-    {
-      var deferred = $q.defer();
-
-      Aggs.query(options,
-        function (result)
-        {
-          var stats = Stats.aggs(result);
-
-          deferred.resolve({
-            id:       options.id,
-            division: options.division,
-            data:     result,
-            ratios:   stats.ratios,
-            durations: stats.durations
-          });
-        },
-        function (error)
-        {
-          deferred.resolve({error: error});
-        });
-
-      return deferred.promise;
-    };
-
-
-	  /**
-	   * Get group aggs for pie charts
-	   */
-	  Slots.prototype.pie = function (options) 
-	  {
-	    var deferred  = $q.defer(),
-	        now       = Math.floor(Date.now().getTime() / 1000),
-	        periods   = Dater.getPeriods(),
-	        current   = Dater.current.week(),
-	        weeks     = {
-	          current:  {
-	            period:   periods.weeks[current],
-	            data:     [],
-	            shortages:[]
-	          },
-	          next: {
-	            period:   periods.weeks[current + 1],
-	            data:     [],
-	            shortages:[]
-	          }
-	        },
-	        slicer = weeks.current.period.last.timeStamp;
-
-      var params = {
-        id:     options.id,
-        start:  weeks.current.period.first.timeStamp / 1000,
-        end:    weeks.next.period.last.timeStamp / 1000
+        return deferred.promise;
       };
 
-      if (options.division != 'both') params.stateGroup = options.division;
 
-	    Aggs.query(params,
-	      function (results)
-	      {
-          deferred.resolve(processPies(results));
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-      function processPies (results)
+      /**
+       * Set group wish
+       */
+      Slots.prototype.setWish = function (options)
       {
-        var state;
+        var deferred = $q.defer(),
+            params = {
+              start:     options.start,
+              end:       options.end,
+              wish:      options.wish,
+              recurring: options.recursive
+            };
 
-        // Check whether it is only one
-        if (results.length > 1)
+        Wishes.save(
+          {id: options.id}, params,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get group aggs
+       */
+      Slots.prototype.aggs = function (options)
+      {
+        var deferred = $q.defer(),
+            calls = [];
+
+        if ($rootScope.config.timeline.config.divisions.length > 0)
         {
-          angular.forEach(results, function (slot)
-          {
-            // Fish out the current
-            if (now >= slot.start && now <= slot.end) state = slot;
-
-            // Slice from end of first week
-            if (slicer <= slot.start * 1000)
+          angular.forEach(
+            $rootScope.config.timeline.config.divisions, function (division)
             {
-              weeks.next.data.push(slot);
-            }
-            else if (slicer >= slot.start * 1000)
-            {
-              weeks.current.data.push(slot)
-            }
-          });
+              if (division.id !== 'all')
+              {
+                var params = {
+                  id:         options.id,
+                  start:      options.start,
+                  end:        options.end,
+                  stateGroup: division.id,
+                  division:   {
+                    id:    division.id,
+                    label: division.label
+                  }
+                };
 
-          // slice extra timestamp from the last of current week data set and add that to week next
-          var last        = weeks.current.data[weeks.current.data.length-1],
-              next        = weeks.next.data[0],
-              difference  = (last.end * 1000 - slicer) / 1000,
-              currents    = [];
-
-          // if start of current of is before the start reset it to start
-          weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
-
-          // if there is a leak to next week adjust the last one of current
-          // week and add new slot to next week with same values
-          if (difference > 0)
-          {
-            last.end = slicer / 1000;
-
-            weeks.next.data.unshift({
-              diff:   last.diff,
-              start:  slicer / 1000,
-              end:    last.end,
-              wish:   last.wish
-            });
-          }
-
-          // shortages and back-end gives more than asked sometimes, with returning
-          // values out of the range which being asked !
-          angular.forEach(weeks.current.data, function (slot)
-          {
-            if (slot.end - slot.start > 0) currents.push(slot);
-
-            // add to shortages
-            if (slot.diff < 0) weeks.current.shortages.push(slot);
-          });
-
-          // reset to start of current weekly begin to week begin
-          currents[0].start = weeks.current.period.first.timeStamp / 1000;
-
-          // add to shortages
-          angular.forEach(weeks.next.data, function (slot)
-          {
-            if (slot.diff < 0) weeks.next.shortages.push(slot);
-          });
-
-          return {
-            id:       options.id,
-            division: options.division,
-            name:     options.name,
-            weeks:    {
-              current: {
-                data:   currents,
-                state:  state,
-                shortages: weeks.current.shortages,
-                start: {
-                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.current.period.first.timeStamp
-                },
-                end: {
-                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.current.period.last.timeStamp
-                },
-                ratios: Stats.pies(currents)
-              },
-              next: {
-                data:   weeks.next.data,
-                shortages: weeks.next.shortages,
-                start: {
-                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.next.period.first.timeStamp
-                },
-                end: {
-                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.next.period.last.timeStamp
-                },
-                ratios: Stats.pies(weeks.next.data)
+                calls.push(Slots.prototype.agg(params));
               }
-            }
-          }
+            });
         }
         else
         {
-          if (results[0].diff == null) results[0].diff = 0;
-          if (results[0].wish == null) results[0].wish = 0;
+          calls.push(
+            Slots.prototype.agg(
+              {
+                id:    options.id,
+                start: options.start,
+                end:   options.end
+              }));
+        }
 
-          var currentWeek = [{
-              start:  weeks.current.period.first.timeStamp / 1000,
-              end:    weeks.current.period.last.timeStamp / 1000,
-              wish:   results[0].wish,
-              diff:   results[0].diff
-            }],
-            nextWeek = [{
-              start:  weeks.next.period.first.timeStamp / 1000,
-              end:    weeks.next.period.last.timeStamp / 1000,
-              wish:   results[0].wish,
-              diff:   results[0].diff
-            }];
+        $q.all(calls)
+          .then(
+          function (result)
+          {
+            deferred.resolve(result);
+          });
 
-          if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
-          if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+        return deferred.promise;
+      };
 
-          return {
-            id:       options.id,
-            division: options.division,
-            name:     options.name,
-            weeks:    {
+
+      /**
+       * Fetch calculated planning of one group
+       */
+      Slots.prototype.agg = function (options)
+      {
+        var deferred = $q.defer();
+
+        Aggs.query(
+          options,
+          function (result)
+          {
+            var stats = Stats.aggs(result);
+
+            deferred.resolve(
+              {
+                id:        options.id,
+                division:  options.division,
+                data:      result,
+                ratios:    stats.ratios,
+                durations: stats.durations
+              });
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          });
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get group aggs for pie charts
+       */
+      Slots.prototype.pie = function (options)
+      {
+        var deferred = $q.defer(),
+            now = Math.floor(Date.now().getTime() / 1000),
+            periods = Dater.getPeriods(),
+            current = Dater.current.week(),
+            weeks = {
               current: {
-                data: currentWeek,
-                state: currentWeek,
-                shortages: weeks.current.shortages,
-                start: {
-                  date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.current.period.first.timeStamp
-                },
-                end: {
-                  date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.current.period.last.timeStamp
-                },
-                ratios: Stats.pies(currentWeek)
+                period:    periods.weeks[current],
+                data:      [],
+                shortages: []
               },
-              next: {
-                data: nextWeek,
-                shortages: weeks.next.shortages,
-                start: {
-                  date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.next.period.first.timeStamp
+              next:    {
+                period:    periods.weeks[current + 1],
+                data:      [],
+                shortages: []
+              }
+            },
+            slicer = weeks.current.period.last.timeStamp;
+
+        var params = {
+          id: options.id,
+          start: weeks.current.period.first.timeStamp / 1000,
+          end: weeks.next.period.last.timeStamp / 1000
+        };
+
+        if (options.division != 'both') params.stateGroup = options.division;
+
+        Aggs.query(
+          params,
+          function (results)
+          {
+            deferred.resolve(processPies(results));
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        function processPies (results)
+        {
+          var state;
+
+          // Check whether it is only one
+          if (results.length > 1)
+          {
+            angular.forEach(
+              results, function (slot)
+              {
+                // Fish out the current
+                if (now >= slot.start && now <= slot.end) state = slot;
+
+                // Slice from end of first week
+                if (slicer <= slot.start * 1000)
+                {
+                  weeks.next.data.push(slot);
+                }
+                else if (slicer >= slot.start * 1000)
+                {
+                  weeks.current.data.push(slot)
+                }
+              });
+
+            // slice extra timestamp from the last of current week data set and add that to week next
+            var last = weeks.current.data[weeks.current.data.length - 1],
+                next = weeks.next.data[0],
+                difference = (last.end * 1000 - slicer) / 1000,
+                currents = [];
+
+            // if start of current of is before the start reset it to start
+            weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+
+            // if there is a leak to next week adjust the last one of current
+            // week and add new slot to next week with same values
+            if (difference > 0)
+            {
+              last.end = slicer / 1000;
+
+              weeks.next.data.unshift(
+                {
+                  diff: last.diff,
+                  start: slicer / 1000,
+                  end:  last.end,
+                  wish: last.wish
+                });
+            }
+
+            // shortages and back-end gives more than asked sometimes, with returning
+            // values out of the range which being asked !
+            angular.forEach(
+              weeks.current.data, function (slot)
+              {
+                if (slot.end - slot.start > 0) currents.push(slot);
+
+                // add to shortages
+                if (slot.diff < 0) weeks.current.shortages.push(slot);
+              });
+
+            // reset to start of current weekly begin to week begin
+            currents[0].start = weeks.current.period.first.timeStamp / 1000;
+
+            // add to shortages
+            angular.forEach(
+              weeks.next.data, function (slot)
+              {
+                if (slot.diff < 0) weeks.next.shortages.push(slot);
+              });
+
+            return {
+              id:       options.id,
+              division: options.division,
+              name:     options.name,
+              weeks:    {
+                current: {
+                  data:      currents,
+                  state:     state,
+                  shortages: weeks.current.shortages,
+                  start:     {
+                    date:      new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.current.period.first.timeStamp
+                  },
+                  end:       {
+                    date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.current.period.last.timeStamp
+                  },
+                  ratios:    Stats.pies(currents)
                 },
-                end: {
-                  date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-                  timeStamp:  weeks.next.period.last.timeStamp
-                },
-                ratios: Stats.pies(nextWeek)
+                next:    {
+                  data:      weeks.next.data,
+                  shortages: weeks.next.shortages,
+                  start:     {
+                    date:      new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.next.period.first.timeStamp
+                  },
+                  end:       {
+                    date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.next.period.last.timeStamp
+                  },
+                  ratios:    Stats.pies(weeks.next.data)
+                }
               }
             }
           }
+          else
+          {
+            if (results[0].diff == null) results[0].diff = 0;
+            if (results[0].wish == null) results[0].wish = 0;
+
+            var currentWeek = [
+                  {
+                    start: weeks.current.period.first.timeStamp / 1000,
+                    end: weeks.current.period.last.timeStamp / 1000,
+                    wish: results[0].wish,
+                    diff: results[0].diff
+                  }
+                ],
+                nextWeek = [
+                  {
+                    start: weeks.next.period.first.timeStamp / 1000,
+                    end: weeks.next.period.last.timeStamp / 1000,
+                    wish: results[0].wish,
+                    diff: results[0].diff
+                  }
+                ];
+
+            if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+            if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+
+            return {
+              id:       options.id,
+              division: options.division,
+              name:     options.name,
+              weeks:    {
+                current: {
+                  data:      currentWeek,
+                  state:     currentWeek,
+                  shortages: weeks.current.shortages,
+                  start:     {
+                    date:      new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.current.period.first.timeStamp
+                  },
+                  end:       {
+                    date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.current.period.last.timeStamp
+                  },
+                  ratios:    Stats.pies(currentWeek)
+                },
+                next:    {
+                  data:      nextWeek,
+                  shortages: weeks.next.shortages,
+                  start:     {
+                    date:      new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.next.period.first.timeStamp
+                  },
+                  end:       {
+                    date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                    timeStamp: weeks.next.period.last.timeStamp
+                  },
+                  ratios:    Stats.pies(nextWeek)
+                }
+              }
+            }
+          }
+
         }
 
-      }
-
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Slots percentage calculator
-	   */
-	  var preloader = {
-
-	  	/**
-	  	 * Init preloader
-	  	 */
-	  	init: function (total)
-	  	{
-	  		$rootScope.app.preloader = {
-	  			status: 	true,
-	  			total: 		total,
-	  			count: 		0,
-	  			started: 	Date.now().getTime()
-	  		}
-	  	},
-
-	  	/**
-	  	 * Countdown
-	  	 */
-	  	count: function ()
-	  	{
-	  		$rootScope.app.preloader.count = Math.abs(Math.floor( $rootScope.app.preloader.count + (100 / $rootScope.app.preloader.total) ));
-
-	  		$rootScope.app.preloader.stopped = Date.now().getTime();
-	  	}
-	  };
-
-
-    /**
-     * Get current state of the user
-     */
-    Slots.prototype.currentState = function ()
-    {
       /**
-       * TODO: Use mathematical formula to calculate it
+       * Slots percentage calculator
        */
-      var now;
+      var preloader = {
 
-      now = String(Date.now().getTime());
-      now = Number(now.substr(0, now.length - 3));
-
-      var deferred  = $q.defer(),
-          params    = {
-            user:   angular.fromJson(Storage.get('resources')).uuid,
-            start:  now,
-            end:    now + 1
-          };
-
-      Slots.query(params,
-        function (result)
+        /**
+         * Init preloader
+         */
+        init: function (total)
         {
-          deferred.resolve(
-            (result.length > 0) ?
+          $rootScope.app.preloader = {
+            status:  true,
+            total:   total,
+            count:   0,
+            started: Date.now().getTime()
+          }
+        },
+
+        /**
+         * Countdown
+         */
+        count: function ()
+        {
+          $rootScope.app.preloader.count = Math.abs(Math.floor($rootScope.app.preloader.count + (100 / $rootScope.app.preloader.total)));
+
+          $rootScope.app.preloader.stopped = Date.now().getTime();
+        }
+      };
+
+
+      /**
+       * Get current state of the user
+       */
+      Slots.prototype.currentState = function ()
+      {
+        /**
+         * TODO: Use mathematical formula to calculate it
+         */
+        var now;
+
+        now = String(Date.now().getTime());
+        now = Number(now.substr(0, now.length - 3));
+
+        var deferred = $q.defer(),
+            params = {
+              user:  angular.fromJson(Storage.get('resources')).uuid,
+              start: now,
+              end: now + 1
+            };
+
+        Slots.query(
+          params,
+          function (result)
+          {
+            deferred.resolve(
+              (result.length > 0) ?
               $rootScope.config.statesall[result[0]['text']] :
               {
                 color: 'gray',
-                label: 'Geen planning'
+                label: 'Mogelijk inzetbaar'
               }
-          );
-        });
-
-      return deferred.promise;
-    };
-
-
-	  /**
-	   * Get slot bundels user, group aggs and members
-	   */
-	  Slots.prototype.all = function (options) 
-	  {
-	    /**
-	     * Define vars
-	     */
-	    var deferred  = $q.defer(),
-	        periods   = Dater.getPeriods(),
-	        params    = {
-	          user:   angular.fromJson(Storage.get('resources')).uuid, // user hardcoded!!
-	          start:  options.stamps.start / 1000,
-	          end:    options.stamps.end / 1000
-	        },
-	        data      = {};
-	    
-	    Slots.query(params, 
-	      function (user) 
-	      {
-          angular.forEach(user, function (slot)
-          {
-            if (!slot.recursive)
-            {
-              slot.recursive = false;
-            }
+            );
           });
 
-	      	/**
-	      	 * If group is on
-	      	 */
-	        if (options.layouts.group)
-	        {
-	          var groupParams = {
-	              id:     options.groupId,
-	              start:  params.start,
-	              end:    params.end,
-	              month:  options.month
-	          };
-
-	          // if (options.division != 'all') groupParams.division = options.division;
-
-	          Slots.prototype.aggs(groupParams)
-	          .then(function (aggs)
-	          {
-              /**
-	          	 * If members are on
-	          	 */
-	            if (options.layouts.members)
-	            {
-	              var allMembers  = angular.fromJson(Storage.get(options.groupId)),
-	                  calls       = [];
+        return deferred.promise;
+      };
 
 
-                // console.log('all members ->', allMembers);
+      /**
+       * Get slot bundels user, group aggs and members
+       */
+      Slots.prototype.all = function (options)
+      {
+        /**
+         * Define vars
+         */
+        var deferred = $q.defer(),
+        periods = Dater.getPeriods(),
+        params = {
+          user: angular.fromJson(Storage.get('resources')).uuid, // user hardcoded!!
+          start: options.stamps.start / 1000,
+          end: options.stamps.end / 1000
+        },
+        data = {};
 
-	              /**
-	               * New bundled call
-	               */
-						    MemberSlots.query(
-							    {
-							    	id: 		options.groupId,
-						    		start: 	params.start,
-						    		end: 		params.end,
-						    		type: 	'both'
-						    	},
-						      function (members) 
-						      {
-						        var mems = [];
+        Slots.query(
+          params,
+          function (user)
+          {
+            angular.forEach(
+              user, function (slot)
+              {
+                if (! slot.recursive)
+                {
+                  slot.recursive = false;
+                }
+              });
 
-						        angular.forEach(members, function (mdata, index)
-						      	{
-						      		angular.forEach(mdata, function (tslot)
-						      		{
-						      			tslot.text = tslot.state;	
-						      		});
+            /**
+             * If group is on
+             */
+            if (options.layouts.group)
+            {
+              var groupParams = {
+                id:    options.groupId,
+                start: params.start,
+                end:   params.end,
+                month: options.month
+              };
 
-                      var lastName;
+              // if (options.division != 'all') groupParams.division = options.division;
 
-                      angular.forEach(allMembers, function (mem)
+              Slots.prototype.aggs(groupParams)
+                .then(
+                function (aggs)
+                {
+                  /**
+                   * If members are on
+                   */
+                  if (options.layouts.members)
+                  {
+                    var allMembers = angular.fromJson(Storage.get(options.groupId)),
+                        calls = [];
+
+
+                    // console.log('all members ->', allMembers);
+
+                    /**
+                     * New bundled call
+                     */
+                    MemberSlots.query(
                       {
-                        if (index == mem.uuid)
-                        {
-                          lastName = mem.resources.lastName;
+                        id:    options.groupId,
+                        start: params.start,
+                        end:   params.end,
+                        type:  'both'
+                      },
+                      function (members)
+                      {
+                        var mems = [];
+
+                        angular.forEach(
+                          members, function (mdata, index)
+                          {
+                            angular.forEach(
+                              mdata, function (tslot)
+                              {
+                                tslot.text = tslot.state;
+                              });
+
+                            var lastName;
+
+                            angular.forEach(
+                              allMembers, function (mem)
+                              {
+                                if (index == mem.uuid)
+                                {
+                                  lastName = mem.resources.lastName;
+                                }
+                              });
+
+                            mems.push(
+                              {
+                                id:       index,
+                                lastName: lastName,
+                                data:     mdata,
+                                stats:    Stats.member(mdata)
+                              })
+                          });
+
+
+                        deferred.resolve(
+                          {
+                            user:    user,
+                            groupId: options.groupId,
+                            aggs:    aggs,
+                            members: mems,
+                            synced:  new Date().getTime(),
+                            periods: {
+                              start: options.stamps.start,
+                              end:   options.stamps.end
+                            }
+                          });
+                      },
+                      function (error)
+                      {
+                        deferred.resolve({error: error});
+                      }
+                    );
+
+                    /**
+                     * Run the preloader
+                     */
+                    // preloader.init(members.length);
+
+                    // angular.forEach(members, function (member, index)
+                    // {
+                    // 	calls.push(Slots.prototype.user({
+                    //     user: member.uuid,
+                    //     start:params.start,
+                    //     end:  params.end,
+                    //     type: 'both'
+                    //   }));
+                    // });
+
+                    // $q.all(calls)
+                    // .then(function (members)
+                    // {
+                    //   deferred.resolve({
+                    //     user:     user,
+                    //     groupId:  options.groupId,
+                    //     aggs:     aggs,
+                    //     members:  members,
+                    //     synced:   new Date().getTime(),
+                    //     periods: {
+                    //       start:  options.stamps.start,
+                    //       end:    options.stamps.end
+                    //     }
+                    //   });
+                    // });
+                  }
+                  else
+                  {
+                    deferred.resolve(
+                      {
+                        user:    user,
+                        groupId: options.groupId,
+                        aggs:    aggs,
+                        synced:  new Date().getTime(),
+                        periods: {
+                          start: options.stamps.start,
+                          end:   options.stamps.end
                         }
                       });
+                  }
+                });
+            }
+            else
+            {
+              deferred.resolve(
+                {
+                  user:    user,
+                  synced:  new Date().getTime(),
+                  periods: {
+                    start: options.stamps.start,
+                    end:   options.stamps.end
+                  }
+                });
+            }
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
 
-						      		mems.push({
-							          id:     index,
-                        lastName: lastName,
-							          data:   mdata,
-							          stats:  Stats.member(mdata)
-							        })
-						      	});
-
-
-		                deferred.resolve({
-		                  user:     user,
-		                  groupId:  options.groupId,
-		                  aggs:     aggs,
-		                  members:  mems,
-		                  synced:   new Date().getTime(),
-		                  periods: {
-		                    start:  options.stamps.start,
-		                    end:    options.stamps.end
-		                  }
-		                });
-						      },
-						      function (error)
-						      {
-						        deferred.resolve({error: error});
-						      }
-						    );
-
-	              /**
-	               * Run the preloader
-	               */
-	              // preloader.init(members.length);
-
-	              // angular.forEach(members, function (member, index)
-	              // {
-	              // 	calls.push(Slots.prototype.user({
-	              //     user: member.uuid,
-	              //     start:params.start,
-	              //     end:  params.end,
-	              //     type: 'both'
-	              //   }));
-	              // });
-
-	              // $q.all(calls)
-	              // .then(function (members)
-	              // {
-	              //   deferred.resolve({
-	              //     user:     user,
-	              //     groupId:  options.groupId,
-	              //     aggs:     aggs,
-	              //     members:  members,
-	              //     synced:   new Date().getTime(),
-	              //     periods: {
-	              //       start:  options.stamps.start,
-	              //       end:    options.stamps.end
-	              //     }
-	              //   });
-	              // });
-	            }
-	            else
-	            {
-	              deferred.resolve({
-	                user:     user,
-	                groupId:  options.groupId,
-	                aggs:     aggs,
-	                synced:   new Date().getTime(),
-	                periods: {
-	                  start:  options.stamps.start,
-	                  end:    options.stamps.end
-	                }
-	              });
-	            }
-	          });
-	        }
-	        else
-	        {
-	          deferred.resolve({
-	            user:   user,
-	            synced: new Date().getTime(),
-	            periods: {
-	              start:  options.stamps.start,
-	              end:    options.stamps.end
-	            }
-	          });
-	        }
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Fetch user slots
-	   * This is needed as a seperate promise object
-	   * for making the process wait in Slots.all call bundle
-	   */
-	  Slots.prototype.user = function (params) 
-	  {
-	    var deferred = $q.defer();
+      /**
+       * Get member availabilities
+       */
+      Slots.prototype.getMemberAvailabilities = function (groupID, divisionID)
+      {
+        var deferred = $q.defer();
 
-	    Slots.query(params, 
-	      function (result) 
-	      {
-	      	/**
-	      	 * Countdown on preloader
-	      	 */
-					preloader.count();
+        var now = Math.floor(Date.now().getTime() / 1000);
 
-	        deferred.resolve({
-	          id:     params.user,
-	          data:   result,
-	          stats:  Stats.member(result)
-	        });
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        // console.log('groupID ->', groupID);
 
-	    return deferred.promise;
-	  };
+        MemberSlots.query(
+          {
+            id:    groupID,
+            type:  divisionID,
+            start: now,
+            end: now + 1000
+          },
+          function (members)
+          {
+            deferred.resolve(
+              {
+                members: members,
+                synced:  now
+              }
+            );
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
 
-
-	  /**
-	   * Return local slots
-	   */
-	  Slots.prototype.local = function () { return angular.fromJson(Storage.get('slots')); };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Slot adding process
-	   */
-	  Slots.prototype.add = function (slot, user) 
-	  {
-	    var deferred = $q.defer();
+      /**
+       * Fetch user slots
+       * This is needed as a seperate promise object
+       * for making the process wait in Slots.all call bundle
+       */
+      Slots.prototype.user = function (params)
+      {
+        var deferred = $q.defer();
 
-	    Slots.save({user: user}, slot,
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        Slots.query(
+          params,
+          function (result)
+          {
+            /**
+             * Countdown on preloader
+             */
+            preloader.count();
 
-	    return deferred.promise;
-	  };
+            deferred.resolve(
+              {
+                id:    params.user,
+                data:  result,
+                stats: Stats.member(result)
+              });
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
 
-
-	  /**
-	   * TODO: Add back-end
-	   * Check whether slot is being replaced on top of an another
-	   * slot of same sort. If so combine them silently and show them as
-	   * one slot but keep aligned with back-end, like two or more slots 
-	   * in real.
-	   * 
-	   * Slot changing process
-	   */
-	  Slots.prototype.change = function (original, changed, user) 
-	  {
-	    var deferred = $q.defer();
-
-	    Slots.change(angular.extend(naturalize(changed), {user: user}), naturalize(original), 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Slot delete process
-	   */
-	  Slots.prototype.remove = function (slot, user) 
-	  {
-	    var deferred = $q.defer();
-
-	    Slots.remove(angular.extend(naturalize(slot), {user: user}), 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-	  
-
-	  /**
-	   * Naturalize Slot for back-end injection
-	   */
-	  function naturalize (slot)
-	  {
-	    var content = angular.fromJson(slot.content);
-
-	    return {
-	      start:      Math.floor(new Date(slot.start).getTime() / 1000),
-	      end:        Math.floor(new Date(slot.end).getTime() / 1000),
-	      recursive:  content.recursive,
-	      text:       content.state,
-	      id:         content.id
-	    }
-	  }
+      /**
+       * Return local slots
+       */
+      Slots.prototype.local = function () { return angular.fromJson(Storage.get('slots')); };
 
 
-	  /**
-	   * Check whether slot extends from saturday to sunday and if recursive?
-	   * 
-	   * Produce timestamps for sunday 00:00 am through the year and
-	   * check whether intended to change recursive slot has one of those
-	   * timestamps, if so slice slot based on midnight and present as two
-	   * slots in timeline.
-	   */
-	  // function checkForSatSun (slot) { };
+      /**
+       * Slot adding process
+       */
+      Slots.prototype.add = function (slot, user)
+      {
+        var deferred = $q.defer();
+
+        Slots.save(
+          {user: user}, slot,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Check for overlapping slots exists?
-	   * 
-	   * Prevent any overlapping slots by adding new slots or changing
-	   * the current ones in front-end so back-end is almost always aligned with
-	   * front-end.
-	   */
-	  // function preventOverlaps (slot) { };
+      /**
+       * TODO: Add back-end
+       * Check whether slot is being replaced on top of an another
+       * slot of same sort. If so combine them silently and show them as
+       * one slot but keep aligned with back-end, like two or more slots
+       * in real.
+       *
+       * Slot changing process
+       */
+      Slots.prototype.change = function (original, changed, user)
+      {
+        var deferred = $q.defer();
+
+        Slots.change(
+          angular.extend(naturalize(changed), {user: user}), naturalize(original),
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Slice a slot from a give point
-	   */
-	  // function slice (slot, point) { };
+      /**
+       * Slot delete process
+       */
+      Slots.prototype.remove = function (slot, user)
+      {
+        var deferred = $q.defer();
+
+        Slots.remove(
+          angular.extend(naturalize(slot), {user: user}),
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Combine two slots
-	   */
-	  // function combine (slots) { };
+      /**
+       * Naturalize Slot for back-end injection
+       */
+      function naturalize (slot)
+      {
+        var content = angular.fromJson(slot.content);
+
+        return {
+          start:     Math.floor(new Date(slot.start).getTime() / 1000),
+          end:       Math.floor(new Date(slot.end).getTime() / 1000),
+          recursive: content.recursive,
+          text:      content.state,
+          id:        content.id
+        }
+      }
 
 
-	  return new Slots;
+      /**
+       * Check whether slot extends from saturday to sunday and if recursive?
+       *
+       * Produce timestamps for sunday 00:00 am through the year and
+       * check whether intended to change recursive slot has one of those
+       * timestamps, if so slice slot based on midnight and present as two
+       * slots in timeline.
+       */
+      // function checkForSatSun (slot) { };
 
 
-    /**
-     * Get group aggs for pie charts
-     */
-//    Slots.prototype.pie = function (options)
-//    {
-//      var deferred  = $q.defer(),
-//        now       = Math.floor(Date.now().getTime() / 1000),
-//        periods   = Dater.getPeriods(),
-//        current   = Dater.current.week(),
-//        weeks     = {
-//          current:  {
-//            period:   periods.weeks[current],
-//            data:     [],
-//            shortages:[]
-//          },
-//          next: {
-//            period:   periods.weeks[current + 1],
-//            data:     [],
-//            shortages:[]
-//          }
-//        },
-//        slicer = weeks.current.period.last.timeStamp;
-//
-//
-//
-//
-//
-//      Aggs.query(
-//        {
-//          id:     options.id,
-//          start:  weeks.current.period.first.timeStamp / 1000,
-//          end:    weeks.next.period.last.timeStamp / 1000
-//        },
-//        function (results)
-//        {
-//          var state;
-//
-////          console.warn('results ->', results);
-//
-//          // Check whether it is only one
-//          if (results.length > 1)
-//          {
-//            angular.forEach(results, function (slot)
-//            {
-//              // Fish out the current
-//              if (now >= slot.start && now <= slot.end) state = slot;
-//
-//              // Slice from end of first week
-//              if (slicer <= slot.start * 1000)
-//              {
-//                weeks.next.data.push(slot);
-//              }
-//              else if (slicer >= slot.start * 1000)
-//              {
-//                weeks.current.data.push(slot)
-//              }
-//            });
-//
-//            // slice extra timestamp from the last of current week dataset and add that to week next
-//            var last        = weeks.current.data[weeks.current.data.length-1],
-//              next        = weeks.next.data[0],
-//              difference  = (last.end * 1000 - slicer) / 1000,
-//              currents    = [];
-//
-//            // if start of current of is before the start reset it to start
-//            weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
-//
-//            // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
-//            if (difference > 0)
-//            {
-//              last.end = slicer / 1000;
-//
-//              weeks.next.data.unshift({
-//                diff:   last.diff,
-//                start:  slicer / 1000,
-//                end:    last.end,
-//                wish:   last.wish
-//              });
-//            }
-//
-//            // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
-//            angular.forEach(weeks.current.data, function (slot)
-//            {
-//              if (slot.end - slot.start > 0) currents.push(slot);
-//
-//              // add to shortages
-//              if (slot.diff < 0) weeks.current.shortages.push(slot);
-//            });
-//
-//            // reset to start of current weekly begin to week begin
-//            currents[0].start = weeks.current.period.first.timeStamp / 1000;
-//
-//            // add to shortages
-//            angular.forEach(weeks.next.data, function (slot)
-//            {
-//              if (slot.diff < 0) weeks.next.shortages.push(slot);
-//            });
-//
-//            deferred.resolve({
-//              id:       options.id,
-//              name:     options.name,
-//              weeks:    {
-//                current: {
-//                  data:   currents,
-//                  state:  state,
-//                  shortages: weeks.current.shortages,
-//                  start: {
-//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.current.period.first.timeStamp
-//                  },
-//                  end: {
-//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.current.period.last.timeStamp
-//                  },
-//                  ratios: Stats.pies(currents)
-//                },
-//                next: {
-//                  data:   weeks.next.data,
-//                  shortages: weeks.next.shortages,
-//                  start: {
-//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.next.period.first.timeStamp
-//                  },
-//                  end: {
-//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.next.period.last.timeStamp
-//                  },
-//                  ratios: Stats.pies(weeks.next.data)
-//                }
-//              }
-//            });
-//          }
-//          else
-//          {
-//            if (results[0].diff == null) results[0].diff = 0;
-//            if (results[0].wish == null) results[0].wish = 0;
-//
-//            var currentWeek = [{
-//                start:  weeks.current.period.first.timeStamp / 1000,
-//                end:    weeks.current.period.last.timeStamp / 1000,
-//                wish:   results[0].wish,
-//                diff:   results[0].diff
-//              }],
-//              nextWeek = [{
-//                start:  weeks.next.period.first.timeStamp / 1000,
-//                end:    weeks.next.period.last.timeStamp / 1000,
-//                wish:   results[0].wish,
-//                diff:   results[0].diff
-//              }];
-//
-//            if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
-//            if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
-//
-//            deferred.resolve({
-//              id:       options.id,
-//              name:     options.name,
-//              weeks:    {
-//                current: {
-//                  data: currentWeek,
-//                  state: currentWeek,
-//                  shortages: weeks.current.shortages,
-//                  start: {
-//                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.current.period.first.timeStamp
-//                  },
-//                  end: {
-//                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.current.period.last.timeStamp
-//                  },
-//                  ratios: Stats.pies(currentWeek)
-//                },
-//                next: {
-//                  data: nextWeek,
-//                  shortages: weeks.next.shortages,
-//                  start: {
-//                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.next.period.first.timeStamp
-//                  },
-//                  end: {
-//                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
-//                    timeStamp:  weeks.next.period.last.timeStamp
-//                  },
-//                  ratios: Stats.pies(nextWeek)
-//                }
-//              }
-//            });
-//          }
-//        },
-//        function (error)
-//        {
-//          deferred.resolve({error: error});
-//        }
-//      );
-//
-//
-//
-//
-//
-//
-//
-//      return deferred.promise;
-//    };
-	}
-]);;/*jslint node: true */
+      /**
+       * Check for overlapping slots exists?
+       *
+       * Prevent any overlapping slots by adding new slots or changing
+       * the current ones in front-end so back-end is almost always aligned with
+       * front-end.
+       */
+      // function preventOverlaps (slot) { };
+
+
+      /**
+       * Slice a slot from a give point
+       */
+      // function slice (slot, point) { };
+
+
+      /**
+       * Combine two slots
+       */
+      // function combine (slots) { };
+
+
+      return new Slots;
+
+
+      /**
+       * Get group aggs for pie charts
+       */
+      //    Slots.prototype.pie = function (options)
+      //    {
+      //      var deferred  = $q.defer(),
+      //        now       = Math.floor(Date.now().getTime() / 1000),
+      //        periods   = Dater.getPeriods(),
+      //        current   = Dater.current.week(),
+      //        weeks     = {
+      //          current:  {
+      //            period:   periods.weeks[current],
+      //            data:     [],
+      //            shortages:[]
+      //          },
+      //          next: {
+      //            period:   periods.weeks[current + 1],
+      //            data:     [],
+      //            shortages:[]
+      //          }
+      //        },
+      //        slicer = weeks.current.period.last.timeStamp;
+      //
+      //
+      //
+      //
+      //
+      //      Aggs.query(
+      //        {
+      //          id:     options.id,
+      //          start:  weeks.current.period.first.timeStamp / 1000,
+      //          end:    weeks.next.period.last.timeStamp / 1000
+      //        },
+      //        function (results)
+      //        {
+      //          var state;
+      //
+      ////          console.warn('results ->', results);
+      //
+      //          // Check whether it is only one
+      //          if (results.length > 1)
+      //          {
+      //            angular.forEach(results, function (slot)
+      //            {
+      //              // Fish out the current
+      //              if (now >= slot.start && now <= slot.end) state = slot;
+      //
+      //              // Slice from end of first week
+      //              if (slicer <= slot.start * 1000)
+      //              {
+      //                weeks.next.data.push(slot);
+      //              }
+      //              else if (slicer >= slot.start * 1000)
+      //              {
+      //                weeks.current.data.push(slot)
+      //              }
+      //            });
+      //
+      //            // slice extra timestamp from the last of current week dataset and add that to week next
+      //            var last        = weeks.current.data[weeks.current.data.length-1],
+      //              next        = weeks.next.data[0],
+      //              difference  = (last.end * 1000 - slicer) / 1000,
+      //              currents    = [];
+      //
+      //            // if start of current of is before the start reset it to start
+      //            weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
+      //
+      //            // if there is a leak to next week adjust the last one of current week and add new slot to next week with same values
+      //            if (difference > 0)
+      //            {
+      //              last.end = slicer / 1000;
+      //
+      //              weeks.next.data.unshift({
+      //                diff:   last.diff,
+      //                start:  slicer / 1000,
+      //                end:    last.end,
+      //                wish:   last.wish
+      //              });
+      //            }
+      //
+      //            // shortages and back-end gives more than asked sometimes, with returning values out of the range which being asked !
+      //            angular.forEach(weeks.current.data, function (slot)
+      //            {
+      //              if (slot.end - slot.start > 0) currents.push(slot);
+      //
+      //              // add to shortages
+      //              if (slot.diff < 0) weeks.current.shortages.push(slot);
+      //            });
+      //
+      //            // reset to start of current weekly begin to week begin
+      //            currents[0].start = weeks.current.period.first.timeStamp / 1000;
+      //
+      //            // add to shortages
+      //            angular.forEach(weeks.next.data, function (slot)
+      //            {
+      //              if (slot.diff < 0) weeks.next.shortages.push(slot);
+      //            });
+      //
+      //            deferred.resolve({
+      //              id:       options.id,
+      //              name:     options.name,
+      //              weeks:    {
+      //                current: {
+      //                  data:   currents,
+      //                  state:  state,
+      //                  shortages: weeks.current.shortages,
+      //                  start: {
+      //                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.current.period.first.timeStamp
+      //                  },
+      //                  end: {
+      //                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.current.period.last.timeStamp
+      //                  },
+      //                  ratios: Stats.pies(currents)
+      //                },
+      //                next: {
+      //                  data:   weeks.next.data,
+      //                  shortages: weeks.next.shortages,
+      //                  start: {
+      //                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.next.period.first.timeStamp
+      //                  },
+      //                  end: {
+      //                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.next.period.last.timeStamp
+      //                  },
+      //                  ratios: Stats.pies(weeks.next.data)
+      //                }
+      //              }
+      //            });
+      //          }
+      //          else
+      //          {
+      //            if (results[0].diff == null) results[0].diff = 0;
+      //            if (results[0].wish == null) results[0].wish = 0;
+      //
+      //            var currentWeek = [{
+      //                start:  weeks.current.period.first.timeStamp / 1000,
+      //                end:    weeks.current.period.last.timeStamp / 1000,
+      //                wish:   results[0].wish,
+      //                diff:   results[0].diff
+      //              }],
+      //              nextWeek = [{
+      //                start:  weeks.next.period.first.timeStamp / 1000,
+      //                end:    weeks.next.period.last.timeStamp / 1000,
+      //                wish:   results[0].wish,
+      //                diff:   results[0].diff
+      //              }];
+      //
+      //            if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
+      //            if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
+      //
+      //            deferred.resolve({
+      //              id:       options.id,
+      //              name:     options.name,
+      //              weeks:    {
+      //                current: {
+      //                  data: currentWeek,
+      //                  state: currentWeek,
+      //                  shortages: weeks.current.shortages,
+      //                  start: {
+      //                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.current.period.first.timeStamp
+      //                  },
+      //                  end: {
+      //                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.current.period.last.timeStamp
+      //                  },
+      //                  ratios: Stats.pies(currentWeek)
+      //                },
+      //                next: {
+      //                  data: nextWeek,
+      //                  shortages: weeks.next.shortages,
+      //                  start: {
+      //                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.next.period.first.timeStamp
+      //                  },
+      //                  end: {
+      //                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+      //                    timeStamp:  weeks.next.period.last.timeStamp
+      //                  },
+      //                  ratios: Stats.pies(nextWeek)
+      //                }
+      //              }
+      //            });
+      //          }
+      //        },
+      //        function (error)
+      //        {
+      //          deferred.resolve({error: error});
+      //        }
+      //      );
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //      return deferred.promise;
+      //    };
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -7667,7 +7737,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
           setTimeout(function ()
           {
             _this.pies(data, current);
-          }, 100);
+          }, $rootScope.config.timers.TICKER);
         }
 
         return timedata;
@@ -8041,255 +8111,264 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Convert date to object
  */
-  .filter('convertToDateObj',
-    [
-      function ()
+  .filter(
+  'convertToDateObj',
+  [
+    function ()
+    {
+      return function (date)
       {
-        return function (date)
-        {
-          return Date(date);
-        }
+        return Date(date);
       }
-    ])
+    }
+  ])
 
 
 /**
  * Translate roles
  */
-  .filter('translateRole',
-    [
-      '$config',
-      function ($config)
+  .filter(
+  'translateRole',
+  [
+    '$config',
+    function ($config)
+    {
+      return function (role)
       {
-        return function (role)
-        {
-          var urole;
+        var urole;
 
-          angular.forEach($config.roles, function (prole)
+        angular.forEach(
+          $config.roles, function (prole)
           {
             if (prole.id == role) urole = prole.label;
           });
 
-          return urole;
-        }
+        return urole;
       }
-    ])
+    }
+  ])
 
 
 /**
  * Translate division ids to names
  */
-.filter('translateDivision',
-[
-  '$config',
-  function ($config)
-  {
-    return function (divid)
+  .filter(
+  'translateDivision',
+  [
+    '$config',
+    function ($config)
     {
-      var filtered;
-
-      angular.forEach($config.timeline.config.divisions, function (division)
+      return function (divid)
       {
-        if (division.id == divid)
-        {
-          filtered = division.label;
-        }
-      });
+        var filtered;
 
-      return filtered;
+        angular.forEach(
+          $config.timeline.config.divisions, function (division)
+          {
+            if (division.id == divid)
+            {
+              filtered = division.label;
+            }
+          });
+
+        return filtered;
+      }
     }
-  }
-])
+  ])
 
 
 /**
  * Main range filter
  */
-.filter('rangeMainFilter', 
-[
-	'Dater',
-	function (Dater)
-	{
-		var periods = Dater.getPeriods();
+  .filter(
+  'rangeMainFilter',
+  [
+    'Dater',
+    function (Dater)
+    {
+      var periods = Dater.getPeriods();
 
-		return function (dates)
-		{
-      if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+      return function (dates)
       {
-        dates.start = new Date(dates.end).addDays(-1);
-      }
+        if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
+        {
+          dates.start = new Date(dates.end).addDays(- 1);
+        }
 
-			var cFirst = function (str)
-			{
-        return str.charAt(0).toUpperCase() + str.substr(1);
-			};
+        var cFirst = function (str)
+        {
+          return str.charAt(0).toUpperCase() + str.substr(1);
+        };
 
-			var ndates = {
-            start: {
-              real: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-              month: 	cFirst( Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-              day: 		cFirst( Dater.translateToDutch(new Date(dates.start).toString('d'))),
-              year:   new Date(dates.start).toString('yyyy')
-            },
-            end: {
-              real: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
-              month: 	cFirst( Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-              day: 		cFirst( Dater.translateToDutch(new Date(dates.end).toString('d'))),
-              year:   new Date(dates.end).toString('yyyy')
-            }
-          };
-
-			var dates = {
-            start: {
-              real: 	new Date(dates.start).toString('dddd d MMMM'),
-              month: 	new Date(dates.start).toString('MMMM'),
-              day: 		new Date(dates.start).toString('d')
-            },
-            end: {
-              real: 	new Date(dates.end).toString('dddd d MMMM'),
-              month: 	new Date(dates.end).toString('MMMM'),
-              day: 		new Date(dates.end).toString('d')
-            }
+        var ndates = {
+          start: {
+            real:  cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+            month: cFirst(Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
+            day:   cFirst(Dater.translateToDutch(new Date(dates.start).toString('d'))),
+            year:  new Date(dates.start).toString('yyyy')
           },
-          monthNumber = Date.getMonthNumberFromName(dates.start.month);
+          end:   {
+            real:  cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+            month: cFirst(Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
+            day:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('d'))),
+            year:  new Date(dates.end).toString('yyyy')
+          }
+        };
 
-			if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
-					dates.start.month == dates.end.month)
-			{
-				return 	ndates.start.real +
-								', ' +
-								ndates.start.year;
-			}
-			else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
-			{
-				return 	ndates.start.month +
-								', ' +
-                ndates.start.year;
-			}
-			else
-			{
-				return 	ndates.start.real +
-                ', ' +
-                ndates.start.year +
-								' / ' + 
-								ndates.end.real +
-								', ' +
-                ndates.end.year;
-			}
+        var dates = {
+              start: {
+                real:  new Date(dates.start).toString('dddd d MMMM'),
+                month: new Date(dates.start).toString('MMMM'),
+                day:   new Date(dates.start).toString('d')
+              },
+              end:   {
+                real:  new Date(dates.end).toString('dddd d MMMM'),
+                month: new Date(dates.end).toString('MMMM'),
+                day:   new Date(dates.end).toString('d')
+              }
+            },
+            monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
-		}
-	}
-])
+        if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
+            dates.start.month == dates.end.month)
+        {
+          return  ndates.start.real +
+                  ', ' +
+                  ndates.start.year;
+        }
+        else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
+        {
+          return  ndates.start.month +
+                  ', ' +
+                  ndates.start.year;
+        }
+        else
+        {
+          return  ndates.start.real +
+                  ', ' +
+                  ndates.start.year +
+                  ' / ' +
+                  ndates.end.real +
+                  ', ' +
+                  ndates.end.year;
+        }
+
+      }
+    }
+  ])
 
 
 /**
  * Main range week filter
  */
-.filter('rangeMainWeekFilter', 
-[
-	'Dater',
-	function (Dater)
-	{
-		return function (dates)
-		{
-			if (dates)
-			{
-				var cFirst = function (str)
-				{
-				  return str.charAt(0).toUpperCase() + str.substr(1);
-				};
-
-				var newDates = {
-					start: 	cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-					end: 		cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
-				};
-
-				return 	newDates.start +
-								' / ' +
-                newDates.end +
-								', ' + 
-								Dater.getThisYear();
-			}
-      else
+  .filter(
+  'rangeMainWeekFilter',
+  [
+    'Dater',
+    function (Dater)
+    {
+      return function (dates)
       {
-        return false;
+        if (dates)
+        {
+          var cFirst = function (str)
+          {
+            return str.charAt(0).toUpperCase() + str.substr(1);
+          };
+
+          var newDates = {
+            start: cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+            end:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+          };
+
+          return  newDates.start +
+                  ' / ' +
+                  newDates.end +
+                  ', ' +
+                  Dater.getThisYear();
+        }
+        else
+        {
+          return false;
+        }
       }
-		}
-	}
-])
+    }
+  ])
 
 
 /**
  * Range info filter
  */
-.filter('rangeInfoFilter', 
-[
-	'$rootScope', 'Dater', 'Storage', 
-	function ($rootScope, Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
+  .filter(
+  'rangeInfoFilter',
+  [
+    '$rootScope', 'Dater', 'Storage',
+    function ($rootScope, Dater, Storage)
+    {
+      var periods = Dater.getPeriods();
 
-		return function (timeline)
-		{
-			var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
+      return function (timeline)
+      {
+        var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
 
-			if (diff > (2419200000 + 259200000))
-			{
-				return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
-			}
-			else
-			{
-				if (timeline.scope.day)
-				{
-					var hours = {
-						start: 	new Date(timeline.range.start).toString('HH:mm'),
-						end: 		new Date(timeline.range.end).toString('HH:mm')
-					};
+        if (diff > (2419200000 + 259200000))
+        {
+          return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
+        }
+        else
+        {
+          if (timeline.scope.day)
+          {
+            var hours = {
+              start: new Date(timeline.range.start).toString('HH:mm'),
+              end:   new Date(timeline.range.end).toString('HH:mm')
+            };
 
-					/**
-					 *  00:00 fix => 24:00
-					 */
-					if (hours.end == '00:00') hours.end = '24:00';
+            /**
+             *  00:00 fix => 24:00
+             */
+            if (hours.end == '00:00') hours.end = '24:00';
 
-					return 	$rootScope.ui.planboard.rangeInfoTime + 
-									hours.start + 
-									' / ' + 
-									hours.end;
-				}
-				else if (timeline.scope.week)
-				{
-					return 	$rootScope.ui.planboard.rangeInfoWeekNumber + 
-									timeline.current.week;
-				}
-				else if (timeline.scope.month)
-				{
-					return 	$rootScope.ui.planboard.rangeInfoMonth + 
-									timeline.current.month + 
-									$rootScope.ui.planboard.rangeInfoTotalDays + 
-									periods.months[timeline.current.month].totalDays;
-				}
-			}
-		};
-	}
-])
+            return  $rootScope.ui.planboard.rangeInfoTime +
+                    hours.start +
+                    ' / ' +
+                    hours.end;
+          }
+          else if (timeline.scope.week)
+          {
+            return  $rootScope.ui.planboard.rangeInfoWeekNumber +
+                    timeline.current.week;
+          }
+          else if (timeline.scope.month)
+          {
+            return  $rootScope.ui.planboard.rangeInfoMonth +
+                    timeline.current.month +
+                    $rootScope.ui.planboard.rangeInfoTotalDays +
+                    periods.months[timeline.current.month].totalDays;
+          }
+        }
+      };
+    }
+  ])
 
 
 /**
  * Range info week filter
  */
-.filter('rangeInfoWeekFilter', 
-[
-	'$rootScope', 'Dater', 'Storage', 
-	function ($rootScope, Dater, Storage)
-	{
-		var periods = Dater.getPeriods();
+  .filter(
+  'rangeInfoWeekFilter',
+  [
+    '$rootScope', 'Dater', 'Storage',
+    function ($rootScope, Dater, Storage)
+    {
+      var periods = Dater.getPeriods();
 
-		return function (timeline)
-		{
-			if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
-		};
-	}
-])
+      return function (timeline)
+      {
+        if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+      };
+    }
+  ])
 
 
 /**
@@ -8297,108 +8376,159 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * TODO: Implement state conversion from config later on!
  * Convert ratios to readable formats
  */
-.filter('convertRatios', 
-[
-	'$config', 
-	function ($config)
-	{
-		return function (stats)
-		{
-			var ratios = '';
+  .filter(
+  'convertRatios',
+  [
+    '$config',
+    function ($config)
+    {
+      return function (stats)
+      {
+        var ratios = '';
 
-			angular.forEach(stats, function (stat, index)
-			{
-				var state = stat.state.replace(/^bar-+/, '');
+        angular.forEach(
+          stats, function (stat, index)
+          {
+            var state = stat.state.replace(/^bar-+/, '');
 
-				if (state == 'Available') state = 'Beschikbaar';
-				if (state == 'Unavailable') state = 'Niet Beschikbaar';
-				if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
-				if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
-				if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
-				if (state == 'Unreached') state = 'Niet Bereikt';
+            if (state == 'Available') state = 'Beschikbaar';
+            if (state == 'Unavailable') state = 'Niet Beschikbaar';
+            if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
+            if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
+            if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
+            if (state == 'Unreached') state = 'Niet Bereikt';
 
-				ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
-			});
+            ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
+          });
 
-			return ratios.substring(0, ratios.length - 2);
-		};
-	}
-])
+        return ratios.substring(0, ratios.length - 2);
+      };
+    }
+  ])
 
 
-/** 
+/**
+ * Calculate time difference
+ */
+  .filter(
+  'calculateDeltaTime',
+  function ()
+  {
+    return function (stamp)
+    {
+      var delta = Math.abs(stamp - Date.now().getTime()) / 1000;
+
+      var days = Math.floor(delta / 86400);
+      delta -= days * 86400;
+
+      var hours = Math.floor(delta / 3600) % 24;
+      delta -= hours * 3600;
+
+      var minutes = Math.floor(delta / 60) % 60;
+
+      var output = '';
+
+      if (days != 0)
+      {
+        output += days;
+      }
+
+      if (hours != 0)
+      {
+        if (days != 0) { output += ' dagen, ' }
+
+        output += hours;
+      }
+
+      if (minutes != 0)
+      {
+        if (hours != 0) { output += ' uren, ' }
+
+        output += minutes + ' minuten'
+      }
+
+      return output;
+    };
+  }
+)
+
+/**
  * Calculate time in days
  */
-.filter('calculateTimeInDays', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					days 		= 0,
-					hours 	= 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours;
+  .filter(
+  'calculateTimeInDays',
+  function ()
+  {
+    return function (stamp)
+    {
+      var day = 1000 * 60 * 60 * 24,
+          hour = 1000 * 60 * 60,
+          days = 0,
+          hours = 0,
+          stamp = stamp * 1000,
+          hours = stamp % day,
+          days = stamp - hours;
 
-			return 	Math.floor(days / day);
-		};
-	}
+      return  Math.floor(days / day);
+    };
+  }
 )
 
 
 /**
  * Calculate time in hours
  */
-.filter('calculateTimeInHours', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					days 		= 0,
-					hours 	= 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours;
+  .filter(
+  'calculateTimeInHours',
+  function ()
+  {
+    return function (stamp)
+    {
+      var day = 1000 * 60 * 60 * 24,
+          hour = 1000 * 60 * 60,
+          days = 0,
+          hours = 0,
+          stamp = stamp * 1000,
+          hours = stamp % day,
+          days = stamp - hours;
 
-			return 	Math.floor(hours / hour);
-		};
-	}
+      return  Math.floor(hours / hour);
+    };
+  }
 )
 
 
 /**
  * Calculate time in minutes
  */
-.filter('calculateTimeInMinutes', 
-	function ()
-	{
-		return function (stamp)
-		{
-			var day 		= 1000 * 60 * 60 * 24,
-					hour		=	1000 * 60 * 60,
-					minute 	= 1000 * 60,
-					days 		= 0,
-					hours 	= 0,
-					minutes = 0,
-					stamp 	= stamp * 1000,
-					hours 	= stamp % day,
-					days 		= stamp - hours,
-					minutes = stamp % hour;
+  .filter(
+  'calculateTimeInMinutes',
+  function ()
+  {
+    return function (stamp)
+    {
+      var day = 1000 * 60 * 60 * 24,
+          hour = 1000 * 60 * 60,
+          minute = 1000 * 60,
+          days = 0,
+          hours = 0,
+          minutes = 0,
+          stamp = stamp * 1000,
+          hours = stamp % day,
+          days = stamp - hours,
+          minutes = stamp % hour;
 
-			return 	Math.floor(minutes / minute);
-		};
-	}
+      return  Math.floor(minutes / minute);
+    };
+  }
 )
 
 
 /**
  * Convert eve urls to ids
  */
-.filter('convertEve',
+  .filter(
+  'convertEve',
   [
     '$config',
     function ($config)
@@ -8415,7 +8545,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
           eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
-          return eve[eve.length-2];
+          return eve[eve.length - 2];
         }
       };
     }
@@ -8423,47 +8553,49 @@ angular.module('WebPaige.Filters', ['ngResource'])
 )
 
 
-/** 
+/**
  * Convert user uuid to name
  */
-.filter('convertUserIdToName', 
-[
-	'Storage', 
-	function (Storage)
-	{
-		var members = angular.fromJson(Storage.get('members'));
+  .filter(
+  'convertUserIdToName',
+  [
+    'Storage',
+    function (Storage)
+    {
+      var members = angular.fromJson(Storage.get('members'));
 
-		return function (id)
-		{	
-	    if (members == null || typeof members[id] == "undefined")
-	    {
-	      return id;
-	    }
-	    else
-	    {
-	      return members[id].name;
-	    }
-		};
-	}
-])
+      return function (id)
+      {
+        if (members == null || typeof members[id] == "undefined")
+        {
+          return id;
+        }
+        else
+        {
+          return members[id].name;
+        }
+      };
+    }
+  ])
 
 
 /**
  * Convert timeStamps to dates
  */
-.filter('nicelyDate', 
-[
-	'$rootScope', 
-	function ($rootScope)
-	{
-	 	return function (date)
-	 	{
-	 		if (typeof date == 'string') date = Number(date);
+  .filter(
+  'nicelyDate',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return function (date)
+      {
+        if (typeof date == 'string') date = Number(date);
 
-	 		return new Date(date).toString($rootScope.config.formats.datetimefull);
-	 	};
-	}
-])
+        return new Date(date).toString($rootScope.config.formats.datetimefull);
+      };
+    }
+  ])
 
 
 /**
@@ -8471,16 +8603,17 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * Combine this either with nicelyDate or terminate!
  * Convert timeStamp to readable date and time
  */
-.filter('convertTimeStamp', 
-	function ()
-	{
-		return function (stamp)
-		{
-			console.warn(typeof stamp);
+  .filter(
+  'convertTimeStamp',
+  function ()
+  {
+    return function (stamp)
+    {
+      console.warn(typeof stamp);
 
-			return new Date(stamp).toString('dd-MM-yyyy HH:mm');
-		};
-	}
+      return new Date(stamp).toString('dd-MM-yyyy HH:mm');
+    };
+  }
 )
 
 
@@ -8488,14 +8621,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * TODO: Still used?
  * No title filter
  */
-.filter('noTitle',
-	function ()
-	{
-		return function (title)
-		{
-			return (title == "") ? "- No Title -" : title;
-		}
-	}
+  .filter(
+  'noTitle',
+  function ()
+  {
+    return function (title)
+    {
+      return (title == "") ? "- No Title -" : title;
+    }
+  }
 )
 
 
@@ -8503,207 +8637,242 @@ angular.module('WebPaige.Filters', ['ngResource'])
  * TODO: Finish it!
  * Strip span tags
  */
-.filter('stripSpan', 
-	function ()
-	{
-	  return function (string)
-	  {
-	    return string.match(/<span class="label">(.*)<\/span>/);
-	  }
-	}
+  .filter(
+  'stripSpan',
+  function ()
+  {
+    return function (string)
+    {
+      return string.match(/<span class="label">(.*)<\/span>/);
+    }
+  }
 )
 
 
 /**
  * Strip html tags
  */
-.filter('stripHtml', 
-	function ()
-	{
-	  return function (string)
-	  {
-	  	if (string) return string.split('>')[1].split('<')[0];
-	  }
-	}
+  .filter(
+  'stripHtml',
+  function ()
+  {
+    return function (string)
+    {
+      if (string) return string.split('>')[1].split('<')[0];
+    }
+  }
 )
 
 
 /**
  * Convert group id to name
  */
-.filter('groupIdToName', 
-[
-	'Storage', 
-	function (Storage)
-	{
-	  return function (id)
-	  {
-	  	var groups = angular.fromJson(Storage.get('groups'));
+  .filter(
+  'groupIdToName',
+  [
+    'Storage',
+    function (Storage)
+    {
+      return function (id)
+      {
+        var groups = angular.fromJson(Storage.get('groups'));
 
-	  	for (var i in groups)
-	  	{
-	  		if (groups[i].uuid == id) return groups[i].name;
-	  	}
-	  }
-	}
-])
+        for (var i in groups)
+        {
+          if (groups[i].uuid == id) return ', ' + groups[i].name;
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Convert division id to name
+ */
+  .filter(
+  'divisionIdToName',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return function (id)
+      {
+        var divisions = $rootScope.config.timeline.config.divisions;
+
+        for (var i in divisions)
+        {
+          if (divisions[i].id == id) return divisions[i].label;
+        }
+      }
+    }
+  ])
 
 
 /**
  * TODO: Unknown filter
  */
-.filter('i18n_spec',
-[
-	'$rootScope', 
-	function ($rootScope)
-	{
-		return function (string, type)
-		{
-			var types = type.split("."),
-					ret 	= $rootScope.ui[types[0]][types[1]],
-					ret 	= ret.replace('$v',string);
-			
-			return ret;
-		}
-	}
-])
+  .filter(
+  'i18n_spec',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return function (string, type)
+      {
+        var types = type.split("."),
+            ret = $rootScope.ui[types[0]][types[1]],
+            ret = ret.replace('$v', string);
+
+        return ret;
+      }
+    }
+  ])
 
 
 /**
  * Truncate group titles for dashboard pie widget
  */
-.filter('truncateGroupTitle', 
-[
-	'Strings', 
-	function (Strings) 
-	{
-		return function (title)
-		{
-	     return Strings.truncate(title, 20, true);
-	  }
-	}
-])
+  .filter(
+  'truncateGroupTitle',
+  [
+    'Strings',
+    function (Strings)
+    {
+      return function (title)
+      {
+        return Strings.truncate(title, 20, true);
+      }
+    }
+  ])
 
 
 /**
  * Make first letter capital
  */
-.filter('toTitleCase', 
-[
-'Strings',
-  function (Strings)
-  {
-    return function (txt)
+  .filter(
+  'toTitleCase',
+  [
+    'Strings',
+    function (Strings)
     {
-      return Strings.toTitleCase(txt);
+      return function (txt)
+      {
+        return Strings.toTitleCase(txt);
+      }
     }
-  }
-])
+  ])
 
 
 /**
  * Count messages in box
  */
-.filter('countBox',
-	function () 
-	{
-		return function (box)
-		{
-			var total = 0;
+  .filter(
+  'countBox',
+  function ()
+  {
+    return function (box)
+    {
+      var total = 0;
 
-			angular.forEach(box, function (bulk)
-			{
-				total = total + bulk.length;
-			});
+      angular.forEach(
+        box, function (bulk)
+        {
+          total = total + bulk.length;
+        });
 
-	    return total;
-	  }
-	}
+      return total;
+    }
+  }
 )
 
 
 /**
  * Convert offsets array to nicely format in scheduled jobs
  */
-.filter('nicelyOffsets', 
-[
-	'Dater', 'Storage', 'Offsetter',
-	function (Dater, Storage, Offsetter)
-	{
-		return function (data)
-		{
-			var offsets 	= Offsetter.factory(data),
-					compiled 	= '';
+  .filter(
+  'nicelyOffsets',
+  [
+    'Dater', 'Storage', 'Offsetter',
+    function (Dater, Storage, Offsetter)
+    {
+      return function (data)
+      {
+        var offsets = Offsetter.factory(data),
+            compiled = '';
 
-			angular.forEach(offsets, function (offset)
-			{
-				compiled += '<div style="display:block; margin-bottom: 5px;">';
+        angular.forEach(
+          offsets, function (offset)
+          {
+            compiled += '<div style="display:block; margin-bottom: 5px;">';
 
-				compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
+            compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
 
-				if (offset.mon) compiled += '<span class="muted"><small><i> maandag,</i></small></span>';
-				if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
-				if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
-				if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
-				if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
-				if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
-				if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+            if (offset.mon) compiled += '<span class="muted"><small><i> maandag,</i></small></span>';
+            if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
+            if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
+            if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
+            if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
+            if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
+            if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
 
-				compiled = compiled.substring(0, compiled.length - 20);
+            compiled = compiled.substring(0, compiled.length - 20);
 
-				compiled = compiled += '</i></small></span>';
+            compiled = compiled += '</i></small></span>';
 
-				compiled += '</div>';
+            compiled += '</div>';
 
-				compiled = compiled.substring(0, compiled.length);
-			});
+            compiled = compiled.substring(0, compiled.length);
+          });
 
-			return compiled;
-		}
-	}
-])
+        return compiled;
+      }
+    }
+  ])
 
 
 /**
  * Convert array of audience to a nice list
  */
-.filter('nicelyAudience', 
-[
-	'Storage',
-	function (Storage)
-	{
-		return function (data)
-		{
-      if (data)
+  .filter(
+  'nicelyAudience',
+  [
+    'Storage',
+    function (Storage)
+    {
+      return function (data)
       {
-        var members 	= angular.fromJson(Storage.get('members')),
-          groups 		= angular.fromJson(Storage.get('groups')),
-          audience 	= [];
-
-        angular.forEach(data, function (recipient)
+        if (data)
         {
-          var name;
+          var members = angular.fromJson(Storage.get('members')),
+              groups = angular.fromJson(Storage.get('groups')),
+              audience = [];
 
-          if (members[recipient])
-          {
-            name = members[recipient].name;
-          }
-          else
-          {
-            angular.forEach(groups, function (group)
+          angular.forEach(
+            data, function (recipient)
             {
-              if (group.uuid == recipient) name = group.name;
+              var name;
+
+              if (members[recipient])
+              {
+                name = members[recipient].name;
+              }
+              else
+              {
+                angular.forEach(
+                  groups, function (group)
+                  {
+                    if (group.uuid == recipient) name = group.name;
+                  });
+              }
+
+              audience += name + ', ';
             });
-          }
 
-          audience += name + ', ';
-        });
-
-        return audience.substring(0, audience.length - 2);
+          return audience.substring(0, audience.length - 2);
+        }
       }
-		}
-	}
-]);;/*jslint node: true */
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -8714,709 +8883,736 @@ angular.module('WebPaige.Controllers.Login', [])
 /**
  * Login controller
  */
-.controller('login', 
-[
-	'$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5',
-	function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
-	{
-	  /**
-	   * Self this
-	   */
-		var self = this;
-
-	  /**
-	   * Redirect to dashboard if logged in
-	   */
-	  // if (Session.check()) redirectToDashboard();
-
-
-	  /**
-	   * Set default views
-	   */
-		if ($routeParams.uuid && $routeParams.key)
-	  {
-			$scope.views = {
-				changePass: true
-			};
-
-			$scope.changepass = {
-				uuid: $routeParams.uuid,
-				key:  $routeParams.key
-			}
-		}
-	  else
-	  {
-			$scope.views = {
-				login:  true,
-				forgot: false
-			};
-		}
-
-
-	  /**
-	   * KNRM users for testing
-	   */
-	  if ($rootScope.config.demo_users && demo_users.length > 0)
+  .controller(
+  'login',
+  [
+    '$rootScope',
+    '$location',
+    '$q',
+    '$scope',
+    'Session',
+    'User',
+    'Groups',
+    'Messages',
+    'Storage',
+    '$routeParams',
+    'Settings',
+    'Profile',
+    'MD5',
+    function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
     {
-      $scope.demo_users = demo_users;
-    }
-
-
-	  /**
-	   * Real KNRM users for testing
-	   */
-	   $scope.knrmLogin = function (user)
-	   {
-	     $('#login button[type=submit]')
-	       .text($rootScope.ui.login.button_loggingIn)
-	       .attr('disabled', 'disabled');
-
-	    self.auth(user.uuid, user.resources.askPass);
-	   };
-
-	  
-	  /**
-	   * Set default alerts
-	   */
-	  $scope.alert = {
-	    login: {
-	      display:  false,
-	      type:     '',
-	      message:  ''
-	    },
-	    forgot: {
-	      display:  false,
-	      type:     '',
-	      message:  ''
-	    }
-	  };
-
-
-	  /**
-	   * Init rootScope app info container
-	   */
-	  if (!Storage.session.get('app')) Storage.session.add('app', '{}');
-
-
-	  /**
-	   * TODO:  Lose this jQuery stuff later on!
-	   * Jquery solution of toggling between login and app view
-	   */
-	  $('.navbar').hide();
-	  $('#footer').hide();
-    $('#watermark').hide();
-    // $('#notification').hide();
-	  $('body').css({
-	    'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-	    'backgroundSize': 'cover'
-	  });
-	  
-     /**
-	   * Disable the autocomplete username/password for Firefox users
-	   */
-      if(navigator.userAgent.indexOf("Firefox") >= 0){
-		$('#login form').attr('autocomplete', 'off');
-	  }
-
-	  /**
-	   * TODO: Use native JSON functions of angular and Store service
-	   */
-	  var logindata = angular.fromJson(Storage.get('logindata'));
-
-	  if (logindata && logindata.remember) $scope.logindata = logindata;
-
-
-	  /**
-	   * TODO: Remove unnecessary DOM manipulation
-	   * Use cookies for user credentials
-	   * 
-	   * Login trigger
-	   */
-	  $scope.login = function()
-	  {
-	    $('#alertDiv').hide();
-
-	    if (!$scope.logindata ||
-	        !$scope.logindata.username || 
-	        !$scope.logindata.password)
-	    {
-	      $scope.alert = {
-	        login: {
-	          display: true,
-	          type:    'alert-error',
-	          message: $rootScope.ui.login.alert_fillfiled
-	        }
-	      };
-
-	      $('#login button[type=submit]')
-	        .text($rootScope.ui.login.button_login)
-	        .removeAttr('disabled');
-
-	      return false;     
-	    }
-
-	    $('#login button[type=submit]')
-	      .text($rootScope.ui.login.button_loggingIn)
-	      .attr('disabled', 'disabled');
-
-	    Storage.add('logindata', angular.toJson({
-	      username: $scope.logindata.username,
-	      password: $scope.logindata.password,
-	      remember: $scope.logindata.remember
-	    }));
+      /**
+       * Self this
+       */
+      var self = this;
 
       /**
-       * Create storage for smart alarming guard values
+       * Redirect to dashboard if logged in
        */
-      if ($rootScope.config.smartAlarm)
+      // if (Session.check()) redirectToDashboard();
+
+
+      /**
+       * Set default views
+       */
+      if ($routeParams.uuid && $routeParams.key)
       {
-        Storage.add('guard', angular.toJson({
-          monitor:  '',
-          role:     ''
-        }));
+        $scope.views = {
+          changePass: true
+        };
+
+        $scope.changepass = {
+          uuid: $routeParams.uuid,
+          key:  $routeParams.key
+        }
+      }
+      else
+      {
+        $scope.views = {
+          login:  true,
+          forgot: false
+        };
       }
 
-	    self.auth( $scope.logindata.username, MD5($scope.logindata.password ));
-	  };
+
+      /**
+       * KNRM users for testing
+       */
+      if ($rootScope.config.demo_users && demo_users.length > 0)
+      {
+        $scope.demo_users = demo_users;
+      }
 
 
-	  /**
-	   * Authorize user
-	   */
-	  self.auth = function (uuid, pass)
-	  {
-	    User.login(uuid.toLowerCase(), pass)
-	    .then(function (result)
-		  {
-	      if (result.status == 400 || result.status == 404)
-	      {
-	        $scope.alert = {
-	          login: {
-	            display: true,
-	            type: 'alert-error',
-	            message: $rootScope.ui.login.alert_wrongUserPass
-	          }
-	        };
+      /**
+       * Real KNRM users for testing
+       */
+      $scope.knrmLogin = function (user)
+      {
+        $('#login button[type=submit]')
+          .text($rootScope.ui.login.button_loggingIn)
+          .attr('disabled', 'disabled');
 
-	        $('#login button[type=submit]')
-	          .text($rootScope.ui.login.button_login)
-	          .removeAttr('disabled');
-
-	        return false;
-	      }
-	      else
-	      {
-	        Session.set(result["X-SESSION_ID"]);
-
-	        self.preloader();
-	      }
-		  });
-	  };
+        self.auth(user.uuid, user.resources.askPass);
+      };
 
 
-	  /**
-	   * TODO: What happens if preloader stucks?
-	   * Optimize preloader and messages
-	   * 
-	   * Initialize preloader
-	   */
-	  self.preloader = function()
-	  {
-	    $('#login').hide();
-	    $('#download').hide();
-	    $('#preloader').show();
+      /**
+       * Set default alerts
+       */
+      $scope.alert = {
+        login:  {
+          display: false,
+          type:    '',
+          message: ''
+        },
+        forgot: {
+          display: false,
+          type:    '',
+          message: ''
+        }
+      };
 
-	    self.progress(30, $rootScope.ui.login.loading_User);
 
-      User.states()
-        .then(function (states)
+      /**
+       * Init rootScope app info container
+       */
+      if (! Storage.session.get('app')) Storage.session.add('app', '{}');
+
+
+      /**
+       * TODO:  Lose this jQuery stuff later on!
+       * Jquery solution of toggling between login and app view
+       */
+      $('.navbar').hide();
+      $('#footer').hide();
+      $('#watermark').hide();
+      // $('#notification').hide();
+      $('body').css(
         {
-          Storage.add('states', angular.toJson(states));
-
-          angular.forEach(states, function (state)
-          {
-            $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
-          });
-
-          User.divisions()
-            .then(function (divisions)
-            {
-              $rootScope.config.timeline.config.divisions = divisions;
-
-              Storage.add('divisions', angular.toJson(divisions));
-				
-              User.resources()
-                .then(function (resources)
-                {
-                  if (resources.error)
-                  {
-                    console.warn('error ->', resources);
-                  }
-                  else
-                  {
-				  
-					$rootScope.app.resources = resources;
-
-                    self.progress(60, $rootScope.ui.login.loading_Group);
-					User.domain()
-					  .then(function (domainnames)
-					  {
-					  
-						// NOTE: Currently using the first domainname, could be expanded
-						// in case users can be in multiple domains
-						$rootScope.app.domain = domainnames.first();
-						
-						self.progress(70, $rootScope.ui.login.loading_Group);
-						
-						Groups.query(true)
-						  .then(function (groups)
-						  {
-							if (groups.error)
-							{
-							  console.warn('error ->', groups);
-							}
-							else
-							{
-							  var settings  = angular.fromJson(resources.settingsWebPaige) || {},
-								sync      = false,
-								parenting = false,
-								defaults  = $rootScope.config.defaults.settingsWebPaige,
-								_groups   = function (groups)
-								{
-								  var _groups = {};
-								  angular.forEach(
-									groups,
-									function (group)
-									{
-									  _groups[group.uuid] = {
-										status:     true,
-										divisions:  false
-									  };
-									}
-								  );
-								  return _groups;
-								};
-
-							  // Check if there is any settings at all
-							  if (settings != null || settings != undefined)
-							  {
-								// check for user settings-all
-								if (settings.user)
-								{
-								  // check for user-language settings
-								  if (settings.user.language)
-								  {
-									// console.warn('user HAS language settings');
-									$rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
-									defaults.user.language = settings.user.language;
-								  }
-								  else
-								  {
-									// console.warn('user has NO language!!');
-									$rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
-									sync = true;
-								  }
-								}
-								else
-								{
-								  // console.log('NO user settings at all !!');
-								  sync = true;
-								}
-
-								// check for app settings-all
-								if (settings.app)
-								{
-								  // check for app-widget settings
-								  if (settings.app.widgets)
-								  {
-									// check for app-widget-groups setting
-									if (settings.app.widgets.groups)
-									{
-									  // console.log('settings for groups =>', settings.app.widgets.groups);
-									  var oldGroupSetup = false;
-
-									  if (!jQuery.isEmptyObject(settings.app.widgets.groups))
-									  {
-										angular.forEach(settings.app.widgets.groups, function (value, id)
-										{
-										  // console.log('value ->', value);
-										  if (typeof value !== 'object' || value == {})
-										  {
-											oldGroupSetup = true;
-										  }
-										});
-									  }
-									  else
-									  {
-										oldGroupSetup = true;
-									  }
-
-									  if (oldGroupSetup)
-									  {
-										// console.warn('OLD SETUP => user has NO app widgets groups!!');
-										defaults.app.widgets.groups = _groups(groups);
-										sync = true;
-									  }
-									  else
-									  {
-										// console.warn('user HAS app widgets groups settings');
-										defaults.app.widgets.groups = settings.app.widgets.groups;
-									  }
-									}
-									else
-									{
-									  console.warn('user has NO app widgets groups!!');
-									  defaults.app.widgets.groups = _groups(groups);
-									  sync = true;
-									}
-								  }
-								  else
-								  {
-									// console.warn('user has NO widget settings!!');
-									defaults.app.widgets = { groups: _groups(groups) };
-									sync = true;
-								  }
-
-								  // check for app group setting
-								  if (settings.app.group && settings.app.group != undefined)
-								  {
-									// console.warn('user HAS app first group setting');
-									defaults.app.group = settings.app.group;
-								  }
-								  else
-								  {
-									// console.warn('user has NO first group setting!!');
-									parenting = true;
-									sync      = true;
-								  }
-								}
-								else
-								{
-								  // console.log('NO app settings!!');
-								  defaults.app = { widgets: { groups: _groups(groups) } };
-								  sync = true;
-								}
-							  }
-							  else
-							  {
-								// console.log('NO SETTINGS AT ALL!!');
-								defaults = {
-								  user: $rootScope.config.defaults.settingsWebPaige.user,
-								  app: {
-									widgets: {
-									  groups: _groups(groups)
-									},
-									group: groups[0].uuid
-								  }
-								};
-								sync = true;
-							  }
-
-							  // sync settings with missing parts also parenting check
-							  if (sync)
-							  {
-								if (parenting)
-								{
-								  // console.warn('setting up parent group for the user');
-
-								  Groups.parents()
-									.then(function (_parent)
-									{
-									  // console.warn('parent group been fetched ->', _parent);
-
-									  if (_parent != null)
-									  {
-										// console.warn('found parent parent -> ', _parent);
-
-										defaults.app.group = _parent;
-									  }
-									  else
-									  {
-										// console.warn('setting the first group in the list for user ->', groups[0].uuid);
-
-										defaults.app.group = groups[0].uuid;
-									  }
-
-									  // console.warn('SAVE ME (with parenting) ->', defaults);
-
-									  Settings.save(resources.uuid, defaults)
-										.then(function ()
-										{
-										  User.resources()
-											.then(function (got)
-											{
-											  // console.log('gotted (with setting parent group) ->', got);
-											  $rootScope.app.resources = got;
-
-											  finalize();
-											})
-										});
-
-									});
-								}
-								else
-								{
-								  // console.warn('SAVE ME ->', defaults);
-
-								  defaults.app.group = groups[0].uuid;
-
-								  Settings.save(resources.uuid, defaults)
-									.then(function ()
-									{
-									  User.resources()
-										.then(function (got)
-										{
-										  // console.log('gotted ->', got);
-										  $rootScope.app.resources = got;
-
-										  finalize();
-										})
-									});
-								}
-							  }
-							  else
-							  {
-								ga('send', 'pageview', {
-								  'dimension1': resources.uuid,
-								  'dimension2': $rootScope.app.domain
-								});
-								ga('send', 'event', 'Login', resources.uuid);
-
-								finalize();
-							  }
-							}
-						  });
-					  });
-                  }
-                });
-
-            });
+          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+          'backgroundSize': 'cover'
         });
 
-	  };
+      /**
+       * Disable the autocomplete username/password for Firefox users
+       */
+      if (navigator.userAgent.indexOf("Firefox") >= 0)
+      {
+        $('#login form').attr('autocomplete', 'off');
+      }
+
+      /**
+       * TODO: Use native JSON functions of angular and Store service
+       */
+      var logindata = angular.fromJson(Storage.get('logindata'));
+
+      if (logindata && logindata.remember) $scope.logindata = logindata;
 
 
-	  /**
-	   * Finalize the preloading
-	   */
-	  function finalize ()
-	  {
-	    self.progress(100, $rootScope.ui.login.loading_everything);
+      /**
+       * TODO: Remove unnecessary DOM manipulation
+       * Use cookies for user credentials
+       *
+       * Login trigger
+       */
+      $scope.login = function ()
+      {
+        $('#alertDiv').hide();
 
-	    self.redirectToDashboard();
+        if (! $scope.logindata || ! $scope.logindata.username || ! $scope.logindata.password)
+        {
+          $scope.alert = {
+            login: {
+              display: true,
+              type:    'alert-error',
+              message: $rootScope.ui.login.alert_fillfiled
+            }
+          };
 
-	    self.getMessages();
+          $('#login button[type=submit]')
+            .text($rootScope.ui.login.button_login)
+            .removeAttr('disabled');
 
-	    self.getMembers();
-	  }
+          return false;
+        }
 
+        $('#login button[type=submit]')
+          .text($rootScope.ui.login.button_loggingIn)
+          .attr('disabled', 'disabled');
 
-	  /**
-	   * TODO: Implement an error handling
-	   * Get members list (SILENTLY)
-	   */
-	  self.getMembers = function ()
-	  {
-	    Groups.query()
-	    .then(function (groups)
-	    {
-	      var calls = [];
+        Storage.add(
+          'logindata', angular.toJson(
+            {
+              username: $scope.logindata.username,
+              password: $scope.logindata.password,
+              remember: $scope.logindata.remember
+            }));
 
-	      angular.forEach(groups, function (group)
-	      {
-	        calls.push(Groups.get(group.uuid));
-	      });
+        /**
+         * Create storage for smart alarming guard values
+         */
+        if ($rootScope.config.smartAlarm)
+        {
+          Storage.add(
+            'guard', angular.toJson(
+              {
+                monitor: '',
+                role:    ''
+              }));
+        }
 
-	      $q.all(calls)
-	      .then(function ()
-	      {
-	        Groups.uniqueMembers();
-	      });
-	    });
-	  };
-
-
-	  /**
-	   * TODO: Implement an error handling
-	   * Get messages (SILENTLY)
-	   */
-	  self.getMessages = function ()
-	  {
-	    Messages.query()
-	    .then(function (messages)
-	    {
-	      if (messages.error)
-	      {
-	        console.warn('error ->', messages);
-	      }
-	      else
-	      {
-	        $rootScope.app.unreadMessages = Messages.unreadCount();
-
-	        Storage.session.unreadMessages = Messages.unreadCount();
-	      }
-	    });
-	  };
+        self.auth($scope.logindata.username, MD5($scope.logindata.password));
+      };
 
 
-	  /**
-	   * Redirect to dashboard
-	   */
-	  self.redirectToDashboard = function ()
-	  {
-	    $location.path('/dashboard');
+      /**
+       * Authorize user
+       */
+      self.auth = function (uuid, pass)
+      {
+        User.login(uuid.toLowerCase(), pass)
+          .then(
+          function (result)
+          {
+            if (result.status == 400 || result.status == 404)
+            {
+              $scope.alert = {
+                login: {
+                  display: true,
+                  type:    'alert-error',
+                  message: $rootScope.ui.login.alert_wrongUserPass
+                }
+              };
 
-	    setTimeout(function ()
-	    {
-	      $('body').css({ 'background': 'none' });
-        $('.navbar').show();
-	      // $('#mobile-status-bar').show();
-	      // $('#notification').show();
-	      if (!$rootScope.browser.mobile) $('#footer').show();
-	      $('#watermark').show();
-	      $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
-	    }, 100);
-	  };
+              $('#login button[type=submit]')
+                .text($rootScope.ui.login.button_login)
+                .removeAttr('disabled');
 
+              return false;
+            }
+            else
+            {
+              Session.set(result["X-SESSION_ID"]);
 
-	  /**
-	   * Progress bar
-	   */
-	  self.progress = function (ratio, message)
-	  {
-	    $('#preloader .progress .bar').css({ width: ratio + '%' }); 
-	    $('#preloader span').text(message);    
-	  };
-
-
-	  /**
-	   * TODO: RE-FACTORY Make button state change! Finish it!
-	   * Forgot password
-	   */
-		$scope.forgot = function ()
-	  {
-			$('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
-
-			User.password($scope.remember.id)
-	    .then(function (result)
-			{
-				if (result == "ok")
-	      {
-					$scope.alert = {
-						forget: {
-							display: true,
-							type: 'alert-success',
-							message: $rootScope.ui.login.checkYourMail
-						}
-					};
-				}
-	      else 
-	      {
-					$scope.alert = {
-						forget: {
-							display: true,
-							type: 'alert-error',
-							message: $rootScope.ui.errors.login.forgotCantFind
-						}
-					};
-				}
-
-				$('#forgot button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
-			});
-		};
+              self.preloader();
+            }
+          });
+      };
 
 
-	  /**
-	   * TODO: RE-FACTORY
-	   * Change password
-	   */
-		self.changePass =  function (uuid, newpass, key)
-	  {
-			User.changePass(uuid, newpass, key)
-	    .then(function (result)
-	    {
-				if(result.status == 400 || result.status == 500 || result.status == 409)
-	      {
-					$scope.alert = {
-						changePass: {
-							display: true,
-							type: 'alert-error',
-							message: $rootScope.ui.errors.login.changePass
-						}
-					};
-				}
-	      else
-	      { // successfully changed
-					$scope.alert = {
-						changePass: {
-							display: true,
-							type: 'alert-success',
-							message: $rootScope.ui.login.passwordChanged
-						}
-					}; 
-					
-					$location.path( "/message" );
-				}
+      /**
+       * TODO: What happens if preloader stucks?
+       * Optimize preloader and messages
+       *
+       * Initialize preloader
+       */
+      self.preloader = function ()
+      {
+        $('#login').hide();
+        $('#download').hide();
+        $('#preloader').show();
 
-				$('#changePass button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
-			})
-		};
+        self.progress(30, $rootScope.ui.login.loading_User);
+
+        User.states()
+          .then(
+          function (states)
+          {
+            Storage.add('states', angular.toJson(states));
+
+            angular.forEach(
+              states, function (state)
+              {
+                $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+              });
+
+            User.divisions()
+              .then(
+              function (divisions)
+              {
+                $rootScope.config.timeline.config.divisions = divisions;
+
+                Storage.add('divisions', angular.toJson(divisions));
+
+                User.resources()
+                  .then(
+                  function (resources)
+                  {
+                    if (resources.error)
+                    {
+                      console.warn('error ->', resources);
+                    }
+                    else
+                    {
+                      $rootScope.app.resources = resources;
+
+                      self.progress(60, $rootScope.ui.login.loading_Group);
+
+                      User.domain()
+                        .then(
+                        function (domainnames)
+                        {
+                          // NOTE: Currently using the first domainname, could be expanded
+                          // in case users can be in multiple domains
+                          $rootScope.app.domain = domainnames.first();
+
+                          self.progress(70, $rootScope.ui.login.loading_Group);
+
+                          Groups.query(true)
+                            .then(
+                            function (groups)
+                            {
+                              if (groups.error)
+                              {
+                                console.warn('error ->', groups);
+                              }
+                              else
+                              {
+                                var calls = [];
+
+                                angular.forEach(
+                                  groups, function (group)
+                                  {
+                                    calls.push(Groups.get(group.uuid));
+                                  });
+
+                                $q.all(calls)
+                                  .then(
+                                  function ()
+                                  {
+                                    Groups.uniqueMembers();
+
+                                    // TODO: Move settings checkup to a module!
+                                    var settings = angular.fromJson(resources.settingsWebPaige) || {},
+                                        sync = false,
+                                        parenting = false,
+                                        defaults = $rootScope.config.defaults.settingsWebPaige,
+                                        _groups = function (groups)
+                                        {
+                                          var _groups = {};
+                                          angular.forEach(
+                                            groups,
+                                            function (group)
+                                            {
+                                              _groups[group.uuid] = {
+                                                status:    true,
+                                                divisions: false
+                                              };
+                                            }
+                                          );
+                                          return _groups;
+                                        };
+
+                                    // Check if there is any settings at all
+                                    if (settings != null || settings != undefined)
+                                    {
+                                      // check for user settings-all
+                                      if (settings.user)
+                                      {
+                                        // check for user-language settings
+                                        if (settings.user.language)
+                                        {
+                                          // console.warn('user HAS language settings');
+                                          $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+                                          defaults.user.language = settings.user.language;
+                                        }
+                                        else
+                                        {
+                                          // console.warn('user has NO language!!');
+                                          $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+                                          sync = true;
+                                        }
+                                      }
+                                      else
+                                      {
+                                        // console.log('NO user settings at all !!');
+                                        sync = true;
+                                      }
+
+                                      // check for app settings-all
+                                      if (settings.app)
+                                      {
+                                        // check for app-widget settings
+                                        if (settings.app.widgets)
+                                        {
+                                          // check for app-widget-groups setting
+                                          if (settings.app.widgets.groups)
+                                          {
+                                            // console.log('settings for groups =>', settings.app.widgets.groups);
+                                            var oldGroupSetup = false;
+
+                                            if (! jQuery.isEmptyObject(settings.app.widgets.groups))
+                                            {
+                                              angular.forEach(
+                                                settings.app.widgets.groups, function (value, id)
+                                                {
+                                                  // console.log('value ->', value);
+                                                  if (typeof value !== 'object' || value == {})
+                                                  {
+                                                    oldGroupSetup = true;
+                                                  }
+                                                });
+                                            }
+                                            else
+                                            {
+                                              oldGroupSetup = true;
+                                            }
+
+                                            if (oldGroupSetup)
+                                            {
+                                              // console.warn('OLD SETUP => user has NO app widgets groups!!');
+                                              defaults.app.widgets.groups = _groups(groups);
+                                              sync = true;
+                                            }
+                                            else
+                                            {
+                                              // console.warn('user HAS app widgets groups settings');
+                                              defaults.app.widgets.groups = settings.app.widgets.groups;
+                                            }
+                                          }
+                                          else
+                                          {
+                                            console.warn('user has NO app widgets groups!!');
+                                            defaults.app.widgets.groups = _groups(groups);
+                                            sync = true;
+                                          }
+                                        }
+                                        else
+                                        {
+                                          // console.warn('user has NO widget settings!!');
+                                          defaults.app.widgets = { groups: _groups(groups) };
+                                          sync = true;
+                                        }
+
+                                        // check for app group setting
+                                        if (settings.app.group && settings.app.group != undefined)
+                                        {
+                                          // console.warn('user HAS app first group setting');
+                                          defaults.app.group = settings.app.group;
+                                        }
+                                        else
+                                        {
+                                          // console.warn('user has NO first group setting!!');
+                                          parenting = true;
+                                          sync = true;
+                                        }
+                                      }
+                                      else
+                                      {
+                                        // console.log('NO app settings!!');
+                                        defaults.app = { widgets: { groups: _groups(groups) } };
+                                        sync = true;
+                                      }
+                                    }
+                                    else
+                                    {
+                                      // console.log('NO SETTINGS AT ALL!!');
+                                      defaults = {
+                                        user: $rootScope.config.defaults.settingsWebPaige.user,
+                                        app:  {
+                                          widgets: {
+                                            groups: _groups(groups)
+                                          },
+                                          group:   groups[0].uuid
+                                        }
+                                      };
+                                      sync = true;
+                                    }
+
+                                    // sync settings with missing parts also parenting check
+                                    if (sync)
+                                    {
+                                      if (parenting)
+                                      {
+                                        // console.warn('setting up parent group for the user');
+
+                                        Groups.parents()
+                                          .then(
+                                          function (_parent)
+                                          {
+                                            // console.warn('parent group been fetched ->', _parent);
+
+                                            if (_parent != null)
+                                            {
+                                              // console.warn('found parent parent -> ', _parent);
+
+                                              defaults.app.group = _parent;
+                                            }
+                                            else
+                                            {
+                                              // console.warn('setting the first group in the list for user ->', groups[0].uuid);
+
+                                              defaults.app.group = groups[0].uuid;
+                                            }
+
+                                            // console.warn('SAVE ME (with parenting) ->', defaults);
+
+                                            Settings.save(resources.uuid, defaults)
+                                              .then(
+                                              function ()
+                                              {
+                                                User.resources()
+                                                  .then(
+                                                  function (got)
+                                                  {
+                                                    // console.log('gotted (with setting parent group) ->', got);
+                                                    $rootScope.app.resources = got;
+
+                                                    finalize();
+                                                  })
+                                              });
+
+                                          });
+                                      }
+                                      else
+                                      {
+                                        // console.warn('SAVE ME ->', defaults);
+
+                                        defaults.app.group = groups[0].uuid;
+
+                                        Settings.save(resources.uuid, defaults)
+                                          .then(
+                                          function ()
+                                          {
+                                            User.resources()
+                                              .then(
+                                              function (got)
+                                              {
+                                                // console.log('gotted ->', got);
+                                                $rootScope.app.resources = got;
+
+                                                finalize();
+                                              })
+                                          });
+                                      }
+                                    }
+                                    else
+                                    {
+                                      ga(
+                                        'send', 'pageview', {
+                                          'dimension1': resources.uuid,
+                                          'dimension2': $rootScope.app.domain
+                                        });
+                                      ga('send', 'event', 'Login', resources.uuid);
+
+                                      finalize();
+                                    }
+                                  }
+                                );
+                              }
+                            }
+                          );
+                        }
+                      );
+                    }
+                  }
+                );
+              }
+            );
+          });
+
+      };
 
 
-	  /**
-	   * TODO: RE-FACTORY
-	   * Change password
-	   */
-		$scope.changePass = function ()
-	  {
-			$('#alertDiv').hide();
+      /**
+       * Finalize the preloading
+       */
+      function finalize ()
+      {
+        self.progress(100, $rootScope.ui.login.loading_everything);
 
-			if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass)
-	    {
-				$scope.alert = {
-					changePass: {
-						display: true,
-						type: 'alert-error',
-						message: $rootScope.ui.errors.login.changePassAllFields
-					}
-				};
+        self.redirectToDashboard();
 
-				$('#changePass button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
+        self.getMessages();
+      }
 
-				return false;
-			}
-	    else if ($scope.changeData.newPass != $scope.changeData.retypePass)
-	    {
-				$scope.alert = {
-					changePass: {
-						display: true,
-						type: 'alert-error',
-						message: $rootScope.ui.errors.login.changePassNoMatch
-					}
-				};
 
-				$('#changePass button[type=submit]')
-	        .text($rootScope.ui.login.button_changePassword)
-	        .removeAttr('disabled');
+      /**
+       * TODO: Implement an error handling
+       * Get messages (SILENTLY)
+       */
+      self.getMessages = function ()
+      {
+        Messages.query()
+          .then(
+          function (messages)
+          {
+            if (messages.error)
+            {
+              console.warn('error ->', messages);
+            }
+            else
+            {
+              $rootScope.app.unreadMessages = Messages.unreadCount();
 
-				return false;
-			}
+              Storage.session.unreadMessages = Messages.unreadCount();
+            }
+          });
+      };
 
-			$('#changePass button[type=submit]')
-	      .text($rootScope.ui.login.button_changingPassword)
-	      .attr('disabled', 'disabled');
 
-			self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
-		};
+      /**
+       * Redirect to dashboard
+       */
+      self.redirectToDashboard = function ()
+      {
+        $location.path('/dashboard');
 
-	}
-]);;/*jslint node: true */
+        setTimeout(
+          function ()
+          {
+            $('body').css({ 'background': 'none' });
+            $('.navbar').show();
+            // $('#mobile-status-bar').show();
+            // $('#notification').show();
+            if (! $rootScope.browser.mobile) $('#footer').show();
+            $('#watermark').show();
+            $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
+          }, $rootScope.config.timers.TICKER);
+      };
+
+
+      /**
+       * Progress bar
+       */
+      self.progress = function (ratio, message)
+      {
+        $('#preloader .progress .bar').css({ width: ratio + '%' });
+        $('#preloader span').text(message);
+      };
+
+
+      /**
+       * TODO: RE-FACTORY Make button state change! Finish it!
+       * Forgot password
+       */
+      $scope.forgot = function ()
+      {
+        $('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
+
+        User.password($scope.remember.id)
+          .then(
+          function (result)
+          {
+            if (result == "ok")
+            {
+              $scope.alert = {
+                forget: {
+                  display: true,
+                  type:    'alert-success',
+                  message: $rootScope.ui.login.checkYourMail
+                }
+              };
+            }
+            else
+            {
+              $scope.alert = {
+                forget: {
+                  display: true,
+                  type:    'alert-error',
+                  message: $rootScope.ui.errors.login.forgotCantFind
+                }
+              };
+            }
+
+            $('#forgot button[type=submit]')
+              .text($rootScope.ui.login.button_changePassword)
+              .removeAttr('disabled');
+          });
+      };
+
+
+      /**
+       * TODO: RE-FACTORY
+       * Change password
+       */
+      self.changePass = function (uuid, newpass, key)
+      {
+        User.changePass(uuid, newpass, key)
+          .then(
+          function (result)
+          {
+            if (result.status == 400 || result.status == 500 || result.status == 409)
+            {
+              $scope.alert = {
+                changePass: {
+                  display: true,
+                  type:    'alert-error',
+                  message: $rootScope.ui.errors.login.changePass
+                }
+              };
+            }
+            else
+            { // successfully changed
+              $scope.alert = {
+                changePass: {
+                  display: true,
+                  type:    'alert-success',
+                  message: $rootScope.ui.login.passwordChanged
+                }
+              };
+
+              $location.path("/message");
+            }
+
+            $('#changePass button[type=submit]')
+              .text($rootScope.ui.login.button_changePassword)
+              .removeAttr('disabled');
+          })
+      };
+
+
+      /**
+       * TODO: RE-FACTORY
+       * Change password
+       */
+      $scope.changePass = function ()
+      {
+        $('#alertDiv').hide();
+
+        if (! $scope.changeData || ! $scope.changeData.newPass || ! $scope.changeData.retypePass)
+        {
+          $scope.alert = {
+            changePass: {
+              display: true,
+              type:    'alert-error',
+              message: $rootScope.ui.errors.login.changePassAllFields
+            }
+          };
+
+          $('#changePass button[type=submit]')
+            .text($rootScope.ui.login.button_changePassword)
+            .removeAttr('disabled');
+
+          return false;
+        }
+        else if ($scope.changeData.newPass != $scope.changeData.retypePass)
+        {
+          $scope.alert = {
+            changePass: {
+              display: true,
+              type:    'alert-error',
+              message: $rootScope.ui.errors.login.changePassNoMatch
+            }
+          };
+
+          $('#changePass button[type=submit]')
+            .text($rootScope.ui.login.button_changePassword)
+            .removeAttr('disabled');
+
+          return false;
+        }
+
+        $('#changePass button[type=submit]')
+          .text($rootScope.ui.login.button_changingPassword)
+          .attr('disabled', 'disabled');
+
+        self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
+      };
+
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -9471,549 +9667,712 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 /**
  * Dashboard controller
  */
-.controller('dashboard',
-[
-	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Slots', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer', 'User',
-	function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer, User)
-	{
-    $rootScope.notification.status = false;
-
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
-
-
-		/**
-		 * Defaults for loaders
-		 */
-		$scope.loading = {
-			pies:       true,
-			alerts:     true,
-      smartAlarm: true
-		};
-
-
-		/**
-		 * Defaults for toggle
-		 */
-		$scope.more = {
-			status: false,
-			text:   $rootScope.ui.dashboard.showMore
-		};
-
-
-		/**
-		 * Default values for synced pointer values
-		 */
-		$scope.synced = {
-			alarms: new Date().getTime(),
-			pies: 	new Date().getTime()
-		};
-
-
-		/**
-		 * TODO: Check somewhere that user-settings widget-groups are synced with the
-		 * real groups list and if a group is missing in settings-groups add by default!
-		 */
-		var groups    = Storage.local.groups(),
-				selection = {};
-
-		angular.forEach(Storage.local.settings().app.widgets.groups, function (value, group)
-		{
-			selection[group] = value;
-		});
-
-    angular.forEach(groups, function (group)
+  .controller(
+  'dashboard',
+  [
+    '$scope',
+    '$rootScope',
+    '$q',
+    '$window',
+    '$location',
+    'Dashboard',
+    'Slots',
+    'Dater',
+    'Storage',
+    'Settings',
+    'Profile',
+    'Groups',
+    'Announcer',
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
     {
-      if (!selection[group.uuid])
-      {
-        selection[group.uuid] = {
-          divisions: !!($rootScope.config.timeline.config.divisions.length > 0),
-          status: false
-        };
-      }
-    });
+      $rootScope.notification.status = false;
 
-		$scope.popover = {
-			groups:     groups,
-			selection:  selection,
-      divisions:  !!($rootScope.config.timeline.config.divisions.length > 0)
-		};
+      var possiblyAvailable = 'Mogelijk inzetbaar';
 
-    $scope.checkAnyPies = function ()
-    {
-      var ret = true;
-
-      $scope.loading.pies = false;
-
-      angular.forEach(Storage.local.settings().app.widgets.groups, function (group)
-      {
-        if (group.status === true)
-        {
-          ret = false;
-        }
-      });
-
-      return ret;
-    };
+      /**
+       * Fix styles
+       */
+      $rootScope.fixStyles();
 
 
-    $scope.loadingPies = true;
-
-
-		/**
-		 * Get group overviews
-		 */
-		function getOverviews ()
-		{
-      $scope.loadingPies = true;
-
-      if (!$scope.checkAnyPies())
-      {
-        Dashboard.pies()
-          .then(function (pies)
-          {
-            $scope.loadingPies = false;
-
-            if (pies.error)
-            {
-              $rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
-              console.warn('error ->', pies.error);
-            }
-            else
-            {
-              $scope.shortageHolders = {};
-
-              $scope.loading.pies = false;
-
-              $scope.periods = {
-                start:  pies[0].weeks.current.start.date,
-                end:    pies[0].weeks.next.end.date
-              };
-
-              angular.forEach(pies, function (pie)
-              {
-                // Check whether if it is an array what data processor gives back
-                if (pie.weeks.current.state instanceof Array)
-                {
-                  pie.weeks.current.state = pie.weeks.current.state[0];
-                }
-
-                if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
-                if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
-
-                if (pie.weeks.current.state.diff > 0)
-                {
-                  pie.weeks.current.state.cls = 'more';
-                }
-                else if (pie.weeks.current.state.diff === 0)
-                {
-                  pie.weeks.current.state.cls = 'even';
-                }
-                else if (pie.weeks.current.state.diff < 0)
-                {
-                  pie.weeks.current.state.cls = 'less';
-                }
-
-                pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-                  new Date(pie.weeks.current.state.start * 1000)
-                    .toString($rootScope.config.formats.datetime) :
-                  'Geen planning';
-
-                pie.weeks.current.state.end   = (pie.weeks.current.state.end !== undefined) ?
-                  new Date(pie.weeks.current.state.end * 1000)
-                    .toString($rootScope.config.formats.datetime) :
-                  'Geen planning';
-
-                pie.shortages = {
-                  current:  pie.weeks.current.shortages,
-                  next:     pie.weeks.next.shortages,
-                  total:    pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
-                };
-
-                pie.state = pie.weeks.current.state;
-
-                delete(pie.weeks.current.shortages);
-                delete(pie.weeks.current.state);
-
-                $scope.shortageHolders['shortages-' + pie.id] = false;
-              });
-
-              $scope.pies = pies;
-            }
-          })
-          .then( function ()
-          {
-            angular.forEach($scope.pies, function (pie)
-            {
-              pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
-              pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
-            });
-
-            function pieMaker ($id, id, _ratios)
-            {
-              setTimeout( function ()
-              {
-                if ($.browser.msie && $.browser.version == '8.0')
-                {
-                  $('#' + $id + id).html('');
-                }
-                else
-                {
-                  if (document.getElementById($id + id))
-                  {
-                    document.getElementById($id + id).innerHTML = '';
-                  }
-                }
-
-                var ratios    = [],
-                  colorMap  = {
-                    more: '#415e6b',
-                    even: '#ba6a24',
-                    less: '#a0a0a0'
-                  },
-                  colors    = [],
-                  xratios   = [];
-
-                angular.forEach(_ratios, function (ratio, index)
-                {
-                  if (ratio !== 0)
-                  {
-                    ratios.push({
-                      ratio: ratio,
-                      color: colorMap[index]
-                    });
-                  }
-                });
-
-                ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio; } );
-
-                angular.forEach(ratios, function (ratio)
-                {
-                  colors.push(ratio.color);
-                  xratios.push(ratio.ratio);
-                });
-
-                var r   = new Raphael($id + id),
-                    pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
-
-              }, 100);
-            }
-          });
-      }
-      else
-      {
-        $rootScope.statusBar.off();
-      }
-		}
-
-
-		/**
-		 * Get pie overviews
-		 */
-		getOverviews();
-
-
-    /**
-     * Process Smart Alarm team members for view
-     */
-    function prepareSaMembers (setup)
-    {
-      var cached = angular.fromJson(Storage.get('guard'));
-
-      $scope.saMembers = {
-        truck:    [],
-        reserves: []
+      /**
+       * Defaults for loaders
+       */
+      $scope.loading = {
+        pies:       true,
+        alerts:     true,
+        smartAlarm: true
       };
 
-      $scope.saSynced = cached.synced;
 
-      angular.forEach(setup.selection, function (selection)
+      /**
+       * Defaults for toggle
+       */
+      $scope.more = {
+        status: false,
+        text:   $rootScope.ui.dashboard.showMore
+      };
+
+
+      /**
+       * Default values for synced pointer values
+       */
+      $scope.synced = {
+        alarms: new Date().getTime(),
+        pies:   new Date().getTime()
+      };
+
+
+      /**
+       * TODO: Check somewhere that user-settings widget-groups are synced with the
+       * real groups list and if a group is missing in settings-groups add by default!
+       */
+      var groups = Storage.local.groups(),
+      selection = {};
+
+      angular.forEach(
+        Storage.local.settings().app.widgets.groups, function (value, group)
+        {
+          selection[group] = value;
+        });
+
+      angular.forEach(
+        groups, function (group)
+        {
+          if (! selection[group.uuid])
+          {
+            selection[group.uuid] = {
+              divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0),
+              status:    false
+            };
+          }
+        });
+
+      $scope.popover = {
+        groups:    groups,
+        selection: selection,
+        divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0)
+      };
+
+      $scope.checkAnyPies = function ()
       {
-        function translateName (user)
+        var ret = true;
+
+        $scope.loading.pies = false;
+
+        angular.forEach(
+          Storage.local.settings().app.widgets.groups, function (group)
+          {
+            if (group.status === true)
+            {
+              ret = false;
+            }
+          });
+
+        return ret;
+      };
+
+
+      $scope.loadingPies = true;
+
+
+      /**
+       * Get group overviews
+       */
+      function getOverviews ()
+      {
+        $scope.loadingPies = true;
+
+        if (! $scope.checkAnyPies())
         {
-          return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
-        }
+          Dashboard.pies()
+            .then(
+            function (pies)
+            {
+              $scope.loadingPies = false;
 
-        switch (selection.role)
-        {
-          case 'bevelvoerder':
-            $scope.saMembers.truck.push({
-              rank: 1,
-              icon: 'B',
-              role: 'Bevelvoerder',
-              class: 'sa-icon-commander',
-              name: translateName(selection.user)
+              if (pies.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
+                console.warn('error ->', pies.error);
+              }
+              else
+              {
+                $scope.shortageHolders = {};
+
+                $scope.loading.pies = false;
+
+                $scope.periods = {
+                  start: pies[0].weeks.current.start.date,
+                  end:   pies[0].weeks.next.end.date
+                };
+
+                angular.forEach(
+                  pies, function (pie)
+                  {
+                    // Check whether if it is an array what data processor gives back
+                    if (pie.weeks.current.state instanceof Array)
+                    {
+                      pie.weeks.current.state = pie.weeks.current.state[0];
+                    }
+
+                    if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
+                    if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
+
+                    if (pie.weeks.current.state.diff > 0)
+                    {
+                      pie.weeks.current.state.cls = 'more';
+                    }
+                    else if (pie.weeks.current.state.diff === 0)
+                    {
+                      pie.weeks.current.state.cls = 'even';
+                    }
+                    else if (pie.weeks.current.state.diff < 0)
+                    {
+                      pie.weeks.current.state.cls = 'less';
+                    }
+
+                    pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
+                                                    new Date(pie.weeks.current.state.start * 1000)
+                                                      .toString($rootScope.config.formats.datetime) :
+                                                    possiblyAvailable;
+
+                    pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
+                                                  new Date(pie.weeks.current.state.end * 1000)
+                                                    .toString($rootScope.config.formats.datetime) :
+                                                  possiblyAvailable;
+
+                    pie.shortages = {
+                      current: pie.weeks.current.shortages,
+                      next:    pie.weeks.next.shortages,
+                      total: pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
+                    };
+
+                    pie.state = pie.weeks.current.state;
+
+                    delete(pie.weeks.current.shortages);
+                    delete(pie.weeks.current.state);
+
+                    $scope.shortageHolders['shortages-' + pie.id] = false;
+                  });
+
+                $scope.pies = pies;
+              }
+            })
+            .then(
+            function ()
+            {
+              angular.forEach(
+                $scope.pies, function (pie)
+                {
+                  pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
+                  pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
+                });
+
+              function pieMaker ($id, id, _ratios)
+              {
+                setTimeout(
+                  function ()
+                  {
+                    if ($.browser.msie && $.browser.version == '8.0')
+                    {
+                      $('#' + $id + id).html('');
+                    }
+                    else
+                    {
+                      if (document.getElementById($id + id))
+                      {
+                        document.getElementById($id + id).innerHTML = '';
+                      }
+                    }
+
+                    var ratios = [],
+                        colorMap = {
+                          more: '#415e6b',
+                          even: '#ba6a24',
+                          less: '#a0a0a0'
+                        },
+                        colors = [],
+                        xratios = [];
+
+                    angular.forEach(
+                      _ratios, function (ratio, index)
+                      {
+                        if (ratio !== 0)
+                        {
+                          ratios.push(
+                            {
+                              ratio: ratio,
+                              color: colorMap[index]
+                            });
+                        }
+                      });
+
+                    ratios = ratios.sort(
+                      function (a, b)
+                      {
+                        return b.ratio - a.ratio;
+                      });
+
+                    angular.forEach(
+                      ratios, function (ratio)
+                      {
+                        colors.push(ratio.color);
+                        xratios.push(ratio.ratio);
+                      });
+
+                    var r = new Raphael($id + id),
+                        pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+
+                  }, $rootScope.config.timers.TICKER);
+              }
             });
-            break;
-
-          case 'chauffeur':
-            $scope.saMembers.truck.push({
-              rank: 0,
-              icon: 'C',
-              role: 'Chauffeur',
-              class: 'sa-icon-driver',
-              name: translateName(selection.user)
-            });
-            break;
-
-          case 'manschap.1':
-            $scope.saMembers.truck.push({
-              rank: 2,
-              icon: 'M1',
-              role: 'Manschap 1',
-              name: translateName(selection.user)
-            });
-            break;
-
-          case 'manschap.2':
-            $scope.saMembers.truck.push({
-              rank: 3,
-              icon: 'M2',
-              role: 'Manschap 2',
-              name: translateName(selection.user)
-            });
-            break;
-
-          case 'manschap.3':
-            $scope.saMembers.truck.push({
-              rank: 4,
-              icon: 'M3',
-              role: 'Manschap 3',
-              name: translateName(selection.user)
-            });
-            break;
-
-          case 'manschap.4':
-            $scope.saMembers.truck.push({
-              rank: 5,
-              icon: 'M4',
-              role: 'Manschap 4',
-              name: translateName(selection.user)
-            });
-            break;
-        }
-
-        $rootScope.app.guard.role = setup.role;
-
-        if (setup.users[$rootScope.app.resources.uuid])
-        {
-          $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
         }
         else
         {
-          Slots.currentState()
-            .then(function (state)
-            {
-              $rootScope.app.guard.currentState = state.label;
-            });
+          $rootScope.statusBar.off();
         }
-
-        var reserves = {};
-
-        var states = ['available', 'unavailable', 'noplanning'];
-
-        angular.forEach(states, function (state)
-        {
-          reserves[state] = [];
-
-          angular.forEach(setup.reserves[state], function (member)
-          {
-            angular.forEach(member, function (meta, userID)
-            {
-              reserves[state].push({
-                id:    userID,
-                name:  meta.name,
-                state: meta.state
-              });
-            });
-          });
-        });
-
-        $scope.saMembers.reserves = reserves;
-
-        $scope.loading.smartAlarm = false;
-      });
-    }
-
-
-    /**
-     * Fetch smartAlarm information
-     */
-    if ($rootScope.config.profile.smartAlarm)
-    {
-      if (angular.fromJson(Storage.get('guard')).selection)
-      {
-        $scope.loading.smartAlarm = false;
-
-        prepareSaMembers(angular.fromJson(Storage.get('guard')));
       }
 
-      Groups.guardMonitor()
-        .then(function ()
-        {
-          Groups.guardRole()
-            .then(function (setup)
+
+      /**
+       * Get pie overviews
+       */
+      getOverviews();
+
+
+      /**
+       * Process Smart Alarm team members for view
+       */
+      function prepareSaMembers (setup)
+      {
+        var cached = angular.fromJson(Storage.get('guard'));
+
+        $scope.saMembers = {
+          truck:    [],
+          reserves: []
+        };
+
+        $scope.saSynced = cached.synced;
+
+        angular.forEach(
+          setup.selection, function (selection)
+          {
+            function translateName (user)
             {
-              prepareSaMembers(setup);
-            });
-        });
-    }
+              return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
+            }
 
-
-		/**
-		 * Save widget settings
-		 */
-		$scope.saveOverviewWidget = function (selection)
-		{
-      $rootScope.statusBar.display($rootScope.ui.settings.saving);
-
-      angular.forEach(selection, function (selected)
-      {
-        if (!selected.status)
-        {
-          selected.divisions = false;
-        }
-      });
-
-			Settings.save($rootScope.app.resources.uuid, {
-				user: Storage.local.settings().user,
-				app: {
-          group: Storage.local.settings().app.group,
-					widgets: {
-						groups: selection
-					}
-				}
-			})
-			.then(function ()
-			{
-				$rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
-
-				Profile.get($rootScope.app.resources.uuid, true)
-				.then(function ()
-				{
-					getOverviews();
-				});
-			});
-		};
-
-
-    /**
-     * Fetcher for p2000 alarm messages
-     */
-		$scope.getP2000 = function  ()
-		{
-      Dashboard.p2000().
-        then(function (result)
-        {
-          $scope.loading.alerts = false;
-
-          $scope.alarms = result.alarms;
-
-          $scope.alarms.list = $scope.alarms.short;
-
-          $scope.synced.alarms = result.synced;
-        });
-		};
-
-
-		/**
-		 * Alarm sync
-		 */
-	  $rootScope.alarmSync = {
-	  	start: function ()
-		  {
-				$window.planboardSync = $window.setInterval(function ()
-				{
-					if ($location.path() == '/dashboard')
-					{
-						$scope.$apply()
-						{
-							$scope.getP2000();
-
-              if ($rootScope.config.profile.smartAlarm)
-              {
-                if (angular.fromJson(Storage.get('guard').selection))
-                {
-                  prepareSaMembers(angular.fromJson(Storage.get('guard')));
-                }
-
-                Groups.guardRole()
-                  .then(function (setup)
+            switch (selection.role)
+            {
+              case 'bevelvoerder':
+                $scope.saMembers.truck.push(
                   {
-                    prepareSaMembers(setup);
+                    rank:  1,
+                    icon:  'B',
+                    role:  'Bevelvoerder',
+                    class: 'sa-icon-commander',
+                    name:  translateName(selection.user)
                   });
-              }
-						}
-					}
-				}, 60000);
-			},
-			clear: function ()
-			{
-				$window.clearInterval($window.alarmSync);
-			}
-	  };
+                break;
+
+              case 'chauffeur':
+                $scope.saMembers.truck.push(
+                  {
+                    rank:  0,
+                    icon:  'C',
+                    role:  'Chauffeur',
+                    class: 'sa-icon-driver',
+                    name:  translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.1':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 2,
+                    icon: 'M1',
+                    role: 'Manschap 1',
+                    name: translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.2':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 3,
+                    icon: 'M2',
+                    role: 'Manschap 2',
+                    name: translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.3':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 4,
+                    icon: 'M3',
+                    role: 'Manschap 3',
+                    name: translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.4':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 5,
+                    icon: 'M4',
+                    role: 'Manschap 4',
+                    name: translateName(selection.user)
+                  });
+                break;
+            }
+
+            $rootScope.app.guard.role = setup.role;
+
+            if (setup.users[$rootScope.app.resources.uuid])
+            {
+              $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
+            }
+            else
+            {
+              Slots.currentState()
+                .then(
+                function (state)
+                {
+                  $rootScope.app.guard.currentState = state.label;
+                }
+              );
+            }
+
+            var reserves = {};
+
+            // TODO: Kind of duplicate purpose with states
+            var states = ['available', 'unavailable', 'noplanning'];
+
+            angular.forEach(
+              states, function (state)
+              {
+                reserves[state] = [];
+
+                angular.forEach(
+                  setup.reserves[state], function (member)
+                  {
+                    angular.forEach(
+                      member, function (meta, userID)
+                      {
+                        reserves[state].push(
+                          {
+                            id:    userID,
+                            name:  meta.name,
+                            state: meta.state
+                          }
+                        );
+                      });
+                  });
+              });
+
+            $scope.saMembers.reserves = reserves;
+
+            $scope.loading.smartAlarm = false;
+          });
+      }
 
 
-	  /**
-	   * Init the sync process
-	   */
-		$rootScope.alarmSync.start();
-
-
-		/**
-		 * Show more or less alarms
-		 */
-		$scope.toggle = function (more)
-		{
-			$scope.alarms.list = (more) ? $scope.alarms.short :  $scope.alarms.long;
-
-			$scope.more.text = (more) ? $rootScope.ui.dashboard.showMore : $rootScope.ui.dashboard.showLess;
-
-			$scope.more.status = !$scope.more.status;
-		};
-
-
-    /**
-     * Fix popover position
-     */
-    $scope.fixPopoverPos = function ()
-    {
-      setTimeout(function ()
+      /**
+       * Fetch smartAlarm information
+       */
+      if ($rootScope.config.profile.smartAlarm)
       {
-        var spanWidth = $('#dashboard .span9').css('width'),
-            popWidth  = $('#dashboard .popover').css('width');
-
-        $('.popover').css({
-          top: $('#dashboardPopoverBtn').css('top'),
-          left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
-                + 'px'
-        });
-      }, 100);
-    };
-
-
-    /**
-     * Get alarms for the first time
-     */
-    if ($rootScope.config.profile.smartAlarm)
-    {
-      $.ajax({
-        url: $rootScope.config.profile.p2000.url,
-        dataType: 'json',
-        success: function (results)
+        if (angular.fromJson(Storage.get('guard')).selection)
         {
-          $rootScope.statusBar.off();
+          $scope.loading.smartAlarm = false;
 
-          var processed = Announcer.process(results, true);
+          prepareSaMembers(angular.fromJson(Storage.get('guard')));
+        }
 
-          var result = {
-            alarms: processed,
-            synced: new Date().getTime()
-          };
+        Groups.guardMonitor()
+          .then(
+          function ()
+          {
+            Groups.guardRole()
+              .then(
+              function (setup)
+              {
+                prepareSaMembers(setup);
+              });
+          });
+      }
 
-          $scope.$apply(function ()
+
+      var groups = Storage.local.groups(),
+          settings = Storage.local.settings(),
+          members = Storage.local.members();
+
+      angular.forEach(
+        groups,
+        function (group)
+        {
+          group.name = group.name.replace(
+            /\w\S*/g,
+            function (name)
+            {
+              return name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+            }
+          );
+        }
+      );
+
+      var initGroup;
+
+      if ($rootScope.config.profile.meta != 'knrm')
+      {
+        groups.unshift(
+          {
+            'name': 'Allemaal',
+            'uuid': 'all'
+          }
+        );
+
+        initGroup = 'all';
+      }
+      else
+      {
+        initGroup = settings.app.group;
+      }
+
+      $scope.groups = groups;
+
+      $scope.states = $rootScope.config.timeline.config.states;
+
+      $scope.states['no-state'] = {
+        className: 'no-state',
+        label:     possiblyAvailable,
+        color:     '#a0a0a0',
+        type:      'Geen Planning',
+        display:   false
+      };
+
+      $scope.divisions = $rootScope.config.timeline.config.divisions;
+
+      if ($rootScope.config.timeline.config.divisions.length > 0)
+      {
+        if ($scope.divisions[0].id !== 'all')
+        {
+          $scope.divisions.unshift(
+            {
+              id:    'all',
+              label: 'Alle divisies'
+            }
+          );
+        }
+      }
+
+      $scope.current = {
+        group:    initGroup,
+        division: 'all'
+      };
+
+      $scope.loadingAvailability = true;
+
+      /**
+       * Get availability
+       */
+      $scope.getAvailability = function (groupID, divisionID)
+      {
+        if (! groupID)
+        {
+          groupID = $scope.current.group;
+        }
+
+        if (! divisionID)
+        {
+          divisionID = $scope.current.division;
+        }
+
+        Slots.getMemberAvailabilities(groupID, divisionID)
+          .then(
+          function (results)
+          {
+            var ordered = {};
+
+            angular.forEach(
+              results.members,
+              function (slots, id)
+              {
+                var _member = {
+                  id: id,
+                  state: (slots.length > 0) ? slots[0].state : 'no-state',
+                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
+                  end: (slots.length > 0 && slots[0].end !== undefined) ?
+                       slots[0].end * 1000 :
+                       possiblyAvailable,
+                  name: (members && members[id]) ? members[id].name : id
+                };
+
+                if (slots.length > 0)
+                {
+                  if (! ordered.available)
+                  {
+                    ordered.available = [];
+                  }
+                  if (! ordered.unavailable)
+                  {
+                    ordered.unavailable = [];
+                  }
+
+                  if (slots[0].state == 'com.ask-cs.State.Available' ||
+                      slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord' ||
+                      slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid' ||
+                      slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
+                  {
+                    ordered.available.push(_member);
+                  }
+                  else if (slots[0].state == 'com.ask-cs.State.Unavailable' ||
+                           slots[0].state == 'com.ask-cs.State.Unreached')
+                  {
+                    ordered.unavailable.push(_member);
+                  }
+                }
+                else
+                {
+                  if (! ordered.possible)
+                  {
+                    ordered.possible = [];
+                  }
+
+                  ordered.possible.push(_member);
+                }
+              }
+            );
+
+            $scope.loadingAvailability = false;
+
+            var sortByEnd = function (a, b)
+            {
+              if (a.end < b.end)
+              {
+                return - 1;
+              }
+
+              if (a.end > b.end)
+              {
+                return 1;
+              }
+
+              return 0;
+            };
+
+            if (ordered.hasOwnProperty('available')) { ordered.available.sort(sortByEnd) }
+            if (ordered.hasOwnProperty('unavailable')) { ordered.unavailable.sort(sortByEnd) }
+
+            var _availables = [];
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst') { _availables.push(available) }
+              }
+            );
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.Available') { _availables.push(available) }
+              }
+            );
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord') { _availables.push(available) }
+              }
+            );
+
+            angular.forEach(
+              ordered.available,
+              function (available)
+              {
+                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid') { _availables.push(available) }
+              }
+            );
+
+            ordered.available = _availables;
+
+            $scope.availability = {
+              members: ordered,
+              synced: results.synced * 1000
+            };
+          }
+        );
+      };
+
+      $scope.getGroupAvailability = function ()
+      {
+        $scope.current.division = 'all';
+
+        $scope.getAvailability($scope.current.group, $scope.current.division);
+      };
+
+      $scope.getDivisionAvailability = function ()
+      {
+        $scope.getAvailability($scope.current.group, $scope.current.division);
+      };
+
+      $scope.getGroupAvailability();
+
+      /**
+       * Save widget settings
+       */
+      $scope.saveOverviewWidget = function (selection)
+      {
+        $rootScope.statusBar.display($rootScope.ui.settings.saving);
+
+        angular.forEach(
+          selection, function (selected)
+          {
+            if (! selected.status)
+            {
+              selected.divisions = false;
+            }
+          });
+
+        Settings.save(
+          $rootScope.app.resources.uuid, {
+            user: Storage.local.settings().user,
+            app:  {
+              group:   Storage.local.settings().app.group,
+              widgets: {
+                groups: selection
+              }
+            }
+          })
+          .then(
+          function ()
+          {
+            $rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
+
+            Profile.get($rootScope.app.resources.uuid, true)
+              .then(
+              function ()
+              {
+                getOverviews();
+              });
+          });
+      };
+
+
+      /**
+       * Fetcher for p2000 alarm messages
+       */
+      $scope.getP2000 = function ()
+      {
+        Dashboard.p2000().
+          then(
+          function (result)
           {
             $scope.loading.alerts = false;
 
@@ -10023,78 +10382,200 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             $scope.synced.alarms = result.synced;
           });
+      };
+
+
+      /**
+       * Alarm sync
+       */
+      $rootScope.alarmSync = {
+        start: function ()
+        {
+          $window.planboardSync = $window.setInterval(
+            function ()
+            {
+              if ($location.path() == '/dashboard')
+              {
+                $scope.$apply()
+                {
+                  $scope.getP2000();
+
+                  if ($rootScope.config.profile.smartAlarm)
+                  {
+                    if (angular.fromJson(Storage.get('guard').selection))
+                    {
+                      prepareSaMembers(angular.fromJson(Storage.get('guard')));
+                    }
+
+                    Groups.guardRole()
+                      .then(
+                      function (setup)
+                      {
+                        prepareSaMembers(setup);
+                      }
+                    );
+                  }
+                  else
+                  {
+                    $scope.getAvailability($scope.current.group);
+                  }
+                }
+              }
+            }, $rootScope.config.timers.ALARM_SYNC);
         },
-        error: function ()
-        {
-          console.log('ERROR with getting p2000 for the first time!');
-        }
-      });
-    }
-    else
-    {
+        clear: function () { $window.clearInterval($window.alarmSync) }
+      };
 
-      Dashboard.getCapcodes().
-        then(function (capcodes)
-        {
-          var _capcodes = '';
 
-          capcodes = capcodes.sort();
+      /**
+       * Init the sync process
+       */
+      $rootScope.alarmSync.start();
 
-          angular.forEach(capcodes, function (code)
+
+      /**
+       * Show more or less alarms
+       */
+      $scope.toggle = function (more)
+      {
+        $scope.alarms.list = (more) ? $scope.alarms.short : $scope.alarms.long;
+
+        $scope.more.text = (more) ? $rootScope.ui.dashboard.showMore : $rootScope.ui.dashboard.showLess;
+
+        $scope.more.status = ! $scope.more.status;
+      };
+
+
+      /**
+       * Fix popover position
+       */
+      $scope.fixPopoverPos = function ()
+      {
+        setTimeout(
+          function ()
           {
-            _capcodes += code + ', ';
-          });
+            var spanWidth = $('#dashboard .span9').css('width'),
+                popWidth = $('#dashboard .popover').css('width');
 
-          $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
+            $('.popover').css(
+              {
+                top: $('#dashboardPopoverBtn').css('top'),
+                left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
+                  + 'px'
+              });
+          }, $rootScope.config.timers.TICKER);
+      };
 
-          $.ajax({
-            url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
-            dataType: 'jsonp',
-            success: function (results)
+
+      /**
+       * Get alarms for the first time
+       */
+      if ($rootScope.config.profile.smartAlarm)
+      {
+        $.ajax(
+          {
+            url:      $rootScope.config.profile.p2000.url,
+            dataType: 'json',
+            success:  function (results)
             {
               $rootScope.statusBar.off();
 
-              var processed = Announcer.process(results);
+              var processed = Announcer.process(results, true);
 
               var result = {
-                alarms: 	processed,
-                synced:   new Date().getTime()
+                alarms: processed,
+                synced: new Date().getTime()
               };
 
-              $scope.$apply(function ()
-              {
-                $scope.loading.alerts = false;
+              $scope.$apply(
+                function ()
+                {
+                  $scope.loading.alerts = false;
 
-                $scope.alarms = result.alarms;
+                  $scope.alarms = result.alarms;
 
-                $scope.alarms.list = $scope.alarms.short;
+                  $scope.alarms.list = $scope.alarms.short;
 
-                $scope.synced.alarms = result.synced;
-              });
+                  $scope.synced.alarms = result.synced;
+                });
             },
-            error: function ()
+            error:    function ()
             {
               console.log('ERROR with getting p2000 for the first time!');
             }
           });
-        });
+      }
+      else
+      {
+
+        Dashboard.getCapcodes().
+          then(
+          function (capcodes)
+          {
+            var _capcodes = '';
+
+            capcodes = capcodes.sort();
+
+            angular.forEach(
+              capcodes, function (code)
+              {
+                _capcodes += code + ', ';
+              });
+
+            $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
+
+            $.ajax(
+              {
+                url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
+                dataType: 'jsonp',
+                success:  function (results)
+                {
+                  $rootScope.statusBar.off();
+
+                  var processed = Announcer.process(results);
+
+                  var result = {
+                    alarms: processed,
+                    synced: new Date().getTime()
+                  };
+
+                  $scope.$apply(
+                    function ()
+                    {
+                      $scope.loading.alerts = false;
+
+                      $scope.alarms = result.alarms;
+
+                      $scope.alarms.list = $scope.alarms.short;
+
+                      $scope.synced.alarms = result.synced;
+                    });
+                },
+                error:    function ()
+                {
+                  console.log('ERROR with getting p2000 for the first time!');
+                }
+              });
+          });
+      }
+
+
+      /**
+       * Broadcast fireSetPrefixedAvailability calls
+       */
+      $scope.setPrefixedAvailability = function (availability, period)
+      {
+        Storage.session.add(
+          'setPrefixedAvailability', angular.toJson(
+            {
+              availability: availability,
+              period:       period
+            }));
+
+        $location.path('/planboard').search({ setPrefixedAvailability: true });
+      }
     }
-
-
-    /**
-     * Broadcast fireSetPrefixedAvailability calls
-     */
-    $scope.setPrefixedAvailability = function (availability, period)
-    {
-      Storage.session.add('setPrefixedAvailability', angular.toJson({
-        availability: availability,
-        period: period
-      }));
-
-      $location.path('/planboard').search({ setPrefixedAvailability: true });
-    }
-	}
-]);;/*jslint node: true */
+  ]);;/*jslint node: true */
 /*global angular */
 /*global Raphael */
 'use strict';
@@ -10106,266 +10587,306 @@ angular.module('WebPaige.Controllers.TV', [])
 /**
  * TV / Dashboard controller
  */
-.controller('tv',
-[
-	'$scope', '$rootScope', '$q', '$window', '$location', 'Dashboard', 'Dater', 'Storage', 'Settings', 'Profile', 'Groups', 'Announcer',
-	function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer)
-	{
-    $rootScope.notifier.destroy();
-
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
-
-    $('.navbar').hide();
-    $('#footer').hide();
-
-    $('#watermark').css({ bottom: '-10px' });
-
-		/**
-		 * Defaults for loaders
-		 */
-		$scope.loading = {
-			alerts:     true,
-      smartAlarm: true
-		};
-
-
-		/**
-		 * Default values for synced pointer values
-		 */
-		$scope.synced = {
-			alarms: new Date().getTime()
-		};
-
-
-    /**
-     * Process Smart Alarm team members for view
-     */
-    function prepareSaMembers (setup)
+  .controller(
+  'tv',
+  [
+    '$scope',
+    '$rootScope',
+    '$q',
+    '$window',
+    '$location',
+    'Dashboard',
+    'Dater',
+    'Storage',
+    'Settings',
+    'Profile',
+    'Groups',
+    'Announcer',
+    '$http',
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer, $http)
     {
-      var cached = angular.fromJson(Storage.get('guard'));
+      $rootScope.notifier.destroy();
 
-      $scope.saMembers = {
-        truck:    [],
-        reserves: []
+      if (! $http.defaults.headers.common['X-SESSION_ID'])
+      {
+        var session = angular.fromJson(Storage.cookie.get('session'));
+
+        $http.defaults.headers.common['X-SESSION_ID'] = session.id;
+      }
+
+      /**
+       * Fix styles
+       */
+      $rootScope.fixStyles();
+
+      $('.navbar').hide();
+      $('#footer').hide();
+
+      $('#watermark').css({ bottom: '-10px' });
+
+      /**
+       * Defaults for loaders
+       */
+      $scope.loading = {
+        alerts:     true,
+        smartAlarm: true
       };
 
-      $scope.saSynced = cached.synced;
+      /**
+       * Default values for synced pointer values
+       */
+      $scope.synced = {
+        alarms: new Date().getTime()
+      };
 
-      angular.forEach(setup.selection, function (selection)
+
+      /**
+       * Process Smart Alarm team members for view
+       */
+      function prepareSaMembers (setup)
       {
-        function translateName (user)
-        {
-          return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
-        }
+        var cached = angular.fromJson(Storage.get('guard'));
 
-        switch (selection.role)
-        {
-          case 'bevelvoerder':
-            $scope.saMembers.truck.push({
-              rank: 1,
-              icon: 'B',
-              role: 'Bevelvoerder',
-              class: 'sa-icon-commander',
-              name: translateName(selection.user)
-            });
-            break;
+        $scope.saMembers = {
+          truck:    [],
+          reserves: []
+        };
 
-          case 'chauffeur':
-            $scope.saMembers.truck.push({
-              rank: 0,
-              icon: 'C',
-              role: 'Chauffeur',
-              class: 'sa-icon-driver',
-              name: translateName(selection.user)
-            });
-            break;
+        $scope.saSynced = cached.synced;
 
-          case 'manschap.1':
-            $scope.saMembers.truck.push({
-              rank: 2,
-              icon: 'M1',
-              role: 'Manschap 1',
-              name: translateName(selection.user)
-            });
-            break;
-
-          case 'manschap.2':
-            $scope.saMembers.truck.push({
-              rank: 3,
-              icon: 'M2',
-              role: 'Manschap 2',
-              name: translateName(selection.user)
-            });
-            break;
-
-          case 'manschap.3':
-            $scope.saMembers.truck.push({
-              rank: 4,
-              icon: 'M3',
-              role: 'Manschap 3',
-              name: translateName(selection.user)
-            });
-            break;
-
-          case 'manschap.4':
-            $scope.saMembers.truck.push({
-              rank: 5,
-              icon: 'M4',
-              role: 'Manschap 4',
-              name: translateName(selection.user)
-            });
-            break;
-        }
-
-        var reserves = {};
-
-        var states = ['available', 'unavailable', 'noplanning'];
-
-        angular.forEach(states, function (state)
-        {
-          reserves[state] = [];
-
-          angular.forEach(setup.reserves[state], function (member)
+        angular.forEach(
+          setup.selection, function (selection)
           {
-            angular.forEach(member, function (meta, userID)
+            function translateName (user)
             {
-              reserves[state].push({
-                id:    userID,
-                name:  meta.name,
-                state: meta.state
+              return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
+            }
+
+            switch (selection.role)
+            {
+              case 'bevelvoerder':
+                $scope.saMembers.truck.push(
+                  {
+                    rank:  1,
+                    icon:  'B',
+                    role:  'Bevelvoerder',
+                    class: 'sa-icon-commander',
+                    name:  translateName(selection.user)
+                  });
+                break;
+
+              case 'chauffeur':
+                $scope.saMembers.truck.push(
+                  {
+                    rank:  0,
+                    icon:  'C',
+                    role:  'Chauffeur',
+                    class: 'sa-icon-driver',
+                    name:  translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.1':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 2,
+                    icon: 'M1',
+                    role: 'Manschap 1',
+                    name: translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.2':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 3,
+                    icon: 'M2',
+                    role: 'Manschap 2',
+                    name: translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.3':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 4,
+                    icon: 'M3',
+                    role: 'Manschap 3',
+                    name: translateName(selection.user)
+                  });
+                break;
+
+              case 'manschap.4':
+                $scope.saMembers.truck.push(
+                  {
+                    rank: 5,
+                    icon: 'M4',
+                    role: 'Manschap 4',
+                    name: translateName(selection.user)
+                  });
+                break;
+            }
+
+            var reserves = {};
+
+            var states = ['available', 'unavailable', 'noplanning'];
+
+            angular.forEach(
+              states, function (state)
+              {
+                reserves[state] = [];
+
+                angular.forEach(
+                  setup.reserves[state], function (member)
+                  {
+                    angular.forEach(
+                      member, function (meta, userID)
+                      {
+                        reserves[state].push(
+                          {
+                            id:    userID,
+                            name:  meta.name,
+                            state: meta.state
+                          });
+                      });
+                  });
               });
-            });
+
+            $scope.saMembers.reserves = reserves;
+
+            $scope.loading.smartAlarm = false;
           });
-        });
-
-        $scope.saMembers.reserves = reserves;
-
-        $scope.loading.smartAlarm = false;
-      });
-    }
+      }
 
 
-    /**
-     * Fetch smartAlarm information
-     */
-    Groups.query()
-      .then(function (groups)
-      {
-        var calls = [];
-
-        angular.forEach(groups, function (group)
+      /**
+       * Fetch smartAlarm information
+       */
+      Groups.query()
+        .then(
+        function (groups)
         {
-          calls.push(Groups.get(group.uuid));
+          var calls = [];
+
+          angular.forEach(
+            groups, function (group)
+            {
+              calls.push(Groups.get(group.uuid));
+            });
+
+          $q.all(calls)
+            .then(
+            function ()
+            {
+              Groups.uniqueMembers();
+
+              var guard = angular.fromJson(Storage.get('guard'));
+
+              if (guard && guard.selection)
+              {
+                $scope.loading.smartAlarm = false;
+
+                prepareSaMembers(angular.fromJson(Storage.get('guard')));
+              }
+
+
+              Groups.guardMonitor()
+                .then(
+                function ()
+                {
+                  Groups.guardRole()
+                    .then(
+                    function (setup)
+                    {
+                      prepareSaMembers(setup);
+                    });
+                });
+            });
         });
 
-        $q.all(calls)
-          .then(function ()
+
+      /**
+       * Fetcher for p2000 alarm messages
+       */
+      $scope.getP2000 = function ()
+      {
+        Dashboard.p2000().
+          then(
+          function (result)
           {
-            Groups.uniqueMembers();
+            $scope.loading.alerts = false;
+
+            $scope.alarms = result.alarms;
+
+            $scope.alarms.list = $scope.alarms.short;
+
+            $scope.synced.alarms = result.synced;
+          });
+      };
+
+
+      $window.setInterval(
+        function ()
+        {
+          $scope.$apply()
+          {
+            $scope.getP2000();
 
             var guard = angular.fromJson(Storage.get('guard'));
 
             if (guard && guard.selection)
             {
-              $scope.loading.smartAlarm = false;
-
               prepareSaMembers(angular.fromJson(Storage.get('guard')));
             }
 
-
-            Groups.guardMonitor()
-              .then(function ()
+            Groups.guardRole()
+              .then(
+              function (setup)
               {
-                Groups.guardRole()
-                  .then(function (setup)
-                  {
-                    prepareSaMembers(setup);
-                  });
+                prepareSaMembers(setup);
               });
-          });
-      });
+          }
+        }, $rootScope.config.timers.TV_SYNC);
 
 
-    /**
-     * Fetcher for p2000 alarm messages
-     */
-		$scope.getP2000 = function  ()
-		{
-      Dashboard.p2000().
-			then(function (result)
-			{
-        $scope.loading.alerts = false;
-
-        $scope.alarms = result.alarms;
-
-        $scope.alarms.list = $scope.alarms.short;
-
-        $scope.synced.alarms = result.synced;
-			});
-		};
-
-
-    $window.setInterval(function ()
-    {
-      $scope.$apply()
-      {
-        $scope.getP2000();
-
-        var guard = angular.fromJson(Storage.get('guard'));
-
-        if (guard && guard.selection)
+      /**
+       * Get alarms for the first time
+       */
+      $.ajax(
         {
-          prepareSaMembers(angular.fromJson(Storage.get('guard')));
-        }
-
-        Groups.guardRole()
-          .then(function (setup)
+          url:      $rootScope.config.profile.p2000.url,
+          dataType: 'json',
+          success:  function (results)
           {
-            prepareSaMembers(setup);
-          });
-      }
-    }, 60000);
+            $rootScope.statusBar.off();
 
+            var processed = Announcer.process(results, true);
 
-    /**
-     * Get alarms for the first time
-     */
-    $.ajax({
-      url: $rootScope.config.profile.p2000.url,
-      dataType: 'json',
-      success: function (results)
-      {
-        $rootScope.statusBar.off();
+            var result = {
+              alarms: processed,
+              synced: new Date().getTime()
+            };
 
-        var processed = Announcer.process(results, true);
+            $scope.$apply(
+              function ()
+              {
+                $scope.loading.alerts = false;
 
-        var result = {
-          alarms: 	processed,
-          synced:   new Date().getTime()
-        };
+                $scope.alarms = result.alarms;
 
-        $scope.$apply(function ()
-        {
-          $scope.loading.alerts = false;
+                $scope.alarms.list = $scope.alarms.short;
 
-          $scope.alarms = result.alarms;
-
-          $scope.alarms.list = $scope.alarms.short;
-
-          $scope.synced.alarms = result.synced;
+                $scope.synced.alarms = result.synced;
+              });
+          },
+          error:    function ()
+          {
+            console.log('ERROR with getting p2000 for the first time!');
+          }
         });
-      },
-      error: function ()
-      {
-        console.log('ERROR with getting p2000 for the first time!');
-      }
-    });
 
-	}
-]);;/*jslint node: true */
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -10403,7 +10924,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	   */
 	  var groups  	= Storage.local.groups(),
 	      settings 	= Storage.local.settings();
-
 
 	  /**
 	   * Pass current
@@ -10952,7 +11472,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
-		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
+		    	var timeout = ($location.hash() == 'timeline') ?
+                        $rootScope.config.timers.TICKER :
+                        $rootScope.config.timers.MEMBER_TIMELINE_RENDER;
 
           $rootScope.timelineLoaded = false;
 
@@ -11316,7 +11838,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      setTimeout(function ()
 	      {
 	        $scope.timeliner.redraw();
-	      }, 10);
+	      }, $rootScope.config.timers.TICKER);
 	    }
 	  };
 
@@ -11942,7 +12464,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			setTimeout(function () 
 	    {
 	      $scope.self.timeline.redraw();
-	    }, 100);
+	    }, $rootScope.config.timers.TICKER);
 	  }
 
 
@@ -11971,7 +12493,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				}, 60 * 1000);
+				}, $rootScope.config.timers.PLANBOARD_SYNC);
 			},
 
 			/**
@@ -13274,7 +13796,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      });
 
 	      $("div#composeTab select.chzn-select").trigger("liszt:updated");
-	    }, 100);
+	    }, $rootScope.config.timers.TICKER);
 
 	    $scope.message = {
 	      subject: $rootScope.ui.message.escalation,
@@ -13630,756 +14152,804 @@ angular.module('WebPaige.Controllers.Groups', [])
 /**
  * Groups controller
  */
-.controller('groups',
-[
-	'$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
-	function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
-	{
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
+  .controller(
+  'groups',
+  [
+    '$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
+    {
+      /**
+       * Fix styles
+       */
+      $rootScope.fixStyles();
 
 
-		/**
-		 * Self this
-		 */
-		var self    = this,
-				params  = $location.search();
+      /**
+       * Self this
+       */
+      var self = this,
+      params = $location.search();
 
 
-		/**
-		 * Init search query
-		 */
-		$scope.search = {
-			query: ''
-		};
+      /**
+       * Init search query
+       */
+      $scope.search = {
+        query: ''
+      };
 
 
-		/**
-		 * Reset selection
-		 */
-		$scope.selection = {};
+      /**
+       * Reset selection
+       */
+      $scope.selection = {};
 
 
-		/**
-		 * Set groups
-		 */
-		$scope.data = data;
+      /**
+       * Set groups
+       */
+      $scope.data = data;
 
 
-		/**
-		 * Grab and set roles for view
-		 */
-		$scope.roles = $rootScope.config.roles;
+      /**
+       * Grab and set roles for view
+       */
+      $scope.roles = $rootScope.config.roles;
 
 
-		/**
-		 * Groups for dropdown
-		 */
-		$scope.groups = data.groups;
+      /**
+       * Groups for dropdown
+       */
+      $scope.groups = data.groups;
 
 
-		var uuid, view;
+      var uuid, view;
 
-		/**
-		 * If no params or hashes given in url
-		 */
-		if (!params.uuid && !$location.hash())
-		{
-			uuid = data.groups[0].uuid;
-			view = 'view';
-
-			$location.search({uuid: data.groups[0].uuid}).hash('view');
-		}
-		else
-		{
-			uuid = params.uuid;
-			view = $location.hash();
-		}
-
-
-		/**
-		 * Set group
-		 */
-		setGroupView(uuid);
-
-
-		/**
-		 * Set view
-		 */
-		setView(view);
-
-
-		/**
-		 * Set given group for view
-		 */
-		function setGroupView (id)
-		{
-			angular.forEach(data.groups, function (group)
-			{
-				if (group.uuid == id) $scope.group = group;
-			});
-
-			$scope.members = data.members[id];
-
-      $scope.members.sort(
-        function (a, b)
-        {
-          var aName = a.resources.lastName.toLowerCase(),
-              bName = b.resources.lastName.toLowerCase();
-
-          if (aName < bName)
-          {
-            return -1;
-          }
-
-          if (aName > bName)
-          {
-            return 1;
-          }
-
-          return 0;
-        }
-      );
-
-			$scope.current = id;
-
-			wisher(id);
-		}
-
-
-    /**
-     * Set wish
-     */
-		function wisher (id)
-		{
-			$scope.wished = false;
-
-			Groups.wish(id)
-			.then(function (wish)
-			{
-				$scope.wished = true;
-
-				$scope.wish = wish.count;
-
-				$scope.popover = {
-					id: id,
-					wish: wish.count
-				};
-			});
-		}
-
-
-		/**
-		 * Set wish for the group
-		 */
-		$scope.saveWish = function (id, wish)
-		{
-			$rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
-
-			Slots.setWish(
-			{
-				id:     id,
-				start:  255600,
-				end:    860400,
-				recursive:  true,
-				wish:   wish
-			})
-			.then(
-				function (result)
-				{
-          $rootScope.statusBar.off();
-
-					if (result.error)
-					{
-						$rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
-
-						console.warn('error ->', result);
-					}
-					else
-					{
-						$rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
-					}
-
-					wisher(id);
-				}
-			);
-
-		};
-
-
-		/**
-		 * Request for a group
-		 */
-		$scope.requestGroup = function (current, switched)
-		{
-			setGroupView(current);
-
-			$scope.$watch($location.search(), function ()
-			{
-				$location.search({uuid: current});
-			});
-
-			if (switched)
-			{
-				if ($location.hash() != 'view')
-        {
-          $location.hash('view');
-        }
-
-				setView('view');
-			}
-		};
-
-
-		/**
-		 * View setter
-		 */
-		function setView (hash)
-		{
-			$scope.views = {
-				view:   false,
-				add:    false,
-				edit:   false,
-				search: false,
-				member: false
-			};
-
-			$scope.views[hash] = true;
-		}
-
-
-		/**
-		 * Switch between the views and set hash accordingly
-		 */
-		$scope.setViewTo = function (hash)
-		{
-			$scope.$watch(hash, function ()
-			{
-				$location.hash(hash);
-
-				setView(hash);
-			});
-		};
-
-
-		/**
-		 * Toggle new group button
-		 */
-		$scope.addGroupForm = function ()
-		{
-			if ($scope.views.add)
-			{
-				$scope.closeTabs();
-			}
-			else
-			{
-				$scope.groupForm = {};
-
-				$scope.setViewTo('add');
-			}
-		};
-
-
-		/**
-		 * New member
-		 */
-		$scope.newMemberForm = function ()
-		{
-			if ($scope.views.member)
-			{
-				$scope.closeTabs();
-			}
-			else
-			{
-				$scope.memberForm = {};
-
-				$scope.setViewTo('member');
-			}
-		};
-
-
-		/**
-		 * Edit a group
-		 */
-		$scope.editGroup = function (group)
-		{
-			$scope.setViewTo('edit');
-
-			$scope.groupForm = {
-				id: group.uuid,
-				name: group.name
-			};
-		};
-
-
-		/**
-		 * Close inline form
-		 */
-		$scope.closeTabs = function ()
-		{
-			$scope.groupForm = {};
-
-			$scope.memberForm = {};
-
-			$scope.setViewTo('view');
-		};
-
-
-		/**
-		 * Search for members
-		 */
-		$scope.searchMembers = function (query)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
-
-			Groups.search(query).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.groups.searchMembers);
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$scope.search = {
-						query: '',
-						queried: query
-					};
-
-					$scope.candidates = result;
-
-					$scope.setViewTo('search');
-
-					$rootScope.statusBar.off();
-				}
-			});
-		};
-
-
-		/**
-		 * Add member to a group
-		 */
-		$scope.addMember = function (candidate)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
-
-			Groups.addMember(candidate).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
-
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.memberAdded);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
-
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$rootScope.statusBar.off();
-
-              if ($location.hash() == 'search')
-              {
-                $scope.searchMembers($scope.search.query);
-              }
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Remove member from a group
-		 */
-		$scope.removeMember = function (member, group)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.removingMember);
-
-			Groups.removeMember(member, group).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
-
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
-
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Remove members
-		 */
-		$scope.removeMembers = function (selection, group)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
-
-			Groups.removeMembers(selection, group).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					$scope.selection = {};
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-
-			/**
-			 * TODO (Not working to reset master checkbox!)
-			 */
-			//$scope.selectionMaster = {};
-		};
-
-
-		/**
-		 * Save a group
-		 */
-		$scope.groupSubmit = function (group)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.saving);
-
-			Groups.save(group).
-			then(function (returned)
-			{
-				if (returned.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
-
-					console.warn('error ->', returned);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.groupSaved);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
-
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.closeTabs();
-
-							$scope.data = data;
-
-							angular.forEach(data.groups, function (group)
-							{
-                if (group.uuid == returned)
-                {
-                  $scope.groups = data.groups;
-
-                  angular.forEach(data.groups, function (g)
-                  {
-                    if (g.uuid == group.uuid)
-                    {
-                      $scope.group = g;
-                    }
-                  });
-
-                  $scope.members = data.members[group.uuid];
-
-                  $scope.current = group.uuid;
-
-                  $scope.$watch($location.search(), function ()
-                  {
-                    $location.search({uuid: group.uuid});
-                  });
-                }
-							});
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
-
-
-		/**
-		 * Save a member
-		 */
-		$scope.memberSubmit = function (member)
-		{
-      // console.log('profile info to save ->', angular.toJson(member));
-
-      if ($rootScope.config.profile.smartAlarm)
+      /**
+       * If no params or hashes given in url
+       */
+      if (! params.uuid && ! $location.hash())
       {
-        member.role = 1;
+        uuid = data.groups[0].uuid;
+        view = 'view';
+
+        $location.search({uuid: data.groups[0].uuid}).hash('view');
+      }
+      else
+      {
+        uuid = params.uuid;
+        view = $location.hash();
       }
 
-			$rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
-			Profile.register(member).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					if (result.error.status === 409)
-					{
-						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
+      /**
+       * Set group
+       */
+      setGroupView(uuid);
 
-						$rootScope.statusBar.off();
-					}
-          else if (result.error.status === 403)
+
+      /**
+       * Set view
+       */
+      setView(view);
+
+
+      /**
+       * Set given group for view
+       */
+      function setGroupView (id)
+      {
+        angular.forEach(
+          data.groups, function (group)
           {
-            // If 403 Forbidden is thrown initialize the process again
-            $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+            if (group.uuid == id) $scope.group = group;
+          });
 
+        $scope.members = data.members[id];
+
+        $scope.members.sort(
+          function (a, b)
+          {
+            var aName, bName;
+
+            if ($rootScope.config.profile.meta != 'demo')
+            {
+              aName = a.resources.lastName.toLowerCase();
+              bName = b.resources.lastName.toLowerCase();
+            }
+            else
+            {
+              if (typeof a.resources.lastName != 'undefined' &&
+                  a.resources.lastName != null &&
+                  typeof b.resources.lastName != 'undefined' &&
+                  b.resources.lastName != null)
+              {
+                aName = a.resources.lastName.toLowerCase();
+                bName = b.resources.lastName.toLowerCase();
+              }
+              else
+              {
+                aName = a.uuid.toLowerCase();
+                bName = b.uuid.toLowerCase();
+              }
+            }
+
+            if (aName < bName)
+            {
+              return - 1;
+            }
+
+            if (aName > bName)
+            {
+              return 1;
+            }
+
+            return 0;
+          }
+        );
+
+        $scope.current = id;
+
+        wisher(id);
+      }
+
+
+      /**
+       * Set wish
+       */
+      function wisher (id)
+      {
+        $scope.wished = false;
+
+        Groups.wish(id)
+          .then(
+          function (wish)
+          {
+            $scope.wished = true;
+
+            $scope.wish = wish.count;
+
+            $scope.popover = {
+              id:   id,
+              wish: wish.count
+            };
+          });
+      }
+
+
+      /**
+       * Set wish for the group
+       */
+      $scope.saveWish = function (id, wish)
+      {
+        $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
+
+        Slots.setWish(
+          {
+            id:        id,
+            start:     255600,
+            end:       860400,
+            recursive: true,
+            wish:      wish
+          })
+          .then(
+          function (result)
+          {
             $rootScope.statusBar.off();
 
-            $('body').scrollTop(0);
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
+            }
+
+            wisher(id);
           }
-					else
-					{
-						$rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
-					}
-					
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+        );
 
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-							$location.path('/profile/' + member.username).hash('profile');
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
+      };
 
 
-    /**
-     * Confirm deleting a group
-     */
-    $scope.confirmGroupDelete = function (id)
-    {
-      $rootScope.notifier.alert('', false, true, {section: 'groups', id: id});
-    };
+      /**
+       * Request for a group
+       */
+      $scope.requestGroup = function (current, switched)
+      {
+        setGroupView(current);
+
+        $scope.$watch(
+          $location.search(), function ()
+          {
+            $location.search({uuid: current});
+          });
+
+        if (switched)
+        {
+          if ($location.hash() != 'view')
+          {
+            $location.hash('view');
+          }
+
+          setView('view');
+        }
+      };
 
 
-    /**
-     * Listen for incoming group delete calls
-     */
-    $rootScope.$on('fireGroupDelete', function (event, group)
-    {
-      $scope.deleteGroup(group.id);
-    });
+      /**
+       * View setter
+       */
+      function setView (hash)
+      {
+        $scope.views = {
+          view:   false,
+          add:    false,
+          edit:   false,
+          search: false,
+          member: false
+        };
+
+        $scope.views[hash] = true;
+      }
 
 
-		/**
-		 * Delete a group
-		 */
-		$scope.deleteGroup = function (id)
-		{
-			$rootScope.statusBar.display($rootScope.ui.groups.deleting);
+      /**
+       * Switch between the views and set hash accordingly
+       */
+      $scope.setViewTo = function (hash)
+      {
+        $scope.$watch(
+          hash, function ()
+          {
+            $location.hash(hash);
 
-			Groups.remove(id).
-			then(function (result)
-			{
-				if (result.error)
-				{
-					$rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
-
-					console.warn('error ->', result);
-				}
-				else
-				{
-					$rootScope.notifier.success($rootScope.ui.groups.deleted);
-
-					$rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-					Groups.query().
-					then(function (data)
-					{
-						if (data.error)
-						{
-							$rootScope.notifier.error($rootScope.ui.errors.groups.query);
-
-							console.warn('error ->', data);
-						}
-						else
-						{
-							$scope.data = data;
-
-              /**
-               * TODO: Is this really supposed to be like this?
-               */
-							angular.forEach(data.groups, function (group, index)
-							{
-								$scope.groups = data.groups;
-
-								$scope.group = data.groups[0];
-
-								$scope.members = data.members[data.groups[0].uuid];
-
-								$scope.current = data.groups[0].uuid;
-
-								$scope.$watch($location.search(),
-									function ()
-									{
-										$location.search({uuid: data.groups[0].uuid});
-									}
-								);
-							});
-
-							$rootScope.statusBar.off();
-						}
-					});
-				}
-			});
-		};
+            setView(hash);
+          });
+      };
 
 
-		/**
-		 * Selection toggle
-		 */
-		$scope.toggleSelection = function (group, master)
-		{
-			var flag    = (master) ? true : false,
-					members = angular.fromJson(Storage.get(group.uuid));
+      /**
+       * Toggle new group button
+       */
+      $scope.addGroupForm = function ()
+      {
+        if ($scope.views.add)
+        {
+          $scope.closeTabs();
+        }
+        else
+        {
+          $scope.groupForm = {};
 
-			angular.forEach(members, function (member)
-			{
-				$scope.selection[member.uuid] = flag;
-			});
-		};
-
-
-		/**
-		 * TODO: Not used in groups yet but login uses modal call..
-		 * Fetch parent groups
-		 */
-		$scope.fetchParent = function ()
-		{
-			Groups.parents()
-			.then(function (result)
-			{
-				console.warn('parent -> ', result);
-			});
-		};
-
-		/**
-		 * TODO: Not used in groups yet..
-		 * Fetch parent groups
-		 */
-		$scope.fetchContainers = function (id)
-		{
-			Groups.containers(id)
-			.then(function (result)
-			{
-				console.warn('containers -> ', result);
-			});
-		};
+          $scope.setViewTo('add');
+        }
+      };
 
 
-    /**
-     * Set some defaults for sorting
-     */
-    $scope.reverse = false;
-    $scope.sorter = 'resources.lastName';
+      /**
+       * New member
+       */
+      $scope.newMemberForm = function ()
+      {
+        if ($scope.views.member)
+        {
+          $scope.closeTabs();
+        }
+        else
+        {
+          $scope.memberForm = {};
+
+          $scope.setViewTo('member');
+        }
+      };
 
 
-    /**
-     * Toggle sorting
-     */
-    $scope.toggleSorter = function (sorter)
-    {
-      $scope.reverse = ($scope.sorter == sorter) ? !$scope.reverse : false;
+      /**
+       * Edit a group
+       */
+      $scope.editGroup = function (group)
+      {
+        $scope.setViewTo('edit');
 
-      $scope.sorter = sorter;
-    };
+        $scope.groupForm = {
+          id:   group.uuid,
+          name: group.name
+        };
+      };
 
-	}
-]);;/*jslint node: true */
+
+      /**
+       * Close inline form
+       */
+      $scope.closeTabs = function ()
+      {
+        $scope.groupForm = {};
+
+        $scope.memberForm = {};
+
+        $scope.setViewTo('view');
+      };
+
+
+      /**
+       * Search for members
+       */
+      $scope.searchMembers = function (query)
+      {
+        $rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
+
+        Groups.search(query).
+          then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.groups.searchMembers);
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $scope.search = {
+                query:   '',
+                queried: query
+              };
+
+              $scope.candidates = result;
+
+              $scope.setViewTo('search');
+
+              $rootScope.statusBar.off();
+            }
+          });
+      };
+
+
+      /**
+       * Add member to a group
+       */
+      $scope.addMember = function (candidate)
+      {
+        $rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
+
+        Groups.addMember(candidate).
+          then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.groups.memberAdded);
+
+              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+              Groups.query().
+                then(
+                function (data)
+                {
+                  if (data.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
+                    console.warn('error ->', data);
+                  }
+                  else
+                  {
+                    $scope.data = data;
+
+                    $rootScope.statusBar.off();
+
+                    if ($location.hash() == 'search')
+                    {
+                      $scope.searchMembers($scope.search.query);
+                    }
+                  }
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Remove member from a group
+       */
+      $scope.removeMember = function (member, group)
+      {
+        $rootScope.statusBar.display($rootScope.ui.groups.removingMember);
+
+        Groups.removeMember(member, group).
+          then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+
+              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+              Groups.query().
+                then(
+                function (data)
+                {
+                  if (data.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
+                    console.warn('error ->', data);
+                  }
+                  else
+                  {
+                    $scope.data = data;
+
+                    $rootScope.statusBar.off();
+                  }
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Remove members
+       */
+      $scope.removeMembers = function (selection, group)
+      {
+        $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
+
+        Groups.removeMembers(selection, group).
+          then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+
+              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+              $scope.selection = {};
+
+              Groups.query().
+                then(
+                function (data)
+                {
+                  if (data.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                    console.warn('error ->', data);
+                  }
+                  else
+                  {
+                    $scope.data = data;
+
+                    $rootScope.statusBar.off();
+                  }
+                });
+            }
+          });
+
+        /**
+         * TODO (Not working to reset master checkbox!)
+         */
+        //$scope.selectionMaster = {};
+      };
+
+
+      /**
+       * Save a group
+       */
+      $scope.groupSubmit = function (group)
+      {
+        $rootScope.statusBar.display($rootScope.ui.groups.saving);
+
+        Groups.save(group).
+          then(
+          function (returned)
+          {
+            if (returned.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
+
+              console.warn('error ->', returned);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.groups.groupSaved);
+
+              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+              Groups.query().
+                then(
+                function (data)
+                {
+                  if (data.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
+                    console.warn('error ->', data);
+                  }
+                  else
+                  {
+                    $scope.closeTabs();
+
+                    $scope.data = data;
+
+                    angular.forEach(
+                      data.groups, function (group)
+                      {
+                        if (group.uuid == returned)
+                        {
+                          $scope.groups = data.groups;
+
+                          angular.forEach(
+                            data.groups, function (g)
+                            {
+                              if (g.uuid == group.uuid)
+                              {
+                                $scope.group = g;
+                              }
+                            });
+
+                          $scope.members = data.members[group.uuid];
+
+                          $scope.current = group.uuid;
+
+                          $scope.$watch(
+                            $location.search(), function ()
+                            {
+                              $location.search({uuid: group.uuid});
+                            });
+                        }
+                      });
+
+                    $rootScope.statusBar.off();
+                  }
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Save a member
+       */
+      $scope.memberSubmit = function (member)
+      {
+        // console.log('profile info to save ->', angular.toJson(member));
+
+        if ($rootScope.config.profile.smartAlarm)
+        {
+          member.role = 1;
+        }
+
+        $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
+
+        Profile.register(member).
+          then(
+          function (result)
+          {
+            if (result.error)
+            {
+              if (result.error.status === 409)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
+
+                $rootScope.statusBar.off();
+              }
+              else if (result.error.status === 403)
+              {
+                // If 403 Forbidden is thrown initialize the process again
+                $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+
+                $rootScope.statusBar.off();
+
+                $('body').scrollTop(0);
+              }
+              else
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
+              }
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+
+              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+              Groups.query().
+                then(
+                function (data)
+                {
+                  if (data.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                    console.warn('error ->', data);
+                  }
+                  else
+                  {
+                    $scope.data = data;
+
+                    $location.path('/profile/' + member.username).hash('profile');
+
+                    $rootScope.statusBar.off();
+                  }
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Confirm deleting a group
+       */
+      $scope.confirmGroupDelete = function (id)
+      {
+        $rootScope.notifier.alert('', false, true, {section: 'groups', id: id});
+      };
+
+
+      /**
+       * Listen for incoming group delete calls
+       */
+      $rootScope.$on(
+        'fireGroupDelete', function (event, group)
+        {
+          $scope.deleteGroup(group.id);
+        });
+
+
+      /**
+       * Delete a group
+       */
+      $scope.deleteGroup = function (id)
+      {
+        $rootScope.statusBar.display($rootScope.ui.groups.deleting);
+
+        Groups.remove(id).
+          then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.groups.deleted);
+
+              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+              Groups.query().
+                then(
+                function (data)
+                {
+                  if (data.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+
+                    console.warn('error ->', data);
+                  }
+                  else
+                  {
+                    $scope.data = data;
+
+                    /**
+                     * TODO: Is this really supposed to be like this?
+                     */
+                    angular.forEach(
+                      data.groups, function (group, index)
+                      {
+                        $scope.groups = data.groups;
+
+                        $scope.group = data.groups[0];
+
+                        $scope.members = data.members[data.groups[0].uuid];
+
+                        $scope.current = data.groups[0].uuid;
+
+                        $scope.$watch(
+                          $location.search(),
+                          function ()
+                          {
+                            $location.search({uuid: data.groups[0].uuid});
+                          }
+                        );
+                      });
+
+                    $rootScope.statusBar.off();
+                  }
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Selection toggle
+       */
+      $scope.toggleSelection = function (group, master)
+      {
+        var flag = (master) ? true : false,
+            members = angular.fromJson(Storage.get(group.uuid));
+
+        angular.forEach(
+          members, function (member)
+          {
+            $scope.selection[member.uuid] = flag;
+          });
+      };
+
+
+      /**
+       * TODO: Not used in groups yet but login uses modal call..
+       * Fetch parent groups
+       */
+      $scope.fetchParent = function ()
+      {
+        Groups.parents()
+          .then(
+          function (result)
+          {
+            console.warn('parent -> ', result);
+          });
+      };
+
+      /**
+       * TODO: Not used in groups yet..
+       * Fetch parent groups
+       */
+      $scope.fetchContainers = function (id)
+      {
+        Groups.containers(id)
+          .then(
+          function (result)
+          {
+            console.warn('containers -> ', result);
+          });
+      };
+
+
+      /**
+       * Set some defaults for sorting
+       */
+      $scope.reverse = false;
+      $scope.sorter = 'resources.lastName';
+
+
+      /**
+       * Toggle sorting
+       */
+      $scope.toggleSorter = function (sorter)
+      {
+        $scope.reverse = ($scope.sorter == sorter) ? ! $scope.reverse : false;
+
+        $scope.sorter = sorter;
+      };
+
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -14705,7 +15275,7 @@ angular.module('WebPaige.Controllers.Profile', [])
         {
           $scope.self.timeline.redraw();
         }
-	  	}, 100);
+	  	}, $rootScope.config.timers.TICKER);
 		};
 
 

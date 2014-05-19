@@ -655,7 +655,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
           setTimeout(function ()
           {
             _this.pies(data, current);
-          }, 100);
+          }, $rootScope.config.timers.TICKER);
         }
 
         return timedata;

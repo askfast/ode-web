@@ -692,42 +692,42 @@ dl dd {
   font-weight: bold;
 }
 
-#sa {
+.sa {
   position: relative;
 }
-#sa #sa-state {
+.sa .sa-state {
   position: absolute;
   top: 10px;
   right: 0;
 }
-#sa ul#sa-setup {
+.sa ul.sa-setup {
   margin: 0;
   padding: 0;
   margin-top: -20px;
   list-style: none;
 }
-#sa ul#sa-setup li {
+.sa ul.sa-setup li {
   border-bottom: 1px solid #ddd;
   overflow: hidden;
   height: 100%;
 }
-#sa ul#sa-setup li:nth-child(odd) {
+.sa ul.sa-setup li:nth-child(odd) {
   background-color: #f2f1ed;
 }
-#sa ul#sa-setup li:nth-child(even) {
+.sa ul.sa-setup li:nth-child(even) {
   background-color: #f9f9f9;
 }
-#sa ul#sa-setup li:last-child {
+.sa ul.sa-setup li:last-child {
   border-bottom: none;
 }
-#sa ul#sa-setup li .sa-member {
+.sa ul.sa-setup li .sa-member {
   display: inline;
   float: left;
   padding: 15px;
-  min-width: 185px;
+  min-width: 230px;
   margin-right: 15px;
 }
-#sa ul#sa-setup li .sa-member .sa-member-icon {
+.sa ul.sa-setup li .sa-member .sa-member-icon {
   margin-right: 15px;
   float: left;
   display: block;
@@ -742,43 +742,43 @@ dl dd {
   padding-top: 18px;
   background-color: #415e6b;
 }
-#sa ul#sa-setup li .sa-member .sa-member-icon strong {
+.sa ul.sa-setup li .sa-member .sa-member-icon strong {
   font-size: 24px;
 }
-#sa ul#sa-setup li .sa-member .sa-icon-driver {
+.sa ul.sa-setup li .sa-member .sa-icon-driver {
   background-color: #253943;
 }
-#sa ul#sa-setup li .sa-member .sa-icon-commander {
+.sa ul.sa-setup li .sa-member .sa-icon-commander {
   background-color: #ba6a24;
 }
-#sa ul#sa-setup li .sa-member .sa-icon-reserve-available {
+.sa ul.sa-setup li .sa-member .sa-icon-reserve-available {
   background-color: #4f824f;
 }
-#sa ul#sa-setup li .sa-member .sa-icon-reserve-unavailable {
+.sa ul.sa-setup li .sa-member .sa-icon-reserve-unavailable {
   background-color: #a93232;
 }
-#sa ul#sa-setup li .sa-member .sa-icon-reserve-noplanning {
+.sa ul.sa-setup li .sa-member .sa-icon-reserve-noplanning {
   background-color: #a0a0a0;
 }
-#sa ul#sa-setup li .sa-member .sa-member-card {
+.sa ul.sa-setup li .sa-member .sa-member-card {
   float: left;
 }
-#sa ul#sa-setup li .sa-member .sa-member-card h5 {
+.sa ul.sa-setup li .sa-member .sa-member-card h5 {
   margin-top: 0px;
   margin-bottom: 5px;
 }
-#sa ul#sa-setup li .sa-member .sa-member-card hr {
+.sa ul.sa-setup li .sa-member .sa-member-card hr {
   margin: 0;
   padding: 0;
   margin-bottom: 5px;
 }
-#sa ul#sa-setup li .sa-member .sa-member-card span {
+.sa ul.sa-setup li .sa-member .sa-member-card span {
   font-size: 13px;
 }
-#sa ul#sa-setup li#sa-truck {
+.sa ul.sa-setup li.sa-truck {
   margin-top: 25px;
 }
-#sa button {
+.sa button {
   margin-top: 10px;
 }
 
@@ -2226,7 +2226,7 @@ div.timeline-event-range {
   background-image: -moz-linear-gradient(top, #7772b5, #65619b);
   background-image: linear-gradient(top, #7772b5, #65619b);
   background-repeat: repeat-x;
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#6e69a8',  endColorstr='#7772b5', GradientType=0);
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#6e69a8', endColorstr='#7772b5', GradientType=0);
   filter: progid:dximagetransform.microsoft.gradient(enabled=false);
   *background-color: #7772b5;
   /*  background-color: #006dcc;

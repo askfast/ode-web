@@ -65,7 +65,16 @@ var profile = {
     }
   },
 
-  smartAlarm: false
+  smartAlarm: false,
+
+  timers: {
+    TICKER:                 100,
+    NOTIFICATION_DELAY:     5000,
+    MEMBER_TIMELINE_RENDER: 2000,
+    ALARM_SYNC:             60000,
+    PLANBOARD_SYNC:         60000,
+    TV_SYNC:                60000
+  }
 };
 
 

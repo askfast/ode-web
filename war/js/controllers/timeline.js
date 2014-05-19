@@ -266,7 +266,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 		    }
 		    else
 		    {
-		    	var timeout = ($location.hash() == 'timeline') ? 100 : 2000;
+		    	var timeout = ($location.hash() == 'timeline') ?
+                        $rootScope.config.timers.TICKER :
+                        $rootScope.config.timers.MEMBER_TIMELINE_RENDER;
 
           $rootScope.timelineLoaded = false;
 
@@ -630,7 +632,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 	      setTimeout(function ()
 	      {
 	        $scope.timeliner.redraw();
-	      }, 10);
+	      }, $rootScope.config.timers.TICKER);
 	    }
 	  };
 
@@ -1256,7 +1258,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 			setTimeout(function () 
 	    {
 	      $scope.self.timeline.redraw();
-	    }, 100);
+	    }, $rootScope.config.timers.TICKER);
 	  }
 
 
@@ -1285,7 +1287,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 						  end:    $scope.data.periods.end
 						}, true);
 					}
-				}, 60 * 1000);
+				}, $rootScope.config.timers.PLANBOARD_SYNC);
 			},
 
 			/**

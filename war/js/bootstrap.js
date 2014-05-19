@@ -35,9 +35,7 @@ angular.module('WebPaige')
      */
     $rootScope.browser = $.browser;
 
-    angular.extend($rootScope.browser, {
-      screen: $window.screen
-    });
+    angular.extend($rootScope.browser, { screen: $window.screen });
 
     if ($rootScope.browser.ios)
     {
@@ -116,10 +114,13 @@ angular.module('WebPaige')
 
     $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
-    angular.forEach(angular.fromJson(Storage.get('states')), function (state)
-    {
-      $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
-    });
+    angular.forEach(
+      angular.fromJson(Storage.get('states')),
+      function (state)
+      {
+        $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+      }
+    );
 
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
@@ -129,9 +130,7 @@ angular.module('WebPaige')
     }
     else
     {
-      Storage.add('registeredNotifications', angular.toJson({
-        timeLineDragging: true
-      }));
+      Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
     }
 
     $rootScope.registerNotification = function (setting, value)
@@ -198,10 +197,7 @@ angular.module('WebPaige')
         };
       },
 
-      off: function ()
-      {
-        $rootScope.loading.status = false;
-      }
+      off: function () { $rootScope.loading.status = false }
     };
 
     $rootScope.statusBar.init();
@@ -273,7 +269,7 @@ angular.module('WebPaige')
         setTimeout(function ()
         {
           $rootScope.notification.status = false;
-        }, 5000);
+        }, $rootScope.config.timers.NOTIFICATION_DELAY);
       }
     };
 
@@ -288,7 +284,7 @@ angular.module('WebPaige')
       switch (options.section)
       {
         case 'groups':
-          $rootScope.$broadcast('fireGroupDelete', {id: options.id});
+          $rootScope.$broadcast('fireGroupDelete', { id: options.id });
           break;
       }
     };
