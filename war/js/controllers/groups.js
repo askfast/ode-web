@@ -592,10 +592,10 @@ angular.module('WebPaige.Controllers.Groups', [])
       {
         // console.log('profile info to save ->', angular.toJson(member));
 
-        if ($rootScope.config.profile.smartAlarm)
-        {
-          member.role = 1;
-        }
+        //        if ($rootScope.config.profile.smartAlarm)
+        //        {
+        //          member.role = 1;
+        //        }
 
         $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
