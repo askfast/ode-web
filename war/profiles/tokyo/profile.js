@@ -34,9 +34,20 @@ var profile = {
   roles: [
     {
       id: 1,
-      label: 'Employee'
+      label: 'Planner'
+    },
+    {
+      id: 2,
+      label: 'Team leider'
+    },
+    {
+      id: 3,
+      label: 'Standaard'
+    },
+    {
+      id: 4,
+      label: 'Viewer'
     }
-
   ],
 
   p2000: {

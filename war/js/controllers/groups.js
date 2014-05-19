@@ -661,7 +661,7 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.confirmGroupDelete = function (id)
       {
-        $rootScope.notifier.alert('', false, true, {section: 'groups', id: id});
+        $rootScope.notifier.alert('', false, true, { section: 'groups', id: id });
       };
 
 

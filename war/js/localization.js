@@ -271,7 +271,7 @@ var ui = {
         lastName: 'Last Name',
         saveGroup: 'Save Group',
         registerMember: 'Register Member',
-        role: 'Role',
+        role: 'PRofile',
         selectRole: 'Select a role',
         selectGroup: 'Choose a group',
         email: 'Email',
@@ -706,7 +706,7 @@ var ui = {
         lastName: 'Achternaam',
         saveGroup: 'Groep opslaan',
         registerMember: 'Lid registreren',
-        role: 'Functie',
+        role: 'Profiel',
         selectRole: 'Selecteer een functie',
         // troubled
         // selectGroup: 'Selecteer een group',

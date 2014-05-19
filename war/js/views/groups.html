@@ -416,7 +416,8 @@
                   <span ng-show="reverse">&#9660;</span>
                 </span>
               </th>
-              <th ng-hide="config.profile.smartAlarm">
+              <!--<th ng-hide="config.profile.smartAlarm">-->
+              <th>
                 <a ng-click="toggleSorter('resources.role')">{{ui.groups.role}}</a>&nbsp;
                 <span ng-show="(sorter=='resources.role')">
                   <span ng-hide="reverse">&#9650;</span>
@@ -443,7 +444,8 @@
               </td>
               <td>{{member.resources.firstName}}</td>
               <td>{{member.resources.lastName}}</td>
-              <td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>
+              <!--<td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>-->
+              <td>{{member.resources.role | translateRole}}</td>
               <td>{{member.resources.PhoneAddress}}</td>
               <td>
                 <div class="pull-right">

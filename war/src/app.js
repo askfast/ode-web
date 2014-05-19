@@ -271,7 +271,7 @@ var ui = {
         lastName: 'Last Name',
         saveGroup: 'Save Group',
         registerMember: 'Register Member',
-        role: 'Role',
+        role: 'PRofile',
         selectRole: 'Select a role',
         selectGroup: 'Choose a group',
         email: 'Email',
@@ -706,7 +706,7 @@ var ui = {
         lastName: 'Achternaam',
         saveGroup: 'Groep opslaan',
         registerMember: 'Lid registreren',
-        role: 'Functie',
+        role: 'Profiel',
         selectRole: 'Selecteer een functie',
         // troubled
         // selectGroup: 'Selecteer een group',
@@ -975,7 +975,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.15',
+    version:  '2.3.16',
     lang:     'nl',
 
     fullscreen: true,
@@ -14804,7 +14804,7 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.confirmGroupDelete = function (id)
       {
-        $rootScope.notifier.alert('', false, true, {section: 'groups', id: id});
+        $rootScope.notifier.alert('', false, true, { section: 'groups', id: id });
       };
 
 

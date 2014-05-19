@@ -29,16 +29,20 @@ var profile = {
 
   roles: [
     {
-      id:    1,
+      id: 1,
       label: 'Planner'
     },
     {
-      id:    2,
-      label: 'Schipper'
+      id: 2,
+      label: 'Team leider'
     },
     {
-      id:    3,
-      label: 'Opstapper'
+      id: 3,
+      label: 'Standaard'
+    },
+    {
+      id: 4,
+      label: 'Viewer'
     }
   ],
 

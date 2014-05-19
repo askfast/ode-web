@@ -34,14 +34,18 @@ var profile = {
     {
       id: 1,
       label: 'Planner'
-    }, 
+    },
     {
       id: 2,
-      label: 'Schipper'
-    }, 
+      label: 'Team leider'
+    },
     {
       id: 3,
-      label: 'Opstapper'
+      label: 'Standaard'
+    },
+    {
+      id: 4,
+      label: 'Viewer'
     }
   ],
 
