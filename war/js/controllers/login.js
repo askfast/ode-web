@@ -595,7 +595,7 @@ angular.module('WebPaige.Controllers.Login', [])
             if (! $rootScope.browser.mobile) $('#footer').show();
             $('#watermark').show();
             $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
-          }, 100);
+          }, $rootScope.config.timers.TICKER);
       };
 
 

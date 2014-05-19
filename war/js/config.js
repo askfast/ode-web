@@ -165,14 +165,17 @@ angular.module('WebPaige')
     //   }
     // },
 
+    timers: profile.timers,
+
     init: function ()
     {
-      var _this = this;
-
-      angular.forEach(profile.states, function (state, index)
-      {
-        _this.timeline.config.states[state] = _this.statesall[state];
-      });
+      angular.forEach(
+        profile.states,
+        (function (state, index)
+        {
+          this.timeline.config.states[state] = this.statesall[state];
+        }).bind(this)
+      );
     }
   }
 );

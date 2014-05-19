@@ -269,7 +269,7 @@ angular.module('WebPaige.Controllers.TV', [])
                 prepareSaMembers(setup);
               });
           }
-        }, 60000);
+        }, $rootScope.config.timers.TV_SYNC);
 
 
       /**

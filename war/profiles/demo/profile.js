@@ -3,7 +3,7 @@
  */
 var profile = {
 
-  meta: 'standby',
+  meta: 'demo',
 
   title: 'BRANDWEER',
 
@@ -11,7 +11,9 @@ var profile = {
   {
     // return ($.browser.msie) ? '/proxy/standby' : 'http://backend.ask-cs.com/standby';
     // return ($.browser.msie) ? '/proxy/standby-test' : 'http://askpack.ask-cs.com/standby-test';
-    return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com/';
+
+    // return ($.browser.msie) ? '/proxy/standby-fair' : 'http://askpack.ask-cs.com';
+    return ($.browser.msie) ? '/proxy' : 'http://askpack.ask-cs.com';
   },
 
   states: [],
@@ -56,7 +58,8 @@ var profile = {
   },
 
   analytics: {
-    url:    'dev.standby.ask-cs.com',
+    url:    'demo.standby.ask-cs.com', // TODO: Does this url exist yet?
+    // url:    'dev.standby.ask-cs.com',
     // url: 'test.standby.ask-cs.com',
     // url: 'brandweer.standby.ask-cs.com',
 
@@ -74,7 +77,7 @@ var profile = {
     NOTIFICATION_DELAY:     5000,
     MEMBER_TIMELINE_RENDER: 2000,
     ALARM_SYNC:             60000,
-    PLANBOARD_SYNC:         60000,
-    TV_SYNC:                60000
+    PLANBOARD_SYNC:         10000,
+    TV_SYNC:                8000
   }
 };

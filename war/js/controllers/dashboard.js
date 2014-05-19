@@ -267,7 +267,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     var r = new Raphael($id + id),
                         pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
-                  }, 100);
+                  }, $rootScope.config.timers.TICKER);
               }
             });
         }
@@ -764,7 +764,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   }
                 }
               }
-            }, 60000);
+            }, $rootScope.config.timers.ALARM_SYNC);
         },
         clear: function () { $window.clearInterval($window.alarmSync) }
       };
@@ -806,7 +806,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
                   + 'px'
               });
-          }, 100);
+          }, $rootScope.config.timers.TICKER);
       };
 
 

@@ -324,7 +324,7 @@ angular.module('WebPaige.Controllers.Profile', [])
         {
           $scope.self.timeline.redraw();
         }
-	  	}, 100);
+	  	}, $rootScope.config.timers.TICKER);
 		};
 
 
