@@ -10144,21 +10144,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       var initGroup;
 
-      if ($rootScope.config.profile.meta != 'knrm')
-      {
-        groups.unshift(
-          {
-            'name': 'Iedereen',
-            'uuid': 'all'
-          }
-        );
+      groups.unshift(
+        {
+          'name': 'Iedereen',
+          'uuid': 'all'
+        }
+      );
 
-        initGroup = 'all';
-      }
-      else
-      {
-        initGroup = settings.app.group;
-      }
+      initGroup = 'all';
 
       $scope.groups = groups;
 

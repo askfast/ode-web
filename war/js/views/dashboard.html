@@ -227,6 +227,7 @@
                 ng-selected="current.division"
                 ng-change="getDivisionAvailability()"
                 ng-show="divisions.length > 0"
+                ng-hide="(current.group == 'all')"
                 style="margin-left: 15px; width:160px">
         </select>
         <!-- end divisions list -->
