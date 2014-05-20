@@ -111,7 +111,8 @@
         <!-- edit profile form -->
         <form class="form-vertical">
 
-          <div class="control-group">
+          <div class="control-group"
+               ng-hide="app.resources.role > 2">
             <label class="control-label">Profiel</label>
             <div class="controls">
               <select

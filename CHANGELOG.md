@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------------------------------------
 
 2.3.16
-- release: Version release. 19-5-2014
+- release: Version release. 20-5-2014
 - feature: Added new profile for 'demo' installation 19-5-2014
 - feature: All timer related integer values are taken into profiles 19-5-2014
 - fix: Scheduled messaging temporarily disabled 16-5-2014
