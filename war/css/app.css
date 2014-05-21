@@ -754,8 +754,20 @@ dl dd {
 .sa ul.sa-setup li .sa-member .sa-icon-reserve-available {
   background-color: #4f824f;
 }
+.sa ul.sa-setup li .sa-member .sa-icon-reserve-available-north {
+  background-color: black;
+}
+.sa ul.sa-setup li .sa-member .sa-icon-reserve-available-south {
+  background-color: #e08a0c;
+}
+.sa ul.sa-setup li .sa-member .sa-icon-reserve-available-schipper {
+  background-color: #e0c100;
+}
 .sa ul.sa-setup li .sa-member .sa-icon-reserve-unavailable {
   background-color: #a93232;
+}
+.sa ul.sa-setup li .sa-member .sa-icon-reserve-unreached {
+  background-color: #65619b;
 }
 .sa ul.sa-setup li .sa-member .sa-icon-reserve-noplanning {
   background-color: #a0a0a0;

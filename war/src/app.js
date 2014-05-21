@@ -10228,22 +10228,43 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   {
                     ordered.available = [];
                   }
+
                   if (! ordered.unavailable)
                   {
                     ordered.unavailable = [];
                   }
 
-                  if (slots[0].state == 'com.ask-cs.State.Available' ||
-                      slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord' ||
-                      slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid' ||
-                      slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                  {
-                    ordered.available.push(_member);
-                  }
-                  else if (slots[0].state == 'com.ask-cs.State.Unavailable' ||
-                           slots[0].state == 'com.ask-cs.State.Unreached')
+                  if (slots[0].state == 'com.ask-cs.State.Unreached')
                   {
                     ordered.unavailable.push(_member);
+                  }
+                  else if (slots[0].state == 'com.ask-cs.State.Unavailable')
+                  {
+                    ordered.unavailable.push(_member);
+                  }
+                  else
+                  {
+                    if (slots[0].state == 'com.ask-cs.State.Available')
+                    {
+                      _member.style = 'sa-icon-reserve-available';
+                    }
+
+                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
+                    {
+                      _member.style = 'sa-icon-reserve-available-north';
+                    }
+
+                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
+                    {
+                      _member.style = 'sa-icon-reserve-available-south';
+                    }
+
+                    if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
+                    {
+                      _member.style = 'sa-icon-reserve-available-schipper';
+                    }
+
+                    ordered.available.push(_member);
                   }
                 }
                 else
@@ -10275,8 +10296,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               return 0;
             };
 
-            if (ordered.hasOwnProperty('available')) { ordered.available.sort(sortByEnd) }
-            if (ordered.hasOwnProperty('unavailable')) { ordered.unavailable.sort(sortByEnd) }
+            if (ordered.hasOwnProperty('available'))
+            { ordered.available.sort(sortByEnd) }
+            if (ordered.hasOwnProperty('unavailable'))
+            { ordered.unavailable.sort(sortByEnd) }
 
             var _availables = [];
 
@@ -10284,7 +10307,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               ordered.available,
               function (available)
               {
-                if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst') { _availables.push(available) }
+                if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
+                { _availables.push(available) }
               }
             );
 
@@ -10292,7 +10316,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               ordered.available,
               function (available)
               {
-                if (available.state == 'com.ask-cs.State.Available') { _availables.push(available) }
+                if (available.state == 'com.ask-cs.State.Available')
+                { _availables.push(available) }
               }
             );
 
@@ -10300,7 +10325,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               ordered.available,
               function (available)
               {
-                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord') { _availables.push(available) }
+                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
+                { _availables.push(available) }
               }
             );
 
@@ -10308,7 +10334,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               ordered.available,
               function (available)
               {
-                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid') { _availables.push(available) }
+                if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
+                { _availables.push(available) }
               }
             );
 
