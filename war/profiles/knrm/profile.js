@@ -11,9 +11,6 @@ var profile = {
   {
     // Google
     // return ($.browser.msie) ? '/proxy/ns_knrm' : 'http://3rc2.ask-services.appspot.com/ns_knrm';
-
-    // return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com';
-
     return ($.browser.msie) ? '/proxy' : 'http://knrm-backend.ask-cs.com';
   },
 
@@ -51,7 +48,7 @@ var profile = {
 
   p2000: {
     status: true,
-    url:    'http://knrm.myask.me/rpc/client/p2000.php',
+    url:    'http://couchdb.ask-cs.com/~jordi/p2000/p2000.php',
     codes:  '1405545, 1405546, 1735749, 1735748'
   },
 
