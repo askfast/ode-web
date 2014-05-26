@@ -9,9 +9,12 @@ var profile = {
 
   host: function ()
   {
-    return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com/';
-    // return ($.browser.msie) ? '/proxy' : 'http://askpack.ask-cs.com/';
-    // return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com/';
+    // Live
+    // return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com';
+    // Test
+    // return ($.browser.msie) ? '/proxy' : 'http://askpack.ask-cs.com';
+    // Dev
+    return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com';
   },
 
   states: [],
