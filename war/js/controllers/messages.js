@@ -859,7 +859,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 	      });
 
 	      $("div#composeTab select.chzn-select").trigger("liszt:updated");
-	    }, 100);
+	    }, $rootScope.config.timers.TICKER);
 
 	    $scope.message = {
 	      subject: $rootScope.ui.message.escalation,

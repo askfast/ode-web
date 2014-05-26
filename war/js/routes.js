@@ -165,28 +165,25 @@ angular.module('WebPaige')
       controller: 'profile',
       resolve: {
         data: [
-          '$rootScope', 'Profile', '$route', '$location',
-          function ($rootScope, Profile, $route, $location)
+          '$rootScope', 'Profile', '$route',
+          function ($rootScope, Profile, $route)
           {
             if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
             {
               // IE route fix
-              var onejan = new Date(new Date().getFullYear(),0,1);
+              var firstOfJanuary = new Date(new Date().getFullYear(),0,1);
 
-              // var periods = Dater.getPeriods(),
               var periods = angular.fromJson(localStorage.getItem('WebPaige.periods')),
-                  // current = Dater.current.week(),
-                  // current = new Date().getWeek(),
-                  current = Math.ceil((((new Date() - onejan) / 86400000) + onejan.getDay()+1)/7);
+                  current = Math.ceil((((new Date() - firstOfJanuary) / 86400000) + firstOfJanuary.getDay()+1)/7);
 
-              // console.log('---->', current);
-
-              var ranges  = {
-                    start:  periods.weeks[current].first.timeStamp / 1000,
-                    end:    periods.weeks[current].last.timeStamp / 1000
-                  };
-
-              return Profile.getWithSlots($route.current.params.userId.toLowerCase(), false, ranges);
+              return Profile.getWithSlots(
+                $route.current.params.userId.toLowerCase(),
+                false,
+                {
+                  start:  periods.weeks[current].first.timeStamp / 1000,
+                  end:    periods.weeks[current].last.timeStamp / 1000
+                }
+              );
             }
             else
             {

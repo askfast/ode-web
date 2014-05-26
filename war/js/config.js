@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.15',
+    version:  '2.3.16',
     lang:     'nl',
 
     fullscreen: true,
@@ -81,7 +81,7 @@ angular.module('WebPaige')
         className:'state-unreached',
         label:    'Niet Bereikt',
         color:    '#65619b',
-        type:     'Niet Beschikbaar' ,
+        type:     'Niet Beschikbaar',
         display:  false
       }
     },
@@ -107,7 +107,7 @@ angular.module('WebPaige')
         style:            'box',
         groupsWidth:      '150px',
         eventMarginAxis:  0,
-        showCustomTime:   true,
+        showCustomTime:   false,
         groupsChangeable: false,
         showNavigation:   false,
         intervalMin:      1000 * 60 * 60 * 1
@@ -165,14 +165,17 @@ angular.module('WebPaige')
     //   }
     // },
 
+    timers: profile.timers,
+
     init: function ()
     {
-      var _this = this;
-
-      angular.forEach(profile.states, function (state, index)
-      {
-        _this.timeline.config.states[state] = _this.statesall[state];
-      });
+      angular.forEach(
+        profile.states,
+        (function (state, index)
+        {
+          this.timeline.config.states[state] = this.statesall[state];
+        }).bind(this)
+      );
     }
   }
 );

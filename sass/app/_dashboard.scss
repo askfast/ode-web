@@ -395,17 +395,17 @@
   font-weight: bold;
 }
 
-#sa {
+.sa {
 
   position:relative;
 
-  #sa-state {
+  .sa-state {
     position: absolute;
     top:10px;
     right: 0;
   }
 
-  ul#sa-setup {
+  ul.sa-setup {
     margin: 0;
     padding: 0;
     margin-top: -20px;
@@ -432,7 +432,7 @@
         display: inline;
         float: left;
         padding: 15px;
-        min-width: 185px;
+        min-width: 230px;
         margin-right: 15px;
 
         .sa-member-icon {
@@ -449,6 +449,7 @@
           margin-bottom: 5px;
           padding-top: 18px;
           background-color: #415e6b;
+
           strong {
             font-size: 24px;
           }
@@ -466,8 +467,24 @@
           background-color: #4f824f;
         }
 
+        .sa-icon-reserve-available-north {
+          background-color: black;
+        }
+
+        .sa-icon-reserve-available-south {
+          background-color: #e08a0c;
+        }
+
+        .sa-icon-reserve-available-schipper {
+          background-color: #e0c100;
+        }
+
         .sa-icon-reserve-unavailable {
           background-color: #a93232;
+        }
+
+        .sa-icon-reserve-unreached {
+          background-color: #65619b;
         }
 
         .sa-icon-reserve-noplanning {
@@ -496,11 +513,11 @@
 
     }
 
-    li#sa-truck {
+    li.sa-truck {
       margin-top: 25px;
     }
 
-    li#sa-reserves {
+    li.sa-reserves {
 
     }
   }

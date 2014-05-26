@@ -11,10 +11,7 @@ var profile = {
   {
     // Google
     // return ($.browser.msie) ? '/proxy/ns_knrm' : 'http://3rc2.ask-services.appspot.com/ns_knrm';
-
-    return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com';
-
-    // return ($.browser.msie) ? '/proxy' : 'http://knrm-backend.ask-cs.com';
+    return ($.browser.msie) ? '/proxy' : 'http://knrm-backend.ask-cs.com';
   },
 
   states: [],
@@ -34,20 +31,24 @@ var profile = {
     {
       id: 1,
       label: 'Planner'
-    }, 
+    },
     {
       id: 2,
-      label: 'Schipper'
-    }, 
+      label: 'Team leider'
+    },
     {
       id: 3,
-      label: 'Opstapper'
+      label: 'Standaard'
+    },
+    {
+      id: 4,
+      label: 'Viewer'
     }
   ],
 
   p2000: {
     status: true,
-    url:    'http://knrm.myask.me/rpc/client/p2000.php',
+    url:    'http://couchdb.ask-cs.com/~jordi/p2000/p2000.php',
     codes:  '1405545, 1405546, 1735749, 1735748'
   },
 
@@ -73,7 +74,16 @@ var profile = {
     }
   },
 
-  smartAlarm: false
+  smartAlarm: false,
+
+  timers: {
+    TICKER:                 100,
+    NOTIFICATION_DELAY:     5000,
+    MEMBER_TIMELINE_RENDER: 2000,
+    ALARM_SYNC:             60000,
+    PLANBOARD_SYNC:         60000,
+    TV_SYNC:                60000
+  }
 };
 
 

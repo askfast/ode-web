@@ -9,7 +9,7 @@ var profile = {
 
 	host: function ()
 	{
-    return ($.browser.msie) ? '/proxy/rb_monster' : 'http://backend.ask-cs.com/rb_monster';
+    return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com';
 	},
 
   states: [],
@@ -29,20 +29,24 @@ var profile = {
     {
       id: 1,
       label: 'Planner'
-    }, 
+    },
     {
       id: 2,
-      label: 'Schipper'
-    }, 
+      label: 'Team leider'
+    },
     {
       id: 3,
-      label: 'Opstapper'
+      label: 'Standaard'
+    },
+    {
+      id: 4,
+      label: 'Viewer'
     }
   ],
 
   p2000: {
     status: true,
-    url:    'http://knrmtest.myask.me/rpc/client/p2000.php',
+    url:    'http://couchdb.ask-cs.com/~jordi/p2000/p2000.php',
     codes:  '1500982'
   },
 
@@ -65,5 +69,14 @@ var profile = {
     }
   },
 
-  smartAlarm: false
+  smartAlarm: false,
+
+  timers: {
+    TICKER:                 100,
+    NOTIFICATION_DELAY:     5000,
+    MEMBER_TIMELINE_RENDER: 2000,
+    ALARM_SYNC:             60000,
+    PLANBOARD_SYNC:         60000,
+    TV_SYNC:                60000
+  }
 };

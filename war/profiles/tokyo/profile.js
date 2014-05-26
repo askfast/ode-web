@@ -34,9 +34,20 @@ var profile = {
   roles: [
     {
       id: 1,
-      label: 'Employee'
+      label: 'Planner'
+    },
+    {
+      id: 2,
+      label: 'Team leider'
+    },
+    {
+      id: 3,
+      label: 'Standaard'
+    },
+    {
+      id: 4,
+      label: 'Viewer'
     }
-
   ],
 
   p2000: {
@@ -67,7 +78,16 @@ var profile = {
     }
   },
 
-  smartAlarm: false
+  smartAlarm: false,
+
+  timers: {
+    TICKER:                 100,
+    NOTIFICATION_DELAY:     5000,
+    MEMBER_TIMELINE_RENDER: 2000,
+    ALARM_SYNC:             60000,
+    PLANBOARD_SYNC:         60000,
+    TV_SYNC:                60000
+  }
 };
 
 

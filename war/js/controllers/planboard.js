@@ -37,7 +37,6 @@ angular.module('WebPaige.Controllers.Planboard', [])
 	  var groups  	= Storage.local.groups(),
 	      settings 	= Storage.local.settings();
 
-
 	  /**
 	   * Pass current
 	   */
