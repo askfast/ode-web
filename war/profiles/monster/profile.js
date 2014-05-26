@@ -9,7 +9,7 @@ var profile = {
 
 	host: function ()
 	{
-    return ($.browser.msie) ? '/proxy/rb_monster' : 'http://backend.ask-cs.com/rb_monster';
+    return ($.browser.msie) ? '/proxy' : 'http://backend.ask-cs.com/';
 	},
 
   states: [],
