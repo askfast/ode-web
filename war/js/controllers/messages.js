@@ -27,7 +27,7 @@ angular.module('WebPaige.Controllers.Messages', [])
        * Receivers list
        */
       $scope.receviersList = Messages.receviers();
-      
+
 
       /**
        * Set messages

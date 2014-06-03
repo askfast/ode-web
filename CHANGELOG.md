@@ -1,6 +1,10 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.3.17
+- fix: 'No subject' placeholder in case of no subjects for the messages. 3-6-2014
+- fix: Correctly displaying cap-codes with leading zeros. 29-5-2014
+
 2.3.16
 - release: Version release. 20-5-2014
 - feature: Added new profile for 'demo' installation 19-5-2014
