@@ -254,7 +254,8 @@ var ui = {
         notificationsEditing: 'Editing scheduled notification...',
         notificationsEdited: 'Scheduled notification is successfully edited.',
         notificationsDeleting: 'Deleting a scheduled notification...',
-        notificationsDeleted: 'Scheduled notification is successfully deleted.'
+        notificationsDeleted: 'Scheduled notification is successfully deleted.',
+        noSubject: '- No subject -'
       },
       groups: {
         groups: 'Groups',
@@ -689,7 +690,8 @@ var ui = {
         notificationsEditing: 'Notificatie wordt gewijzigd...',
         notificationsEdited: 'Notificatie is met succes gewijzigd.',
         notificationsDeleting: 'Notificatie wordt verwijderd...',
-        notificationsDeleted: 'Notificatie is met succes verwijderd.'
+        notificationsDeleted: 'Notificatie is met succes verwijderd.',
+        noSubject: '- Geen onderwerp -'
       },
       groups: {
         groups: 'Groepen',
@@ -1150,258 +1152,268 @@ angular.module('WebPaige')
  * Providers & Routes
  */
 angular.module('WebPaige')
-.config(
-[
-  '$locationProvider', '$routeProvider', '$httpProvider',
-  function ($locationProvider, $routeProvider, $httpProvider)
-  {
-    /**
-     * Login router
-     */
-    $routeProvider
-    .when('/login',
+  .config(
+  [
+    '$locationProvider', '$routeProvider', '$httpProvider',
+    function ($locationProvider, $routeProvider, $httpProvider)
     {
-      templateUrl: 'dist/views/login.html',
-      controller: 'login'
-    })
+      /**
+       * Login router
+       */
+      $routeProvider
+        .when(
+        '/login',
+        {
+          templateUrl: 'dist/views/login.html',
+          controller: 'login'
+        })
 
 
-    /**
-     * Logout router
-     */
-    .when('/logout',
-    {
-      templateUrl: 'dist/views/logout.html',
-      controller: 'logout'
-    })
+      /**
+       * Logout router
+       */
+        .when(
+        '/logout',
+        {
+          templateUrl: 'dist/views/logout.html',
+          controller: 'logout'
+        })
 
 
-    /**
-     * Dashboard router
-     */
-    .when('/dashboard',
-    {
-      templateUrl: 'dist/views/dashboard.html',
-      controller: 'dashboard'
-    })
+      /**
+       * Dashboard router
+       */
+        .when(
+        '/dashboard',
+        {
+          templateUrl: 'dist/views/dashboard.html',
+          controller: 'dashboard'
+        })
 
 
-    /**
-     * TV Monitor / Dashboard router
-     */
-    .when('/tv',
-    {
-      templateUrl: 'dist/views/tv.html',
-      controller: 'tv',
-      resolve: {
-        data:
-          [
-            '$route', '$http',
-            function ($route, $http)
-            {
-              if ($route.current.params.sessionID)
+      /**
+       * TV Monitor / Dashboard router
+       */
+        .when(
+        '/tv',
+        {
+          templateUrl: 'dist/views/tv.html',
+          controller: 'tv',
+          resolve: {
+            data: [
+              '$route', '$http',
+              function ($route, $http)
               {
-                $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
-              }
-            }
-          ]
-      }
-    })
-
-
-    /**
-     * Planboard router
-     */
-    .when('/planboard',
-    {
-      templateUrl: 'dist/views/planboard.html',
-      controller: 'planboard',
-      resolve: {
-        data:
-        [
-          '$route', 'Slots', 'Storage', 'Dater',
-          function ($route, Slots, Storage, Dater)
-          {
-            var periods   = Storage.local.periods(),
-                settings  = Storage.local.settings();
-
-            var stamps = {};
-
-            if (Dater.current.today() > 360)
-            {
-              stamps = {
-                start:  periods.days[358].last.timeStamp,
-                end:    periods.days[365].last.timeStamp
-              }
-            }
-            else
-            {
-              stamps = {
-                start:  periods.days[Dater.current.today() - 1].last.timeStamp,
-                end:    periods.days[Dater.current.today() + 6].last.timeStamp
-              }
-            }
-
-            return  Slots.all({
-                      groupId:  settings.app.group,
-                      stamps:   stamps,
-                      month:    Dater.current.month(),
-                      layouts: {
-                        user:     true,
-                        group:    true,
-                        members:  false
-                      }
-                    });
-          }
-        ]
-      },
-      reloadOnSearch: false
-    })
-
-
-    /**
-     * Messages router
-     */
-    .when('/messages',
-    {
-      templateUrl: 'dist/views/messages.html',
-      controller: 'messages',
-      resolve: {
-        data: [
-          '$route', 'Messages',
-          function ($route, Messages)
-          {
-            return Messages.query();
-          }
-        ]
-      },
-      reloadOnSearch: false
-    })
-
-
-    /**
-     * Groups router
-     */
-    .when('/groups',
-    {
-      templateUrl: 'dist/views/groups.html',
-      controller: 'groups',
-      resolve: {
-        data: [
-          'Groups',
-          function (Groups)
-          {
-            return Groups.query();
-          }
-        ]
-      },
-      reloadOnSearch: false
-    })
-
-
-    /**
-     * Profile (user specific) router
-     */
-    .when('/profile/:userId',
-    {
-      templateUrl: 'dist/views/profile.html',
-      controller: 'profile',
-      resolve: {
-        data: [
-          '$rootScope', 'Profile', '$route',
-          function ($rootScope, Profile, $route)
-          {
-            if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
-            {
-              // IE route fix
-              var firstOfJanuary = new Date(new Date().getFullYear(),0,1);
-
-              var periods = angular.fromJson(localStorage.getItem('WebPaige.periods')),
-                  current = Math.ceil((((new Date() - firstOfJanuary) / 86400000) + firstOfJanuary.getDay()+1)/7);
-
-              return Profile.getWithSlots(
-                $route.current.params.userId.toLowerCase(),
-                false,
+                if ($route.current.params.sessionID)
                 {
-                  start:  periods.weeks[current].first.timeStamp / 1000,
-                  end:    periods.weeks[current].last.timeStamp / 1000
+                  $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
                 }
-              );
-            }
-            else
-            {
-              return Profile.get($route.current.params.userId.toLowerCase(), false);
-            }
+              }
+            ]
           }
-        ]
-      },
-      reloadOnSearch: false
-    })
+        })
 
 
-    /**
-     * Profile (user hiself) router
-     */
-    .when('/profile',
-    {
-      templateUrl: 'dist/views/profile.html',
-      controller: 'profile',
-      resolve: {
-        data: [
-          '$rootScope', '$route', '$location',
-          function ($rootScope, $route, $location)
-          {
-            if (!$route.current.params.userId || !$location.hash())
-              $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
+      /**
+       * Planboard router
+       */
+        .when(
+        '/planboard',
+        {
+          templateUrl: 'dist/views/planboard.html',
+          controller: 'planboard',
+          resolve: {
+            data: [
+              '$route', 'Slots', 'Storage', 'Dater',
+              function ($route, Slots, Storage, Dater)
+              {
+                var periods = Storage.local.periods(),
+                    settings = Storage.local.settings();
+
+                var stamps = {};
+
+                if (Dater.current.today() > 360)
+                {
+                  stamps = {
+                    start: periods.days[358].last.timeStamp,
+                    end: periods.days[365].last.timeStamp
+                  }
+                }
+                else
+                {
+                  stamps = {
+                    start: periods.days[Dater.current.today() - 1].last.timeStamp,
+                    end: periods.days[Dater.current.today() + 6].last.timeStamp
+                  }
+                }
+
+                return  Slots.all(
+                  {
+                    groupId: settings.app.group,
+                    stamps: stamps,
+                    month: Dater.current.month(),
+                    layouts: {
+                      user: true,
+                      group: true,
+                      members: false
+                    }
+                  });
+              }
+            ]
+          },
+          reloadOnSearch: false
+        })
+
+
+      /**
+       * Messages router
+       */
+        .when(
+        '/messages',
+        {
+          templateUrl: 'dist/views/messages.html',
+          controller: 'messages',
+          resolve: {
+            data: [
+              '$route', 'Messages',
+              function ($route, Messages) { return Messages.query() }
+            ]
+          },
+          reloadOnSearch: false
+        })
+
+
+      /**
+       * Groups router
+       */
+        .when(
+        '/groups',
+        {
+          templateUrl: 'dist/views/groups.html',
+          controller: 'groups',
+          resolve: {
+            data: [
+              'Groups',
+              function (Groups)
+              {
+                return Groups.query();
+              }
+            ]
+          },
+          reloadOnSearch: false
+        })
+
+
+      /**
+       * Profile (user specific) router
+       */
+        .when(
+        '/profile/:userId',
+        {
+          templateUrl: 'dist/views/profile.html',
+          controller: 'profile',
+          resolve: {
+            data: [
+              '$rootScope', 'Profile', '$route',
+              function ($rootScope, Profile, $route)
+              {
+                if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
+                {
+                  // IE route fix
+                  var firstOfJanuary = new Date(new Date().getFullYear(), 0, 1);
+
+                  var periods = angular.fromJson(localStorage.getItem('WebPaige.periods')),
+                      current = Math.ceil((((new Date() - firstOfJanuary) / 86400000) + firstOfJanuary.getDay() + 1) / 7);
+
+                  return Profile.getWithSlots(
+                    $route.current.params.userId.toLowerCase(),
+                    false,
+                    {
+                      start: periods.weeks[current].first.timeStamp / 1000,
+                      end: periods.weeks[current].last.timeStamp / 1000
+                    }
+                  );
+                }
+                else
+                {
+                  return Profile.get($route.current.params.userId.toLowerCase(), false);
+                }
+              }
+            ]
+          },
+          reloadOnSearch: false
+        })
+
+
+      /**
+       * Profile (user hiself) router
+       */
+        .when(
+        '/profile',
+        {
+          templateUrl: 'dist/views/profile.html',
+          controller: 'profile',
+          resolve: {
+            data: [
+              '$rootScope', '$route', '$location',
+              function ($rootScope, $route, $location)
+              {
+                if (! $route.current.params.userId || ! $location.hash())
+                {
+                  $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
+                }
+              }
+            ]
           }
-        ]
-      }
-    })
+        })
 
 
-    /**
-     * Settings router
-     */
-    .when('/settings',
-    {
-      templateUrl: 'dist/views/settings.html',
-      controller: 'settings',
-      resolve: {
-        data: [
-          'Settings',
-          function (Settings)
-          {
-            return angular.fromJson(Settings.get());
+      /**
+       * Settings router
+       */
+        .when(
+        '/settings',
+        {
+          templateUrl: 'dist/views/settings.html',
+          controller: 'settings',
+          resolve: {
+            data: [
+              'Settings',
+              function (Settings)
+              {
+                return angular.fromJson(Settings.get());
+              }
+            ]
           }
-        ]
-      }
-    })
+        })
 
 
-    /**
-     * Help router
-     */
-    .when('/help',
-    {
-      templateUrl: 'dist/views/help.html',
-      controller: 'help'
-    })
+      /**
+       * Help router
+       */
+        .when(
+        '/help',
+        {
+          templateUrl: 'dist/views/help.html',
+          controller: 'help'
+        })
 
 
-    /**
-     * Router fallback
-     */
-    .otherwise({
-      redirectTo: '/login'
-    });
+      /**
+       * Router fallback
+       */
+        .otherwise(
+        {
+          redirectTo: '/login'
+        });
 
 
-    /**
-     * Define interceptor
-     */
-    $httpProvider.responseInterceptors.push('Interceptor');
-  }
-]);;/*jslint node: true */
+      /**
+       * Define interceptor
+       */
+      $httpProvider.responseInterceptors.push('Interceptor');
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 /*global $ */
 /*global ui */
@@ -2419,7 +2431,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
         angular.forEach(code, function (_c) { _code += _c; });
 
-        return Number(_code);
+        return String(_code);
       }
 
       Backend.capcodes(null,
@@ -2427,10 +2439,10 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
         {
           var codes = [];
 
-          angular.forEach(results, function (res)
-          {
-            codes.push(concatCode(res));
-          });
+          angular.forEach(
+            results,
+            function (res) { codes.push(concatCode(res)) }
+          );
 
           deferred.resolve(codes);
         },
@@ -2480,8 +2492,6 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
       }
       else
       {
-
-
         Dashboard.prototype.getCapcodes().
           then(function (capcodes)
           {
@@ -3651,730 +3661,786 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 /**
  * Messages model
  */
-.factory('Messages',
-[
-	'$rootScope', '$config', '$resource', '$q', 'Storage', '$http', 
-	function ($rootScope, $config, $resource, $q, Storage, $http)
-	{
-	  var Messages = $resource(
-	    $config.host + '/question/:action',
-	    {
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {
-		        action: '', 
-		        0: 'dm'
-		        // 0: 'all', 
-		        // status: 'READ',
-		        // limit: 50,
-		        // offset: 0
-		      },
-	        isArray: true
-	      },
-	      get: {
-	        method: 'GET',
-	        params: {}
-	      },
-	      send: {
-	        method: 'POST',
-	        params: {action: 'sendDirectMessage'}
-	      },
-	      save: {
-	        method: 'POST',
-	        params: {}
-	      },
-	      changeState: {
-	        method: 'POST',
-	        params: {action: 'changeState'}
-	      },
-	      remove: {
-	        method: 'POST',
-	        params: {action: 'deleteQuestions'}
-	      }
-	    }
-	  );
-
-
-	  var Notifications = $resource(
-	    $config.host + '/notification/:uuid',
-	    {
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {},
-	        isArray: true
-	      },
-	      get: {
-	        method: 'GET',
-	        params: {uuid: ''}
-	      },
-	      save: {
-	        method: 'POST',
-	        params: {}
-	      },
-	      edit: {
-	        method: 'PUT',
-	        params: {uuid: ''}
-	      },
-	      remove: {
-	        method: 'DELETE',
-	        params: {uuid: ''}
-	      }
-	    }
-	  );
-	  
-
-	  /**
-	   * Query messages from back-end
-	   */
-	  Messages.prototype.query = function () 
-	  {
-	    var deferred = $q.defer();
-
-	    Messages.query(
-	      function (result) 
-	      {
-	        Storage.add('messages', angular.toJson(result));
-
-	        Messages.prototype.unreadCount();
-
-          if (!$rootScope.config.profile.smartAlarm)
+  .factory(
+  'Messages',
+  [
+    '$rootScope', '$config', '$resource', '$q', 'Storage', '$http',
+    function ($rootScope, $config, $resource, $q, Storage, $http)
+    {
+      var Messages = $resource(
+          $config.host + '/question/:action',
           {
-            Messages.prototype.scheaduled.list()
-              .then(function (scheadules)
+          },
+          {
+            query: {
+              method: 'GET',
+              params: {
+                action: '',
+                0: 'dm'
+                // 0: 'all',
+                // status: 'READ',
+                // limit: 50,
+                // offset: 0
+              },
+              isArray: true
+            },
+            get: {
+              method: 'GET',
+              params: {}
+            },
+            send: {
+              method: 'POST',
+              params: {action: 'sendDirectMessage'}
+            },
+            save: {
+              method: 'POST',
+              params: {}
+            },
+            changeState: {
+              method: 'POST',
+              params: {action: 'changeState'}
+            },
+            remove: {
+              method: 'POST',
+              params: {action: 'deleteQuestions'}
+            }
+          }
+      );
+
+
+      var Notifications = $resource(
+          $config.host + '/notification/:uuid',
+          {
+          },
+          {
+            query: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            },
+            get: {
+              method: 'GET',
+              params: {uuid: ''}
+            },
+            save: {
+              method: 'POST',
+              params: {}
+            },
+            edit: {
+              method: 'PUT',
+              params: {uuid: ''}
+            },
+            remove: {
+              method: 'DELETE',
+              params: {uuid: ''}
+            }
+          }
+      );
+
+
+      /**
+       * Query messages from back-end
+       */
+      Messages.prototype.query = function ()
+      {
+        var deferred = $q.defer();
+
+        Messages.query(
+          function (results)
+          {
+            var messages = [];
+
+            angular.forEach(
+              results,
+              function (message)
               {
-                deferred.resolve({
-                  messages: 	Messages.prototype.filter(result),
-                  scheadules: scheadules
+                if (message.subject == null ||
+                    message.subject == undefined ||
+                    message.subject == '')
+                {
+                  message.subject = $rootScope.ui.message.noSubject;
+                }
+
+                messages.push(message);
+              }
+            );
+
+            Storage.add('messages', angular.toJson(messages));
+
+            Messages.prototype.unreadCount();
+
+            if (! $rootScope.config.profile.smartAlarm)
+            {
+              Messages.prototype.scheaduled.list()
+                .then(
+                function (scheadules)
+                {
+                  deferred.resolve(
+                    {
+                      messages: Messages.prototype.filter(messages),
+                      scheadules: scheadules
+                    });
                 });
-              });
-          }
-          else
+            }
+            else
+            {
+              deferred.resolve(
+                {
+                  messages: Messages.prototype.filter(messages),
+                  scheadules: {}
+                });
+            }
+
+          },
+          function (error)
           {
-            deferred.resolve({
-              messages: 	Messages.prototype.filter(result),
-              scheadules: {}
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Notifications
+       */
+      Messages.prototype.scheaduled = {
+
+        /**
+         * List of the notifications
+         */
+        list: function ()
+        {
+          var deferred = $q.defer();
+
+          Notifications.query(
+            function (result)
+            {
+              Storage.add('notifications', angular.toJson(result));
+
+              angular.forEach(
+                result, function (scheadule)
+                {
+                  angular.forEach(
+                    scheadule.types, function (type)
+                    {
+                      if (type == 'sms') scheadule.sms = true;
+                      if (type == 'email') scheadule.mail = true;
+                    });
+                });
+
+              deferred.resolve(result);
+            },
+            function (error)
+            {
+              deferred.resolve({error: error});
+            }
+          );
+
+          return deferred.promise;
+        },
+
+        /**
+         * Create notifications
+         */
+        create: function (notification)
+        {
+          // console.log('not ->', notification);
+
+          var deferred = $q.defer();
+
+          Notifications.save(
+            null, angular.toJson(notification),
+            function (result)
+            {
+              var returned = '';
+
+              angular.forEach(
+                result, function (chr)
+                {
+                  returned += chr;
+                });
+
+              deferred.resolve(returned);
+            },
+            function (error)
+            {
+              deferred.resolve({error: error});
+            }
+          );
+
+          return deferred.promise;
+        },
+
+        /**
+         * Edit notification
+         */
+        edit: function (uuid, notification)
+        {
+          var deferred = $q.defer();
+
+          Notifications.edit(
+            {uuid: uuid}, angular.toJson(notification),
+            function (result)
+            {
+              deferred.resolve(result);
+            },
+            function (error)
+            {
+              deferred.resolve({error: error});
+            }
+          );
+
+          return deferred.promise;
+        },
+
+        /**
+         * Get notification
+         */
+        get: function (uuid)
+        {
+          var deferred = $q.defer();
+
+          Notifications.get(
+            {uuid: uuid},
+            function (result)
+            {
+              deferred.resolve(result);
+            },
+            function (error)
+            {
+              deferred.resolve({error: error});
+            }
+          );
+
+          return deferred.promise;
+        },
+
+        /**
+         * Get a local notification
+         */
+        find: function (id)
+        {
+          var gem;
+
+          angular.forEach(
+            this.local(), function (notification)
+            {
+              if (notification.uuid == id) gem = notification;
             });
+
+          return gem;
+        },
+
+        /**
+         * Get local cache of notifications
+         */
+        local: function () { return angular.fromJson(Storage.get('notifications')); },
+
+        /**
+         * Delete notifications
+         */
+        remove: function (uuid)
+        {
+          var deferred = $q.defer();
+
+          Notifications.remove(
+            {uuid: uuid},
+            function (result)
+            {
+              deferred.resolve(result);
+            },
+            function (error)
+            {
+              deferred.resolve({error: error});
+            }
+          );
+
+          return deferred.promise;
+        }
+
+      };
+
+
+      /**
+       * Filter messages based on box
+       */
+      Messages.prototype.filter = function (messages)
+      {
+        var filtered = {
+          inbox: [],
+          outbox: [],
+          trash: []
+        };
+
+        angular.forEach(
+          messages, function (message)
+          {
+            if (message.subject == '') message.subject = '-No Subject-';
+
+            if (message.box == 'inbox' &&
+                message.state != 'TRASH')
+            {
+              filtered.inbox.push(message);
+            }
+            else if (message.box == 'outbox' &&
+                     message.state != 'TRASH')
+            {
+              filtered.outbox.push(message);
+            }
+            else if ((message.box == 'inbox' || message.box == 'outbox') &&
+                     message.state == 'TRASH')
+            {
+              filtered.trash.push(message);
+            }
+          });
+
+        var butcher = function (box)
+        {
+          var limit = 50,
+              total = box.length,
+              offset = 0,
+              newarr = [];
+
+          while (offset * limit < total)
+          {
+            newarr[offset] = box.slice(offset * limit, ( offset + 1 ) * limit);
+
+            offset ++;
           }
 
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+          return newarr;
+        };
 
-	    return deferred.promise;
-	  };
-	  
+        filtered.inbox = butcher(filtered.inbox);
+        filtered.outbox = butcher(filtered.outbox);
+        filtered.trash = butcher(filtered.trash);
 
-	  /**
-	   * Notifications
-	   */
-	  Messages.prototype.scheaduled = {
+        return filtered;
+      };
 
-	  	/**
-	  	 * List of the notifications
-	  	 */
-	  	list: function () 
-		  {
-		    var deferred = $q.defer();
 
-		    Notifications.query(
-		      function (result) 
-		      {
-		      	Storage.add('notifications', angular.toJson(result));
+      /**
+       * Serve messages from localStorage
+       */
+      Messages.prototype.local = function () { return angular.fromJson(Storage.get('messages')) };
 
-		      	angular.forEach(result, function (scheadule)
-		      	{
-		      		angular.forEach(scheadule.types, function (type)
-		      		{
-		      			if (type == 'sms') scheadule.sms = true;
-		      			if (type == 'email') scheadule.mail = true;
-		      		});
-		      	});
 
-		        deferred.resolve(result);
-		      },
-		      function (error)
-		      {
-		        deferred.resolve({error: error});
-		      }
-		    );
-
-		    return deferred.promise;
-		  },
-
-		  /**
-		   * Create notifications
-		   */
-		  create: function (notification)
-		  {
-		  	// console.log('not ->', notification);
-		  	
-		    var deferred = $q.defer();
-
-		    Notifications.save(null, angular.toJson(notification),
-		      function (result) 
-		      {
-		        var returned = '';
-
-		        angular.forEach(result, function (chr)
-		        {
-		          returned += chr;
-		        });
-
-		        deferred.resolve(returned);
-		      },
-		      function (error)
-		      {
-		        deferred.resolve({error: error});
-		      }
-		    );
-
-		    return deferred.promise;		  	
-		  },
-
-		  /**
-		   * Edit notification
-		   */
-		  edit: function (uuid, notification)
-		  {		  	
-		    var deferred = $q.defer();
-
-		    Notifications.edit({uuid: uuid}, angular.toJson(notification),
-		      function (result) 
-		      {
-		        deferred.resolve(result);
-		      },
-		      function (error)
-		      {
-		        deferred.resolve({error: error});
-		      }
-		    );
-
-		    return deferred.promise;		  	
-		  },
-
-		  /**
-		   * Get notification
-		   */
-		  get: function (uuid)
-		  {		  	
-		    var deferred = $q.defer();
-
-		    Notifications.get({uuid: uuid},
-		      function (result) 
-		      {
-		        deferred.resolve(result);
-		      },
-		      function (error)
-		      {
-		        deferred.resolve({error: error});
-		      }
-		    );
-
-		    return deferred.promise;		  	
-		  },
-
-		  /**
-		   * Get a local notification
-		   */
-		  find: function (id)
-		  {
-		    var gem;
-
-		    angular.forEach(this.local(), function (notification)
-		    {
-		      if (notification.uuid == id) gem = notification;
-		    });
-
-		    return gem;	  	
-		  },
-
-		  /**
-		   * Get local cache of notifications
-		   */
-		  local: function () { return angular.fromJson(Storage.get('notifications')); },
-
-		  /**
-		   * Delete notifications
-		   */
-		  remove: function (uuid)
-		  {		  	
-		    var deferred = $q.defer();
-
-		    Notifications.remove({uuid: uuid},
-		      function (result) 
-		      {
-		        deferred.resolve(result);
-		      },
-		      function (error)
-		      {
-		        deferred.resolve({error: error});
-		      }
-		    );
-
-		    return deferred.promise;		  	
-		  }
-
-	  };
-
-
-	  /**
-	   * Filter messages based on box
-	   */
-	  Messages.prototype.filter = function (messages)
-	  {
-	    var filtered = {
-	      inbox: [],
-	      outbox: [],
-	      trash: []
-	    };
-
-	    angular.forEach(messages, function (message)
-	    {
-	      if (message.subject == '') message.subject = '-No Subject-';
-
-	      if (message.box == 'inbox' &&
-	          message.state != 'TRASH')
-	      {
-	        filtered.inbox.push(message);
-	      }
-	      else if ( message.box == 'outbox' && 
-	                message.state != 'TRASH')
-	      {
-	        filtered.outbox.push(message);
-	      }
-	      else if ( (message.box == 'inbox' || message.box == 'outbox') &&
-	                message.state == 'TRASH')
-	      {
-	        filtered.trash.push(message);
-	      }
-	    });
-
-	    var butcher = function (box)
-	    {
-		    var limit 	= 50,
-		    		total 	= box.length,
-		  			offset 	= 0,
-		  			newarr 	= [];
-
-		  	while (offset * limit < total)
-		  	{
-					newarr[offset] = box.slice( offset * limit, ( offset + 1 ) * limit );
-
-					offset ++;
-		  	}
-
-		  	return newarr;
-	    };
-
-	    filtered.inbox 	= butcher(filtered.inbox);
-	    filtered.outbox = butcher(filtered.outbox);
-	    filtered.trash 	= butcher(filtered.trash);
-
-	    return filtered;
-	  };
-
-
-	  /**
-	   * Serve messages from localStorage
-	   */
-	  Messages.prototype.local = function () { return angular.fromJson(Storage.get('messages')) };
-
-
-	  /**
-	   * Find a message in cache
-	   */
-	  Messages.prototype.find = function (id)
-	  {
-	    var gem;
-
-      // console.log('== asked message id ->', id);
-
-      // console.log('printing local messages ->', Messages.prototype.local());
-
-	    angular.forEach(Messages.prototype.local(), function (message)
-	    {
-        // console.log('== listing message ->', message.uuid);
-
-	      if (message.uuid == id) gem = message;
-	    });
-
-	    return gem;
-	  };
-
-
-	  /**
-	   * Serve receivers list
-	   */
-	  Messages.prototype.receviers = function ()
-	  {
-	    var members   = angular.fromJson(Storage.get('members')),
-	        groups    = angular.fromJson(Storage.get('groups')),
-	        receivers = [];
-
-	    angular.forEach(members, function(member)
-	    {
-        receivers.push({
-          id: member.uuid,
-          name: member.name,
-          lastName: member.resources.lastName,
-          firstName: member.resources.firstName,
-          group: $rootScope.ui.message.receiversUsers
-	      });
-	    });
-
-//      console.log('groups ->')
-//
-//      groups.sort(function (a, b)
-//      {
-//        var aName = a.name.toLowerCase();
-//        var bName = b.name.toLowerCase();
-//        if (aName < bName) return -1;
-//        if (aName > bName) return 1;
-//        return 0;
-//      });
-//
-//      console.log('groups sorted ->', groups);
-
-	    angular.forEach(groups, function(group)
-	    {
-        receivers.push({
-          id: group.uuid,
-          name: group.name,
-          lastName: group.name,
-          group: $rootScope.ui.message.receiversGroups
-	      });
-	    });
-
-	    return receivers;
-	  };
-
-
-	  /**
-	   * Send a message
-	   */
-	  Messages.prototype.send = function (message, broadcast) 
-	  {
-	    var deferred = $q.defer(),
-	        members = [],
-	        types = [];
-
-	    angular.forEach(message.receivers, function (receiver)
-	    {
-	      members.push(receiver.id);
-	    });
-
-	    types.push('paige');
-
-	    if (broadcast.sms) types.push('sms');
-
-	    if (broadcast.email) types.push('email');
-
-	    var message = {
-	      members: members,
-	      content: message.body,
-	      subject: message.subject,
-	      types: types
-	    };
-
-	    Messages.send(null, message, 
-	      function (result) 
-	      {
-	        var returned = '';
-
-	        angular.forEach(result, function (chr)
-	        {
-	          returned += chr;
-	        });
-
-	        deferred.resolve(returned);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Send a message
-	   */
-	  Messages.prototype.email = function (type)
-	  {
-	    var deferred 	= $q.defer();
-
-      var mailTemplate;
-
-      if (type == 'regular')
+      /**
+       * Find a message in cache
+       */
+      Messages.prototype.find = function (id)
       {
-        mailTemplate = '/mail/mobile_app.html';
-      }
-      else if (type == 'experimental')
+        var gem;
+
+        // console.log('== asked message id ->', id);
+
+        // console.log('printing local messages ->', Messages.prototype.local());
+
+        angular.forEach(
+          Messages.prototype.local(), function (message)
+          {
+            // console.log('== listing message ->', message.uuid);
+
+            if (message.uuid == id) gem = message;
+          });
+
+        return gem;
+      };
+
+
+      /**
+       * Serve receivers list
+       */
+      Messages.prototype.receviers = function ()
       {
-        mailTemplate = '/mail/mobile_app_experimental.html';
-      }
+        var members = angular.fromJson(Storage.get('members')),
+            groups = angular.fromJson(Storage.get('groups')),
+            receivers = [];
 
-	    $http({
-			  method: 'GET',
-			  url: 		'../profiles/' +
-                $config.profile.meta +
-                mailTemplate
-			}).
-		  success(function (content, status, headers, config)
-		  {
-		  	// content = content.replace('__download_link__', $config.profile.mobileApp.link);
+        angular.forEach(
+          members, function (member)
+          {
+            receivers.push(
+              {
+                id: member.uuid,
+                name: member.name,
+                lastName: member.resources.lastName,
+                firstName: member.resources.firstName,
+                group: $rootScope.ui.message.receiversUsers
+              });
+          });
 
-		    var message = {
-					content: 			content,
-					subject: 			'Mobiele App Instructies',
-					types: 				['email'],
-					contenttype: 	'text/html'
-				};
+        //      console.log('groups ->')
+        //
+        //      groups.sort(function (a, b)
+        //      {
+        //        var aName = a.name.toLowerCase();
+        //        var bName = b.name.toLowerCase();
+        //        if (aName < bName) return -1;
+        //        if (aName > bName) return 1;
+        //        return 0;
+        //      });
+        //
+        //      console.log('groups sorted ->', groups);
 
-		    Messages.send(
+        angular.forEach(
+          groups, function (group)
+          {
+            receivers.push(
+              {
+                id: group.uuid,
+                name: group.name,
+                lastName: group.name,
+                group: $rootScope.ui.message.receiversGroups
+              });
+          });
+
+        return receivers;
+      };
+
+
+      /**
+       * Send a message
+       */
+      Messages.prototype.send = function (message, broadcast)
+      {
+        var deferred = $q.defer(),
+            members = [],
+            types = [];
+
+        angular.forEach(
+          message.receivers, function (receiver)
+          {
+            members.push(receiver.id);
+          });
+
+        types.push('paige');
+
+        if (broadcast.sms) types.push('sms');
+
+        if (broadcast.email) types.push('email');
+
+        var message = {
+          members: members,
+          content: message.body,
+          subject: message.subject,
+          types: types
+        };
+
+        Messages.send(
+          null, message,
+          function (result)
+          {
+            var returned = '';
+
+            angular.forEach(
+              result, function (chr)
+              {
+                returned += chr;
+              });
+
+            deferred.resolve(returned);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Send a message
+       */
+      Messages.prototype.email = function (type)
+      {
+        var deferred = $q.defer();
+
+        var mailTemplate;
+
+        if (type == 'regular')
+        {
+          mailTemplate = '/mail/mobile_app.html';
+        }
+        else if (type == 'experimental')
+        {
+          mailTemplate = '/mail/mobile_app_experimental.html';
+        }
+
+        $http(
+          {
+            method: 'GET',
+            url: '../profiles/' +
+                 $config.profile.meta +
+                 mailTemplate
+          }).
+          success(
+          function (content, status, headers, config)
+          {
+            // content = content.replace('__download_link__', $config.profile.mobileApp.link);
+
+            var message = {
+              content: content,
+              subject: 'Mobiele App Instructies',
+              types: ['email'],
+              contenttype: 'text/html'
+            };
+
+            Messages.send(
+              null,
+              message,
+              function (result)
+              {
+                var returned = '';
+
+                angular.forEach(
+                  result, function (chr)
+                  {
+                    returned += chr;
+                  });
+
+                deferred.resolve(returned);
+              },
+              function (error)
+              {
+                deferred.resolve({error: error});
+              }
+            );
+          }).
+          error(
+          function (data, status, headers, config)
+          {
+            console.log('Something went wrong terribly with emailing the message!', data, status, headers, config);
+          });
+
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get unread messages
+       */
+      Messages.prototype.unread = function ()
+      {
+        var messages = Messages.prototype.local(),
+            unread = [];
+
+        angular.forEach(
+          messages, function (message)
+          {
+            if (message.box == 'inbox' && message.state == 'NEW') unread.push(message);
+          });
+
+        return unread;
+      };
+
+
+      /**
+       * Count unread messages
+       */
+      Messages.prototype.unreadCount = function ()
+      {
+        var messages = Messages.prototype.local(),
+            counter = 0;
+
+        angular.forEach(
+          messages, function (message)
+          {
+            if (message.box == 'inbox' && message.state == 'NEW')
+            {
+              counter ++;
+
+              // if ($rootScope.browser.webkit)
+              // {
+              // $rootScope.setWebkitNotification(
+              //   'New message: ' + message.subject,
+              //   message.question_text,
+              //   {
+              //     path: 'messages',
+              //     search:
+              //     {
+              //       uuid: message.uuid,
+              //     },
+              //     hash: 'message'
+              //   }
+              // );
+              // };
+            }
+          });
+
+        $rootScope.app.unreadMessages = counter;
+      };
+
+
+      /**
+       * Change message state
+       */
+      Messages.prototype.changeState = function (ids, state)
+      {
+        var deferred = $q.defer();
+
+        Messages.changeState(
           null,
-          message,
-		      function (result)
-		      {
-		        var returned = '';
+          {
+            ids: ids,
+            state: state
+          },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
 
-		        angular.forEach(result, function (chr)
-		        {
-		          returned += chr;
-		        });
+        /**
+         * Change message state locally as well if it is READ
+         */
+        if (state == 'READ')
+        {
+          var messages = angular.fromJson(Storage.get('messages')),
+              converted = [];
 
-		        deferred.resolve(returned);
-		      },
-		      function (error)
-		      {
-		        deferred.resolve({error: error});
-		      }
-		    );
-		  }).
-		  error(function (data, status, headers, config)
-		  {
-		  	console.log('Something went wrong terribly with emailing the message!', data, status, headers, config);
-		  });
+          angular.forEach(
+            messages, function (message)
+            {
+              angular.forEach(
+                ids, function (id)
+                {
+                  if (message.uuid == id) message.state = 'READ';
+                });
 
+              converted.push(message);
+            });
 
-	    return deferred.promise;
-	  };
+          Storage.remove('messages');
 
+          Storage.add(angular.toJson('messages', converted));
 
-	  /**
-	   * Get unread messages
-	   */
-	  Messages.prototype.unread = function ()
-	  {
-	    var messages = Messages.prototype.local(),
-	        unread = [];
+          Messages.prototype.unreadCount();
+        }
 
-	    angular.forEach(messages, function (message)
-	    {
-	      if (message.box == 'inbox' && message.state == 'NEW') unread.push(message);
-	    });
-
-	    return unread;
-	  };
-
-
-	  /**
-	   * Count unread messages
-	   */
-	  Messages.prototype.unreadCount = function ()
-	  {
-	  	var messages = Messages.prototype.local(),
-	        counter = 0;
-
-	    angular.forEach(messages, function (message)
-	    {
-	      if (message.box == 'inbox' && message.state == 'NEW')
-	      {
-		      counter++;
-
-		      // if ($rootScope.browser.webkit)
-		      // {
-				    // $rootScope.setWebkitNotification(
-				    //   'New message: ' + message.subject, 
-				    //   message.question_text,
-				    //   {
-				    //     path: 'messages',
-				    //     search: 
-				    //     {
-				    //       uuid: message.uuid,
-				    //     },
-				    //     hash: 'message'
-				    //   }
-				    // );
-		      // };
-		    }
-	    });
-
-	    $rootScope.app.unreadMessages = counter;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Change message state
-	   */
-	  Messages.prototype.changeState = function (ids, state)
-	  {
-	    var deferred = $q.defer();
+      /**
+       * Delete message(s)
+       */
+      Messages.prototype.remove = function (id)
+      {
+        var deferred = $q.defer();
 
-	    Messages.changeState(null, 
-	      {
-	        ids: ids, 
-	        state: state 
-	      }, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        Messages.prototype.changeState(id, 'TRASH')
+          .then(
+          function (result)
+          {
+            deferred.resolve(result);
+          });
 
-	    /**
-	     * Change message state locally as well if it is READ
-	     */
-	    if (state == 'READ')
-	    {
-	      var messages = angular.fromJson(Storage.get('messages')),
-	          converted = [];
-
-	      angular.forEach(messages, function (message)
-	      {
-	        angular.forEach(ids, function (id)
-	        {
-	          if (message.uuid == id) message.state = 'READ';
-	        });
-
-	        converted.push(message);
-	      });
-
-	      Storage.remove('messages');
-
-	      Storage.add(angular.toJson('messages', converted));
-
-	      Messages.prototype.unreadCount();
-	    }
-
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Delete message(s)
-	   */
-	  Messages.prototype.remove = function (id)
-	  {
-	    var deferred = $q.defer();
+      /**
+       * Restore message(s)
+       */
+      Messages.prototype.restore = function (id)
+      {
+        var deferred = $q.defer();
 
-	    Messages.prototype.changeState(id, 'TRASH')
-	    .then(function (result) 
-	    {
-	      deferred.resolve(result);
-	    });
+        Messages.prototype.changeState(id, 'SEEN')
+          .then(
+          function (result)
+          {
+            deferred.resolve(result);
+          });
 
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Restore message(s)
-	   */
-	  Messages.prototype.restore = function (id)
-	  {
-	    var deferred = $q.defer();
-
-	    Messages.prototype.changeState(id, 'SEEN')
-	    .then(function (result) 
-	    {
-	      deferred.resolve(result);
-	    });
-
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Delete forever
-	   */
-	  Messages.prototype.emptyTrash = function (ids)
-	  {
-	    var deferred = $q.defer(),
-	        messages = Messages.prototype.local(),
-	        bulk = [];
+      /**
+       * Delete forever
+       */
+      Messages.prototype.emptyTrash = function (ids)
+      {
+        var deferred = $q.defer(),
+            messages = Messages.prototype.local(),
+            bulk = [];
 
-	    angular.forEach(messages, function(message)
-	    {
-	      if ((message.box == 'inbox' || message.box == 'outbox') && message.state == 'TRASH') bulk.push(message.uuid);
-	    });
+        angular.forEach(
+          messages, function (message)
+          {
+            if ((message.box == 'inbox' || message.box == 'outbox') && message.state == 'TRASH') bulk.push(message.uuid);
+          });
 
-	    Messages.remove(null,
-	      { 
-	        members: bulk 
-	      }, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        Messages.remove(
+          null,
+          {
+            members: bulk
+          },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
 
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Clean the mailboxes
-	   */
-	  Messages.prototype.clean = function (box)
-	  {
-	    var deferred 	= $q.defer(),
-	        calls 		= [];
-
-	    angular.forEach(box, function (bulk)
-	    {
-	    	var ids = [];
-
-	    	angular.forEach(bulk, function (message)
-	    	{
-	    		ids.push(message.uuid);
-	    	});
-
-	      calls.push(Messages.remove(null, {
-	      	members: ids
-	      }));
-	    });
-
-	    $q.all(calls)
-	    .then(function (result)
-	    {
-	      deferred.resolve(result);
-	    });
-
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  return new Messages;
-	}
-]);;'use strict';
+      /**
+       * Clean the mailboxes
+       */
+      Messages.prototype.clean = function (box)
+      {
+        var deferred = $q.defer(),
+            calls = [];
+
+        angular.forEach(
+          box, function (bulk)
+          {
+            var ids = [];
+
+            angular.forEach(
+              bulk, function (message)
+              {
+                ids.push(message.uuid);
+              });
+
+            calls.push(
+              Messages.remove(
+                null, {
+                  members: ids
+                }));
+          });
+
+        $q.all(calls)
+          .then(
+          function (result)
+          {
+            deferred.resolve(result);
+          });
+
+        return deferred.promise;
+      };
+
+
+      return new Messages;
+    }
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Modals.Groups', ['ngResource'])
@@ -10556,10 +10622,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             capcodes = capcodes.sort();
 
             angular.forEach(
-              capcodes, function (code)
+              capcodes,
+              function (code)
               {
                 _capcodes += code + ', ';
-              });
+              }
+            );
 
             $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
 
@@ -12985,1100 +13053,1153 @@ angular.module('WebPaige.Controllers.Messages', [])
 /**
  * Messages controller
  */
-.controller('messages', 
-[
-	'$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
-	function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) 
-	{
-    $rootScope.notification.status = false;
+  .controller(
+  'messages',
+  [
+    '$scope', '$rootScope', '$q', '$location', '$route', 'data', 'Messages', 'Storage', 'Timer', 'Offsetter',
+    function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter)
+    {
+      $rootScope.notification.status = false;
 
-	  /**
-	   * Fix styles
-	   */
-	  $rootScope.fixStyles();
-
-
-	  /**
-     * TODO: Still being used?
-	   */
-	  var self = this;
+      /**
+       * Fix styles
+       */
+      $rootScope.fixStyles();
 
 
-	  /**
-	   * Receivers list
-	   */
-	  $scope.receviersList = Messages.receviers();
+      /**
+       * Receivers list
+       */
+      $scope.receviersList = Messages.receviers();
+      
+
+      /**
+       * Set messages
+       */
+      $scope.messages = data.messages;
+      $scope.scheadules = data.scheadules;
 
 
-	  /**
-	   * Set messages
-	   */
-	  $scope.messages 	= data.messages;
-	  $scope.scheadules = data.scheadules;
+      /**
+       * Pagination
+       */
+      $scope.page = {
+        inbox: 0,
+        outbox: 0,
+        trash: 0
+      };
 
 
-	  /**
-	   * Pagination
-	   */
-	  $scope.page = {
-	  	inbox: 	0,
-	  	outbox: 0,
-	  	trash: 	0
-	  };
+      /**
+       * Paginate engine
+       */
+      $scope.paginate = {
 
-
-	  /**
-	   * Paginate engine
-	   */
-	  $scope.paginate = {
-
-	  	set: function (page, box)
-	  	{
-	  		$scope.page[box] = page;
-	  	},
-
-	  	next: function (box)
-	  	{
-	  		if ($scope.page[box] + 1 != $scope.messages[box].length)
-	  			$scope.page[box]++;
-	  	},
-
-	  	before: function (box)
-	  	{
-	  		if ($scope.page[box] != 0)
+        set: function (page, box)
         {
-          $scope.page[box]--;
+          $scope.page[box] = page;
+        },
+
+        next: function (box)
+        {
+          if ($scope.page[box] + 1 != $scope.messages[box].length)
+          {
+            $scope.page[box] ++;
+          }
+        },
+
+        before: function (box)
+        {
+          if ($scope.page[box] != 0)
+          {
+            $scope.page[box] --;
+          }
         }
-	  	}
-	  };
+      };
 
 
-	  /**
-	   * Selections
-	   */
-	  $scope.selection = {
-	    inbox: 	{},
-	    outbox: {},
-	    trash: 	{}
-	  };
+      /**
+       * Selections
+       */
+      $scope.selection = {
+        inbox: {},
+        outbox: {},
+        trash: {}
+      };
 
 
-	  /**
-	   * Selection masters
-	   */
-	  $scope.selectionMaster = {
-	    inbox: 	'',
-	    outbox: '',
-	    trash: 	''
-	  };
+      /**
+       * Selection masters
+       */
+      $scope.selectionMaster = {
+        inbox: '',
+        outbox: '',
+        trash: ''
+      };
 
 
-	  /**
-	   * Initial value for broadcasting
-	   */
-	  $scope.broadcast = {
-	    sms: 		false,
-	    email: 	false
-	  };
+      /**
+       * Initial value for broadcasting
+       */
+      $scope.broadcast = {
+        sms: false,
+        email: false
+      };
 
 
-	  /**
-	   * Default scheduled config
-	   */
-		$scope.scheaduled = {
-			title: 		'',
-			offsets: 	{},
-			status: 	false
-		};
+      /**
+       * Default scheduled config
+       */
+      $scope.scheaduled = {
+        title: '',
+        offsets: {},
+        status: false
+      };
 
 
-		/**
-	   * Set origin container for returning back to origin box
-	   */
-	  $scope.origin = 'inbox';
+      /**
+       * Set origin container for returning back to origin box
+       */
+      $scope.origin = 'inbox';
 
 
-	  /**
-	   * View setter
-	   */
-	  function setView (hash)
-	  {
-	    $scope.views = {
-	      compose: 				false,
-	      message: 				false,
-	      inbox:   				false,
-	      outbox:  				false,
-	      trash:   				false,
-	      notifications: 	false,
-	      scheaduler: 		false
-	    };
+      /**
+       * View setter
+       */
+      function setView (hash)
+      {
+        $scope.views = {
+          compose: false,
+          message: false,
+          inbox: false,
+          outbox: false,
+          trash: false,
+          notifications: false,
+          scheaduler: false
+        };
 
-	    $scope.views[hash] = true;
-	  }
-
-
-	  /**
-	   * Switch between the views and set hash accordingly
-	   */
-	  $scope.setViewTo = function (hash)
-	  {
-	    $scope.$watch(hash, function ()
-	    {
-	      $location.hash(hash);
-
-	      setView(hash);
-	    });
-	  };
+        $scope.views[hash] = true;
+      }
 
 
-	  /**
-	   * If no params or hashes given in url
-	   */
-	  if (!$location.hash())
-	  {
-	    var view = 'inbox';
-
-	    $location.hash('inbox');
-	  }
-	  else
-	  {
-	    var view = $location.hash();
-	  }
-
-
-	  /**
-	   * Set view
-	   */
-	  setView(view);
-
-
-	  /**
-	   * Default toggle for scheaduler pane
-	   */
-    $scope.scheadulerPane = false;
-
-
-	  /**
-	   * Extract view action from url and set message view
-	   */
-	  if ($location.search().uuid)
-	  {
-	  	if ($location.hash() == 'scheaduler')
-	  	{
-		    setNotificationView($location.search().uuid);
-	  	}
-	  	else
-	  	{
-	  		setMessageView($location.search().uuid);
-	  	}
-	  }
-
-
-	  /**
-	   * TODO: Possible bug.. Still issues with changing state of the message
-	   * Set given group for view
-	   */
-	  function setMessageView (id)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.loadingMessage);
-
-	    setView('message');
-
-      // console.log('Getting message! ->', id);
-
-	    $scope.setViewTo('message');
-
-	    $scope.message = Messages.find(id);
-
-      // console.log('Found message ->', $scope.message);
-
-	    /**
-	     * Change to read if message not seen yet
-	     * Check only in inbox because other box messages
-	     * can have 'NEW' state as well but those states are not shown
-	     * Maybe only for 'trash' box to show state in later stages
-	     */
-	    if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
-	    {
-	      Messages.changeState([id], 'READ')
-	      .then(function (result)
-	      {
-	        if (result.error)
-	        {
-	          $rootScope.notifier.error($rootScope.ui.errors.messages.changeState);
-	          console.warn('error ->', result);
-	        }
-	        else
-	        {
-	          // console.log('state changed');
-	        }
-	      });
-
-	      var _inbox = [];
-
-	      angular.forEach($scope.messages.inbox, function (message)
-	      {
-	        if (message.uuid == $scope.message.uuid)
+      /**
+       * Switch between the views and set hash accordingly
+       */
+      $scope.setViewTo = function (hash)
+      {
+        $scope.$watch(
+          hash,
+          function ()
           {
-            message.state = "READ";
+            $location.hash(hash);
+
+            setView(hash);
           }
-
-	        _inbox.push(message);
-	      });
-
-	  	  $scope.messages.inbox = _inbox;
-
-	      Messages.unreadCount(); 
-	    }
-
-	    $rootScope.statusBar.off();
-	  }
+        );
+      };
 
 
-	  /**
-	   * Request for a message
-	   */
-	  $scope.requestMessage = function (current, origin)
-	  {
-		  $scope.origin = origin;
+      var view;
 
-	    setMessageView(current);
-
-	    $scope.$watch($location.search(), function ()
-	    {
-	      $location.search({uuid: current});
-	    });
-	  };
-
-
-  	/**
-  	 * Count the schedules
-  	 */
-  	$scope.scheaduleCounter = function ()
-  	{
-  		var count = 0;
-
-  		angular.forEach($scope.scheaduled.offsets, function ()
+      /**
+       * If no params or hashes given in url
+       */
+      if (! $location.hash())
       {
-        count++;
-      });
+        view = 'inbox';
 
-	  	$scope.scheaduleCount = count;
-  	};
-
-
-	  /**
-	   * Set view for notification
-	   */
-	  function setNotificationView (id)
-	  {
-	  	$scope.origin = 'notifications';
-
-    	$scope.scheadulerPane = true;
-
-	    var scheaduled = Messages.scheaduled.find(id);
-
-	    angular.forEach(scheaduled.types, function (type)
-	  	{
-	  		if (type == 'sms') 		$scope.broadcast.sms 		= true;
-	  		if (type == 'email') 	$scope.broadcast.email 	= true;
-	  	});
-
-	    var members 	= angular.fromJson(Storage.get('members')),
-	    		groups 		= angular.fromJson(Storage.get('groups')),
-	    		receivers = [];
-
-	    angular.forEach(scheaduled.recipients, function (recipient)
-	  	{
-	  		var name;
-
-	  		if (members[recipient])
-	  		{
-		  		name = members[recipient].name;
-
-		  		receivers.push({
-		  			group: 	$rootScope.ui.message.receiversUsers,
-		  			id: 		recipient,
-		  			name: 	name
-		  		});
-	  		}
-	  		else
-	  		{
-	  			angular.forEach(groups, function (group)
-	  			{
-	  				if (group.uuid == recipient)
-	  				{  					
-			  			name = group.name;
-
-				  		receivers.push({
-				  			group: 	$rootScope.ui.message.receiversGroups,
-				  			id: 		recipient,
-				  			name: 	name
-				  		});
-	  				}
-	  			});
-	  		}
-	  	});
-
-	    $scope.message = {
-	      subject: 		scheaduled.subject,
-	      body: 			scheaduled.message,
-	      receivers: 	receivers
-	    };
-
-	    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
-	    {
-	    	angular.forEach(scheaduled.recipients, function (recipient)
-	    	{
-		  		if (members[recipient])
-		  		{
-		    		if (option.innerHTML == members[recipient].name) option.selected = true;
-		    	}
-		    	else
-		    	{
-		  			angular.forEach(groups, function (group)
-		  			{
-		  				if (group.uuid == recipient)
-		  				{
-		    				if (option.innerHTML == group.name) option.selected = true;
-		  				}
-		  			});
-		    	}
-	    	});
-	    });
-
-	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
-
-	    $scope.scheaduled = {
-	    	uuid: 		scheaduled.uuid,
-	    	sender: 	scheaduled.sender,
-	    	title: 		scheaduled.label,
-	    	status: 	scheaduled.active,
-	    	offsets: 	Offsetter.factory(scheaduled.offsets)
-	    };
-
-	    /**
-	     * TODO: FIX Counter is hard coded because calling counter script is not working! Maybe it is because that it is
-       * $scope function and angular needs some time to wrap the things, when console log is produced at the time of
-       * compilation it is observable that $scope object did not include all the functions in the controller
-	     */
-	    // $scope.scheaduleCounter();
-
-  		var count = 0;
-
-  		angular.forEach($scope.scheaduled.offsets, function (offset)
+        $location.hash('inbox');
+      }
+      else
       {
-        count++;
-      });
+        view = $location.hash();
+      }
 
-	  	$scope.scheaduleCount = count;
 
-	    // rerenderReceiversList();
-	  }
+      /**
+       * Set view
+       */
+      setView(view);
 
 
-	  /**
-	   * Request for a notification
-	   */
-	  $scope.requestNotification = function (id)
-	  {
-	  	$rootScope.statusBar.display($rootScope.ui.message.loadingNotifications);
+      /**
+       * Default toggle for scheduler pane
+       */
+      $scope.scheadulerPane = false;
 
-	    setView('scheaduler');
 
-	    $scope.setViewTo('scheaduler');
-
-	    setNotificationView(id);
-
-	    $scope.$watch($location.search(), function ()
-	    {
-	      $location.search({uuid: id});
-	    });
-
-	    $rootScope.statusBar.off();
-	  };
-
-
-	  /**
-	   * Compose message view toggle
-	   */
-	  $scope.composeMessage = function ()
-	  {
-	  	/**
-	  	 * Close composer
-	  	 */
-	    if ($scope.views.compose)
-	    {
-	      $scope.closeTabs();
-	    }
-	    /**
-	     * Open composer
-	     */
-	    else
-	    {
-	    	/**
-	    	 * TODO: Why not working properly? Look into this one
-	    	 * Reset them
-	    	 */
-	    	$location.search({});
-
-	      $scope.message = {};
-
-	      $scope.broadcast.sms 		= false;
-	      $scope.broadcast.email 	= false;
-
-	      $scope.scheadulerPane = false;
-
-		    angular.forEach($("div#composeTab select.chzn-select option"), function (option)
-		    {
-		    	option.selected = false;
-		    });
-
-		    $("div#composeTab select.chzn-select").trigger("liszt:updated");
-
-				$scope.scheaduled = {
-					title: 		'',
-					offsets: 	{},
-					status: 	false
-				};
-
-	      $scope.scheaduleCounter();
-
-	      $scope.setViewTo('inbox');
-	    }
-	  };
-
-
-	  /**
-	   * Reset views
-	   */
-	  $scope.closeTabs = function ()
-	  {
-	    $scope.message = {};
-
-	    $location.search({});
-
-	    setView($scope.origin);
-
-	    $scope.setViewTo($scope.origin);
-
-	    Storage.session.remove('escalation');
-	  };
-
-
-	  /**
-	   * Toggle selections
-	   */
-	  $scope.toggleSelection = function (messages, inbox, master)
-	  {
-	    var flag = (master) ? true : false;
-
-	    angular.forEach(messages, function (message)
-	    {
-	      $scope.selection[inbox][message.uuid] = flag;
-	    });
-	  };
-
-
-	  /**
-	   * Remove message
-	   */
-	  $scope.removeMessage = function (id)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.removing);
-
-	    var bulk = [];
-
-	    bulk.push(id);
-
-	    Messages.remove(bulk)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
-
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.removed);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function (messages)
-	        {
-	          $scope.messages = messages.messages;
-
-	          $rootScope.loading = false;
-
-	          $scope.closeTabs();
-
-	          $rootScope.statusBar.off();
-	        });
-	      }
-	    });
-	  };
-
-
-	  /**
-	   * Remove messages
-	   */
-	  $scope.removeMessages = function (selection)
-	  {
-	    // console.log('it is coming to bulk remove ->', selection.length);
-
-	    $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
-
-	    var ids = [];
-
-	    angular.forEach(selection, function (flag, id)
-	    {
-	      if (flag) ids.push(id);
-	    });
-
-	    Messages.remove(ids)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
-
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.removed);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function (messages)
-	        {
-	          $scope.messages = messages.messages;
-
-	          $rootScope.statusBar.off();
-	        });
-	      }
-	    });
-	  };
-
-
-	  /**
-	   * Restore a message
-	   */
-	  $scope.restoreMessage = function (id)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.restoring);
-
-	    var bulk = [];
-
-	    bulk.push(id);
-
-	    Messages.restore(bulk)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
-
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.restored);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function(messages)
-	        {
-	          $scope.messages = messages.messages;
-
-	          $rootScope.statusBar.off();
-	        });
-	      }
-	    });
-	  };
-
-
-	  /**
-	   * Restore messages
-	   */
-	  $scope.restoreMessages = function (selection)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.restoringSelected);
-
-	    var ids = [];
-
-	    angular.forEach(selection, function (flag, id)
-	    {
-	      if (flag) ids.push(id);
-	    });
-
-	    Messages.restore(ids)
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
-
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.removed);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function(messages)
-	        {
-	          $scope.messages = messages.messages;
-
-	          $rootScope.statusBar.off();
-	        });
-	      }
-	    });
-	  };
-
-
-	  /**
-	   * Empty trash
-	   */
-	  $scope.emptyTrash = function ()
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.emptying);
-
-	    Messages.emptyTrash()
-	    .then(function (result)
-	    {
-	      if (result.error)
-	      {
-	        $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
-
-	        console.warn('error ->', result);
-	      }
-	      else
-	      {
-	        $rootScope.notifier.success($rootScope.ui.message.emptied);
-
-	        $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	        Messages.query()
-	        .then(function (messages)
-	        {
-	          if (messages.error)
-	          {
-	            $rootScope.notifier.error($rootScope.ui.errors.messages.query);
-
-	            console.warn('error ->', messages);
-	          }
-	          else
-	          {
-	            $scope.messages = messages.messages;
-
-	            $rootScope.statusBar.off();
-	          }
-	        });
-	      }
-	    });    
-	  };
-
-
-	  /**
-	   * Reply a message
-	   */
-	  $scope.reply = function(message)
-	  {
-	    setView('compose');
-
-	    $scope.setViewTo('compose');
-
-	    var members = angular.fromJson(Storage.get('members'));
-
-      // console.log('requester ->', message.requester);
-
-	    var senderId = ($rootScope.config.profile.smartAlarm) ?
-                        message.requester :
-                        message.requester.split('personalagent/')[1].split('/')[0];
-
-      // console.log('processed requester ->', senderId);
-
-      var name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
-
-      // console.log('name ->', name);
-
-	    $scope.message = {
-	      subject: 		'RE: ' + message.subject,
-	      receivers: 	[{
-	        group: 		'Users', 
-	        id: 			senderId , 
-	        name: 		name
-	      }]
-	    };
-
-	    renderReceiversList();
-	  };
-
-
-	  /**
-	   * Send message
-	   */
-	  $scope.send = function (message, broadcast)
-	  {
-	    $rootScope.statusBar.display($rootScope.ui.message.sending);
-
-	    if (message.receivers)
-	    {
-	      Messages.send(message, broadcast)
-	      .then(function (uuid)
-	      {
-	        if (uuid.error)
-	        {
-	          $rootScope.notifier.error($rootScope.ui.errors.messages.send);
-
-	          console.warn('error ->', uuid);
-	        }
-	        else
-	        {
-	          $rootScope.notifier.success($rootScope.ui.message.sent);
-
-	          $rootScope.statusBar.display($rootScope.ui.message.refreshing);
-
-	          Messages.query()
-	          .then(function (messages)
-	          {
-	            if (messages.error)
-	            {
-	              $rootScope.notifier.error($rootScope.ui.errors.messages.query);
-
-	              console.warn('error ->', messages);
-	            }
-	            else
-	            {
-	              $scope.messages = messages.messages;
-
-	              $scope.closeTabs();
-
-	              $scope.requestMessage(uuid, $scope.origin);
-
-	              $rootScope.statusBar.off();
-	            }
-	          });
-	        }
-	      });
-	    }
-	    else
-	    {
-	      $rootScope.notifier.error($rootScope.ui.message.noReceivers);
-
-	      $rootScope.statusBar.off();
-	    }
-	  };
-
-
-		/**
-	   * TODO: Is it still working? Fix for not displaying original sender in multiple receivers selector
-	   * in the case that user wants to add more receivers to the list  
-	   */
-	  $("div#composeTab select.chzn-select").chosen()
-	  .change(function ()
-	  {
-	  	$.each($(this).next().find("ul li.result-selected"), function (i, li)
-	    {
-	  		var name = $(li).html();
-
-	  		$.each($("div#composeTab select.chzn-select option"), function (j, opt)
-	      {
-		      if (opt.innerHTML == name) opt.selected = true;
-		    });
-	  	});
-	  });
-
-	  
-	  /**
-	   * Re-render receivers list
-	   */
-	  function renderReceiversList ()
-	  {
-      angular.forEach($scope.message.receivers, function (receiver)
+      /**
+       * Extract view action from url and set message view
+       */
+      if ($location.search().uuid)
       {
-        angular.forEach($("div#composeTab select.chzn-select option"), function (option)
+        if ($location.hash() == 'scheaduler')
         {
-          if (option.innerHTML == receiver.name)
+          setNotificationView($location.search().uuid);
+        }
+        else
+        {
+          setMessageView($location.search().uuid);
+        }
+      }
+
+
+      /**
+       * TODO: Possible bug.. Still issues with changing state of the message
+       * Set given group for view
+       */
+      function setMessageView (id)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.loadingMessage);
+
+        setView('message');
+
+        // console.log('Getting message! ->', id);
+
+        $scope.setViewTo('message');
+
+        $scope.message = Messages.find(id);
+
+        // console.log('Found message ->', $scope.message);
+
+        /**
+         * Change to read if message not seen yet
+         * Check only in inbox because other box messages
+         * can have 'NEW' state as well but those states are not shown
+         * Maybe only for 'trash' box to show state in later stages
+         */
+        if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
+        {
+          Messages.changeState([id], 'READ')
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.messages.changeState);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                // console.log('state changed');
+              }
+            });
+
+          var _inbox = [];
+
+          angular.forEach(
+            $scope.messages.inbox,
+            function (message)
+            {
+              if (message.uuid == $scope.message.uuid)
+              {
+                message.state = "READ";
+              }
+
+              _inbox.push(message);
+            }
+          );
+
+          $scope.messages.inbox = _inbox;
+
+          Messages.unreadCount();
+        }
+
+        $rootScope.statusBar.off();
+      }
+
+
+      /**
+       * Request for a message
+       */
+      $scope.requestMessage = function (current, origin)
+      {
+        $scope.origin = origin;
+
+        setMessageView(current);
+
+        $scope.$watch(
+          $location.search(),
+          function () { $location.search({uuid: current}) }
+        );
+      };
+
+
+      /**
+       * Count the schedules
+       */
+      $scope.scheaduleCounter = function ()
+      {
+        var count = 0;
+
+        angular.forEach(
+          $scope.scheaduled.offsets, function ()
           {
-            option.selected = true;
-          }
-        });
-      });
+            count ++;
+          });
 
-	    $("div#composeTab select.chzn-select").trigger("liszt:updated");
-	  }
-
-	    
-	  /**
-	   * Extract escalation information
-	   */
-	  if ($location.search().escalate)
-	  {
-	    var escalation = angular.fromJson(Storage.session.get('escalation')),
-	        name = escalation.group.split('>')[1].split('<')[0],
-	        uuid = escalation.group.split('uuid=')[1].split('#view')[0];
-
-	    setTimeout (function ()
-	    {
-	      angular.forEach($("div#composeTab select.chzn-select option"), function (option)
-	      {
-	        if (option.innerHTML == name) option.selected = true;
-	      });
-
-	      $("div#composeTab select.chzn-select").trigger("liszt:updated");
-	    }, $rootScope.config.timers.TICKER);
-
-	    $scope.message = {
-	      subject: $rootScope.ui.message.escalation,
-	      receivers: [{
-	        group: $rootScope.ui.message.receiversGroups, 
-	        id: uuid, 
-	        name: name
-	      }],
-	      body: $rootScope.ui.message.escalationBody(
-	        escalation.diff, 
-	        escalation.start.date, 
-	        escalation.start.time,
-	        escalation.end.date,
-	        escalation.end.time)
-	    };
-
-	    $scope.broadcast = {
-	      sms: true
-	    };
-	  }
+        $scope.scheaduleCount = count;
+      };
 
 
-	  /**
-     * DASHBOARD
-	   * Bulk cleaners for mailboxes
-	   */
-	  $scope.clean = {
-	  	inbox: function ()
-	  	{
-	  		Messages.clean($scope.messages.inbox);
-	  	},
-	  	outbox: function ()
-	  	{
-	  		Messages.clean($scope.messages.outbox);
-	  	},
-	  	trash: function ()
-	  	{
-	  		Messages.clean($scope.messages.trash); 		
-	  	}
-	  };
+      /**
+       * Set view for notification
+       */
+      function setNotificationView (id)
+      {
+        $scope.origin = 'notifications';
+
+        $scope.scheadulerPane = true;
+
+        var scheaduled = Messages.scheaduled.find(id);
+
+        angular.forEach(
+          scheaduled.types, function (type)
+          {
+            if (type == 'sms')    $scope.broadcast.sms = true;
+            if (type == 'email')  $scope.broadcast.email = true;
+          });
+
+        var members = angular.fromJson(Storage.get('members')),
+            groups = angular.fromJson(Storage.get('groups')),
+            receivers = [];
+
+        angular.forEach(
+          scheaduled.recipients, function (recipient)
+          {
+            var name;
+
+            if (members[recipient])
+            {
+              name = members[recipient].name;
+
+              receivers.push(
+                {
+                  group: $rootScope.ui.message.receiversUsers,
+                  id: recipient,
+                  name: name
+                });
+            }
+            else
+            {
+              angular.forEach(
+                groups, function (group)
+                {
+                  if (group.uuid == recipient)
+                  {
+                    name = group.name;
+
+                    receivers.push(
+                      {
+                        group: $rootScope.ui.message.receiversGroups,
+                        id: recipient,
+                        name: name
+                      });
+                  }
+                });
+            }
+          });
+
+        $scope.message = {
+          subject: scheaduled.subject,
+          body: scheaduled.message,
+          receivers: receivers
+        };
+
+        angular.forEach(
+          $("div#composeTab select.chzn-select option"), function (option)
+          {
+            angular.forEach(
+              scheaduled.recipients, function (recipient)
+              {
+                if (members[recipient])
+                {
+                  if (option.innerHTML == members[recipient].name) option.selected = true;
+                }
+                else
+                {
+                  angular.forEach(
+                    groups, function (group)
+                    {
+                      if (group.uuid == recipient)
+                      {
+                        if (option.innerHTML == group.name) option.selected = true;
+                      }
+                    });
+                }
+              });
+          });
+
+        $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+        $scope.scheaduled = {
+          uuid: scheaduled.uuid,
+          sender: scheaduled.sender,
+          title: scheaduled.label,
+          status: scheaduled.active,
+          offsets: Offsetter.factory(scheaduled.offsets)
+        };
+
+        /**
+         * TODO: FIX Counter is hard coded because calling counter script is not working! Maybe it is because that it is
+         * $scope function and angular needs some time to wrap the things, when console log is produced at the time of
+         * compilation it is observable that $scope object did not include all the functions in the controller
+         */
+        // $scope.scheaduleCounter();
+
+        var count = 0;
+
+        angular.forEach(
+          $scope.scheaduled.offsets, function (offset)
+          {
+            count ++;
+          });
+
+        $scope.scheaduleCount = count;
+
+        // rerenderReceiversList();
+      }
 
 
-	  /**
-	   * Scheduler jobs manager
-	   */
-	  $scope.scheaduler = {
+      /**
+       * Request for a notification
+       */
+      $scope.requestNotification = function (id)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.loadingNotifications);
 
-	  	/**
-	  	 * Make data ready for insertion
-	  	 */
-	  	job: function (message, broadcast, scheaduled)
-	  	{
-		    var members = [],
-		        types 	= [];
+        setView('scheaduler');
 
-		    angular.forEach(message.receivers, function (receiver)
+        $scope.setViewTo('scheaduler');
+
+        setNotificationView(id);
+
+        $scope.$watch(
+          $location.search(), function ()
+          {
+            $location.search({uuid: id});
+          });
+
+        $rootScope.statusBar.off();
+      };
+
+
+      /**
+       * Compose message view toggle
+       */
+      $scope.composeMessage = function ()
+      {
+        /**
+         * Close composer
+         */
+        if ($scope.views.compose)
         {
-          members.push(receiver.id);
+          $scope.closeTabs();
+        }
+        /**
+         * Open composer
+         */
+        else
+        {
+          /**
+           * TODO: Why not working properly? Look into this one
+           * Reset them
+           */
+          $location.search({});
+
+          $scope.message = {};
+
+          $scope.broadcast.sms = false;
+          $scope.broadcast.email = false;
+
+          $scope.scheadulerPane = false;
+
+          angular.forEach(
+            $("div#composeTab select.chzn-select option"), function (option)
+            {
+              option.selected = false;
+            });
+
+          $("div#composeTab select.chzn-select").trigger("liszt:updated");
+
+          $scope.scheaduled = {
+            title: '',
+            offsets: {},
+            status: false
+          };
+
+          $scope.scheaduleCounter();
+
+          $scope.setViewTo('inbox');
+        }
+      };
+
+
+      /**
+       * Reset views
+       */
+      $scope.closeTabs = function ()
+      {
+        $scope.message = {};
+
+        $location.search({});
+
+        setView($scope.origin);
+
+        $scope.setViewTo($scope.origin);
+
+        Storage.session.remove('escalation');
+      };
+
+
+      /**
+       * Toggle selections
+       */
+      $scope.toggleSelection = function (messages, inbox, master)
+      {
+        var flag = (master) ? true : false;
+
+        angular.forEach(
+          messages, function (message)
+          {
+            $scope.selection[inbox][message.uuid] = flag;
+          });
+      };
+
+
+      /**
+       * Remove message
+       */
+      $scope.removeMessage = function (id)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.removing);
+
+        var bulk = [];
+
+        bulk.push(id);
+
+        Messages.remove(bulk)
+          .then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.message.removed);
+
+              $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+              Messages.query()
+                .then(
+                function (messages)
+                {
+                  $scope.messages = messages.messages;
+
+                  $rootScope.loading = false;
+
+                  $scope.closeTabs();
+
+                  $rootScope.statusBar.off();
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Remove messages
+       */
+      $scope.removeMessages = function (selection)
+      {
+        // console.log('it is coming to bulk remove ->', selection.length);
+
+        $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
+
+        var ids = [];
+
+        angular.forEach(
+          selection, function (flag, id)
+          {
+            if (flag) ids.push(id);
+          });
+
+        Messages.remove(ids)
+          .then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.message.removed);
+
+              $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+              Messages.query()
+                .then(
+                function (messages)
+                {
+                  $scope.messages = messages.messages;
+
+                  $rootScope.statusBar.off();
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Restore a message
+       */
+      $scope.restoreMessage = function (id)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.restoring);
+
+        var bulk = [];
+
+        bulk.push(id);
+
+        Messages.restore(bulk)
+          .then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.message.restored);
+
+              $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+              Messages.query()
+                .then(
+                function (messages)
+                {
+                  $scope.messages = messages.messages;
+
+                  $rootScope.statusBar.off();
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Restore messages
+       */
+      $scope.restoreMessages = function (selection)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.restoringSelected);
+
+        var ids = [];
+
+        angular.forEach(
+          selection, function (flag, id)
+          {
+            if (flag) ids.push(id);
+          });
+
+        Messages.restore(ids)
+          .then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.message.removed);
+
+              $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+              Messages.query()
+                .then(
+                function (messages)
+                {
+                  $scope.messages = messages.messages;
+
+                  $rootScope.statusBar.off();
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Empty trash
+       */
+      $scope.emptyTrash = function ()
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.emptying);
+
+        Messages.emptyTrash()
+          .then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
+
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.message.emptied);
+
+              $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+              Messages.query()
+                .then(
+                function (messages)
+                {
+                  if (messages.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
+                    console.warn('error ->', messages);
+                  }
+                  else
+                  {
+                    $scope.messages = messages.messages;
+
+                    $rootScope.statusBar.off();
+                  }
+                });
+            }
+          });
+      };
+
+
+      /**
+       * Reply a message
+       */
+      $scope.reply = function (message)
+      {
+        setView('compose');
+
+        $scope.setViewTo('compose');
+
+        var members = angular.fromJson(Storage.get('members'));
+
+        // console.log('requester ->', message.requester);
+
+        var senderId = ($rootScope.config.profile.smartAlarm) ?
+                       message.requester :
+                       message.requester.split('personalagent/')[1].split('/')[0];
+
+        // console.log('processed requester ->', senderId);
+
+        var name = (typeof members[senderId] == 'undefined' ) ? senderId : members[senderId].name;
+
+        // console.log('name ->', name);
+
+        $scope.message = {
+          subject: 'RE: ' + message.subject,
+          receivers: [
+            {
+              group: 'Users',
+              id: senderId,
+              name: name
+            }
+          ]
+        };
+
+        renderReceiversList();
+      };
+
+
+      /**
+       * Send message
+       */
+      $scope.send = function (message, broadcast)
+      {
+        $rootScope.statusBar.display($rootScope.ui.message.sending);
+
+        if (message.receivers)
+        {
+          Messages.send(message, broadcast)
+            .then(
+            function (uuid)
+            {
+              if (uuid.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.messages.send);
+
+                console.warn('error ->', uuid);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.message.sent);
+
+                $rootScope.statusBar.display($rootScope.ui.message.refreshing);
+
+                Messages.query()
+                  .then(
+                  function (messages)
+                  {
+                    if (messages.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.messages.query);
+
+                      console.warn('error ->', messages);
+                    }
+                    else
+                    {
+                      $scope.messages = messages.messages;
+
+                      $scope.closeTabs();
+
+                      $scope.requestMessage(uuid, $scope.origin);
+
+                      $rootScope.statusBar.off();
+                    }
+                  });
+              }
+            });
+        }
+        else
+        {
+          $rootScope.notifier.error($rootScope.ui.message.noReceivers);
+
+          $rootScope.statusBar.off();
+        }
+      };
+
+
+      /**
+       * TODO: Is it still working? Fix for not displaying original sender in multiple receivers selector
+       * in the case that user wants to add more receivers to the list
+       */
+      $("div#composeTab select.chzn-select").chosen()
+        .change(
+        function ()
+        {
+          $.each(
+            $(this).next().find("ul li.result-selected"), function (i, li)
+            {
+              var name = $(li).html();
+
+              $.each(
+                $("div#composeTab select.chzn-select option"), function (j, opt)
+                {
+                  if (opt.innerHTML == name) opt.selected = true;
+                });
+            });
         });
 
-		    types.push('paige');
 
-		    if (broadcast.sms) types.push('sms');
-		    if (broadcast.email) types.push('email');
+      /**
+       * Re-render receivers list
+       */
+      function renderReceiversList ()
+      {
+        angular.forEach(
+          $scope.message.receivers, function (receiver)
+          {
+            angular.forEach(
+              $("div#composeTab select.chzn-select option"), function (option)
+              {
+                if (option.innerHTML == receiver.name)
+                {
+                  option.selected = true;
+                }
+              });
+          });
 
-		    return {
-		    	sender: 		$rootScope.app.resources.uuid,
-		      recipients: members,
-		      label: 			scheaduled.title,
-		      subject: 		message.subject,
-		      message: 		message.body,
-		      offsets: 		Offsetter.arrayed(scheaduled.offsets),
-		      repeat: 		'week',
-		      types: 			types,
-		      active: 		scheaduled.status
-		    };
-		  },
-
-
-	  	/**
-	  	 * Scheduler jobs lister
-	  	 */
-	  	list: function (callback)
-	  	{
-				$rootScope.statusBar.display($rootScope.ui.message.notificationsRefresh);
-
-				Messages.scheaduled.list()
-				.then(function (result)
-				{
-				  if (result.error)
-				  {
-				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsList);
-				    console.warn('error ->', result);
-				  }
-				  else
-				  {
-				    $scope.scheadules = result;
-
-				    $rootScope.statusBar.off();
-
-				    callback();
-				  }
-				});
-	  	},
+        $("div#composeTab select.chzn-select").trigger("liszt:updated");
+      }
 
 
-	  	/**
-	  	 * TODO: NOT IN USE!
-	  	 * Get a scheduler job
-	  	 */
-	  	get: function (uuid)
-	  	{
-				Messages.scheaduled.get(uuid)
-				.then(function (result)
-				{
-				  if (result.error)
-				  {
-				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsGet);
-				    console.warn('error ->', result);
-				  }
-				  else
-				  {
-				    // console.log('notification fetched ->', result);
+      /**
+       * Extract escalation information
+       */
+      if ($location.search().escalate)
+      {
+        var escalation = angular.fromJson(Storage.session.get('escalation')),
+            name = escalation.group.split('>')[1].split('<')[0],
+            uuid = escalation.group.split('uuid=')[1].split('#view')[0];
 
-				    $scope.scheaduled = result;
-				  }
-				});
-	  	},
+        setTimeout(
+          function ()
+          {
+            angular.forEach(
+              $("div#composeTab select.chzn-select option"), function (option)
+              {
+                if (option.innerHTML == name) option.selected = true;
+              });
 
+            $("div#composeTab select.chzn-select").trigger("liszt:updated");
+          }, $rootScope.config.timers.TICKER);
 
-	  	/**
-	  	 * Save a schedule job
-	  	 */
-	  	save: function (message, broadcast, scheaduled)
-	  	{
-	  		if (scheaduled.uuid)
-	  		{
-	  			this.edit(message, broadcast, scheaduled);
-	  		}
-	  		else
-	  		{
-	  			this.add(message, broadcast, scheaduled)
-	  		}
-	  	},
+        $scope.message = {
+          subject: $rootScope.ui.message.escalation,
+          receivers: [
+            {
+              group: $rootScope.ui.message.receiversGroups,
+              id: uuid,
+              name: name
+            }
+          ],
+          body: $rootScope.ui.message.escalationBody(
+            escalation.diff,
+            escalation.start.date,
+            escalation.start.time,
+            escalation.end.date,
+            escalation.end.time)
+        };
 
-
-	  	/**
-	  	 * Add a schedule job
-	  	 */
-	  	add: function (message, broadcast, scheaduled)
-	  	{
-	  		var self = this;
-
-	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsAdd);
-
-	  		Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
-				.then(function (result)
-				{
-				  if (result.error)
-				  {
-				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
-
-				    console.warn('error ->', result);
-				  }
-				  else
-				  {
-	          $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
-
-	          self.list(function ()
-	        	{
-	        		$scope.setViewTo('notifications');
-	        	});
-				  }
-				});
-	  	},
+        $scope.broadcast = {
+          sms: true
+        };
+      }
 
 
-	  	/**
-	  	 * Edit a schedule job
-	  	 */
-	  	edit: function (message, broadcast, scheaduled)
-	  	{
-	  		var self = this;
-
-	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsEditing);
-
-				Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
-				.then(function (result)
-				{
-				  if (result.error)
-				  {
-				    $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
-
-				    console.warn('error ->', result);
-				  }
-				  else
-				  {
-	          $rootScope.notifier.success($rootScope.ui.message.notificationsEdited);
-
-	          self.list(function ()
-	        	{
-	        		$scope.setViewTo('notifications');
-
-					    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
-	        	});
-				  }
-				});	
-	  	},
+      /**
+       * DASHBOARD
+       * Bulk cleaners for mailboxes
+       */
+      $scope.clean = {
+        inbox: function ()
+        {
+          Messages.clean($scope.messages.inbox);
+        },
+        outbox: function ()
+        {
+          Messages.clean($scope.messages.outbox);
+        },
+        trash: function ()
+        {
+          Messages.clean($scope.messages.trash);
+        }
+      };
 
 
-	  	/**
-	  	 * Remove a schedule job
-	  	 */
-	  	remove: function (uuid)
-	  	{
-	  		var self = this;
+      /**
+       * Scheduler jobs manager
+       */
+      $scope.scheaduler = {
 
-	    	$rootScope.statusBar.display($rootScope.ui.message.notificationsDeleting);
+        /**
+         * Make data ready for insertion
+         */
+        job: function (message, broadcast, scheaduled)
+        {
+          var members = [],
+              types = [];
 
-		    Messages.scheaduled.remove(uuid)
-		    .then(function (result)
-		    {
-		      if (result.error)
-		      {
-		        $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
+          angular.forEach(
+            message.receivers, function (receiver)
+            {
+              members.push(receiver.id);
+            });
 
-		        console.warn('error ->', result);
-		      }
-		      else
-		      {
-	          $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
+          types.push('paige');
 
-	          self.list(function ()
-	        	{
-	        		$scope.setViewTo('notifications');
-	        	});
-		      }
-		    });
-	  	}
+          if (broadcast.sms) types.push('sms');
+          if (broadcast.email) types.push('email');
 
-	  };
-	}
-]);;/*jslint node: true */
+          return {
+            sender: $rootScope.app.resources.uuid,
+            recipients: members,
+            label: scheaduled.title,
+            subject: message.subject,
+            message: message.body,
+            offsets: Offsetter.arrayed(scheaduled.offsets),
+            repeat: 'week',
+            types: types,
+            active: scheaduled.status
+          };
+        },
+
+
+        /**
+         * Scheduler jobs lister
+         */
+        list: function (callback)
+        {
+          $rootScope.statusBar.display($rootScope.ui.message.notificationsRefresh);
+
+          Messages.scheaduled.list()
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsList);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $scope.scheadules = result;
+
+                $rootScope.statusBar.off();
+
+                callback();
+              }
+            });
+        },
+
+
+        /**
+         * TODO: NOT IN USE!
+         * Get a scheduler job
+         */
+        get: function (uuid)
+        {
+          Messages.scheaduled.get(uuid)
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsGet);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                // console.log('notification fetched ->', result);
+
+                $scope.scheaduled = result;
+              }
+            });
+        },
+
+
+        /**
+         * Save a schedule job
+         */
+        save: function (message, broadcast, scheaduled)
+        {
+          if (scheaduled.uuid)
+          {
+            this.edit(message, broadcast, scheaduled);
+          }
+          else
+          {
+            this.add(message, broadcast, scheaduled)
+          }
+        },
+
+
+        /**
+         * Add a schedule job
+         */
+        add: function (message, broadcast, scheaduled)
+        {
+          var self = this;
+
+          $rootScope.statusBar.display($rootScope.ui.message.notificationsAdd);
+
+          Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
+
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
+
+                self.list(
+                  function ()
+                  {
+                    $scope.setViewTo('notifications');
+                  });
+              }
+            });
+        },
+
+
+        /**
+         * Edit a schedule job
+         */
+        edit: function (message, broadcast, scheaduled)
+        {
+          var self = this;
+
+          $rootScope.statusBar.display($rootScope.ui.message.notificationsEditing);
+
+          Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
+
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.message.notificationsEdited);
+
+                self.list(
+                  function ()
+                  {
+                    $scope.setViewTo('notifications');
+
+                    // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
+                  });
+              }
+            });
+        },
+
+
+        /**
+         * Remove a schedule job
+         */
+        remove: function (uuid)
+        {
+          var self = this;
+
+          $rootScope.statusBar.display($rootScope.ui.message.notificationsDeleting);
+
+          Messages.scheaduled.remove(uuid)
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
+
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
+
+                self.list(
+                  function ()
+                  {
+                    $scope.setViewTo('notifications');
+                  });
+              }
+            });
+        }
+
+      };
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 

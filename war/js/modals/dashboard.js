@@ -123,7 +123,7 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 
         angular.forEach(code, function (_c) { _code += _c; });
 
-        return Number(_code);
+        return String(_code);
       }
 
       Backend.capcodes(null,
@@ -131,10 +131,10 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
         {
           var codes = [];
 
-          angular.forEach(results, function (res)
-          {
-            codes.push(concatCode(res));
-          });
+          angular.forEach(
+            results,
+            function (res) { codes.push(concatCode(res)) }
+          );
 
           deferred.resolve(codes);
         },
@@ -184,8 +184,6 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
       }
       else
       {
-
-
         Dashboard.prototype.getCapcodes().
           then(function (capcodes)
           {

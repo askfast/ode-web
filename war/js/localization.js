@@ -254,7 +254,8 @@ var ui = {
         notificationsEditing: 'Editing scheduled notification...',
         notificationsEdited: 'Scheduled notification is successfully edited.',
         notificationsDeleting: 'Deleting a scheduled notification...',
-        notificationsDeleted: 'Scheduled notification is successfully deleted.'
+        notificationsDeleted: 'Scheduled notification is successfully deleted.',
+        noSubject: '- No subject -'
       },
       groups: {
         groups: 'Groups',
@@ -689,7 +690,8 @@ var ui = {
         notificationsEditing: 'Notificatie wordt gewijzigd...',
         notificationsEdited: 'Notificatie is met succes gewijzigd.',
         notificationsDeleting: 'Notificatie wordt verwijderd...',
-        notificationsDeleted: 'Notificatie is met succes verwijderd.'
+        notificationsDeleted: 'Notificatie is met succes verwijderd.',
+        noSubject: '- Geen onderwerp -'
       },
       groups: {
         groups: 'Groepen',

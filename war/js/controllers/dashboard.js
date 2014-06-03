@@ -880,10 +880,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             capcodes = capcodes.sort();
 
             angular.forEach(
-              capcodes, function (code)
+              capcodes,
+              function (code)
               {
                 _capcodes += code + ', ';
-              });
+              }
+            );
 
             $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
 
