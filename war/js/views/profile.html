@@ -103,6 +103,45 @@
         <!-- tab header -->
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.editProfile}}</h3>
+
+
+          <div ng-switch="deleteUserState">
+
+            <div ng-switch-when="ask">
+              <button type="submit"
+                      ng-click="showDeleteUserForm()"
+                      class="btn btn-danger pull-right">Verwijder gebruiker</button>
+            </div>
+
+            <div ng-switch-when="confirm"
+                 ng-hide="app.resources.role > 1">
+
+              <form class="form-inline pull-right">
+
+                <div class="control-group">
+                  <div class="controls">
+                    <input  type="text"
+                            style="margin-right: 5px"
+                            placeholder="Voornaam van de gebruiker"
+                            ng-model="userName">
+
+                    <button type="submit"
+                            ng-click="deleteUser(userName)"
+                            class="btn btn-danger"
+                            style="margin-right: 10px">Verwijder deze gebruiker</button>
+
+                    <button type="submit"
+                            ng-click="hideDeleteUserForm()"
+                            class="btn">Cancel</button>
+                  </div>
+                </div>
+
+
+              </form>
+            </div>
+
+          </div>
+
         </div>
         <!-- end tab header -->
 

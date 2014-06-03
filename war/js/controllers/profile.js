@@ -39,6 +39,53 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.self = this;
 
+      $scope.deleteUserState = 'ask';
+
+      $scope.showDeleteUserForm = function ()
+      {
+        $scope.deleteUserState = 'confirm';
+      };
+
+      $scope.hideDeleteUserForm = function ()
+      {
+        $scope.deleteUserState = 'ask';
+      };
+
+      $scope.deleteUser = function (userName)
+      {
+        if (userName != '')
+        {
+          if ($rootScope.app.resources.role == 1)
+          {
+            if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
+            {
+              if (userName == data.resources.firstName)
+              {
+                console.log('we can now delete it ->');
+              }
+              else
+              {
+                $scope.userName = '';
+
+                $rootScope.notifier.error('Gebruikernaam is verkeerd getypt!');
+              }
+            }
+            else
+            {
+              $rootScope.notifier.error('U kunt uw eigen account niet verwijderen!');
+            }
+          }
+          else
+          {
+            $rootScope.notifier.error('Gebruiker verwijderen is niet toegestaan!');
+          }
+        }
+        else
+        {
+          $rootScope.notifier.error('Graag type de voornaam van de gebruiker!');
+        }
+      };
+
 
       /**
        * Pass periods
