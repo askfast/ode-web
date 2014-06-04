@@ -182,26 +182,27 @@
             <!-- end subject -->
 
             <!-- schedulerPane toggle -->
-            <div class="control-group"
-                 ng-hide="scheadulerPane || config.profile.smartAlarm">
-              <label class="control-label">{{ui.message.repeat}}</label>
+            <!--<div class="control-group"-->
+                 <!--ng-hide="scheadulerPane || config.profile.smartAlarm">-->
+              <!--<label class="control-label">{{ui.message.repeat}}</label>-->
 
-              <div  class="btn-group"  
-                    bs-buttons-checkbox="" 
-                    data-toggle="buttons-checkbox">
+              <!--<div  class="btn-group"  -->
+                    <!--bs-buttons-checkbox="" -->
+                    <!--data-toggle="buttons-checkbox">-->
 
-                <button type="button" 
-                        class="btn btn-small" 
-                        ng-model="scheadulerPane" 
-                        ng-click="scheadulerPane == !scheadulerPane"
-                        bs-button="">{{ui.message.repeatOn}}</button>
+                <!--<button type="button" -->
+                        <!--class="btn btn-small" -->
+                        <!--ng-model="scheadulerPane" -->
+                        <!--ng-click="scheadulerPane == !scheadulerPane"-->
+                        <!--bs-button="">{{ui.message.repeatOn}}</button>-->
 
-              </div>
-            </div>
+              <!--</div>-->
+            <!--</div>-->
             <!-- end scheduler toggle -->
 
             <!-- scheduler -->
-            <section id="scheaduler-pane" ng-show="scheadulerPane">
+            <section id="scheaduler-pane"
+                     ng-show="scheadulerPane">
 
               <!-- scheduler header -->
               <header>
