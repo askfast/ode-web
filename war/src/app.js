@@ -8620,17 +8620,22 @@ angular.module('WebPaige.Filters', ['ngResource'])
     {
       return function (url)
       {
-        if ($config.profile.smartAlarm)
+        if (/\//.test(url))
         {
-          return url;
-        }
-        else
-        {
+          if ($config.profile.smartAlarm)
+          {
+            return url;
+          }
+
           var eve = url;
 
           eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
           return eve[eve.length - 2];
+        }
+        else
+        {
+          return url
         }
       };
     }
@@ -13283,7 +13288,8 @@ angular.module('WebPaige.Controllers.Messages', [])
               {
                 // console.log('state changed');
               }
-            });
+            }
+          );
 
           var _inbox = [];
 
@@ -13853,6 +13859,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   .then(
                   function (messages)
                   {
+                    console.log('messages ->', angular.fromJson(messages));
+
                     if (messages.error)
                     {
                       $rootScope.notifier.error($rootScope.ui.errors.messages.query);

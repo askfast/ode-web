@@ -239,7 +239,8 @@ angular.module('WebPaige.Controllers.Messages', [])
               {
                 // console.log('state changed');
               }
-            });
+            }
+          );
 
           var _inbox = [];
 
@@ -809,6 +810,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   .then(
                   function (messages)
                   {
+                    console.log('messages ->', angular.fromJson(messages));
+
                     if (messages.error)
                     {
                       $rootScope.notifier.error($rootScope.ui.errors.messages.query);

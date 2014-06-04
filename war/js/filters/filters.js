@@ -431,17 +431,22 @@ angular.module('WebPaige.Filters', ['ngResource'])
     {
       return function (url)
       {
-        if ($config.profile.smartAlarm)
+        if (/\//.test(url))
         {
-          return url;
-        }
-        else
-        {
+          if ($config.profile.smartAlarm)
+          {
+            return url;
+          }
+
           var eve = url;
 
           eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
           return eve[eve.length - 2];
+        }
+        else
+        {
+          return url
         }
       };
     }
