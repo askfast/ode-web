@@ -15207,12 +15207,12 @@ angular.module('WebPaige.Controllers.Profile', [])
             {
               if (MD5(userPassword) == data.resources.askPass)
               {
-                $scope.userPassword = '';
-
                 Profile.remove(data.resources.uuid)
                   .then(
                   function (result)
                   {
+                    $scope.userPassword = '';
+                    
                     if (result.hasOwnProperty('error'))
                     {
                       $scope.deleteUserError = true;
