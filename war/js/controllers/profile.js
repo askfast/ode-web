@@ -40,39 +40,40 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.self = this;
 
-      $scope.deleteUserState = 'ask';
+      $scope.deleteUserError = false;
 
-      $scope.showDeleteUserForm = function ()
-      {
-        $scope.deleteUserState = 'confirm';
-      };
+      $scope.userPassword = '';
 
-      $scope.hideDeleteUserForm = function ()
+      $scope.deleteUser = function (userPassword)
       {
-        $scope.deleteUserState = 'ask';
-      };
+        $scope.deleteUserError = false;
 
-      $scope.deleteUser = function (userName)
-      {
-        if (userName != '')
+        console.log('userPass ->', userPassword);
+
+        if (userPassword != '' && userPassword != undefined)
         {
           if ($rootScope.app.resources.role == 1)
           {
             if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
             {
-              if (userName == data.resources.firstName)
+              if (MD5(userPassword) == data.resources.askPass)
               {
+                $scope.userPassword = '';
+
                 Profile.remove(data.resources.uuid)
                   .then(
                   function (result)
                   {
                     if (result.hasOwnProperty('error'))
                     {
-                      $rootScope.notifier.error('Fout bij het verwijderen van deze gebruiker.');
+                      $scope.deleteUserError = true;
+                      $scope.deleteUserErrorMessage = 'Fout bij het verwijderen van deze gebruiker.';
                     }
                     else
                     {
-                      $rootScope.notifier.success('Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.');
+                      $rootScope.notifier.success(
+                        'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
+                      );
 
                       $location.path('/groups').hash('').search({});
                     }
@@ -81,24 +82,28 @@ angular.module('WebPaige.Controllers.Profile', [])
               }
               else
               {
-                $scope.userName = '';
+                $scope.userPassword = '';
 
-                $rootScope.notifier.error('Voornaam is verkeerd getypt.');
+                $scope.deleteUserError = true;
+                $scope.deleteUserErrorMessage = 'Wachtwoord is verkeerd.';
               }
             }
             else
             {
-              $rootScope.notifier.error('U kunt uw eigen account niet verwijderen.');
+              $scope.deleteUserError = true;
+              $scope.deleteUserErrorMessage = 'U kunt uw eigen account niet verwijderen.';
             }
           }
           else
           {
-            $rootScope.notifier.error('Gebruiker verwijderen is niet toegestaan.');
+            $scope.deleteUserError = true;
+            $scope.deleteUserErrorMessage = 'Gebruiker verwijderen is niet toegestaan voor u.';
           }
         }
         else
         {
-          $rootScope.notifier.error('Vul aub de voornaam van de gebruiker in.');
+          $scope.deleteUserError = true;
+          $scope.deleteUserErrorMessage = 'Vul aub uw wachtwoord in.';
         }
       };
 
