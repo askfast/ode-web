@@ -2,6 +2,7 @@
 -----------------------------------------------------------------------------------------------------------
 
 2.3.17
+- feature: User deleting functionality. 5-6-2014
 - fix: 'No subject' placeholder in case of no subjects for the messages. 3-6-2014
 - fix: Correctly displaying cap-codes with leading zeros. 29-5-2014
 
