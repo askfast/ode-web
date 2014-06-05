@@ -5201,6 +5201,11 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               method: 'PUT',
               params: { section: 'resource' }
             },
+            remove: {
+              method:  'DELETE',
+              params:  {},
+              isArray: true
+            },
             role: {
               method:  'PUT',
               params:  { section: 'role' },
@@ -5489,6 +5494,31 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
             id: id
           },
           resources,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Save profile
+       */
+      Profile.prototype.remove = function (id)
+      {
+        var deferred = $q.defer();
+
+        Profile.remove(
+          {
+            id: id
+          },
           function (result)
           {
             deferred.resolve(result);
@@ -15143,7 +15173,8 @@ angular.module('WebPaige.Controllers.Profile', [])
     'Groups',
     'Dater',
     'MD5',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5)
+    '$timeout',
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -15180,28 +15211,43 @@ angular.module('WebPaige.Controllers.Profile', [])
             {
               if (userName == data.resources.firstName)
               {
-                console.log('we can now delete it ->');
+                Profile.remove(data.resources.uuid)
+                  .then(
+                  function (result)
+                  {
+                    if (result.hasOwnProperty('error'))
+                    {
+                      $rootScope.notifier.error('Fout bij het verwijderen van deze gebruiker.');
+                    }
+                    else
+                    {
+                      $rootScope.notifier.success('Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.');
+
+                      $location.path('/groups').hash('').search({});
+                    }
+                  }
+                );
               }
               else
               {
                 $scope.userName = '';
 
-                $rootScope.notifier.error('Gebruikernaam is verkeerd getypt!');
+                $rootScope.notifier.error('Voornaam is verkeerd getypt.');
               }
             }
             else
             {
-              $rootScope.notifier.error('U kunt uw eigen account niet verwijderen!');
+              $rootScope.notifier.error('U kunt uw eigen account niet verwijderen.');
             }
           }
           else
           {
-            $rootScope.notifier.error('Gebruiker verwijderen is niet toegestaan!');
+            $rootScope.notifier.error('Gebruiker verwijderen is niet toegestaan.');
           }
         }
         else
         {
-          $rootScope.notifier.error('Graag type de voornaam van de gebruiker!');
+          $rootScope.notifier.error('Vul aub de voornaam van de gebruiker in.');
         }
       };
 
