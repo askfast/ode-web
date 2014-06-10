@@ -11405,7 +11405,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
     '$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
     function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile)
     {
-      var range, diff;
+      // TODO: Define diff in the watcher maybe?
+      var range,
+          diff;
 
 
       /**
@@ -11532,7 +11534,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
        * Timeliner listener
        */
       $rootScope.$on(
-        'slotInitials', function ()
+        'slotInitials',
+        function ()
         {
           $scope.slot = {};
 
@@ -11555,7 +11558,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           };
 
           console.log('slot initials ->', $scope.slot);
-        });
+        }
+      );
 
 
       /**
@@ -12478,25 +12482,22 @@ angular.module('WebPaige.Controllers.Timeline', [])
          * the past as it is
          */
         if (options.content.recursive == false &&
-            (
-              new Date($scope.original.start).getTime() < options.start &&
-              new Date($scope.original.end).getTime() < options.end
-              ) &&
+            (new Date($scope.original.start).getTime() < options.start && new Date($scope.original.end).getTime() < options.end) &&
             $scope.original.start < Date.now().getTime()
           )
         {
           Slots.change(
-            $scope.original, {
-
+            $scope.original,
+            {
               start: new Date($scope.original.start).getTime(),
               end: Date.now().getTime(),
               content: {
                 recursive: slot.recursive,
                 state: slot.state
               }
-
-            }, $scope.timeline.user.id)
-            .then(
+            },
+            $scope.timeline.user.id
+          ).then(
             function (result)
             {
               $rootScope.$broadcast('resetPlanboardViews');
@@ -12542,10 +12543,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         else
         {
           if (options.content.recursive == true ||
-              (
-                isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
-                isChangeAllowed(new Date($scope.original.end).getTime(), options.end)
-                )
+              ( isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
+                isChangeAllowed(new Date($scope.original.end).getTime(), options.end) )
             )
           {
             $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
