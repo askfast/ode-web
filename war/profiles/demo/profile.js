@@ -52,7 +52,7 @@ var profile = {
     status: true,
     // url:    'http://backend.ask-cs.com/p2000/ob.php',
     // codes:  '1201999'
-    url:    'http://couchdb.ask-cs.com:5984/p2000/_design/search/_view/standby?limit=4&descending=true',
+    url:    'http://backend.ask-cs.com/~ask/p2000/p2000.php',
     codes:  '1201958'
   },
 

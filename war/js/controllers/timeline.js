@@ -1040,6 +1040,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
       {
         $rootScope.planboardSync.clear();
 
+        console.log('changing slot ->', original, slot, options);
+
         if (! direct)
         {
           /**

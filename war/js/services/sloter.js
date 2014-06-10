@@ -483,11 +483,13 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         angular.forEach(data.members, function (member)
         {
+          var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+
           var link = (privilage == 1) ?
                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                         '<a href="#/profile/' + 
                         member.id + 
-                        '#timeline">' + 
+                        '#' + user + '">' +
                         members[member.id] + 
                         '</a>' :
                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
