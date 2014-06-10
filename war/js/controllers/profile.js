@@ -48,8 +48,6 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         $scope.deleteUserError = false;
 
-        console.log('userPass ->', userPassword);
-
         if (userPassword != '' && userPassword != undefined)
         {
           if ($rootScope.app.resources.role == 1)
@@ -67,13 +65,11 @@ angular.module('WebPaige.Controllers.Profile', [])
                     if (result.hasOwnProperty('error'))
                     {
                       $scope.deleteUserError = true;
-                      $scope.deleteUserErrorMessage = 'Fout bij het verwijderen van deze gebruiker.';
+                      $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.general;
                     }
                     else
                     {
-                      $rootScope.notifier.success(
-                        'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
-                      );
+                      $rootScope.notifier.success($rootScope.ui.profile.remove.success);
 
                       $location.path('/groups').hash('').search({});
                     }
@@ -85,25 +81,25 @@ angular.module('WebPaige.Controllers.Profile', [])
                 $scope.userPassword = '';
 
                 $scope.deleteUserError = true;
-                $scope.deleteUserErrorMessage = 'Wachtwoord is verkeerd.';
+                $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.password;
               }
             }
             else
             {
               $scope.deleteUserError = true;
-              $scope.deleteUserErrorMessage = 'U kunt uw eigen account niet verwijderen.';
+              $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
             }
           }
           else
           {
             $scope.deleteUserError = true;
-            $scope.deleteUserErrorMessage = 'Gebruiker verwijderen is niet toegestaan voor u.';
+            $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
           }
         }
         else
         {
           $scope.deleteUserError = true;
-          $scope.deleteUserErrorMessage = 'Vul aub uw wachtwoord in.';
+          $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.empty;
         }
       };
 

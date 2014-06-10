@@ -323,6 +323,7 @@ var ui = {
         profileView: 'Profile View',
         userGroups: 'User Groups',
         role: 'Profile',
+        choose: 'choose a profile',
         email: 'Email',
         phone: 'Phone',
         address: 'Address',
@@ -348,7 +349,14 @@ var ui = {
         newTimeslotAdded: 'New timeslot added successfully.',
         changingTimeslot: 'Changing a timeslot..',
         timeslotChanged: 'Timeslot is succesfully changed.',
-        passwordChangeWarning: 'Warning! with this option you will change password this user.'
+        passwordChangeWarning: 'Warning! with this option you will change password this user.',
+        remove: {
+          title: 'Delete user',
+          info: 'This action deletes user completely from the system. There is no undo on this action.',
+          button: 'Delete this user',
+          cancel: 'Cancel',
+          success: 'User has been deleted. You are now redirected to groups page.'
+        }
       },
       settings: {
         settings: 'Settings',
@@ -409,7 +417,14 @@ var ui = {
         profile: {
           save: 'Error with saving profile information!',
           get: 'Error with getting profile data!',
-          changePassword: 'Error with changing password!'
+          changePassword: 'Error with changing password!',
+          remove: {
+            general: 'There has been an error with deleting this user.',
+            password: 'Given password is not correct!',
+            self: 'You can not delete your own account!',
+            auth: 'You are not allowed to delete any user!',
+            empty: 'Please fill your password to continue.'
+          }
         },
         messages: {
           query: 'Error with getting messages!',
@@ -758,6 +773,7 @@ var ui = {
         profileView: 'Profiel weergave',
         userGroups: 'Gebruikersgroepen',
         role: 'Profiel',
+        choose: 'kies een profiel',
         email: 'Email',
         phone: 'Telefoon',
         address: 'Adres',
@@ -783,7 +799,14 @@ var ui = {
         newTimeslotAdded: 'Nieuw tijdslot succesvol toegevoegd.',
         changingTimeslot: 'Tijdslot wijzigen...',
         timeslotChanged: 'Tijdslot succesvol gewijzigd.',
-        passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.'
+        passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.',
+        remove: {
+          title: 'Verwijder gebruiker',
+          info: 'Deze actie verwijdert de gebruiker volledig uit het systeem. Dit kan niet meer ongedaan worden.',
+          button: 'Verwijder deze gebruiker',
+          cancel: 'Annuleer',
+          success: 'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
+        }
       },
       settings: {
         settings: 'Instellingen',
@@ -844,7 +867,14 @@ var ui = {
         profile: {
           save: 'Fout bij het opslaan van het profiel!',
           get: 'Fout bij het ophalen van het profiel!',
-          changePassword: 'Fout bij het wijzigen van het wachtwoord!'
+          changePassword: 'Fout bij het wijzigen van het wachtwoord!',
+          remove: {
+            general: 'Fout bij het verwijderen van deze gebruiker.',
+            password: 'Wachtwoord is verkeerd.',
+            self: 'U kunt uw eigen account niet verwijderen.',
+            auth: 'Gebruiker verwijderen is niet toegestaan voor u.',
+            empty: 'Vul aub uw wachtwoord in.'
+          }
         },
         messages: {
           query: 'Fout bij het ophalen van berichten!',
@@ -15197,8 +15227,6 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         $scope.deleteUserError = false;
 
-        console.log('userPass ->', userPassword);
-
         if (userPassword != '' && userPassword != undefined)
         {
           if ($rootScope.app.resources.role == 1)
@@ -15212,17 +15240,15 @@ angular.module('WebPaige.Controllers.Profile', [])
                   function (result)
                   {
                     $scope.userPassword = '';
-                    
+
                     if (result.hasOwnProperty('error'))
                     {
                       $scope.deleteUserError = true;
-                      $scope.deleteUserErrorMessage = 'Fout bij het verwijderen van deze gebruiker.';
+                      $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.general;
                     }
                     else
                     {
-                      $rootScope.notifier.success(
-                        'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
-                      );
+                      $rootScope.notifier.success($rootScope.ui.profile.remove.success);
 
                       $location.path('/groups').hash('').search({});
                     }
@@ -15234,25 +15260,25 @@ angular.module('WebPaige.Controllers.Profile', [])
                 $scope.userPassword = '';
 
                 $scope.deleteUserError = true;
-                $scope.deleteUserErrorMessage = 'Wachtwoord is verkeerd.';
+                $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.password;
               }
             }
             else
             {
               $scope.deleteUserError = true;
-              $scope.deleteUserErrorMessage = 'U kunt uw eigen account niet verwijderen.';
+              $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
             }
           }
           else
           {
             $scope.deleteUserError = true;
-            $scope.deleteUserErrorMessage = 'Gebruiker verwijderen is niet toegestaan voor u.';
+            $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
           }
         }
         else
         {
           $scope.deleteUserError = true;
-          $scope.deleteUserErrorMessage = 'Vul aub uw wachtwoord in.';
+          $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.empty;
         }
       };
 
