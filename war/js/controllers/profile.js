@@ -63,7 +63,7 @@ angular.module('WebPaige.Controllers.Profile', [])
                   function (result)
                   {
                     $scope.userPassword = '';
-                    
+
                     if (result.hasOwnProperty('error'))
                     {
                       $scope.deleteUserError = true;
