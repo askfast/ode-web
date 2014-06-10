@@ -4141,10 +4141,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             types = [];
 
         angular.forEach(
-          message.receivers, function (receiver)
-          {
-            members.push(receiver.id);
-          });
+          message.receivers,
+          function (receiver) { members.push(receiver.id) }
+        );
 
         types.push('paige');
 
@@ -4166,10 +4165,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             var returned = '';
 
             angular.forEach(
-              result, function (chr)
+              result,
+              function (chr)
               {
                 returned += chr;
-              });
+              }
+            );
 
             deferred.resolve(returned);
           },
@@ -7710,11 +7711,13 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         angular.forEach(data.members, function (member)
         {
+          var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+
           var link = (privilage == 1) ?
                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                         '<a href="#/profile/' + 
                         member.id + 
-                        '#timeline">' + 
+                        '#' + user + '">' +
                         members[member.id] + 
                         '</a>' :
                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
@@ -15203,8 +15206,7 @@ angular.module('WebPaige.Controllers.Profile', [])
     'Groups',
     'Dater',
     'MD5',
-    '$timeout',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout)
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5)
     {
       $rootScope.notification.status = false;
 
@@ -15301,7 +15303,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       /**
        * Set data for view
        */
-      if (! ! ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
+      if (($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
       {
         if (data && data.slots)
         {
@@ -15645,7 +15647,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 
         var states = {};
 
-        angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+        angular.forEach(
+          $scope.timeline.config.states,
+          function (state, key) { states[key] = state.label }
+        );
 
         $scope.states = states;
 

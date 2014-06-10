@@ -24,8 +24,7 @@ angular.module('WebPaige.Controllers.Profile', [])
     'Groups',
     'Dater',
     'MD5',
-    '$timeout',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout)
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5)
     {
       $rootScope.notification.status = false;
 
@@ -122,7 +121,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       /**
        * Set data for view
        */
-      if (! ! ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
+      if (($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
       {
         if (data && data.slots)
         {
@@ -466,7 +465,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 
         var states = {};
 
-        angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+        angular.forEach(
+          $scope.timeline.config.states,
+          function (state, key) { states[key] = state.label }
+        );
 
         $scope.states = states;
 

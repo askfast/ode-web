@@ -459,10 +459,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             types = [];
 
         angular.forEach(
-          message.receivers, function (receiver)
-          {
-            members.push(receiver.id);
-          });
+          message.receivers,
+          function (receiver) { members.push(receiver.id) }
+        );
 
         types.push('paige');
 
@@ -484,10 +483,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             var returned = '';
 
             angular.forEach(
-              result, function (chr)
+              result,
+              function (chr)
               {
                 returned += chr;
-              });
+              }
+            );
 
             deferred.resolve(returned);
           },
