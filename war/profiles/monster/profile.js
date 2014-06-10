@@ -46,7 +46,7 @@ var profile = {
 
   p2000: {
     status: true,
-    url:    'http://couchdb.ask-cs.com/~jordi/p2000/p2000.php',
+    url:    'http://backend.ask-cs.com/~ask/p2000/p2000.php',
     codes:  '1500982'
   },
 
