@@ -921,6 +921,7 @@ localStorage.removeItem('WebPaige.periodsNext');
  */
 angular.module('WebPaige',[
   'ngResource',
+  'ngRoute',
   // modals
   'WebPaige.Modals.User',
   'WebPaige.Modals.Dashboard',
