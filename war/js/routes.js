@@ -266,6 +266,6 @@ angular.module('WebPaige')
       /**
        * Define interceptor
        */
-      $httpProvider.responseInterceptors.push('Interceptor');
+      $httpProvider.interceptors.push('Interceptor');
     }
   ]);
