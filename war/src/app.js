@@ -50,7 +50,8 @@ var ui = {
             'By pressing English or Dutch you can change the used language.'
           ],
           cta: 'Return to login screen'
-        }
+        },
+        sessionTimeout: 'Your session is timed out. Please re-login again.'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -449,7 +450,8 @@ var ui = {
           pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
           pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
           remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!'
+          wisher: 'Error with changing wish value!',
+          notAuth: 'It is not allowed to alter someone else\'s planning unless you do have a planning role. As a administrator/planner you can change the planning of others by clicking on their name from the list of members. You are then directed to another page for changing the planning of that member.'
         }
       },
       confirms: {
@@ -501,7 +503,8 @@ var ui = {
             'Door op English of Nederlands te klikken kunt u de taal instellen.'
           ],
           cta: 'Terug naar inloggen'
-        }
+        },
+        sessionTimeout: 'Uw sessie is verlopen. Graag nogmaals inloggen.'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -897,7 +900,8 @@ var ui = {
           pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
           pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
           remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!'
+          wisher: 'Error with changing wish value!',
+          notAuth: 'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.'
         }
       },
       confirms: {
@@ -6433,27 +6437,36 @@ angular.module('WebPaige.Services.EventBus', ['ngResource'])
 angular.module(
   'WebPaige.Services.Interceptor', ['ngResource']).factory(
   'Interceptor', [
-    '$q',
-    function ($q)
+    '$window', '$q',
+    function ($window, $q)
     {
       return {
         request: function (config)
         {
-          console.log('request ->', config);
+          // console.log('request ->', config);
           return config || $q.when(config);
         },
         requestError: function (rejection)
         {
-          console.warn('request error ->', rejection);
+          // console.warn('request error ->', rejection);
           return $q.reject(rejection);
         },
         response: function (response)
         {
+          // console.log('response ->', response);
           return response || $q.when(response);
         },
         responseError: function (rejection)
         {
-          console.warn('response error ->', rejection);
+          // console.warn('response error ->', rejection);
+
+          if (rejection.status == 403)
+          {
+            localStorage.setItem('sessionTimeout', '');
+
+            $window.location.href = 'logout.html';
+          }
+
           return $q.reject(rejection);
         }
       };
@@ -7395,8 +7408,11 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       namer: function (agg, privilage)
       {
         var groups  = this.get.groups(),
-            name    = groups[agg.id],
-            link    = '<a href="#/groups?uuid=' +
+            name = groups[agg.id];
+
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+
+        var link    = '<a href="#/groups?uuid=' +
                       agg.id +
                       '#view">' +
                       name +
@@ -7671,8 +7687,21 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       members: function (data, timedata, config, privilage)
       {
         var _this   = this,
-            members = this.get.members();
+            members = this.get.members(),
+            filtered = [];
 
+        angular.forEach(
+          data.members,
+          function (member)
+          {
+            if (member.lastName != undefined)
+            {
+              filtered.push(member);
+            }
+          }
+        );
+
+        data.members = filtered;
 
         data.members.sort(
           function (a, b)
@@ -8512,15 +8541,14 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'convertRatios',
   [
-    '$config',
-    function ($config)
+    function ()
     {
       return function (stats)
       {
         var ratios = '';
 
         angular.forEach(
-          stats, function (stat, index)
+          stats, function (stat)
           {
             var state = stat.state.replace(/^bar-+/, '');
 
@@ -9048,7 +9076,6 @@ angular.module('WebPaige.Controllers.Login', [])
        * Redirect to dashboard if logged in
        */
       // if (Session.check()) redirectToDashboard();
-
 
       /**
        * Set default views
@@ -9749,6 +9776,20 @@ angular.module('WebPaige.Controllers.Login', [])
         self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
       };
 
+
+      if (localStorage.hasOwnProperty('sessionTimeout'))
+      {
+        localStorage.removeItem('sessionTimeout');
+
+        $scope.alert = {
+          login: {
+            display: true,
+            type:    'alert-error',
+            message: $rootScope.ui.login.sessionTimeout
+          }
+        };
+      }
+
     }
   ]);;/*jslint node: true */
 /*global angular */
@@ -9766,32 +9807,32 @@ angular.module('WebPaige.Controllers.Logout', [])
 	'$rootScope', '$scope', '$window', 'Session', 'User', 'Storage', 
 	function ($rootScope, $scope, $window, Session, User, Storage) 
 	{
-	  $('.navbar').hide();
+    $('.navbar').hide();
     $('#footer').hide();
     // $('#notification').hide();
 
     var logindata = angular.fromJson(Storage.get('logindata'));
     var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
-		User.logout()
-		.then(function (result)
-		{
-	    if (result.error)
-	    {
-	      console.warn('error ->', result);
-	    }
-	    else
-	    {
-	      Storage.clearAll();
+    User.logout()
+      .then(function (result)
+      {
+        if (result.error)
+        {
+          console.warn('error ->', result);
+        }
+        else
+        {
+          Storage.clearAll();
 
-	      Storage.session.clearAll();
+          Storage.session.clearAll();
 
-        Storage.add('logindata', angular.toJson(logindata));
-        Storage.add('registeredNotifications', angular.toJson(registeredNotifications));
+          Storage.add('logindata', angular.toJson(logindata));
+          Storage.add('registeredNotifications', angular.toJson(registeredNotifications));
 
-	      $window.location.href = 'logout.html';
-	    }
-		});
+          $window.location.href = 'logout.html';
+        }
+      });
 	}
 ]);;/*jslint node: true */
 /*global angular */
@@ -12258,12 +12299,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
       {
         $rootScope.planboardSync.clear();
 
+        var values;
+
         /**
          * Make view for new slot
          */
         if (! form)
         {
-          var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+          values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
           if (/planning/.test(values.group))
           {
@@ -12311,11 +12354,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             $scope.self.timeline.cancelAdd();
 
-            $rootScope.notifier.error(
-                'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen,' +
-                'tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen' +
-                ' door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een ' +
-                'apart scherm de wijzigingen aan te brengen.');
+            $rootScope.notifier.error($rootScope.ui.errors.timeline.notAuth);
 
             $rootScope.$apply();
           }
@@ -12325,8 +12364,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
          */
         else
         {
-          var now = Date.now().getTime(),
-              values = {
+          var now = Date.now().getTime();
+
+          values = {
                 start: ($rootScope.browser.mobile) ?
                        Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
                        Dater.convert.absolute(slot.start.date, slot.start.time, true),

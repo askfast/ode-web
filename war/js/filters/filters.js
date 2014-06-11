@@ -275,15 +275,14 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'convertRatios',
   [
-    '$config',
-    function ($config)
+    function ()
     {
       return function (stats)
       {
         var ratios = '';
 
         angular.forEach(
-          stats, function (stat, index)
+          stats, function (stat)
           {
             var state = stat.state.replace(/^bar-+/, '');
 

@@ -877,12 +877,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
       {
         $rootScope.planboardSync.clear();
 
+        var values;
+
         /**
          * Make view for new slot
          */
         if (! form)
         {
-          var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+          values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
           if (/planning/.test(values.group))
           {
@@ -930,11 +932,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             $scope.self.timeline.cancelAdd();
 
-            $rootScope.notifier.error(
-                'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen,' +
-                'tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen' +
-                ' door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een ' +
-                'apart scherm de wijzigingen aan te brengen.');
+            $rootScope.notifier.error($rootScope.ui.errors.timeline.notAuth);
 
             $rootScope.$apply();
           }
@@ -944,8 +942,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
          */
         else
         {
-          var now = Date.now().getTime(),
-              values = {
+          var now = Date.now().getTime();
+
+          values = {
                 start: ($rootScope.browser.mobile) ?
                        Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
                        Dater.convert.absolute(slot.start.date, slot.start.time, true),

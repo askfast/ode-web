@@ -182,8 +182,11 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       namer: function (agg, privilage)
       {
         var groups  = this.get.groups(),
-            name    = groups[agg.id],
-            link    = '<a href="#/groups?uuid=' +
+            name = groups[agg.id];
+
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+
+        var link    = '<a href="#/groups?uuid=' +
                       agg.id +
                       '#view">' +
                       name +
@@ -458,8 +461,21 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       members: function (data, timedata, config, privilage)
       {
         var _this   = this,
-            members = this.get.members();
+            members = this.get.members(),
+            filtered = [];
 
+        angular.forEach(
+          data.members,
+          function (member)
+          {
+            if (member.lastName != undefined)
+            {
+              filtered.push(member);
+            }
+          }
+        );
+
+        data.members = filtered;
 
         data.members.sort(
           function (a, b)
