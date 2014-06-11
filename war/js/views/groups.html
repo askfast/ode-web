@@ -36,7 +36,7 @@
     <!-- add group tab link -->
     <li class="{{(views.add==true) && 'active'}}"
         ng-show="views.add">
-      <a href="#addGroupTab" 
+      <a href="groups#addGroupTab"
           ng-click="setViewTo('add')" 
           data-toggle="tab">
         <span class="entypo">&#9998;</span>
@@ -47,7 +47,7 @@
     <!-- edit group tab link -->
     <li class="{{(views.edit==true) && 'active'}}"
         ng-show="views.edit">
-      <a href="#editGroupTab" 
+      <a href="groups#editGroupTab"
           ng-click="setViewTo('edit')" 
           data-toggle="tab">
         <span class="entypo">&#9998;</span>
@@ -58,7 +58,7 @@
     <!-- new member tab link -->
     <li class="{{(views.member==true) && 'active'}}"
         ng-show="views.member">
-      <a href="#newMemberTab" 
+      <a href="groups#newMemberTab"
           ng-click="setViewTo('member')" 
           data-toggle="tab">
         <span class="entypo">&#59136;</span>
@@ -69,7 +69,7 @@
     <!-- search tab link -->
     <li class="{{(views.search==true) && 'active'}}"
         ng-show="views.search">
-      <a href="#searchTab" 
+      <a href="groups#searchTab"
           ng-click="setViewTo('search')"
           data-toggle="tab">
         <span class="entypo">&#128269;</span>
@@ -80,7 +80,7 @@
     <!-- group tab links -->
     <li id="groupTabLink" 
         class="{{(views.view==true) && 'active'}}">
-      <a href="#groupTab" 
+      <a href="groups#groupTab"
           data-toggle="tab"
           ng-click="setViewTo('view')">
           <span class="entypo">&#128101;</span> 

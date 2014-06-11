@@ -17,14 +17,14 @@
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
       <li class="{{(views.profile==true) && 'active'}}">
-        <a href="#profileTab" 
+        <a href="{{data.resources.uuid}}#profileTab"
             data-toggle="tab"
             ng-click="fixTabHeight('profileTab'); setViewTo('profile')">
           <span class="entypo">&#128100;</span> {{ui.profile.profile}}
         </a>
       </li>
       <li class="{{(views.edit==true) && 'active'}}">
-        <a href="#editTab" 
+        <a href="{{data.resources.uuid}}#editTab"
             data-toggle="tab"
             ng-click="fixTabHeight('editTab'); setViewTo('edit')">
           <span class="entypo">&#9998;</span> {{ui.profile.edit}}
@@ -32,14 +32,14 @@
       </li>
       <li class="{{(views.password==true) && 'active'}}"
           ng-show="views.user">
-        <a href="#passwordTab" 
+        <a href="{{data.resources.uuid}}#passwordTab"
             data-toggle="tab"
             ng-click="fixTabHeight('passwordTab'); setViewTo('password')">
           <span class="entypo">&#128274;</span> {{ui.profile.password}}
         </a>
       </li>
       <li class="{{(views.timeline==true) && 'active'}}" ng-hide="views.user">
-        <a href="#userTimelineTab" 
+        <a href="{{data.resources.uuid}}#userTimelineTab"
             data-toggle="tab"
             ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline'); redraw()">
           <span class="entypo">&#128340;</span> {{ui.profile.timeline}}

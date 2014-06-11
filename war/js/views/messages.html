@@ -23,7 +23,7 @@
     <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
 
       <li class="{{(views.compose==true) && 'active'}}" ng-show="views.compose">
-        <a href="#composeTab" 
+        <a href="messages#composeTab"
             data-toggle="tab"
             ng-click="setViewTo('compose')">
           <span class="entypo">&#9998;</span> {{ui.message.compose}}
@@ -31,7 +31,7 @@
       </li>
 
       <li class="{{(views.message==true) && 'active'}}"  ng-show="views.message">
-        <a href="#viewTab" 
+        <a href="messages#viewTab"
             data-toggle="tab"
             ng-click="">
           <span class="entypo">&#128196;</span> {{ui.message.message}}
@@ -39,7 +39,7 @@
       </li>
 
       <li class="{{(views.inbox==true) && 'active'}}">
-        <a href="#inboxTab" 
+        <a href="messages#inboxTab"
             data-toggle="tab"
             ng-click="resetViews(); setViewTo('inbox')">
           <span class="entypo">&#128229;</span> {{ui.message.inbox}}
@@ -47,7 +47,7 @@
       </li>
 
       <li class="{{(views.outbox==true ) && 'active'}}">
-        <a href="#outboxTab"   
+        <a href="messages#outboxTab"
             data-toggle="tab"
             ng-click="resetViews(); setViewTo('outbox')">
           <span class="entypo">&#128228;</span> {{ui.message.outbox}}
@@ -64,7 +64,7 @@
       <!--</li>-->
 
       <li class="{{(views.trash==true ) && 'active'}}">
-        <a href="#trashTab" 
+        <a href="messages#trashTab"
             data-toggle="tab"
             ng-click="resetViews(); setViewTo('trash')">
           <span class="entypo">&#9749;</span> {{ui.message.trash}}
