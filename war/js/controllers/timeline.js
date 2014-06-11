@@ -942,12 +942,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
          */
         else
         {
-          var now = Date.now().getTime();
+          var now = Date.now().getTime(),
+              nowStamp = Math.abs(Math.floor(now / 1000));
+
+          var start = ($rootScope.browser.mobile) ?
+                      Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
+                      Dater.convert.absolute(slot.start.date, slot.start.time, true);
+
+          if (start < nowStamp) { start = nowStamp  }
 
           values = {
-                start: ($rootScope.browser.mobile) ?
-                       Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
-                       Dater.convert.absolute(slot.start.date, slot.start.time, true),
+                start: start,
                 end: ($rootScope.browser.mobile) ?
                      Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
                      Dater.convert.absolute(slot.end.date, slot.end.time, true),
