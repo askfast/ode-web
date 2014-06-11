@@ -37,7 +37,6 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       // if (Session.check()) redirectToDashboard();
 
-
       /**
        * Set default views
        */
@@ -736,6 +735,20 @@ angular.module('WebPaige.Controllers.Login', [])
 
         self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
       };
+
+
+      if (localStorage.hasOwnProperty('sessionTimeout'))
+      {
+        localStorage.removeItem('sessionTimeout');
+
+        $scope.alert = {
+          login: {
+            display: true,
+            type:    'alert-error',
+            message: $rootScope.ui.login.sessionTimeout
+          }
+        };
+      }
 
     }
   ]);

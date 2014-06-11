@@ -50,7 +50,8 @@ var ui = {
             'By pressing English or Dutch you can change the used language.'
           ],
           cta: 'Return to login screen'
-        }
+        },
+        sessionTimeout: 'Your session is timed out. Please re-login again.'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -449,7 +450,8 @@ var ui = {
           pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
           pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
           remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!'
+          wisher: 'Error with changing wish value!',
+          notAuth: 'It is not allowed to alter someone else\'s planning unless you do have a planning role. As a administrator/planner you can change the planning of others by clicking on their name from the list of members. You are then directed to another page for changing the planning of that member.'
         }
       },
       confirms: {
@@ -501,7 +503,8 @@ var ui = {
             'Door op English of Nederlands te klikken kunt u de taal instellen.'
           ],
           cta: 'Terug naar inloggen'
-        }
+        },
+        sessionTimeout: 'Uw sessie is verlopen. Graag nogmaals inloggen.'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -897,7 +900,8 @@ var ui = {
           pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
           pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
           remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!'
+          wisher: 'Error with changing wish value!',
+          notAuth: 'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.'
         }
       },
       confirms: {
