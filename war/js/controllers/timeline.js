@@ -1000,6 +1000,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
       };
 
 
+
       /**
        * Timeline on change
        */
@@ -1213,6 +1214,25 @@ angular.module('WebPaige.Controllers.Timeline', [])
         }
         else
         {
+          var successCallback = function (result)
+          {
+            $rootScope.$broadcast('resetPlanboardViews');
+
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.timeline.remove);
+              console.warn('error ->', result);
+            }
+            else
+            {
+              $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
+            }
+
+            $scope.timeliner.refresh();
+
+            $rootScope.planboardSync.start();
+          };
+
           var now = Date.now().getTime();
 
           if ($scope.original.end.getTime() <= now && $scope.original.content.recursive == false)
@@ -1221,30 +1241,32 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
             $scope.timeliner.refresh();
           }
+          else if ($scope.original.start.getTime() <= now &&
+                   $scope.original.end.getTime() >= now &&
+                   $scope.original.content.recursive == false)
+          {
+            Slots.change(
+              $scope.original,
+              {
+                start: Math.abs(Math.floor(new Date($scope.original.start).getTime() / 1000)),
+                end: Math.abs(Math.floor(now / 1000)),
+                content: {
+                  recursive: $scope.original.content.recursive,
+                  state: $scope.original.content.state
+                }
+              },
+              $scope.timeline.user.id
+            ).then(
+              function (result) { successCallback(result) }
+            );
+          }
           else
           {
             $rootScope.statusBar.display($rootScope.ui.planboard.deletingTimeslot);
 
             Slots.remove($scope.original, $scope.timeline.user.id)
               .then(
-              function (result)
-              {
-                $rootScope.$broadcast('resetPlanboardViews');
-
-                if (result.error)
-                {
-                  $rootScope.notifier.error($rootScope.ui.errors.timeline.remove);
-                  console.warn('error ->', result);
-                }
-                else
-                {
-                  $rootScope.notifier.success($rootScope.ui.planboard.timeslotDeleted);
-                }
-
-                $scope.timeliner.refresh();
-
-                $rootScope.planboardSync.start();
-              }
+              function (result) { successCallback(result) }
             );
           }
         }
