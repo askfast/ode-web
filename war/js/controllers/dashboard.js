@@ -30,8 +30,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     {
       $rootScope.notification.status = false;
 
-      var possiblyAvailable = 'Mogelijk inzetbaar';
-
       /**
        * Fix styles
        */
@@ -178,12 +176,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                                                     new Date(pie.weeks.current.state.start * 1000)
                                                       .toString($rootScope.config.formats.datetime) :
-                                                    possiblyAvailable;
+                      $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
                                                   new Date(pie.weeks.current.state.end * 1000)
                                                     .toString($rootScope.config.formats.datetime) :
-                                                  possiblyAvailable;
+                      $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.shortages = {
                       current: pie.weeks.current.shortages,
@@ -303,7 +301,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           {
             function translateName (user)
             {
-              return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
+              return (user !== null) ? setup.users[user].name : $rootScope.ui.dashboard.notAssigned
             }
 
             switch (selection.role)
@@ -312,8 +310,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 $scope.saMembers.truck.push(
                   {
                     rank:  1,
-                    icon:  'B',
-                    role:  'Bevelvoerder',
+                    icon:  $rootScope.ui.dashboard.alarmRoles.commanderInitial,
+                    role:  $rootScope.ui.dashboard.alarmRoles.commander,
                     class: 'sa-icon-commander',
                     name:  translateName(selection.user)
                   });
@@ -323,8 +321,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 $scope.saMembers.truck.push(
                   {
                     rank:  0,
-                    icon:  'C',
-                    role:  'Chauffeur',
+                    icon:  $rootScope.ui.dashboard.alarmRoles.driverInitial,
+                    role:  $rootScope.ui.dashboard.alarmRoles.driver,
                     class: 'sa-icon-driver',
                     name:  translateName(selection.user)
                   });
@@ -335,7 +333,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   {
                     rank: 2,
                     icon: 'M1',
-                    role: 'Manschap 1',
+                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
                     name: translateName(selection.user)
                   });
                 break;
@@ -345,7 +343,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   {
                     rank: 3,
                     icon: 'M2',
-                    role: 'Manschap 2',
+                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
                     name: translateName(selection.user)
                   });
                 break;
@@ -355,7 +353,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   {
                     rank: 4,
                     icon: 'M3',
-                    role: 'Manschap 3',
+                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
                     name: translateName(selection.user)
                   });
                 break;
@@ -365,7 +363,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   {
                     rank: 5,
                     icon: 'M4',
-                    role: 'Manschap 4',
+                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
                     name: translateName(selection.user)
                   });
                 break;
@@ -381,10 +379,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             {
               Slots.currentState()
                 .then(
-                function (state)
-                {
-                  $rootScope.app.guard.currentState = state.label;
-                }
+                function (state) { $rootScope.app.guard.currentState = state.label }
               );
             }
 
@@ -399,10 +394,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 reserves[state] = [];
 
                 angular.forEach(
-                  setup.reserves[state], function (member)
+                  setup.reserves[state],
+                  function (member)
                   {
                     angular.forEach(
-                      member, function (meta, userID)
+                      member,
+                      function (meta, userID)
                       {
                         reserves[state].push(
                           {
@@ -411,14 +408,18 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                             state: meta.state
                           }
                         );
-                      });
-                  });
-              });
+                      }
+                    );
+                  }
+                );
+              }
+            );
 
             $scope.saMembers.reserves = reserves;
 
             $scope.loading.smartAlarm = false;
-          });
+          }
+        );
       }
 
 
@@ -440,17 +441,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           {
             Groups.guardRole()
               .then(
-              function (setup)
-              {
-                prepareSaMembers(setup);
-              });
-          });
+              function (setup) { prepareSaMembers(setup) }
+            );
+          }
+        );
       }
 
 
-      var groups = Storage.local.groups(),
-          settings = Storage.local.settings(),
-          members = Storage.local.members();
+      var members = Storage.local.members();
 
       angular.forEach(
         groups,
@@ -470,7 +468,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       groups.unshift(
         {
-          'name': 'Iedereen',
+          'name': $rootScope.ui.dashboard.everyone,
           'uuid': 'all'
         }
       );
@@ -483,9 +481,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       $scope.states['no-state'] = {
         className: 'no-state',
-        label:     possiblyAvailable,
+        label:     $rootScope.ui.dashboard.possiblyAvailable,
         color:     '#a0a0a0',
-        type:      'Geen Planning',
+        type:      $rootScope.ui.dashboard.noPlanning,
         display:   false
       };
 
@@ -498,7 +496,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           $scope.divisions.unshift(
             {
               id:    'all',
-              label: 'Alle divisies'
+              label: $rootScope.ui.dashboard.allDivisions
             }
           );
         }
@@ -542,7 +540,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
                   end: (slots.length > 0 && slots[0].end !== undefined) ?
                        slots[0].end * 1000 :
-                       possiblyAvailable,
+                    $rootScope.ui.dashboard.possiblyAvailable,
                   name: (members && members[id]) ? members[id].name : id
                 };
 
@@ -720,10 +718,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             Profile.get($rootScope.app.resources.uuid, true)
               .then(
-              function ()
-              {
-                getOverviews();
-              });
+              function () { getOverviews() }
+            );
           });
       };
 
@@ -870,7 +866,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
       else
       {
-
         Dashboard.getCapcodes().
           then(
           function (capcodes)

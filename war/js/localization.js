@@ -76,7 +76,24 @@ var ui = {
         refreshGroupOverviews: 'Refreshing group overviews..',
         showMore: 'meer tonen',
         showLess: 'minder tonen',
-        gettingAlarms: 'Getting P2000 alarm messages'
+        gettingAlarms: 'Getting P2000 alarm messages',
+        time: {
+          days: 'd',
+          hours: 'h',
+          minutes: 'm'
+        },
+        possiblyAvailable: 'Possibly available',
+        notAssigned: 'Not assigned',
+        alarmRoles: {
+          commander: 'Commander',
+          commanderInitial: 'C',
+          driver: 'Driver',
+          driverInitial: 'D',
+          manpower: 'Manpower'
+        },
+        everyone: 'Everybody',
+        noPlanning: 'No planning',
+        allDivisions: 'All divisions'
       },
       planboard: {
         planboard: 'Agenda',
@@ -529,7 +546,24 @@ var ui = {
         refreshGroupOverviews: 'Groep overzichten laden...',
         showMore: 'show more',
         showLess: 'show less',
-        gettingAlarms: 'P2000 alarm berichten aan het ophalen...'
+        gettingAlarms: 'P2000 alarm berichten aan het ophalen...',
+        time: {
+          days: 'd',
+          hours: 'u',
+          minutes: 'm'
+        },
+        possiblyAvailable: 'Mogelijk Inzetbaar',
+        notAssigned: 'Niet ingedeeld',
+        alarmRoles: {
+          commander: 'Bevelvoerder',
+          commanderInitial: 'B',
+          driver: 'Chauffeur',
+          driverInitial: 'C',
+          manpower: 'Manschap'
+        },
+        everyone: 'Iedereen',
+        noPlanning: 'Geen Planning',
+        allDivisions: 'Alle divisies'
       },
       planboard : {
         planboard: 'Agenda',
