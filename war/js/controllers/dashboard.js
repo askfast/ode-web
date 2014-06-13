@@ -530,8 +530,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           {
             var ordered = {};
 
+            // Quick fix unwrapping $promise and $resolved
             angular.forEach(
-              results.members,
+              angular.fromJson(angular.toJson(results.members)),
               function (slots, id)
               {
                 var _member = {

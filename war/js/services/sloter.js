@@ -221,12 +221,12 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var name = _this.namer(agg, privilage);
 
-          angular.forEach(agg.data, function (slot, index)
+          angular.forEach(agg.data, function (slot)
           {
             if (slot.wish > maxh)  maxh = slot.wish;
           });
 
-          angular.forEach(agg.data, function (slot, index)
+          angular.forEach(agg.data, function (slot)
           {
             var maxNum      = maxh,
                 num         = slot.wish,

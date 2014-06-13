@@ -301,7 +301,8 @@
       <!-- end slot state -->
 
       <!-- slot recursive -->
-      <div class="form-elements-group rightest" ng-show="views.slot.add || views.slot.edit">
+      <div class="form-elements-group rightest"
+           ng-show="views.slot.add">
         <label>{{ui.planboard.reoccuring}}</label>
         <input type="checkbox" ng-model="slot.recursive">
       </div>
