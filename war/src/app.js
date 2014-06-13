@@ -12409,7 +12409,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
                       Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
                       Dater.convert.absolute(slot.start.date, slot.start.time, true);
 
-          if (start < nowStamp) { start = nowStamp  }
+          if (start < nowStamp && slot.recursive == true)
+          {
+            start = nowStamp;
+          }
 
           values = {
                 start: start,
