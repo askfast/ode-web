@@ -1,6 +1,8 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.3.18
+
 2.3.17
 - feature: Auto logout when session expires 11-6-2014
 - feature: User deleting functionality. 5-6-2014
