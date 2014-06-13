@@ -275,15 +275,14 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'convertRatios',
   [
-    '$config',
-    function ($config)
+    function ()
     {
       return function (stats)
       {
         var ratios = '';
 
         angular.forEach(
-          stats, function (stat, index)
+          stats, function (stat)
           {
             var state = stat.state.replace(/^bar-+/, '');
 
@@ -308,44 +307,52 @@ angular.module('WebPaige.Filters', ['ngResource'])
  */
   .filter(
   'calculateDeltaTime',
-  function ()
-  {
-    return function (stamp)
+  [
+    '$rootScope',
+    function ($rootScope)
     {
-      var delta = Math.abs(stamp - Date.now().getTime()) / 1000;
-
-      var days = Math.floor(delta / 86400);
-      delta -= days * 86400;
-
-      var hours = Math.floor(delta / 3600) % 24;
-      delta -= hours * 3600;
-
-      var minutes = Math.floor(delta / 60) % 60;
-
-      var output = '';
-
-      if (days != 0)
+      return function (stamp)
       {
-        output += days;
-      }
+        var delta = Math.abs(stamp - Date.now().getTime()) / 1000;
 
-      if (hours != 0)
-      {
-        if (days != 0) { output += ' dagen, ' }
+        var days = Math.floor(delta / 86400);
+        delta -= days * 86400;
 
-        output += hours;
-      }
+        var hours = Math.floor(delta / 3600) % 24;
+        delta -= hours * 3600;
 
-      if (minutes != 0)
-      {
-        if (hours != 0) { output += ' uren, ' }
+        var minutes = Math.floor(delta / 60) % 60;
 
-        output += minutes + ' minuten'
-      }
+        var output = '';
 
-      return output;
-    };
-  }
+        if (days != 0)
+        {
+          output += days;
+        }
+
+        if (hours != 0)
+        {
+          if (days != 0) { output += $rootScope.ui.dashboard.time.days + ' : ' }
+
+          output += hours;
+        }
+
+        if (minutes != 0)
+        {
+          if (hours != 0) { output += $rootScope.ui.dashboard.time.hours + ' : ' }
+
+          output += minutes + $rootScope.ui.dashboard.time.minutes
+        }
+
+        if (hours == 0 && minutes == 0)
+        {
+          output += ' ' + $rootScope.ui.dashboard.time.days
+        }
+
+        return output;
+      };
+    }
+  ]
 )
 
 /**
@@ -431,17 +438,22 @@ angular.module('WebPaige.Filters', ['ngResource'])
     {
       return function (url)
       {
-        if ($config.profile.smartAlarm)
+        if (/\//.test(url))
         {
-          return url;
-        }
-        else
-        {
+          if ($config.profile.smartAlarm)
+          {
+            return url;
+          }
+
           var eve = url;
 
           eve = (typeof url != "undefined") ? url.split("/") : ["", url, ""];
 
           return eve[eve.length - 2];
+        }
+        else
+        {
+          return url
         }
       };
     }

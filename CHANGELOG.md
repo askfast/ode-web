@@ -1,6 +1,16 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.3.18
+
+2.3.17
+- feature: Auto logout when session expires 11-6-2014
+- feature: User deleting functionality. 5-6-2014
+- fix: Issue with not showing receiver or recipient name helped out. 4-6-2014
+- fix: Refresh inbox messages after sending a message and closing the message view. 4-6-2014
+- fix: 'No subject' placeholder in case of no subjects for the messages. 3-6-2014
+- fix: Correctly displaying cap-codes with leading zeros. 29-5-2014
+
 2.3.16
 - release: Version release. 20-5-2014
 - feature: Added new profile for 'demo' installation 19-5-2014

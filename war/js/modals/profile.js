@@ -26,6 +26,11 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               method: 'PUT',
               params: { section: 'resource' }
             },
+            remove: {
+              method:  'DELETE',
+              params:  {},
+              isArray: true
+            },
             role: {
               method:  'PUT',
               params:  { section: 'role' },
@@ -314,6 +319,31 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
             id: id
           },
           resources,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Save profile
+       */
+      Profile.prototype.remove = function (id)
+      {
+        var deferred = $q.defer();
+
+        Profile.remove(
+          {
+            id: id
+          },
           function (result)
           {
             deferred.resolve(result);

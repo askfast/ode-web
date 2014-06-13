@@ -182,8 +182,11 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       namer: function (agg, privilage)
       {
         var groups  = this.get.groups(),
-            name    = groups[agg.id],
-            link    = '<a href="#/groups?uuid=' +
+            name = groups[agg.id];
+
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+
+        var link    = '<a href="#/groups?uuid=' +
                       agg.id +
                       '#view">' +
                       name +
@@ -218,12 +221,12 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
         {
           var name = _this.namer(agg, privilage);
 
-          angular.forEach(agg.data, function (slot, index)
+          angular.forEach(agg.data, function (slot)
           {
             if (slot.wish > maxh)  maxh = slot.wish;
           });
 
-          angular.forEach(agg.data, function (slot, index)
+          angular.forEach(agg.data, function (slot)
           {
             var maxNum      = maxh,
                 num         = slot.wish,
@@ -458,8 +461,21 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
       members: function (data, timedata, config, privilage)
       {
         var _this   = this,
-            members = this.get.members();
+            members = this.get.members(),
+            filtered = [];
 
+        angular.forEach(
+          data.members,
+          function (member)
+          {
+            if (member.lastName != undefined)
+            {
+              filtered.push(member);
+            }
+          }
+        );
+
+        data.members = filtered;
 
         data.members.sort(
           function (a, b)
@@ -483,11 +499,13 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         angular.forEach(data.members, function (member)
         {
+          var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+
           var link = (privilage == 1) ?
                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                         '<a href="#/profile/' + 
                         member.id + 
-                        '#timeline">' + 
+                        '#' + user + '">' +
                         members[member.id] + 
                         '</a>' :
                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +

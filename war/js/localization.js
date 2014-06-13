@@ -50,7 +50,8 @@ var ui = {
             'By pressing English or Dutch you can change the used language.'
           ],
           cta: 'Return to login screen'
-        }
+        },
+        sessionTimeout: 'Your session is timed out. Please re-login again.'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -75,7 +76,24 @@ var ui = {
         refreshGroupOverviews: 'Refreshing group overviews..',
         showMore: 'meer tonen',
         showLess: 'minder tonen',
-        gettingAlarms: 'Getting P2000 alarm messages'
+        gettingAlarms: 'Getting P2000 alarm messages',
+        time: {
+          days: 'd',
+          hours: 'h',
+          minutes: 'm'
+        },
+        possiblyAvailable: 'Possibly available',
+        notAssigned: 'Not assigned',
+        alarmRoles: {
+          commander: 'Commander',
+          commanderInitial: 'C',
+          driver: 'Driver',
+          driverInitial: 'D',
+          manpower: 'Manpower'
+        },
+        everyone: 'Everybody',
+        noPlanning: 'No planning',
+        allDivisions: 'All divisions'
       },
       planboard: {
         planboard: 'Agenda',
@@ -254,7 +272,8 @@ var ui = {
         notificationsEditing: 'Editing scheduled notification...',
         notificationsEdited: 'Scheduled notification is successfully edited.',
         notificationsDeleting: 'Deleting a scheduled notification...',
-        notificationsDeleted: 'Scheduled notification is successfully deleted.'
+        notificationsDeleted: 'Scheduled notification is successfully deleted.',
+        noSubject: '- No subject -'
       },
       groups: {
         groups: 'Groups',
@@ -322,6 +341,7 @@ var ui = {
         profileView: 'Profile View',
         userGroups: 'User Groups',
         role: 'Profile',
+        choose: 'choose a profile',
         email: 'Email',
         phone: 'Phone',
         address: 'Address',
@@ -347,7 +367,14 @@ var ui = {
         newTimeslotAdded: 'New timeslot added successfully.',
         changingTimeslot: 'Changing a timeslot..',
         timeslotChanged: 'Timeslot is succesfully changed.',
-        passwordChangeWarning: 'Warning! with this option you will change password this user.'
+        passwordChangeWarning: 'Warning! with this option you will change password this user.',
+        remove: {
+          title: 'Delete user',
+          info: 'This action deletes user completely from the system. There is no undo on this action.',
+          button: 'Delete this user',
+          cancel: 'Cancel',
+          success: 'User has been deleted. You are now redirected to groups page.'
+        }
       },
       settings: {
         settings: 'Settings',
@@ -408,7 +435,14 @@ var ui = {
         profile: {
           save: 'Error with saving profile information!',
           get: 'Error with getting profile data!',
-          changePassword: 'Error with changing password!'
+          changePassword: 'Error with changing password!',
+          remove: {
+            general: 'There has been an error with deleting this user.',
+            password: 'Given password is not correct!',
+            self: 'You can not delete your own account!',
+            auth: 'You are not allowed to delete any user!',
+            empty: 'Please fill your password to continue.'
+          }
         },
         messages: {
           query: 'Error with getting messages!',
@@ -433,7 +467,8 @@ var ui = {
           pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
           pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
           remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!'
+          wisher: 'Error with changing wish value!',
+          notAuth: 'It is not allowed to alter someone else\'s planning unless you do have a planning role. As a administrator/planner you can change the planning of others by clicking on their name from the list of members. You are then directed to another page for changing the planning of that member.'
         }
       },
       confirms: {
@@ -485,7 +520,8 @@ var ui = {
             'Door op English of Nederlands te klikken kunt u de taal instellen.'
           ],
           cta: 'Terug naar inloggen'
-        }
+        },
+        sessionTimeout: 'Uw sessie is verlopen. Graag nogmaals inloggen.'
       },
       dashboard: {
         dashboard: 'Dashboard',
@@ -510,7 +546,24 @@ var ui = {
         refreshGroupOverviews: 'Groep overzichten laden...',
         showMore: 'show more',
         showLess: 'show less',
-        gettingAlarms: 'P2000 alarm berichten aan het ophalen...'
+        gettingAlarms: 'P2000 alarm berichten aan het ophalen...',
+        time: {
+          days: 'd',
+          hours: 'u',
+          minutes: 'm'
+        },
+        possiblyAvailable: 'Mogelijk Inzetbaar',
+        notAssigned: 'Niet ingedeeld',
+        alarmRoles: {
+          commander: 'Bevelvoerder',
+          commanderInitial: 'B',
+          driver: 'Chauffeur',
+          driverInitial: 'C',
+          manpower: 'Manschap'
+        },
+        everyone: 'Iedereen',
+        noPlanning: 'Geen Planning',
+        allDivisions: 'Alle divisies'
       },
       planboard : {
         planboard: 'Agenda',
@@ -689,7 +742,8 @@ var ui = {
         notificationsEditing: 'Notificatie wordt gewijzigd...',
         notificationsEdited: 'Notificatie is met succes gewijzigd.',
         notificationsDeleting: 'Notificatie wordt verwijderd...',
-        notificationsDeleted: 'Notificatie is met succes verwijderd.'
+        notificationsDeleted: 'Notificatie is met succes verwijderd.',
+        noSubject: '- Geen onderwerp -'
       },
       groups: {
         groups: 'Groepen',
@@ -756,6 +810,7 @@ var ui = {
         profileView: 'Profiel weergave',
         userGroups: 'Gebruikersgroepen',
         role: 'Profiel',
+        choose: 'kies een profiel',
         email: 'Email',
         phone: 'Telefoon',
         address: 'Adres',
@@ -781,7 +836,14 @@ var ui = {
         newTimeslotAdded: 'Nieuw tijdslot succesvol toegevoegd.',
         changingTimeslot: 'Tijdslot wijzigen...',
         timeslotChanged: 'Tijdslot succesvol gewijzigd.',
-        passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.'
+        passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.',
+        remove: {
+          title: 'Verwijder gebruiker',
+          info: 'Deze actie verwijdert de gebruiker volledig uit het systeem. Dit kan niet meer ongedaan worden.',
+          button: 'Verwijder deze gebruiker',
+          cancel: 'Annuleer',
+          success: 'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
+        }
       },
       settings: {
         settings: 'Instellingen',
@@ -842,7 +904,14 @@ var ui = {
         profile: {
           save: 'Fout bij het opslaan van het profiel!',
           get: 'Fout bij het ophalen van het profiel!',
-          changePassword: 'Fout bij het wijzigen van het wachtwoord!'
+          changePassword: 'Fout bij het wijzigen van het wachtwoord!',
+          remove: {
+            general: 'Fout bij het verwijderen van deze gebruiker.',
+            password: 'Wachtwoord is verkeerd.',
+            self: 'U kunt uw eigen account niet verwijderen.',
+            auth: 'Gebruiker verwijderen is niet toegestaan voor u.',
+            empty: 'Vul aub uw wachtwoord in.'
+          }
         },
         messages: {
           query: 'Fout bij het ophalen van berichten!',
@@ -865,7 +934,8 @@ var ui = {
           pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
           pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
           remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!'
+          wisher: 'Error with changing wish value!',
+          notAuth: 'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.'
         }
       },
       confirms: {

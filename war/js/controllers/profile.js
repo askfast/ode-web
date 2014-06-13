@@ -39,6 +39,69 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.self = this;
 
+      $scope.deleteUserError = false;
+
+      $scope.userPassword = '';
+
+      $scope.deleteUser = function (userPassword)
+      {
+        $scope.deleteUserError = false;
+
+        if (userPassword != '' && userPassword != undefined)
+        {
+          if ($rootScope.app.resources.role == 1)
+          {
+            if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
+            {
+              if (MD5(userPassword) == data.resources.askPass)
+              {
+                Profile.remove(data.resources.uuid)
+                  .then(
+                  function (result)
+                  {
+                    $scope.userPassword = '';
+
+                    if (result.hasOwnProperty('error'))
+                    {
+                      $scope.deleteUserError = true;
+                      $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.general;
+                    }
+                    else
+                    {
+                      $rootScope.notifier.success($rootScope.ui.profile.remove.success);
+
+                      $location.path('/groups').hash('').search({});
+                    }
+                  }
+                );
+              }
+              else
+              {
+                $scope.userPassword = '';
+
+                $scope.deleteUserError = true;
+                $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.password;
+              }
+            }
+            else
+            {
+              $scope.deleteUserError = true;
+              $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
+            }
+          }
+          else
+          {
+            $scope.deleteUserError = true;
+            $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
+          }
+        }
+        else
+        {
+          $scope.deleteUserError = true;
+          $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.empty;
+        }
+      };
+
 
       /**
        * Pass periods
@@ -58,7 +121,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       /**
        * Set data for view
        */
-      if (! ! ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
+      if (($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
       {
         if (data && data.slots)
         {
@@ -402,7 +465,10 @@ angular.module('WebPaige.Controllers.Profile', [])
 
         var states = {};
 
-        angular.forEach($scope.timeline.config.states, function (state, key) { states[key] = state.label });
+        angular.forEach(
+          $scope.timeline.config.states,
+          function (state, key) { states[key] = state.label }
+        );
 
         $scope.states = states;
 

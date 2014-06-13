@@ -17,13 +17,13 @@
     <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
 
       <li class="{{(views.dashboard==true) && 'active'}}">
-        <a  href="#dashboardTab" 
+        <a  href="help#dashboardTab"
             data-toggle="tab"
             ng-click="setViewTo('dashboard')"><span class="entypo">&#9716;</span> {{ui.dashboard.dashboard}}</a>
       </li>
 
       <li class="{{(views.planboard==true) && 'active'}}">
-        <a  href="#planboardTab" 
+        <a  href="help#planboardTab"
             data-toggle="tab"
             ng-click="setViewTo('planboard')"><span class="entypo">&#128340;</span> {{ui.planboard.planboard}}</a>
       </li>
@@ -33,31 +33,31 @@
       </li> -->
 
       <li class="{{(views.messages==true) && 'active'}}">
-        <a  href="#messagesTab" 
+        <a  href="help#messagesTab"
             data-toggle="tab"
             ng-click="setViewTo('messages')"><span class="entypo">&#9993;</span> {{ui.message.messages}}</a>
       </li>
 
       <li class="{{(views.groups==true) && 'active'}}">
-        <a  href="#groupsTab" 
+        <a  href="help#groupsTab"
             data-toggle="tab"
             ng-click="setViewTo('groups')"><span class="entypo">&#128101;</span> {{ui.groups.groups}}</a>
       </li>
 
       <li class="{{(views.profile==true) && 'active'}}">
-        <a  href="#profileTab" 
+        <a  href="help#profileTab"
             data-toggle="tab"
             ng-click="setViewTo('profile')"><span class="entypo">&#128100;</span> {{ui.profile.profile}}</a>
       </li>
 
       <li class="{{(views.settings==true) && 'active'}}">
-        <a  href="#settingsTab" 
+        <a  href="help#settingsTab"
             data-toggle="tab"
             ng-click="setViewTo('settings')"><span class="entypo">&#9881;</span> {{ui.settings.settings}}</a>
       </li>
 
       <li class="{{(views.support==true) && 'active'}}" ng-show="(config.profile.meta=='knrm') || (config.profile.meta=='test')">
-        <a  href="#supportTab" 
+        <a  href="help#supportTab"
             data-toggle="tab"
             ng-click="setViewTo('support')"><span class="entypo">&#59272;</span> {{ui.help.support}}</a>
       </li>

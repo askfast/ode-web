@@ -301,7 +301,8 @@
       <!-- end slot state -->
 
       <!-- slot recursive -->
-      <div class="form-elements-group rightest" ng-show="views.slot.add || views.slot.edit">
+      <div class="form-elements-group rightest"
+           ng-show="views.slot.add">
         <label>{{ui.planboard.reoccuring}}</label>
         <input type="checkbox" ng-model="slot.recursive">
       </div>
@@ -394,12 +395,12 @@
       <!-- tabs -->
       <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
         <li class="active">
-          <a  href="#timelineTab" 
+          <a  href="planboard#timelineTab"
               data-toggle="tab"
               ng-click="destroy.statistics();"><span class="entypo">&#128340;</span> {{ui.planboard.timeline}}</a>
         </li>
         <li>
-          <a  href="#statisticsTab" 
+          <a  href="planboard#statisticsTab"
               data-toggle="tab"
               ng-click="destroy.timeline();"><span class="entypo">&#128200;</span> {{ui.planboard.statistics}}</a>
         </li>
