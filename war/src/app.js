@@ -12415,13 +12415,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
 
           values = {
-                start: start,
-                end: ($rootScope.browser.mobile) ?
-                     Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
-                     Dater.convert.absolute(slot.end.date, slot.end.time, true),
-                recursive: (slot.recursive) ? true : false,
-                text: slot.state
-              };
+            start: start,
+            end: ($rootScope.browser.mobile) ?
+                 Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
+                 Dater.convert.absolute(slot.end.date, slot.end.time, true),
+            recursive: (slot.recursive) ? true : false,
+            text: slot.state
+          };
 
           /**
            * Two minutes waiting time to take an action
@@ -12436,8 +12436,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
 
-            Slots.add(values, $scope.timeline.user.id)
-              .then(
+            Slots.add(
+              values,
+              $scope.timeline.user.id
+            ).then(
               function (result)
               {
                 $rootScope.$broadcast('resetPlanboardViews');
@@ -12461,7 +12463,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
         }
       };
-
 
 
       /**
@@ -12508,13 +12509,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
       {
         $rootScope.planboardSync.clear();
 
-        // console.log('changing slot ->', original, slot, options);
-
         if (! direct)
         {
-          /**
-           * Through timeline
-           */
           var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
           options = {
@@ -12525,9 +12521,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
         }
         else
         {
-          /**
-           * Through form
-           */
           options = {
             start: ($rootScope.browser.mobile) ?
                    new Date(slot.start.datetime).getTime() :
@@ -12543,15 +12536,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
         }
 
         var now = Date.now().getTime();
-
-        var isChangeAllowed = function (old, curr)
-        {
-          if (old == curr) return true;
-
-          if (old < now) return false;
-
-          return curr >= now;
-        };
 
         var notAllowed = function ()
         {
@@ -12607,20 +12591,21 @@ angular.module('WebPaige.Controllers.Timeline', [])
              * future completely right than now() then slice it with now and leave
              * the past as it is
              */
-            if (
-              options.content.recursive == false &&
-              (
-                new Date($scope.original.start).getTime() < options.start &&
-                new Date($scope.original.end).getTime() < options.end
-                ) &&
-              $scope.original.start < Date.now().getTime()
-              )
+            if ((new Date($scope.original.start).getTime() < now) &&
+                new Date($scope.original.end).getTime() > now)
             {
+              var start = options.start;
+
+              if (options.start < now)
+              {
+                start = now;
+              }
+
               Slots.change(
                 $scope.original,
                 {
                   start: new Date($scope.original.start).getTime(),
-                  end: Date.now().getTime(),
+                  end: Math.abs(Math.floor(now / 1000)),
                   content: {
                     recursive: slot.recursive,
                     state: slot.state
@@ -12641,7 +12626,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   {
                     Slots.add(
                       {
-                        start: options.start / 1000,
+                        start: Math.abs(Math.floor(start / 1000)),
                         end: options.end / 1000,
                         recursive: (slot.recursive) ? true : false,
                         text: slot.state
@@ -12673,13 +12658,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
             }
             else
             {
-              if (
-                options.content.recursive == true ||
-                (
-                  isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
-                  isChangeAllowed(new Date($scope.original.end).getTime(), options.end)
-                  )
-                )
+              var isChangeAllowed = function (old, current)
+              {
+                if (old == current) return true;
+
+                if (old < now) return false;
+
+                return current >= now;
+              };
+
+              if (isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
+                  isChangeAllowed(new Date($scope.original.end).getTime(), options.end))
               {
                 changeSlot();
               }
@@ -12690,13 +12679,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
             }
           }
         }
-
-
-        console.log('conditions ->', (
-          isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
-          isChangeAllowed(new Date($scope.original.end).getTime(), options.end)
-          )
-        );
       };
 
 
