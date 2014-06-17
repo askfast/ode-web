@@ -46,7 +46,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             changeState: {
               method: 'POST',
-              params: {action: 'changeState'}
+              params: {action: 'changeState'},
+              isArray: true
             },
             remove: {
               method: 'POST',
