@@ -9971,13 +9971,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       selection = {};
 
       angular.forEach(
-        Storage.local.settings().app.widgets.groups, function (value, group)
+        Storage.local.settings().app.widgets.groups,
+        function (value, group)
         {
           selection[group] = value;
-        });
+        }
+      );
 
       angular.forEach(
-        groups, function (group)
+        groups,
+        function (group)
         {
           if (! selection[group.uuid])
           {
@@ -9986,7 +9989,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               status:    false
             };
           }
-        });
+        }
+      );
 
       $scope.popover = {
         groups:    groups,
@@ -10196,7 +10200,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $scope.saSynced = cached.synced;
 
         angular.forEach(
-          setup.selection, function (selection)
+          setup.selection,
+          function (selection)
           {
             function translateName (user)
             {
@@ -10212,7 +10217,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon:  $rootScope.ui.dashboard.alarmRoles.commanderInitial,
                     role:  $rootScope.ui.dashboard.alarmRoles.commander,
                     class: 'sa-icon-commander',
-                    name:  translateName(selection.user)
+                    name:  translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10223,7 +10229,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon:  $rootScope.ui.dashboard.alarmRoles.driverInitial,
                     role:  $rootScope.ui.dashboard.alarmRoles.driver,
                     class: 'sa-icon-driver',
-                    name:  translateName(selection.user)
+                    name:  translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10233,7 +10240,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 2,
                     icon: 'M1',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10243,7 +10251,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 3,
                     icon: 'M2',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10253,7 +10262,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 4,
                     icon: 'M3',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10263,7 +10273,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 5,
                     icon: 'M4',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
             }

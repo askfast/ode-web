@@ -436,7 +436,11 @@
                           <!-- ng-checked="selectionMaster.inbox"> -->
                 </td>
                 <td><span class="label label-warning" ng-show="(message.state=='NEW')">{{ui.message.newMsg}}</span></td>
-                <td>{{message.requester | convertEve | convertUserIdToName}}</td>
+                <td>
+                  <a href="#/profile/{{message.requester | convertEve}}#profile">
+                    {{message.requester | convertEve | convertUserIdToName}}
+                  </a>
+                </td>
                 <td><a ng-click="requestMessage(message.uuid, 'inbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime | nicelyDate}}</td>
                 <td>
@@ -544,7 +548,11 @@
                           <!-- ng-checked="selectionMaster.outbox"> -->
                 </td>
                 <td>
-                  <span ng-repeat="receiver in message.responder">{{receiver | convertEve | convertUserIdToName}}, </span>
+                  <span ng-repeat="receiver in message.responder">
+                  <a href="#/profile/{{receiver | convertEve}}#profile">
+                    {{receiver | convertEve | convertUserIdToName}}
+                  </a>,
+                  </span>
                 </td>
                 <td><a ng-click="requestMessage(message.uuid, 'outbox')">{{message.subject}}</a></td>
                 <td>{{message.creationTime | nicelyDate}}</td>
@@ -734,7 +742,11 @@
                 </td>
                 <td><span class="label">{{message.box}}</span></td>
                 <td>
-                  <span ng-repeat="receiver in message.responder">{{receiver | convertEve | convertUserIdToName}}, </span>
+                  <span ng-repeat="receiver in message.responder">
+                    <a href="#/profile/{{receiver | convertEve}}#profile">
+                      {{receiver | convertEve | convertUserIdToName}}
+                    </a>,
+                  </span>
                 </td>
                 <td><a ng-click="requestMessage(message.uuid, 'trash')">{{message.subject}}</a></td>
                 <td>{{message.creationTime | nicelyDate}}</td>
