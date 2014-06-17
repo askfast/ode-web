@@ -43,6 +43,11 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.userPassword = '';
 
+      $scope.showDeleteUserModal = function ()
+      {
+        $('#deleteUserModal').modal('show');
+      };
+
       $scope.deleteUser = function (userPassword)
       {
         $scope.deleteUserError = false;

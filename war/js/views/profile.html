@@ -104,11 +104,15 @@
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.editProfile}}</h3>
 
-          <a href="#deleteUserModal"
-             role="button"
-             class="btn btn-danger pull-right"
-             data-toggle="modal"
-             ng-hide="app.resources.role > 1">{{ui.profile.remove.title}}</a>
+          <div ng-hide="app.resources.uuid == profilemeta.uuid">
+            <button ng-click="showDeleteUserModal()"
+                    role="button"
+                    class="btn btn-danger pull-right"
+                    data-toggle="modal"
+                    ng-hide="app.resources.role > 1">
+              {{ui.profile.remove.title}}
+            </button>
+          </div>
 
         </div>
         <!-- end tab header -->
@@ -188,10 +192,20 @@
           <div class="control-group">
             <label class="control-label">{{ui.profile.city}}</label>
             <div class="controls">
-              <input  type="text" 
-                      class="span3" 
+              <input  type="text"
+                      class="span3"
                       ng-model="profilemeta.PostCity"
                       value="{{data.resources.PostCity}}">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ui.profile.username}}</label>
+            <div class="controls">
+              <input  type="text"
+                      class="span3"
+                      ng-model="profilemeta.uuid"
+                      value="{{data.resources.uuid}}"
+                      disabled>
             </div>
           </div>
 

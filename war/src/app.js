@@ -347,6 +347,7 @@ var ui = {
         address: 'Address',
         postcode: 'Postcode',
         city: 'City',
+        username: 'Username',
         editProfile: 'Edit Profile',
         name: 'Name',
         saveProfile: 'Save Profile',
@@ -816,6 +817,7 @@ var ui = {
         address: 'Adres',
         postcode: 'Postcode',
         city: 'Stad',
+        username: 'Gebruikersnaam',
         editProfile: 'Profiel wijzigen',
         name: 'Naam',
         saveProfile: 'Profiel opslaan',
@@ -15395,6 +15397,11 @@ angular.module('WebPaige.Controllers.Profile', [])
       $scope.deleteUserError = false;
 
       $scope.userPassword = '';
+
+      $scope.showDeleteUserModal = function ()
+      {
+        $('#deleteUserModal').modal('show');
+      };
 
       $scope.deleteUser = function (userPassword)
       {
