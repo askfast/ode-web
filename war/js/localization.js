@@ -432,7 +432,8 @@ var ui = {
           groupSubmit: 'Error with saving group!',
           memberSubmitRegistered: 'Username is already registered!',
           memberSubmitRegister: 'Error with registering a member!',
-          deleteGroup: 'Error with deleting a group!'
+          deleteGroup: 'Error with deleting a group!',
+          emptyUserCredentials: 'Username or password can not be left empty!'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -918,7 +919,8 @@ var ui = {
           groupSubmit: 'Fout bij het opslaan van de groep!',
           memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
           memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
-          deleteGroup: 'Fout bij het verwijderen van een groep!'
+          deleteGroup: 'Fout bij het verwijderen van een groep!',
+          emptyUserCredentials: 'Vul gebruikersnaam en wachtwoord in!'
         },
         login: {
           changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',

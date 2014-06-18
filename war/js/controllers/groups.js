@@ -302,6 +302,12 @@ angular.module('WebPaige.Controllers.Groups', [])
         else
         {
           $scope.memberForm = {};
+          $scope.memberForm.PhoneAddress = '';
+          $scope.memberForm.username = '';
+          $scope.memberForm.password = '';
+          $scope.memberForm.role = {
+            id: 3
+          };
 
           $scope.setViewTo('member');
         }
@@ -593,16 +599,26 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.memberSubmit = function (member)
       {
-        //        if ($rootScope.config.profile.smartAlarm)
-        //        {
-        //          member.role = 1;
-        //        }
+        if (member.username == '' || member.password == '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
+
+          $('body').scrollTop(0);
+
+          return;
+        }
 
         $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
-        //if ($rootScope.phoneNumberParsed.result || $scope.memberForm.PhoneAddress == '')
+        if (member == undefined || member.PhoneAddress == '')
+        {
+          $rootScope.phoneNumberParsed.result = true;
+        }
+
         if ($rootScope.phoneNumberParsed.result)
         {
+          // if (member && member.role.id)
+
           Profile.register(member).
             then(
             function (result)

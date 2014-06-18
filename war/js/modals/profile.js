@@ -102,7 +102,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
             // console.log('registered ->', registered);
 
             // Profile.prototype.role(uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id)
-            Profile.prototype.role(uuid, profile.role.id || 3)
+            Profile.prototype.role(uuid, profile.role.id)
               .then(
               function (roled)
               {

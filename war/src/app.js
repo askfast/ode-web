@@ -432,7 +432,8 @@ var ui = {
           groupSubmit: 'Error with saving group!',
           memberSubmitRegistered: 'Username is already registered!',
           memberSubmitRegister: 'Error with registering a member!',
-          deleteGroup: 'Error with deleting a group!'
+          deleteGroup: 'Error with deleting a group!',
+          emptyUserCredentials: 'Username or password can not be left empty!'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -918,7 +919,8 @@ var ui = {
           groupSubmit: 'Fout bij het opslaan van de groep!',
           memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
           memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
-          deleteGroup: 'Fout bij het verwijderen van een groep!'
+          deleteGroup: 'Fout bij het verwijderen van een groep!',
+          emptyUserCredentials: 'Vul gebruikersnaam en wachtwoord in!'
         },
         login: {
           changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
@@ -5505,7 +5507,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
             // console.log('registered ->', registered);
 
             // Profile.prototype.role(uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id)
-            Profile.prototype.role(uuid, profile.role.id || 3)
+            Profile.prototype.role(uuid, profile.role.id)
               .then(
               function (roled)
               {
@@ -15034,6 +15036,12 @@ angular.module('WebPaige.Controllers.Groups', [])
         else
         {
           $scope.memberForm = {};
+          $scope.memberForm.PhoneAddress = '';
+          $scope.memberForm.username = '';
+          $scope.memberForm.password = '';
+          $scope.memberForm.role = {
+            id: 3
+          };
 
           $scope.setViewTo('member');
         }
@@ -15325,16 +15333,26 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.memberSubmit = function (member)
       {
-        //        if ($rootScope.config.profile.smartAlarm)
-        //        {
-        //          member.role = 1;
-        //        }
+        if (member.username == '' || member.password == '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
+
+          $('body').scrollTop(0);
+
+          return;
+        }
 
         $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
-        //if ($rootScope.phoneNumberParsed.result || $scope.memberForm.PhoneAddress == '')
+        if (member == undefined || member.PhoneAddress == '')
+        {
+          $rootScope.phoneNumberParsed.result = true;
+        }
+
         if ($rootScope.phoneNumberParsed.result)
         {
+          // if (member && member.role.id)
+
           Profile.register(member).
             then(
             function (result)
