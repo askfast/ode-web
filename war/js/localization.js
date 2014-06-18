@@ -357,8 +357,8 @@ var ui = {
         newPassRepeat: 'New password (Repeat)',
         changePass: 'Change password',
         newAvail: 'New Availability',
-        // saveProfile: 'Saving profile information..',
-        refreshing: 'Refreshing profile information..',
+        // saveProfile: 'Saving profile information...',
+        refreshing: 'Refreshing profile information...',
         dataChanged: 'Profile data is succesfully changed.',
         pleaseFill: 'Please fill all fields!',
         passNotMatch: 'Provided passwords do not match! Please try it again.',
@@ -366,10 +366,11 @@ var ui = {
         passChanged: 'Password is succesfully changed.',
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
-        changingTimeslot: 'Changing a timeslot..',
+        changingTimeslot: 'Changing a timeslot...',
         timeslotChanged: 'Timeslot is succesfully changed.',
         passwordChangeWarning: 'Warning! with this option you will change password this user.',
         remove: {
+          inProgress: 'Deleting user...',
           title: 'Delete user',
           info: 'This action deletes user completely from the system. There is no undo on this action.',
           button: 'Delete this user',
@@ -415,7 +416,8 @@ var ui = {
           notValid: 'It seems not to be a phone number!',
           invalidCountry: 'Invalid country code. Please enter a number from Netherlands.',
           tooShort: ' (Number is too short.)',
-          tooLong: ' (Number is too long)'
+          tooLong: ' (Number is too long)',
+          notValidOnSubmit: 'Please enter a valid telephone number to save.'
         },
         dashboard: {
           getOverviews: 'Error with getting group overviews!'
@@ -854,6 +856,7 @@ var ui = {
         timeslotChanged: 'Tijdslot succesvol gewijzigd.',
         passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.',
         remove: {
+          inProgress: 'Gebruiker aan het verwijderen...',
           title: 'Verwijder gebruiker',
           info: 'Deze actie verwijdert de gebruiker volledig uit het systeem. Dit kan niet meer ongedaan worden.',
           button: 'Verwijder deze gebruiker',
@@ -899,7 +902,8 @@ var ui = {
           notValid: 'Geen valide telefoonnummer!',
           invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
           tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
-          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)'
+          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)',
+          notValidOnSubmit: 'Vul alstublieft een geldig telefoonnummer in om op te slaan.'
         },
         dashboard: {
           getOverviews: 'Fout bij het ophalen van groep overzichten!'

@@ -427,12 +427,14 @@
 
 
         <!-- slot controls -->
-        <div id="form-open" class="row-fluid" ng-show="forms.add || forms.edit">
+        <div id="form-open"
+             class="row-fluid"
+             ng-show="forms.add || forms.edit">
           <form class="form-inline form-toggled">
 
 
             <!-- close btn -->
-            <button ng-click="resetInlineForms()" 
+            <button ng-click="resetInlineForms(); forms.add = false; forms.edit = false;"
                     class="close">&times;</button>
             <!-- end close btn -->
 

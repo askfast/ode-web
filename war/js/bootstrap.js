@@ -532,93 +532,96 @@ angular.module('WebPaige')
 
       $rootScope.phoneNumberParser = function (checked)
       {
-        if (checked && checked.length > 0)
+        if (checked != '')
         {
-          var result, all;
-
-          result = all = phoneNumberParser(checked, 'NL');
-
-          $rootScope.phoneNumberParsed.result = true;
-
-          if (result)
+          if (checked && checked.length > 0)
           {
-            var error = $rootScope.ui.errors.phone.notValid,
-                invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
-                message;
+            var result, all;
 
-            if (result.error)
+            result = all = phoneNumberParser(checked, 'NL');
+
+            $rootScope.phoneNumberParsed.result = true;
+
+            if (result)
             {
-              $rootScope.phoneNumberParsed = {
-                result: false,
-                message: error
-              };
-            }
-            else
-            {
-              if (! result.validation.isPossibleNumber)
+              var error = $rootScope.ui.errors.phone.notValid,
+                  invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                  message;
+
+              if (result.error)
               {
-                switch (result.validation.isPossibleNumberWithReason)
-                {
-                  case 'INVALID_COUNTRY_CODE':
-                    message = invalidCountry;
-                    break;
-                  case 'TOO_SHORT':
-                    message = error + $rootScope.ui.errors.phone.tooShort;
-                    break;
-                  case 'TOO_LONG':
-                    message = error + $rootScope.ui.errors.phone.tooLong;
-                    break;
-                }
-
                 $rootScope.phoneNumberParsed = {
                   result: false,
-                  message: message
+                  message: error
                 };
               }
               else
               {
-                if (! result.validation.isValidNumber)
+                if (! result.validation.isPossibleNumber)
                 {
+                  switch (result.validation.isPossibleNumberWithReason)
+                  {
+                    case 'INVALID_COUNTRY_CODE':
+                      message = invalidCountry;
+                      break;
+                    case 'TOO_SHORT':
+                      message = error + $rootScope.ui.errors.phone.tooShort;
+                      break;
+                    case 'TOO_LONG':
+                      message = error + $rootScope.ui.errors.phone.tooLong;
+                      break;
+                  }
+
                   $rootScope.phoneNumberParsed = {
                     result: false,
-                    message: error
+                    message: message
                   };
                 }
                 else
                 {
-                  if (! result.validation.isValidNumberForRegion)
+                  if (! result.validation.isValidNumber)
                   {
                     $rootScope.phoneNumberParsed = {
                       result: false,
-                      message: invalidCountry
+                      message: error
                     };
                   }
                   else
                   {
-                    $rootScope.phoneNumberParsed = {
-                      result: true,
-                      message: $rootScope.ui.success.phone.message +
-                               result.validation.phoneNumberRegion +
-                               $rootScope.ui.success.phone.as +
-                               result.validation.getNumberType
-                    };
+                    if (! result.validation.isValidNumberForRegion)
+                    {
+                      $rootScope.phoneNumberParsed = {
+                        result: false,
+                        message: invalidCountry
+                      };
+                    }
+                    else
+                    {
+                      $rootScope.phoneNumberParsed = {
+                        result: true,
+                        message: $rootScope.ui.success.phone.message +
+                                 result.validation.phoneNumberRegion +
+                                 $rootScope.ui.success.phone.as +
+                                 result.validation.getNumberType
+                      };
 
-                    $('#inputPhoneNumber').removeClass('error');
+                      $('#inputPhoneNumber').removeClass('error');
+                    }
                   }
                 }
               }
             }
+
+            $rootScope.phoneNumberParsed.all = all;
           }
+          else
+          {
+            $rootScope.phoneNumberParsed.result = true;
 
-          $rootScope.phoneNumberParsed.all = all;
-        }
-        else
-        {
-          $rootScope.phoneNumberParsed.result = true;
+            delete $rootScope.phoneNumberParsed.message;
 
-          delete $rootScope.phoneNumberParsed.message;
-
-          $('#inputPhoneNumber').removeClass('error');
+            $('#inputPhoneNumber').removeClass('error');
+          }
         }
       };
     }

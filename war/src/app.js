@@ -357,8 +357,8 @@ var ui = {
         newPassRepeat: 'New password (Repeat)',
         changePass: 'Change password',
         newAvail: 'New Availability',
-        // saveProfile: 'Saving profile information..',
-        refreshing: 'Refreshing profile information..',
+        // saveProfile: 'Saving profile information...',
+        refreshing: 'Refreshing profile information...',
         dataChanged: 'Profile data is succesfully changed.',
         pleaseFill: 'Please fill all fields!',
         passNotMatch: 'Provided passwords do not match! Please try it again.',
@@ -366,10 +366,11 @@ var ui = {
         passChanged: 'Password is succesfully changed.',
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
-        changingTimeslot: 'Changing a timeslot..',
+        changingTimeslot: 'Changing a timeslot...',
         timeslotChanged: 'Timeslot is succesfully changed.',
         passwordChangeWarning: 'Warning! with this option you will change password this user.',
         remove: {
+          inProgress: 'Deleting user...',
           title: 'Delete user',
           info: 'This action deletes user completely from the system. There is no undo on this action.',
           button: 'Delete this user',
@@ -415,7 +416,8 @@ var ui = {
           notValid: 'It seems not to be a phone number!',
           invalidCountry: 'Invalid country code. Please enter a number from Netherlands.',
           tooShort: ' (Number is too short.)',
-          tooLong: ' (Number is too long)'
+          tooLong: ' (Number is too long)',
+          notValidOnSubmit: 'Please enter a valid telephone number to save.'
         },
         dashboard: {
           getOverviews: 'Error with getting group overviews!'
@@ -854,6 +856,7 @@ var ui = {
         timeslotChanged: 'Tijdslot succesvol gewijzigd.',
         passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.',
         remove: {
+          inProgress: 'Gebruiker aan het verwijderen...',
           title: 'Verwijder gebruiker',
           info: 'Deze actie verwijdert de gebruiker volledig uit het systeem. Dit kan niet meer ongedaan worden.',
           button: 'Verwijder deze gebruiker',
@@ -899,7 +902,8 @@ var ui = {
           notValid: 'Geen valide telefoonnummer!',
           invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
           tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
-          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)'
+          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)',
+          notValidOnSubmit: 'Vul alstublieft een geldig telefoonnummer in om op te slaan.'
         },
         dashboard: {
           getOverviews: 'Fout bij het ophalen van groep overzichten!'
@@ -2047,93 +2051,96 @@ angular.module('WebPaige')
 
       $rootScope.phoneNumberParser = function (checked)
       {
-        if (checked && checked.length > 0)
+        if (checked != '')
         {
-          var result, all;
-
-          result = all = phoneNumberParser(checked, 'NL');
-
-          $rootScope.phoneNumberParsed.result = true;
-
-          if (result)
+          if (checked && checked.length > 0)
           {
-            var error = $rootScope.ui.errors.phone.notValid,
-                invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
-                message;
+            var result, all;
 
-            if (result.error)
+            result = all = phoneNumberParser(checked, 'NL');
+
+            $rootScope.phoneNumberParsed.result = true;
+
+            if (result)
             {
-              $rootScope.phoneNumberParsed = {
-                result: false,
-                message: error
-              };
-            }
-            else
-            {
-              if (! result.validation.isPossibleNumber)
+              var error = $rootScope.ui.errors.phone.notValid,
+                  invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                  message;
+
+              if (result.error)
               {
-                switch (result.validation.isPossibleNumberWithReason)
-                {
-                  case 'INVALID_COUNTRY_CODE':
-                    message = invalidCountry;
-                    break;
-                  case 'TOO_SHORT':
-                    message = error + $rootScope.ui.errors.phone.tooShort;
-                    break;
-                  case 'TOO_LONG':
-                    message = error + $rootScope.ui.errors.phone.tooLong;
-                    break;
-                }
-
                 $rootScope.phoneNumberParsed = {
                   result: false,
-                  message: message
+                  message: error
                 };
               }
               else
               {
-                if (! result.validation.isValidNumber)
+                if (! result.validation.isPossibleNumber)
                 {
+                  switch (result.validation.isPossibleNumberWithReason)
+                  {
+                    case 'INVALID_COUNTRY_CODE':
+                      message = invalidCountry;
+                      break;
+                    case 'TOO_SHORT':
+                      message = error + $rootScope.ui.errors.phone.tooShort;
+                      break;
+                    case 'TOO_LONG':
+                      message = error + $rootScope.ui.errors.phone.tooLong;
+                      break;
+                  }
+
                   $rootScope.phoneNumberParsed = {
                     result: false,
-                    message: error
+                    message: message
                   };
                 }
                 else
                 {
-                  if (! result.validation.isValidNumberForRegion)
+                  if (! result.validation.isValidNumber)
                   {
                     $rootScope.phoneNumberParsed = {
                       result: false,
-                      message: invalidCountry
+                      message: error
                     };
                   }
                   else
                   {
-                    $rootScope.phoneNumberParsed = {
-                      result: true,
-                      message: $rootScope.ui.success.phone.message +
-                               result.validation.phoneNumberRegion +
-                               $rootScope.ui.success.phone.as +
-                               result.validation.getNumberType
-                    };
+                    if (! result.validation.isValidNumberForRegion)
+                    {
+                      $rootScope.phoneNumberParsed = {
+                        result: false,
+                        message: invalidCountry
+                      };
+                    }
+                    else
+                    {
+                      $rootScope.phoneNumberParsed = {
+                        result: true,
+                        message: $rootScope.ui.success.phone.message +
+                                 result.validation.phoneNumberRegion +
+                                 $rootScope.ui.success.phone.as +
+                                 result.validation.getNumberType
+                      };
 
-                    $('#inputPhoneNumber').removeClass('error');
+                      $('#inputPhoneNumber').removeClass('error');
+                    }
                   }
                 }
               }
             }
+
+            $rootScope.phoneNumberParsed.all = all;
           }
+          else
+          {
+            $rootScope.phoneNumberParsed.result = true;
 
-          $rootScope.phoneNumberParsed.all = all;
-        }
-        else
-        {
-          $rootScope.phoneNumberParsed.result = true;
+            delete $rootScope.phoneNumberParsed.message;
 
-          delete $rootScope.phoneNumberParsed.message;
-
-          $('#inputPhoneNumber').removeClass('error');
+            $('#inputPhoneNumber').removeClass('error');
+          }
         }
       };
     }
@@ -5483,7 +5490,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
         var uuid = profile.username.toLowerCase();
 
-        console.log('profile ->', profile);
+        // console.log('profile ->', profile);
 
         Register.profile(
           {
@@ -5495,10 +5502,10 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           },
           function (registered)
           {
-            console.log('registered ->', registered);
+            // console.log('registered ->', registered);
 
             // Profile.prototype.role(uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id)
-            Profile.prototype.role(uuid, profile.role.id)
+            Profile.prototype.role(uuid, profile.role.id || 3)
               .then(
               function (roled)
               {
@@ -15318,8 +15325,6 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.memberSubmit = function (member)
       {
-        // console.log('profile info to save ->', angular.toJson(member));
-
         //        if ($rootScope.config.profile.smartAlarm)
         //        {
         //          member.role = 1;
@@ -15327,60 +15332,73 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
-        Profile.register(member).
-          then(
-          function (result)
-          {
-            if (result.error)
+        //if ($rootScope.phoneNumberParsed.result || $scope.memberForm.PhoneAddress == '')
+        if ($rootScope.phoneNumberParsed.result)
+        {
+          Profile.register(member).
+            then(
+            function (result)
             {
-              if (result.error.status === 409)
+              if (result.error)
               {
-                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
+                if (result.error.status === 409)
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
-                $rootScope.statusBar.off();
-              }
-              else if (result.error.status === 403)
-              {
-                // If 403 Forbidden is thrown initialize the process again
-                $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+                  $rootScope.statusBar.off();
+                }
+                else if (result.error.status === 403)
+                {
+                  // If 403 Forbidden is thrown initialize the process again
+                  $rootScope.notifier.error('Registering a new user is failed. Please try again.');
 
-                $rootScope.statusBar.off();
+                  $rootScope.statusBar.off();
 
-                $('body').scrollTop(0);
+                  $('body').scrollTop(0);
+                }
+                else
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
+                }
+
+                console.warn('error ->', result);
               }
               else
               {
-                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
+                $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+                Groups.query().
+                  then(
+                  function (data)
+                  {
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
+
+                      $location.path('/profile/' + member.username).hash('profile');
+
+                      $rootScope.statusBar.off();
+                    }
+                  });
               }
-
-              console.warn('error ->', result);
             }
-            else
-            {
-              $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+          );
+        }
+        else
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
-              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+          $rootScope.statusBar.off();
 
-              Groups.query().
-                then(
-                function (data)
-                {
-                  if (data.error)
-                  {
-                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                    console.warn('error ->', data);
-                  }
-                  else
-                  {
-                    $scope.data = data;
-
-                    $location.path('/profile/' + member.username).hash('profile');
-
-                    $rootScope.statusBar.off();
-                  }
-                });
-            }
-          });
+          $('body').scrollTop(0);
+        }
       };
 
 
@@ -15598,10 +15616,14 @@ angular.module('WebPaige.Controllers.Profile', [])
             {
               if (MD5(userPassword) == data.resources.askPass)
               {
+                $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
+
                 Profile.remove(data.resources.uuid)
                   .then(
                   function (result)
                   {
+                    $rootScope.statusBar.off();
+
                     $scope.userPassword = '';
 
                     if (result.hasOwnProperty('error'))
@@ -15620,6 +15642,8 @@ angular.module('WebPaige.Controllers.Profile', [])
               }
               else
               {
+                $rootScope.statusBar.off();
+
                 $scope.userPassword = '';
 
                 $scope.deleteUserError = true;
@@ -15628,18 +15652,24 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
+              $rootScope.statusBar.off();
+
               $scope.deleteUserError = true;
               $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
             }
           }
           else
           {
+            $rootScope.statusBar.off();
+
             $scope.deleteUserError = true;
             $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
           }
         }
         else
         {
+          $rootScope.statusBar.off();
+
           $scope.deleteUserError = true;
           $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.empty;
         }

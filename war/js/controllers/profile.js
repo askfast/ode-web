@@ -62,10 +62,14 @@ angular.module('WebPaige.Controllers.Profile', [])
             {
               if (MD5(userPassword) == data.resources.askPass)
               {
+                $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
+
                 Profile.remove(data.resources.uuid)
                   .then(
                   function (result)
                   {
+                    $rootScope.statusBar.off();
+
                     $scope.userPassword = '';
 
                     if (result.hasOwnProperty('error'))
@@ -84,6 +88,8 @@ angular.module('WebPaige.Controllers.Profile', [])
               }
               else
               {
+                $rootScope.statusBar.off();
+
                 $scope.userPassword = '';
 
                 $scope.deleteUserError = true;
@@ -92,18 +98,24 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
+              $rootScope.statusBar.off();
+
               $scope.deleteUserError = true;
               $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
             }
           }
           else
           {
+            $rootScope.statusBar.off();
+
             $scope.deleteUserError = true;
             $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
           }
         }
         else
         {
+          $rootScope.statusBar.off();
+
           $scope.deleteUserError = true;
           $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.empty;
         }
