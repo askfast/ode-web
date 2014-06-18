@@ -34,6 +34,8 @@ angular.module('WebPaige.Controllers.Profile', [])
       $rootScope.fixStyles();
 
 
+      $rootScope.resetPhoneNumberChecker();
+
       /**
        * Pass the self
        */

@@ -396,7 +396,9 @@ var ui = {
       },
       downloads: {
         app: 'Soon it will be downloadable.<br>',
-        manual: 'Download Manual'
+        manual: 'Download Manual',
+        inAction: 'Sending instructions...',
+        success: 'Check your inbox for instructions.'
       },
       loading: {
         general:    'Loading',
@@ -409,6 +411,12 @@ var ui = {
         loggingOut: 'Logging out...'
       },
       errors: {
+        phone: {
+          notValid: 'It seems not to be a phone number!',
+          invalidCountry: 'Invalid country code. Please enter a number from Netherlands.',
+          tooShort: ' (Number is too short.)',
+          tooLong: ' (Number is too long)'
+        },
         dashboard: {
           getOverviews: 'Error with getting group overviews!'
         },
@@ -474,6 +482,12 @@ var ui = {
       },
       confirms: {
         remove: 'Are you sure you want to delete it? You can not undo this action.'
+      },
+      success: {
+        phone: {
+          message: 'You have entered a correct number. Number is registered for ',
+          as: ' and number type is '
+        }
       }
     },
     nl: {
@@ -866,7 +880,9 @@ var ui = {
       },
       downloads: {
         app: 'Binnenkort te downloaden.',
-        manual: 'Download Handleiding'
+        manual: 'Download Handleiding',
+        inAction: 'Instructies aan het verzenden...',
+        success: 'Controleer uw inbox voor de instructies.'
       },
       loading: {
         general:    'Laden',
@@ -879,6 +895,12 @@ var ui = {
         loggingOut: 'Aan het uitloggen...'
       },
       errors: {
+        phone: {
+          notValid: 'Geen valide telefoonnummer!',
+          invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
+          tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
+          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)'
+        },
         dashboard: {
           getOverviews: 'Fout bij het ophalen van groep overzichten!'
         },
@@ -942,6 +964,12 @@ var ui = {
       },
       confirms: {
         remove: 'Weet u zeker dat u dit wilt verwijderen? U kunt dit niet ongedaan maken.'
+      },
+      success: {
+        phone: {
+          message: 'Ingevoerd telefoonnummer is correct. Nummer is geregistreerd in ',
+          as: ' als '
+        }
       }
     }
 };

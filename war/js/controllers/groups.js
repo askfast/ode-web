@@ -21,6 +21,9 @@ angular.module('WebPaige.Controllers.Groups', [])
       $rootScope.fixStyles();
 
 
+      $rootScope.resetPhoneNumberChecker();
+
+
       /**
        * Self this
        */

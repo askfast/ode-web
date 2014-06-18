@@ -164,15 +164,27 @@
                       value="{{data.resources.EmailAddress}}">
             </div>
           </div>
+
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.phone}}</label>
             <div class="controls">
-              <input  type="text" 
+              <input  type="text"
+                      id="inputPhoneNumber"
                       class="span3" 
                       ng-model="profilemeta.PhoneAddress"
+                      ng-change="phoneNumberParser(profilemeta.PhoneAddress)"
                       value="{{data.resources.PhoneAddress}}">
+              <p class="text-error" ng-show="!profilemeta.PhoneAddress">
+                <small><i>Please fill your phone number!</i></small>
+              </p>
+              <p class="text-error" ng-hide="phoneNumberParsed.result">
+                <small><i>{{phoneNumberParsed.message}}</i></small>
+              </p>
             </div>
           </div>
+
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.address}}</label>
             <div class="controls">

@@ -230,14 +230,31 @@
                         ng-model="memberForm.EmailAddress">
               </div>
             </div>
+
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.phone}}</label>
               <div class="controls">
-                <input  type="text" 
-                        class="span3" 
-                        ng-model="memberForm.PhoneAddress">
+                <input  type="text"
+                        id="inputPhoneNumber"
+                        class="span3"
+                        ng-model="memberForm.PhoneAddress"
+                        ng-change="phoneNumberParser(memberForm.PhoneAddress)">
+                <!--<p class="text-error" ng-show="!memberForm.PhoneAddress">-->
+                  <!--<small><i>Please fill your phone number!</i></small>-->
+                <!--</p>-->
+                <p class="text-error" ng-hide="phoneNumberParsed.result">
+                  <small><i>{{phoneNumberParsed.message}}</i></small>
+                </p>
+                <p class="text-success" ng-show="phoneNumberParsed.result">
+                  <small>
+                    <i>{{phoneNumberParsed.message}}</i>
+                  </small>
+                </p>
               </div>
             </div>
+
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.address}}</label>
               <div class="controls">
