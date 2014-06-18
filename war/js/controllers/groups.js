@@ -617,8 +617,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         if ($rootScope.phoneNumberParsed.result)
         {
-          // if (member && member.role.id)
-
           Profile.register(member).
             then(
             function (result)
@@ -633,8 +631,7 @@ angular.module('WebPaige.Controllers.Groups', [])
                 }
                 else if (result.error.status === 403)
                 {
-                  // If 403 Forbidden is thrown initialize the process again
-                  $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.failedRegistration);
 
                   $rootScope.statusBar.off();
 

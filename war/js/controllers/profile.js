@@ -284,6 +284,11 @@ angular.module('WebPaige.Controllers.Profile', [])
           timeline: false
         };
 
+        if (hash == 'edit')
+        {
+          $rootScope.phoneNumberParser($scope.profilemeta.PhoneAddress);
+        }
+
         $scope.views[hash] = true;
 
         $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
@@ -307,11 +312,34 @@ angular.module('WebPaige.Controllers.Profile', [])
       };
 
 
+      $scope.$watch(
+        'profilemeta.PhoneAddress',
+        function (value)
+        {
+          if (value == '')
+          {
+            $rootScope.resetPhoneNumberChecker();
+          }
+        }
+      );
+
+
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
+        if (!$rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
         $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
         /**
