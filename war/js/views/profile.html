@@ -175,11 +175,16 @@
                       ng-model="profilemeta.PhoneAddress"
                       ng-change="phoneNumberParser(profilemeta.PhoneAddress)"
                       value="{{data.resources.PhoneAddress}}">
-              <p class="text-error" ng-show="!profilemeta.PhoneAddress">
-                <small><i>Please fill your phone number!</i></small>
-              </p>
+              <!--<p class="text-error" ng-show="!profilemeta.PhoneAddress">-->
+                <!--<small><i>Please fill your phone number!</i></small>-->
+              <!--</p>-->
               <p class="text-error" ng-hide="phoneNumberParsed.result">
                 <small><i>{{phoneNumberParsed.message}}</i></small>
+              </p>
+              <p class="text-success" ng-show="phoneNumberParsed.result">
+                <small>
+                  <i>{{phoneNumberParsed.message}}</i>
+                </small>
               </p>
             </div>
           </div>
