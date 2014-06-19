@@ -2055,7 +2055,6 @@ angular.module('WebPaige')
       };
 
 
-
       $rootScope.resetPhoneNumberChecker = function ()
       {
         $rootScope.phoneNumberParsed = {};
