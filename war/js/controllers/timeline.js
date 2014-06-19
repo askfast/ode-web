@@ -886,7 +886,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
-          if (/planning/.test(values.group))
+          var element = angular.element(values.content),
+              secret = angular.fromJson(element.html());
+
+          if (secret.recursive)
           {
             if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
@@ -919,20 +922,19 @@ angular.module('WebPaige.Controllers.Timeline', [])
                     datetime: new Date(values.end).toISOString()
                   },
                   recursive: (values.group.match(/recursive/)) ? true : false,
-                  /**
-                   * INFO
-                   * First state is hard-coded
-                   * Maybe use the first one from array later on?
-                   */
                   state: 'com.ask-cs.State.Available'
                 };
               });
           }
           else
           {
+            var errorMessage = (/#timeline/.test(values.group)) ?
+                               $rootScope.ui.errors.timeline.notAuth :
+                               $rootScope.ui.errors.timeline.pastAdding;
+
             $scope.self.timeline.cancelAdd();
 
-            $rootScope.notifier.error($rootScope.ui.errors.timeline.notAuth);
+            $rootScope.notifier.error(errorMessage);
 
             $rootScope.$apply();
           }
@@ -942,6 +944,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
          */
         else
         {
+          console.log('coming from the form ->');
+
           var now = Date.now().getTime(),
               nowStamp = Math.abs(Math.floor(now / 1000));
 
@@ -949,7 +953,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
                       Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
                       Dater.convert.absolute(slot.start.date, slot.start.time, true);
 
-          if (start < nowStamp && slot.recursive == true)
+          if (start < nowStamp && slot.recursive == false)
           {
             start = nowStamp;
           }
