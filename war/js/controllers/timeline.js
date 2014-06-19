@@ -1046,7 +1046,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
       /**
        * Timeline on change
        */
-      $scope.__timelineOnChange = function (direct, original, slot, options)
+      $scope.timelineOnChange = function (direct, original, slot, options)
       {
         $rootScope.planboardSync.clear();
 
@@ -1323,7 +1323,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
       /**
        * Timeline on change
        */
-      $scope.timelineOnChange = function (direct, original, slot, options)
+      $scope.__timelineOnChange = function (direct, original, slot, options)
       {
         $rootScope.planboardSync.clear();
 
