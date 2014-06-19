@@ -37,6 +37,7 @@ angular.module('WebPaige',[
   'WebPaige.Controllers.Groups',
   'WebPaige.Controllers.Profile',
   'WebPaige.Controllers.Settings',
+  'WebPaige.Controllers.FAQ',
   'WebPaige.Controllers.Help',
   // services
   'WebPaige.Services.Timer',

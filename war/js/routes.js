@@ -244,6 +244,17 @@ angular.module('WebPaige')
 
 
       /**
+       * FAQ router
+       */
+        .when(
+        '/faq',
+        {
+          templateUrl: 'dist/views/faq.html',
+          controller: 'faq'
+        })
+
+
+      /**
        * Help router
        */
         .when(
