@@ -412,6 +412,12 @@ var ui = {
         loggingOut: 'Logging out...'
       },
       errors: {
+        email: {
+          required: 'Your email is required.',
+          min: 'Your email is required to be at least 3 characters.',
+          max: 'Your email cannot be longer than 20 characters.',
+          notValid: 'That is not a valid email. Please input a valid email.'
+        },
         phone: {
           notValid: 'It seems not to be a phone number!',
           invalidCountry: 'Invalid country code. Please enter a number from Netherlands.',
@@ -900,6 +906,12 @@ var ui = {
         loggingOut: 'Aan het uitloggen...'
       },
       errors: {
+        email: {
+          required: 'E-mail is verplicht!',
+          min: 'E-mail moet mimimaal 3 karakters te zijn!',
+          max: 'E-mail kan maximaal 50 karakters zijn!',
+          notValid: 'Dit is geen valid e-mail.'
+        },
         phone: {
           notValid: 'Geen valide telefoonnummer!',
           invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
