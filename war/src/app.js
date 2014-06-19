@@ -480,12 +480,12 @@ var ui = {
         },
         timeline: {
           query: 'There has been some problems with syncing planboard information. Please refresh your browser for getting the latest planboard information.',
-          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
-          add: 'Error with adding a new timeslot!',
-          change: 'Error with changing timeslot!',
-          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
-          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
-          remove: 'Error with removing timeslot!',
+          pastAdding: 'It is not allowed to add a planning in the past!',
+          add: 'Error with adding a new planning!',
+          change: 'Error with changing planning!',
+          pastChanging: 'Changing planning of past is not allowed!',
+          pastDeleting: 'Removing a past planning is not allowed!',
+          remove: 'Error with removing planning!',
           wisher: 'Error with changing wish value!',
           notAuth: 'It is not allowed to alter someone else\'s planning unless you do have a planning role. As a administrator/planner you can change the planning of others by clicking on their name from the list of members. You are then directed to another page for changing the planning of that member.'
         }
@@ -973,12 +973,12 @@ var ui = {
         timeline: {
           query: 'Er is iets fout gegaan bij het laden van de tijdlijndata. Vernieuw deze webpagina om het nogmaals te proberen.',
           pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
-          add: 'Error with adding a new timeslot!',
-          change: 'Error with changing timeslot!',
-          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
-          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
-          remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!',
+          add: 'Fout bij het toevoegen van een planning.',
+          change: 'Fout bij het wijzigen van een planning.',
+          pastChanging: 'Veranderen van planning in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van planning in het verleden is niet toegestaan!',
+          remove: 'Fout bij het verwijderen van een planning.',
+          wisher: 'Fout bij het wijzigen van de minimaale behoefte waarde.',
           notAuth: 'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.'
         }
       },
