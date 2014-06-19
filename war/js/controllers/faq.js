@@ -30,7 +30,8 @@ angular.module('WebPaige.Controllers.FAQ', [])
       {
         $scope.views = {
           web: false,
-          mobile: false
+          ios: false,
+          android: false
         };
 
         $scope.views[hash] = true;

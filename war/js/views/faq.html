@@ -22,10 +22,16 @@
             ng-click="setViewTo('web')"><span class="entypo">&#128187;</span> Web</a>
       </li>
 
-      <li class="{{(views.mobile==true) && 'active'}}">
-        <a  href="help#mobileTab"
+      <li class="{{(views.ios==true) && 'active'}}">
+        <a  href="help#iosTab"
             data-toggle="tab"
-            ng-click="setViewTo('mobile')"><span class="entypo">&#128241;</span> Mobiel</a>
+            ng-click="setViewTo('ios')"><span class="entypo">&#128241;</span> IOS</a>
+      </li>
+
+      <li class="{{(views.android==true) && 'active'}}">
+        <a  href="help#androidTab"
+            data-toggle="tab"
+            ng-click="setViewTo('android')"><span class="entypo">&#128241;</span> Android</a>
       </li>
 
     </ul>
@@ -193,10 +199,10 @@
 
 
 
-      <!-- mobileTab -->
-      <div class="tab-pane {{(views.mobile == true) && 'active'}}" id="mobileTab">
+      <!-- iosTab -->
+      <div class="tab-pane {{(views.ios == true) && 'active'}}" id="iosTab">
         <div class="tab-header">
-          <h3 class="pull-left">Standby Android & iOS App</h3>
+          <h3 class="pull-left">iOS</h3>
         </div>
         <hr>
 
@@ -263,7 +269,83 @@
         <p>Vestibulum non molestie magna. Morbi porta blandit convallis.</p>
         <br/>
       </div>
-      <!-- end mobileTab -->
+      <!-- end iosTab -->
+
+
+
+
+
+      <!-- androidTab -->
+      <div class="tab-pane {{(views.android == true) && 'active'}}" id="androidTab">
+        <div class="tab-header">
+          <h3 class="pull-left">Android</h3>
+        </div>
+        <hr>
+
+        <h4>Hoe download ik de app?</h4>
+        <iframe width="560"
+                height="315"
+                src="//www.youtube.com/embed/fepUaXchGAc"
+                frameborder="0"
+                allowfullscreen></iframe>
+        <p>Vestibulum non molestie magna. Morbi porta blandit convallis.</p>
+        <br/>
+
+        <h4>Hoe weet ik welke versie van de app ik gebruik?</h4>
+        <iframe width="560"
+                height="315"
+                src="//www.youtube.com/embed/fepUaXchGAc"
+                frameborder="0"
+                allowfullscreen></iframe>
+        <p>Vestibulum non molestie magna. Morbi porta blandit convallis.</p>
+        <br/>
+
+        <h4>Hoe zet ik mezelf voor de komende 6 uur op niet beschikbaar?</h4>
+        <iframe width="560"
+                height="315"
+                src="//www.youtube.com/embed/fepUaXchGAc"
+                frameborder="0"
+                allowfullscreen></iframe>
+        <p>Vestibulum non molestie magna. Morbi porta blandit convallis.</p>
+        <br/>
+
+        <h4>Hoe zet ik mezelf beschikbaar voor iedere dinsdagavond van 17:00-2300?</h4>
+        <iframe width="560"
+                height="315"
+                src="//www.youtube.com/embed/fepUaXchGAc"
+                frameborder="0"
+                allowfullscreen></iframe>
+        <p>Hoe stuur ik een bericht naar alle collega's in een groep (bijv. alle opstappers)?</p>
+        <br/>
+
+        <h4>How to send a message to all Opstappers?</h4>
+        <iframe width="560"
+                height="315"
+                src="//www.youtube.com/embed/fepUaXchGAc"
+                frameborder="0"
+                allowfullscreen></iframe>
+        <p>Vestibulum non molestie magna. Morbi porta blandit convallis.</p>
+        <br/>
+
+        <h4>Hoe zie ik mijn huidige status en die van de groep(en)?</h4>
+        <iframe width="560"
+                height="315"
+                src="//www.youtube.com/embed/fepUaXchGAc"
+                frameborder="0"
+                allowfullscreen></iframe>
+        <p>Vestibulum non molestie magna. Morbi porta blandit convallis.</p>
+        <br/>
+
+        <h4>Hoe zet ik de geo-fencing optie aan of uit?</h4>
+        <iframe width="560"
+                height="315"
+                src="//www.youtube.com/embed/fepUaXchGAc"
+                frameborder="0"
+                allowfullscreen></iframe>
+        <p>Vestibulum non molestie magna. Morbi porta blandit convallis.</p>
+        <br/>
+      </div>
+      <!-- end androidTab -->
 
 
 
