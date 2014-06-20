@@ -1052,11 +1052,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
         var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
-        var stampToMinute = function (stamp)
-        {
-          return Math.abs(Math.floor(stamp / 1000));
-        };
-
         if (! direct)
         {
           options = {
@@ -1081,13 +1076,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
           };
         }
 
-        original.start = stampToMinute(new Date(original.start).getTime());
-        original.end = stampToMinute(new Date(original.end).getTime());
+        original.start = new Date(original.start).getTime();
+        original.end = new Date(original.end).getTime();
 
-        options.start = stampToMinute(options.start);
-        options.end = stampToMinute(options.end);
-
-        var now = stampToMinute(Date.now().getTime());
+        var now = Date.now().getTime();
 
         var change = function ()
         {
@@ -1099,14 +1091,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
           console.log('changing and adding it ->');
         };
 
+        // check whether it is user's timeline
         if (/#timeline/.test(values.group))
         {
           alert('not allowed to change others!')
         }
         else
         {
-          console.log('it is user!');
-
+          // all recursive changes are allowed
           if (options.content.recursive)
           {
             console.log('changing allowed because it is recursive!');
@@ -1114,55 +1106,104 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
           else
           {
-            console.log('it is not recursive..');
-
+            // if both start and end falls in past do NOT allow it!
             if (options.start < now && options.end < now)
             {
               alert('not allowed!');
               return;
             }
 
-            if (options.start > now && options.end > now)
+            // if both start and end both in the future allow it!
+            if (options.start > now &&
+                options.end > now )
             {
-              console.log('allowing change because it is all in the future!');
-              change();
-              return;
+              if (original.start < now && original.end < now)
+              {
+                alert('not allowed!');
+              }
+
+              if (original.start < now && original.end > now)
+              {
+                changeAndAdd();
+              }
+
+              if (original.start > now && original.end > now)
+              {
+                change();
+              }
             }
 
+
+
+
+
+
+            // if start in past and end in future
+            // IMPORTANT: for all those mutations keep start as it is
             if (options.start < now && options.end > now)
             {
-            }
-              console.log('orignal ->', $scope.original);
-              console.log('new ->', options);
 
-            console.log('start ->', (original.start == options.start), original.start, options.start);
+              if (original.start < now && original.end < now)
+              {
+                alert('not allowed!');
+              }
 
-            if (original.start == options.start &&
-                original.end == options.end &&
-                original.content.state != options.content.state)
-            {
-              console.log('start and end same, just changing the state ->');
-              change();
+              if (original.start < now && original.end > now)
+              {
+                changeAndAdd();
+              }
+
+              if (original.start > now && original.end > now)
+              {
+                change();
+              }
+
+//              // if only end value changed
+//              if ((Math.abs(original.start - options.start) <= 60000) &&
+//                  original.end > now &&
+//                  options.end > now)
+//              {
+//                // if state is changed in this case
+//                if (original.content.state != options.content.state)
+//                {
+//                  console.log('start is in the past and end with state changed.');
+//                  changeAndAdd();
+//                }
+//                // state is same only period values changed
+//                else
+//                {
+//                  console.log('start in the past and only end changed.');
+//                  change();
+//                }
+//              }
+
             }
+
+//            // if start and end did not change and only state changed
+//            if ((Math.abs(original.start - options.start) <= 60000) &&
+//                (Math.abs(original.end - options.end) <= 60000) &&
+//                original.content.state != options.content.state)
+//            {
+//              // keep the period values same but add new slot with new state
+//              console.log('start and end same, just changing the state.');
+//              changeAndAdd();
+//            }
+
+
+
+
           }
         }
 
+
+
         // start in the <past and same> and end changed but still bigger than now --> change the current
-
         // start in the <past and same> and end is smaller than now --> change the current keeping old till now
-
         // start in the <past and same> and end changed and state changed --> change old and add new
-
         // start and end changed
-
         // start and end in the past --> trim the slot to original till now
-
         // start and end in the future --> change old slot till now and add new slot for the difference
-
         // start in the past and end in the future somewhere
-
-
-
 
 
         //        var notAllowed = function ()
