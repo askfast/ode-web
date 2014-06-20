@@ -2,6 +2,14 @@
 -----------------------------------------------------------------------------------------------------------
 
 2.3.18
+- feature: Added FAQ section with linked tutorial videos. 20-6-2014
+- fix: Solved issue with not creating planning for recursive timeline in past. 19-6-2014
+- fix: Improved user credetentials validation by registration. 19-6-2014
+- fix: Improved email validation. 19-6-2014
+- fix: Issue with not closing planning for in profile timeline section. 18-6-2014
+- feature: Phone number validation. 18-6-2014
+- feature: Enabling logging in for redirected users coming from portal. 18-6-2014
+- feature: User profile enhancements and fixes 17-6-2014
 
 2.3.17
 - feature: Auto logout when session expires 11-6-2014
