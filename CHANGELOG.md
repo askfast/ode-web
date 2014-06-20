@@ -2,6 +2,7 @@
 -----------------------------------------------------------------------------------------------------------
 
 2.3.18
+- release: Version release. 20-6-2014
 - feature: Added FAQ section with linked tutorial videos. 20-6-2014
 - fix: Solved issue with not creating planning for recursive timeline in past. 19-6-2014
 - fix: Improved user credetentials validation by registration. 19-6-2014
@@ -12,6 +13,7 @@
 - feature: User profile enhancements and fixes 17-6-2014
 
 2.3.17
+- release: Version release. 13-6-2014
 - feature: Auto logout when session expires 11-6-2014
 - feature: User deleting functionality. 5-6-2014
 - fix: Issue with not showing receiver or recipient name helped out. 4-6-2014
