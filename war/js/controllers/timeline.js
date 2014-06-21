@@ -1082,7 +1082,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
         var now = Date.now().getTime();
 
-        var callback = function (result, messages, add)
+        var callback = function (result, messages, addFn)
         {
           $rootScope.$broadcast('resetPlanboardViews');
 
@@ -1093,9 +1093,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
           else
           {
-            ! add && $rootScope.notifier.success(messages.success);
+            ! addFn && $rootScope.notifier.success(messages.success);
 
-            add && add();
+            addFn && addFn();
           }
 
           $scope.timeliner.refresh();
@@ -1103,13 +1103,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
           $rootScope.planboardSync.start();
         };
 
-        var change = function (original, options, add)
+        var change = function (changed, addFn)
         {
           $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
           Slots.change(
-            original,
-            options,
+            $scope.original,
+            changed,
             $scope.timeline.user.id
           ).then(
             function (result)
@@ -1120,7 +1120,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   error: $rootScope.ui.errors.timeline.change,
                   success: $rootScope.ui.planboard.slotChanged
                 },
-                add
+                addFn
               );
             }
           );
@@ -1145,17 +1145,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
           );
         };
 
-        var changeAndAdd = function (original, options, newly)
+        var changeAndAdd = function (oldOne, newOne)
         {
           change(
-            original,
-            options,
+            $scope.original,
+            oldOne,
             add(
               {
-                start: newly.start,
-                end: newly.end / 1000,
-                recursive: (newly.recursive) ? true : false,
-                text: newly.state
+                start: newOne.start,
+                end: newOne.end / 1000,
+                recursive: (newOne.recursive) ? true : false,
+                text: newOne.state
               }
             )
           );
@@ -1168,9 +1168,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
           $scope.timeliner.refresh();
         };
 
+        // It is already blocked at time-line level but for in case
         if (/#timeline/.test(values.group))
         {
-          $rootScope.notifier.error('Not allowed to change others');
+          $rootScope.notifier.error($rootScope.ui.errors.timeline.notAuth);
 
           $scope.timeliner.refresh();
         }
@@ -1178,7 +1179,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           if (options.content.recursive)
           {
-            change($scope.original, options);
+            change(options);
           }
           else
           {
@@ -1187,6 +1188,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
               notAllowedForPast();
               return;
             }
+
 
             if (options.start > now && options.end > now)
             {
@@ -1198,15 +1200,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
               if (original.start < now && original.end > now)
               {
-                // original.end = now;
                 changeAndAdd();
               }
 
               if (original.start > now && original.end > now)
               {
-                change($scope.original, options);
+                change(options);
               }
             }
+
 
             if (options.start < now && options.end > now)
             {
@@ -1218,15 +1220,58 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
               if (original.start < now && original.end > now)
               {
-                // original.end = now;
-                changeAndAdd();
+                if (options.content.state == original.content.state)
+                {
+                  change(
+                    {
+                      start: $scope.original.start,
+                      end: options.end,
+                      content: {
+                        recursive: options.content.recursive,
+                        state: options.content.state
+                      }
+                    }
+                  );
+                }
+                else
+                {
+                  changeAndAdd(
+                    {
+                      start: $scope.original.start,
+                      end: now,
+                      content: {
+                        recursive: $scope.original.content.recursive,
+                        state: $scope.original.content.state
+                      }
+                    },
+                    {
+                      start: now,
+                      end: options.end,
+                      content: {
+                        recursive: options.content.recursive,
+                        state: options.content.state
+                      }
+                    }
+                  );
+                }
               }
 
               if (original.start > now && original.end > now)
               {
-                change($scope.original, options);
+                change(
+                  {
+                    start: now,
+                    end: options.end,
+                    content: {
+                      recursive: options.content.recursive,
+                      state: options.content.state
+                    }
+                  }
+                );
               }
             }
+
+
           }
         }
       };
