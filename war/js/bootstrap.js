@@ -302,7 +302,8 @@ angular.module('WebPaige')
        * Callback function accepts <event, next, current>
        */
       $rootScope.$on(
-        '$routeChangeStart', function ()
+        '$routeChangeStart',
+        function ()
         {
           function resetLoaders ()
           {
@@ -371,7 +372,14 @@ angular.module('WebPaige')
 
           if (! $rootScope.location)
           {
-            ga('send', 'Undefined Page', $location.path());
+            try
+            {
+              ga('send', 'Undefined Page', $location.path());
+            }
+            catch (e)
+            {
+              console.log('something wrong with passing location to google analytics ->');
+            }
           }
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
