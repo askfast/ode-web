@@ -13162,50 +13162,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
        */
       $rootScope.planboardSync.start();
     }
-  ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;/*jslint node: true */
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
