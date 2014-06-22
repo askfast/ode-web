@@ -36,7 +36,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      },
 	      remove: {
 	        method: 'DELETE',
-	        params: {id:''}
+	        params: {id:''},
+          isArray: true
 	      },
 	      search: {
 	        method: 'POST',
@@ -609,13 +610,23 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	          /**
 	           * Group save call returns only uuid and that is parsed as json
 	           * by angular, this is a fix for converting returned object to plain string
+             *
+             * Added: 22 Jun 2014
+             * Strip $promise and $resolved objects from response as well, since new version
+             * of Angular does not unwrap promises.
 	           */
 	          var returned = '';
 
-	          angular.forEach(result, function (chr, i)
-	          {
-	            returned += chr;
-	          });
+	          angular.forEach(
+              result,
+              function (chr)
+              {
+                if (chr.length == 1 && !angular.isObject(chr))
+                {
+                  returned += chr;
+                }
+              }
+            );
 
 	          deferred.resolve(returned);
 	        },

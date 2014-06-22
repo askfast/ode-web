@@ -4741,7 +4741,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	      },
 	      remove: {
 	        method: 'DELETE',
-	        params: {id:''}
+	        params: {id:''},
+          isArray: true
 	      },
 	      search: {
 	        method: 'POST',
@@ -5314,13 +5315,23 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	          /**
 	           * Group save call returns only uuid and that is parsed as json
 	           * by angular, this is a fix for converting returned object to plain string
+             *
+             * Added: 22 Jun 2014
+             * Strip $promise and $resolved objects from response as well, since new version
+             * of Angular does not unwrap promises.
 	           */
 	          var returned = '';
 
-	          angular.forEach(result, function (chr, i)
-	          {
-	            returned += chr;
-	          });
+	          angular.forEach(
+              result,
+              function (chr)
+              {
+                if (chr.length == 1 && !angular.isObject(chr))
+                {
+                  returned += chr;
+                }
+              }
+            );
 
 	          deferred.resolve(returned);
 	        },
@@ -14902,7 +14913,6 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $rootScope.fixStyles();
 
-
       $rootScope.resetPhoneNumberChecker();
 
 
@@ -15578,10 +15588,12 @@ angular.module('WebPaige.Controllers.Groups', [])
        * Listen for incoming group delete calls
        */
       $rootScope.$on(
-        'fireGroupDelete', function (event, group)
+        'fireGroupDelete',
+        function (event, group)
         {
           $scope.deleteGroup(group.id);
-        });
+        }
+      );
 
 
       /**
@@ -15625,7 +15637,8 @@ angular.module('WebPaige.Controllers.Groups', [])
                      * TODO: Is this really supposed to be like this?
                      */
                     angular.forEach(
-                      data.groups, function (group, index)
+                      data.groups,
+                      function (group, index)
                       {
                         $scope.groups = data.groups;
 
@@ -15642,13 +15655,16 @@ angular.module('WebPaige.Controllers.Groups', [])
                             $location.search({uuid: data.groups[0].uuid});
                           }
                         );
-                      });
+                      }
+                    );
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
