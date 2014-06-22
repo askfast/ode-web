@@ -525,18 +525,25 @@ angular.module('WebPaige.Controllers.Login', [])
                                                 $rootScope.app.resources = got;
 
                                                 finalize();
-                                              })
+                                              });
                                           });
                                       }
                                     }
                                     else
                                     {
-                                      ga(
-                                        'send', 'pageview', {
-                                          'dimension1': resources.uuid,
-                                          'dimension2': $rootScope.app.domain
-                                        });
-                                      ga('send', 'event', 'Login', resources.uuid);
+                                      try
+                                      {
+                                        ga(
+                                          'send', 'pageview', {
+                                            'dimension1': resources.uuid,
+                                            'dimension2': $rootScope.app.domain
+                                          });
+                                        ga('send', 'event', 'Login', resources.uuid);
+                                      }
+                                      catch (err)
+                                      {
+                                        console.log('smth wrong with google analytics library!');
+                                      }
 
                                       finalize();
                                     }
