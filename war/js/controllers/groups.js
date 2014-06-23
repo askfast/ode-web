@@ -346,8 +346,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 
             $scope.selectionMaster = {};
 
-            // console.log(' $scope.selection ->', $scope.selection);
-
             $scope.selection = {};
 
             $scope.setViewTo('view');

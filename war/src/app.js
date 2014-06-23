@@ -10261,7 +10261,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 };
 
                 angular.forEach(
-                  pies, function (pie)
+                  pies,
+                  function (pie)
                   {
                     // Check whether if it is an array what data processor gives back
                     if (pie.weeks.current.state instanceof Array)
@@ -10307,7 +10308,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     delete(pie.weeks.current.state);
 
                     $scope.shortageHolders['shortages-' + pie.id] = false;
-                  });
+                  }
+                );
 
                 $scope.pies = pies;
               }
@@ -10316,11 +10318,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             function ()
             {
               angular.forEach(
-                $scope.pies, function (pie)
+                $scope.pies,
+                function (pie)
                 {
                   pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
                   pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
-                });
+                }
+              );
 
               function pieMaker ($id, id, _ratios)
               {
@@ -10349,7 +10353,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                         xratios = [];
 
                     angular.forEach(
-                      _ratios, function (ratio, index)
+                      _ratios,
+                      function (ratio, index)
                       {
                         if (ratio !== 0)
                         {
@@ -10359,27 +10364,29 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                               color: colorMap[index]
                             });
                         }
-                      });
+                      }
+                    );
 
                     ratios = ratios.sort(
-                      function (a, b)
-                      {
-                        return b.ratio - a.ratio;
-                      });
+                      function (a, b) { return b.ratio - a.ratio }
+                    );
 
                     angular.forEach(
-                      ratios, function (ratio)
+                      ratios,
+                      function (ratio)
                       {
                         colors.push(ratio.color);
                         xratios.push(ratio.ratio);
-                      });
+                      }
+                    );
 
                     var r = new Raphael($id + id),
                         pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
                   }, $rootScope.config.timers.TICKER);
               }
-            });
+            }
+          );
         }
         else
         {
@@ -10477,6 +10484,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 break;
 
               case 'manschap.4':
+                console.log('selection ->', selection);
                 $scope.saMembers.truck.push(
                   {
                     rank: 5,
@@ -10633,15 +10641,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.getAvailability = function (groupID, divisionID)
       {
-        if (! groupID)
-        {
-          groupID = $scope.current.group;
-        }
+        if (! groupID) { groupID = $scope.current.group }
 
-        if (! divisionID)
-        {
-          divisionID = $scope.current.division;
-        }
+        if (! divisionID) { divisionID = $scope.current.division }
 
         Slots.getMemberAvailabilities(groupID, divisionID)
           .then(
@@ -10982,7 +10984,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             {
               console.log('ERROR with getting p2000 for the first time!');
             }
-          });
+          }
+        );
       }
       else
       {
@@ -15206,8 +15209,6 @@ angular.module('WebPaige.Controllers.Groups', [])
             $scope.memberForm = {};
 
             $scope.selectionMaster = {};
-
-            // console.log(' $scope.selection ->', $scope.selection);
 
             $scope.selection = {};
 
