@@ -481,13 +481,17 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           null, message,
           function (result)
           {
-            var returned = '';
+            var uuid = '',
+                returned = '';
 
             angular.forEach(
               result,
               function (chr)
               {
-                returned += chr;
+                if (chr.length == 1 && !angular.isObject(chr))
+                {
+                  returned += chr;
+                }
               }
             );
 

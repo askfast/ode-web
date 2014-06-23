@@ -810,7 +810,7 @@ angular.module('WebPaige.Controllers.Messages', [])
                   .then(
                   function (messages)
                   {
-                    console.log('messages ->', angular.fromJson(messages));
+                    // console.log('messages ->', angular.fromJson(messages));
 
                     if (messages.error)
                     {
