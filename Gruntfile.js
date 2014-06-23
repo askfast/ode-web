@@ -65,6 +65,7 @@ module.exports = function (grunt)
             'war/js/controllers/groups.js',
             'war/js/controllers/profile.js',
             'war/js/controllers/settings.js',
+            'war/js/controllers/faq.js',
             'war/js/controllers/help.js'
           ],
           'war/src/plugins.js': [
@@ -143,6 +144,7 @@ module.exports = function (grunt)
           'war/dist/views/groups-wish.html':              'war/js/views/groups-wish.html',
           'war/dist/views/profile.html':                  'war/js/views/profile.html',
           'war/dist/views/settings.html':                 'war/js/views/settings.html',
+          'war/dist/views/faq.html':                     'war/js/views/faq.html',
           'war/dist/views/help.html':                     'war/js/views/help.html'
         }
       }

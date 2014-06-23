@@ -89,6 +89,8 @@
             <dd>{{data.resources.PostZip}}</dd>
           <dt>{{ui.profile.city}}</dt>
             <dd>{{data.resources.PostCity}}</dd>
+          <dt>{{ui.profile.username}}</dt>
+            <dd>{{data.resources.uuid}}</dd>
         </dl>
         <!-- end profile info -->
 
@@ -104,11 +106,15 @@
         <div style="overflow: hidden; height: 35px">
           <h3 style="margin-top: 0;" class="pull-left">{{ui.profile.editProfile}}</h3>
 
-          <a href="#deleteUserModal"
-             role="button"
-             class="btn btn-danger pull-right"
-             data-toggle="modal"
-             ng-hide="app.resources.role > 1">{{ui.profile.remove.title}}</a>
+          <div ng-hide="app.resources.uuid == profilemeta.uuid">
+            <button ng-click="showDeleteUserModal()"
+                    role="button"
+                    class="btn btn-danger pull-right"
+                    data-toggle="modal"
+                    ng-hide="app.resources.role > 1">
+              {{ui.profile.remove.title}}
+            </button>
+          </div>
 
         </div>
         <!-- end tab header -->
@@ -116,7 +122,8 @@
         <hr>
 
         <!-- edit profile form -->
-        <form class="form-vertical">
+        <form class="form-vertical"
+              name="profileForm">
 
           <div class="control-group"
                ng-hide="app.resources.role > 2">
@@ -149,24 +156,68 @@
                       value="{{data.resources.lastName}}">
             </div>
           </div>
+
+
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.email}}</label>
             <div class="controls">
-              <input  type="text" 
-                      class="span4" 
+              <input  type="email"
+                      name="email"
+                      class="span4"
                       ng-model="profilemeta.EmailAddress"
-                      value="{{data.resources.EmailAddress}}">
+                      ng-minlength=3
+                      ng-maxlength=50
+                      value="{{data.resources.EmailAddress}}" />
+              <div class="error-container"
+                   ng-show="profileForm.email.$dirty && profileForm.email.$invalid">
+                <p class="text-error"
+                   ng-show="profileForm.email.$error.minlength">
+                  <small>
+                    <i>{{ui.errors.email.min}}</i>
+                  </small>
+                </p>
+                <p class="text-error"
+                   ng-show="profileForm.email.$error.email">
+                  <small>
+                    <i>{{ui.errors.email.notValid}}</i>
+                  </small>
+                </p>
+                <p class="text-error"
+                   ng-show="profileForm.email.$error.maxlength">
+                  <small>
+                    <i>{{ui.errors.email.max}}</i>
+                  </small>
+                </p>
+              </div>
             </div>
           </div>
+
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.phone}}</label>
             <div class="controls">
-              <input  type="text" 
+              <input  type="text"
+                      id="inputPhoneNumber"
                       class="span3" 
                       ng-model="profilemeta.PhoneAddress"
+                      ng-change="phoneNumberParser(profilemeta.PhoneAddress)"
                       value="{{data.resources.PhoneAddress}}">
+              <!--<p class="text-error" ng-show="!profilemeta.PhoneAddress">-->
+                <!--<small><i>Please fill your phone number!</i></small>-->
+              <!--</p>-->
+              <p class="text-error" ng-hide="phoneNumberParsed.result">
+                <small><i>{{phoneNumberParsed.message}}</i></small>
+              </p>
+              <p class="text-success" ng-show="phoneNumberParsed.result">
+                <small>
+                  <i>{{phoneNumberParsed.message}}</i>
+                </small>
+              </p>
             </div>
           </div>
+
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.address}}</label>
             <div class="controls">
@@ -188,10 +239,20 @@
           <div class="control-group">
             <label class="control-label">{{ui.profile.city}}</label>
             <div class="controls">
-              <input  type="text" 
-                      class="span3" 
+              <input  type="text"
+                      class="span3"
                       ng-model="profilemeta.PostCity"
                       value="{{data.resources.PostCity}}">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ui.profile.username}}</label>
+            <div class="controls">
+              <input  type="text"
+                      class="span3"
+                      ng-model="profilemeta.uuid"
+                      value="{{data.resources.uuid}}"
+                      disabled>
             </div>
           </div>
 
@@ -394,12 +455,14 @@
 
 
         <!-- slot controls -->
-        <div id="form-open" class="row-fluid" ng-show="forms.add || forms.edit">
+        <div id="form-open"
+             class="row-fluid"
+             ng-show="forms.add || forms.edit">
           <form class="form-inline form-toggled">
 
 
             <!-- close btn -->
-            <button ng-click="resetInlineForms()" 
+            <button ng-click="resetInlineForms(); forms.add = false; forms.edit = false;"
                     class="close">&times;</button>
             <!-- end close btn -->
 

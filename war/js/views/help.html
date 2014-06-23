@@ -1,10 +1,14 @@
 <div class="page-header">
   <h2>{{ui.help.header}}</h2>
-  <!-- <div class="btn-group pull-right">
-    <button type="submit" 
-            ng-click="downloadManual()" 
-            class="btn btn-success">{{ui.downloads.manual}}</button>
-  </div> -->
+  <div class="btn-group pull-right"
+       ng-show="(config.profile.meta=='knrm')">
+    <a href="../docs/manual.pdf"
+       target="_blank"
+       class="btn btn-success">
+      <i class="icon-book icon-white"></i>
+      {{ui.downloads.manual}}
+    </a>
+  </div>
 </div>
 
 
@@ -74,7 +78,7 @@
 
 
       <!-- dashboardTab -->
-      <div class="tab-pane {{(views.dashboard == true == true) && 'active'}}" id="dashboardTab">
+      <div class="tab-pane {{(views.dashboard == true) && 'active'}}" id="dashboardTab">
         <div class="tab-header">
           <h3 class="pull-left">{{ui.dashboard.dashboard}}</h3>
         </div>
@@ -104,7 +108,7 @@
 
 
       <!-- planboardTab -->
-      <div class="tab-pane {{(views.planboard == true == true) && 'active'}}" id="planboardTab">
+      <div class="tab-pane {{(views.planboard == true) && 'active'}}" id="planboardTab">
         <div class="tab-header">
           <h3 class="pull-left">{{ui.planboard.planboard}}</h3>
         </div>
@@ -163,7 +167,7 @@
 
 
       <!-- messagesTab -->
-      <div class="tab-pane {{(views.messages == true == true) && 'active'}}" id="messagesTab">
+      <div class="tab-pane {{(views.messages == true) && 'active'}}" id="messagesTab">
         <div class="tab-header">
           <h3 class="pull-left">{{ui.message.messages}}</h3>
         </div>
@@ -225,7 +229,7 @@
 
 
       <!-- groupsTab -->
-      <div class="tab-pane {{(views.groups == true == true) && 'active'}}" id="groupsTab">
+      <div class="tab-pane {{(views.groups == true) && 'active'}}" id="groupsTab">
         <div class="tab-header">
           <h3 class="pull-left">{{ui.groups.groups}}</h3>
         </div>
@@ -272,7 +276,7 @@
 
 
       <!-- profileTab -->
-      <div class="tab-pane {{(views.profile == true == true) && 'active'}}" id="profileTab">
+      <div class="tab-pane {{(views.profile == true) && 'active'}}" id="profileTab">
         <div class="tab-header">
           <h3 class="pull-left">{{ui.profile.profile}}</h3>
         </div>
@@ -288,7 +292,7 @@
 
 
       <!-- settingsTab -->
-      <div class="tab-pane {{(views.settings == true == true) && 'active'}}" id="settingsTab">
+      <div class="tab-pane {{(views.settings == true) && 'active'}}" id="settingsTab">
         <div class="tab-header">
           <h3 class="pull-left">{{ui.settings.settings}}</h3>
         </div>
@@ -307,7 +311,7 @@
 
 
       <!-- supportTab -->
-      <div class="tab-pane {{(views.support == true == true) && 'active'}}" id="supportTab">
+      <div class="tab-pane {{(views.support == true) && 'active'}}" id="supportTab">
         <div class="tab-header">
           <h3 class="pull-left">{{ui.help.support}}</h3>
         </div>

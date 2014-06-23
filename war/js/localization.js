@@ -347,6 +347,7 @@ var ui = {
         address: 'Address',
         postcode: 'Postcode',
         city: 'City',
+        username: 'Username',
         editProfile: 'Edit Profile',
         name: 'Name',
         saveProfile: 'Save Profile',
@@ -356,8 +357,8 @@ var ui = {
         newPassRepeat: 'New password (Repeat)',
         changePass: 'Change password',
         newAvail: 'New Availability',
-        // saveProfile: 'Saving profile information..',
-        refreshing: 'Refreshing profile information..',
+        // saveProfile: 'Saving profile information...',
+        refreshing: 'Refreshing profile information...',
         dataChanged: 'Profile data is succesfully changed.',
         pleaseFill: 'Please fill all fields!',
         passNotMatch: 'Provided passwords do not match! Please try it again.',
@@ -365,10 +366,11 @@ var ui = {
         passChanged: 'Password is succesfully changed.',
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
-        changingTimeslot: 'Changing a timeslot..',
+        changingTimeslot: 'Changing a timeslot...',
         timeslotChanged: 'Timeslot is succesfully changed.',
         passwordChangeWarning: 'Warning! with this option you will change password this user.',
         remove: {
+          inProgress: 'Deleting user...',
           title: 'Delete user',
           info: 'This action deletes user completely from the system. There is no undo on this action.',
           button: 'Delete this user',
@@ -395,7 +397,9 @@ var ui = {
       },
       downloads: {
         app: 'Soon it will be downloadable.<br>',
-        manual: 'Download Manual'
+        manual: 'Download Manual',
+        inAction: 'Sending instructions...',
+        success: 'Check your inbox for instructions.'
       },
       loading: {
         general:    'Loading',
@@ -408,6 +412,19 @@ var ui = {
         loggingOut: 'Logging out...'
       },
       errors: {
+        email: {
+          required: 'Your email is required.',
+          min: 'Your email is required to be at least 3 characters.',
+          max: 'Your email cannot be longer than 20 characters.',
+          notValid: 'That is not a valid email. Please input a valid email.'
+        },
+        phone: {
+          notValid: 'It seems not to be a phone number!',
+          invalidCountry: 'Invalid country code. Please enter a number from Netherlands.',
+          tooShort: ' (Number is too short.)',
+          tooLong: ' (Number is too long)',
+          notValidOnSubmit: 'Please enter a valid telephone number to save.'
+        },
         dashboard: {
           getOverviews: 'Error with getting group overviews!'
         },
@@ -421,7 +438,9 @@ var ui = {
           groupSubmit: 'Error with saving group!',
           memberSubmitRegistered: 'Username is already registered!',
           memberSubmitRegister: 'Error with registering a member!',
-          deleteGroup: 'Error with deleting a group!'
+          deleteGroup: 'Error with deleting a group!',
+          emptyUserCredentials: 'Username or password can not be left empty!',
+          failedRegistration: 'Registering a new user is failed. Please try again.'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -461,18 +480,24 @@ var ui = {
         },
         timeline: {
           query: 'There has been some problems with syncing planboard information. Please refresh your browser for getting the latest planboard information.',
-          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
-          add: 'Error with adding a new timeslot!',
-          change: 'Error with changing timeslot!',
-          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
-          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
-          remove: 'Error with removing timeslot!',
+          pastAdding: 'It is not allowed to add a planning in the past!',
+          add: 'Error with adding a new planning!',
+          change: 'Error with changing planning!',
+          pastChanging: 'Changing planning of past is not allowed!',
+          pastDeleting: 'Removing a past planning is not allowed!',
+          remove: 'Error with removing planning!',
           wisher: 'Error with changing wish value!',
           notAuth: 'It is not allowed to alter someone else\'s planning unless you do have a planning role. As a administrator/planner you can change the planning of others by clicking on their name from the list of members. You are then directed to another page for changing the planning of that member.'
         }
       },
       confirms: {
         remove: 'Are you sure you want to delete it? You can not undo this action.'
+      },
+      success: {
+        phone: {
+          message: 'You have entered a correct number. Number is registered for ',
+          as: ' and number type is '
+        }
       }
     },
     nl: {
@@ -816,6 +841,7 @@ var ui = {
         address: 'Adres',
         postcode: 'Postcode',
         city: 'Stad',
+        username: 'Gebruikersnaam',
         editProfile: 'Profiel wijzigen',
         name: 'Naam',
         saveProfile: 'Profiel opslaan',
@@ -838,6 +864,7 @@ var ui = {
         timeslotChanged: 'Tijdslot succesvol gewijzigd.',
         passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.',
         remove: {
+          inProgress: 'Gebruiker aan het verwijderen...',
           title: 'Verwijder gebruiker',
           info: 'Deze actie verwijdert de gebruiker volledig uit het systeem. Dit kan niet meer ongedaan worden.',
           button: 'Verwijder deze gebruiker',
@@ -864,7 +891,9 @@ var ui = {
       },
       downloads: {
         app: 'Binnenkort te downloaden.',
-        manual: 'Download Handleiding'
+        manual: 'Download Handleiding',
+        inAction: 'Instructies aan het verzenden...',
+        success: 'Controleer uw inbox voor de instructies.'
       },
       loading: {
         general:    'Laden',
@@ -877,6 +906,19 @@ var ui = {
         loggingOut: 'Aan het uitloggen...'
       },
       errors: {
+        email: {
+          required: 'E-mail is verplicht!',
+          min: 'E-mail moet mimimaal 3 karakters te zijn!',
+          max: 'E-mail kan maximaal 50 karakters zijn!',
+          notValid: 'Dit is geen valid e-mail.'
+        },
+        phone: {
+          notValid: 'Geen valide telefoonnummer!',
+          invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
+          tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
+          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)',
+          notValidOnSubmit: 'Vul alstublieft een geldig telefoonnummer in om op te slaan.'
+        },
         dashboard: {
           getOverviews: 'Fout bij het ophalen van groep overzichten!'
         },
@@ -890,7 +932,9 @@ var ui = {
           groupSubmit: 'Fout bij het opslaan van de groep!',
           memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
           memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
-          deleteGroup: 'Fout bij het verwijderen van een groep!'
+          deleteGroup: 'Fout bij het verwijderen van een groep!',
+          emptyUserCredentials: 'Vul gebruikersnaam en wachtwoord in!',
+          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.'
         },
         login: {
           changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
@@ -929,17 +973,23 @@ var ui = {
         timeline: {
           query: 'Er is iets fout gegaan bij het laden van de tijdlijndata. Vernieuw deze webpagina om het nogmaals te proberen.',
           pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
-          add: 'Error with adding a new timeslot!',
-          change: 'Error with changing timeslot!',
-          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
-          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
-          remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!',
+          add: 'Fout bij het toevoegen van een planning.',
+          change: 'Fout bij het wijzigen van een planning.',
+          pastChanging: 'Veranderen van planning in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van planning in het verleden is niet toegestaan!',
+          remove: 'Fout bij het verwijderen van een planning.',
+          wisher: 'Fout bij het wijzigen van de minimaale behoefte waarde.',
           notAuth: 'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.'
         }
       },
       confirms: {
         remove: 'Weet u zeker dat u dit wilt verwijderen? U kunt dit niet ongedaan maken.'
+      },
+      success: {
+        phone: {
+          message: 'Ingevoerd telefoonnummer is correct. Nummer is geregistreerd in ',
+          as: ' als '
+        }
       }
     }
 };

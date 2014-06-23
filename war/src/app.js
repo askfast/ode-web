@@ -347,6 +347,7 @@ var ui = {
         address: 'Address',
         postcode: 'Postcode',
         city: 'City',
+        username: 'Username',
         editProfile: 'Edit Profile',
         name: 'Name',
         saveProfile: 'Save Profile',
@@ -356,8 +357,8 @@ var ui = {
         newPassRepeat: 'New password (Repeat)',
         changePass: 'Change password',
         newAvail: 'New Availability',
-        // saveProfile: 'Saving profile information..',
-        refreshing: 'Refreshing profile information..',
+        // saveProfile: 'Saving profile information...',
+        refreshing: 'Refreshing profile information...',
         dataChanged: 'Profile data is succesfully changed.',
         pleaseFill: 'Please fill all fields!',
         passNotMatch: 'Provided passwords do not match! Please try it again.',
@@ -365,10 +366,11 @@ var ui = {
         passChanged: 'Password is succesfully changed.',
         passwrong: 'Given current password is wrong! Please try it again.',
         newTimeslotAdded: 'New timeslot added successfully.',
-        changingTimeslot: 'Changing a timeslot..',
+        changingTimeslot: 'Changing a timeslot...',
         timeslotChanged: 'Timeslot is succesfully changed.',
         passwordChangeWarning: 'Warning! with this option you will change password this user.',
         remove: {
+          inProgress: 'Deleting user...',
           title: 'Delete user',
           info: 'This action deletes user completely from the system. There is no undo on this action.',
           button: 'Delete this user',
@@ -395,7 +397,9 @@ var ui = {
       },
       downloads: {
         app: 'Soon it will be downloadable.<br>',
-        manual: 'Download Manual'
+        manual: 'Download Manual',
+        inAction: 'Sending instructions...',
+        success: 'Check your inbox for instructions.'
       },
       loading: {
         general:    'Loading',
@@ -408,6 +412,19 @@ var ui = {
         loggingOut: 'Logging out...'
       },
       errors: {
+        email: {
+          required: 'Your email is required.',
+          min: 'Your email is required to be at least 3 characters.',
+          max: 'Your email cannot be longer than 20 characters.',
+          notValid: 'That is not a valid email. Please input a valid email.'
+        },
+        phone: {
+          notValid: 'It seems not to be a phone number!',
+          invalidCountry: 'Invalid country code. Please enter a number from Netherlands.',
+          tooShort: ' (Number is too short.)',
+          tooLong: ' (Number is too long)',
+          notValidOnSubmit: 'Please enter a valid telephone number to save.'
+        },
         dashboard: {
           getOverviews: 'Error with getting group overviews!'
         },
@@ -421,7 +438,9 @@ var ui = {
           groupSubmit: 'Error with saving group!',
           memberSubmitRegistered: 'Username is already registered!',
           memberSubmitRegister: 'Error with registering a member!',
-          deleteGroup: 'Error with deleting a group!'
+          deleteGroup: 'Error with deleting a group!',
+          emptyUserCredentials: 'Username or password can not be left empty!',
+          failedRegistration: 'Registering a new user is failed. Please try again.'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -461,18 +480,24 @@ var ui = {
         },
         timeline: {
           query: 'There has been some problems with syncing planboard information. Please refresh your browser for getting the latest planboard information.',
-          pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
-          add: 'Error with adding a new timeslot!',
-          change: 'Error with changing timeslot!',
-          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
-          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
-          remove: 'Error with removing timeslot!',
+          pastAdding: 'It is not allowed to add a planning in the past!',
+          add: 'Error with adding a new planning!',
+          change: 'Error with changing planning!',
+          pastChanging: 'Changing planning of past is not allowed!',
+          pastDeleting: 'Removing a past planning is not allowed!',
+          remove: 'Error with removing planning!',
           wisher: 'Error with changing wish value!',
           notAuth: 'It is not allowed to alter someone else\'s planning unless you do have a planning role. As a administrator/planner you can change the planning of others by clicking on their name from the list of members. You are then directed to another page for changing the planning of that member.'
         }
       },
       confirms: {
         remove: 'Are you sure you want to delete it? You can not undo this action.'
+      },
+      success: {
+        phone: {
+          message: 'You have entered a correct number. Number is registered for ',
+          as: ' and number type is '
+        }
       }
     },
     nl: {
@@ -816,6 +841,7 @@ var ui = {
         address: 'Adres',
         postcode: 'Postcode',
         city: 'Stad',
+        username: 'Gebruikersnaam',
         editProfile: 'Profiel wijzigen',
         name: 'Naam',
         saveProfile: 'Profiel opslaan',
@@ -838,6 +864,7 @@ var ui = {
         timeslotChanged: 'Tijdslot succesvol gewijzigd.',
         passwordChangeWarning: 'Let op! Hiermee wijzigt u het wachtwoord van deze persoon.',
         remove: {
+          inProgress: 'Gebruiker aan het verwijderen...',
           title: 'Verwijder gebruiker',
           info: 'Deze actie verwijdert de gebruiker volledig uit het systeem. Dit kan niet meer ongedaan worden.',
           button: 'Verwijder deze gebruiker',
@@ -864,7 +891,9 @@ var ui = {
       },
       downloads: {
         app: 'Binnenkort te downloaden.',
-        manual: 'Download Handleiding'
+        manual: 'Download Handleiding',
+        inAction: 'Instructies aan het verzenden...',
+        success: 'Controleer uw inbox voor de instructies.'
       },
       loading: {
         general:    'Laden',
@@ -877,6 +906,19 @@ var ui = {
         loggingOut: 'Aan het uitloggen...'
       },
       errors: {
+        email: {
+          required: 'E-mail is verplicht!',
+          min: 'E-mail moet mimimaal 3 karakters te zijn!',
+          max: 'E-mail kan maximaal 50 karakters zijn!',
+          notValid: 'Dit is geen valid e-mail.'
+        },
+        phone: {
+          notValid: 'Geen valide telefoonnummer!',
+          invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
+          tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
+          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)',
+          notValidOnSubmit: 'Vul alstublieft een geldig telefoonnummer in om op te slaan.'
+        },
         dashboard: {
           getOverviews: 'Fout bij het ophalen van groep overzichten!'
         },
@@ -890,7 +932,9 @@ var ui = {
           groupSubmit: 'Fout bij het opslaan van de groep!',
           memberSubmitRegistered: 'Gebruikersnaam bestaat al!',
           memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
-          deleteGroup: 'Fout bij het verwijderen van een groep!'
+          deleteGroup: 'Fout bij het verwijderen van een groep!',
+          emptyUserCredentials: 'Vul gebruikersnaam en wachtwoord in!',
+          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.'
         },
         login: {
           changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
@@ -929,17 +973,23 @@ var ui = {
         timeline: {
           query: 'Er is iets fout gegaan bij het laden van de tijdlijndata. Vernieuw deze webpagina om het nogmaals te proberen.',
           pastAdding: 'Invoer van tijden in het verleden is niet toegestaan!',
-          add: 'Error with adding a new timeslot!',
-          change: 'Error with changing timeslot!',
-          pastChanging: 'Veranderen van tijden in het verleden is niet toegestaan!',
-          pastDeleting: 'Verwijderen van tijden in het verleden is niet toegestaan!',
-          remove: 'Error with removing timeslot!',
-          wisher: 'Error with changing wish value!',
+          add: 'Fout bij het toevoegen van een planning.',
+          change: 'Fout bij het wijzigen van een planning.',
+          pastChanging: 'Veranderen van planning in het verleden is niet toegestaan!',
+          pastDeleting: 'Verwijderen van planning in het verleden is niet toegestaan!',
+          remove: 'Fout bij het verwijderen van een planning.',
+          wisher: 'Fout bij het wijzigen van de minimaale behoefte waarde.',
           notAuth: 'Het is niet toegestaan om wijzigingen in de agenda van anderen aan te brengen, tenzij u planner of beheer rol heeft. Als beheerder/planner kunt u de planning van anderen wijzigen door links van agenda balk de gebruikersnaam te selecteren. U krijgt dan de mogelijkheid om in een apart scherm de wijzigingen aan te brengen.'
         }
       },
       confirms: {
         remove: 'Weet u zeker dat u dit wilt verwijderen? U kunt dit niet ongedaan maken.'
+      },
+      success: {
+        phone: {
+          message: 'Ingevoerd telefoonnummer is correct. Nummer is geregistreerd in ',
+          as: ' als '
+        }
       }
     }
 };;/*jslint node: true */
@@ -981,6 +1031,7 @@ angular.module('WebPaige',[
   'WebPaige.Controllers.Groups',
   'WebPaige.Controllers.Profile',
   'WebPaige.Controllers.Settings',
+  'WebPaige.Controllers.FAQ',
   'WebPaige.Controllers.Help',
   // services
   'WebPaige.Services.Timer',
@@ -1017,7 +1068,8 @@ if ('localStorage' in window && window['localStorage'] !== null)
       { url: 'libs/bootstrap-timepicker/bootstrap-timepicker.min.js' },
       { url: 'libs/daterangepicker/1.1.0/daterangepicker.min.js' },
       { url: 'libs/sugar/1.3.7/sugar.min.js' },
-      { url: 'libs/raphael/2.1.0/raphael-min.js' }
+      { url: 'libs/raphael/2.1.0/raphael-min.js' },
+      { url: 'libs/web-lib-phonenumber/libphonenumber.js' }
     )
     .then(function ()
       {
@@ -1046,7 +1098,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.17',
+    version:  '2.3.18',
     lang:     'nl',
 
     fullscreen: true,
@@ -1458,6 +1510,17 @@ angular.module('WebPaige')
 
 
       /**
+       * FAQ router
+       */
+        .when(
+        '/faq',
+        {
+          templateUrl: 'dist/views/faq.html',
+          controller: 'faq'
+        })
+
+
+      /**
        * Help router
        */
         .when(
@@ -1494,500 +1557,621 @@ angular.module('WebPaige')
  * Initial run functions
  */
 angular.module('WebPaige')
-.run(
-[
-  '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
-  function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
-  {
-    /**
-     * Pass config and init dynamic config values
-     */
-    $rootScope.config = $config;
-
-    $rootScope.config.init();
-
-
-    /**
-     * Turn off the display of notification on refresh @ login page
-     */
-    $('#notification').removeClass('ng-cloak');
-
-
-    /**
-     * TODO: Move these checks to jquery.browser
-     * Pass Jquery browser data to angular
-     */
-    $rootScope.browser = $.browser;
-
-    angular.extend($rootScope.browser, { screen: $window.screen });
-
-    if ($rootScope.browser.ios)
+  .run(
+  [
+    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
+    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
     {
-      angular.extend($rootScope.browser, {
-        landscape:    !!(Math.abs ($window.orientation) == 90),
-        portrait:     !!(Math.abs ($window.orientation) != 90)
-      });
-    }
-    else
-    {
-      angular.extend($rootScope.browser, {
-        landscape:    !!(Math.abs ($window.orientation) != 90),
-        portrait:     !!(Math.abs ($window.orientation) == 90)
-      });
-    }
+      /**
+       * Pass config and init dynamic config values
+       */
+      $rootScope.config = $config;
 
-    $window.onresize = function ()
-    {
-      $rootScope.browser.screen = $window.screen;
-    };
+      $rootScope.config.init();
 
-    $window.onorientationchange = function ()
-    {
-      $rootScope.$apply(function ()
+
+      /**
+       * Turn off the display of notification on refresh @ login page
+       */
+      $('#notification').removeClass('ng-cloak');
+
+
+      /**
+       * TODO: Move these checks to jquery.browser
+       * Pass Jquery browser data to angular
+       */
+      $rootScope.browser = $.browser;
+
+      angular.extend($rootScope.browser, { screen: $window.screen });
+
+      if ($rootScope.browser.ios)
       {
-        if ($rootScope.browser.ios)
-        {
-          angular.extend($rootScope.browser, {
-            landscape:    !!(Math.abs ($window.orientation) == 90),
-            portrait:     !!(Math.abs ($window.orientation) != 90)
+        angular.extend(
+          $rootScope.browser, {
+            landscape: ! ! (Math.abs($window.orientation) == 90),
+            portrait: ! ! (Math.abs($window.orientation) != 90)
           });
-        }
-        else
-        {
-          angular.extend($rootScope.browser, {
-            landscape:    !!(Math.abs ($window.orientation) != 90),
-            portrait:     !!(Math.abs ($window.orientation) == 90)
-          });
-        }
-      });
-    };
-
-
-    /**
-     * Default language and change language
-     */
-    $rootScope.changeLanguage = function (lang)
-    {
-      $rootScope.ui = ui[lang];
-    };
-
-    $rootScope.ui = ui[$rootScope.config.lang];
-
-
-    /**
-     * If periods are not present calculate them
-     */
-    if (!Storage.get('periods'))
-    {
-      Dater.registerPeriods();
-    }
-
-
-    /**
-     * Set important info back if refreshed
-     */
-    $rootScope.app = $rootScope.app || {};
-
-
-    /**
-     * Set up resources
-     */
-    $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
-	
-    $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
-
-    $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
-
-    angular.forEach(
-      angular.fromJson(Storage.get('states')),
-      function (state)
-      {
-        $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
       }
-    );
+      else
+      {
+        angular.extend(
+          $rootScope.browser, {
+            landscape: ! ! (Math.abs($window.orientation) != 90),
+            portrait: ! ! (Math.abs($window.orientation) == 90)
+          });
+      }
 
-    var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
-
-    if (registeredNotifications)
-    {
-      $rootScope.registeredNotifications = registeredNotifications;
-    }
-    else
-    {
-      Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
-    }
-
-    $rootScope.registerNotification = function (setting, value)
-    {
-      $rootScope.registeredNotifications[setting] = value;
-
-      Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
-    };
-
-
-    /**
-     * Count unread messages
-     */
-    if (!$rootScope.app.unreadMessages)
-    {
-      Messages.unreadCount();
-    }
-
-    /**
-     * Initialize empty guard data container for smart alarming
-     */
-    if (angular.fromJson(Storage.get('guard')))
-    {
-     $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
-    }
-    else
-    {
-      // TODO: Some changes in the constructor. Review this later on
-      $rootScope.app.guard = {
-        monitor:            '',
-        role:               '',
-        currentState:       '',
-        currentStateClass:  ''
+      $window.onresize = function ()
+      {
+        $rootScope.browser.screen = $window.screen;
       };
-    }
 
-
-    /**
-     * Show action loading messages
-     */
-    $rootScope.statusBar =
-    {
-      init: function ()
+      $window.onorientationchange = function ()
       {
-        $rootScope.loading = {
-          status: false,
-          message: 'Aan het laden..'
-        };
-
-        $rootScope.app.preloader = {
-          status: false,
-          total:  0,
-          count:  0
-        };
-      },
-
-      display: function (message)
-      {
-        $rootScope.app.preloader.status = false;
-
-        $rootScope.loading = {
-          status:   true,
-          message:  message
-        };
-      },
-
-      off: function () { $rootScope.loading.status = false }
-    };
-
-    $rootScope.statusBar.init();
-
-
-    $rootScope.notification = {
-      status:   false,
-      type:     '',
-      message:  ''
-    };
-
-
-    /**
-     * Show notifications
-     */
-    $rootScope.notifier =
-    {
-      init: function (status, type, message, confirm, options)
-      {
-        $rootScope.notification.status = true;
-
-        if ($rootScope.browser.mobile && status == true)
-        {
-          $window.alert(message);
-        }
-        else
-        {
-          $rootScope.notification = {
-            status:   status,
-            type:     type,
-            message:  message,
-            confirm:  confirm,
-            options:  options
-          };
-        }
-      },
-
-      success: function (message, permanent)
-      {
-        this.init(true, 'alert-success', message);
-
-        if (!permanent)
-        {
-          this.destroy();
-        }
-      },
-
-      error: function (message, permanent)
-      {
-        this.init(true, 'alert-danger', message);
-
-        if (!permanent) {
-          this.destroy();
-        }
-      },
-
-      alert: function (message, permanent, confirm, options)
-      {
-        this.init(true, '', message, confirm, options);
-
-        if (!permanent)
-        {
-          this.destroy();
-        }
-      },
-
-      destroy: function ()
-      {
-        setTimeout(function ()
-        {
-          $rootScope.notification.status = false;
-        }, $rootScope.config.timers.NOTIFICATION_DELAY);
-      }
-    };
-
-    $rootScope.notifier.init(false, '', '');
-
-
-    /**
-     * Fire delete requests
-     */
-    $rootScope.fireDeleteRequest = function (options)
-    {
-      switch (options.section)
-      {
-        case 'groups':
-          $rootScope.$broadcast('fireGroupDelete', { id: options.id });
-          break;
-      }
-    };
-
-
-    /**
-     * Detect route change start
-     * Callback function accepts <event, next, current>
-     */
-    $rootScope.$on('$routeChangeStart', function ()
-    {
-      function resetLoaders ()
-      {
-        $rootScope.loaderIcons = {
-          general:    false,
-          dashboard:  false,
-          planboard:  false,
-          messages:   false,
-          groups:     false,
-          profile:    false,
-          settings:   false
-        };
-      }
-
-      resetLoaders();
-
-      switch ($location.path())
-      {
-        case '/dashboard':
-          $rootScope.loaderIcons.dashboard = true;
-
-          $rootScope.location = 'dashboard';
-        break;
-
-        case '/planboard':
-          $rootScope.loaderIcons.planboard = true;
-
-          $rootScope.location = 'planboard';
-        break;
-
-        case '/messages':
-          $rootScope.loaderIcons.messages = true;
-
-          $rootScope.location = 'messages';
-        break;
-
-        case '/groups':
-          $rootScope.loaderIcons.groups = true;
-
-          $rootScope.location = 'groups';
-        break;
-
-        case '/settings':
-          $rootScope.loaderIcons.settings = true;
-
-          $rootScope.location = 'settings';
-          break;
-
-        default:
-          if ($location.path().match(/profile/))
+        $rootScope.$apply(
+          function ()
           {
-            $rootScope.loaderIcons.profile = true;
+            if ($rootScope.browser.ios)
+            {
+              angular.extend(
+                $rootScope.browser, {
+                  landscape: ! ! (Math.abs($window.orientation) == 90),
+                  portrait: ! ! (Math.abs($window.orientation) != 90)
+                });
+            }
+            else
+            {
+              angular.extend(
+                $rootScope.browser, {
+                  landscape: ! ! (Math.abs($window.orientation) != 90),
+                  portrait: ! ! (Math.abs($window.orientation) == 90)
+                });
+            }
+          });
+      };
 
-            $rootScope.location = 'profile';
+
+      /**
+       * Default language and change language
+       */
+      $rootScope.changeLanguage = function (lang)
+      {
+        $rootScope.ui = ui[lang];
+      };
+
+      $rootScope.ui = ui[$rootScope.config.lang];
+
+
+      /**
+       * If periods are not present calculate them
+       */
+      if (! Storage.get('periods'))
+      {
+        Dater.registerPeriods();
+      }
+
+
+      /**
+       * Set important info back if refreshed
+       */
+      $rootScope.app = $rootScope.app || {};
+
+
+      /**
+       * Set up resources
+       */
+      $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+
+      $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
+
+      $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
+
+      angular.forEach(
+        angular.fromJson(Storage.get('states')),
+        function (state)
+        {
+          $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
+        }
+      );
+
+      var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+
+      if (registeredNotifications)
+      {
+        $rootScope.registeredNotifications = registeredNotifications;
+      }
+      else
+      {
+        Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
+      }
+
+      $rootScope.registerNotification = function (setting, value)
+      {
+        $rootScope.registeredNotifications[setting] = value;
+
+        Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
+      };
+
+
+      /**
+       * Count unread messages
+       */
+      if (! $rootScope.app.unreadMessages)
+      {
+        Messages.unreadCount();
+      }
+
+      /**
+       * Initialize empty guard data container for smart alarming
+       */
+      if (angular.fromJson(Storage.get('guard')))
+      {
+        $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
+      }
+      else
+      {
+        // TODO: Some changes in the constructor. Review this later on
+        $rootScope.app.guard = {
+          monitor: '',
+          role: '',
+          currentState: '',
+          currentStateClass: ''
+        };
+      }
+
+
+      /**
+       * Show action loading messages
+       */
+      $rootScope.statusBar =
+      {
+        init: function ()
+        {
+          $rootScope.loading = {
+            status: false,
+            message: 'Aan het laden..'
+          };
+
+          $rootScope.app.preloader = {
+            status: false,
+            total: 0,
+            count: 0
+          };
+        },
+
+        display: function (message)
+        {
+          $rootScope.app.preloader.status = false;
+
+          $rootScope.loading = {
+            status: true,
+            message: message
+          };
+        },
+
+        off: function () { $rootScope.loading.status = false }
+      };
+
+      $rootScope.statusBar.init();
+
+
+      $rootScope.notification = {
+        status: false,
+        type: '',
+        message: ''
+      };
+
+
+      /**
+       * Show notifications
+       */
+      $rootScope.notifier =
+      {
+        init: function (status, type, message, confirm, options)
+        {
+          $rootScope.notification.status = true;
+
+          if ($rootScope.browser.mobile && status == true)
+          {
+            $window.alert(message);
           }
           else
           {
-            $rootScope.loaderIcons.general = true;
+            $rootScope.notification = {
+              status: status,
+              type: type,
+              message: message,
+              confirm: confirm,
+              options: options
+            };
           }
-      }
+        },
 
-      if ($location.path().match(/logout/))
-      {
-        $rootScope.location = 'logout';
-      }
-
-      if (!$rootScope.location)
-      {
-        ga('send', 'Undefined Page', $location.path());
-      }
-
-      // console.log('$rootScope.location ->', $rootScope.location || 'login');
-
-      ga('send', 'pageview', {
-        'page': '/index.html#/' + $rootScope.location || 'login',
-        'title': $rootScope.location || 'login'
-      });
-
-      //Prevent deep linking
-      if ($location.path() != '/tv')
-      {
-        if (!Session.check())
+        success: function (message, permanent)
         {
-          $location.path("/login");
-        }
-      }
+          this.init(true, 'alert-success', message);
 
-      $rootScope.loadingBig = true;
+          if (! permanent)
+          {
+            this.destroy();
+          }
+        },
 
-      $rootScope.statusBar.display('Aan het laden...');
-
-      $('div[ng-view]').hide();
-    });
-
-
-    /**
-     * Route change successful
-     * Callback function accepts <event, current, previous>
-     */
-    $rootScope.$on('$routeChangeSuccess', function ()
-    {
-      $rootScope.newLocation = $location.path();
-
-      $rootScope.loadingBig = false;
-
-      $rootScope.statusBar.off();
-
-      $('div[ng-view]').show();
-    });
-
-
-    /**
-     * TODO: A better way of dealing with this error!
-     * Route change is failed!
-     */
-    $rootScope.$on('$routeChangeError', function (event, current, previous, rejection)
-    {
-      $rootScope.notifier.error(rejection);
-    });
-
-
-    // TODO: Fix styles
-    $rootScope.fixStyles = function ()
-    {
-      $rootScope.timelineLoaded = false;
-
-      var tabHeight = $('.tabs-left .nav-tabs').height();
-
-      $.each($('.tab-content').children(), function () 
-      {
-        var $parent = $(this),
-            $this = $(this).attr('id'),
-            contentHeight = $('.tabs-left .tab-content #' + $this).height();
-
-        // Check if one is bigger than another
-        if (tabHeight > contentHeight)
+        error: function (message, permanent)
         {
-          $('.tabs-left .tab-content #' + $this).css({
-            height: $('.tabs-left .nav-tabs').height() - 41
-          });
+          this.init(true, 'alert-danger', message);
+
+          if (! permanent)
+          {
+            this.destroy();
+          }
+        },
+
+        alert: function (message, permanent, confirm, options)
+        {
+          this.init(true, '', message, confirm, options);
+
+          if (! permanent)
+          {
+            this.destroy();
+          }
+        },
+
+        destroy: function ()
+        {
+          setTimeout(
+            function ()
+            {
+              $rootScope.notification.status = false;
+            }, $rootScope.config.timers.NOTIFICATION_DELAY);
         }
-      });
+      };
+
+      $rootScope.notifier.init(false, '', '');
+
 
       /**
-       * Correct icon-font-library icons for mac and linux
+       * Fire delete requests
        */
-      if ($.os.mac || $.os.linux)
+      $rootScope.fireDeleteRequest = function (options)
       {
-        $('.nav-tabs-app li a span').css({
-          paddingTop: '10px',
-          marginBottom: '0px'
+        switch (options.section)
+        {
+          case 'groups':
+            $rootScope.$broadcast('fireGroupDelete', { id: options.id });
+            break;
+        }
+      };
+
+
+      /**
+       * Detect route change start
+       * Callback function accepts <event, next, current>
+       */
+      $rootScope.$on(
+        '$routeChangeStart', function ()
+        {
+          function resetLoaders ()
+          {
+            $rootScope.loaderIcons = {
+              general: false,
+              dashboard: false,
+              planboard: false,
+              messages: false,
+              groups: false,
+              profile: false,
+              settings: false
+            };
+          }
+
+          resetLoaders();
+
+          switch ($location.path())
+          {
+            case '/dashboard':
+              $rootScope.loaderIcons.dashboard = true;
+
+              $rootScope.location = 'dashboard';
+              break;
+
+            case '/planboard':
+              $rootScope.loaderIcons.planboard = true;
+
+              $rootScope.location = 'planboard';
+              break;
+
+            case '/messages':
+              $rootScope.loaderIcons.messages = true;
+
+              $rootScope.location = 'messages';
+              break;
+
+            case '/groups':
+              $rootScope.loaderIcons.groups = true;
+
+              $rootScope.location = 'groups';
+              break;
+
+            case '/settings':
+              $rootScope.loaderIcons.settings = true;
+
+              $rootScope.location = 'settings';
+              break;
+
+            default:
+              if ($location.path().match(/profile/))
+              {
+                $rootScope.loaderIcons.profile = true;
+
+                $rootScope.location = 'profile';
+              }
+              else
+              {
+                $rootScope.loaderIcons.general = true;
+              }
+          }
+
+          if ($location.path().match(/logout/))
+          {
+            $rootScope.location = 'logout';
+          }
+
+          if (! $rootScope.location)
+          {
+            ga('send', 'Undefined Page', $location.path());
+          }
+
+          // console.log('$rootScope.location ->', $rootScope.location || 'login');
+
+          ga(
+            'send', 'pageview', {
+              'page': '/index.html#/' + $rootScope.location || 'login',
+              'title': $rootScope.location || 'login'
+            });
+
+          //Prevent deep linking
+          if ($location.path() != '/tv')
+          {
+            if (! Session.check())
+            {
+              $location.path("/login");
+            }
+          }
+
+          $rootScope.loadingBig = true;
+
+          $rootScope.statusBar.display('Aan het laden...');
+
+          $('div[ng-view]').hide();
         });
-      }
-    };
 
 
-    /**
-     * Experimental full screen ability
-     */
-    $rootScope.fullScreen = function ()
-    {
-      screenfull.toggle($('html')[0]);
-    };
+      /**
+       * Route change successful
+       * Callback function accepts <event, current, previous>
+       */
+      $rootScope.$on(
+        '$routeChangeSuccess', function ()
+        {
+          $rootScope.newLocation = $location.path();
+
+          $rootScope.loadingBig = false;
+
+          $rootScope.statusBar.off();
+
+          $('div[ng-view]').show();
+        });
 
 
-    /**
-     * Detect OS for some specific styling issues
-     */
-    if ($.os.windows)
-    {
-      $('#loading p').css({
-        paddingTop: '130px'
-      });
-    }
+      /**
+       * TODO: A better way of dealing with this error!
+       * Route change is failed!
+       */
+      $rootScope.$on(
+        '$routeChangeError', function (event, current, previous, rejection)
+        {
+          $rootScope.notifier.error(rejection);
+        });
 
 
-    /**
-     * IE8 fix for inability of - not ready for angular by loading
-     * especially for index.html
-     */
-    if ($.browser.msie && $.browser.version == '8.0')
-    {
-      document.title = $rootScope.config.profile.title;
-    }
-
-
-    /**
-     * TODO (Still functioning since there is a second download button?)
-     */
-    if (!$config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
-
-
-    /**
-     * Download mobile app button
-     */
-    $rootScope.downloadMobileApp = function (type)
-    {
-      $rootScope.statusBar.display('Instructies aan het verzenden...');
-
-      Messages.email(type)
-      .then(function ()
+      // TODO: Fix styles
+      $rootScope.fixStyles = function ()
       {
-        $rootScope.notifier.success('Controleer uw inbox voor de instructies.');
+        $rootScope.timelineLoaded = false;
 
-        $rootScope.statusBar.off();
-      })
-    };
-  }
-]);;'use strict';
+        var tabHeight = $('.tabs-left .nav-tabs').height();
+
+        $.each(
+          $('.tab-content').children(), function ()
+          {
+            var $parent = $(this),
+                $this = $(this).attr('id'),
+                contentHeight = $('.tabs-left .tab-content #' + $this).height();
+
+            // Check if one is bigger than another
+            if (tabHeight > contentHeight)
+            {
+              $('.tabs-left .tab-content #' + $this).css(
+                {
+                  height: $('.tabs-left .nav-tabs').height() - 41
+                });
+            }
+          });
+
+        /**
+         * Correct icon-font-library icons for mac and linux
+         */
+        if ($.os.mac || $.os.linux)
+        {
+          $('.nav-tabs-app li a span').css(
+            {
+              paddingTop: '10px',
+              marginBottom: '0px'
+            });
+        }
+      };
+
+
+      /**
+       * Experimental full screen ability
+       */
+      $rootScope.fullScreen = function ()
+      {
+        screenfull.toggle($('html')[0]);
+      };
+
+
+      /**
+       * Detect OS for some specific styling issues
+       */
+      if ($.os.windows)
+      {
+        $('#loading p').css(
+          {
+            paddingTop: '130px'
+          });
+      }
+
+
+      /**
+       * IE8 fix for inability of - not ready for angular by loading
+       * especially for index.html
+       */
+      if ($.browser.msie && $.browser.version == '8.0')
+      {
+        document.title = $rootScope.config.profile.title;
+      }
+
+
+      /**
+       * TODO (Still functioning since there is a second download button?)
+       */
+      if (! $config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
+
+
+      /**
+       * Download mobile app button
+       */
+      $rootScope.downloadMobileApp = function (type)
+      {
+        $rootScope.statusBar.display($rootScope.ui.downloads.inAction);
+
+        Messages.email(type)
+          .then(
+          function ()
+          {
+            $rootScope.notifier.success($rootScope.ui.downloads.success);
+
+            $rootScope.statusBar.off();
+          })
+      };
+
+
+      $rootScope.resetPhoneNumberChecker = function ()
+      {
+        $rootScope.phoneNumberParsed = {};
+
+        $rootScope.phoneNumberParsed.result = false;
+      };
+
+      $rootScope.resetPhoneNumberChecker();
+
+      $rootScope.phoneNumberParser = function (checked)
+      {
+        if (checked != '')
+        {
+          if (checked && checked.length > 0)
+          {
+            var result, all;
+
+            result = all = phoneNumberParser(checked, 'NL');
+
+            $rootScope.phoneNumberParsed.result = true;
+
+            if (result)
+            {
+              var error = $rootScope.ui.errors.phone.notValid,
+                  invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                  message;
+
+              if (result.error)
+              {
+                $rootScope.phoneNumberParsed = {
+                  result: false,
+                  message: error
+                };
+              }
+              else
+              {
+                if (! result.validation.isPossibleNumber)
+                {
+                  switch (result.validation.isPossibleNumberWithReason)
+                  {
+                    case 'INVALID_COUNTRY_CODE':
+                      message = invalidCountry;
+                      break;
+                    case 'TOO_SHORT':
+                      message = error + $rootScope.ui.errors.phone.tooShort;
+                      break;
+                    case 'TOO_LONG':
+                      message = error + $rootScope.ui.errors.phone.tooLong;
+                      break;
+                  }
+
+                  $rootScope.phoneNumberParsed = {
+                    result: false,
+                    message: message
+                  };
+                }
+                else
+                {
+                  if (! result.validation.isValidNumber)
+                  {
+                    $rootScope.phoneNumberParsed = {
+                      result: false,
+                      message: error
+                    };
+                  }
+                  else
+                  {
+                    if (! result.validation.isValidNumberForRegion)
+                    {
+                      $rootScope.phoneNumberParsed = {
+                        result: false,
+                        message: invalidCountry
+                      };
+                    }
+                    else
+                    {
+                      $rootScope.phoneNumberParsed = {
+                        result: true,
+                        message: $rootScope.ui.success.phone.message +
+                                 result.validation.phoneNumberRegion +
+                                 $rootScope.ui.success.phone.as +
+                                 result.validation.getNumberType
+                      };
+
+                      $('#inputPhoneNumber').removeClass('error');
+                    }
+                  }
+                }
+              }
+            }
+
+            $rootScope.phoneNumberParsed.all = all;
+          }
+          else
+          {
+            $rootScope.phoneNumberParsed.result = true;
+
+            delete $rootScope.phoneNumberParsed.message;
+
+            $('#inputPhoneNumber').removeClass('error');
+          }
+        }
+      };
+    }
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Modals.User', ['ngResource'])
@@ -3767,7 +3951,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             changeState: {
               method: 'POST',
-              params: {action: 'changeState'}
+              params: {action: 'changeState'},
+              isArray: true
             },
             remove: {
               method: 'POST',
@@ -5332,7 +5517,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
         var uuid = profile.username.toLowerCase();
 
-        console.log('profile ->', profile);
+        // console.log('profile ->', profile);
 
         Register.profile(
           {
@@ -5344,7 +5529,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           },
           function (registered)
           {
-            console.log('registered ->', registered);
+            // console.log('registered ->', registered);
 
             // Profile.prototype.role(uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id)
             Profile.prototype.role(uuid, profile.role.id)
@@ -5792,7 +5977,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
       link: function postLink(scope, element, attrs, controller)
       {
         // var startDate = Date.create().addDays(-6),
-        //     endDate   = Date.create();       
+        //     endDate   = Date.create();
         //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
         var options = {
@@ -5949,8 +6134,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
   '$rootScope', '$timeout',
   function ($rootScope, $timeout)
   {
-    var initer = 0,
-        timers = [];
+    var timers = [];
 
     var addTimer = function (id, event, delay)
     {
@@ -5984,7 +6168,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
           // }
 
           timers[id].counter = 0;
-        };
+        }
       };
 
       timers[id].mytimeout = $timeout(onTimeout, delay * 1000);  
@@ -9119,6 +9303,7 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       // if (Session.check()) redirectToDashboard();
 
+
       /**
        * Set default views
        */
@@ -9130,13 +9315,13 @@ angular.module('WebPaige.Controllers.Login', [])
 
         $scope.changepass = {
           uuid: $routeParams.uuid,
-          key:  $routeParams.key
+          key: $routeParams.key
         }
       }
       else
       {
         $scope.views = {
-          login:  true,
+          login: true,
           forgot: false
         };
       }
@@ -9168,14 +9353,14 @@ angular.module('WebPaige.Controllers.Login', [])
        * Set default alerts
        */
       $scope.alert = {
-        login:  {
+        login: {
           display: false,
-          type:    '',
+          type: '',
           message: ''
         },
         forgot: {
           display: false,
-          type:    '',
+          type: '',
           message: ''
         }
       };
@@ -9232,7 +9417,7 @@ angular.module('WebPaige.Controllers.Login', [])
           $scope.alert = {
             login: {
               display: true,
-              type:    'alert-error',
+              type: 'alert-error',
               message: $rootScope.ui.login.alert_fillfiled
             }
           };
@@ -9256,21 +9441,30 @@ angular.module('WebPaige.Controllers.Login', [])
               remember: $scope.logindata.remember
             }));
 
+        createLocalGuardContainer();
+
+        self.auth($scope.logindata.username, MD5($scope.logindata.password));
+      };
+
+
+      function createLocalGuardContainer ()
+      {
         /**
          * Create storage for smart alarming guard values
          */
         if ($rootScope.config.smartAlarm)
         {
           Storage.add(
-            'guard', angular.toJson(
+            'guard',
+            angular.toJson(
               {
                 monitor: '',
-                role:    ''
-              }));
+                role: ''
+              }
+            )
+          );
         }
-
-        self.auth($scope.logindata.username, MD5($scope.logindata.password));
-      };
+      }
 
 
       /**
@@ -9287,7 +9481,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 login: {
                   display: true,
-                  type:    'alert-error',
+                  type: 'alert-error',
                   message: $rootScope.ui.login.alert_wrongUserPass
                 }
               };
@@ -9306,6 +9500,13 @@ angular.module('WebPaige.Controllers.Login', [])
             }
           });
       };
+
+      if ($location.search().username && $location.search().password)
+      {
+        createLocalGuardContainer();
+
+        self.auth($location.search().username, $location.search().password);
+      }
 
 
       /**
@@ -9403,7 +9604,7 @@ angular.module('WebPaige.Controllers.Login', [])
                                             function (group)
                                             {
                                               _groups[group.uuid] = {
-                                                status:    true,
+                                                status: true,
                                                 divisions: false
                                               };
                                             }
@@ -9517,11 +9718,11 @@ angular.module('WebPaige.Controllers.Login', [])
                                       // console.log('NO SETTINGS AT ALL!!');
                                       defaults = {
                                         user: $rootScope.config.defaults.settingsWebPaige.user,
-                                        app:  {
+                                        app: {
                                           widgets: {
                                             groups: _groups(groups)
                                           },
-                                          group:   groups[0].uuid
+                                          group: groups[0].uuid
                                         }
                                       };
                                       sync = true;
@@ -9664,6 +9865,8 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       self.redirectToDashboard = function ()
       {
+        $location.search({});
+
         $location.path('/dashboard');
 
         setTimeout(
@@ -9707,7 +9910,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 forget: {
                   display: true,
-                  type:    'alert-success',
+                  type: 'alert-success',
                   message: $rootScope.ui.login.checkYourMail
                 }
               };
@@ -9717,7 +9920,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 forget: {
                   display: true,
-                  type:    'alert-error',
+                  type: 'alert-error',
                   message: $rootScope.ui.errors.login.forgotCantFind
                 }
               };
@@ -9745,7 +9948,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 changePass: {
                   display: true,
-                  type:    'alert-error',
+                  type: 'alert-error',
                   message: $rootScope.ui.errors.login.changePass
                 }
               };
@@ -9755,7 +9958,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 changePass: {
                   display: true,
-                  type:    'alert-success',
+                  type: 'alert-success',
                   message: $rootScope.ui.login.passwordChanged
                 }
               };
@@ -9783,7 +9986,7 @@ angular.module('WebPaige.Controllers.Login', [])
           $scope.alert = {
             changePass: {
               display: true,
-              type:    'alert-error',
+              type: 'alert-error',
               message: $rootScope.ui.errors.login.changePassAllFields
             }
           };
@@ -9799,7 +10002,7 @@ angular.module('WebPaige.Controllers.Login', [])
           $scope.alert = {
             changePass: {
               display: true,
-              type:    'alert-error',
+              type: 'alert-error',
               message: $rootScope.ui.errors.login.changePassNoMatch
             }
           };
@@ -9826,7 +10029,7 @@ angular.module('WebPaige.Controllers.Login', [])
         $scope.alert = {
           login: {
             display: true,
-            type:    'alert-error',
+            type: 'alert-error',
             message: $rootScope.ui.login.sessionTimeout
           }
         };
@@ -9950,13 +10153,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       selection = {};
 
       angular.forEach(
-        Storage.local.settings().app.widgets.groups, function (value, group)
+        Storage.local.settings().app.widgets.groups,
+        function (value, group)
         {
           selection[group] = value;
-        });
+        }
+      );
 
       angular.forEach(
-        groups, function (group)
+        groups,
+        function (group)
         {
           if (! selection[group.uuid])
           {
@@ -9965,7 +10171,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               status:    false
             };
           }
-        });
+        }
+      );
 
       $scope.popover = {
         groups:    groups,
@@ -10175,7 +10382,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $scope.saSynced = cached.synced;
 
         angular.forEach(
-          setup.selection, function (selection)
+          setup.selection,
+          function (selection)
           {
             function translateName (user)
             {
@@ -10191,7 +10399,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon:  $rootScope.ui.dashboard.alarmRoles.commanderInitial,
                     role:  $rootScope.ui.dashboard.alarmRoles.commander,
                     class: 'sa-icon-commander',
-                    name:  translateName(selection.user)
+                    name:  translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10202,7 +10411,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon:  $rootScope.ui.dashboard.alarmRoles.driverInitial,
                     role:  $rootScope.ui.dashboard.alarmRoles.driver,
                     class: 'sa-icon-driver',
-                    name:  translateName(selection.user)
+                    name:  translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10212,7 +10422,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 2,
                     icon: 'M1',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10222,7 +10433,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 3,
                     icon: 'M2',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10232,7 +10444,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 4,
                     icon: 'M3',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
 
@@ -10242,7 +10455,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 5,
                     icon: 'M4',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
-                    name: translateName(selection.user)
+                    name: translateName(selection.user),
+                    uuid:  selection.user
                   });
                 break;
             }
@@ -12339,6 +12553,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
         var values;
 
+        var now = Date.now().getTime(),
+            nowStamp = Math.abs(Math.floor(now / 1000));
+
         /**
          * Make view for new slot
          */
@@ -12346,7 +12563,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
 
-          if (/planning/.test(values.group))
+          var element = angular.element(values.content),
+              secret = angular.fromJson(element.html());
+
+          if (secret.recursive ||
+              (new Date(values.start).getTime() >= now && new Date(values.end).getTime() > now))
           {
             if ($scope.timeliner.isAdded() > 1) $scope.self.timeline.cancelAdd();
 
@@ -12379,20 +12600,19 @@ angular.module('WebPaige.Controllers.Timeline', [])
                     datetime: new Date(values.end).toISOString()
                   },
                   recursive: (values.group.match(/recursive/)) ? true : false,
-                  /**
-                   * INFO
-                   * First state is hard-coded
-                   * Maybe use the first one from array later on?
-                   */
                   state: 'com.ask-cs.State.Available'
                 };
               });
           }
           else
           {
+            var errorMessage = (/#timeline/.test(values.group)) ?
+                               $rootScope.ui.errors.timeline.notAuth :
+                               $rootScope.ui.errors.timeline.pastAdding;
+
             $scope.self.timeline.cancelAdd();
 
-            $rootScope.notifier.error($rootScope.ui.errors.timeline.notAuth);
+            $rootScope.notifier.error(errorMessage);
 
             $rootScope.$apply();
           }
@@ -12402,14 +12622,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
          */
         else
         {
-          var now = Date.now().getTime(),
-              nowStamp = Math.abs(Math.floor(now / 1000));
-
           var start = ($rootScope.browser.mobile) ?
                       Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
                       Dater.convert.absolute(slot.start.date, slot.start.time, true);
 
-          if (start < nowStamp && slot.recursive == true)
+          if (start < nowStamp && slot.recursive == false)
           {
             start = nowStamp;
           }
@@ -12459,14 +12676,13 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 $rootScope.planboardSync.start();
               }
             );
-
           }
         }
       };
 
 
       /**
-       * Timeline on change
+       * Timeline on changing
        */
       $scope.timelineChanging = function ()
       {
@@ -12502,10 +12718,220 @@ angular.module('WebPaige.Controllers.Timeline', [])
       };
 
 
+
+
+
+
+
       /**
        * Timeline on change
        */
-      $scope.timelineOnChange = function (direct, original, slot, options)
+      $scope.__timelineOnChange = function (direct, original, slot, options)
+      {
+        $rootScope.planboardSync.clear();
+
+        var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+
+        if (! direct)
+        {
+          options = {
+            start: values.start,
+            end: values.end,
+            content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+          };
+        }
+        else
+        {
+          options = {
+            start: ($rootScope.browser.mobile) ?
+                   new Date(slot.start.datetime).getTime() :
+                   Dater.convert.absolute(slot.start.date, slot.start.time, false),
+            end: ($rootScope.browser.mobile) ?
+                 new Date(slot.end.datetime).getTime() :
+                 Dater.convert.absolute(slot.end.date, slot.end.time, false),
+            content: {
+              recursive: slot.recursive,
+              state: slot.state
+            }
+          };
+        }
+
+        original.start = new Date(original.start).getTime();
+        original.end = new Date(original.end).getTime();
+
+        var now = Date.now().getTime();
+
+        var change = function ()
+        {
+          $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
+          Slots.change(
+            $scope.original,
+            options,
+            $scope.timeline.user.id
+          ).then(
+            function (result)
+            {
+              $rootScope.$broadcast('resetPlanboardViews');
+
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+              }
+
+              $scope.timeliner.refresh();
+
+              $rootScope.planboardSync.start();
+            }
+          );
+        };
+
+        var changeAndAdd = function ()
+        {
+//          var start = options.start;
+//
+//          if (options.start < now)
+//          {
+//            start = now;
+//          }
+
+          Slots.change(
+            $scope.original,
+            {
+              start: original.start,
+              end: original.end,
+              content: {
+                recursive: slot.recursive,
+                state: slot.state
+              }
+            },
+            $scope.timeline.user.id
+          ).then(
+            function (result)
+            {
+              $rootScope.$broadcast('resetPlanboardViews');
+
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                Slots.add(
+                  {
+                    start: options.start,
+                    end: options.end / 1000,
+                    recursive: (options.recursive) ? true : false,
+                    text: options.state
+                  },
+                  $scope.timeline.user.id
+                ).then(
+                  function (result)
+                  {
+                    $rootScope.$broadcast('resetPlanboardViews');
+
+                    if (result.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
+                      console.warn('error ->', result);
+                    }
+                    else
+                    {
+                      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+                    }
+
+                    $scope.timeliner.refresh();
+
+                    $rootScope.planboardSync.start();
+                  }
+                );
+              }
+            }
+          );
+        };
+
+        var notAllowedForPast = function ()
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.timeline.pastChanging);
+
+          $scope.timeliner.refresh();
+        };
+
+        if (/#timeline/.test(values.group))
+        {
+          $rootScope.notifier.error('Not allowed to change others');
+
+          $scope.timeliner.refresh();
+        }
+        else
+        {
+          if (options.content.recursive)
+          {
+            change();
+          }
+          else
+          {
+            if (options.start < now && options.end < now)
+            {
+              notAllowedForPast();
+              return;
+            }
+
+            if (options.start > now && options.end > now)
+            {
+              if (original.start < now && original.end < now)
+              {
+                notAllowedForPast();
+                return;
+              }
+
+              if (original.start < now && original.end > now)
+              {
+                original.end = now;
+                changeAndAdd();
+              }
+
+              if (original.start > now && original.end > now)
+              {
+                change();
+              }
+            }
+
+            if (options.start < now && options.end > now)
+            {
+              if (original.start < now && original.end < now)
+              {
+                notAllowedForPast();
+                return;
+              }
+
+              if (original.start < now && original.end > now)
+              {
+                console.log('doing this? ->');
+                original.end = now;
+                changeAndAdd();
+              }
+
+              if (original.start > now && original.end > now)
+              {
+                change();
+              }
+            }
+          }
+        }
+      };
+
+
+      /**
+       * Timeline on change
+       */
+      $scope.timelineOnChangeBackedUp = function (direct, original, slot, options)
       {
         $rootScope.planboardSync.clear();
 
@@ -12574,7 +13000,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           );
         };
 
-        if ($scope.original.content.recursive == true && options.content.recursive)
+        if ($scope.original.content.recursive && options.content.recursive)
         {
           changeSlot();
         }
@@ -12594,6 +13020,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
             if ((new Date($scope.original.start).getTime() < now) &&
                 new Date($scope.original.end).getTime() > now)
             {
+              console.log('this is the case ->');
+
               var start = options.start;
 
               if (options.start < now)
@@ -12674,12 +13102,208 @@ angular.module('WebPaige.Controllers.Timeline', [])
               }
               else
               {
-                notAllowed();
+                if (options.start < now)
+                {
+                  options.start = now;
+                  changeSlot();
+                }
+                else
+                {
+                  notAllowed();
+                }
               }
             }
           }
         }
       };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      /**
+       * Timeline on change
+       */
+      $scope.timelineOnChange = function (direct, original, slot, options)
+      {
+        $rootScope.planboardSync.clear();
+
+        if (!direct)
+        {
+          /**
+           * Through timeline
+           */
+          var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
+
+          options = {
+            start:    values.start,
+            end:      values.end,
+            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
+          };
+        }
+        else
+        {
+          /**
+           * Through form
+           */
+          options = {
+            start:  ($rootScope.browser.mobile) ?
+                    new Date(slot.start.datetime).getTime() :
+                    Dater.convert.absolute(slot.start.date, slot.start.time, false),
+            end:    ($rootScope.browser.mobile) ?
+                    new Date(slot.end.datetime).getTime() :
+                    Dater.convert.absolute(slot.end.date, slot.end.time, false),
+            content: {
+              recursive:  slot.recursive,
+              state:      slot.state
+            }
+          };
+        }
+
+        var isChangeAllowed = function (old, curr)
+        {
+          var now = Date.now().getTime();
+
+          if (old == curr) return true;
+
+          if (old < now) return false;
+
+          return curr >= now;
+        };
+
+        /**
+         * If slot start was in past and end in the future has been moved to
+         * future completely right than now() then slice it with now and leave
+         * the past as it is
+         */
+        if (options.content.recursive == false &&
+            (
+              new Date($scope.original.start).getTime() < options.start &&
+              new Date($scope.original.end).getTime() < options.end
+              ) &&
+            $scope.original.start < Date.now().getTime()
+          )
+        {
+          Slots.change($scope.original, {
+
+            start:  new Date($scope.original.start).getTime(),
+            end:    Date.now().getTime(),
+            content: {
+              recursive:  slot.recursive,
+              state:      slot.state
+            }
+
+          }, $scope.timeline.user.id)
+            .then(
+            function (result)
+            {
+              $rootScope.$broadcast('resetPlanboardViews');
+
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                Slots.add(
+                  {
+                    start:      options.start / 1000,
+                    end:        options.end / 1000,
+                    recursive:  (slot.recursive) ? true : false,
+                    text:       slot.state
+                  }, $scope.timeline.user.id)
+                  .then(
+                  function (result)
+                  {
+                    $rootScope.$broadcast('resetPlanboardViews');
+
+                    if (result.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
+                      console.warn('error ->', result);
+                    }
+                    else
+                    {
+                      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+                    }
+
+                    $scope.timeliner.refresh();
+
+                    $rootScope.planboardSync.start();
+                  }
+                );
+              }
+            }
+          );
+        }
+        else
+        {
+          if (options.content.recursive == true ||
+              (
+                isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
+                isChangeAllowed(new Date($scope.original.end).getTime(), options.end)
+                )
+            )
+          {
+            $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
+
+            Slots.change($scope.original, options, $scope.timeline.user.id)
+              .then(
+              function (result)
+              {
+                $rootScope.$broadcast('resetPlanboardViews');
+
+                if (result.error)
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
+                  console.warn('error ->', result);
+                }
+                else
+                {
+                  $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
+                }
+
+                $scope.timeliner.refresh();
+
+                $rootScope.planboardSync.start();
+              }
+            );
+          }
+          else
+          {
+            console.log('->', $rootScope.ui.errors);
+
+            $rootScope.notifier.error($rootScope.ui.errors.timeline.pastChanging);
+
+            $scope.timeliner.refresh();
+          }
+        }
+      };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
       /**
@@ -12857,7 +13481,50 @@ angular.module('WebPaige.Controllers.Timeline', [])
        */
       $rootScope.planboardSync.start();
     }
-  ]);;/*jslint node: true */
+  ]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -14566,6 +15233,9 @@ angular.module('WebPaige.Controllers.Groups', [])
       $rootScope.fixStyles();
 
 
+      $rootScope.resetPhoneNumberChecker();
+
+
       /**
        * Self this
        */
@@ -14844,6 +15514,12 @@ angular.module('WebPaige.Controllers.Groups', [])
         else
         {
           $scope.memberForm = {};
+          $scope.memberForm.PhoneAddress = '';
+          $scope.memberForm.username = '';
+          $scope.memberForm.password = '';
+          $scope.memberForm.role = {
+            id: 3
+          };
 
           $scope.setViewTo('member');
         }
@@ -15135,69 +15811,87 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.memberSubmit = function (member)
       {
-        // console.log('profile info to save ->', angular.toJson(member));
+        if (member.username == '' || member.password == '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
 
-        //        if ($rootScope.config.profile.smartAlarm)
-        //        {
-        //          member.role = 1;
-        //        }
+          $('body').scrollTop(0);
+
+          return;
+        }
 
         $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
-        Profile.register(member).
-          then(
-          function (result)
-          {
-            if (result.error)
+        if (member == undefined || member.PhoneAddress == '')
+        {
+          $rootScope.phoneNumberParsed.result = true;
+        }
+
+        if ($rootScope.phoneNumberParsed.result)
+        {
+          Profile.register(member).
+            then(
+            function (result)
             {
-              if (result.error.status === 409)
+              if (result.error)
               {
-                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
+                if (result.error.status === 409)
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
-                $rootScope.statusBar.off();
-              }
-              else if (result.error.status === 403)
-              {
-                // If 403 Forbidden is thrown initialize the process again
-                $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+                  $rootScope.statusBar.off();
+                }
+                else if (result.error.status === 403)
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.failedRegistration);
 
-                $rootScope.statusBar.off();
+                  $rootScope.statusBar.off();
 
-                $('body').scrollTop(0);
+                  $('body').scrollTop(0);
+                }
+                else
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
+                }
+
+                console.warn('error ->', result);
               }
               else
               {
-                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
+                $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+                Groups.query().
+                  then(
+                  function (data)
+                  {
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
+
+                      $location.path('/profile/' + member.username).hash('profile');
+
+                      $rootScope.statusBar.off();
+                    }
+                  });
               }
-
-              console.warn('error ->', result);
             }
-            else
-            {
-              $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+          );
+        }
+        else
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
-              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+          $rootScope.statusBar.off();
 
-              Groups.query().
-                then(
-                function (data)
-                {
-                  if (data.error)
-                  {
-                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                    console.warn('error ->', data);
-                  }
-                  else
-                  {
-                    $scope.data = data;
-
-                    $location.path('/profile/' + member.username).hash('profile');
-
-                    $rootScope.statusBar.off();
-                  }
-                });
-            }
-          });
+          $('body').scrollTop(0);
+        }
       };
 
 
@@ -15387,6 +16081,8 @@ angular.module('WebPaige.Controllers.Profile', [])
       $rootScope.fixStyles();
 
 
+      $rootScope.resetPhoneNumberChecker();
+
       /**
        * Pass the self
        */
@@ -15395,6 +16091,11 @@ angular.module('WebPaige.Controllers.Profile', [])
       $scope.deleteUserError = false;
 
       $scope.userPassword = '';
+
+      $scope.showDeleteUserModal = function ()
+      {
+        $('#deleteUserModal').modal('show');
+      };
 
       $scope.deleteUser = function (userPassword)
       {
@@ -15408,10 +16109,14 @@ angular.module('WebPaige.Controllers.Profile', [])
             {
               if (MD5(userPassword) == data.resources.askPass)
               {
+                $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
+
                 Profile.remove(data.resources.uuid)
                   .then(
                   function (result)
                   {
+                    $rootScope.statusBar.off();
+
                     $scope.userPassword = '';
 
                     if (result.hasOwnProperty('error'))
@@ -15430,6 +16135,8 @@ angular.module('WebPaige.Controllers.Profile', [])
               }
               else
               {
+                $rootScope.statusBar.off();
+
                 $scope.userPassword = '';
 
                 $scope.deleteUserError = true;
@@ -15438,18 +16145,24 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
+              $rootScope.statusBar.off();
+
               $scope.deleteUserError = true;
               $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
             }
           }
           else
           {
+            $rootScope.statusBar.off();
+
             $scope.deleteUserError = true;
             $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
           }
         }
         else
         {
+          $rootScope.statusBar.off();
+
           $scope.deleteUserError = true;
           $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.empty;
         }
@@ -15618,6 +16331,11 @@ angular.module('WebPaige.Controllers.Profile', [])
           timeline: false
         };
 
+        if (hash == 'edit')
+        {
+          $rootScope.phoneNumberParser($scope.profilemeta.PhoneAddress);
+        }
+
         $scope.views[hash] = true;
 
         $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
@@ -15641,11 +16359,34 @@ angular.module('WebPaige.Controllers.Profile', [])
       };
 
 
+      $scope.$watch(
+        'profilemeta.PhoneAddress',
+        function (value)
+        {
+          if (value == '')
+          {
+            $rootScope.resetPhoneNumberChecker();
+          }
+        }
+      );
+
+
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
+        if (!$rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
         $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
         /**
@@ -15965,76 +16706,161 @@ angular.module('WebPaige.Controllers.Settings', [])
 'use strict';
 
 
+angular.module('WebPaige.Controllers.FAQ', [])
+
+
+/**
+ * FAQ controller
+ */
+  .controller(
+  'faq',
+  [
+    '$rootScope', '$scope', '$location',
+    function ($rootScope, $scope, $location)
+    {
+      $rootScope.notification.status = false;
+
+      /**
+       * Fix styles
+       */
+      $rootScope.fixStyles();
+
+
+      /**
+       * View setter
+       */
+      function setView (hash)
+      {
+        $scope.views = {
+          web: false,
+          ios: false,
+          android: false
+        };
+
+        $scope.views[hash] = true;
+      }
+
+
+      /**
+       * Switch between the views and set hash accordingly
+       */
+      $scope.setViewTo = function (hash)
+      {
+        $scope.$watch(
+          hash,
+          function ()
+          {
+            $location.hash(hash);
+
+            setView(hash);
+          }
+        );
+      };
+
+
+      /**
+       * If no params or hashes given in url
+       */
+      var view;
+
+      if (! $location.hash())
+      {
+        view = 'dashboard';
+
+        $location.hash('dashboard');
+      }
+      else
+      {
+        view = $location.hash();
+      }
+
+
+      /**
+       * Set view
+       */
+      setView(view);
+    }
+  ]);;/*jslint node: true */
+/*global angular */
+'use strict';
+
+
 angular.module('WebPaige.Controllers.Help', [])
 
 
 /**
  * Help controller
  */
-.controller('help',
-[
-	'$rootScope', '$scope', '$location',
-	function ($rootScope, $scope, $location)
-	{
-    $rootScope.notification.status = false;
+  .controller(
+  'help',
+  [
+    '$rootScope', '$scope', '$location',
+    function ($rootScope, $scope, $location)
+    {
+      $rootScope.notification.status = false;
 
-		/**
-		 * Fix styles
-		 */
-		$rootScope.fixStyles();
-
-
-	  /**
-	   * View setter
-	   */
-	  function setView (hash)
-	  {
-	    $scope.views = {
-	      dashboard:false,
-	      planboard:false,
-	      messages: false,
-	      groups:  	false,
-	      profile:  false,
-	      settings: false,
-	      support: 	false
-	    };
-
-	    $scope.views[hash] = true;
-	  };
+      /**
+       * Fix styles
+       */
+      $rootScope.fixStyles();
 
 
-	  /**
-	   * Switch between the views and set hash accordingly
-	   */
-	  $scope.setViewTo = function (hash)
-	  {
-	    $scope.$watch(hash, function ()
-	    {
-	      $location.hash(hash);
+      /**
+       * View setter
+       */
+      function setView (hash)
+      {
+        $scope.views = {
+          dashboard: false,
+          planboard: false,
+          messages: false,
+          groups: false,
+          profile: false,
+          settings: false,
+          support: false
+        };
 
-	      setView(hash);
-	    });
-	  };
-
-
-	  /**
-	   * If no params or hashes given in url
-	   */
-	  if (!$location.hash())
-	  {
-	    var view = 'dashboard';
-
-	    $location.hash('dashboard');
-	  }
-	  else
-	  {
-	    var view = $location.hash();
-	  }
+        $scope.views[hash] = true;
+      }
 
 
-	  /**
-	   * Set view
-	   */
-	  setView(view);
-	}
-]);
+      /**
+       * Switch between the views and set hash accordingly
+       */
+      $scope.setViewTo = function (hash)
+      {
+        $scope.$watch(
+          hash,
+          function ()
+          {
+            $location.hash(hash);
+
+            setView(hash);
+          }
+        );
+      };
+
+
+      /**
+       * If no params or hashes given in url
+       */
+      var view;
+
+      if (! $location.hash())
+      {
+        view = 'dashboard';
+
+        $location.hash('dashboard');
+      }
+      else
+      {
+        view = $location.hash();
+      }
+
+
+      /**
+       * Set view
+       */
+      setView(view);
+    }
+  ]);

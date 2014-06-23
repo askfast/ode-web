@@ -37,6 +37,7 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       // if (Session.check()) redirectToDashboard();
 
+
       /**
        * Set default views
        */
@@ -48,13 +49,13 @@ angular.module('WebPaige.Controllers.Login', [])
 
         $scope.changepass = {
           uuid: $routeParams.uuid,
-          key:  $routeParams.key
+          key: $routeParams.key
         }
       }
       else
       {
         $scope.views = {
-          login:  true,
+          login: true,
           forgot: false
         };
       }
@@ -86,14 +87,14 @@ angular.module('WebPaige.Controllers.Login', [])
        * Set default alerts
        */
       $scope.alert = {
-        login:  {
+        login: {
           display: false,
-          type:    '',
+          type: '',
           message: ''
         },
         forgot: {
           display: false,
-          type:    '',
+          type: '',
           message: ''
         }
       };
@@ -150,7 +151,7 @@ angular.module('WebPaige.Controllers.Login', [])
           $scope.alert = {
             login: {
               display: true,
-              type:    'alert-error',
+              type: 'alert-error',
               message: $rootScope.ui.login.alert_fillfiled
             }
           };
@@ -174,21 +175,30 @@ angular.module('WebPaige.Controllers.Login', [])
               remember: $scope.logindata.remember
             }));
 
+        createLocalGuardContainer();
+
+        self.auth($scope.logindata.username, MD5($scope.logindata.password));
+      };
+
+
+      function createLocalGuardContainer ()
+      {
         /**
          * Create storage for smart alarming guard values
          */
         if ($rootScope.config.smartAlarm)
         {
           Storage.add(
-            'guard', angular.toJson(
+            'guard',
+            angular.toJson(
               {
                 monitor: '',
-                role:    ''
-              }));
+                role: ''
+              }
+            )
+          );
         }
-
-        self.auth($scope.logindata.username, MD5($scope.logindata.password));
-      };
+      }
 
 
       /**
@@ -205,7 +215,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 login: {
                   display: true,
-                  type:    'alert-error',
+                  type: 'alert-error',
                   message: $rootScope.ui.login.alert_wrongUserPass
                 }
               };
@@ -224,6 +234,13 @@ angular.module('WebPaige.Controllers.Login', [])
             }
           });
       };
+
+      if ($location.search().username && $location.search().password)
+      {
+        createLocalGuardContainer();
+
+        self.auth($location.search().username, $location.search().password);
+      }
 
 
       /**
@@ -321,7 +338,7 @@ angular.module('WebPaige.Controllers.Login', [])
                                             function (group)
                                             {
                                               _groups[group.uuid] = {
-                                                status:    true,
+                                                status: true,
                                                 divisions: false
                                               };
                                             }
@@ -435,11 +452,11 @@ angular.module('WebPaige.Controllers.Login', [])
                                       // console.log('NO SETTINGS AT ALL!!');
                                       defaults = {
                                         user: $rootScope.config.defaults.settingsWebPaige.user,
-                                        app:  {
+                                        app: {
                                           widgets: {
                                             groups: _groups(groups)
                                           },
-                                          group:   groups[0].uuid
+                                          group: groups[0].uuid
                                         }
                                       };
                                       sync = true;
@@ -582,6 +599,8 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       self.redirectToDashboard = function ()
       {
+        $location.search({});
+
         $location.path('/dashboard');
 
         setTimeout(
@@ -625,7 +644,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 forget: {
                   display: true,
-                  type:    'alert-success',
+                  type: 'alert-success',
                   message: $rootScope.ui.login.checkYourMail
                 }
               };
@@ -635,7 +654,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 forget: {
                   display: true,
-                  type:    'alert-error',
+                  type: 'alert-error',
                   message: $rootScope.ui.errors.login.forgotCantFind
                 }
               };
@@ -663,7 +682,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 changePass: {
                   display: true,
-                  type:    'alert-error',
+                  type: 'alert-error',
                   message: $rootScope.ui.errors.login.changePass
                 }
               };
@@ -673,7 +692,7 @@ angular.module('WebPaige.Controllers.Login', [])
               $scope.alert = {
                 changePass: {
                   display: true,
-                  type:    'alert-success',
+                  type: 'alert-success',
                   message: $rootScope.ui.login.passwordChanged
                 }
               };
@@ -701,7 +720,7 @@ angular.module('WebPaige.Controllers.Login', [])
           $scope.alert = {
             changePass: {
               display: true,
-              type:    'alert-error',
+              type: 'alert-error',
               message: $rootScope.ui.errors.login.changePassAllFields
             }
           };
@@ -717,7 +736,7 @@ angular.module('WebPaige.Controllers.Login', [])
           $scope.alert = {
             changePass: {
               display: true,
-              type:    'alert-error',
+              type: 'alert-error',
               message: $rootScope.ui.errors.login.changePassNoMatch
             }
           };
@@ -744,7 +763,7 @@ angular.module('WebPaige.Controllers.Login', [])
         $scope.alert = {
           login: {
             display: true,
-            type:    'alert-error',
+            type: 'alert-error',
             message: $rootScope.ui.login.sessionTimeout
           }
         };

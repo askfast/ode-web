@@ -89,7 +89,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
       link: function postLink(scope, element, attrs, controller)
       {
         // var startDate = Date.create().addDays(-6),
-        //     endDate   = Date.create();       
+        //     endDate   = Date.create();
         //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
         var options = {

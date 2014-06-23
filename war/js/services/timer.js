@@ -14,8 +14,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
   '$rootScope', '$timeout',
   function ($rootScope, $timeout)
   {
-    var initer = 0,
-        timers = [];
+    var timers = [];
 
     var addTimer = function (id, event, delay)
     {
@@ -49,7 +48,7 @@ angular.module('WebPaige.Services.Timer', ['ngResource'])
           // }
 
           timers[id].counter = 0;
-        };
+        }
       };
 
       timers[id].mytimeout = $timeout(onTimeout, delay * 1000);  

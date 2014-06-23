@@ -87,7 +87,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
         var uuid = profile.username.toLowerCase();
 
-        console.log('profile ->', profile);
+        // console.log('profile ->', profile);
 
         Register.profile(
           {
@@ -99,7 +99,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           },
           function (registered)
           {
-            console.log('registered ->', registered);
+            // console.log('registered ->', registered);
 
             // Profile.prototype.role(uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id)
             Profile.prototype.role(uuid, profile.role.id)

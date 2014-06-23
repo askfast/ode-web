@@ -34,6 +34,8 @@ angular.module('WebPaige.Controllers.Profile', [])
       $rootScope.fixStyles();
 
 
+      $rootScope.resetPhoneNumberChecker();
+
       /**
        * Pass the self
        */
@@ -42,6 +44,11 @@ angular.module('WebPaige.Controllers.Profile', [])
       $scope.deleteUserError = false;
 
       $scope.userPassword = '';
+
+      $scope.showDeleteUserModal = function ()
+      {
+        $('#deleteUserModal').modal('show');
+      };
 
       $scope.deleteUser = function (userPassword)
       {
@@ -55,10 +62,14 @@ angular.module('WebPaige.Controllers.Profile', [])
             {
               if (MD5(userPassword) == data.resources.askPass)
               {
+                $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
+
                 Profile.remove(data.resources.uuid)
                   .then(
                   function (result)
                   {
+                    $rootScope.statusBar.off();
+
                     $scope.userPassword = '';
 
                     if (result.hasOwnProperty('error'))
@@ -77,6 +88,8 @@ angular.module('WebPaige.Controllers.Profile', [])
               }
               else
               {
+                $rootScope.statusBar.off();
+
                 $scope.userPassword = '';
 
                 $scope.deleteUserError = true;
@@ -85,18 +98,24 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
+              $rootScope.statusBar.off();
+
               $scope.deleteUserError = true;
               $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
             }
           }
           else
           {
+            $rootScope.statusBar.off();
+
             $scope.deleteUserError = true;
             $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
           }
         }
         else
         {
+          $rootScope.statusBar.off();
+
           $scope.deleteUserError = true;
           $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.empty;
         }
@@ -265,6 +284,11 @@ angular.module('WebPaige.Controllers.Profile', [])
           timeline: false
         };
 
+        if (hash == 'edit')
+        {
+          $rootScope.phoneNumberParser($scope.profilemeta.PhoneAddress);
+        }
+
         $scope.views[hash] = true;
 
         $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
@@ -288,11 +312,34 @@ angular.module('WebPaige.Controllers.Profile', [])
       };
 
 
+      $scope.$watch(
+        'profilemeta.PhoneAddress',
+        function (value)
+        {
+          if (value == '')
+          {
+            $rootScope.resetPhoneNumberChecker();
+          }
+        }
+      );
+
+
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
+        if (!$rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
         $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
         /**

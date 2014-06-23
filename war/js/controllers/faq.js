@@ -3,14 +3,14 @@
 'use strict';
 
 
-angular.module('WebPaige.Controllers.Help', [])
+angular.module('WebPaige.Controllers.FAQ', [])
 
 
 /**
- * Help controller
+ * FAQ controller
  */
   .controller(
-  'help',
+  'faq',
   [
     '$rootScope', '$scope', '$location',
     function ($rootScope, $scope, $location)
@@ -29,13 +29,9 @@ angular.module('WebPaige.Controllers.Help', [])
       function setView (hash)
       {
         $scope.views = {
-          dashboard: false,
-          planboard: false,
-          messages: false,
-          groups: false,
-          profile: false,
-          settings: false,
-          support: false
+          web: false,
+          ios: false,
+          android: false
         };
 
         $scope.views[hash] = true;

@@ -21,6 +21,9 @@ angular.module('WebPaige.Controllers.Groups', [])
       $rootScope.fixStyles();
 
 
+      $rootScope.resetPhoneNumberChecker();
+
+
       /**
        * Self this
        */
@@ -299,6 +302,12 @@ angular.module('WebPaige.Controllers.Groups', [])
         else
         {
           $scope.memberForm = {};
+          $scope.memberForm.PhoneAddress = '';
+          $scope.memberForm.username = '';
+          $scope.memberForm.password = '';
+          $scope.memberForm.role = {
+            id: 3
+          };
 
           $scope.setViewTo('member');
         }
@@ -590,69 +599,87 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.memberSubmit = function (member)
       {
-        // console.log('profile info to save ->', angular.toJson(member));
+        if (member.username == '' || member.password == '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
 
-        //        if ($rootScope.config.profile.smartAlarm)
-        //        {
-        //          member.role = 1;
-        //        }
+          $('body').scrollTop(0);
+
+          return;
+        }
 
         $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
-        Profile.register(member).
-          then(
-          function (result)
-          {
-            if (result.error)
+        if (member == undefined || member.PhoneAddress == '')
+        {
+          $rootScope.phoneNumberParsed.result = true;
+        }
+
+        if ($rootScope.phoneNumberParsed.result)
+        {
+          Profile.register(member).
+            then(
+            function (result)
             {
-              if (result.error.status === 409)
+              if (result.error)
               {
-                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
+                if (result.error.status === 409)
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
-                $rootScope.statusBar.off();
-              }
-              else if (result.error.status === 403)
-              {
-                // If 403 Forbidden is thrown initialize the process again
-                $rootScope.notifier.error('Registering a new user is failed. Please try again.');
+                  $rootScope.statusBar.off();
+                }
+                else if (result.error.status === 403)
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.failedRegistration);
 
-                $rootScope.statusBar.off();
+                  $rootScope.statusBar.off();
 
-                $('body').scrollTop(0);
+                  $('body').scrollTop(0);
+                }
+                else
+                {
+                  $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
+                }
+
+                console.warn('error ->', result);
               }
               else
               {
-                $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
+                $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+                Groups.query().
+                  then(
+                  function (data)
+                  {
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
+
+                      $location.path('/profile/' + member.username).hash('profile');
+
+                      $rootScope.statusBar.off();
+                    }
+                  });
               }
-
-              console.warn('error ->', result);
             }
-            else
-            {
-              $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
+          );
+        }
+        else
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
-              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+          $rootScope.statusBar.off();
 
-              Groups.query().
-                then(
-                function (data)
-                {
-                  if (data.error)
-                  {
-                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                    console.warn('error ->', data);
-                  }
-                  else
-                  {
-                    $scope.data = data;
-
-                    $location.path('/profile/' + member.username).hash('profile');
-
-                    $rootScope.statusBar.off();
-                  }
-                });
-            }
-          });
+          $('body').scrollTop(0);
+        }
       };
 
 

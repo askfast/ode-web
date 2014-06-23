@@ -178,7 +178,7 @@
         </div>
         <hr>
         <!-- member form -->
-        <form>
+        <form name="registerUserForm">
           <fieldset>
 
             <div class="control-group">
@@ -206,6 +206,7 @@
               </div>
             </div>
             <hr>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.firstName}}</label>
               <div class="controls">
@@ -214,6 +215,7 @@
                         ng-model="memberForm.firstName">
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.lastName}}</label>
               <div class="controls">
@@ -222,22 +224,62 @@
                         ng-model="memberForm.lastName">
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.email}}</label>
               <div class="controls">
-                <input  type="text" 
+                <input  type="email"
+                        name="email"
                         class="span4" 
-                        ng-model="memberForm.EmailAddress">
+                        ng-model="memberForm.EmailAddress"
+                        ng-minlength=3
+                        ng-maxlength=50 />
+                <div class="error-container"
+                     ng-show="registerUserForm.email.$dirty && registerUserForm.email.$invalid">
+                  <p class="text-error"
+                     ng-show="registerUserForm.email.$error.minlength">
+                    <small>
+                      <i>{{ui.errors.email.min}}</i>
+                    </small>
+                  </p>
+                  <p class="text-error"
+                     ng-show="registerUserForm.email.$error.email">
+                    <small>
+                      <i>{{ui.errors.email.notValid}}</i>
+                    </small>
+                  </p>
+                  <p class="text-error"
+                     ng-show="registerUserForm.email.$error.maxlength">
+                    <small>
+                      <i>{{ui.errors.email.max}}</i>
+                    </small>
+                  </p>
+                </div>
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.phone}}</label>
               <div class="controls">
-                <input  type="text" 
-                        class="span3" 
-                        ng-model="memberForm.PhoneAddress">
+                <input  type="text"
+                        id="inputPhoneNumber"
+                        class="span3"
+                        ng-model="memberForm.PhoneAddress"
+                        ng-change="phoneNumberParser(memberForm.PhoneAddress)">
+                <!--<p class="text-error" ng-show="!memberForm.PhoneAddress">-->
+                  <!--<small><i>Please fill your phone number!</i></small>-->
+                <!--</p>-->
+                <p class="text-error" ng-hide="phoneNumberParsed.result">
+                  <small><i>{{phoneNumberParsed.message}}</i></small>
+                </p>
+                <p class="text-success" ng-show="phoneNumberParsed.result">
+                  <small>
+                    <i>{{phoneNumberParsed.message}}</i>
+                  </small>
+                </p>
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.address}}</label>
               <div class="controls">
@@ -246,6 +288,7 @@
                         ng-model="memberForm.PostAddress">
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.postCode}}</label>
               <div class="controls">
@@ -254,6 +297,7 @@
                         ng-model="memberForm.PostZip">
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.city}}</label>
               <div class="controls">
@@ -263,6 +307,7 @@
               </div>
             </div>
             <hr>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.userName}}</label>
               <div class="controls">
@@ -271,6 +316,7 @@
                         ng-model="memberForm.username">
               </div>
             </div>
+
             <div class="control-group">
               <label class="control-label">{{ui.groups.password}}</label>
               <div class="controls">
@@ -279,6 +325,7 @@
                         ng-model="memberForm.password">
               </div>
             </div>
+
             <div class="form-actions">
               <button type="submit" 
                   ng-click="memberSubmit(memberForm)" 
@@ -454,7 +501,7 @@
                      class="btn btn-mini"><i class="icon-edit"></i></a>&nbsp;
                   <button type="submit" 
                           ng-click="removeMember(member.uuid, group.uuid)" 
-                          class="btn btn-danger btn-mini"><i class="icon-trash icon-white"></i></button>
+                          class="btn btn-danger btn-mini"><i class="icon-remove-sign icon-white"></i></button>
                 </div>
               </td>
             </tr>

@@ -779,6 +779,9 @@ dl dd {
   margin-top: 0px;
   margin-bottom: 5px;
 }
+.sa ul.sa-setup li .sa-member .sa-member-card h5 a {
+  color: #433c2d;
+}
 .sa ul.sa-setup li .sa-member .sa-member-card hr {
   margin: 0;
   padding: 0;
@@ -2238,7 +2241,7 @@ div.timeline-event-range {
   background-image: -moz-linear-gradient(top, #7772b5, #65619b);
   background-image: linear-gradient(top, #7772b5, #65619b);
   background-repeat: repeat-x;
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#6e69a8', endColorstr='#7772b5', GradientType=0);
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#6e69a8',  endColorstr='#7772b5', GradientType=0);
   filter: progid:dximagetransform.microsoft.gradient(enabled=false);
   *background-color: #7772b5;
   /*  background-color: #006dcc;
