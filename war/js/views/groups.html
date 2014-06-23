@@ -362,7 +362,11 @@
           <tbody>
             <tr ng-repeat="candidate in candidates">
               <td>{{$index + 1}}</td>
-              <td>{{candidate.name}}</td>
+              <td>
+                <a href="#/profile/{{candidate.id}}#profile">
+                  {{candidate.name}}
+                </a>
+              </td>
               <td>
                 <span ng-repeat="group in candidate.groups">
                   <a ng-click="requestGroup(group.uuid, true)">{{group.name}}</a>,
@@ -440,6 +444,12 @@
       </p>
 
       <div ng-show="(data.members[group.uuid]|filter:filtered).length > 0">
+
+        <!--<p>-->
+          <!--selection -> {{selectionMaster}}-->
+          <!--selected -> {{selection}}-->
+        <!--</p>-->
+
         <table class="table table-striped">
           <thead>
             <tr>

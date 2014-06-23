@@ -396,19 +396,18 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred  = $q.defer(),
 	        calls     = [];
 
-	    angular.forEach(selection, function (value, id)
-	    {
-	      if (id)
+	    angular.forEach(
+        selection,
+        function (value, id)
         {
-          calls.push(Groups.prototype.removeMember(id, group.uuid));
+          if (value) {  calls.push(Groups.prototype.removeMember(id, group.uuid)) }
         }
-	    });
+      );
 
 	    $q.all(calls)
-	    .then(function (result)
-	    {
-	      deferred.resolve(result);
-	    });
+	    .then(
+        function (result) { deferred.resolve(result) }
+      );
 
 	    return deferred.promise; 
 	  };

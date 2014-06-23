@@ -290,7 +290,7 @@ var ui = {
         lastName: 'Last Name',
         saveGroup: 'Save Group',
         registerMember: 'Register Member',
-        role: 'PRofile',
+        role: 'Profile',
         selectRole: 'Select a role',
         selectGroup: 'Choose a group',
         email: 'Email',
@@ -303,7 +303,7 @@ var ui = {
         password: 'Password',
         saveMember: 'Save Member',
         searchedFor: 'Search results for ',
-        sorryCanNotFind: 'Sorry but we couldn\'t find what you are looking for.',
+        sorryCanNotFind: 'Sorry but we could not find what you are looking for.',
         // troubled
         // selectGroup: '-- select a group --',
         //
@@ -328,7 +328,7 @@ var ui = {
         deleting: 'Deleting group..',
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
-        searchFor: 'firstname, lastname..',
+        searchFor: 'first name, last name..',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
         requiredPeople: 'Required'
@@ -440,7 +440,8 @@ var ui = {
           memberSubmitRegister: 'Error with registering a member!',
           deleteGroup: 'Error with deleting a group!',
           emptyUserCredentials: 'Username or password can not be left empty!',
-          failedRegistration: 'Registering a new user is failed. Please try again.'
+          failedRegistration: 'Registering a new user is failed. Please try again.',
+          noSelection: 'Please select some members first!'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -934,7 +935,8 @@ var ui = {
           memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
           deleteGroup: 'Fout bij het verwijderen van een groep!',
           emptyUserCredentials: 'Vul gebruikersnaam en wachtwoord in!',
-          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.'
+          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.',
+          noSelection: 'Maak alstublieft eerst een selectie.'
         },
         login: {
           changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
@@ -5101,19 +5103,18 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 	    var deferred  = $q.defer(),
 	        calls     = [];
 
-	    angular.forEach(selection, function (value, id)
-	    {
-	      if (id)
+	    angular.forEach(
+        selection,
+        function (value, id)
         {
-          calls.push(Groups.prototype.removeMember(id, group.uuid));
+          if (value) {  calls.push(Groups.prototype.removeMember(id, group.uuid)) }
         }
-	    });
+      );
 
 	    $q.all(calls)
-	    .then(function (result)
-	    {
-	      deferred.resolve(result);
-	    });
+	    .then(
+        function (result) { deferred.resolve(result) }
+      );
 
 	    return deferred.promise; 
 	  };
@@ -12131,14 +12132,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
        * Timeliner listener
        */
       $rootScope.$on(
-        'timeliner', function ()
+        'timeliner',
+        function ()
         {
           $scope.timeliner.load(
             {
               start: new Date(arguments[1].start).getTime(),
               end: new Date(arguments[1].end).getTime()
-            });
-        });
+            }
+          );
+        }
+      );
 
 
       /**
@@ -12171,7 +12175,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.data.periods.start,
             end: $scope.data.periods.end
-          });
+          }
+        );
       };
 
 
@@ -12198,7 +12203,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
               };
             }
 
-          });
+          }
+        );
       };
 
 
@@ -12340,10 +12346,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         $rootScope.planboardSync.clear();
 
         $scope.$apply(
-          function ()
-          {
-            $scope.selectedOriginal = $scope.selectedSlot();
-          });
+          function () { $scope.selectedOriginal = $scope.selectedSlot() }
+        );
       };
 
 
@@ -12362,7 +12366,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
             function ()
             {
               $scope.timeliner.redraw();
-            }, $rootScope.config.timers.TICKER);
+            },
+            $rootScope.config.timers.TICKER);
         }
       };
 
@@ -12396,10 +12401,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         //      console.log('div ->', $scope.groupPieHide);
 
         angular.forEach(
-          $scope.divisions, function (division)
+          $scope.divisions,
+          function (division)
           {
             $scope.groupPieHide[division.id] = false;
-          });
+          }
+        );
 
         if ($scope.timeline.current.division !== 'all')
         {
@@ -12410,7 +12417,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -12425,7 +12433,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -12444,7 +12453,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
             {
               start: $scope.timeline.range.start,
               end: $scope.timeline.range.end
-            }, true);
+            },
+            true
+          );
         }
         else
         {
@@ -12481,7 +12492,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   start: $scope.timeline.range.start,
                   end: $scope.timeline.range.end
                 }, true);
-            });
+            }
+          );
         }
       }
 
@@ -12506,7 +12518,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -12739,8 +12752,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
               recursive: options.content.recursive,
               id: options.content.id
             };
-          });
-
+          }
+        );
       };
 
 
@@ -13110,10 +13123,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       if ($scope.timeline && $scope.timeline.main)
       {
         setTimeout(
-          function ()
-          {
-            $scope.self.timeline.redraw();
-          }, $rootScope.config.timers.TICKER);
+          function () { $scope.self.timeline.redraw() },
+          $rootScope.config.timers.TICKER
+        );
       }
 
 
@@ -13142,7 +13154,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   {
                     start: $scope.data.periods.start,
                     end: $scope.data.periods.end
-                  }, true);
+                  },
+                  true
+                );
               }
             }, $rootScope.config.timers.PLANBOARD_SYNC);
         },
@@ -13150,10 +13164,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         /**
          * Clear planboard sync
          */
-        clear: function ()
-        {
-          $window.clearInterval($window.planboardSync);
-        }
+        clear: function () { $window.clearInterval($window.planboardSync) }
       };
 
 
@@ -14862,8 +14873,18 @@ angular.module('WebPaige.Controllers.Groups', [])
   .controller(
   'groups',
   [
-    '$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
+    '$rootScope',
+    '$scope',
+    '$location',
+    'data',
+    'Groups',
+    'Profile',
+    '$route',
+    '$routeParams',
+    'Storage',
+    'Slots',
+    '$timeout',
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout)
     {
       /**
        * Fix styles
@@ -14872,12 +14893,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
       $rootScope.resetPhoneNumberChecker();
 
-
-      /**
-       * Self this
-       */
-      var self = this,
-      params = $location.search();
+      var params = $location.search();
 
 
       /**
@@ -15019,7 +15035,7 @@ angular.module('WebPaige.Controllers.Groups', [])
             $scope.wish = wish.count;
 
             $scope.popover = {
-              id:   id,
+              id: id,
               wish: wish.count
             };
           });
@@ -15035,11 +15051,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         Slots.setWish(
           {
-            id:        id,
-            start:     255600,
-            end:       860400,
+            id: id,
+            start: 255600,
+            end: 860400,
             recursive: true,
-            wish:      wish
+            wish: wish
           })
           .then(
           function (result)
@@ -15095,9 +15111,9 @@ angular.module('WebPaige.Controllers.Groups', [])
       function setView (hash)
       {
         $scope.views = {
-          view:   false,
-          add:    false,
-          edit:   false,
+          view: false,
+          add: false,
+          edit: false,
           search: false,
           member: false
         };
@@ -15171,7 +15187,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         $scope.setViewTo('edit');
 
         $scope.groupForm = {
-          id:   group.uuid,
+          id: group.uuid,
           name: group.name
         };
       };
@@ -15182,11 +15198,22 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.closeTabs = function ()
       {
-        $scope.groupForm = {};
+        $timeout(
+          function ()
+          {
+            $scope.groupForm = {};
 
-        $scope.memberForm = {};
+            $scope.memberForm = {};
 
-        $scope.setViewTo('view');
+            $scope.selectionMaster = {};
+
+            // console.log(' $scope.selection ->', $scope.selection);
+
+            $scope.selection = {};
+
+            $scope.setViewTo('view');
+          }
+        )
       };
 
 
@@ -15209,7 +15236,7 @@ angular.module('WebPaige.Controllers.Groups', [])
             else
             {
               $scope.search = {
-                query:   '',
+                query: '',
                 queried: query
               };
 
@@ -15325,46 +15352,61 @@ angular.module('WebPaige.Controllers.Groups', [])
       {
         $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
 
-        Groups.removeMembers(selection, group).
-          then(
-          function (result)
+        var selected = false;
+
+        angular.forEach(
+          selection,
+          function (value)
           {
-            if (result.error)
+            if (value)
+            { selected = true }
+          }
+        );
+
+        if (selected)
+        {
+          Groups.removeMembers(selection, group)
+            .then(
+            function (result)
             {
-              $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-              console.warn('error ->', result);
-            }
-            else
-            {
-              $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-              $scope.selection = {};
+                $scope.selection = {};
 
-              Groups.query().
-                then(
-                function (data)
-                {
-                  if (data.error)
+                Groups.query()
+                  .then(
+                  function (data)
                   {
-                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                    console.warn('error ->', data);
-                  }
-                  else
-                  {
-                    $scope.data = data;
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
 
-                    $rootScope.statusBar.off();
+                      $rootScope.statusBar.off();
+                    }
                   }
-                });
+                );
+              }
             }
-          });
-
-        /**
-         * TODO (Not working to reset master checkbox!)
-         */
-        //$scope.selectionMaster = {};
+          );
+        }
+        else
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.groups.noSelection);
+        }
       };
 
 
@@ -15626,22 +15668,6 @@ angular.module('WebPaige.Controllers.Groups', [])
 
 
       /**
-       * Selection toggle
-       */
-      $scope.toggleSelection = function (group, master)
-      {
-        var flag = (master) ? true : false,
-            members = angular.fromJson(Storage.get(group.uuid));
-
-        angular.forEach(
-          members, function (member)
-          {
-            $scope.selection[member.uuid] = flag;
-          });
-      };
-
-
-      /**
        * TODO: Not used in groups yet but login uses modal call..
        * Fetch parent groups
        */
@@ -15667,6 +15693,21 @@ angular.module('WebPaige.Controllers.Groups', [])
           {
             console.warn('containers -> ', result);
           });
+      };
+
+
+      /**
+       * Selection toggle
+       */
+      $scope.toggleSelection = function (group, master)
+      {
+        var flag = (master) ? false : true,
+            members = angular.fromJson(Storage.get(group.uuid));
+
+        angular.forEach(
+          members,
+          function (member) { $scope.selection[member.uuid] = flag }
+        );
       };
 
 

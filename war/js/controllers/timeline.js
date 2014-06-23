@@ -431,14 +431,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
        * Timeliner listener
        */
       $rootScope.$on(
-        'timeliner', function ()
+        'timeliner',
+        function ()
         {
           $scope.timeliner.load(
             {
               start: new Date(arguments[1].start).getTime(),
               end: new Date(arguments[1].end).getTime()
-            });
-        });
+            }
+          );
+        }
+      );
 
 
       /**
@@ -471,7 +474,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.data.periods.start,
             end: $scope.data.periods.end
-          });
+          }
+        );
       };
 
 
@@ -498,7 +502,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
               };
             }
 
-          });
+          }
+        );
       };
 
 
@@ -640,10 +645,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         $rootScope.planboardSync.clear();
 
         $scope.$apply(
-          function ()
-          {
-            $scope.selectedOriginal = $scope.selectedSlot();
-          });
+          function () { $scope.selectedOriginal = $scope.selectedSlot() }
+        );
       };
 
 
@@ -662,7 +665,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
             function ()
             {
               $scope.timeliner.redraw();
-            }, $rootScope.config.timers.TICKER);
+            },
+            $rootScope.config.timers.TICKER);
         }
       };
 
@@ -696,10 +700,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         //      console.log('div ->', $scope.groupPieHide);
 
         angular.forEach(
-          $scope.divisions, function (division)
+          $scope.divisions,
+          function (division)
           {
             $scope.groupPieHide[division.id] = false;
-          });
+          }
+        );
 
         if ($scope.timeline.current.division !== 'all')
         {
@@ -710,7 +716,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -725,7 +732,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -744,7 +752,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
             {
               start: $scope.timeline.range.start,
               end: $scope.timeline.range.end
-            }, true);
+            },
+            true
+          );
         }
         else
         {
@@ -781,7 +791,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   start: $scope.timeline.range.start,
                   end: $scope.timeline.range.end
                 }, true);
-            });
+            }
+          );
         }
       }
 
@@ -806,7 +817,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -1039,8 +1051,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
               recursive: options.content.recursive,
               id: options.content.id
             };
-          });
-
+          }
+        );
       };
 
 
@@ -1410,10 +1422,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       if ($scope.timeline && $scope.timeline.main)
       {
         setTimeout(
-          function ()
-          {
-            $scope.self.timeline.redraw();
-          }, $rootScope.config.timers.TICKER);
+          function () { $scope.self.timeline.redraw() },
+          $rootScope.config.timers.TICKER
+        );
       }
 
 
@@ -1442,7 +1453,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   {
                     start: $scope.data.periods.start,
                     end: $scope.data.periods.end
-                  }, true);
+                  },
+                  true
+                );
               }
             }, $rootScope.config.timers.PLANBOARD_SYNC);
         },
@@ -1450,10 +1463,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         /**
          * Clear planboard sync
          */
-        clear: function ()
-        {
-          $window.clearInterval($window.planboardSync);
-        }
+        clear: function () { $window.clearInterval($window.planboardSync) }
       };
 
 

@@ -290,7 +290,7 @@ var ui = {
         lastName: 'Last Name',
         saveGroup: 'Save Group',
         registerMember: 'Register Member',
-        role: 'PRofile',
+        role: 'Profile',
         selectRole: 'Select a role',
         selectGroup: 'Choose a group',
         email: 'Email',
@@ -303,7 +303,7 @@ var ui = {
         password: 'Password',
         saveMember: 'Save Member',
         searchedFor: 'Search results for ',
-        sorryCanNotFind: 'Sorry but we couldn\'t find what you are looking for.',
+        sorryCanNotFind: 'Sorry but we could not find what you are looking for.',
         // troubled
         // selectGroup: '-- select a group --',
         //
@@ -328,7 +328,7 @@ var ui = {
         deleting: 'Deleting group..',
         deleted: 'Group deleted successfully.',
         filterMembers: 'Filter members..',
-        searchFor: 'firstname, lastname..',
+        searchFor: 'first name, last name..',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
         requiredPeople: 'Required'
@@ -440,7 +440,8 @@ var ui = {
           memberSubmitRegister: 'Error with registering a member!',
           deleteGroup: 'Error with deleting a group!',
           emptyUserCredentials: 'Username or password can not be left empty!',
-          failedRegistration: 'Registering a new user is failed. Please try again.'
+          failedRegistration: 'Registering a new user is failed. Please try again.',
+          noSelection: 'Please select some members first!'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -934,7 +935,8 @@ var ui = {
           memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
           deleteGroup: 'Fout bij het verwijderen van een groep!',
           emptyUserCredentials: 'Vul gebruikersnaam en wachtwoord in!',
-          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.'
+          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.',
+          noSelection: 'Maak alstublieft eerst een selectie.'
         },
         login: {
           changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
