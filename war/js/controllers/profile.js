@@ -60,7 +60,7 @@ angular.module('WebPaige.Controllers.Profile', [])
           {
             if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
             {
-              if (MD5(userPassword) == data.resources.askPass)
+              if (MD5(userPassword) == $rootScope.app.resources.askPass)
               {
                 $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
 
