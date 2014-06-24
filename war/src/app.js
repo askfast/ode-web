@@ -3953,7 +3953,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             send: {
               method: 'POST',
-              params: {action: 'sendDirectMessage'}
+              params: {action: 'sendDirectMessage'},
+              isArray: true
             },
             save: {
               method: 'POST',
@@ -4396,11 +4397,10 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           null, message,
           function (result)
           {
-            var uuid = '',
-                returned = '';
+            var returned = '';
 
             angular.forEach(
-              result,
+              result[0],
               function (chr)
               {
                 if (chr.length == 1 && !angular.isObject(chr))
