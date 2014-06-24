@@ -183,6 +183,7 @@ release Live release for 120G 5-6-2013
 - feature: Dashboard 2.0 8-4-2013
 
 2.0.1
+- release: Version released. 5-4-2013
 - fix: Fixed rendering issues with pie chart of totals in statistics in plan 5-4-2013
 - feature: Dynamic listing for legend based on available states of that particular installation 4-4-2013
 - fix: Hot fix for not displaying date time conversions in message center 4-4-2013

@@ -284,72 +284,65 @@
           <div id="download-footer">
             <ul>
 
-              <!--Monster-->
-              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
-                <a class="btn btn-success btn-large"
-                   href="https://play.google.com/store/apps/details?id=com.askcs.standby">
-                  Download Android App
-                </a>
+              <li>
+                <div class="btn-group dropup">
+                  <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                    Download mobiele app <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu pull-right">
+
+                    <!--Monster-->
+                    <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
+                      <a href="https://play.google.com/store/apps/details?id=com.askcs.standby">
+                        Download Android App
+                      </a>
+                    </li>
+
+                    <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
+                      <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+                         target="itunes_store">
+                        Download iPhone App
+                      </a>
+                    </li>
+                    <!--end Monster-->
+
+                    <!--Demo-->
+                    <li
+                      ng-show="config.profile.mobileApp.status && (config.profile.meta == 'demo')">
+                      <a href="https://play.google.com/store/apps/details?id=com.askcs.standbydemo">
+                        Download Android App
+                      </a>
+                    </li>
+                    <!--end Demo-->
+
+                    <!--Others-->
+                    <li
+                      ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
+                      <a href="https://play.google.com/store/apps/details?id=com.askcs.standby">
+                        Download Android App
+                      </a>
+                    </li>
+
+                    <li ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
+                      <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+                         target="itunes_store">
+                        Download iPhone App
+                      </a>
+                    </li>
+                    <!--end Others-->
+                  </ul>
+                </div>
               </li>
-
-              <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
-                <a class="btn btn-success btn-large"
-                   href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
-                   target="itunes_store">
-                  Download iPhone App
-                </a>
-              </li>
-              <!--end Monster-->
-
-              <!--Demo-->
-              <li
-                ng-show="config.profile.mobileApp.status && (config.profile.meta == 'demo')">
-                <a class="btn btn-success btn-large"
-                   href="https://play.google.com/store/apps/details?id=com.askcs.standbydemo">
-                  Download Android App
-                </a>
-              </li>
-              <!--end Demo-->
-
-              <!--Others-->
-              <li
-                ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
-                <a class="btn btn-success btn-large"
-                   href="https://play.google.com/store/apps/details?id=com.askcs.standby">
-                  Download Android App
-                </a>
-              </li>
-
-              <li ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
-                <a class="btn btn-success btn-large"
-                   href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
-                   target="itunes_store">
-                  Download iPhone App
-                </a>
-              </li>
-              <!--end Others-->
-
-              <!--<li ng-show="config.profile.mobileApp.status"-->
-                  <!--ng-hide="(config.profile.meta == 'standby') || (config.profile.meta == 'monster') || (config.profile.meta == 'knrm')">-->
-                <!--<button class="btn btn-success btn-large"-->
-                        <!--type="button"-->
-                        <!--ng-click="downloadMobileApp('regular')">-->
-                  <!--Download Mobiele App-->
-                <!--</button>-->
-              <!--</li>-->
-
-              <!--<li ng-show="config.profile.mobileApp.experimental">-->
-              <!--<button class="btn btn-success btn-large"-->
-              <!--type="button"-->
-              <!--ng-click="downloadMobileApp('experimental')">-->
-              <!--Download Experimentele App-->
-              <!--</button>-->
-              <!--</li>-->
 
               <li>
-                <span class="muted">
+                <img src="img/standby_logo_footer.png" alt="StandBy Logo"/>
+              </li>
+
+              <li>
+                <span class="muted" style="display:block; margin-top: 4px">
                   <small>
-                    Ask Community Systems, 2013<br><i><a href="version.html" target="_blank" style="color: #dddddd;">StandBy v{{config.version}}</a></i>
+                    Ask Community Systems, 2013 &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <i><a href="version.html" target="_blank" style="color: #dddddd;">StandBy v{{config.version}}</a></i>
                   </small>
                 </span>
               </li>
@@ -360,9 +353,16 @@
         </div>
         <!-- end copyrights -->
 
+        <!--<span id="bullhorn">-->
+          <!--<i class="icon-bullhorn icon-white"></i>-->
+        <!--</span>-->
+
         <!-- general pre-loader -->
         <p class="muted" ng-show="loading.status">
-          <img src="img/ajax-loader.gif"><small><span ng-show="app.preloader.status">{{app.preloader.count}}% </span>{{loading.message}}</small>
+          <img src="img/ajax-loader.gif">
+          <small>
+            <span ng-show="app.preloader.status">{{app.preloader.count}}% </span>{{loading.message}}
+          </small>
         </p>
         <!-- end general pre-loader -->
 

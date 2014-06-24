@@ -53,7 +53,6 @@ dl {
   position: fixed;
   bottom: 50px;
   right: -10px;
-  z-index: 1;
   width: 400px;
   height: 400px
 }
@@ -324,5 +323,25 @@ dl {
     .mail {
       margin-left: 2px;
     }
+  }
+}
+
+
+#download-footer {
+  ul.dropdown-menu {
+    li {
+      min-width: 100%;
+      a {
+        display: block;
+      }
+    }
+  }
+}
+
+#footer {
+  #bullhorn {
+    position: absolute;
+    bottom: 17px;
+    left: 15px;
   }
 }

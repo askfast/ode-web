@@ -262,20 +262,14 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       function setGroupSelection ()
       {
-        // console.log('coming in here??', $("div#editTab"));
-
         angular.forEach(
           $("div#editTab select.chzn-select option"),
           function (option)
           {
-            // console.log('option ->', option);
-
             angular.forEach(
               $scope.groups,
               function (userGroup)
               {
-                // console.log('userGroup ->', userGroup);
-
                 if (option.innerHTML == userGroup.name)
                 {
                   option.selected = true;
