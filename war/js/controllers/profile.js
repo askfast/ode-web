@@ -24,7 +24,8 @@ angular.module('WebPaige.Controllers.Profile', [])
     'Groups',
     'Dater',
     'MD5',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5)
+    '$timeout',
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -32,7 +33,6 @@ angular.module('WebPaige.Controllers.Profile', [])
        * Fix styles
        */
       $rootScope.fixStyles();
-
 
       $rootScope.resetPhoneNumberChecker();
 
@@ -45,10 +45,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.userPassword = '';
 
-      $scope.showDeleteUserModal = function ()
-      {
-        $('#deleteUserModal').modal('show');
-      };
+      $scope.showDeleteUserModal = function () { $('#deleteUserModal').modal('show') };
 
       $scope.deleteUser = function (userPassword)
       {
@@ -121,12 +118,10 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       };
 
-
       /**
        * Pass periods
        */
       $scope.periods = Dater.getPeriods();
-
 
       /**
        * Pass current
@@ -147,7 +142,6 @@ angular.module('WebPaige.Controllers.Profile', [])
           data.user = data.slots.data;
         }
       }
-
 
       /**
        * Pass data container
@@ -181,18 +175,17 @@ angular.module('WebPaige.Controllers.Profile', [])
         )
       };
 
-
       /**
        * Pass profile information
        */
       $scope.profilemeta = data && data.resources;
-
 
       /**
        * Get groups of user
        */
       $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
+      $scope.availableGroups = angular.fromJson(Storage.get('groups'));
 
       /**
        * Default values for passwords
@@ -203,7 +196,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         new2:    ''
       };
 
-
       /**
        * Default form views
        */
@@ -211,7 +203,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         add:  false,
         edit: false
       };
-
 
       /**
        * Slot form toggle
@@ -249,7 +240,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       };
 
-
       /**
        * Reset inline forms
        */
@@ -265,12 +255,38 @@ angular.module('WebPaige.Controllers.Profile', [])
         };
       };
 
-
       /**
        * Extract view action from url and set view
        */
       setView($location.hash());
 
+      function setGroupSelection ()
+      {
+        // console.log('coming in here??', $("div#editTab"));
+
+        angular.forEach(
+          $("div#editTab select.chzn-select option"),
+          function (option)
+          {
+            // console.log('option ->', option);
+
+            angular.forEach(
+              $scope.groups,
+              function (userGroup)
+              {
+                // console.log('userGroup ->', userGroup);
+
+                if (option.innerHTML == userGroup.name)
+                {
+                  option.selected = true;
+                }
+              }
+            );
+          }
+        );
+
+        $("div#editTab select.chzn-select").trigger("liszt:updated");
+      }
 
       /**
        * View setter
@@ -284,6 +300,11 @@ angular.module('WebPaige.Controllers.Profile', [])
           timeline: false
         };
 
+        $timeout(
+          function () { setGroupSelection() },
+          100
+        );
+
         if (hash == 'edit')
         {
           $rootScope.phoneNumberParser($scope.profilemeta.PhoneAddress);
@@ -293,7 +314,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 
         $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
       }
-
 
       /**
        * Switch between the views and set hash accordingly
@@ -311,7 +331,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         );
       };
 
-
       $scope.$watch(
         'profilemeta.PhoneAddress',
         function (value)
@@ -322,7 +341,6 @@ angular.module('WebPaige.Controllers.Profile', [])
           }
         }
       );
-
 
       /**
        * Save user
@@ -387,7 +405,6 @@ angular.module('WebPaige.Controllers.Profile', [])
           });
 
       };
-
 
       /**
        * Change passwords
@@ -456,7 +473,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       };
 
-
       /**
        * Render timeline if hash is timeline
        */
@@ -465,7 +481,6 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         timelinebooter();
       }
-
 
       /**
        * TODO: Is it really needed? Since the timeline-booter is disabled
@@ -482,7 +497,6 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
           }, $rootScope.config.timers.TICKER);
       };
-
 
       function timelinebooter ()
       {
@@ -538,6 +552,5 @@ angular.module('WebPaige.Controllers.Profile', [])
         $('#timeline').html('');
         $('#timeline').append('<div id="userTimeline"></div>');
       }
-
     }
   ]);

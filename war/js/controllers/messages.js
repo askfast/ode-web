@@ -290,10 +290,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var count = 0;
 
         angular.forEach(
-          $scope.scheaduled.offsets, function ()
-          {
-            count ++;
-          });
+          $scope.scheaduled.offsets,
+          function () { count ++ }
+        );
 
         $scope.scheaduleCount = count;
       };
@@ -311,18 +310,21 @@ angular.module('WebPaige.Controllers.Messages', [])
         var scheaduled = Messages.scheaduled.find(id);
 
         angular.forEach(
-          scheaduled.types, function (type)
+          scheaduled.types,
+          function (type)
           {
             if (type == 'sms')    $scope.broadcast.sms = true;
             if (type == 'email')  $scope.broadcast.email = true;
-          });
+          }
+        );
 
         var members = angular.fromJson(Storage.get('members')),
             groups = angular.fromJson(Storage.get('groups')),
             receivers = [];
 
         angular.forEach(
-          scheaduled.recipients, function (recipient)
+          scheaduled.recipients,
+          function (recipient)
           {
             var name;
 
@@ -335,12 +337,14 @@ angular.module('WebPaige.Controllers.Messages', [])
                   group: $rootScope.ui.message.receiversUsers,
                   id: recipient,
                   name: name
-                });
+                }
+              );
             }
             else
             {
               angular.forEach(
-                groups, function (group)
+                groups,
+                function (group)
                 {
                   if (group.uuid == recipient)
                   {
@@ -351,11 +355,14 @@ angular.module('WebPaige.Controllers.Messages', [])
                         group: $rootScope.ui.message.receiversGroups,
                         id: recipient,
                         name: name
-                      });
+                      }
+                    );
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
 
         $scope.message = {
           subject: scheaduled.subject,
@@ -364,28 +371,40 @@ angular.module('WebPaige.Controllers.Messages', [])
         };
 
         angular.forEach(
-          $("div#composeTab select.chzn-select option"), function (option)
+          $("div#composeTab select.chzn-select option"),
+          function (option)
           {
             angular.forEach(
-              scheaduled.recipients, function (recipient)
+              scheaduled.recipients,
+              function (recipient)
               {
                 if (members[recipient])
                 {
-                  if (option.innerHTML == members[recipient].name) option.selected = true;
+                  if (option.innerHTML == members[recipient].name)
+                  {
+                    option.selected = true;
+                  }
                 }
                 else
                 {
                   angular.forEach(
-                    groups, function (group)
+                    groups,
+                    function (group)
                     {
                       if (group.uuid == recipient)
                       {
-                        if (option.innerHTML == group.name) option.selected = true;
+                        if (option.innerHTML == group.name)
+                        {
+                          option.selected = true;
+                        }
                       }
-                    });
+                    }
+                  );
                 }
-              });
-          });
+              }
+            );
+          }
+        );
 
         $("div#composeTab select.chzn-select").trigger("liszt:updated");
 

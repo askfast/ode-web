@@ -421,10 +421,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
       /**
        * Init timeline
        */
-      if ($scope.timeline)
-      {
-        $scope.timeliner.init();
-      }
+      if ($scope.timeline) { $scope.timeliner.init() }
 
 
       /**

@@ -376,7 +376,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 break;
 
               case 'manschap.4':
-                console.log('selection ->', selection);
                 $scope.saMembers.truck.push(
                   {
                     rank: 5,
