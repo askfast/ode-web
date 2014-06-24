@@ -4726,8 +4726,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
     {
       var Groups = $resource(
           $config.host + '/network/:action/:id',
-          {
-          },
+          {},
           {
             query: {
               method: 'GET',
@@ -4763,8 +4762,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
       var Containers = $resource(
           $config.host + '/node/:id/container',
-          {
-          },
+          {},
           {
             get: {
               method: 'GET',
@@ -4777,8 +4775,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
       var Parents = $resource(
           $config.host + '/parent',
-          {
-          },
+          {},
           {
             get: {
               method: 'GET',
@@ -4791,8 +4788,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 
       var Members = $resource(
           $config.host + '/network/:id/members/:mid',
-          {
-          },
+          {},
           {
             query: {
               method: 'GET',
@@ -4824,8 +4820,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
        */
       var Guards = $resource(
           $config.host + '/network/guard/:id/:team',
-          {
-          },
+          {},
           {
             global: {
               method: 'GET',
