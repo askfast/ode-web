@@ -4740,7 +4740,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             },
             save: {
               method: 'POST',
-              params: {id: ''}
+              params: {id: ''},
+              isArray: true
             },
             edit: {
               method: 'PUT',
@@ -5358,7 +5359,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               var returned = '';
 
               angular.forEach(
-                result,
+                result[0],
                 function (chr)
                 {
                   if (chr.length == 1 && ! angular.isObject(chr))
