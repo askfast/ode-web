@@ -361,8 +361,17 @@ angular.module('WebPaige.Controllers.Profile', [])
           resources.askPass = MD5(resources.Password);
         }
 
-        Profile.save($route.current.params.userId, resources)
-          .then(
+        if (resources.PhoneAddress)
+        {
+          var parsed = phoneNumberParser(resources.PhoneAddress, 'NL');
+
+          resources.PhoneAddress = parsed.formatting.e164;
+        }
+
+        Profile.save(
+          $route.current.params.userId,
+          resources
+        ).then(
           function (result)
           {
             if (result.error)

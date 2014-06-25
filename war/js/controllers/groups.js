@@ -646,8 +646,15 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         if ($rootScope.phoneNumberParsed.result)
         {
-          Profile.register(member).
-            then(
+          if (member.PhoneAddress)
+          {
+            var parsed = phoneNumberParser(member.PhoneAddress, 'NL');
+
+            member.PhoneAddress = parsed.formatting.e164;
+          }
+
+          Profile.register(member)
+            .then(
             function (result)
             {
               if (result.error)

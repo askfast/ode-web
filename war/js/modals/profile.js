@@ -222,8 +222,6 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           function (group) { groupIds.push(group.uuid) }
         );
 
-        console.log('setting groups ->', id, groupIds);
-
         Profile.membership(
           { id: id },
           groupIds,
