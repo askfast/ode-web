@@ -756,9 +756,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 

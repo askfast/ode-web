@@ -415,7 +415,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             receivers.push(
               {
                 id: member.uuid,
-                name: member.name,
+                // name: member.name,
+                name: member.resources.firstName + ' ' + member.resources.lastName,
                 lastName: member.resources.lastName,
                 firstName: member.resources.firstName,
                 group: $rootScope.ui.message.receiversUsers

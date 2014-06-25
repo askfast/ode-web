@@ -4330,7 +4330,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             receivers.push(
               {
                 id: member.uuid,
-                name: member.name,
+                // name: member.name,
+                name: member.resources.firstName + ' ' + member.resources.lastName,
                 lastName: member.resources.lastName,
                 firstName: member.resources.firstName,
                 group: $rootScope.ui.message.receiversUsers
@@ -7551,681 +7552,804 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 /**
  * Planboard data processors
  */
-.factory('Sloter', 
-[
-  '$rootScope', 'Storage', 
-  function ($rootScope, Storage) 
-  {
-    return {
+  .factory(
+  'Sloter',
+  [
+    '$rootScope', 'Storage',
+    function ($rootScope, Storage)
+    {
+      return {
 
-      /**
-       * Getters
-       */
-      get: {
-        groups: function ()
-        {
-          var groups = {};
-
-          angular.forEach(Storage.local.groups(), function (group)
+        /**
+         * Getters
+         */
+        get: {
+          groups: function ()
           {
-            groups[group.uuid] = group.name;
-          });
+            var groups = {};
 
-          return groups;
+            angular.forEach(
+              Storage.local.groups(),
+              function (group) { groups[group.uuid] = group.name }
+            );
+
+            return groups;
+          },
+
+          members: function ()
+          {
+            var members = {};
+
+            angular.forEach(
+              Storage.local.members(),
+              // function (member) { members[member.uuid] = member.name }
+              function (member) { members[member.uuid] = member.resources.firstName + ' ' + member.resources.lastName }
+            );
+
+            return members;
+          }
         },
 
-        members: function ()
+        /**
+         * Wrap for sorting in list
+         */
+        wrapper: function (rank) { return '<span style="display:none;">' + rank + '</span>' },
+
+        /**
+         * Wrap secrets in slot contents
+         */
+        secret: function (content) { return '<span class="secret">' + content + '</span>' },
+
+        /**
+         * Add loading bars on both ends
+         */
+        addLoading: function (data, timedata, rows)
         {
-          var members = {};
-
-          angular.forEach(Storage.local.members(), function (member)
-          {
-            members[member.uuid] = member.name;
-          });
-
-          return members;
-        }
-      },
-
-      /**
-       * Wrap for sorting in list
-       */
-      wrapper: function (rank) { return '<span style="display:none;">' + rank + '</span>' },
-
-      /**
-       * Wrap secrets in slot contents
-       */
-      secret: function (content) { return '<span class="secret">' + content + '</span>' },
-
-      /**
-       * Add loading bars on both ends
-       */
-      addLoading: function (data, timedata, rows)
-      {
-        angular.forEach(rows, function (row)
-        {
-          timedata.push({
-            start:  data.periods.end,
-            end:    1577836800000,
-            group:  row,
-            content:    'loading',
-            className:  'state-loading-right',
-            editable:   false
-          });
-
-          timedata.push({
-            start:  0,
-            end:    data.periods.start,
-            group:  row,
-            content:    'loading',
-            className:  'state-loading-left',
-            editable:   false
-          });
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Handle user slots
-       */
-      user: function (data, timedata, config)
-      {
-        var _this = this;
-
-        angular.forEach(data.user, function (slot, index)
-        {
-          angular.forEach(config.legenda, function (value, legenda)
-          {
-            if (slot.text == legenda && value)
+          angular.forEach(
+            rows,
+            function (row)
             {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-                content:  _this.secret(angular.toJson({
-                  type:   'slot',
-                  id:     index, // slot.id, 
-                  recursive: slot.recursive, 
-                  state:  slot.text 
-                  })),
-                className:  'slot-' + index + ' ' + config.states[slot.text].className,
-                editable:   true
-              });
+              timedata.push(
+                {
+                  start: data.periods.end,
+                  end: 1577836800000,
+                  group: row,
+                  content: 'loading',
+                  className: 'state-loading-right',
+                  editable: false
+                }
+              );
+
+              timedata.push(
+                {
+                  start: 0,
+                  end: data.periods.start,
+                  group: row,
+                  content: 'loading',
+                  className: 'state-loading-left',
+                  editable: false
+                }
+              );
             }
-          });       
-        });
+          );
 
-        timedata = _this.addLoading(data, timedata, [
-          _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
-          _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning')
-        ]);
+          return timedata;
+        },
 
-        return timedata;
-      },
-    
-      /**
-       * TODO: Look for ways to combine with user
-       * 
-       * Profile timeline data processing
-       */
-      profile: function (data, config)
-      {
-        var _this     = this,
-            timedata  = [];
-
-        angular.forEach(data, function (slot, index)
+        /**
+         * Handle user slots
+         */
+        user: function (data, timedata, config)
         {
-          angular.forEach(config.legenda, function (value, legenda)
-          {
-            if (slot.text == legenda && value)
+          var _this = this;
+
+          angular.forEach(
+            data.user,
+            function (slot, index)
             {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-                content: _this.secret(angular.toJson({
-                  type: 'slot',
-                  id:   index, // slot.id, 
-                  recursive:  slot.recursive, 
-                  state:      slot.text 
-                  })),
-                className:  'slot-' + index + ' ' + config.states[slot.text].className,
-                editable:   true
-              });  
+              angular.forEach(
+                config.legenda,
+                function (value, legenda)
+                {
+                  if (slot.text == legenda && value)
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: (slot.recursive) ?
+                               _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
+                               _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                        content: _this.secret(
+                          angular.toJson(
+                            {
+                              type: 'slot',
+                              id: index, // slot.id,
+                              recursive: slot.recursive,
+                              state: slot.text
+                            }
+                          )
+                        ),
+                        className: 'slot-' + index + ' ' + config.states[slot.text].className,
+                        editable: true
+                      });
+                  }
+                }
+              );
             }
-          });       
-        });
+          );
 
-        timedata.push({
-          start:  0,
-          end:    1,
-          group:  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
-          content:    '',
-          className:  null,
-          editable:   false
-        });
-
-        timedata.push({
-          start:  0,
-          end:    1,
-          group:  _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-          content:    '',
-          className:  null,
-          editable:   false
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Handle group name whether divisions selected
-       */
-      namer: function (agg, privilage)
-      {
-        var groups  = this.get.groups(),
-            name = groups[agg.id];
-
-        name = name.charAt(0).toUpperCase() + name.slice(1);
-
-        var link    = '<a href="#/groups?uuid=' +
-                      agg.id +
-                      '#view">' +
-                      name +
-                      '</a>',
-                      title;
-
-        if (!agg.division)
-        {
-          title = (privilage == 1) ? link : '<span>' + name + '</span>';
-        }
-        else
-        {
-          var label;
-
-          title = (privilage == 1) ? link : '<span>' + name + '</span>';
-
-          title += ' <span class="label">' + agg.division.label + '</span>';
-        }
-
-        return title;
-      },
-
-      /**
-       * Handle group aggs (with divisions) with bars
-       */
-      bars: function (data, timedata, config, privilage, current)
-      {
-        var _this = this,
-            maxh  = 0;
-
-        angular.forEach(_this.filtered(data, current), function (agg)
-        {
-          var name = _this.namer(agg, privilage);
-
-          angular.forEach(agg.data, function (slot)
-          {
-            if (slot.wish > maxh)  maxh = slot.wish;
-          });
-
-          angular.forEach(agg.data, function (slot)
-          {
-            var maxNum      = maxh,
-                num         = slot.wish,
-                xwish       = num,
-                height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
-                minHeight   = height,
-                style       = 'height:' + height + 'px;',
-                requirement = '<div class="requirement" style="' +
-                              style +
-                              '" ' +
-                              'title="' + 'Minimum aantal benodigden' + ': ' +
-                              num +
-                              ' personen"></div>';
-
-            num = slot.wish + slot.diff;
-
-            var xcurrent = num;
-
-            height = Math.round(num / maxNum * 80 + 20);
-
-            if (slot.diff >= 0 && slot.diff < 7)
-            {
-              var color;
-
-              switch (slot.diff)
-              {
-                case 0:
-                  color = config.densities.even;
-                  break;
-                case 1:
-                  color = config.densities.one;
-                  break;
-                case 2:
-                  color = config.densities.two;
-                  break;
-                case 3:
-                  color = config.densities.three;
-                  break;
-                case 4:
-                  color = config.densities.four;
-                  break;
-                case 5:
-                  color = config.densities.five;
-                  break;
-                case 6:
-                  color = config.densities.six;
-                  break;
-              }
-            }
-            else if (slot.diff >= 7)
-            {
-              color = config.densities.more;
-            }
-            else
-            {
-              color = config.densities.less;
-            }
-
-            var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
-
-            if (xcurrent > xwish) height = minHeight;
-
-            style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
-
-            var actual = '<div class="bar" style="' +
-              style +
-              '" ' +
-              ' title="Huidig aantal beschikbaar: ' +
-              num +
-              ' personen">' +
-              span +
-              '</div>';
-
-            if (  (slot.diff > 0  && config.legenda.groups.more) ||
-              (slot.diff == 0 && config.legenda.groups.even) ||
-              (slot.diff < 0  && config.legenda.groups.less) )
-            {
-              timedata.push({
-                start:    Math.round(slot.start * 1000),
-                end:      Math.round(slot.end * 1000),
-                group:    _this.wrapper('c') + name,
-                content:  requirement +
-                  actual +
-                  _this.secret(angular.toJson({
-                    type: 'group',
-                    diff: slot.diff,
-                    group: name
-                  })),
-                className: 'group-aggs',
-                editable: false
-              });
-            }
-
-            timedata = _this.addLoading(data, timedata, [
-              _this.wrapper('c') + name
+          timedata = _this.addLoading(
+            data, timedata, [
+                _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+                _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning')
             ]);
-          });
-        });
 
-        return timedata;
-      },
+          return timedata;
+        },
 
-      /**
-       * Process plain group aggs
-       */
-      aggs: function (data, timedata, config, privilage, current)
-      {
-        var _this = this;
-
-        angular.forEach(_this.filtered(data, current), function (agg)
+        /**
+         * TODO: Look for ways to combine with user
+         *
+         * Profile timeline data processing
+         */
+        profile: function (data, config)
         {
-          var name = _this.namer(agg, privilage);
+          var _this = this,
+              timedata = [];
 
-          angular.forEach(agg.data, function (slot)
-          {
-            var cn;
-
-            if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(
+            data,
+            function (slot, index)
             {
-              switch (slot.diff)
-              {
-                case 0: cn = 'even';  break;
-                case 1: cn = 1;       break;
-                case 2: cn = 2;       break;
-                case 3: cn = 3;       break;
-                case 4: cn = 4;       break;
-                case 5: cn = 5;       break;
-                case 6: cn = 6;       break;
-              }
+              angular.forEach(
+                config.legenda,
+                function (value, legenda)
+                {
+                  if (slot.text == legenda && value)
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: (slot.recursive) ?
+                               _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
+                               _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                        content: _this.secret(
+                          angular.toJson(
+                            {
+                              type: 'slot',
+                              id: index, // slot.id,
+                              recursive: slot.recursive,
+                              state: slot.text
+                            }
+                          )
+                        ),
+                        className: 'slot-' + index + ' ' + config.states[slot.text].className,
+                        editable: true
+                      }
+                    );
+                  }
+                }
+              );
             }
-            else if (slot.diff >= 7)
+          );
+
+          timedata.push(
             {
-              cn = 'more';
+              start: 0,
+              end: 1,
+              group: _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+              content: '',
+              className: null,
+              editable: false
             }
-            else
+          );
+
+          timedata.push(
             {
-              cn = 'less'
+              start: 0,
+              end: 1,
+              group: _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+              content: '',
+              className: null,
+              editable: false
             }
+          );
 
-            if ((slot.diff > 0  && config.legenda.groups.more) ||
-              (slot.diff == 0 && config.legenda.groups.even) ||
-              (slot.diff < 0  && config.legenda.groups.less))
-            {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group: _this.wrapper('c') + name,
-                content:  cn +
-                  _this.secret(angular.toJson({
-                    type: 'group',
-                    diff: slot.diff,
-                    group: name
-                  })),
-                className:  'agg-' + cn,
-                editable:   false
-              });
-            }
+          return timedata;
+        },
 
-            timedata = _this.addLoading(data, timedata, [
-              _this.wrapper('c') + name
-            ]);
-          });
-
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Wish slots
-       */
-      wishes: function (data, timedata, privilage)
-      {
-        var _this   = this;
-
-        var groups  = this.get.groups(),
-            name    = groups[data.aggs[0].id],
-            link    = '<a href="#/groups?uuid=' +
-                      data.aggs[0].id +
-                      '#view">' +
-                      name +
-                      '</a>',
-            title;
-
-        title = (privilage == 1) ? link : '<span>' + name + '</span>';
-
-        title += ' <span class="label">Behoefte (elke divisie)</span>';
-
-        angular.forEach(data.aggs.wishes, function (wish)
+        /**
+         * Handle group name whether divisions selected
+         */
+        namer: function (agg, privilage)
         {
-          var cn;
+          var groups = this.get.groups(),
+              name = groups[agg.id];
 
-          if ( wish.count >= 7 )
+          name = name.charAt(0).toUpperCase() + name.slice(1);
+
+          var link = '<a href="#/groups?uuid=' +
+                     agg.id +
+                     '#view">' +
+                     name +
+                     '</a>',
+              title;
+
+          if (! agg.division)
           {
-            cn = 'wishes-more';
-          }
-          else if ( wish.count == 0 )
-          {
-            cn = 'wishes-even';
+            title = (privilage == 1) ? link : '<span>' + name + '</span>';
           }
           else
           {
-            cn = 'wishes-' + wish.count;
+            var label;
+
+            title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+            title += ' <span class="label">' + agg.division.label + '</span>';
           }
 
-          timedata.push({
-            start:  Math.round(wish.start * 1000),
-            end:    Math.round(wish.end * 1000),
-            group:  _this.wrapper('c') + title,
-            content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
-              _this.secret(angular.toJson({
-                type: 'wish',
-                wish: wish.count,
-                group: title,
-                groupId: data.aggs[0].id
-              })),
-            className:  cn,
-            editable:   false
-          });
+          return title;
+        },
 
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + title
-          ]);
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Process members
-       */
-      members: function (data, timedata, config, privilage)
-      {
-        var _this   = this,
-            members = this.get.members(),
-            filtered = [];
-
-        angular.forEach(
-          data.members,
-          function (member)
-          {
-            if (member.lastName != undefined)
-            {
-              filtered.push(member);
-            }
-          }
-        );
-
-        data.members = filtered;
-
-        data.members.sort(
-          function (a, b)
-          {
-            var aName = a.lastName.toLowerCase(),
-                bName = b.lastName.toLowerCase();
-
-            if (aName < bName)
-            {
-              return -1;
-            }
-
-            if (aName > bName)
-            {
-              return 1;
-            }
-
-            return 0;
-          }
-        );
-
-        angular.forEach(data.members, function (member)
+        /**
+         * Handle group aggs (with divisions) with bars
+         */
+        bars: function (data, timedata, config, privilage, current)
         {
-          var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+          var _this = this,
+              maxh = 0;
 
-          var link = (privilage == 1) ?
-                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
-                        '<a href="#/profile/' + 
-                        member.id + 
-                        '#' + user + '">' +
-                        members[member.id] + 
-                        '</a>' :
-                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
-                        members[member.id];
-
-          angular.forEach(member.data, function (slot)
-          {
-            angular.forEach(config.legenda, function (value, legenda)
+          angular.forEach(
+            _this.filtered(data, current),
+            function (agg)
             {
-              if (slot.text == legenda && value)
+              var name = _this.namer(agg, privilage);
+
+              angular.forEach(
+                agg.data,
+                function (slot)
+                {
+                  if (slot.wish > maxh)
+                  {
+                    maxh = slot.wish;
+                  }
+                }
+              );
+
+              angular.forEach(
+                agg.data,
+                function (slot)
+                {
+                  var maxNum = maxh,
+                      num = slot.wish,
+                      xwish = num,
+                      height = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
+                      minHeight = height,
+                      style = 'height:' + height + 'px;',
+                      requirement = '<div class="requirement" style="' +
+                                    style +
+                                    '" ' +
+                                    'title="' + 'Minimum aantal benodigden' + ': ' +
+                                    num +
+                                    ' personen"></div>';
+
+                  num = slot.wish + slot.diff;
+
+                  var xcurrent = num;
+
+                  height = Math.round(num / maxNum * 80 + 20);
+
+                  if (slot.diff >= 0 && slot.diff < 7)
+                  {
+                    var color;
+
+                    switch (slot.diff)
+                    {
+                      case 0:
+                        color = config.densities.even;
+                        break;
+                      case 1:
+                        color = config.densities.one;
+                        break;
+                      case 2:
+                        color = config.densities.two;
+                        break;
+                      case 3:
+                        color = config.densities.three;
+                        break;
+                      case 4:
+                        color = config.densities.four;
+                        break;
+                      case 5:
+                        color = config.densities.five;
+                        break;
+                      case 6:
+                        color = config.densities.six;
+                        break;
+                    }
+                  }
+                  else if (slot.diff >= 7)
+                  {
+                    color = config.densities.more;
+                  }
+                  else
+                  {
+                    color = config.densities.less;
+                  }
+
+                  var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+
+                  if (xcurrent > xwish) height = minHeight;
+
+                  style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+
+                  var actual = '<div class="bar" style="' +
+                               style +
+                               '" ' +
+                               ' title="Huidig aantal beschikbaar: ' +
+                               num +
+                               ' personen">' +
+                               span +
+                               '</div>';
+
+                  if ((slot.diff > 0 && config.legenda.groups.more) ||
+                      (slot.diff == 0 && config.legenda.groups.even) ||
+                      (slot.diff < 0 && config.legenda.groups.less))
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: _this.wrapper('c') + name,
+                        content: requirement +
+                                 actual +
+                                 _this.secret(
+                                   angular.toJson(
+                                     {
+                                       type: 'group',
+                                       diff: slot.diff,
+                                       group: name
+                                     })),
+                        className: 'group-aggs',
+                        editable: false
+                      }
+                    );
+                  }
+
+                  timedata = _this.addLoading(
+                    data, timedata, [
+                        _this.wrapper('c') + name
+                    ]
+                  );
+                }
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Process plain group aggs
+         */
+        aggs: function (data, timedata, config, privilage, current)
+        {
+          var _this = this;
+
+          angular.forEach(
+            _this.filtered(data, current),
+            function (agg)
+            {
+              var name = _this.namer(agg, privilage);
+
+              angular.forEach(
+                agg.data,
+                function (slot)
+                {
+                  var cn;
+
+                  if (slot.diff >= 0 && slot.diff < 7)
+                  {
+                    switch (slot.diff)
+                    {
+                      case 0:
+                        cn = 'even';
+                        break;
+                      case 1:
+                        cn = 1;
+                        break;
+                      case 2:
+                        cn = 2;
+                        break;
+                      case 3:
+                        cn = 3;
+                        break;
+                      case 4:
+                        cn = 4;
+                        break;
+                      case 5:
+                        cn = 5;
+                        break;
+                      case 6:
+                        cn = 6;
+                        break;
+                    }
+                  }
+                  else if (slot.diff >= 7)
+                  {
+                    cn = 'more';
+                  }
+                  else
+                  {
+                    cn = 'less'
+                  }
+
+                  if ((slot.diff > 0 && config.legenda.groups.more) ||
+                      (slot.diff == 0 && config.legenda.groups.even) ||
+                      (slot.diff < 0 && config.legenda.groups.less))
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: _this.wrapper('c') + name,
+                        content: cn +
+                                 _this.secret(
+                                   angular.toJson(
+                                     {
+                                       type: 'group',
+                                       diff: slot.diff,
+                                       group: name
+                                     })),
+                        className: 'agg-' + cn,
+                        editable: false
+                      }
+                    );
+                  }
+
+                  timedata = _this.addLoading(
+                    data, timedata, [
+                        _this.wrapper('c') + name
+                    ]
+                  );
+                }
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Wish slots
+         */
+        wishes: function (data, timedata, privilage)
+        {
+          var _this = this;
+
+          var groups = this.get.groups(),
+              name = groups[data.aggs[0].id],
+              link = '<a href="#/groups?uuid=' +
+                     data.aggs[0].id +
+                     '#view">' +
+                     name +
+                     '</a>',
+              title;
+
+          title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+          title += ' <span class="label">Behoefte (elke divisie)</span>';
+
+          angular.forEach(
+            data.aggs.wishes,
+            function (wish)
+            {
+              var cn;
+
+              if (wish.count >= 7)
               {
-                timedata.push({
-                  start:  Math.round(slot.start * 1000),
-                  end:    Math.round(slot.end * 1000),
-                  group:  link,
-                  content: _this.secret(angular.toJson({ 
-                    type: 'member',
-                    id:   slot.id, 
-                    mid:  member.id,
-                    recursive: slot.recursive, 
-                    state: slot.text 
-                    })),
-                  className:  config.states[slot.text].className,
-                  editable:   false
+                cn = 'wishes-more';
+              }
+              else if (wish.count == 0)
+              {
+                cn = 'wishes-even';
+              }
+              else
+              {
+                cn = 'wishes-' + wish.count;
+              }
+
+              timedata.push(
+                {
+                  start: Math.round(wish.start * 1000),
+                  end: Math.round(wish.end * 1000),
+                  group: _this.wrapper('c') + title,
+                  content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
+                           _this.secret(
+                             angular.toJson(
+                               {
+                                 type: 'wish',
+                                 wish: wish.count,
+                                 group: title,
+                                 groupId: data.aggs[0].id
+                               })),
+                  className: cn,
+                  editable: false
+                }
+              );
+
+              timedata = _this.addLoading(
+                data, timedata, [
+                    _this.wrapper('c') + title
+                ]
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Process members
+         */
+        members: function (data, timedata, config, privilage)
+        {
+          var _this = this,
+              members = this.get.members(),
+              filtered = [];
+
+          angular.forEach(
+            data.members,
+            function (member)
+            {
+              if (member.lastName != undefined)
+              {
+                filtered.push(member);
+              }
+            }
+          );
+
+          data.members = filtered;
+
+          data.members.sort(
+            function (a, b)
+            {
+              var aName = a.lastName.toLowerCase(),
+                  bName = b.lastName.toLowerCase();
+
+              if (aName < bName)
+              {
+                return - 1;
+              }
+
+              if (aName > bName)
+              {
+                return 1;
+              }
+
+              return 0;
+            }
+          );
+
+          angular.forEach(
+            data.members,
+            function (member)
+            {
+              var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+
+              var link = (privilage == 1) ?
+                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
+                         '<a href="#/profile/' +
+                         member.id +
+                         '#' + user + '">' +
+                         members[member.id] +
+                         '</a>' :
+                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
+                         members[member.id];
+
+              angular.forEach(
+                member.data,
+                function (slot)
+                {
+                  angular.forEach(
+                    config.legenda,
+                    function (value, legenda)
+                    {
+                      if (slot.text == legenda && value)
+                      {
+                        timedata.push(
+                          {
+                            start: Math.round(slot.start * 1000),
+                            end: Math.round(slot.end * 1000),
+                            group: link,
+                            content: _this.secret(
+                              angular.toJson(
+                                {
+                                  type: 'member',
+                                  id: slot.id,
+                                  mid: member.id,
+                                  recursive: slot.recursive,
+                                  state: slot.text
+                                }
+                              )
+                            ),
+                            className: config.states[slot.text].className,
+                            editable: false
+                          }
+                        );
+                      }
+                    }
+                  );
+                }
+              );
+
+              timedata.push(
+                {
+                  start: 0,
+                  end: 0,
+                  group: link,
+                  content: null,
+                  className: null,
+                  editable: false
                 });
+
+              timedata = _this.addLoading(data, timedata, [link]);
+
+              /**
+               * TODO: Good place to host this here?
+               */
+              angular.forEach(
+                member.stats,
+                function (stat)
+                {
+                  var state = stat.state.split('.');
+                  state.reverse();
+
+                  stat.state = (stat.state.match(/bar-(.*)/)) ? stat.state : 'bar-' + state[0];
+                }
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Produce pie charts
+         */
+        pies: function (data, current)
+        {
+          var _this = this;
+
+          angular.forEach(
+            _this.filtered(data, current),
+            function (agg)
+            {
+              var id;
+
+              id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
+
+              if ($.browser.msie && $.browser.version == '8.0')
+              {
+                $('#' + 'groupPie-' + id).html('');
               }
+              else
+              {
+                document.getElementById('groupPie-' + id).innerHTML = '';
+              }
+
+              var ratios = [],
+                  colorMap = {
+                    more: '#415e6b',
+                    even: '#ba6a24',
+                    less: '#a0a0a0'
+                  },
+                  colors = [],
+                  xratios = [];
+
+              angular.forEach(
+                agg.ratios,
+                function (ratio, index)
+                {
+                  if (ratio != 0)
+                  {
+                    ratios.push(
+                      {
+                        ratio: ratio,
+                        color: colorMap[index]
+                      }
+                    );
+                  }
+                }
+              );
+
+              ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+              angular.forEach(
+                ratios,
+                function (ratio)
+                {
+                  colors.push(ratio.color);
+                  xratios.push(ratio.ratio);
+                }
+              );
+
+              var r = Raphael('groupPie-' + id),
+                  pie = r.piechart(120, 120, 100, xratios, { colors: colors });
             });
-          });
+        },
 
-          timedata.push({
-            start:    0,
-            end:      0,
-            group:    link,
-            content:  null,
-            className:null,
-            editable: false
-          });
 
-          timedata = _this.addLoading(data, timedata, [ link ]);
-
-          /**
-           * TODO: Good place to host this here?
-           */
-          angular.forEach(member.stats, function (stat)
-          {
-            var state = stat.state.split('.');
-            state.reverse();
-
-            stat.state = (stat.state.match(/bar-(.*)/)) ? stat.state : 'bar-' + state[0];
-          });
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Produce pie charts
-       */
-      pies: function (data, current)
-      {
-        var _this = this;
-
-        angular.forEach(_this.filtered(data, current), function (agg)
+        /**
+         * Filter group agg data based on selected divisions
+         */
+        filtered: function (data, current)
         {
-          var id;
+          var filtered = [];
 
-          id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
-
-          if ($.browser.msie && $.browser.version == '8.0')
+          if (current.division == 'all')
           {
-            $('#' + 'groupPie-' + id).html('');
+            filtered = data.aggs;
           }
           else
           {
-            document.getElementById('groupPie-' + id).innerHTML = '';
+            angular.forEach(
+              data.aggs,
+              function (agg)
+              {
+                if (current.division == agg.division.id)
+                {
+                  filtered.push(agg);
+                }
+              }
+            );
           }
 
-          var ratios    = [],
-            colorMap  = {
-              more: '#415e6b',
-              even: '#ba6a24',
-              less: '#a0a0a0'
-            },
-            colors    = [],
-            xratios   = [];
+          return filtered;
+        },
 
-          angular.forEach(agg.ratios, function (ratio, index)
+        /**
+         * Timeline data processing
+         */
+        process: function (data, config, divisions, privilage, current)
+        {
+          var _this = this,
+              timedata = [];
+
+          if (data.user) timedata = _this.user(data, timedata, config);
+
+          if (data.aggs)
           {
-            if (ratio != 0)
+            if (config.bar)
             {
-              ratios.push({
-                ratio: ratio,
-                color: colorMap[index]
-              });
+              timedata = _this.bars(data, timedata, config, privilage, current);
             }
-          });
-
-          ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
-
-          angular.forEach(ratios, function (ratio, index)
-          {
-            colors.push(ratio.color);
-            xratios.push(ratio.ratio);
-          });
-
-          var r   = Raphael('groupPie-' + id),
-              pie = r.piechart(120, 120, 100, xratios, { colors: colors });
-        });
-      },
-
-
-      /**
-       * Filter group agg data based on selected divisions
-       */
-      filtered: function (data, current)
-      {
-        var filtered = [];
-
-        if (current.division == 'all')
-        {
-          filtered = data.aggs;
-        }
-        else
-        {
-          angular.forEach(data.aggs, function (agg)
-          {
-            if (current.division == agg.division.id)
+            else
             {
-              filtered.push(agg);
+              timedata = _this.aggs(data, timedata, config, privilage, current);
             }
-          });
-        }
-
-        return filtered;
-      },
-      
-      /**
-       * Timeline data processing
-       */
-      process: function (data, config, divisions, privilage, current)
-      {
-        var _this     = this,
-            timedata  = [];
-
-        if (data.user) timedata = _this.user(data, timedata, config);
-
-        if (data.aggs)
-        {
-          if (config.bar) 
-          {
-            timedata = _this.bars(data, timedata, config, privilage, current);
           }
-          else
+
+          if (config.wishes && data.aggs) timedata = _this.wishes(data, timedata, privilage);
+
+          if (data.members) timedata = _this.members(data, timedata, config, privilage);
+
+          if (data.aggs)
           {
-            timedata = _this.aggs(data, timedata, config, privilage, current);
+            setTimeout(
+              function () { _this.pies(data, current) },
+              $rootScope.config.timers.TICKER
+            );
           }
+
+          return timedata;
         }
 
-        if (config.wishes && data.aggs) timedata = _this.wishes(data, timedata, privilage);
-
-        if (data.members) timedata = _this.members(data, timedata, config, privilage);
-
-        if (data.aggs)
-        {
-          setTimeout(function ()
-          {
-            _this.pies(data, current);
-          }, $rootScope.config.timers.TICKER);
-        }
-
-        return timedata;
       }
-
     }
-  }
-]);;'use strict';
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Services.Stats', ['ngResource'])
@@ -9064,7 +9188,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
         }
         else
         {
-          return members[id].name;
+          return members[id].resources.firstName + ' ' + members[id].resources.lastName;
         }
       };
     }
@@ -9150,7 +9274,10 @@ angular.module('WebPaige.Filters', ['ngResource'])
   {
     return function (string)
     {
-      if (string) return string.split('>')[1].split('<')[0];
+      if (string)
+      {
+        return string.split('>')[1].split('<')[0];
+      }
     }
   }
 )
@@ -9167,12 +9294,20 @@ angular.module('WebPaige.Filters', ['ngResource'])
     {
       return function (id)
       {
-        var groups = angular.fromJson(Storage.get('groups'));
+        var groups = angular.fromJson(Storage.get('groups')),
+            names = '';
 
         for (var i in groups)
         {
-          if (groups[i].uuid == id) return ', ' + groups[i].name;
+          if (groups[i].uuid == id)
+          {
+            // names += ', ' + groups[i].name;
+            names += groups[i].name;
+          }
         }
+
+        // if (names[0] == ',' && names[1] == '')
+        return names;
       }
     }
   ])
@@ -10228,8 +10363,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        * Defaults for loaders
        */
       $scope.loading = {
-        pies:       true,
-        alerts:     true,
+        pies: true,
+        alerts: true,
         smartAlarm: true
       };
 
@@ -10239,7 +10374,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.more = {
         status: false,
-        text:   $rootScope.ui.dashboard.showMore
+        text: $rootScope.ui.dashboard.showMore
       };
 
 
@@ -10248,7 +10383,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.synced = {
         alarms: new Date().getTime(),
-        pies:   new Date().getTime()
+        pies: new Date().getTime()
       };
 
 
@@ -10275,14 +10410,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           {
             selection[group.uuid] = {
               divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0),
-              status:    false
+              status: false
             };
           }
         }
       );
 
       $scope.popover = {
-        groups:    groups,
+        groups: groups,
         selection: selection,
         divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0)
       };
@@ -10337,7 +10472,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                 $scope.periods = {
                   start: pies[0].weeks.current.start.date,
-                  end:   pies[0].weeks.next.end.date
+                  end: pies[0].weeks.next.end.date
                 };
 
                 angular.forEach(
@@ -10369,16 +10504,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                                                     new Date(pie.weeks.current.state.start * 1000)
                                                       .toString($rootScope.config.formats.datetime) :
-                      $rootScope.ui.dashboard.possiblyAvailable;
+                                                    $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
                                                   new Date(pie.weeks.current.state.end * 1000)
                                                     .toString($rootScope.config.formats.datetime) :
-                      $rootScope.ui.dashboard.possiblyAvailable;
+                                                  $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.shortages = {
                       current: pie.weeks.current.shortages,
-                      next:    pie.weeks.next.shortages,
+                      next: pie.weeks.next.shortages,
                       total: pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
                     };
 
@@ -10489,7 +10624,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         var cached = angular.fromJson(Storage.get('guard'));
 
         $scope.saMembers = {
-          truck:    [],
+          truck: [],
           reserves: []
         };
 
@@ -10509,24 +10644,24 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               case 'bevelvoerder':
                 $scope.saMembers.truck.push(
                   {
-                    rank:  1,
-                    icon:  $rootScope.ui.dashboard.alarmRoles.commanderInitial,
-                    role:  $rootScope.ui.dashboard.alarmRoles.commander,
+                    rank: 1,
+                    icon: $rootScope.ui.dashboard.alarmRoles.commanderInitial,
+                    role: $rootScope.ui.dashboard.alarmRoles.commander,
                     class: 'sa-icon-commander',
-                    name:  translateName(selection.user),
-                    uuid:  selection.user
+                    name: translateName(selection.user),
+                    uuid: selection.user
                   });
                 break;
 
               case 'chauffeur':
                 $scope.saMembers.truck.push(
                   {
-                    rank:  0,
-                    icon:  $rootScope.ui.dashboard.alarmRoles.driverInitial,
-                    role:  $rootScope.ui.dashboard.alarmRoles.driver,
+                    rank: 0,
+                    icon: $rootScope.ui.dashboard.alarmRoles.driverInitial,
+                    role: $rootScope.ui.dashboard.alarmRoles.driver,
                     class: 'sa-icon-driver',
-                    name:  translateName(selection.user),
-                    uuid:  selection.user
+                    name: translateName(selection.user),
+                    uuid: selection.user
                   });
                 break;
 
@@ -10537,7 +10672,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M1',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
                     name: translateName(selection.user),
-                    uuid:  selection.user
+                    uuid: selection.user
                   });
                 break;
 
@@ -10548,7 +10683,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M2',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
                     name: translateName(selection.user),
-                    uuid:  selection.user
+                    uuid: selection.user
                   });
                 break;
 
@@ -10559,7 +10694,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M3',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
                     name: translateName(selection.user),
-                    uuid:  selection.user
+                    uuid: selection.user
                   });
                 break;
 
@@ -10570,7 +10705,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M4',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
                     name: translateName(selection.user),
-                    uuid:  selection.user
+                    uuid: selection.user
                   });
                 break;
             }
@@ -10609,8 +10744,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       {
                         reserves[state].push(
                           {
-                            id:    userID,
-                            name:  meta.name,
+                            id: userID,
+                            name: meta.name,
                             state: meta.state
                           }
                         );
@@ -10687,10 +10822,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       $scope.states['no-state'] = {
         className: 'no-state',
-        label:     $rootScope.ui.dashboard.possiblyAvailable,
-        color:     '#a0a0a0',
-        type:      $rootScope.ui.dashboard.noPlanning,
-        display:   false
+        label: $rootScope.ui.dashboard.possiblyAvailable,
+        color: '#a0a0a0',
+        type: $rootScope.ui.dashboard.noPlanning,
+        display: false
       };
 
       $scope.divisions = $rootScope.config.timeline.config.divisions;
@@ -10701,7 +10836,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         {
           $scope.divisions.unshift(
             {
-              id:    'all',
+              id: 'all',
               label: $rootScope.ui.dashboard.allDivisions
             }
           );
@@ -10709,7 +10844,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
 
       $scope.current = {
-        group:    initGroup,
+        group: initGroup,
         division: 'all'
       };
 
@@ -10720,17 +10855,20 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.getAvailability = function (groupID, divisionID)
       {
-        if (! groupID) { groupID = $scope.current.group }
+        if (! groupID)
+        { groupID = $scope.current.group }
 
-        if (! divisionID) { divisionID = $scope.current.division }
+        if (! divisionID)
+        { divisionID = $scope.current.division }
 
-        Slots.getMemberAvailabilities(groupID, divisionID)
-          .then(
+        Slots.getMemberAvailabilities(
+          groupID,
+          divisionID
+        ).then(
           function (results)
           {
             var ordered = {};
 
-            // Quick fix unwrapping $promise and $resolved
             angular.forEach(
               angular.fromJson(angular.toJson(results.members)),
               function (slots, id)
@@ -10741,8 +10879,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
                   end: (slots.length > 0 && slots[0].end !== undefined) ?
                        slots[0].end * 1000 :
-                    $rootScope.ui.dashboard.possiblyAvailable,
-                  name: (members && members[id]) ? members[id].name : id
+                       $rootScope.ui.dashboard.possiblyAvailable,
+                  name: (members && members[id]) ?
+                        members[id].resources.firstName + ' ' + members[id].resources.lastName :
+                        id
                 };
 
                 if (slots.length > 0)
@@ -10820,9 +10960,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             };
 
             if (ordered.hasOwnProperty('available'))
-            { ordered.available.sort(sortByEnd) }
+            {
+              ordered.available.sort(sortByEnd);
+            }
+
             if (ordered.hasOwnProperty('unavailable'))
-            { ordered.unavailable.sort(sortByEnd) }
+            {
+              ordered.unavailable.sort(sortByEnd);
+            }
 
             var _availables = [];
 
@@ -10831,7 +10976,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10840,7 +10987,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.Available')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10849,7 +10998,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10858,7 +11009,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10905,8 +11058,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         Settings.save(
           $rootScope.app.resources.uuid, {
             user: Storage.local.settings().user,
-            app:  {
-              group:   Storage.local.settings().app.group,
+            app: {
+              group: Storage.local.settings().app.group,
               widgets: {
                 groups: selection
               }
@@ -11034,9 +11187,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       {
         $.ajax(
           {
-            url:      $rootScope.config.profile.p2000.url,
+            url: $rootScope.config.profile.p2000.url,
             dataType: 'json',
-            success:  function (results)
+            success: function (results)
             {
               $rootScope.statusBar.off();
 
@@ -11059,7 +11212,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   $scope.synced.alarms = result.synced;
                 });
             },
-            error:    function ()
+            error: function ()
             {
               console.log('ERROR with getting p2000 for the first time!');
             }
@@ -11090,7 +11243,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               {
                 url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
                 dataType: 'jsonp',
-                success:  function (results)
+                success: function (results)
                 {
                   $rootScope.statusBar.off();
 
@@ -11113,7 +11266,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       $scope.synced.alarms = result.synced;
                     });
                 },
-                error:    function ()
+                error: function ()
                 {
                   console.log('ERROR with getting p2000 for the first time!');
                 }
@@ -11131,7 +11284,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           'setPrefixedAvailability', angular.toJson(
             {
               availability: availability,
-              period:       period
+              period: period
             }));
 
         $location.path('/planboard').search({ setPrefixedAvailability: true });
@@ -14434,9 +14587,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
