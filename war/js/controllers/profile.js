@@ -164,8 +164,10 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
-        Profile.role(data.resources.uuid, $scope.data.resources.role)
-          .then(
+        Profile.role(
+          data.resources.uuid,
+          $scope.data.resources.role
+        ).then(
           function ()
           {
             $rootScope.notifier.success($rootScope.ui.profile.changedRole);
@@ -186,14 +188,6 @@ angular.module('WebPaige.Controllers.Profile', [])
       $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
       $scope.availableGroups = angular.fromJson(Storage.get('groups'));
-
-//      $scope.$watch(
-//        'profilemeta.groups',
-//        function (values)
-//        {
-//          console.log('values ->', values);
-//        }
-//      );
 
       /**
        * Default values for passwords
@@ -362,9 +356,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 
         $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
-        /**
-         * Convert given other user's password to MD5
-         */
         if (resources.Password)
         {
           resources.askPass = MD5(resources.Password);
