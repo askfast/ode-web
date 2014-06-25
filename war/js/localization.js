@@ -377,7 +377,9 @@ var ui = {
           cancel: 'Cancel',
           success: 'User has been deleted. You are now redirected to groups page.'
         },
-        settingGroups: 'Setting up selected groups...'
+        settingGroups: 'Setting up selected groups...',
+        changingRole: 'Changing user role...',
+        changedRole: 'User role has been changed.'
       },
       settings: {
         settings: 'Settings',
@@ -874,7 +876,9 @@ var ui = {
           cancel: 'Annuleer',
           success: 'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
         },
-        settingGroups: 'Groeplijst aan het toepassen...'
+        settingGroups: 'Groeplijst aan het toepassen...',
+        changingRole: 'Gebruiker profiel aan het aanpassen...',
+        changedRole: 'Gebruiker profiel aangepast.'
       },
       settings: {
         settings: 'Instellingen',

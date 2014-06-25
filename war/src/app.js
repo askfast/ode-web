@@ -377,7 +377,9 @@ var ui = {
           cancel: 'Cancel',
           success: 'User has been deleted. You are now redirected to groups page.'
         },
-        settingGroups: 'Setting up selected groups...'
+        settingGroups: 'Setting up selected groups...',
+        changingRole: 'Changing user role...',
+        changedRole: 'User role has been changed.'
       },
       settings: {
         settings: 'Settings',
@@ -874,7 +876,9 @@ var ui = {
           cancel: 'Annuleer',
           success: 'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
         },
-        settingGroups: 'Groeplijst aan het toepassen...'
+        settingGroups: 'Groeplijst aan het toepassen...',
+        changingRole: 'Gebruiker profiel aan het aanpassen...',
+        changedRole: 'Gebruiker profiel aangepast.'
       },
       settings: {
         settings: 'Instellingen',
@@ -15996,13 +16000,13 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.changeRole = function ()
       {
-        $rootScope.statusBar.display('Gebruiker profiel aan het aanpassen...');
+        $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
         Profile.role(data.resources.uuid, $scope.data.resources.role)
           .then(
           function ()
           {
-            $rootScope.notifier.success('Gebruiker profiel aangepast.');
+            $rootScope.notifier.success($rootScope.ui.profile.changedRole);
 
             $rootScope.statusBar.off();
           }

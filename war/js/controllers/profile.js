@@ -162,13 +162,13 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.changeRole = function ()
       {
-        $rootScope.statusBar.display('Gebruiker profiel aan het aanpassen...');
+        $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
         Profile.role(data.resources.uuid, $scope.data.resources.role)
           .then(
           function ()
           {
-            $rootScope.notifier.success('Gebruiker profiel aangepast.');
+            $rootScope.notifier.success($rootScope.ui.profile.changedRole);
 
             $rootScope.statusBar.off();
           }
