@@ -36,11 +36,11 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..',
-        setting: 'Setting..',
+        loading: 'Loading...',
+        setting: 'Setting...',
         passwordChanged: 'Password changed!',
         button_changePassword: 'Change password',
-        button_changingPassword: 'Changing password..',
+        button_changingPassword: 'Changing password...',
         checkYourMail: 'Please check your email to reset your password!',
         help: {
           content: [
@@ -73,7 +73,7 @@ var ui = {
         statEven: 'enough',
         statLess: 'less',
         periods: 'Periods',
-        refreshGroupOverviews: 'Refreshing group overviews..',
+        refreshGroupOverviews: 'Refreshing group overviews...',
         showMore: 'meer tonen',
         showLess: 'minder tonen',
         gettingAlarms: 'Getting P2000 alarm messages',
@@ -231,7 +231,7 @@ var ui = {
         sent: 'Message sent.',
         typeSubject: 'Type a subject',
         // messages: 'Messages',
-        ph_filterMessage: 'Filter messages..',
+        ph_filterMessage: 'Filter messages...',
         noReceivers: 'Please select a receiver.',
         days: {
           monday:     'monday',
@@ -314,21 +314,21 @@ var ui = {
         noMembers: 'There are no members.',
         removeSelectedMembers: 'Remove Selected Members',
         memberCount:  'There are $v member(s)',
-        searchingMembers: 'Searching members..',
-        addingNewMember: 'Adding a new member..',
+        searchingMembers: 'Searching members...',
+        addingNewMember: 'Adding a new member...',
         memberAdded: 'Member added to group successfully.',
-        refreshingGroupMember: 'Refreshing groups and members list..',
-        removingMember: 'Removing member from group..',
+        refreshingGroupMember: 'Refreshing groups and members list...',
+        removingMember: 'Removing member from group...',
         memberRemoved: 'Member(s) removed from group successfully.',
-        removingSelected: 'Removing selected members..',
-        saving: 'Saving group..',
+        removingSelected: 'Removing selected members...',
+        saving: 'Saving group...',
         groupSaved: 'Group saved successfully.',
-        registerNew: 'Registering a new member..',
+        registerNew: 'Registering a new member...',
         memberRegstered: 'Member registered successfully.',
-        deleting: 'Deleting group..',
+        deleting: 'Deleting group...',
         deleted: 'Group deleted successfully.',
-        filterMembers: 'Filter members..',
-        searchFor: 'first name, last name..',
+        filterMembers: 'Filter members...',
+        searchFor: 'first name, last name...',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
         requiredPeople: 'Required'
@@ -359,15 +359,15 @@ var ui = {
         newAvail: 'New Availability',
         // saveProfile: 'Saving profile information...',
         refreshing: 'Refreshing profile information...',
-        dataChanged: 'Profile data is succesfully changed.',
+        dataChanged: 'Profile data is successfully changed.',
         pleaseFill: 'Please fill all fields!',
         passNotMatch: 'Provided passwords do not match! Please try it again.',
-        changingPass: 'Changing password..',
-        passChanged: 'Password is succesfully changed.',
+        changingPass: 'Changing password...',
+        passChanged: 'Password is successfully changed.',
         passwrong: 'Given current password is wrong! Please try it again.',
-        newTimeslotAdded: 'New timeslot added successfully.',
-        changingTimeslot: 'Changing a timeslot...',
-        timeslotChanged: 'Timeslot is succesfully changed.',
+        newTimeslotAdded: 'New planning added successfully.',
+        changingTimeslot: 'Changing planning...',
+        timeslotChanged: 'Planning is successfully changed.',
         passwordChangeWarning: 'Warning! with this option you will change password this user.',
         remove: {
           inProgress: 'Deleting user...',
@@ -376,7 +376,8 @@ var ui = {
           button: 'Delete this user',
           cancel: 'Cancel',
           success: 'User has been deleted. You are now redirected to groups page.'
-        }
+        },
+        settingGroups: 'Setting up selected groups...'
       },
       settings: {
         settings: 'Settings',
@@ -462,7 +463,8 @@ var ui = {
             self: 'You can not delete your own account!',
             auth: 'You are not allowed to delete any user!',
             empty: 'Please fill your password to continue.'
-          }
+          },
+          settingGroups: 'Setting up the list groups is failed!'
         },
         messages: {
           query: 'Error with getting messages!',
@@ -532,11 +534,11 @@ var ui = {
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
         logout: 'Uitloggen',
-        loading: 'Aan het laden..',
-        setting: 'Aan het toepassen..',
+        loading: 'Aan het laden...',
+        setting: 'Aan het toepassen...',
         passwordChanged: 'Wachtwoord gewijzigd!',
         button_changePassword: 'Wachtwoord wijzigen',
-        button_changingPassword: 'Wachtwoord aan het wijzigen..',
+        button_changingPassword: 'Wachtwoord aan het wijzigen...',
         checkYourMail: 'Controleer uw mailbox voor de instructies!',
         help: {
           content: [
@@ -843,10 +845,10 @@ var ui = {
         postcode: 'Postcode',
         city: 'Stad',
         username: 'Gebruikersnaam',
-        editProfile: 'Profiel wijzigen',
+        editProfile: 'Profiel wijzigen...',
         name: 'Naam',
-        saveProfile: 'Profiel opslaan',
-        passChange: 'Wachtwoord wijzigen',
+        saveProfile: 'Profiel opslaan...',
+        passChange: 'Wachtwoord wijzigen...',
         currentPass: 'Huidig wachtwoord',
         newPass: 'Nieuw wachtwoord',
         newPassRepeat: 'Herhaal nieuw wachtwoord',
@@ -871,7 +873,8 @@ var ui = {
           button: 'Verwijder deze gebruiker',
           cancel: 'Annuleer',
           success: 'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
-        }
+        },
+        settingGroups: 'Groeplijst aan het toepassen...'
       },
       settings: {
         settings: 'Instellingen',
@@ -957,7 +960,8 @@ var ui = {
             self: 'U kunt uw eigen account niet verwijderen.',
             auth: 'Gebruiker verwijderen is niet toegestaan voor u.',
             empty: 'Vul aub uw wachtwoord in.'
-          }
+          },
+          settingGroups: 'Fout bij het toepassen van groeplijst!'
         },
         messages: {
           query: 'Fout bij het ophalen van berichten!',
@@ -5506,10 +5510,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
     {
       var Profile = $resource(
           $config.host + '/node/:id/:section',
+          {},
           {
-          },
-          {
-            get:  {
+            get: {
               method: 'GET',
               params: { id: '', section: 'resource' }
             },
@@ -5518,13 +5521,18 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               params: { section: 'resource' }
             },
             remove: {
-              method:  'DELETE',
-              params:  {},
+              method: 'DELETE',
+              params: {},
               isArray: true
             },
             role: {
-              method:  'PUT',
-              params:  { section: 'role' },
+              method: 'PUT',
+              params: { section: 'role' },
+              isArray: true
+            },
+            membership: {
+              method: 'PUT',
+              params: { id: '', section: 'membership' },
               isArray: true
             }
           }
@@ -5539,8 +5547,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           },
           {
             profile: {
-              method:  'GET',
-              params:  {uuid: '', pass: '', name: '', phone: ''},
+              method: 'GET',
+              params: {uuid: '', pass: '', name: '', phone: ''},
               isArray: true
             }
           }
@@ -5552,7 +5560,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
           },
           {
-            get:  {
+            get: {
               method: 'GET',
               params: {}
             },
@@ -5599,12 +5607,12 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               {
                 Profile.prototype.save(
                   uuid, {
-                    firstName:    profile.firstName,
-                    lastName:     profile.lastName,
+                    firstName: profile.firstName,
+                    lastName: profile.lastName,
                     EmailAddress: profile.EmailAddress,
-                    PostAddress:  profile.PostAddress,
-                    PostZip:      profile.PostZip,
-                    PostCity:     profile.PostCity
+                    PostAddress: profile.PostAddress,
+                    PostZip: profile.PostZip,
+                    PostCity: profile.PostCity
                   }).then(
                   function (resourced)
                   {
@@ -5616,7 +5624,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                         calls.push(
                           Groups.addMember(
                             {
-                              id:    uuid,
+                              id: uuid,
                               group: group
                             }));
                       });
@@ -5628,9 +5636,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                         deferred.resolve(
                           {
                             registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
-                            roled:     roled,
+                            roled: roled,
                             resourced: resourced,
-                            grouped:   grouped
+                            grouped: grouped
                           });
                       });
 
@@ -5697,6 +5705,38 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
       /**
+       * Set the groups for user
+       */
+      Profile.prototype.membership = function (id, groups)
+      {
+        var deferred = $q.defer(),
+            groupIds = [];
+
+        angular.forEach(
+          groups,
+          function (group) { groupIds.push(group.uuid) }
+        );
+
+        console.log('setting groups ->', id, groupIds);
+
+        Profile.membership(
+          { id: id },
+          groupIds,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
        * Get profile of given user
        */
       Profile.prototype.get = function (id, localize)
@@ -5704,17 +5744,22 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         var deferred = $q.defer();
 
         Profile.get(
-          {
-            id: id
-          },
+          { id: id },
           function (result)
           {
-            if (id == $rootScope.app.resources.uuid) $rootScope.app.resources = result;
+            if (id == $rootScope.app.resources.uuid)
+            {
+              $rootScope.app.resources = result;
+            }
 
-            if (localize) Storage.add('resources', angular.toJson(result));
+            if (localize)
+            {
+              Storage.add('resources', angular.toJson(result));
+            }
 
             deferred.resolve({resources: result});
-          });
+          }
+        );
 
         return deferred.promise;
       };
@@ -5733,9 +5778,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
             Slots.user(
               {
-                user:  id,
+                user: id,
                 start: params.start,
-                end:   params.end
+                end: params.end
               }
             ).then(
               function (slots)
@@ -5743,8 +5788,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                 deferred.resolve(
                   angular.extend(
                     resources, {
-                      slots:   slots,
-                      synced:  new Date().getTime(),
+                      slots: slots,
+                      synced: new Date().getTime(),
                       periods: {
                         start: params.start * 1000,
                         end: params.end * 1000
@@ -5774,11 +5819,11 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
             deferred.resolve(
               {
-                slots:   slots,
-                synced:  new Date().getTime(),
+                slots: slots,
+                synced: new Date().getTime(),
                 periods: {
                   start: params.start,
-                  end:   params.end
+                  end: params.end
                 }
               });
           });
@@ -14987,7 +15032,8 @@ angular.module('WebPaige.Controllers.Groups', [])
       $scope.groups = data.groups;
 
 
-      var uuid, view;
+      var uuid,
+          view;
 
       /**
        * If no params or hashes given in url
@@ -15975,6 +16021,14 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.availableGroups = angular.fromJson(Storage.get('groups'));
 
+//      $scope.$watch(
+//        'profilemeta.groups',
+//        function (values)
+//        {
+//          console.log('values ->', values);
+//        }
+//      );
+
       /**
        * Default values for passwords
        */
@@ -16161,31 +16215,73 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
-              $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+              $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
 
-              var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid) ? true : false;
-
-              Profile.get($route.current.params.userId.toLowerCase(), flag)
-                .then(
-                function (data)
+              Profile.membership(
+                $route.current.params.userId,
+                $scope.profilemeta.groups
+              ).then(
+                function (result)
                 {
-                  if (data.error)
+                  if (result.error)
                   {
-                    $rootScope.notifier.error($rootScope.ui.errors.profile.get);
-                    console.warn('error ->', data);
+                    $rootScope.notifier.error($rootScope.ui.errors.profile.settingGroups);
+                    console.warn('error ->', result);
                   }
                   else
                   {
-                    $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+                    $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-                    $scope.data = data;
+                    Groups.query().
+                      then(
+                      function (data)
+                      {
+                        if (data.error)
+                        {
+                          $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                          console.warn('error ->', data);
+                        }
+                        else
+                        {
+                          $scope.groups = $route.current.params.userId &&
+                                          Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
-                    $rootScope.statusBar.off();
+                          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+                          var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid);
+
+                          Profile.get(
+                            $route.current.params.userId.toLowerCase(),
+                            flag
+                          ).then(
+                            function (data)
+                            {
+                              if (data.error)
+                              {
+                                $rootScope.notifier.error($rootScope.ui.errors.profile.get);
+                                console.warn('error ->', data);
+                              }
+                              else
+                              {
+                                $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
+                                $scope.data = data;
+
+                                $rootScope.statusBar.off();
+
+                                $('body').scrollTop(0);
+                              }
+                            }
+                          );
+                        }
+                      }
+                    );
                   }
-                });
+                }
+              );
             }
-          });
-
+          }
+        );
       };
 
       /**

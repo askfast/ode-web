@@ -36,11 +36,11 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..',
-        setting: 'Setting..',
+        loading: 'Loading...',
+        setting: 'Setting...',
         passwordChanged: 'Password changed!',
         button_changePassword: 'Change password',
-        button_changingPassword: 'Changing password..',
+        button_changingPassword: 'Changing password...',
         checkYourMail: 'Please check your email to reset your password!',
         help: {
           content: [
@@ -73,7 +73,7 @@ var ui = {
         statEven: 'enough',
         statLess: 'less',
         periods: 'Periods',
-        refreshGroupOverviews: 'Refreshing group overviews..',
+        refreshGroupOverviews: 'Refreshing group overviews...',
         showMore: 'meer tonen',
         showLess: 'minder tonen',
         gettingAlarms: 'Getting P2000 alarm messages',
@@ -231,7 +231,7 @@ var ui = {
         sent: 'Message sent.',
         typeSubject: 'Type a subject',
         // messages: 'Messages',
-        ph_filterMessage: 'Filter messages..',
+        ph_filterMessage: 'Filter messages...',
         noReceivers: 'Please select a receiver.',
         days: {
           monday:     'monday',
@@ -314,21 +314,21 @@ var ui = {
         noMembers: 'There are no members.',
         removeSelectedMembers: 'Remove Selected Members',
         memberCount:  'There are $v member(s)',
-        searchingMembers: 'Searching members..',
-        addingNewMember: 'Adding a new member..',
+        searchingMembers: 'Searching members...',
+        addingNewMember: 'Adding a new member...',
         memberAdded: 'Member added to group successfully.',
-        refreshingGroupMember: 'Refreshing groups and members list..',
-        removingMember: 'Removing member from group..',
+        refreshingGroupMember: 'Refreshing groups and members list...',
+        removingMember: 'Removing member from group...',
         memberRemoved: 'Member(s) removed from group successfully.',
-        removingSelected: 'Removing selected members..',
-        saving: 'Saving group..',
+        removingSelected: 'Removing selected members...',
+        saving: 'Saving group...',
         groupSaved: 'Group saved successfully.',
-        registerNew: 'Registering a new member..',
+        registerNew: 'Registering a new member...',
         memberRegstered: 'Member registered successfully.',
-        deleting: 'Deleting group..',
+        deleting: 'Deleting group...',
         deleted: 'Group deleted successfully.',
-        filterMembers: 'Filter members..',
-        searchFor: 'first name, last name..',
+        filterMembers: 'Filter members...',
+        searchFor: 'first name, last name...',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
         requiredPeople: 'Required'
@@ -359,15 +359,15 @@ var ui = {
         newAvail: 'New Availability',
         // saveProfile: 'Saving profile information...',
         refreshing: 'Refreshing profile information...',
-        dataChanged: 'Profile data is succesfully changed.',
+        dataChanged: 'Profile data is successfully changed.',
         pleaseFill: 'Please fill all fields!',
         passNotMatch: 'Provided passwords do not match! Please try it again.',
-        changingPass: 'Changing password..',
-        passChanged: 'Password is succesfully changed.',
+        changingPass: 'Changing password...',
+        passChanged: 'Password is successfully changed.',
         passwrong: 'Given current password is wrong! Please try it again.',
-        newTimeslotAdded: 'New timeslot added successfully.',
-        changingTimeslot: 'Changing a timeslot...',
-        timeslotChanged: 'Timeslot is succesfully changed.',
+        newTimeslotAdded: 'New planning added successfully.',
+        changingTimeslot: 'Changing planning...',
+        timeslotChanged: 'Planning is successfully changed.',
         passwordChangeWarning: 'Warning! with this option you will change password this user.',
         remove: {
           inProgress: 'Deleting user...',
@@ -376,7 +376,8 @@ var ui = {
           button: 'Delete this user',
           cancel: 'Cancel',
           success: 'User has been deleted. You are now redirected to groups page.'
-        }
+        },
+        settingGroups: 'Setting up selected groups...'
       },
       settings: {
         settings: 'Settings',
@@ -462,7 +463,8 @@ var ui = {
             self: 'You can not delete your own account!',
             auth: 'You are not allowed to delete any user!',
             empty: 'Please fill your password to continue.'
-          }
+          },
+          settingGroups: 'Setting up the list groups is failed!'
         },
         messages: {
           query: 'Error with getting messages!',
@@ -532,11 +534,11 @@ var ui = {
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
         logout: 'Uitloggen',
-        loading: 'Aan het laden..',
-        setting: 'Aan het toepassen..',
+        loading: 'Aan het laden...',
+        setting: 'Aan het toepassen...',
         passwordChanged: 'Wachtwoord gewijzigd!',
         button_changePassword: 'Wachtwoord wijzigen',
-        button_changingPassword: 'Wachtwoord aan het wijzigen..',
+        button_changingPassword: 'Wachtwoord aan het wijzigen...',
         checkYourMail: 'Controleer uw mailbox voor de instructies!',
         help: {
           content: [
@@ -843,10 +845,10 @@ var ui = {
         postcode: 'Postcode',
         city: 'Stad',
         username: 'Gebruikersnaam',
-        editProfile: 'Profiel wijzigen',
+        editProfile: 'Profiel wijzigen...',
         name: 'Naam',
-        saveProfile: 'Profiel opslaan',
-        passChange: 'Wachtwoord wijzigen',
+        saveProfile: 'Profiel opslaan...',
+        passChange: 'Wachtwoord wijzigen...',
         currentPass: 'Huidig wachtwoord',
         newPass: 'Nieuw wachtwoord',
         newPassRepeat: 'Herhaal nieuw wachtwoord',
@@ -871,7 +873,8 @@ var ui = {
           button: 'Verwijder deze gebruiker',
           cancel: 'Annuleer',
           success: 'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
-        }
+        },
+        settingGroups: 'Groeplijst aan het toepassen...'
       },
       settings: {
         settings: 'Instellingen',
@@ -957,7 +960,8 @@ var ui = {
             self: 'U kunt uw eigen account niet verwijderen.',
             auth: 'Gebruiker verwijderen is niet toegestaan voor u.',
             empty: 'Vul aub uw wachtwoord in.'
-          }
+          },
+          settingGroups: 'Fout bij het toepassen van groeplijst!'
         },
         messages: {
           query: 'Fout bij het ophalen van berichten!',

@@ -67,7 +67,8 @@ angular.module('WebPaige.Controllers.Groups', [])
       $scope.groups = data.groups;
 
 
-      var uuid, view;
+      var uuid,
+          view;
 
       /**
        * If no params or hashes given in url

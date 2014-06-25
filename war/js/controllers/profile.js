@@ -187,6 +187,14 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.availableGroups = angular.fromJson(Storage.get('groups'));
 
+//      $scope.$watch(
+//        'profilemeta.groups',
+//        function (values)
+//        {
+//          console.log('values ->', values);
+//        }
+//      );
+
       /**
        * Default values for passwords
        */
@@ -373,31 +381,73 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
-              $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+              $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
 
-              var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid) ? true : false;
-
-              Profile.get($route.current.params.userId.toLowerCase(), flag)
-                .then(
-                function (data)
+              Profile.membership(
+                $route.current.params.userId,
+                $scope.profilemeta.groups
+              ).then(
+                function (result)
                 {
-                  if (data.error)
+                  if (result.error)
                   {
-                    $rootScope.notifier.error($rootScope.ui.errors.profile.get);
-                    console.warn('error ->', data);
+                    $rootScope.notifier.error($rootScope.ui.errors.profile.settingGroups);
+                    console.warn('error ->', result);
                   }
                   else
                   {
-                    $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+                    $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-                    $scope.data = data;
+                    Groups.query().
+                      then(
+                      function (data)
+                      {
+                        if (data.error)
+                        {
+                          $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                          console.warn('error ->', data);
+                        }
+                        else
+                        {
+                          $scope.groups = $route.current.params.userId &&
+                                          Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
-                    $rootScope.statusBar.off();
+                          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+                          var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid);
+
+                          Profile.get(
+                            $route.current.params.userId.toLowerCase(),
+                            flag
+                          ).then(
+                            function (data)
+                            {
+                              if (data.error)
+                              {
+                                $rootScope.notifier.error($rootScope.ui.errors.profile.get);
+                                console.warn('error ->', data);
+                              }
+                              else
+                              {
+                                $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
+                                $scope.data = data;
+
+                                $rootScope.statusBar.off();
+
+                                $('body').scrollTop(0);
+                              }
+                            }
+                          );
+                        }
+                      }
+                    );
                   }
-                });
+                }
+              );
             }
-          });
-
+          }
+        );
       };
 
       /**
