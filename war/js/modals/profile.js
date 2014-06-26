@@ -71,12 +71,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
             },
             save: {
               method: 'POST',
-              params: {
-                /**
-                 * It seems like backend accepts data in request payload as body as well
-                 */
-                //tags: ''
-              }
+              params: {},
+              isArray: true
             }
           }
       );

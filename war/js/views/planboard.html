@@ -685,7 +685,7 @@
                 <div id="groupPie-{{agg.division.id}}" class="groupPies"></div>
 
                 <div class="groupStatInfo">
-                <h3>{{agg.id | groupIdToName}} <span ng-hide="!agg.division.label">&nbsp; ({{ agg.division.label }})</span></h3>
+                <h3>{{agg.id | groupIdToName | toTitleCase}} <span ng-hide="!agg.division.label">&nbsp; ({{ agg.division.label }})</span></h3>
                 <hr>
                 <ul>
                   <li>

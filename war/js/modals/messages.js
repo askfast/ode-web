@@ -483,6 +483,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           null, message,
           function (result)
           {
+            console.log('result ->', result);
+
             var returned = '';
 
             angular.forEach(

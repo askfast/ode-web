@@ -340,7 +340,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
           else
           {
-            Profile.getSlots($scope.timeline.user.id, stamps)
+            Profile.getSlots(
+              $scope.timeline.user.id, stamps)
               .then(
               function (data)
               {
@@ -409,6 +410,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         },
 
         /**
+         * TODO: Still being used?
          * Cancel add
          */
         cancelAdd: function ()
@@ -498,7 +500,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 end: Dater.readable.date(new Date(range.end).getTime())
               };
             }
-
           }
         );
       };

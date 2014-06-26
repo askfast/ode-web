@@ -584,7 +584,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
     'Storage',
     function (Storage)
     {
-      return function (id)
+      return function (id, comma)
       {
         var groups = angular.fromJson(Storage.get('groups')),
             names = '';
@@ -593,7 +593,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
         {
           if (groups[i].uuid == id)
           {
-            // names += ', ' + groups[i].name;
+            if (comma)
+            {
+              names += ', ';
+            }
+
             names += groups[i].name;
           }
         }

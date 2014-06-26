@@ -2314,6 +2314,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
             pass: '',
             key:  ''
           }
+          ,
+          isArray: true
         }
       });
 
@@ -2453,18 +2455,18 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    /**
 	     * RE-FACTORY
 	     */
-	    changePassword.get({
+	    changePassword.reset({
           uuid: uuid,
           pass: newpass,
           key:  key
         },
 	      function (result)
 	      {
-	        deferred.resolve(result);
+          deferred.resolve(result);
 	      },
 	      function (error)
 	      {
-	        deferred.resolve(error);
+          deferred.resolve(error);
 	      }
 	    );
 	    
@@ -4398,6 +4400,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           null, message,
           function (result)
           {
+            console.log('result ->', result);
+
             var returned = '';
 
             angular.forEach(
@@ -5563,12 +5567,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
             },
             save: {
               method: 'POST',
-              params: {
-                /**
-                 * It seems like backend accepts data in request payload as body as well
-                 */
-                //tags: ''
-              }
+              params: {},
+              isArray: true
             }
           }
       );
@@ -9292,7 +9292,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
     'Storage',
     function (Storage)
     {
-      return function (id)
+      return function (id, comma)
       {
         var groups = angular.fromJson(Storage.get('groups')),
             names = '';
@@ -9301,7 +9301,11 @@ angular.module('WebPaige.Filters', ['ngResource'])
         {
           if (groups[i].uuid == id)
           {
-            // names += ', ' + groups[i].name;
+            if (comma)
+            {
+              names += ', ';
+            }
+
             names += groups[i].name;
           }
         }
@@ -10396,10 +10400,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       angular.forEach(
         Storage.local.settings().app.widgets.groups,
-        function (value, group)
-        {
-          selection[group] = value;
-        }
+        function (value, group) { selection[group] = value }
       );
 
       angular.forEach(
@@ -10409,7 +10410,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           if (! selection[group.uuid])
           {
             selection[group.uuid] = {
-              divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0),
+              divisions: ($rootScope.config.timeline.config.divisions.length > 0),
               status: false
             };
           }
@@ -10419,7 +10420,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $scope.popover = {
         groups: groups,
         selection: selection,
-        divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0)
+        divisions: ($rootScope.config.timeline.config.divisions.length > 0)
       };
 
       $scope.checkAnyPies = function ()
@@ -10429,13 +10430,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $scope.loading.pies = false;
 
         angular.forEach(
-          Storage.local.settings().app.widgets.groups, function (group)
+          Storage.local.settings().app.widgets.groups,
+          function (group)
           {
             if (group.status === true)
             {
               ret = false;
             }
-          });
+          }
+        );
 
         return ret;
       };
@@ -10577,7 +10580,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                             {
                               ratio: ratio,
                               color: colorMap[index]
-                            });
+                            }
+                          );
                         }
                       }
                     );
@@ -10650,7 +10654,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     class: 'sa-icon-commander',
                     name: translateName(selection.user),
                     uuid: selection.user
-                  });
+                  }
+                );
                 break;
 
               case 'chauffeur':
@@ -10662,7 +10667,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     class: 'sa-icon-driver',
                     name: translateName(selection.user),
                     uuid: selection.user
-                  });
+                  }
+                );
                 break;
 
               case 'manschap.1':
@@ -10673,7 +10679,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
                     name: translateName(selection.user),
                     uuid: selection.user
-                  });
+                  }
+                );
                 break;
 
               case 'manschap.2':
@@ -10684,7 +10691,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
                     name: translateName(selection.user),
                     uuid: selection.user
-                  });
+                  }
+                );
                 break;
 
               case 'manschap.3':
@@ -10695,7 +10703,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
                     name: translateName(selection.user),
                     uuid: selection.user
-                  });
+                  }
+                );
                 break;
 
               case 'manschap.4':
@@ -10706,7 +10715,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
                     name: translateName(selection.user),
                     uuid: selection.user
-                  });
+                  }
+                );
                 break;
             }
 
@@ -10856,10 +10866,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $scope.getAvailability = function (groupID, divisionID)
       {
         if (! groupID)
-        { groupID = $scope.current.group }
+        {
+          groupID = $scope.current.group;
+        }
 
         if (! divisionID)
-        { divisionID = $scope.current.division }
+        {
+          divisionID = $scope.current.division;
+        }
 
         Slots.getMemberAvailabilities(
           groupID,
@@ -11047,16 +11061,19 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
         angular.forEach(
-          selection, function (selected)
+          selection,
+          function (selected)
           {
             if (! selected.status)
             {
               selected.divisions = false;
             }
-          });
+          }
+        );
 
         Settings.save(
-          $rootScope.app.resources.uuid, {
+          $rootScope.app.resources.uuid,
+          {
             user: Storage.local.settings().user,
             app: {
               group: Storage.local.settings().app.group,
@@ -11064,8 +11081,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 groups: selection
               }
             }
-          })
-          .then(
+          }).then(
           function ()
           {
             $rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
@@ -11074,7 +11090,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               .then(
               function () { getOverviews() }
             );
-          });
+          }
+        );
       };
 
 
@@ -11094,7 +11111,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             $scope.alarms.list = $scope.alarms.short;
 
             $scope.synced.alarms = result.synced;
-          });
+          }
+        );
       };
 
 
@@ -11175,7 +11193,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 top: $('#dashboardPopoverBtn').css('top'),
                 left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
                   + 'px'
-              });
+              }
+            );
           }, $rootScope.config.timers.TICKER);
       };
 
@@ -11210,7 +11229,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   $scope.alarms.list = $scope.alarms.short;
 
                   $scope.synced.alarms = result.synced;
-                });
+                }
+              );
             },
             error: function ()
             {
@@ -11231,10 +11251,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             angular.forEach(
               capcodes,
-              function (code)
-              {
-                _capcodes += code + ', ';
-              }
+              function (code) { _capcodes += code + ', ' }
             );
 
             $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
@@ -11264,14 +11281,17 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       $scope.alarms.list = $scope.alarms.short;
 
                       $scope.synced.alarms = result.synced;
-                    });
+                    }
+                  );
                 },
                 error: function ()
                 {
                   console.log('ERROR with getting p2000 for the first time!');
                 }
-              });
-          });
+              }
+            );
+          }
+        );
       }
 
 
@@ -11281,11 +11301,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $scope.setPrefixedAvailability = function (availability, period)
       {
         Storage.session.add(
-          'setPrefixedAvailability', angular.toJson(
+          'setPrefixedAvailability',
+          angular.toJson(
             {
               availability: availability,
               period: period
-            }));
+            }
+          )
+        );
 
         $location.path('/planboard').search({ setPrefixedAvailability: true });
       }
@@ -12276,7 +12299,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
           else
           {
-            Profile.getSlots($scope.timeline.user.id, stamps)
+            Profile.getSlots(
+              $scope.timeline.user.id, stamps)
               .then(
               function (data)
               {
@@ -12345,6 +12369,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         },
 
         /**
+         * TODO: Still being used?
          * Cancel add
          */
         cancelAdd: function ()
@@ -12434,7 +12459,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 end: Dater.readable.date(new Date(range.end).getTime())
               };
             }
-
           }
         );
       };
@@ -16207,28 +16231,33 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
         else
         {
-          $scope.slot = {};
+          $timeout(
+            function ()
+            {
+              $scope.slot = {};
 
-          $scope.slot = {
-            start:     {
-              date:     new Date().toString($rootScope.config.formats.date),
-              time:     new Date().toString($rootScope.config.formats.time),
-              datetime: new Date().toISOString()
-            },
-            end:       {
-              date:     new Date().toString($rootScope.config.formats.date),
-              time:     new Date().addHours(1).toString($rootScope.config.formats.time),
-              datetime: new Date().toISOString()
-            },
-            state:     '',
-            recursive: false,
-            id:        ''
-          };
+              $scope.slot = {
+                start:     {
+                  date:     new Date().toString($rootScope.config.formats.date),
+                  time:     new Date().toString($rootScope.config.formats.time),
+                  datetime: new Date().toISOString()
+                },
+                end:       {
+                  date:     new Date().toString($rootScope.config.formats.date),
+                  time:     new Date().addHours(1).toString($rootScope.config.formats.time),
+                  datetime: new Date().toISOString()
+                },
+                state:     '',
+                recursive: false,
+                id:        ''
+              };
 
-          $scope.forms = {
-            add:  true,
-            edit: false
-          };
+              $scope.forms = {
+                add:  true,
+                edit: false
+              };
+            }, 20
+          );
         }
       };
 
@@ -16237,14 +16266,19 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.resetInlineForms = function ()
       {
-        $scope.slot = {};
+        $timeout(
+          function ()
+          {
+            $scope.slot = {};
 
-        $scope.original = {};
+            $scope.original = {};
 
-        $scope.forms = {
-          add:  false,
-          edit: false
-        };
+            $scope.forms = {
+              add:  false,
+              edit: false
+            };
+          }, 20
+        );
       };
 
       /**

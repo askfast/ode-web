@@ -217,28 +217,33 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
         else
         {
-          $scope.slot = {};
+          $timeout(
+            function ()
+            {
+              $scope.slot = {};
 
-          $scope.slot = {
-            start:     {
-              date:     new Date().toString($rootScope.config.formats.date),
-              time:     new Date().toString($rootScope.config.formats.time),
-              datetime: new Date().toISOString()
-            },
-            end:       {
-              date:     new Date().toString($rootScope.config.formats.date),
-              time:     new Date().addHours(1).toString($rootScope.config.formats.time),
-              datetime: new Date().toISOString()
-            },
-            state:     '',
-            recursive: false,
-            id:        ''
-          };
+              $scope.slot = {
+                start:     {
+                  date:     new Date().toString($rootScope.config.formats.date),
+                  time:     new Date().toString($rootScope.config.formats.time),
+                  datetime: new Date().toISOString()
+                },
+                end:       {
+                  date:     new Date().toString($rootScope.config.formats.date),
+                  time:     new Date().addHours(1).toString($rootScope.config.formats.time),
+                  datetime: new Date().toISOString()
+                },
+                state:     '',
+                recursive: false,
+                id:        ''
+              };
 
-          $scope.forms = {
-            add:  true,
-            edit: false
-          };
+              $scope.forms = {
+                add:  true,
+                edit: false
+              };
+            }, 20
+          );
         }
       };
 
@@ -247,14 +252,19 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.resetInlineForms = function ()
       {
-        $scope.slot = {};
+        $timeout(
+          function ()
+          {
+            $scope.slot = {};
 
-        $scope.original = {};
+            $scope.original = {};
 
-        $scope.forms = {
-          add:  false,
-          edit: false
-        };
+            $scope.forms = {
+              add:  false,
+              edit: false
+            };
+          }, 20
+        );
       };
 
       /**

@@ -205,7 +205,7 @@
 
     <div class="head">
       <h4>
-        Overzicht beschikbaarheid{{current.group | groupIdToName | toTitleCase}}
+        Overzicht beschikbaarheid{{current.group | groupIdToName:true | toTitleCase}}
         <span ng-show="(current.division != 'all')">({{current.division | divisionIdToName}})</span>
       </h4>
 
