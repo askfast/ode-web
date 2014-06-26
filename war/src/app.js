@@ -3956,7 +3956,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             send: {
               method: 'POST',
               params: {action: 'sendDirectMessage'}
-              //,isArray: true
+              ,isArray: true
             },
             save: {
               method: 'POST',
