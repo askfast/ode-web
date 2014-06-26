@@ -38,8 +38,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             send: {
               method: 'POST',
-              params: {action: 'sendDirectMessage'},
-              isArray: true
+              params: {action: 'sendDirectMessage'}
+              //,isArray: true
             },
             save: {
               method: 'POST',
@@ -480,15 +480,20 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
         };
 
         Messages.send(
-          null, message,
+          null,
+          message,
           function (result)
           {
-            console.log('result ->', result);
+            console.log('result ->', result, angular.isArray(result) );
 
             var returned = '';
 
+            var chunks = (angular.isArray(result)) ? result[0] : result;
+
+            console.log('chunk result ->', result);
+
             angular.forEach(
-              result[0],
+              chunks,
               function (chr)
               {
                 if (chr.length == 1 && !angular.isObject(chr))
@@ -497,6 +502,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
                 }
               }
             );
+
+            console.log('returned ->', returned);
 
             deferred.resolve(returned);
           },

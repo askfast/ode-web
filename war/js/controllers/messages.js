@@ -811,10 +811,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         if (message.receivers)
         {
-          Messages.send(message, broadcast)
-            .then(
+          Messages.send(
+            message,
+            broadcast
+          ).then(
             function (uuid)
             {
+              console.log('uuid ->', uuid);
+
               if (uuid.error)
               {
                 $rootScope.notifier.error($rootScope.ui.errors.messages.send);
