@@ -57,7 +57,9 @@ angular.module('WebPaige.Controllers.Profile', [])
           {
             if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
             {
-              if (MD5(userPassword) == $rootScope.app.resources.askPass)
+              // console.log('pass ->', MD5(userPassword), $rootScope.app.resources.askPass);
+              // Switched from $rootScope.app.resources.askPass to localStorage
+              if (MD5(userPassword) == Storage.get('askPass'))
               {
                 $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
 

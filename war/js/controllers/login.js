@@ -168,12 +168,20 @@ angular.module('WebPaige.Controllers.Login', [])
           .attr('disabled', 'disabled');
 
         Storage.add(
-          'logindata', angular.toJson(
+          'logindata',
+          angular.toJson(
             {
               username: $scope.logindata.username,
               password: $scope.logindata.password,
               remember: $scope.logindata.remember
-            }));
+            }
+          )
+        );
+
+        Storage.add(
+          'askPass',
+          MD5($scope.logindata.password)
+        );
 
         createLocalGuardContainer();
 

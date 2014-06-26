@@ -9673,12 +9673,20 @@ angular.module('WebPaige.Controllers.Login', [])
           .attr('disabled', 'disabled');
 
         Storage.add(
-          'logindata', angular.toJson(
+          'logindata',
+          angular.toJson(
             {
               username: $scope.logindata.username,
               password: $scope.logindata.password,
               remember: $scope.logindata.remember
-            }));
+            }
+          )
+        );
+
+        Storage.add(
+          'askPass',
+          MD5($scope.logindata.password)
+        );
 
         createLocalGuardContainer();
 
@@ -16071,7 +16079,9 @@ angular.module('WebPaige.Controllers.Profile', [])
           {
             if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
             {
-              if (MD5(userPassword) == $rootScope.app.resources.askPass)
+              // console.log('pass ->', MD5(userPassword), $rootScope.app.resources.askPass);
+              // Switched from $rootScope.app.resources.askPass to localStorage
+              if (MD5(userPassword) == Storage.get('askPass'))
               {
                 $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
 
