@@ -36,11 +36,11 @@ var ui = {
         loading_Members: 'Loading members...',
         loading_everything: 'Everything loaded!',
         logout: 'Logout',
-        loading: 'Loading..',
-        setting: 'Setting..',
+        loading: 'Loading...',
+        setting: 'Setting...',
         passwordChanged: 'Password changed!',
         button_changePassword: 'Change password',
-        button_changingPassword: 'Changing password..',
+        button_changingPassword: 'Changing password...',
         checkYourMail: 'Please check your email to reset your password!',
         help: {
           content: [
@@ -73,7 +73,7 @@ var ui = {
         statEven: 'enough',
         statLess: 'less',
         periods: 'Periods',
-        refreshGroupOverviews: 'Refreshing group overviews..',
+        refreshGroupOverviews: 'Refreshing group overviews...',
         showMore: 'meer tonen',
         showLess: 'minder tonen',
         gettingAlarms: 'Getting P2000 alarm messages',
@@ -231,7 +231,7 @@ var ui = {
         sent: 'Message sent.',
         typeSubject: 'Type a subject',
         // messages: 'Messages',
-        ph_filterMessage: 'Filter messages..',
+        ph_filterMessage: 'Filter messages...',
         noReceivers: 'Please select a receiver.',
         days: {
           monday:     'monday',
@@ -290,7 +290,7 @@ var ui = {
         lastName: 'Last Name',
         saveGroup: 'Save Group',
         registerMember: 'Register Member',
-        role: 'PRofile',
+        role: 'Profile',
         selectRole: 'Select a role',
         selectGroup: 'Choose a group',
         email: 'Email',
@@ -303,7 +303,7 @@ var ui = {
         password: 'Password',
         saveMember: 'Save Member',
         searchedFor: 'Search results for ',
-        sorryCanNotFind: 'Sorry but we couldn\'t find what you are looking for.',
+        sorryCanNotFind: 'Sorry but we could not find what you are looking for.',
         // troubled
         // selectGroup: '-- select a group --',
         //
@@ -314,21 +314,21 @@ var ui = {
         noMembers: 'There are no members.',
         removeSelectedMembers: 'Remove Selected Members',
         memberCount:  'There are $v member(s)',
-        searchingMembers: 'Searching members..',
-        addingNewMember: 'Adding a new member..',
+        searchingMembers: 'Searching members...',
+        addingNewMember: 'Adding a new member...',
         memberAdded: 'Member added to group successfully.',
-        refreshingGroupMember: 'Refreshing groups and members list..',
-        removingMember: 'Removing member from group..',
+        refreshingGroupMember: 'Refreshing groups and members list...',
+        removingMember: 'Removing member from group...',
         memberRemoved: 'Member(s) removed from group successfully.',
-        removingSelected: 'Removing selected members..',
-        saving: 'Saving group..',
+        removingSelected: 'Removing selected members...',
+        saving: 'Saving group...',
         groupSaved: 'Group saved successfully.',
-        registerNew: 'Registering a new member..',
+        registerNew: 'Registering a new member...',
         memberRegstered: 'Member registered successfully.',
-        deleting: 'Deleting group..',
+        deleting: 'Deleting group...',
         deleted: 'Group deleted successfully.',
-        filterMembers: 'Filter members..',
-        searchFor: 'firstname, lastname..',
+        filterMembers: 'Filter members...',
+        searchFor: 'first name, last name...',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
         requiredPeople: 'Required'
@@ -359,15 +359,15 @@ var ui = {
         newAvail: 'New Availability',
         // saveProfile: 'Saving profile information...',
         refreshing: 'Refreshing profile information...',
-        dataChanged: 'Profile data is succesfully changed.',
+        dataChanged: 'Profile data is successfully changed.',
         pleaseFill: 'Please fill all fields!',
         passNotMatch: 'Provided passwords do not match! Please try it again.',
-        changingPass: 'Changing password..',
-        passChanged: 'Password is succesfully changed.',
+        changingPass: 'Changing password...',
+        passChanged: 'Password is successfully changed.',
         passwrong: 'Given current password is wrong! Please try it again.',
-        newTimeslotAdded: 'New timeslot added successfully.',
-        changingTimeslot: 'Changing a timeslot...',
-        timeslotChanged: 'Timeslot is succesfully changed.',
+        newTimeslotAdded: 'New planning added successfully.',
+        changingTimeslot: 'Changing planning...',
+        timeslotChanged: 'Planning is successfully changed.',
         passwordChangeWarning: 'Warning! with this option you will change password this user.',
         remove: {
           inProgress: 'Deleting user...',
@@ -376,7 +376,10 @@ var ui = {
           button: 'Delete this user',
           cancel: 'Cancel',
           success: 'User has been deleted. You are now redirected to groups page.'
-        }
+        },
+        settingGroups: 'Setting up selected groups...',
+        changingRole: 'Changing user role...',
+        changedRole: 'User role has been changed.'
       },
       settings: {
         settings: 'Settings',
@@ -440,7 +443,8 @@ var ui = {
           memberSubmitRegister: 'Error with registering a member!',
           deleteGroup: 'Error with deleting a group!',
           emptyUserCredentials: 'Username or password can not be left empty!',
-          failedRegistration: 'Registering a new user is failed. Please try again.'
+          failedRegistration: 'Registering a new user is failed. Please try again.',
+          noSelection: 'Please select some members first!'
         },
         login: {
           changePass: 'Something wrong with password changing!',
@@ -461,7 +465,8 @@ var ui = {
             self: 'You can not delete your own account!',
             auth: 'You are not allowed to delete any user!',
             empty: 'Please fill your password to continue.'
-          }
+          },
+          settingGroups: 'Setting up the list groups is failed!'
         },
         messages: {
           query: 'Error with getting messages!',
@@ -531,11 +536,11 @@ var ui = {
         loading_Members: 'Leden laden...',
         loading_everything: 'Alles is geladen!',
         logout: 'Uitloggen',
-        loading: 'Aan het laden..',
-        setting: 'Aan het toepassen..',
+        loading: 'Aan het laden...',
+        setting: 'Aan het toepassen...',
         passwordChanged: 'Wachtwoord gewijzigd!',
         button_changePassword: 'Wachtwoord wijzigen',
-        button_changingPassword: 'Wachtwoord aan het wijzigen..',
+        button_changingPassword: 'Wachtwoord aan het wijzigen...',
         checkYourMail: 'Controleer uw mailbox voor de instructies!',
         help: {
           content: [
@@ -842,10 +847,10 @@ var ui = {
         postcode: 'Postcode',
         city: 'Stad',
         username: 'Gebruikersnaam',
-        editProfile: 'Profiel wijzigen',
+        editProfile: 'Profiel wijzigen...',
         name: 'Naam',
-        saveProfile: 'Profiel opslaan',
-        passChange: 'Wachtwoord wijzigen',
+        saveProfile: 'Profiel opslaan...',
+        passChange: 'Wachtwoord wijzigen...',
         currentPass: 'Huidig wachtwoord',
         newPass: 'Nieuw wachtwoord',
         newPassRepeat: 'Herhaal nieuw wachtwoord',
@@ -870,7 +875,10 @@ var ui = {
           button: 'Verwijder deze gebruiker',
           cancel: 'Annuleer',
           success: 'Gebruiker is verwijderd. U wordt doorgestuurd naar groepen pagina.'
-        }
+        },
+        settingGroups: 'Groeplijst aan het toepassen...',
+        changingRole: 'Gebruiker profiel aan het aanpassen...',
+        changedRole: 'Gebruiker profiel aangepast.'
       },
       settings: {
         settings: 'Instellingen',
@@ -934,7 +942,8 @@ var ui = {
           memberSubmitRegister: 'Fout bij het registreren van een gebruiker!',
           deleteGroup: 'Fout bij het verwijderen van een groep!',
           emptyUserCredentials: 'Vul gebruikersnaam en wachtwoord in!',
-          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.'
+          failedRegistration: 'Fout bij het nieuwe gebruiker registreren. Excuses voor het ongemak. Probeer het opnieuw.',
+          noSelection: 'Maak alstublieft eerst een selectie.'
         },
         login: {
           changePass: 'Er ging iets mis met het wijzigen van het wachtwoord!',
@@ -955,7 +964,8 @@ var ui = {
             self: 'U kunt uw eigen account niet verwijderen.',
             auth: 'Gebruiker verwijderen is niet toegestaan voor u.',
             empty: 'Vul aub uw wachtwoord in.'
-          }
+          },
+          settingGroups: 'Fout bij het toepassen van groeplijst!'
         },
         messages: {
           query: 'Fout bij het ophalen van berichten!',
@@ -1098,7 +1108,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.18',
+    version:  '2.3.19',
     lang:     'nl',
 
     fullscreen: true,
@@ -1601,10 +1611,7 @@ angular.module('WebPaige')
           });
       }
 
-      $window.onresize = function ()
-      {
-        $rootScope.browser.screen = $window.screen;
-      };
+      $window.onresize = function () { $rootScope.browser.screen = $window.screen };
 
       $window.onorientationchange = function ()
       {
@@ -1634,10 +1641,7 @@ angular.module('WebPaige')
       /**
        * Default language and change language
        */
-      $rootScope.changeLanguage = function (lang)
-      {
-        $rootScope.ui = ui[lang];
-      };
+      $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang] };
 
       $rootScope.ui = ui[$rootScope.config.lang];
 
@@ -1668,10 +1672,7 @@ angular.module('WebPaige')
 
       angular.forEach(
         angular.fromJson(Storage.get('states')),
-        function (state)
-        {
-          $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
-        }
+        function (state) { $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state] }
       );
 
       var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
@@ -1849,7 +1850,8 @@ angular.module('WebPaige')
        * Callback function accepts <event, next, current>
        */
       $rootScope.$on(
-        '$routeChangeStart', function ()
+        '$routeChangeStart',
+        function ()
         {
           function resetLoaders ()
           {
@@ -1918,7 +1920,14 @@ angular.module('WebPaige')
 
           if (! $rootScope.location)
           {
-            ga('send', 'Undefined Page', $location.path());
+            try
+            {
+              ga('send', 'Undefined Page', $location.path());
+            }
+            catch (e)
+            {
+              console.log('something wrong with passing location to google analytics ->');
+            }
           }
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
@@ -1951,7 +1960,8 @@ angular.module('WebPaige')
        * Callback function accepts <event, current, previous>
        */
       $rootScope.$on(
-        '$routeChangeSuccess', function ()
+        '$routeChangeSuccess',
+        function ()
         {
           $rootScope.newLocation = $location.path();
 
@@ -1960,7 +1970,8 @@ angular.module('WebPaige')
           $rootScope.statusBar.off();
 
           $('div[ng-view]').show();
-        });
+        }
+      );
 
 
       /**
@@ -1968,10 +1979,9 @@ angular.module('WebPaige')
        * Route change is failed!
        */
       $rootScope.$on(
-        '$routeChangeError', function (event, current, previous, rejection)
-        {
-          $rootScope.notifier.error(rejection);
-        });
+        '$routeChangeError',
+        function (event, current, previous, rejection) { $rootScope.notifier.error(rejection) }
+      );
 
 
       // TODO: Fix styles
@@ -1994,9 +2004,11 @@ angular.module('WebPaige')
               $('.tabs-left .tab-content #' + $this).css(
                 {
                   height: $('.tabs-left .nav-tabs').height() - 41
-                });
+                }
+              );
             }
-          });
+          }
+        );
 
         /**
          * Correct icon-font-library icons for mac and linux
@@ -2015,10 +2027,7 @@ angular.module('WebPaige')
       /**
        * Experimental full screen ability
        */
-      $rootScope.fullScreen = function ()
-      {
-        screenfull.toggle($('html')[0]);
-      };
+      $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]) };
 
 
       /**
@@ -2026,10 +2035,7 @@ angular.module('WebPaige')
        */
       if ($.os.windows)
       {
-        $('#loading p').css(
-          {
-            paddingTop: '130px'
-          });
+        $('#loading p').css({ paddingTop: '130px' });
       }
 
 
@@ -2046,7 +2052,10 @@ angular.module('WebPaige')
       /**
        * TODO (Still functioning since there is a second download button?)
        */
-      if (! $config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
+      if (! $config.profile.mobileApp.status)
+      {
+        $('#copyrights span.muted').css({ right: 0 });
+      }
 
 
       /**
@@ -2063,7 +2072,8 @@ angular.module('WebPaige')
             $rootScope.notifier.success($rootScope.ui.downloads.success);
 
             $rootScope.statusBar.off();
-          })
+          }
+        );
       };
 
 
@@ -2304,6 +2314,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
             pass: '',
             key:  ''
           }
+          ,
+          isArray: true
         }
       });
 
@@ -2443,18 +2455,18 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    /**
 	     * RE-FACTORY
 	     */
-	    changePassword.get({
+	    changePassword.reset({
           uuid: uuid,
           pass: newpass,
           key:  key
         },
 	      function (result)
 	      {
-	        deferred.resolve(result);
+          deferred.resolve(result);
 	      },
 	      function (error)
 	      {
-	        deferred.resolve(error);
+          deferred.resolve(error);
 	      }
 	    );
 	    
@@ -3944,6 +3956,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             send: {
               method: 'POST',
               params: {action: 'sendDirectMessage'}
+              //,isArray: true
             },
             save: {
               method: 'POST',
@@ -4319,7 +4332,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             receivers.push(
               {
                 id: member.uuid,
-                name: member.name,
+                // name: member.name,
+                name: member.resources.firstName + ' ' + member.resources.lastName,
                 lastName: member.resources.lastName,
                 firstName: member.resources.firstName,
                 group: $rootScope.ui.message.receiversUsers
@@ -4383,18 +4397,30 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
         };
 
         Messages.send(
-          null, message,
+          null,
+          message,
           function (result)
           {
+            console.log('result ->', result, angular.isArray(result) );
+
             var returned = '';
 
+            var chunks = (angular.isArray(result)) ? result[0] : result;
+
+            console.log('chunk result ->', result);
+
             angular.forEach(
-              result,
+              chunks,
               function (chr)
               {
-                returned += chr;
+                if (chr.length == 1 && !angular.isObject(chr))
+                {
+                  returned += chr;
+                }
               }
             );
+
+            console.log('returned ->', returned);
 
             deferred.resolve(returned);
           },
@@ -4704,731 +4730,778 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
 /**
  * Groups modal
  */
-.factory('Groups', 
-[
-	'$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location',
-	function ($resource, $config, $q, Storage, $rootScope, Slots, $location)
-	{
-	  var Groups = $resource(
-	    $config.host + '/network/:action/:id',
-	    {
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {},
-	        isArray: true
-	      },
-	      get: {
-	        method: 'GET',
-	        params: {id:''}
-	      },
-	      save: {
-	        method: 'POST',
-	        params: {id:''}
-	      },
-	      edit: {
-	        method: 'PUT',
-	        params: {id:''}
-	      },
-	      remove: {
-	        method: 'DELETE',
-	        params: {id:''}
-	      },
-	      search: {
-	        method: 'POST',
-	        params: {id:'', action:'searchPaigeUser'},
-	        isArray: true
-	      }
-	    }
-	  );
-
-
-	  var Containers = $resource(
-	    $config.host + '/node/:id/container',
-	    {
-	    },
-	    {
-	      get: {
-	        method: 'GET',
-	        params: {id:''},
-	        isArray: true
-	      }
-	    }
-	  );
-
-
-    var Parents = $resource(
-      $config.host + '/parent',
-      {
-      },
-      {
-        get: {
-          method: 'GET',
-          params: {},
-          isArray: true
-        }
-      }
-    );
-
-
-	  var Members = $resource(
-	    $config.host + '/network/:id/members/:mid',
-	    {
-	    },
-	    {
-	      query: {
-	        method: 'GET',
-	        params: {id:'', fields: '[role, settingsWebPaige]'},
-	        isArray: true
-	      },
-	      get: {
-	        method: 'GET',
-	        params: {id:''}
-	      },
-	      save: {
-	        method: 'POST',
-	        params: {}
-	      },
-	      add: {
-	        method: 'POST',
-	        params: {id:'', mid:''} 
-	      },
-	      remove: {
-	        method: 'DELETE',
-	        params: {id:'', mid:''} 
-	      }
-	    }
-	  );
-
-
-    /**
-     * Smart Alarming
-     */
-    var Guards = $resource(
-      $config.host + '/network/guard/:id/:team',
-      {
-      },
-      {
-        global: {
-          method: 'GET',
-          isArray: true
-        },
-        position: {
-          method: 'GET',
-          params: {id: '', team: ''}
-        }
-      }
-    );
-
-
-    /**
-     * Get current smart alarming guard data
-     */
-    Groups.prototype.guardMonitor = function ()
+  .factory(
+  'Groups',
+  [
+    '$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location',
+    function ($resource, $config, $q, Storage, $rootScope, Slots, $location)
     {
-      var deferred = $q.defer();
-
-      var guard = angular.fromJson(Storage.get('guard')) || {};
-
-      Guards.global(
-        null,
-        function (result)
-        {
-          var returned = '';
-
-          angular.forEach(result[0], function (chr)
+      var Groups = $resource(
+          $config.host + '/network/:action/:id',
+          {},
           {
-            returned += chr
-          });
-
-          guard.monitor = returned;
-
-          Storage.add('guard', angular.toJson(guard));
-
-          $rootScope.app.guard.monitor = returned;
-
-          deferred.resolve(returned);
-        },
-        function (error)
-        {
-          deferred.resolve({error: error});
-        }
+            query: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            },
+            get: {
+              method: 'GET',
+              params: {id: ''}
+            },
+            save: {
+              method: 'POST',
+              params: {id: ''},
+              isArray: true
+            },
+            edit: {
+              method: 'PUT',
+              params: {id: ''}
+            },
+            remove: {
+              method: 'DELETE',
+              params: {id: ''},
+              isArray: true
+            },
+            search: {
+              method: 'POST',
+              params: {id: '', action: 'searchPaigeUser'},
+              isArray: true
+            }
+          }
       );
 
-      return deferred.promise;
-    };
 
-
-    /**
-     * Get guard role for smart alarming
-     */
-    Groups.prototype.guardRole = function ()
-    {
-      var deferred = $q.defer(),
-          _this    = this;
-
-      _this.guard = angular.fromJson(Storage.get('guard'));
-
-      Guards.position(
-        {
-          id:   _this.guard.monitor,
-          team: 'status'
-        },
-        function (results)
-        {
-          var members = angular.fromJson(Storage.get('members'));
-
-          _this.guard.synced = new Date().getTime();
-
-          _this.guard.users = {};
-
-          angular.forEach(results.station, function (user)
+      var Containers = $resource(
+          $config.host + '/node/:id/container',
+          {},
           {
-            if (user[0] != 'agent' || user[1] != 'state')
-            {
-              _this.guard.users[user[0]] = {
-                name:   (members && members[user[0]] && members[user[0]].name) || user[0],
-                state:  user[1]
-              };
+            get: {
+              method: 'GET',
+              params: {id: ''},
+              isArray: true
             }
-          });
+          }
+      );
 
-          _this.guard.truck = [];
 
-          _this.guard.selection = {};
-
-          angular.forEach(results.selection, function (selected, id)
+      var Parents = $resource(
+          $config.host + '/parent',
+          {},
           {
-            _this.guard.selection[id] = {
-              user: selected.agentID
+            get: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            }
+          }
+      );
+
+
+      var Members = $resource(
+          $config.host + '/network/:id/members/:mid',
+          {},
+          {
+            query: {
+              method: 'GET',
+              params: {id: '', fields: '[role, settingsWebPaige]'},
+              isArray: true
+            },
+            get: {
+              method: 'GET',
+              params: {id: ''}
+            },
+            save: {
+              method: 'POST',
+              params: {}
+            },
+            add: {
+              method: 'POST',
+              params: {id: '', mid: ''}
+            },
+            remove: {
+              method: 'DELETE',
+              params: {id: '', mid: ''}
+            }
+          }
+      );
+
+
+      /**
+       * Smart Alarming
+       */
+      var Guards = $resource(
+          $config.host + '/network/guard/:id/:team',
+          {},
+          {
+            global: {
+              method: 'GET',
+              isArray: true
+            },
+            position: {
+              method: 'GET',
+              params: {id: '', team: ''}
+            }
+          }
+      );
+
+
+      /**
+       * Get current smart alarming guard data
+       */
+      Groups.prototype.guardMonitor = function ()
+      {
+        var deferred = $q.defer();
+
+        var guard = angular.fromJson(Storage.get('guard')) || {};
+
+        Guards.global(
+          null,
+          function (result)
+          {
+            var returned = '';
+
+            angular.forEach(
+              result[0],
+              function (chr) { returned += chr }
+            );
+
+            guard.monitor = returned;
+
+            Storage.add('guard', angular.toJson(guard));
+
+            $rootScope.app.guard.monitor = returned;
+
+            deferred.resolve(returned);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get guard role for smart alarming
+       */
+      Groups.prototype.guardRole = function ()
+      {
+        var deferred = $q.defer(),
+            _this = this;
+
+        _this.guard = angular.fromJson(Storage.get('guard'));
+
+        Guards.position(
+          {
+            id: _this.guard.monitor,
+            team: 'status'
+          },
+          function (results)
+          {
+            var members = angular.fromJson(Storage.get('members'));
+
+            _this.guard.synced = new Date().getTime();
+
+            _this.guard.users = {};
+
+            angular.forEach(
+              results.station,
+              function (user)
+              {
+                if (user[0] != 'agent' || user[1] != 'state')
+                {
+                  _this.guard.users[user[0]] = {
+                    name: (members && members[user[0]] && members[user[0]].name) || user[0],
+                    state: user[1]
+                  };
+                }
+              }
+            );
+
+            _this.guard.truck = [];
+
+            _this.guard.selection = {};
+
+            angular.forEach(
+              results.selection,
+              function (selected, id)
+              {
+                _this.guard.selection[id] = { user: selected.agentID };
+
+                if (selected.agentID != null)
+                {
+                  _this.guard.truck.push(selected.agentID);
+                }
+
+                if ($location.path() != '/tv')
+                {
+                  if (selected.agentID == $rootScope.app.resources.uuid)
+                  {
+                    _this.guard.role = results.map[id].name;
+                  }
+                }
+              }
+            );
+
+            angular.forEach(
+              results.map,
+              function (mapped, id)
+              {
+                _this.guard.selection[id].role = mapped.name;
+              }
+            );
+
+            _this.guard.reserves = {
+              available: [],
+              unavailable: [],
+              noplanning: []
             };
 
-            if (selected.agentID != null)
-            {
-              _this.guard.truck.push(selected.agentID);
-            }
-
-            if ($location.path() != '/tv')
-            {
-              if (selected.agentID == $rootScope.app.resources.uuid)
+            angular.forEach(
+              _this.guard.users,
+              function (user, id)
               {
-                _this.guard.role = results.map[id].name;
+                if (_this.guard.truck.indexOf(id) == - 1)
+                {
+                  var obj = {};
+                  obj[id] = user;
+
+                  _this.guard.reserves[user.state].push(obj);
+                }
               }
-            }
-          });
+            );
 
-          angular.forEach(results.map, function (mapped, id)
+            Storage.add('guard', angular.toJson(_this.guard));
+
+            deferred.resolve(_this.guard);
+          },
+          function (error)
           {
-            _this.guard.selection[id].role = mapped.name;
-          });
+            deferred.resolve({error: error});
+          }
+        );
 
-          _this.guard.reserves = {
-            available:    [],
-            unavailable:  [],
-            noplanning:   []
-          };
+        return deferred.promise;
+      };
 
-          angular.forEach(_this.guard.users, function (user, id)
+
+      /**
+       * Get parent group data
+       */
+      Groups.prototype.parents = function (all)
+      {
+        var deferred = $q.defer();
+
+        Parents.get(
+          null,
+          function (result)
           {
-            if (_this.guard.truck.indexOf(id) == -1)
+            if (! all)
             {
-              var obj = {};
-              obj[id] = user;
-
-              _this.guard.reserves[user.state].push(obj);
-            }
-          });
-
-          Storage.add('guard', angular.toJson(_this.guard));
-
-          deferred.resolve(_this.guard);
-        },
-        function (error)
-        {
-          deferred.resolve({error: error});
-        }
-      );
-
-      return deferred.promise;
-    };
-
-
-    /**
-     * Get parent group data
-     */
-    Groups.prototype.parents = function (all)
-    {
-      var deferred = $q.defer();
-
-      Parents.get(
-        null,
-        function (result)
-        {
-          if (!all)
-          {
-            if (result.length == 0)
-            {
-              deferred.resolve(null);
+              if (result.length == 0)
+              {
+                deferred.resolve(null);
+              }
+              else
+              {
+                deferred.resolve(result[0].uuid);
+              }
             }
             else
             {
-              deferred.resolve(result[0].uuid);
+              deferred.resolve(result);
             }
-          }
-          else
-          {
-            deferred.resolve(result);
-          }
-        },
-        function (error)
-        {
-          deferred.resolve({error: error});
-        }
-      );
-
-      return deferred.promise;
-    };
-
-
-	  /**
-	   * TODO (Extract only the groups which are in the local list)
-	   * Get container (parent) group data
-	   */
-	  Groups.prototype.containers = function (id) 
-	  {   
-	    var deferred  = $q.defer(),
-	        cons      = [];
-
-	    Containers.get(
-	      {
-          id: id
-        },
-	      function (result) 
-	      {
-	        /**
-	         * Group save call returns only uuid and that is parsed as json
-	         * by angular, this is a fix for converting returned object to plain string
-	         */
-	        angular.forEach(result, function (_r, _i)
-	        {
-	          var returned = [];
-
-	          angular.forEach(_r, function (chr, i) { returned += chr });
-
-	          cons.push(returned);
-	        });
-	        
-	        deferred.resolve(cons);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Add Member to a group
-	   */
-	  Groups.prototype.addMember = function (candidate)
-	  {
-	    var deferred = $q.defer();
-
-	    Members.add(
-	      { 
-	        id:   candidate.group.uuid,
-	        mid:  candidate.id
-	      }, 
-	      {}, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;    
-	  };
-
-
-	  /**
-	   * Remove member from group
-	   */
-	  Groups.prototype.removeMember = function (memberId, groupId)
-	  {
-	    var deferred = $q.defer();
-
-	    Members.remove(
-	      { 
-	        id:   groupId,
-	        mid:  memberId
-	      }, 
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;    
-	  };
-
-
-	  /**
-	   * Remove members from a group (bulk action)
-	   */
-	  Groups.prototype.removeMembers = function (selection, group)
-	  {
-	    var deferred  = $q.defer(),
-	        calls     = [];
-
-	    angular.forEach(selection, function (value, id)
-	    {
-	      if (id)
-        {
-          calls.push(Groups.prototype.removeMember(id, group.uuid));
-        }
-	    });
-
-	    $q.all(calls)
-	    .then(function (result)
-	    {
-	      deferred.resolve(result);
-	    });
-
-	    return deferred.promise; 
-	  };
-
-
-	  Groups.prototype.wish = function (id)
-	  {
-	    var deferred  = $q.defer(),
-	        count     = 0;
-
-	    Slots.wishes({
-	      id:     id,
-	      start:  255600,
-	      end:    860400
-	    }).then(function (results)
-	    {
-	      angular.forEach(results, function (slot)
-	      {
-	        if (slot.start == 255600 &&
-              slot.end == 860400 &&
-              slot.count != null)
-          {
-            count = slot.count;
-          }
-	      });
-
-	      deferred.resolve({
-	        count: count
-	      });
-	    });
-
-	    return deferred.promise; 
-	  };
-
-
-	  /**
-	   * General query function from groups and their members
-	   */
-	  Groups.prototype.query = function (only)
-	  {
-	    var deferred = $q.defer();
-
-	    Groups.query(
-	      function (groups) 
-	      {
-	        Storage.add('groups', angular.toJson(groups));
-
-	        if (!only)
-	        {
-	          var calls = [];
-
-	          angular.forEach(groups, function (group)
-	          {
-	            calls.push(Groups.prototype.get(group.uuid));
-	          });
-
-	          $q.all(calls)
-	          .then(function (results)
-	          {
-	            Groups.prototype.uniqueMembers();
-
-	            var data = {};
-
-	            data.members = {};
-
-	            angular.forEach(groups, function (group)
-	            {
-	              data.groups = groups;
-
-	              data.members[group.uuid] = [];
-
-	              angular.forEach(results, function (result)
-	              {
-	                if (result.id == group.uuid) data.members[group.uuid] = result.data;
-	              });
-	            });
-
-	            deferred.resolve(data);
-	          });
-	        }
-	        else
-	        {
-	          deferred.resolve(groups);
-	        }
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get group data
-	   */
-	  Groups.prototype.get = function (id) 
-	  {   
-	    var deferred = $q.defer();
-
-	    Members.query(
-	      {
-          id: id
-        },
-	      function (result) 
-	      {
-	        /**
-	         * DIRTY CHECK!
-	         * 
-	         * Check for 'null' return from back-end
-	         * if group is empty
-	         */
-	        var returned;
-
-	        if (result.length == 4 && 
-	            result[0][0] == 'n' && 
-	            result[1][0] == 'u')
-	        {
-	          returned = [];
-	        }
-	        else
-	        {
-	          returned = result;
-	        }
-
-	        Storage.add(id, angular.toJson(returned));
-
-	        deferred.resolve({
-	          id: id,
-	          data: returned
-	        });
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Make an unique list of members
-	   */
-	  Groups.prototype.uniqueMembers = function ()
-	  {
-	    angular.forEach(angular.fromJson(Storage.get('groups')), function (group)
-	    {
-	      var members = angular.fromJson(Storage.get('members')) || {};
-
-	      angular.forEach(angular.fromJson(Storage.get(group.uuid)), function (member)
-	      {
-	        members[member.uuid] = member;
-	      });
-
-	      Storage.add('members', angular.toJson(members));
-	    });
-	  };
-
-
-	  /**
-	   * Save group
-	   */
-	  Groups.prototype.save = function (group) 
-	  {
-	    var deferred = $q.defer();
-
-	    /**
-	     * Check if group id supplied
-	     * if save submitted from add / edit form
-	     */
-	    if (group.id)
-	    {
-	      Groups.edit(
-          {
-            id: group.id
           },
+          function (error)
           {
-            name: group.name
-          },
-          function ()
-          {
-            deferred.resolve(group.id);
+            deferred.resolve({error: error});
           }
         );
-	    }
-	    else
-	    {
-	      Groups.save(
-	        {
-            id: $rootScope.app.resources.uuid
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * TODO: (Extract only the groups which are in the local list)
+       * Get container (parent) group data
+       */
+      Groups.prototype.containers = function (id)
+      {
+        var deferred = $q.defer(),
+            cons = [];
+
+        Containers.get(
+          { id: id },
+          function (result)
+          {
+            /**
+             * Group save call returns only uuid and that is parsed as json
+             * by angular, this is a fix for converting returned object to plain string
+             */
+            angular.forEach(
+              result,
+              function (_r)
+              {
+                var returned = [];
+
+                angular.forEach(_r, function (chr) { returned += chr });
+
+                cons.push(returned);
+              }
+            );
+
+            deferred.resolve(cons);
           },
-	        group, 
-	        function (result) 
-	        {
-	          /**
-	           * Group save call returns only uuid and that is parsed as json
-	           * by angular, this is a fix for converting returned object to plain string
-	           */
-	          var returned = '';
-
-	          angular.forEach(result, function (chr, i)
-	          {
-	            returned += chr;
-	          });
-
-	          deferred.resolve(returned);
-	        },
-	        function (error)
-	        {
-	          deferred.resolve({error: error});
-	        }
-	      ); 
-	    }
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Delete group
-	   */
-	  Groups.prototype.remove = function (id) 
-	  {
-	    var deferred = $q.defer();
-
-	    Groups.remove(
-	      {
-          id: id
-        },
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Search candidate members
-	   */
-	  Groups.prototype.search = function (query) 
-	  {
-	    var deferred = $q.defer();
-
-	    Groups.search(
-	      null, 
-	      {
-          key: query
-        },
-	      function (results) 
-	      {
-	        var processed = [];
-
-          results.sort(function (a, b)
+          function (error)
           {
-            var aName = a.name.toLowerCase();
-            var bName = b.name.toLowerCase();
-            if (aName < bName) return -1;
-            if (aName > bName) return 1;
-            return 0;
-          });
-
-	        angular.forEach(results, function (result)
-	        {
-	          processed.push({
-	            id:     result.id,
-	            name:   result.name,
-	            groups: Groups.prototype.getMemberGroups(result.id)
-	          });
-	        });
-
-	        deferred.resolve(processed);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get groups of given member
-	   */
-	  Groups.prototype.getMemberGroups = function (id)
-	  {
-	    var groups        = angular.fromJson(Storage.get('groups')),
-	        memberGroups  = [];
-
-	    angular.forEach(groups, function (group)
-	    {
-	      var localGroup = angular.fromJson(Storage.get(group.uuid));
-
-	      angular.forEach(localGroup, function (member)
-	      {
-	        if (member.uuid === id)
-          {
-            memberGroups.push({
-              uuid: group.uuid,
-              name: group.name
-            });
+            deferred.resolve({error: error});
           }
-	      });
-	    });
+        );
 
-	    return memberGroups;
-	  };
+        return deferred.promise;
+      };
 
 
-	  return new Groups;
-	}
-]);;'use strict';
+      /**
+       * Add Member to a group
+       */
+      Groups.prototype.addMember = function (candidate)
+      {
+        var deferred = $q.defer();
+
+        Members.add(
+          {
+            id: candidate.group.uuid,
+            mid: candidate.id
+          },
+          {},
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Remove member from group
+       */
+      Groups.prototype.removeMember = function (memberId, groupId)
+      {
+        var deferred = $q.defer();
+
+        Members.remove(
+          {
+            id: groupId,
+            mid: memberId
+          },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Remove members from a group (bulk action)
+       */
+      Groups.prototype.removeMembers = function (selection, group)
+      {
+        var deferred = $q.defer(),
+            calls = [];
+
+        angular.forEach(
+          selection,
+          function (value, id)
+          {
+            if (value)
+            {
+              calls.push(Groups.prototype.removeMember(id, group.uuid));
+            }
+          }
+        );
+
+        $q.all(calls)
+          .then(
+          function (result) { deferred.resolve(result) }
+        );
+
+        return deferred.promise;
+      };
+
+
+      Groups.prototype.wish = function (id)
+      {
+        var deferred = $q.defer(),
+            count = 0;
+
+        Slots.wishes(
+          {
+            id: id,
+            start: 255600,
+            end: 860400
+          }).then(
+          function (results)
+          {
+            angular.forEach(
+              results,
+              function (slot)
+              {
+                if (slot.start == 255600 &&
+                    slot.end == 860400 &&
+                    slot.count != null)
+                {
+                  count = slot.count;
+                }
+              }
+            );
+
+            deferred.resolve({ count: count });
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * General query function from groups and their members
+       */
+      Groups.prototype.query = function (only)
+      {
+        var deferred = $q.defer();
+
+        Groups.query(
+          function (groups)
+          {
+            Storage.add('groups', angular.toJson(groups));
+
+            if (! only)
+            {
+              var calls = [];
+
+              angular.forEach(
+                groups,
+                function (group) { calls.push(Groups.prototype.get(group.uuid)) }
+              );
+
+              $q.all(calls)
+                .then(
+                function (results)
+                {
+                  Groups.prototype.uniqueMembers();
+
+                  var data = {};
+
+                  data.members = {};
+
+                  angular.forEach(
+                    groups,
+                    function (group)
+                    {
+                      data.groups = groups;
+
+                      data.members[group.uuid] = [];
+
+                      angular.forEach(
+                        results,
+                        function (result)
+                        {
+                          if (result.id == group.uuid)
+                          {
+                            data.members[group.uuid] = result.data;
+                          }
+                        }
+                      );
+                    }
+                  );
+
+                  deferred.resolve(data);
+                }
+              );
+            }
+            else
+            {
+              deferred.resolve(groups);
+            }
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get group data
+       */
+      Groups.prototype.get = function (id)
+      {
+        var deferred = $q.defer();
+
+        Members.query(
+          { id: id },
+          function (result)
+          {
+            /**
+             * DIRTY CHECK!
+             *
+             * Check for 'null' return from back-end
+             * if group is empty
+             */
+            var returned;
+
+            if (result.length == 4 &&
+                result[0][0] == 'n' &&
+                result[1][0] == 'u')
+            {
+              returned = [];
+            }
+            else
+            {
+              returned = result;
+            }
+
+            Storage.add(id, angular.toJson(returned));
+
+            deferred.resolve(
+              {
+                id: id,
+                data: returned
+              }
+            );
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Make an unique list of members
+       */
+      Groups.prototype.uniqueMembers = function ()
+      {
+        angular.forEach(
+          angular.fromJson(Storage.get('groups')),
+          function (group)
+          {
+            var members = angular.fromJson(Storage.get('members')) || {};
+
+            angular.forEach(
+              angular.fromJson(Storage.get(group.uuid)),
+              function (member)
+              {
+                members[member.uuid] = member;
+              }
+            );
+
+            Storage.add('members', angular.toJson(members));
+          }
+        );
+      };
+
+
+      /**
+       * Save group
+       */
+      Groups.prototype.save = function (group)
+      {
+        var deferred = $q.defer();
+
+        /**
+         * Check if group id supplied
+         * if save submitted from add / edit form
+         */
+        if (group.id)
+        {
+          Groups.edit(
+            { id: group.id },
+            { name: group.name },
+            function ()
+            {
+              deferred.resolve(group.id);
+            }
+          );
+        }
+        else
+        {
+          Groups.save(
+            { id: $rootScope.app.resources.uuid },
+            group,
+            function (result)
+            {
+              /**
+               * Group save call returns only uuid and that is parsed as json
+               * by angular, this is a fix for converting returned object to plain string
+               *
+               * Added: 22 Jun 2014
+               * Strip $promise and $resolved objects from response as well, since new version
+               * of Angular does not unwrap promises.
+               */
+              var returned = '';
+
+              angular.forEach(
+                result[0],
+                function (chr)
+                {
+                  if (chr.length == 1 && ! angular.isObject(chr))
+                  {
+                    returned += chr;
+                  }
+                }
+              );
+
+              deferred.resolve(returned);
+            },
+            function (error)
+            {
+              deferred.resolve({error: error});
+            }
+          );
+        }
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Delete group
+       */
+      Groups.prototype.remove = function (id)
+      {
+        var deferred = $q.defer();
+
+        Groups.remove(
+          { id: id },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Search candidate members
+       */
+      Groups.prototype.search = function (query)
+      {
+        var deferred = $q.defer();
+
+        Groups.search(
+          null,
+          { key: query },
+          function (results)
+          {
+            var processed = [];
+
+            results.sort(
+              function (a, b)
+              {
+                var aName = a.name.toLowerCase();
+                var bName = b.name.toLowerCase();
+                if (aName < bName) return - 1;
+                if (aName > bName) return 1;
+                return 0;
+              }
+            );
+
+            angular.forEach(
+              results,
+              function (result)
+              {
+                processed.push(
+                  {
+                    id: result.id,
+                    name: result.name,
+                    groups: Groups.prototype.getMemberGroups(result.id)
+                  }
+                );
+              }
+            );
+
+            deferred.resolve(processed);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get groups of given member
+       */
+      Groups.prototype.getMemberGroups = function (id)
+      {
+        var groups = angular.fromJson(Storage.get('groups')),
+            memberGroups = [];
+
+        angular.forEach(
+          groups,
+          function (group)
+          {
+            var localGroup = angular.fromJson(Storage.get(group.uuid));
+
+            angular.forEach(
+              localGroup,
+              function (member)
+              {
+                if (member.uuid === id)
+                {
+                  memberGroups.push(
+                    {
+                      uuid: group.uuid,
+                      name: group.name
+                    }
+                  );
+                }
+              }
+            );
+          }
+        );
+
+        return memberGroups;
+      };
+
+
+      return new Groups;
+    }
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Modals.Profile', ['ngResource'])
@@ -5445,10 +5518,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
     {
       var Profile = $resource(
           $config.host + '/node/:id/:section',
+          {},
           {
-          },
-          {
-            get:  {
+            get: {
               method: 'GET',
               params: { id: '', section: 'resource' }
             },
@@ -5457,13 +5529,18 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               params: { section: 'resource' }
             },
             remove: {
-              method:  'DELETE',
-              params:  {},
+              method: 'DELETE',
+              params: {},
               isArray: true
             },
             role: {
-              method:  'PUT',
-              params:  { section: 'role' },
+              method: 'PUT',
+              params: { section: 'role' },
+              isArray: true
+            },
+            membership: {
+              method: 'PUT',
+              params: { id: '', section: 'membership' },
               isArray: true
             }
           }
@@ -5478,8 +5555,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           },
           {
             profile: {
-              method:  'GET',
-              params:  {uuid: '', pass: '', name: '', phone: ''},
+              method: 'GET',
+              params: {uuid: '', pass: '', name: '', phone: ''},
               isArray: true
             }
           }
@@ -5491,18 +5568,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
           },
           {
-            get:  {
+            get: {
               method: 'GET',
               params: {}
             },
             save: {
               method: 'POST',
-              params: {
-                /**
-                 * It seems like backend accepts data in request payload as body as well
-                 */
-                //tags: ''
-              }
+              params: {},
+              isArray: true
             }
           }
       );
@@ -5538,12 +5611,12 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               {
                 Profile.prototype.save(
                   uuid, {
-                    firstName:    profile.firstName,
-                    lastName:     profile.lastName,
+                    firstName: profile.firstName,
+                    lastName: profile.lastName,
                     EmailAddress: profile.EmailAddress,
-                    PostAddress:  profile.PostAddress,
-                    PostZip:      profile.PostZip,
-                    PostCity:     profile.PostCity
+                    PostAddress: profile.PostAddress,
+                    PostZip: profile.PostZip,
+                    PostCity: profile.PostCity
                   }).then(
                   function (resourced)
                   {
@@ -5555,7 +5628,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                         calls.push(
                           Groups.addMember(
                             {
-                              id:    uuid,
+                              id: uuid,
                               group: group
                             }));
                       });
@@ -5567,9 +5640,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                         deferred.resolve(
                           {
                             registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
-                            roled:     roled,
+                            roled: roled,
                             resourced: resourced,
-                            grouped:   grouped
+                            grouped: grouped
                           });
                       });
 
@@ -5636,6 +5709,36 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
       /**
+       * Set the groups for user
+       */
+      Profile.prototype.membership = function (id, groups)
+      {
+        var deferred = $q.defer(),
+            groupIds = [];
+
+        angular.forEach(
+          groups,
+          function (group) { groupIds.push(group.uuid) }
+        );
+
+        Profile.membership(
+          { id: id },
+          groupIds,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
        * Get profile of given user
        */
       Profile.prototype.get = function (id, localize)
@@ -5643,17 +5746,22 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         var deferred = $q.defer();
 
         Profile.get(
-          {
-            id: id
-          },
+          { id: id },
           function (result)
           {
-            if (id == $rootScope.app.resources.uuid) $rootScope.app.resources = result;
+            if (id == $rootScope.app.resources.uuid)
+            {
+              $rootScope.app.resources = result;
+            }
 
-            if (localize) Storage.add('resources', angular.toJson(result));
+            if (localize)
+            {
+              Storage.add('resources', angular.toJson(result));
+            }
 
             deferred.resolve({resources: result});
-          });
+          }
+        );
 
         return deferred.promise;
       };
@@ -5672,9 +5780,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
             Slots.user(
               {
-                user:  id,
+                user: id,
                 start: params.start,
-                end:   params.end
+                end: params.end
               }
             ).then(
               function (slots)
@@ -5682,8 +5790,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                 deferred.resolve(
                   angular.extend(
                     resources, {
-                      slots:   slots,
-                      synced:  new Date().getTime(),
+                      slots: slots,
+                      synced: new Date().getTime(),
                       periods: {
                         start: params.start * 1000,
                         end: params.end * 1000
@@ -5713,11 +5821,11 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
             deferred.resolve(
               {
-                slots:   slots,
-                synced:  new Date().getTime(),
+                slots: slots,
+                synced: new Date().getTime(),
                 periods: {
                   start: params.start,
-                  end:   params.end
+                  end: params.end
                 }
               });
           });
@@ -7451,681 +7559,804 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 /**
  * Planboard data processors
  */
-.factory('Sloter', 
-[
-  '$rootScope', 'Storage', 
-  function ($rootScope, Storage) 
-  {
-    return {
+  .factory(
+  'Sloter',
+  [
+    '$rootScope', 'Storage',
+    function ($rootScope, Storage)
+    {
+      return {
 
-      /**
-       * Getters
-       */
-      get: {
-        groups: function ()
-        {
-          var groups = {};
-
-          angular.forEach(Storage.local.groups(), function (group)
+        /**
+         * Getters
+         */
+        get: {
+          groups: function ()
           {
-            groups[group.uuid] = group.name;
-          });
+            var groups = {};
 
-          return groups;
+            angular.forEach(
+              Storage.local.groups(),
+              function (group) { groups[group.uuid] = group.name }
+            );
+
+            return groups;
+          },
+
+          members: function ()
+          {
+            var members = {};
+
+            angular.forEach(
+              Storage.local.members(),
+              // function (member) { members[member.uuid] = member.name }
+              function (member) { members[member.uuid] = member.resources.firstName + ' ' + member.resources.lastName }
+            );
+
+            return members;
+          }
         },
 
-        members: function ()
+        /**
+         * Wrap for sorting in list
+         */
+        wrapper: function (rank) { return '<span style="display:none;">' + rank + '</span>' },
+
+        /**
+         * Wrap secrets in slot contents
+         */
+        secret: function (content) { return '<span class="secret">' + content + '</span>' },
+
+        /**
+         * Add loading bars on both ends
+         */
+        addLoading: function (data, timedata, rows)
         {
-          var members = {};
-
-          angular.forEach(Storage.local.members(), function (member)
-          {
-            members[member.uuid] = member.name;
-          });
-
-          return members;
-        }
-      },
-
-      /**
-       * Wrap for sorting in list
-       */
-      wrapper: function (rank) { return '<span style="display:none;">' + rank + '</span>' },
-
-      /**
-       * Wrap secrets in slot contents
-       */
-      secret: function (content) { return '<span class="secret">' + content + '</span>' },
-
-      /**
-       * Add loading bars on both ends
-       */
-      addLoading: function (data, timedata, rows)
-      {
-        angular.forEach(rows, function (row)
-        {
-          timedata.push({
-            start:  data.periods.end,
-            end:    1577836800000,
-            group:  row,
-            content:    'loading',
-            className:  'state-loading-right',
-            editable:   false
-          });
-
-          timedata.push({
-            start:  0,
-            end:    data.periods.start,
-            group:  row,
-            content:    'loading',
-            className:  'state-loading-left',
-            editable:   false
-          });
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Handle user slots
-       */
-      user: function (data, timedata, config)
-      {
-        var _this = this;
-
-        angular.forEach(data.user, function (slot, index)
-        {
-          angular.forEach(config.legenda, function (value, legenda)
-          {
-            if (slot.text == legenda && value)
+          angular.forEach(
+            rows,
+            function (row)
             {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-                content:  _this.secret(angular.toJson({
-                  type:   'slot',
-                  id:     index, // slot.id, 
-                  recursive: slot.recursive, 
-                  state:  slot.text 
-                  })),
-                className:  'slot-' + index + ' ' + config.states[slot.text].className,
-                editable:   true
-              });
+              timedata.push(
+                {
+                  start: data.periods.end,
+                  end: 1577836800000,
+                  group: row,
+                  content: 'loading',
+                  className: 'state-loading-right',
+                  editable: false
+                }
+              );
+
+              timedata.push(
+                {
+                  start: 0,
+                  end: data.periods.start,
+                  group: row,
+                  content: 'loading',
+                  className: 'state-loading-left',
+                  editable: false
+                }
+              );
             }
-          });       
-        });
+          );
 
-        timedata = _this.addLoading(data, timedata, [
-          _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
-          _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning')
-        ]);
+          return timedata;
+        },
 
-        return timedata;
-      },
-    
-      /**
-       * TODO: Look for ways to combine with user
-       * 
-       * Profile timeline data processing
-       */
-      profile: function (data, config)
-      {
-        var _this     = this,
-            timedata  = [];
-
-        angular.forEach(data, function (slot, index)
+        /**
+         * Handle user slots
+         */
+        user: function (data, timedata, config)
         {
-          angular.forEach(config.legenda, function (value, legenda)
-          {
-            if (slot.text == legenda && value)
+          var _this = this;
+
+          angular.forEach(
+            data.user,
+            function (slot, index)
             {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group:  (slot.recursive) ?  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') : 
-                                            _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-                content: _this.secret(angular.toJson({
-                  type: 'slot',
-                  id:   index, // slot.id, 
-                  recursive:  slot.recursive, 
-                  state:      slot.text 
-                  })),
-                className:  'slot-' + index + ' ' + config.states[slot.text].className,
-                editable:   true
-              });  
+              angular.forEach(
+                config.legenda,
+                function (value, legenda)
+                {
+                  if (slot.text == legenda && value)
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: (slot.recursive) ?
+                               _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
+                               _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                        content: _this.secret(
+                          angular.toJson(
+                            {
+                              type: 'slot',
+                              id: index, // slot.id,
+                              recursive: slot.recursive,
+                              state: slot.text
+                            }
+                          )
+                        ),
+                        className: 'slot-' + index + ' ' + config.states[slot.text].className,
+                        editable: true
+                      });
+                  }
+                }
+              );
             }
-          });       
-        });
+          );
 
-        timedata.push({
-          start:  0,
-          end:    1,
-          group:  _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
-          content:    '',
-          className:  null,
-          editable:   false
-        });
-
-        timedata.push({
-          start:  0,
-          end:    1,
-          group:  _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-          content:    '',
-          className:  null,
-          editable:   false
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Handle group name whether divisions selected
-       */
-      namer: function (agg, privilage)
-      {
-        var groups  = this.get.groups(),
-            name = groups[agg.id];
-
-        name = name.charAt(0).toUpperCase() + name.slice(1);
-
-        var link    = '<a href="#/groups?uuid=' +
-                      agg.id +
-                      '#view">' +
-                      name +
-                      '</a>',
-                      title;
-
-        if (!agg.division)
-        {
-          title = (privilage == 1) ? link : '<span>' + name + '</span>';
-        }
-        else
-        {
-          var label;
-
-          title = (privilage == 1) ? link : '<span>' + name + '</span>';
-
-          title += ' <span class="label">' + agg.division.label + '</span>';
-        }
-
-        return title;
-      },
-
-      /**
-       * Handle group aggs (with divisions) with bars
-       */
-      bars: function (data, timedata, config, privilage, current)
-      {
-        var _this = this,
-            maxh  = 0;
-
-        angular.forEach(_this.filtered(data, current), function (agg)
-        {
-          var name = _this.namer(agg, privilage);
-
-          angular.forEach(agg.data, function (slot)
-          {
-            if (slot.wish > maxh)  maxh = slot.wish;
-          });
-
-          angular.forEach(agg.data, function (slot)
-          {
-            var maxNum      = maxh,
-                num         = slot.wish,
-                xwish       = num,
-                height      = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
-                minHeight   = height,
-                style       = 'height:' + height + 'px;',
-                requirement = '<div class="requirement" style="' +
-                              style +
-                              '" ' +
-                              'title="' + 'Minimum aantal benodigden' + ': ' +
-                              num +
-                              ' personen"></div>';
-
-            num = slot.wish + slot.diff;
-
-            var xcurrent = num;
-
-            height = Math.round(num / maxNum * 80 + 20);
-
-            if (slot.diff >= 0 && slot.diff < 7)
-            {
-              var color;
-
-              switch (slot.diff)
-              {
-                case 0:
-                  color = config.densities.even;
-                  break;
-                case 1:
-                  color = config.densities.one;
-                  break;
-                case 2:
-                  color = config.densities.two;
-                  break;
-                case 3:
-                  color = config.densities.three;
-                  break;
-                case 4:
-                  color = config.densities.four;
-                  break;
-                case 5:
-                  color = config.densities.five;
-                  break;
-                case 6:
-                  color = config.densities.six;
-                  break;
-              }
-            }
-            else if (slot.diff >= 7)
-            {
-              color = config.densities.more;
-            }
-            else
-            {
-              color = config.densities.less;
-            }
-
-            var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
-
-            if (xcurrent > xwish) height = minHeight;
-
-            style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
-
-            var actual = '<div class="bar" style="' +
-              style +
-              '" ' +
-              ' title="Huidig aantal beschikbaar: ' +
-              num +
-              ' personen">' +
-              span +
-              '</div>';
-
-            if (  (slot.diff > 0  && config.legenda.groups.more) ||
-              (slot.diff == 0 && config.legenda.groups.even) ||
-              (slot.diff < 0  && config.legenda.groups.less) )
-            {
-              timedata.push({
-                start:    Math.round(slot.start * 1000),
-                end:      Math.round(slot.end * 1000),
-                group:    _this.wrapper('c') + name,
-                content:  requirement +
-                  actual +
-                  _this.secret(angular.toJson({
-                    type: 'group',
-                    diff: slot.diff,
-                    group: name
-                  })),
-                className: 'group-aggs',
-                editable: false
-              });
-            }
-
-            timedata = _this.addLoading(data, timedata, [
-              _this.wrapper('c') + name
+          timedata = _this.addLoading(
+            data, timedata, [
+                _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+                _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning')
             ]);
-          });
-        });
 
-        return timedata;
-      },
+          return timedata;
+        },
 
-      /**
-       * Process plain group aggs
-       */
-      aggs: function (data, timedata, config, privilage, current)
-      {
-        var _this = this;
-
-        angular.forEach(_this.filtered(data, current), function (agg)
+        /**
+         * TODO: Look for ways to combine with user
+         *
+         * Profile timeline data processing
+         */
+        profile: function (data, config)
         {
-          var name = _this.namer(agg, privilage);
+          var _this = this,
+              timedata = [];
 
-          angular.forEach(agg.data, function (slot)
-          {
-            var cn;
-
-            if (slot.diff >= 0 && slot.diff < 7)
+          angular.forEach(
+            data,
+            function (slot, index)
             {
-              switch (slot.diff)
-              {
-                case 0: cn = 'even';  break;
-                case 1: cn = 1;       break;
-                case 2: cn = 2;       break;
-                case 3: cn = 3;       break;
-                case 4: cn = 4;       break;
-                case 5: cn = 5;       break;
-                case 6: cn = 6;       break;
-              }
+              angular.forEach(
+                config.legenda,
+                function (value, legenda)
+                {
+                  if (slot.text == legenda && value)
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: (slot.recursive) ?
+                               _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
+                               _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                        content: _this.secret(
+                          angular.toJson(
+                            {
+                              type: 'slot',
+                              id: index, // slot.id,
+                              recursive: slot.recursive,
+                              state: slot.text
+                            }
+                          )
+                        ),
+                        className: 'slot-' + index + ' ' + config.states[slot.text].className,
+                        editable: true
+                      }
+                    );
+                  }
+                }
+              );
             }
-            else if (slot.diff >= 7)
+          );
+
+          timedata.push(
             {
-              cn = 'more';
+              start: 0,
+              end: 1,
+              group: _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive'),
+              content: '',
+              className: null,
+              editable: false
             }
-            else
+          );
+
+          timedata.push(
             {
-              cn = 'less'
+              start: 0,
+              end: 1,
+              group: _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+              content: '',
+              className: null,
+              editable: false
             }
+          );
 
-            if ((slot.diff > 0  && config.legenda.groups.more) ||
-              (slot.diff == 0 && config.legenda.groups.even) ||
-              (slot.diff < 0  && config.legenda.groups.less))
-            {
-              timedata.push({
-                start:  Math.round(slot.start * 1000),
-                end:    Math.round(slot.end * 1000),
-                group: _this.wrapper('c') + name,
-                content:  cn +
-                  _this.secret(angular.toJson({
-                    type: 'group',
-                    diff: slot.diff,
-                    group: name
-                  })),
-                className:  'agg-' + cn,
-                editable:   false
-              });
-            }
+          return timedata;
+        },
 
-            timedata = _this.addLoading(data, timedata, [
-              _this.wrapper('c') + name
-            ]);
-          });
-
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Wish slots
-       */
-      wishes: function (data, timedata, privilage)
-      {
-        var _this   = this;
-
-        var groups  = this.get.groups(),
-            name    = groups[data.aggs[0].id],
-            link    = '<a href="#/groups?uuid=' +
-                      data.aggs[0].id +
-                      '#view">' +
-                      name +
-                      '</a>',
-            title;
-
-        title = (privilage == 1) ? link : '<span>' + name + '</span>';
-
-        title += ' <span class="label">Behoefte (elke divisie)</span>';
-
-        angular.forEach(data.aggs.wishes, function (wish)
+        /**
+         * Handle group name whether divisions selected
+         */
+        namer: function (agg, privilage)
         {
-          var cn;
+          var groups = this.get.groups(),
+              name = groups[agg.id];
 
-          if ( wish.count >= 7 )
+          name = name.charAt(0).toUpperCase() + name.slice(1);
+
+          var link = '<a href="#/groups?uuid=' +
+                     agg.id +
+                     '#view">' +
+                     name +
+                     '</a>',
+              title;
+
+          if (! agg.division)
           {
-            cn = 'wishes-more';
-          }
-          else if ( wish.count == 0 )
-          {
-            cn = 'wishes-even';
+            title = (privilage == 1) ? link : '<span>' + name + '</span>';
           }
           else
           {
-            cn = 'wishes-' + wish.count;
+            var label;
+
+            title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+            title += ' <span class="label">' + agg.division.label + '</span>';
           }
 
-          timedata.push({
-            start:  Math.round(wish.start * 1000),
-            end:    Math.round(wish.end * 1000),
-            group:  _this.wrapper('c') + title,
-            content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
-              _this.secret(angular.toJson({
-                type: 'wish',
-                wish: wish.count,
-                group: title,
-                groupId: data.aggs[0].id
-              })),
-            className:  cn,
-            editable:   false
-          });
+          return title;
+        },
 
-          timedata = _this.addLoading(data, timedata, [
-            _this.wrapper('c') + title
-          ]);
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Process members
-       */
-      members: function (data, timedata, config, privilage)
-      {
-        var _this   = this,
-            members = this.get.members(),
-            filtered = [];
-
-        angular.forEach(
-          data.members,
-          function (member)
-          {
-            if (member.lastName != undefined)
-            {
-              filtered.push(member);
-            }
-          }
-        );
-
-        data.members = filtered;
-
-        data.members.sort(
-          function (a, b)
-          {
-            var aName = a.lastName.toLowerCase(),
-                bName = b.lastName.toLowerCase();
-
-            if (aName < bName)
-            {
-              return -1;
-            }
-
-            if (aName > bName)
-            {
-              return 1;
-            }
-
-            return 0;
-          }
-        );
-
-        angular.forEach(data.members, function (member)
+        /**
+         * Handle group aggs (with divisions) with bars
+         */
+        bars: function (data, timedata, config, privilage, current)
         {
-          var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+          var _this = this,
+              maxh = 0;
 
-          var link = (privilage == 1) ?
-                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
-                        '<a href="#/profile/' + 
-                        member.id + 
-                        '#' + user + '">' +
-                        members[member.id] + 
-                        '</a>' :
-                        _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
-                        members[member.id];
-
-          angular.forEach(member.data, function (slot)
-          {
-            angular.forEach(config.legenda, function (value, legenda)
+          angular.forEach(
+            _this.filtered(data, current),
+            function (agg)
             {
-              if (slot.text == legenda && value)
+              var name = _this.namer(agg, privilage);
+
+              angular.forEach(
+                agg.data,
+                function (slot)
+                {
+                  if (slot.wish > maxh)
+                  {
+                    maxh = slot.wish;
+                  }
+                }
+              );
+
+              angular.forEach(
+                agg.data,
+                function (slot)
+                {
+                  var maxNum = maxh,
+                      num = slot.wish,
+                      xwish = num,
+                      height = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
+                      minHeight = height,
+                      style = 'height:' + height + 'px;',
+                      requirement = '<div class="requirement" style="' +
+                                    style +
+                                    '" ' +
+                                    'title="' + 'Minimum aantal benodigden' + ': ' +
+                                    num +
+                                    ' personen"></div>';
+
+                  num = slot.wish + slot.diff;
+
+                  var xcurrent = num;
+
+                  height = Math.round(num / maxNum * 80 + 20);
+
+                  if (slot.diff >= 0 && slot.diff < 7)
+                  {
+                    var color;
+
+                    switch (slot.diff)
+                    {
+                      case 0:
+                        color = config.densities.even;
+                        break;
+                      case 1:
+                        color = config.densities.one;
+                        break;
+                      case 2:
+                        color = config.densities.two;
+                        break;
+                      case 3:
+                        color = config.densities.three;
+                        break;
+                      case 4:
+                        color = config.densities.four;
+                        break;
+                      case 5:
+                        color = config.densities.five;
+                        break;
+                      case 6:
+                        color = config.densities.six;
+                        break;
+                    }
+                  }
+                  else if (slot.diff >= 7)
+                  {
+                    color = config.densities.more;
+                  }
+                  else
+                  {
+                    color = config.densities.less;
+                  }
+
+                  var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
+
+                  if (xcurrent > xwish) height = minHeight;
+
+                  style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+
+                  var actual = '<div class="bar" style="' +
+                               style +
+                               '" ' +
+                               ' title="Huidig aantal beschikbaar: ' +
+                               num +
+                               ' personen">' +
+                               span +
+                               '</div>';
+
+                  if ((slot.diff > 0 && config.legenda.groups.more) ||
+                      (slot.diff == 0 && config.legenda.groups.even) ||
+                      (slot.diff < 0 && config.legenda.groups.less))
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: _this.wrapper('c') + name,
+                        content: requirement +
+                                 actual +
+                                 _this.secret(
+                                   angular.toJson(
+                                     {
+                                       type: 'group',
+                                       diff: slot.diff,
+                                       group: name
+                                     })),
+                        className: 'group-aggs',
+                        editable: false
+                      }
+                    );
+                  }
+
+                  timedata = _this.addLoading(
+                    data, timedata, [
+                        _this.wrapper('c') + name
+                    ]
+                  );
+                }
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Process plain group aggs
+         */
+        aggs: function (data, timedata, config, privilage, current)
+        {
+          var _this = this;
+
+          angular.forEach(
+            _this.filtered(data, current),
+            function (agg)
+            {
+              var name = _this.namer(agg, privilage);
+
+              angular.forEach(
+                agg.data,
+                function (slot)
+                {
+                  var cn;
+
+                  if (slot.diff >= 0 && slot.diff < 7)
+                  {
+                    switch (slot.diff)
+                    {
+                      case 0:
+                        cn = 'even';
+                        break;
+                      case 1:
+                        cn = 1;
+                        break;
+                      case 2:
+                        cn = 2;
+                        break;
+                      case 3:
+                        cn = 3;
+                        break;
+                      case 4:
+                        cn = 4;
+                        break;
+                      case 5:
+                        cn = 5;
+                        break;
+                      case 6:
+                        cn = 6;
+                        break;
+                    }
+                  }
+                  else if (slot.diff >= 7)
+                  {
+                    cn = 'more';
+                  }
+                  else
+                  {
+                    cn = 'less'
+                  }
+
+                  if ((slot.diff > 0 && config.legenda.groups.more) ||
+                      (slot.diff == 0 && config.legenda.groups.even) ||
+                      (slot.diff < 0 && config.legenda.groups.less))
+                  {
+                    timedata.push(
+                      {
+                        start: Math.round(slot.start * 1000),
+                        end: Math.round(slot.end * 1000),
+                        group: _this.wrapper('c') + name,
+                        content: cn +
+                                 _this.secret(
+                                   angular.toJson(
+                                     {
+                                       type: 'group',
+                                       diff: slot.diff,
+                                       group: name
+                                     })),
+                        className: 'agg-' + cn,
+                        editable: false
+                      }
+                    );
+                  }
+
+                  timedata = _this.addLoading(
+                    data, timedata, [
+                        _this.wrapper('c') + name
+                    ]
+                  );
+                }
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Wish slots
+         */
+        wishes: function (data, timedata, privilage)
+        {
+          var _this = this;
+
+          var groups = this.get.groups(),
+              name = groups[data.aggs[0].id],
+              link = '<a href="#/groups?uuid=' +
+                     data.aggs[0].id +
+                     '#view">' +
+                     name +
+                     '</a>',
+              title;
+
+          title = (privilage == 1) ? link : '<span>' + name + '</span>';
+
+          title += ' <span class="label">Behoefte (elke divisie)</span>';
+
+          angular.forEach(
+            data.aggs.wishes,
+            function (wish)
+            {
+              var cn;
+
+              if (wish.count >= 7)
               {
-                timedata.push({
-                  start:  Math.round(slot.start * 1000),
-                  end:    Math.round(slot.end * 1000),
-                  group:  link,
-                  content: _this.secret(angular.toJson({ 
-                    type: 'member',
-                    id:   slot.id, 
-                    mid:  member.id,
-                    recursive: slot.recursive, 
-                    state: slot.text 
-                    })),
-                  className:  config.states[slot.text].className,
-                  editable:   false
+                cn = 'wishes-more';
+              }
+              else if (wish.count == 0)
+              {
+                cn = 'wishes-even';
+              }
+              else
+              {
+                cn = 'wishes-' + wish.count;
+              }
+
+              timedata.push(
+                {
+                  start: Math.round(wish.start * 1000),
+                  end: Math.round(wish.end * 1000),
+                  group: _this.wrapper('c') + title,
+                  content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
+                           _this.secret(
+                             angular.toJson(
+                               {
+                                 type: 'wish',
+                                 wish: wish.count,
+                                 group: title,
+                                 groupId: data.aggs[0].id
+                               })),
+                  className: cn,
+                  editable: false
+                }
+              );
+
+              timedata = _this.addLoading(
+                data, timedata, [
+                    _this.wrapper('c') + title
+                ]
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Process members
+         */
+        members: function (data, timedata, config, privilage)
+        {
+          var _this = this,
+              members = this.get.members(),
+              filtered = [];
+
+          angular.forEach(
+            data.members,
+            function (member)
+            {
+              if (member.lastName != undefined)
+              {
+                filtered.push(member);
+              }
+            }
+          );
+
+          data.members = filtered;
+
+          data.members.sort(
+            function (a, b)
+            {
+              var aName = a.lastName.toLowerCase(),
+                  bName = b.lastName.toLowerCase();
+
+              if (aName < bName)
+              {
+                return - 1;
+              }
+
+              if (aName > bName)
+              {
+                return 1;
+              }
+
+              return 0;
+            }
+          );
+
+          angular.forEach(
+            data.members,
+            function (member)
+            {
+              var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+
+              var link = (privilage == 1) ?
+                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
+                         '<a href="#/profile/' +
+                         member.id +
+                         '#' + user + '">' +
+                         members[member.id] +
+                         '</a>' :
+                         _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
+                         members[member.id];
+
+              angular.forEach(
+                member.data,
+                function (slot)
+                {
+                  angular.forEach(
+                    config.legenda,
+                    function (value, legenda)
+                    {
+                      if (slot.text == legenda && value)
+                      {
+                        timedata.push(
+                          {
+                            start: Math.round(slot.start * 1000),
+                            end: Math.round(slot.end * 1000),
+                            group: link,
+                            content: _this.secret(
+                              angular.toJson(
+                                {
+                                  type: 'member',
+                                  id: slot.id,
+                                  mid: member.id,
+                                  recursive: slot.recursive,
+                                  state: slot.text
+                                }
+                              )
+                            ),
+                            className: config.states[slot.text].className,
+                            editable: false
+                          }
+                        );
+                      }
+                    }
+                  );
+                }
+              );
+
+              timedata.push(
+                {
+                  start: 0,
+                  end: 0,
+                  group: link,
+                  content: null,
+                  className: null,
+                  editable: false
                 });
+
+              timedata = _this.addLoading(data, timedata, [link]);
+
+              /**
+               * TODO: Good place to host this here?
+               */
+              angular.forEach(
+                member.stats,
+                function (stat)
+                {
+                  var state = stat.state.split('.');
+                  state.reverse();
+
+                  stat.state = (stat.state.match(/bar-(.*)/)) ? stat.state : 'bar-' + state[0];
+                }
+              );
+            }
+          );
+
+          return timedata;
+        },
+
+        /**
+         * Produce pie charts
+         */
+        pies: function (data, current)
+        {
+          var _this = this;
+
+          angular.forEach(
+            _this.filtered(data, current),
+            function (agg)
+            {
+              var id;
+
+              id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
+
+              if ($.browser.msie && $.browser.version == '8.0')
+              {
+                $('#' + 'groupPie-' + id).html('');
               }
+              else
+              {
+                document.getElementById('groupPie-' + id).innerHTML = '';
+              }
+
+              var ratios = [],
+                  colorMap = {
+                    more: '#415e6b',
+                    even: '#ba6a24',
+                    less: '#a0a0a0'
+                  },
+                  colors = [],
+                  xratios = [];
+
+              angular.forEach(
+                agg.ratios,
+                function (ratio, index)
+                {
+                  if (ratio != 0)
+                  {
+                    ratios.push(
+                      {
+                        ratio: ratio,
+                        color: colorMap[index]
+                      }
+                    );
+                  }
+                }
+              );
+
+              ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+
+              angular.forEach(
+                ratios,
+                function (ratio)
+                {
+                  colors.push(ratio.color);
+                  xratios.push(ratio.ratio);
+                }
+              );
+
+              var r = Raphael('groupPie-' + id),
+                  pie = r.piechart(120, 120, 100, xratios, { colors: colors });
             });
-          });
+        },
 
-          timedata.push({
-            start:    0,
-            end:      0,
-            group:    link,
-            content:  null,
-            className:null,
-            editable: false
-          });
 
-          timedata = _this.addLoading(data, timedata, [ link ]);
-
-          /**
-           * TODO: Good place to host this here?
-           */
-          angular.forEach(member.stats, function (stat)
-          {
-            var state = stat.state.split('.');
-            state.reverse();
-
-            stat.state = (stat.state.match(/bar-(.*)/)) ? stat.state : 'bar-' + state[0];
-          });
-        });
-
-        return timedata;
-      },
-
-      /**
-       * Produce pie charts
-       */
-      pies: function (data, current)
-      {
-        var _this = this;
-
-        angular.forEach(_this.filtered(data, current), function (agg)
+        /**
+         * Filter group agg data based on selected divisions
+         */
+        filtered: function (data, current)
         {
-          var id;
+          var filtered = [];
 
-          id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
-
-          if ($.browser.msie && $.browser.version == '8.0')
+          if (current.division == 'all')
           {
-            $('#' + 'groupPie-' + id).html('');
+            filtered = data.aggs;
           }
           else
           {
-            document.getElementById('groupPie-' + id).innerHTML = '';
+            angular.forEach(
+              data.aggs,
+              function (agg)
+              {
+                if (current.division == agg.division.id)
+                {
+                  filtered.push(agg);
+                }
+              }
+            );
           }
 
-          var ratios    = [],
-            colorMap  = {
-              more: '#415e6b',
-              even: '#ba6a24',
-              less: '#a0a0a0'
-            },
-            colors    = [],
-            xratios   = [];
+          return filtered;
+        },
 
-          angular.forEach(agg.ratios, function (ratio, index)
+        /**
+         * Timeline data processing
+         */
+        process: function (data, config, divisions, privilage, current)
+        {
+          var _this = this,
+              timedata = [];
+
+          if (data.user) timedata = _this.user(data, timedata, config);
+
+          if (data.aggs)
           {
-            if (ratio != 0)
+            if (config.bar)
             {
-              ratios.push({
-                ratio: ratio,
-                color: colorMap[index]
-              });
+              timedata = _this.bars(data, timedata, config, privilage, current);
             }
-          });
-
-          ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
-
-          angular.forEach(ratios, function (ratio, index)
-          {
-            colors.push(ratio.color);
-            xratios.push(ratio.ratio);
-          });
-
-          var r   = Raphael('groupPie-' + id),
-              pie = r.piechart(120, 120, 100, xratios, { colors: colors });
-        });
-      },
-
-
-      /**
-       * Filter group agg data based on selected divisions
-       */
-      filtered: function (data, current)
-      {
-        var filtered = [];
-
-        if (current.division == 'all')
-        {
-          filtered = data.aggs;
-        }
-        else
-        {
-          angular.forEach(data.aggs, function (agg)
-          {
-            if (current.division == agg.division.id)
+            else
             {
-              filtered.push(agg);
+              timedata = _this.aggs(data, timedata, config, privilage, current);
             }
-          });
-        }
-
-        return filtered;
-      },
-      
-      /**
-       * Timeline data processing
-       */
-      process: function (data, config, divisions, privilage, current)
-      {
-        var _this     = this,
-            timedata  = [];
-
-        if (data.user) timedata = _this.user(data, timedata, config);
-
-        if (data.aggs)
-        {
-          if (config.bar) 
-          {
-            timedata = _this.bars(data, timedata, config, privilage, current);
           }
-          else
+
+          if (config.wishes && data.aggs) timedata = _this.wishes(data, timedata, privilage);
+
+          if (data.members) timedata = _this.members(data, timedata, config, privilage);
+
+          if (data.aggs)
           {
-            timedata = _this.aggs(data, timedata, config, privilage, current);
+            setTimeout(
+              function () { _this.pies(data, current) },
+              $rootScope.config.timers.TICKER
+            );
           }
+
+          return timedata;
         }
 
-        if (config.wishes && data.aggs) timedata = _this.wishes(data, timedata, privilage);
-
-        if (data.members) timedata = _this.members(data, timedata, config, privilage);
-
-        if (data.aggs)
-        {
-          setTimeout(function ()
-          {
-            _this.pies(data, current);
-          }, $rootScope.config.timers.TICKER);
-        }
-
-        return timedata;
       }
-
     }
-  }
-]);;'use strict';
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Services.Stats', ['ngResource'])
@@ -8964,7 +9195,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
         }
         else
         {
-          return members[id].name;
+          return members[id].resources.firstName + ' ' + members[id].resources.lastName;
         }
       };
     }
@@ -9050,7 +9281,10 @@ angular.module('WebPaige.Filters', ['ngResource'])
   {
     return function (string)
     {
-      if (string) return string.split('>')[1].split('<')[0];
+      if (string)
+      {
+        return string.split('>')[1].split('<')[0];
+      }
     }
   }
 )
@@ -9065,14 +9299,26 @@ angular.module('WebPaige.Filters', ['ngResource'])
     'Storage',
     function (Storage)
     {
-      return function (id)
+      return function (id, comma)
       {
-        var groups = angular.fromJson(Storage.get('groups'));
+        var groups = angular.fromJson(Storage.get('groups')),
+            names = '';
 
         for (var i in groups)
         {
-          if (groups[i].uuid == id) return ', ' + groups[i].name;
+          if (groups[i].uuid == id)
+          {
+            if (comma)
+            {
+              names += ', ';
+            }
+
+            names += groups[i].name;
+          }
         }
+
+        // if (names[0] == ',' && names[1] == '')
+        return names;
       }
     }
   ])
@@ -9434,12 +9680,20 @@ angular.module('WebPaige.Controllers.Login', [])
           .attr('disabled', 'disabled');
 
         Storage.add(
-          'logindata', angular.toJson(
+          'logindata',
+          angular.toJson(
             {
               username: $scope.logindata.username,
               password: $scope.logindata.password,
               remember: $scope.logindata.remember
-            }));
+            }
+          )
+        );
+
+        Storage.add(
+          'askPass',
+          MD5($scope.logindata.password)
+        );
 
         createLocalGuardContainer();
 
@@ -9791,18 +10045,25 @@ angular.module('WebPaige.Controllers.Login', [])
                                                 $rootScope.app.resources = got;
 
                                                 finalize();
-                                              })
+                                              });
                                           });
                                       }
                                     }
                                     else
                                     {
-                                      ga(
-                                        'send', 'pageview', {
-                                          'dimension1': resources.uuid,
-                                          'dimension2': $rootScope.app.domain
-                                        });
-                                      ga('send', 'event', 'Login', resources.uuid);
+                                      try
+                                      {
+                                        ga(
+                                          'send', 'pageview', {
+                                            'dimension1': resources.uuid,
+                                            'dimension2': $rootScope.app.domain
+                                          });
+                                        ga('send', 'event', 'Login', resources.uuid);
+                                      }
+                                      catch (err)
+                                      {
+                                        console.log('smth wrong with google analytics library!');
+                                      }
 
                                       finalize();
                                     }
@@ -10121,8 +10382,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        * Defaults for loaders
        */
       $scope.loading = {
-        pies:       true,
-        alerts:     true,
+        pies: true,
+        alerts: true,
         smartAlarm: true
       };
 
@@ -10132,7 +10393,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.more = {
         status: false,
-        text:   $rootScope.ui.dashboard.showMore
+        text: $rootScope.ui.dashboard.showMore
       };
 
 
@@ -10141,7 +10402,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.synced = {
         alarms: new Date().getTime(),
-        pies:   new Date().getTime()
+        pies: new Date().getTime()
       };
 
 
@@ -10154,10 +10415,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       angular.forEach(
         Storage.local.settings().app.widgets.groups,
-        function (value, group)
-        {
-          selection[group] = value;
-        }
+        function (value, group) { selection[group] = value }
       );
 
       angular.forEach(
@@ -10167,17 +10425,17 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           if (! selection[group.uuid])
           {
             selection[group.uuid] = {
-              divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0),
-              status:    false
+              divisions: ($rootScope.config.timeline.config.divisions.length > 0),
+              status: false
             };
           }
         }
       );
 
       $scope.popover = {
-        groups:    groups,
+        groups: groups,
         selection: selection,
-        divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0)
+        divisions: ($rootScope.config.timeline.config.divisions.length > 0)
       };
 
       $scope.checkAnyPies = function ()
@@ -10187,13 +10445,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $scope.loading.pies = false;
 
         angular.forEach(
-          Storage.local.settings().app.widgets.groups, function (group)
+          Storage.local.settings().app.widgets.groups,
+          function (group)
           {
             if (group.status === true)
             {
               ret = false;
             }
-          });
+          }
+        );
 
         return ret;
       };
@@ -10230,11 +10490,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                 $scope.periods = {
                   start: pies[0].weeks.current.start.date,
-                  end:   pies[0].weeks.next.end.date
+                  end: pies[0].weeks.next.end.date
                 };
 
                 angular.forEach(
-                  pies, function (pie)
+                  pies,
+                  function (pie)
                   {
                     // Check whether if it is an array what data processor gives back
                     if (pie.weeks.current.state instanceof Array)
@@ -10261,16 +10522,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                                                     new Date(pie.weeks.current.state.start * 1000)
                                                       .toString($rootScope.config.formats.datetime) :
-                      $rootScope.ui.dashboard.possiblyAvailable;
+                                                    $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
                                                   new Date(pie.weeks.current.state.end * 1000)
                                                     .toString($rootScope.config.formats.datetime) :
-                      $rootScope.ui.dashboard.possiblyAvailable;
+                                                  $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.shortages = {
                       current: pie.weeks.current.shortages,
-                      next:    pie.weeks.next.shortages,
+                      next: pie.weeks.next.shortages,
                       total: pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
                     };
 
@@ -10280,7 +10541,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     delete(pie.weeks.current.state);
 
                     $scope.shortageHolders['shortages-' + pie.id] = false;
-                  });
+                  }
+                );
 
                 $scope.pies = pies;
               }
@@ -10289,11 +10551,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             function ()
             {
               angular.forEach(
-                $scope.pies, function (pie)
+                $scope.pies,
+                function (pie)
                 {
                   pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
                   pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
-                });
+                }
+              );
 
               function pieMaker ($id, id, _ratios)
               {
@@ -10322,7 +10586,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                         xratios = [];
 
                     angular.forEach(
-                      _ratios, function (ratio, index)
+                      _ratios,
+                      function (ratio, index)
                       {
                         if (ratio !== 0)
                         {
@@ -10330,29 +10595,32 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                             {
                               ratio: ratio,
                               color: colorMap[index]
-                            });
+                            }
+                          );
                         }
-                      });
+                      }
+                    );
 
                     ratios = ratios.sort(
-                      function (a, b)
-                      {
-                        return b.ratio - a.ratio;
-                      });
+                      function (a, b) { return b.ratio - a.ratio }
+                    );
 
                     angular.forEach(
-                      ratios, function (ratio)
+                      ratios,
+                      function (ratio)
                       {
                         colors.push(ratio.color);
                         xratios.push(ratio.ratio);
-                      });
+                      }
+                    );
 
                     var r = new Raphael($id + id),
                         pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
                   }, $rootScope.config.timers.TICKER);
               }
-            });
+            }
+          );
         }
         else
         {
@@ -10375,7 +10643,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         var cached = angular.fromJson(Storage.get('guard'));
 
         $scope.saMembers = {
-          truck:    [],
+          truck: [],
           reserves: []
         };
 
@@ -10395,25 +10663,27 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               case 'bevelvoerder':
                 $scope.saMembers.truck.push(
                   {
-                    rank:  1,
-                    icon:  $rootScope.ui.dashboard.alarmRoles.commanderInitial,
-                    role:  $rootScope.ui.dashboard.alarmRoles.commander,
+                    rank: 1,
+                    icon: $rootScope.ui.dashboard.alarmRoles.commanderInitial,
+                    role: $rootScope.ui.dashboard.alarmRoles.commander,
                     class: 'sa-icon-commander',
-                    name:  translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    name: translateName(selection.user),
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'chauffeur':
                 $scope.saMembers.truck.push(
                   {
-                    rank:  0,
-                    icon:  $rootScope.ui.dashboard.alarmRoles.driverInitial,
-                    role:  $rootScope.ui.dashboard.alarmRoles.driver,
+                    rank: 0,
+                    icon: $rootScope.ui.dashboard.alarmRoles.driverInitial,
+                    role: $rootScope.ui.dashboard.alarmRoles.driver,
                     class: 'sa-icon-driver',
-                    name:  translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    name: translateName(selection.user),
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.1':
@@ -10423,8 +10693,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M1',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.2':
@@ -10434,8 +10705,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M2',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.3':
@@ -10445,8 +10717,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M3',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.4':
@@ -10456,8 +10729,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M4',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
             }
 
@@ -10495,8 +10769,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       {
                         reserves[state].push(
                           {
-                            id:    userID,
-                            name:  meta.name,
+                            id: userID,
+                            name: meta.name,
                             state: meta.state
                           }
                         );
@@ -10573,10 +10847,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       $scope.states['no-state'] = {
         className: 'no-state',
-        label:     $rootScope.ui.dashboard.possiblyAvailable,
-        color:     '#a0a0a0',
-        type:      $rootScope.ui.dashboard.noPlanning,
-        display:   false
+        label: $rootScope.ui.dashboard.possiblyAvailable,
+        color: '#a0a0a0',
+        type: $rootScope.ui.dashboard.noPlanning,
+        display: false
       };
 
       $scope.divisions = $rootScope.config.timeline.config.divisions;
@@ -10587,7 +10861,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         {
           $scope.divisions.unshift(
             {
-              id:    'all',
+              id: 'all',
               label: $rootScope.ui.dashboard.allDivisions
             }
           );
@@ -10595,7 +10869,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
 
       $scope.current = {
-        group:    initGroup,
+        group: initGroup,
         division: 'all'
       };
 
@@ -10616,13 +10890,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           divisionID = $scope.current.division;
         }
 
-        Slots.getMemberAvailabilities(groupID, divisionID)
-          .then(
+        Slots.getMemberAvailabilities(
+          groupID,
+          divisionID
+        ).then(
           function (results)
           {
             var ordered = {};
 
-            // Quick fix unwrapping $promise and $resolved
             angular.forEach(
               angular.fromJson(angular.toJson(results.members)),
               function (slots, id)
@@ -10633,8 +10908,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
                   end: (slots.length > 0 && slots[0].end !== undefined) ?
                        slots[0].end * 1000 :
-                    $rootScope.ui.dashboard.possiblyAvailable,
-                  name: (members && members[id]) ? members[id].name : id
+                       $rootScope.ui.dashboard.possiblyAvailable,
+                  name: (members && members[id]) ?
+                        members[id].resources.firstName + ' ' + members[id].resources.lastName :
+                        id
                 };
 
                 if (slots.length > 0)
@@ -10712,9 +10989,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             };
 
             if (ordered.hasOwnProperty('available'))
-            { ordered.available.sort(sortByEnd) }
+            {
+              ordered.available.sort(sortByEnd);
+            }
+
             if (ordered.hasOwnProperty('unavailable'))
-            { ordered.unavailable.sort(sortByEnd) }
+            {
+              ordered.unavailable.sort(sortByEnd);
+            }
 
             var _availables = [];
 
@@ -10723,7 +11005,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10732,7 +11016,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.Available')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10741,7 +11027,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10750,7 +11038,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -10786,25 +11076,27 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
         angular.forEach(
-          selection, function (selected)
+          selection,
+          function (selected)
           {
             if (! selected.status)
             {
               selected.divisions = false;
             }
-          });
+          }
+        );
 
         Settings.save(
-          $rootScope.app.resources.uuid, {
+          $rootScope.app.resources.uuid,
+          {
             user: Storage.local.settings().user,
-            app:  {
-              group:   Storage.local.settings().app.group,
+            app: {
+              group: Storage.local.settings().app.group,
               widgets: {
                 groups: selection
               }
             }
-          })
-          .then(
+          }).then(
           function ()
           {
             $rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
@@ -10813,7 +11105,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               .then(
               function () { getOverviews() }
             );
-          });
+          }
+        );
       };
 
 
@@ -10833,7 +11126,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             $scope.alarms.list = $scope.alarms.short;
 
             $scope.synced.alarms = result.synced;
-          });
+          }
+        );
       };
 
 
@@ -10914,7 +11208,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 top: $('#dashboardPopoverBtn').css('top'),
                 left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
                   + 'px'
-              });
+              }
+            );
           }, $rootScope.config.timers.TICKER);
       };
 
@@ -10926,9 +11221,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       {
         $.ajax(
           {
-            url:      $rootScope.config.profile.p2000.url,
+            url: $rootScope.config.profile.p2000.url,
             dataType: 'json',
-            success:  function (results)
+            success: function (results)
             {
               $rootScope.statusBar.off();
 
@@ -10949,13 +11244,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   $scope.alarms.list = $scope.alarms.short;
 
                   $scope.synced.alarms = result.synced;
-                });
+                }
+              );
             },
-            error:    function ()
+            error: function ()
             {
               console.log('ERROR with getting p2000 for the first time!');
             }
-          });
+          }
+        );
       }
       else
       {
@@ -10969,10 +11266,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             angular.forEach(
               capcodes,
-              function (code)
-              {
-                _capcodes += code + ', ';
-              }
+              function (code) { _capcodes += code + ', ' }
             );
 
             $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
@@ -10981,7 +11275,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               {
                 url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
                 dataType: 'jsonp',
-                success:  function (results)
+                success: function (results)
                 {
                   $rootScope.statusBar.off();
 
@@ -11002,14 +11296,17 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       $scope.alarms.list = $scope.alarms.short;
 
                       $scope.synced.alarms = result.synced;
-                    });
+                    }
+                  );
                 },
-                error:    function ()
+                error: function ()
                 {
                   console.log('ERROR with getting p2000 for the first time!');
                 }
-              });
-          });
+              }
+            );
+          }
+        );
       }
 
 
@@ -11019,11 +11316,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $scope.setPrefixedAvailability = function (availability, period)
       {
         Storage.session.add(
-          'setPrefixedAvailability', angular.toJson(
+          'setPrefixedAvailability',
+          angular.toJson(
             {
               availability: availability,
-              period:       period
-            }));
+              period: period
+            }
+          )
+        );
 
         $location.path('/planboard').search({ setPrefixedAvailability: true });
       }
@@ -12014,7 +12314,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
           else
           {
-            Profile.getSlots($scope.timeline.user.id, stamps)
+            Profile.getSlots(
+              $scope.timeline.user.id, stamps)
               .then(
               function (data)
               {
@@ -12083,6 +12384,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         },
 
         /**
+         * TODO: Still being used?
          * Cancel add
          */
         cancelAdd: function ()
@@ -12095,24 +12397,24 @@ angular.module('WebPaige.Controllers.Timeline', [])
       /**
        * Init timeline
        */
-      if ($scope.timeline)
-      {
-        $scope.timeliner.init();
-      }
+      if ($scope.timeline) { $scope.timeliner.init() }
 
 
       /**
        * Timeliner listener
        */
       $rootScope.$on(
-        'timeliner', function ()
+        'timeliner',
+        function ()
         {
           $scope.timeliner.load(
             {
               start: new Date(arguments[1].start).getTime(),
               end: new Date(arguments[1].end).getTime()
-            });
-        });
+            }
+          );
+        }
+      );
 
 
       /**
@@ -12145,7 +12447,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.data.periods.start,
             end: $scope.data.periods.end
-          });
+          }
+        );
       };
 
 
@@ -12171,8 +12474,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 end: Dater.readable.date(new Date(range.end).getTime())
               };
             }
-
-          });
+          }
+        );
       };
 
 
@@ -12314,10 +12617,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         $rootScope.planboardSync.clear();
 
         $scope.$apply(
-          function ()
-          {
-            $scope.selectedOriginal = $scope.selectedSlot();
-          });
+          function () { $scope.selectedOriginal = $scope.selectedSlot() }
+        );
       };
 
 
@@ -12336,7 +12637,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
             function ()
             {
               $scope.timeliner.redraw();
-            }, $rootScope.config.timers.TICKER);
+            },
+            $rootScope.config.timers.TICKER);
         }
       };
 
@@ -12370,10 +12672,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         //      console.log('div ->', $scope.groupPieHide);
 
         angular.forEach(
-          $scope.divisions, function (division)
+          $scope.divisions,
+          function (division)
           {
             $scope.groupPieHide[division.id] = false;
-          });
+          }
+        );
 
         if ($scope.timeline.current.division !== 'all')
         {
@@ -12384,7 +12688,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -12399,7 +12704,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -12418,7 +12724,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
             {
               start: $scope.timeline.range.start,
               end: $scope.timeline.range.end
-            }, true);
+            },
+            true
+          );
         }
         else
         {
@@ -12455,7 +12763,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   start: $scope.timeline.range.start,
                   end: $scope.timeline.range.end
                 }, true);
-            });
+            }
+          );
         }
       }
 
@@ -12480,7 +12789,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
           {
             start: $scope.timeline.range.start,
             end: $scope.timeline.range.end
-          });
+          }
+        );
       };
 
 
@@ -12713,20 +13023,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
               recursive: options.content.recursive,
               id: options.content.id
             };
-          });
-
+          }
+        );
       };
-
-
-
-
-
 
 
       /**
        * Timeline on change
        */
-      $scope.__timelineOnChange = function (direct, original, slot, options)
+      $scope.timelineOnChange = function (direct, original, slot, changed)
       {
         $rootScope.planboardSync.clear();
 
@@ -12734,7 +13039,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
         if (! direct)
         {
-          options = {
+          changed = {
             start: values.start,
             end: values.end,
             content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
@@ -12742,7 +13047,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         }
         else
         {
-          options = {
+          changed = {
             start: ($rootScope.browser.mobile) ?
                    new Date(slot.start.datetime).getTime() :
                    Dater.convert.absolute(slot.start.date, slot.start.time, false),
@@ -12761,97 +13066,78 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
         var now = Date.now().getTime();
 
-        var change = function ()
+        var callback = function (result, messages, added)
+        {
+          $rootScope.$broadcast('resetPlanboardViews');
+
+          if (result.error)
+          {
+            $rootScope.notifier.error(messages.error);
+            console.warn('error ->', result);
+          }
+          else
+          {
+            ! added && $rootScope.notifier.success(messages.success);
+
+            added && add(added);
+          }
+
+          $scope.timeliner.refresh();
+
+          $rootScope.planboardSync.start();
+        };
+
+        var change = function (changed, added)
         {
           $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
 
           Slots.change(
             $scope.original,
+            changed,
+            $scope.timeline.user.id
+          ).then(
+            function (result)
+            {
+              callback(
+                result,
+                {
+                  error: $rootScope.ui.errors.timeline.change,
+                  success: $rootScope.ui.planboard.slotChanged
+                },
+                added
+              );
+            }
+          );
+        };
+
+        var add = function (options)
+        {
+          Slots.add(
             options,
             $scope.timeline.user.id
           ).then(
             function (result)
             {
-              $rootScope.$broadcast('resetPlanboardViews');
-
-              if (result.error)
-              {
-                $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
-                console.warn('error ->', result);
-              }
-              else
-              {
-                $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-              }
-
-              $scope.timeliner.refresh();
-
-              $rootScope.planboardSync.start();
+              callback(
+                result,
+                {
+                  error: $rootScope.ui.errors.timeline.add,
+                  success: $rootScope.ui.planboard.slotChanged
+                }
+              );
             }
           );
         };
 
-        var changeAndAdd = function ()
+        var changeAndAdd = function (changed, added)
         {
-//          var start = options.start;
-//
-//          if (options.start < now)
-//          {
-//            start = now;
-//          }
-
-          Slots.change(
-            $scope.original,
+          change(
+            changed,
             {
-              start: original.start,
-              end: original.end,
-              content: {
-                recursive: slot.recursive,
-                state: slot.state
-              }
-            },
-            $scope.timeline.user.id
-          ).then(
-            function (result)
-            {
-              $rootScope.$broadcast('resetPlanboardViews');
-
-              if (result.error)
-              {
-                $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
-                console.warn('error ->', result);
-              }
-              else
-              {
-                Slots.add(
-                  {
-                    start: options.start,
-                    end: options.end / 1000,
-                    recursive: (options.recursive) ? true : false,
-                    text: options.state
-                  },
-                  $scope.timeline.user.id
-                ).then(
-                  function (result)
-                  {
-                    $rootScope.$broadcast('resetPlanboardViews');
-
-                    if (result.error)
-                    {
-                      $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
-                      console.warn('error ->', result);
-                    }
-                    else
-                    {
-                      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-                    }
-
-                    $scope.timeliner.refresh();
-
-                    $rootScope.planboardSync.start();
-                  }
-                );
-              }
+              start: Math.abs(Math.floor(added.start / 1000)),
+              end: Math.abs(Math.floor(added.end / 1000)),
+              recursive: (added.content.recursive) ? true : false,
+              text: added.content.state
             }
           );
         };
@@ -12863,27 +13149,28 @@ angular.module('WebPaige.Controllers.Timeline', [])
           $scope.timeliner.refresh();
         };
 
+        // It is already blocked at time-line level but for in case
         if (/#timeline/.test(values.group))
         {
-          $rootScope.notifier.error('Not allowed to change others');
+          $rootScope.notifier.error($rootScope.ui.errors.timeline.notAuth);
 
           $scope.timeliner.refresh();
         }
         else
         {
-          if (options.content.recursive)
+          if (changed.content.recursive)
           {
-            change();
+            change(changed);
           }
           else
           {
-            if (options.start < now && options.end < now)
+            if (changed.start < now && changed.end < now)
             {
               notAllowedForPast();
               return;
             }
 
-            if (options.start > now && options.end > now)
+            if (changed.start > now && changed.end > now)
             {
               if (original.start < now && original.end < now)
               {
@@ -12893,17 +13180,33 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
               if (original.start < now && original.end > now)
               {
-                original.end = now;
-                changeAndAdd();
+                changeAndAdd(
+                  {
+                    start: $scope.original.start,
+                    end: now,
+                    content: {
+                      recursive: $scope.original.content.recursive,
+                      state: $scope.original.content.state
+                    }
+                  },
+                  {
+                    start: changed.start + (now - $scope.original.start),
+                    end: changed.end,
+                    content: {
+                      recursive: changed.content.recursive,
+                      state: changed.content.state
+                    }
+                  }
+                );
               }
 
               if (original.start > now && original.end > now)
               {
-                change();
+                change(changed);
               }
             }
 
-            if (options.start < now && options.end > now)
+            if (changed.start < now && changed.end > now)
             {
               if (original.start < now && original.end < now)
               {
@@ -12913,397 +13216,59 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
               if (original.start < now && original.end > now)
               {
-                console.log('doing this? ->');
-                original.end = now;
-                changeAndAdd();
-              }
-
-              if (original.start > now && original.end > now)
-              {
-                change();
-              }
-            }
-          }
-        }
-      };
-
-
-      /**
-       * Timeline on change
-       */
-      $scope.timelineOnChangeBackedUp = function (direct, original, slot, options)
-      {
-        $rootScope.planboardSync.clear();
-
-        if (! direct)
-        {
-          var values = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-
-          options = {
-            start: values.start,
-            end: values.end,
-            content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
-          };
-        }
-        else
-        {
-          options = {
-            start: ($rootScope.browser.mobile) ?
-                   new Date(slot.start.datetime).getTime() :
-                   Dater.convert.absolute(slot.start.date, slot.start.time, false),
-            end: ($rootScope.browser.mobile) ?
-                 new Date(slot.end.datetime).getTime() :
-                 Dater.convert.absolute(slot.end.date, slot.end.time, false),
-            content: {
-              recursive: slot.recursive,
-              state: slot.state
-            }
-          };
-        }
-
-        var now = Date.now().getTime();
-
-        var notAllowed = function ()
-        {
-          $rootScope.notifier.error($rootScope.ui.errors.timeline.pastChanging);
-
-          $scope.timeliner.refresh();
-        };
-
-        var changeSlot = function ()
-        {
-          $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
-
-          Slots.change(
-            $scope.original,
-            options,
-            $scope.timeline.user.id
-          ).then(
-            function (result)
-            {
-              $rootScope.$broadcast('resetPlanboardViews');
-
-              if (result.error)
-              {
-                $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
-                console.warn('error ->', result);
-              }
-              else
-              {
-                $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-              }
-
-              $scope.timeliner.refresh();
-
-              $rootScope.planboardSync.start();
-            }
-          );
-        };
-
-        if ($scope.original.content.recursive && options.content.recursive)
-        {
-          changeSlot();
-        }
-        else
-        {
-          if (options.start < now && options.end < now)
-          {
-            notAllowed();
-          }
-          else
-          {
-            /**
-             * If slot start was in past and end in the future has been moved to
-             * future completely right than now() then slice it with now and leave
-             * the past as it is
-             */
-            if ((new Date($scope.original.start).getTime() < now) &&
-                new Date($scope.original.end).getTime() > now)
-            {
-              console.log('this is the case ->');
-
-              var start = options.start;
-
-              if (options.start < now)
-              {
-                start = now;
-              }
-
-              Slots.change(
-                $scope.original,
+                if (changed.content.state == original.content.state)
                 {
-                  start: new Date($scope.original.start).getTime(),
-                  end: Math.abs(Math.floor(now / 1000)),
-                  content: {
-                    recursive: slot.recursive,
-                    state: slot.state
-                  }
-                },
-                $scope.timeline.user.id
-              ).then(
-                function (result)
-                {
-                  $rootScope.$broadcast('resetPlanboardViews');
-
-                  if (result.error)
-                  {
-                    $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
-                    console.warn('error ->', result);
-                  }
-                  else
-                  {
-                    Slots.add(
-                      {
-                        start: Math.abs(Math.floor(start / 1000)),
-                        end: options.end / 1000,
-                        recursive: (slot.recursive) ? true : false,
-                        text: slot.state
-                      },
-                      $scope.timeline.user.id
-                    ).then(
-                      function (result)
-                      {
-                        $rootScope.$broadcast('resetPlanboardViews');
-
-                        if (result.error)
-                        {
-                          $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
-                          console.warn('error ->', result);
-                        }
-                        else
-                        {
-                          $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-                        }
-
-                        $scope.timeliner.refresh();
-
-                        $rootScope.planboardSync.start();
+                  change(
+                    {
+                      start: $scope.original.start,
+                      end: changed.end,
+                      content: {
+                        recursive: changed.content.recursive,
+                        state: changed.content.state
                       }
-                    );
-                  }
-                }
-              );
-            }
-            else
-            {
-              var isChangeAllowed = function (old, current)
-              {
-                if (old == current) return true;
-
-                if (old < now) return false;
-
-                return current >= now;
-              };
-
-              if (isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
-                  isChangeAllowed(new Date($scope.original.end).getTime(), options.end))
-              {
-                changeSlot();
-              }
-              else
-              {
-                if (options.start < now)
-                {
-                  options.start = now;
-                  changeSlot();
+                    }
+                  );
                 }
                 else
                 {
-                  notAllowed();
+                  changeAndAdd(
+                    {
+                      start: $scope.original.start,
+                      end: now,
+                      content: {
+                        recursive: $scope.original.content.recursive,
+                        state: $scope.original.content.state
+                      }
+                    },
+                    {
+                      start: now,
+                      end: changed.end,
+                      content: {
+                        recursive: changed.content.recursive,
+                        state: changed.content.state
+                      }
+                    }
+                  );
                 }
               }
-            }
-          }
-        }
-      };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      /**
-       * Timeline on change
-       */
-      $scope.timelineOnChange = function (direct, original, slot, options)
-      {
-        $rootScope.planboardSync.clear();
-
-        if (!direct)
-        {
-          /**
-           * Through timeline
-           */
-          var values  = $scope.self.timeline.getItem($scope.self.timeline.getSelection()[0].row);
-
-          options = {
-            start:    values.start,
-            end:      values.end,
-            content:  angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
-          };
-        }
-        else
-        {
-          /**
-           * Through form
-           */
-          options = {
-            start:  ($rootScope.browser.mobile) ?
-                    new Date(slot.start.datetime).getTime() :
-                    Dater.convert.absolute(slot.start.date, slot.start.time, false),
-            end:    ($rootScope.browser.mobile) ?
-                    new Date(slot.end.datetime).getTime() :
-                    Dater.convert.absolute(slot.end.date, slot.end.time, false),
-            content: {
-              recursive:  slot.recursive,
-              state:      slot.state
-            }
-          };
-        }
-
-        var isChangeAllowed = function (old, curr)
-        {
-          var now = Date.now().getTime();
-
-          if (old == curr) return true;
-
-          if (old < now) return false;
-
-          return curr >= now;
-        };
-
-        /**
-         * If slot start was in past and end in the future has been moved to
-         * future completely right than now() then slice it with now and leave
-         * the past as it is
-         */
-        if (options.content.recursive == false &&
-            (
-              new Date($scope.original.start).getTime() < options.start &&
-              new Date($scope.original.end).getTime() < options.end
-              ) &&
-            $scope.original.start < Date.now().getTime()
-          )
-        {
-          Slots.change($scope.original, {
-
-            start:  new Date($scope.original.start).getTime(),
-            end:    Date.now().getTime(),
-            content: {
-              recursive:  slot.recursive,
-              state:      slot.state
-            }
-
-          }, $scope.timeline.user.id)
-            .then(
-            function (result)
-            {
-              $rootScope.$broadcast('resetPlanboardViews');
-
-              if (result.error)
+              if (original.start > now && original.end > now)
               {
-                $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
-                console.warn('error ->', result);
-              }
-              else
-              {
-                Slots.add(
+                change(
                   {
-                    start:      options.start / 1000,
-                    end:        options.end / 1000,
-                    recursive:  (slot.recursive) ? true : false,
-                    text:       slot.state
-                  }, $scope.timeline.user.id)
-                  .then(
-                  function (result)
-                  {
-                    $rootScope.$broadcast('resetPlanboardViews');
-
-                    if (result.error)
-                    {
-                      $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
-                      console.warn('error ->', result);
+                    start: now,
+                    end: changed.end,
+                    content: {
+                      recursive: changed.content.recursive,
+                      state: changed.content.state
                     }
-                    else
-                    {
-                      $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-                    }
-
-                    $scope.timeliner.refresh();
-
-                    $rootScope.planboardSync.start();
                   }
                 );
               }
             }
-          );
-        }
-        else
-        {
-          if (options.content.recursive == true ||
-              (
-                isChangeAllowed(new Date($scope.original.start).getTime(), options.start) &&
-                isChangeAllowed(new Date($scope.original.end).getTime(), options.end)
-                )
-            )
-          {
-            $rootScope.statusBar.display($rootScope.ui.planboard.changingSlot);
-
-            Slots.change($scope.original, options, $scope.timeline.user.id)
-              .then(
-              function (result)
-              {
-                $rootScope.$broadcast('resetPlanboardViews');
-
-                if (result.error)
-                {
-                  $rootScope.notifier.error($rootScope.ui.errors.timeline.change);
-                  console.warn('error ->', result);
-                }
-                else
-                {
-                  $rootScope.notifier.success($rootScope.ui.planboard.slotChanged);
-                }
-
-                $scope.timeliner.refresh();
-
-                $rootScope.planboardSync.start();
-              }
-            );
-          }
-          else
-          {
-            console.log('->', $rootScope.ui.errors);
-
-            $rootScope.notifier.error($rootScope.ui.errors.timeline.pastChanging);
-
-            $scope.timeliner.refresh();
           }
         }
       };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       /**
@@ -13429,10 +13394,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
       if ($scope.timeline && $scope.timeline.main)
       {
         setTimeout(
-          function ()
-          {
-            $scope.self.timeline.redraw();
-          }, $rootScope.config.timers.TICKER);
+          function () { $scope.self.timeline.redraw() },
+          $rootScope.config.timers.TICKER
+        );
       }
 
 
@@ -13461,7 +13425,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   {
                     start: $scope.data.periods.start,
                     end: $scope.data.periods.end
-                  }, true);
+                  },
+                  true
+                );
               }
             }, $rootScope.config.timers.PLANBOARD_SYNC);
         },
@@ -13469,10 +13435,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
         /**
          * Clear planboard sync
          */
-        clear: function ()
-        {
-          $window.clearInterval($window.planboardSync);
-        }
+        clear: function () { $window.clearInterval($window.planboardSync) }
       };
 
 
@@ -13481,50 +13444,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
        */
       $rootScope.planboardSync.start();
     }
-  ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;/*jslint node: true */
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -14240,10 +14160,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var count = 0;
 
         angular.forEach(
-          $scope.scheaduled.offsets, function ()
-          {
-            count ++;
-          });
+          $scope.scheaduled.offsets,
+          function () { count ++ }
+        );
 
         $scope.scheaduleCount = count;
       };
@@ -14261,18 +14180,21 @@ angular.module('WebPaige.Controllers.Messages', [])
         var scheaduled = Messages.scheaduled.find(id);
 
         angular.forEach(
-          scheaduled.types, function (type)
+          scheaduled.types,
+          function (type)
           {
             if (type == 'sms')    $scope.broadcast.sms = true;
             if (type == 'email')  $scope.broadcast.email = true;
-          });
+          }
+        );
 
         var members = angular.fromJson(Storage.get('members')),
             groups = angular.fromJson(Storage.get('groups')),
             receivers = [];
 
         angular.forEach(
-          scheaduled.recipients, function (recipient)
+          scheaduled.recipients,
+          function (recipient)
           {
             var name;
 
@@ -14285,12 +14207,14 @@ angular.module('WebPaige.Controllers.Messages', [])
                   group: $rootScope.ui.message.receiversUsers,
                   id: recipient,
                   name: name
-                });
+                }
+              );
             }
             else
             {
               angular.forEach(
-                groups, function (group)
+                groups,
+                function (group)
                 {
                   if (group.uuid == recipient)
                   {
@@ -14301,11 +14225,14 @@ angular.module('WebPaige.Controllers.Messages', [])
                         group: $rootScope.ui.message.receiversGroups,
                         id: recipient,
                         name: name
-                      });
+                      }
+                    );
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
 
         $scope.message = {
           subject: scheaduled.subject,
@@ -14314,28 +14241,40 @@ angular.module('WebPaige.Controllers.Messages', [])
         };
 
         angular.forEach(
-          $("div#composeTab select.chzn-select option"), function (option)
+          $("div#composeTab select.chzn-select option"),
+          function (option)
           {
             angular.forEach(
-              scheaduled.recipients, function (recipient)
+              scheaduled.recipients,
+              function (recipient)
               {
                 if (members[recipient])
                 {
-                  if (option.innerHTML == members[recipient].name) option.selected = true;
+                  if (option.innerHTML == members[recipient].name)
+                  {
+                    option.selected = true;
+                  }
                 }
                 else
                 {
                   angular.forEach(
-                    groups, function (group)
+                    groups,
+                    function (group)
                     {
                       if (group.uuid == recipient)
                       {
-                        if (option.innerHTML == group.name) option.selected = true;
+                        if (option.innerHTML == group.name)
+                        {
+                          option.selected = true;
+                        }
                       }
-                    });
+                    }
+                  );
                 }
-              });
-          });
+              }
+            );
+          }
+        );
 
         $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
@@ -14687,9 +14626,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
@@ -14740,10 +14681,14 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         if (message.receivers)
         {
-          Messages.send(message, broadcast)
-            .then(
+          Messages.send(
+            message,
+            broadcast
+          ).then(
             function (uuid)
             {
+              console.log('uuid ->', uuid);
+
               if (uuid.error)
               {
                 $rootScope.notifier.error($rootScope.ui.errors.messages.send);
@@ -14760,7 +14705,7 @@ angular.module('WebPaige.Controllers.Messages', [])
                   .then(
                   function (messages)
                   {
-                    console.log('messages ->', angular.fromJson(messages));
+                    // console.log('messages ->', angular.fromJson(messages));
 
                     if (messages.error)
                     {
@@ -15224,23 +15169,27 @@ angular.module('WebPaige.Controllers.Groups', [])
   .controller(
   'groups',
   [
-    '$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
+    '$rootScope',
+    '$scope',
+    '$location',
+    'data',
+    'Groups',
+    'Profile',
+    '$route',
+    '$routeParams',
+    'Storage',
+    'Slots',
+    '$timeout',
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout)
     {
       /**
        * Fix styles
        */
       $rootScope.fixStyles();
 
-
       $rootScope.resetPhoneNumberChecker();
 
-
-      /**
-       * Self this
-       */
-      var self = this,
-      params = $location.search();
+      var params = $location.search();
 
 
       /**
@@ -15275,7 +15224,8 @@ angular.module('WebPaige.Controllers.Groups', [])
       $scope.groups = data.groups;
 
 
-      var uuid, view;
+      var uuid,
+          view;
 
       /**
        * If no params or hashes given in url
@@ -15382,7 +15332,7 @@ angular.module('WebPaige.Controllers.Groups', [])
             $scope.wish = wish.count;
 
             $scope.popover = {
-              id:   id,
+              id: id,
               wish: wish.count
             };
           });
@@ -15398,11 +15348,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         Slots.setWish(
           {
-            id:        id,
-            start:     255600,
-            end:       860400,
+            id: id,
+            start: 255600,
+            end: 860400,
             recursive: true,
-            wish:      wish
+            wish: wish
           })
           .then(
           function (result)
@@ -15458,9 +15408,9 @@ angular.module('WebPaige.Controllers.Groups', [])
       function setView (hash)
       {
         $scope.views = {
-          view:   false,
-          add:    false,
-          edit:   false,
+          view: false,
+          add: false,
+          edit: false,
           search: false,
           member: false
         };
@@ -15534,7 +15484,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         $scope.setViewTo('edit');
 
         $scope.groupForm = {
-          id:   group.uuid,
+          id: group.uuid,
           name: group.name
         };
       };
@@ -15545,11 +15495,20 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.closeTabs = function ()
       {
-        $scope.groupForm = {};
+        $timeout(
+          function ()
+          {
+            $scope.groupForm = {};
 
-        $scope.memberForm = {};
+            $scope.memberForm = {};
 
-        $scope.setViewTo('view');
+            $scope.selectionMaster = {};
+
+            $scope.selection = {};
+
+            $scope.setViewTo('view');
+          }
+        )
       };
 
 
@@ -15572,7 +15531,7 @@ angular.module('WebPaige.Controllers.Groups', [])
             else
             {
               $scope.search = {
-                query:   '',
+                query: '',
                 queried: query
               };
 
@@ -15688,46 +15647,61 @@ angular.module('WebPaige.Controllers.Groups', [])
       {
         $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
 
-        Groups.removeMembers(selection, group).
-          then(
-          function (result)
+        var selected = false;
+
+        angular.forEach(
+          selection,
+          function (value)
           {
-            if (result.error)
+            if (value)
+            { selected = true }
+          }
+        );
+
+        if (selected)
+        {
+          Groups.removeMembers(selection, group)
+            .then(
+            function (result)
             {
-              $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-              console.warn('error ->', result);
-            }
-            else
-            {
-              $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-              $scope.selection = {};
+                $scope.selection = {};
 
-              Groups.query().
-                then(
-                function (data)
-                {
-                  if (data.error)
+                Groups.query()
+                  .then(
+                  function (data)
                   {
-                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                    console.warn('error ->', data);
-                  }
-                  else
-                  {
-                    $scope.data = data;
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
 
-                    $rootScope.statusBar.off();
+                      $rootScope.statusBar.off();
+                    }
                   }
-                });
+                );
+              }
             }
-          });
-
-        /**
-         * TODO (Not working to reset master checkbox!)
-         */
-        //$scope.selectionMaster = {};
+          );
+        }
+        else
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.groups.noSelection);
+        }
       };
 
 
@@ -15829,8 +15803,15 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         if ($rootScope.phoneNumberParsed.result)
         {
-          Profile.register(member).
-            then(
+          if (member.PhoneAddress)
+          {
+            var parsed = phoneNumberParser(member.PhoneAddress, 'NL');
+
+            member.PhoneAddress = parsed.formatting.e164;
+          }
+
+          Profile.register(member)
+            .then(
             function (result)
             {
               if (result.error)
@@ -15908,10 +15889,12 @@ angular.module('WebPaige.Controllers.Groups', [])
        * Listen for incoming group delete calls
        */
       $rootScope.$on(
-        'fireGroupDelete', function (event, group)
+        'fireGroupDelete',
+        function (event, group)
         {
           $scope.deleteGroup(group.id);
-        });
+        }
+      );
 
 
       /**
@@ -15955,7 +15938,8 @@ angular.module('WebPaige.Controllers.Groups', [])
                      * TODO: Is this really supposed to be like this?
                      */
                     angular.forEach(
-                      data.groups, function (group, index)
+                      data.groups,
+                      function (group, index)
                       {
                         $scope.groups = data.groups;
 
@@ -15972,29 +15956,16 @@ angular.module('WebPaige.Controllers.Groups', [])
                             $location.search({uuid: data.groups[0].uuid});
                           }
                         );
-                      });
+                      }
+                    );
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
-      };
-
-
-      /**
-       * Selection toggle
-       */
-      $scope.toggleSelection = function (group, master)
-      {
-        var flag = (master) ? true : false,
-            members = angular.fromJson(Storage.get(group.uuid));
-
-        angular.forEach(
-          members, function (member)
-          {
-            $scope.selection[member.uuid] = flag;
-          });
+          }
+        );
       };
 
 
@@ -16024,6 +15995,21 @@ angular.module('WebPaige.Controllers.Groups', [])
           {
             console.warn('containers -> ', result);
           });
+      };
+
+
+      /**
+       * Selection toggle
+       */
+      $scope.toggleSelection = function (group, master)
+      {
+        var flag = (master) ? false : true,
+            members = angular.fromJson(Storage.get(group.uuid));
+
+        angular.forEach(
+          members,
+          function (member) { $scope.selection[member.uuid] = flag }
+        );
       };
 
 
@@ -16071,7 +16057,8 @@ angular.module('WebPaige.Controllers.Profile', [])
     'Groups',
     'Dater',
     'MD5',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5)
+    '$timeout',
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -16079,7 +16066,6 @@ angular.module('WebPaige.Controllers.Profile', [])
        * Fix styles
        */
       $rootScope.fixStyles();
-
 
       $rootScope.resetPhoneNumberChecker();
 
@@ -16092,10 +16078,7 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.userPassword = '';
 
-      $scope.showDeleteUserModal = function ()
-      {
-        $('#deleteUserModal').modal('show');
-      };
+      $scope.showDeleteUserModal = function () { $('#deleteUserModal').modal('show') };
 
       $scope.deleteUser = function (userPassword)
       {
@@ -16107,7 +16090,9 @@ angular.module('WebPaige.Controllers.Profile', [])
           {
             if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
             {
-              if (MD5(userPassword) == data.resources.askPass)
+              // console.log('pass ->', MD5(userPassword), $rootScope.app.resources.askPass);
+              // Switched from $rootScope.app.resources.askPass to localStorage
+              if (MD5(userPassword) == Storage.get('askPass'))
               {
                 $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
 
@@ -16168,12 +16153,10 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       };
 
-
       /**
        * Pass periods
        */
       $scope.periods = Dater.getPeriods();
-
 
       /**
        * Pass current
@@ -16195,7 +16178,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       }
 
-
       /**
        * Pass data container
        */
@@ -16215,31 +16197,32 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.changeRole = function ()
       {
-        $rootScope.statusBar.display('Gebruiker profiel aan het aanpassen...');
+        $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
-        Profile.role(data.resources.uuid, $scope.data.resources.role)
-          .then(
+        Profile.role(
+          data.resources.uuid,
+          $scope.data.resources.role
+        ).then(
           function ()
           {
-            $rootScope.notifier.success('Gebruiker profiel aangepast.');
+            $rootScope.notifier.success($rootScope.ui.profile.changedRole);
 
             $rootScope.statusBar.off();
           }
         )
       };
 
-
       /**
        * Pass profile information
        */
       $scope.profilemeta = data && data.resources;
-
 
       /**
        * Get groups of user
        */
       $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
+      $scope.availableGroups = angular.fromJson(Storage.get('groups'));
 
       /**
        * Default values for passwords
@@ -16250,7 +16233,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         new2:    ''
       };
 
-
       /**
        * Default form views
        */
@@ -16258,7 +16240,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         add:  false,
         edit: false
       };
-
 
       /**
        * Slot form toggle
@@ -16271,53 +16252,82 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
         else
         {
-          $scope.slot = {};
+          $timeout(
+            function ()
+            {
+              $scope.slot = {};
 
-          $scope.slot = {
-            start:     {
-              date:     new Date().toString($rootScope.config.formats.date),
-              time:     new Date().toString($rootScope.config.formats.time),
-              datetime: new Date().toISOString()
-            },
-            end:       {
-              date:     new Date().toString($rootScope.config.formats.date),
-              time:     new Date().addHours(1).toString($rootScope.config.formats.time),
-              datetime: new Date().toISOString()
-            },
-            state:     '',
-            recursive: false,
-            id:        ''
-          };
+              $scope.slot = {
+                start:     {
+                  date:     new Date().toString($rootScope.config.formats.date),
+                  time:     new Date().toString($rootScope.config.formats.time),
+                  datetime: new Date().toISOString()
+                },
+                end:       {
+                  date:     new Date().toString($rootScope.config.formats.date),
+                  time:     new Date().addHours(1).toString($rootScope.config.formats.time),
+                  datetime: new Date().toISOString()
+                },
+                state:     '',
+                recursive: false,
+                id:        ''
+              };
 
-          $scope.forms = {
-            add:  true,
-            edit: false
-          };
+              $scope.forms = {
+                add:  true,
+                edit: false
+              };
+            }, 20
+          );
         }
       };
-
 
       /**
        * Reset inline forms
        */
       $scope.resetInlineForms = function ()
       {
-        $scope.slot = {};
+        $timeout(
+          function ()
+          {
+            $scope.slot = {};
 
-        $scope.original = {};
+            $scope.original = {};
 
-        $scope.forms = {
-          add:  false,
-          edit: false
-        };
+            $scope.forms = {
+              add:  false,
+              edit: false
+            };
+          }, 20
+        );
       };
-
 
       /**
        * Extract view action from url and set view
        */
       setView($location.hash());
 
+      function setGroupSelection ()
+      {
+        angular.forEach(
+          $("div#editTab select.chzn-select option"),
+          function (option)
+          {
+            angular.forEach(
+              $scope.groups,
+              function (userGroup)
+              {
+                if (option.innerHTML == userGroup.name)
+                {
+                  option.selected = true;
+                }
+              }
+            );
+          }
+        );
+
+        $("div#editTab select.chzn-select").trigger("liszt:updated");
+      }
 
       /**
        * View setter
@@ -16331,6 +16341,11 @@ angular.module('WebPaige.Controllers.Profile', [])
           timeline: false
         };
 
+        $timeout(
+          function () { setGroupSelection() },
+          100
+        );
+
         if (hash == 'edit')
         {
           $rootScope.phoneNumberParser($scope.profilemeta.PhoneAddress);
@@ -16340,7 +16355,6 @@ angular.module('WebPaige.Controllers.Profile', [])
 
         $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
       }
-
 
       /**
        * Switch between the views and set hash accordingly
@@ -16358,7 +16372,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         );
       };
 
-
       $scope.$watch(
         'profilemeta.PhoneAddress',
         function (value)
@@ -16369,7 +16382,6 @@ angular.module('WebPaige.Controllers.Profile', [])
           }
         }
       );
-
 
       /**
        * Save user
@@ -16389,16 +16401,22 @@ angular.module('WebPaige.Controllers.Profile', [])
 
         $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
-        /**
-         * Convert given other user's password to MD5
-         */
         if (resources.Password)
         {
           resources.askPass = MD5(resources.Password);
         }
 
-        Profile.save($route.current.params.userId, resources)
-          .then(
+        if (resources.PhoneAddress)
+        {
+          var parsed = phoneNumberParser(resources.PhoneAddress, 'NL');
+
+          resources.PhoneAddress = parsed.formatting.e164;
+        }
+
+        Profile.save(
+          $route.current.params.userId,
+          resources
+        ).then(
           function (result)
           {
             if (result.error)
@@ -16408,33 +16426,74 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
-              $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+              $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
 
-              var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid) ? true : false;
-
-              Profile.get($route.current.params.userId.toLowerCase(), flag)
-                .then(
-                function (data)
+              Profile.membership(
+                $route.current.params.userId,
+                $scope.profilemeta.groups
+              ).then(
+                function (result)
                 {
-                  if (data.error)
+                  if (result.error)
                   {
-                    $rootScope.notifier.error($rootScope.ui.errors.profile.get);
-                    console.warn('error ->', data);
+                    $rootScope.notifier.error($rootScope.ui.errors.profile.settingGroups);
+                    console.warn('error ->', result);
                   }
                   else
                   {
-                    $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+                    $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-                    $scope.data = data;
+                    Groups.query().
+                      then(
+                      function (data)
+                      {
+                        if (data.error)
+                        {
+                          $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                          console.warn('error ->', data);
+                        }
+                        else
+                        {
+                          $scope.groups = $route.current.params.userId &&
+                                          Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
-                    $rootScope.statusBar.off();
+                          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+                          var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid);
+
+                          Profile.get(
+                            $route.current.params.userId.toLowerCase(),
+                            flag
+                          ).then(
+                            function (data)
+                            {
+                              if (data.error)
+                              {
+                                $rootScope.notifier.error($rootScope.ui.errors.profile.get);
+                                console.warn('error ->', data);
+                              }
+                              else
+                              {
+                                $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
+                                $scope.data = data;
+
+                                $rootScope.statusBar.off();
+
+                                $('body').scrollTop(0);
+                              }
+                            }
+                          );
+                        }
+                      }
+                    );
                   }
-                });
+                }
+              );
             }
-          });
-
+          }
+        );
       };
-
 
       /**
        * Change passwords
@@ -16503,7 +16562,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       };
 
-
       /**
        * Render timeline if hash is timeline
        */
@@ -16512,7 +16570,6 @@ angular.module('WebPaige.Controllers.Profile', [])
       {
         timelinebooter();
       }
-
 
       /**
        * TODO: Is it really needed? Since the timeline-booter is disabled
@@ -16529,7 +16586,6 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
           }, $rootScope.config.timers.TICKER);
       };
-
 
       function timelinebooter ()
       {
@@ -16585,7 +16641,6 @@ angular.module('WebPaige.Controllers.Profile', [])
         $('#timeline').html('');
         $('#timeline').append('<div id="userTimeline"></div>');
       }
-
     }
   ]);;/*jslint node: true */
 /*global angular */

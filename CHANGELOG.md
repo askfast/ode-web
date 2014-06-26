@@ -1,11 +1,23 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.3.19
+- fix: Response of send direct message is more compatible with multiple types of returns. 26-6-2014</i>
+- fix: Solved an issue with password reset. 26-6-2014
+- fix: Solved inconsistency problems with names. More usage of first name and last names. 25-6-2014
+- fix: Communicate only e164 formatted phone numbers to backend. 25-6-2014
+- feature: Groups editing for profile edit view. 25-6-2014
+- feature: User interface improvements for footer bar and download buttons and brandt identity of web app. 
+25-6-2014
+- fix: Fixed a bug on delete user modal password matching. 22-6-2014
+- fix: Fixed an issue with deleting a group. 22-6-2014
+- feature: Prevention matrix implementation for any past related timeline mutations. 22-6-2014
+
 2.3.18
 - release: Version release. 20-6-2014
 - feature: Added FAQ section with linked tutorial videos. 20-6-2014
 - fix: Solved issue with not creating planning for recursive timeline in past. 19-6-2014
-- fix: Improved user credetentials validation by registration. 19-6-2014
+- fix: Improved user credentials validation by registration. 19-6-2014
 - fix: Improved email validation. 19-6-2014
 - fix: Issue with not closing planning for in profile timeline section. 18-6-2014
 - feature: Phone number validation. 18-6-2014
@@ -183,6 +195,7 @@ release Live release for 120G 5-6-2013
 - feature: Dashboard 2.0 8-4-2013
 
 2.0.1
+- release: Version released. 5-4-2013
 - fix: Fixed rendering issues with pie chart of totals in statistics in plan 5-4-2013
 - feature: Dynamic listing for legend based on available states of that particular installation 4-4-2013
 - fix: Hot fix for not displaying date time conversions in message center 4-4-2013

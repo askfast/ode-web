@@ -12,23 +12,27 @@ angular.module('WebPaige.Controllers.Groups', [])
   .controller(
   'groups',
   [
-    '$rootScope', '$scope', '$location', 'data', 'Groups', 'Profile', '$route', '$routeParams', 'Storage', 'Slots',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots)
+    '$rootScope',
+    '$scope',
+    '$location',
+    'data',
+    'Groups',
+    'Profile',
+    '$route',
+    '$routeParams',
+    'Storage',
+    'Slots',
+    '$timeout',
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout)
     {
       /**
        * Fix styles
        */
       $rootScope.fixStyles();
 
-
       $rootScope.resetPhoneNumberChecker();
 
-
-      /**
-       * Self this
-       */
-      var self = this,
-      params = $location.search();
+      var params = $location.search();
 
 
       /**
@@ -63,7 +67,8 @@ angular.module('WebPaige.Controllers.Groups', [])
       $scope.groups = data.groups;
 
 
-      var uuid, view;
+      var uuid,
+          view;
 
       /**
        * If no params or hashes given in url
@@ -170,7 +175,7 @@ angular.module('WebPaige.Controllers.Groups', [])
             $scope.wish = wish.count;
 
             $scope.popover = {
-              id:   id,
+              id: id,
               wish: wish.count
             };
           });
@@ -186,11 +191,11 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         Slots.setWish(
           {
-            id:        id,
-            start:     255600,
-            end:       860400,
+            id: id,
+            start: 255600,
+            end: 860400,
             recursive: true,
-            wish:      wish
+            wish: wish
           })
           .then(
           function (result)
@@ -246,9 +251,9 @@ angular.module('WebPaige.Controllers.Groups', [])
       function setView (hash)
       {
         $scope.views = {
-          view:   false,
-          add:    false,
-          edit:   false,
+          view: false,
+          add: false,
+          edit: false,
           search: false,
           member: false
         };
@@ -322,7 +327,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         $scope.setViewTo('edit');
 
         $scope.groupForm = {
-          id:   group.uuid,
+          id: group.uuid,
           name: group.name
         };
       };
@@ -333,11 +338,20 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.closeTabs = function ()
       {
-        $scope.groupForm = {};
+        $timeout(
+          function ()
+          {
+            $scope.groupForm = {};
 
-        $scope.memberForm = {};
+            $scope.memberForm = {};
 
-        $scope.setViewTo('view');
+            $scope.selectionMaster = {};
+
+            $scope.selection = {};
+
+            $scope.setViewTo('view');
+          }
+        )
       };
 
 
@@ -360,7 +374,7 @@ angular.module('WebPaige.Controllers.Groups', [])
             else
             {
               $scope.search = {
-                query:   '',
+                query: '',
                 queried: query
               };
 
@@ -476,46 +490,61 @@ angular.module('WebPaige.Controllers.Groups', [])
       {
         $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
 
-        Groups.removeMembers(selection, group).
-          then(
-          function (result)
+        var selected = false;
+
+        angular.forEach(
+          selection,
+          function (value)
           {
-            if (result.error)
+            if (value)
+            { selected = true }
+          }
+        );
+
+        if (selected)
+        {
+          Groups.removeMembers(selection, group)
+            .then(
+            function (result)
             {
-              $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-              console.warn('error ->', result);
-            }
-            else
-            {
-              $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-              $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
-              $scope.selection = {};
+                $scope.selection = {};
 
-              Groups.query().
-                then(
-                function (data)
-                {
-                  if (data.error)
+                Groups.query()
+                  .then(
+                  function (data)
                   {
-                    $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                    console.warn('error ->', data);
-                  }
-                  else
-                  {
-                    $scope.data = data;
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
 
-                    $rootScope.statusBar.off();
+                      $rootScope.statusBar.off();
+                    }
                   }
-                });
+                );
+              }
             }
-          });
-
-        /**
-         * TODO (Not working to reset master checkbox!)
-         */
-        //$scope.selectionMaster = {};
+          );
+        }
+        else
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.groups.noSelection);
+        }
       };
 
 
@@ -617,8 +646,15 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         if ($rootScope.phoneNumberParsed.result)
         {
-          Profile.register(member).
-            then(
+          if (member.PhoneAddress)
+          {
+            var parsed = phoneNumberParser(member.PhoneAddress, 'NL');
+
+            member.PhoneAddress = parsed.formatting.e164;
+          }
+
+          Profile.register(member)
+            .then(
             function (result)
             {
               if (result.error)
@@ -696,10 +732,12 @@ angular.module('WebPaige.Controllers.Groups', [])
        * Listen for incoming group delete calls
        */
       $rootScope.$on(
-        'fireGroupDelete', function (event, group)
+        'fireGroupDelete',
+        function (event, group)
         {
           $scope.deleteGroup(group.id);
-        });
+        }
+      );
 
 
       /**
@@ -743,7 +781,8 @@ angular.module('WebPaige.Controllers.Groups', [])
                      * TODO: Is this really supposed to be like this?
                      */
                     angular.forEach(
-                      data.groups, function (group, index)
+                      data.groups,
+                      function (group, index)
                       {
                         $scope.groups = data.groups;
 
@@ -760,29 +799,16 @@ angular.module('WebPaige.Controllers.Groups', [])
                             $location.search({uuid: data.groups[0].uuid});
                           }
                         );
-                      });
+                      }
+                    );
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
-      };
-
-
-      /**
-       * Selection toggle
-       */
-      $scope.toggleSelection = function (group, master)
-      {
-        var flag = (master) ? true : false,
-            members = angular.fromJson(Storage.get(group.uuid));
-
-        angular.forEach(
-          members, function (member)
-          {
-            $scope.selection[member.uuid] = flag;
-          });
+          }
+        );
       };
 
 
@@ -812,6 +838,21 @@ angular.module('WebPaige.Controllers.Groups', [])
           {
             console.warn('containers -> ', result);
           });
+      };
+
+
+      /**
+       * Selection toggle
+       */
+      $scope.toggleSelection = function (group, master)
+      {
+        var flag = (master) ? false : true,
+            members = angular.fromJson(Storage.get(group.uuid));
+
+        angular.forEach(
+          members,
+          function (member) { $scope.selection[member.uuid] = flag }
+        );
       };
 
 

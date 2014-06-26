@@ -54,10 +54,7 @@ angular.module('WebPaige')
           });
       }
 
-      $window.onresize = function ()
-      {
-        $rootScope.browser.screen = $window.screen;
-      };
+      $window.onresize = function () { $rootScope.browser.screen = $window.screen };
 
       $window.onorientationchange = function ()
       {
@@ -87,10 +84,7 @@ angular.module('WebPaige')
       /**
        * Default language and change language
        */
-      $rootScope.changeLanguage = function (lang)
-      {
-        $rootScope.ui = ui[lang];
-      };
+      $rootScope.changeLanguage = function (lang) { $rootScope.ui = ui[lang] };
 
       $rootScope.ui = ui[$rootScope.config.lang];
 
@@ -121,10 +115,7 @@ angular.module('WebPaige')
 
       angular.forEach(
         angular.fromJson(Storage.get('states')),
-        function (state)
-        {
-          $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state];
-        }
+        function (state) { $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state] }
       );
 
       var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
@@ -302,7 +293,8 @@ angular.module('WebPaige')
        * Callback function accepts <event, next, current>
        */
       $rootScope.$on(
-        '$routeChangeStart', function ()
+        '$routeChangeStart',
+        function ()
         {
           function resetLoaders ()
           {
@@ -371,7 +363,14 @@ angular.module('WebPaige')
 
           if (! $rootScope.location)
           {
-            ga('send', 'Undefined Page', $location.path());
+            try
+            {
+              ga('send', 'Undefined Page', $location.path());
+            }
+            catch (e)
+            {
+              console.log('something wrong with passing location to google analytics ->');
+            }
           }
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
@@ -404,7 +403,8 @@ angular.module('WebPaige')
        * Callback function accepts <event, current, previous>
        */
       $rootScope.$on(
-        '$routeChangeSuccess', function ()
+        '$routeChangeSuccess',
+        function ()
         {
           $rootScope.newLocation = $location.path();
 
@@ -413,7 +413,8 @@ angular.module('WebPaige')
           $rootScope.statusBar.off();
 
           $('div[ng-view]').show();
-        });
+        }
+      );
 
 
       /**
@@ -421,10 +422,9 @@ angular.module('WebPaige')
        * Route change is failed!
        */
       $rootScope.$on(
-        '$routeChangeError', function (event, current, previous, rejection)
-        {
-          $rootScope.notifier.error(rejection);
-        });
+        '$routeChangeError',
+        function (event, current, previous, rejection) { $rootScope.notifier.error(rejection) }
+      );
 
 
       // TODO: Fix styles
@@ -447,9 +447,11 @@ angular.module('WebPaige')
               $('.tabs-left .tab-content #' + $this).css(
                 {
                   height: $('.tabs-left .nav-tabs').height() - 41
-                });
+                }
+              );
             }
-          });
+          }
+        );
 
         /**
          * Correct icon-font-library icons for mac and linux
@@ -468,10 +470,7 @@ angular.module('WebPaige')
       /**
        * Experimental full screen ability
        */
-      $rootScope.fullScreen = function ()
-      {
-        screenfull.toggle($('html')[0]);
-      };
+      $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]) };
 
 
       /**
@@ -479,10 +478,7 @@ angular.module('WebPaige')
        */
       if ($.os.windows)
       {
-        $('#loading p').css(
-          {
-            paddingTop: '130px'
-          });
+        $('#loading p').css({ paddingTop: '130px' });
       }
 
 
@@ -499,7 +495,10 @@ angular.module('WebPaige')
       /**
        * TODO (Still functioning since there is a second download button?)
        */
-      if (! $config.profile.mobileApp.status) $('#copyrights span.muted').css({right: 0});
+      if (! $config.profile.mobileApp.status)
+      {
+        $('#copyrights span.muted').css({ right: 0 });
+      }
 
 
       /**
@@ -516,7 +515,8 @@ angular.module('WebPaige')
             $rootScope.notifier.success($rootScope.ui.downloads.success);
 
             $rootScope.statusBar.off();
-          })
+          }
+        );
       };
 
 

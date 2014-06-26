@@ -168,12 +168,20 @@ angular.module('WebPaige.Controllers.Login', [])
           .attr('disabled', 'disabled');
 
         Storage.add(
-          'logindata', angular.toJson(
+          'logindata',
+          angular.toJson(
             {
               username: $scope.logindata.username,
               password: $scope.logindata.password,
               remember: $scope.logindata.remember
-            }));
+            }
+          )
+        );
+
+        Storage.add(
+          'askPass',
+          MD5($scope.logindata.password)
+        );
 
         createLocalGuardContainer();
 
@@ -525,18 +533,25 @@ angular.module('WebPaige.Controllers.Login', [])
                                                 $rootScope.app.resources = got;
 
                                                 finalize();
-                                              })
+                                              });
                                           });
                                       }
                                     }
                                     else
                                     {
-                                      ga(
-                                        'send', 'pageview', {
-                                          'dimension1': resources.uuid,
-                                          'dimension2': $rootScope.app.domain
-                                        });
-                                      ga('send', 'event', 'Login', resources.uuid);
+                                      try
+                                      {
+                                        ga(
+                                          'send', 'pageview', {
+                                            'dimension1': resources.uuid,
+                                            'dimension2': $rootScope.app.domain
+                                          });
+                                        ga('send', 'event', 'Login', resources.uuid);
+                                      }
+                                      catch (err)
+                                      {
+                                        console.log('smth wrong with google analytics library!');
+                                      }
 
                                       finalize();
                                     }

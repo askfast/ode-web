@@ -16,32 +16,40 @@
 
 
 	<!-- loginForm -->
-	<div id="login" class="boxed" ng-show="views.login" ng-hide="views.help || views.changePass">
+	<div id="login"
+       class="boxed"
+       ng-show="views.login"
+       ng-hide="views.help || views.changePass">
 		<form ng-submit="login()">
-		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
+		  <img ng-src="{{config.profile.logos.login}}"
+           alt="{{config.profile.title}}" />
 
       <h4 class="form-signin-heading">{{ui.login.header}}</h4>
-      <div class="alert {{alert.login.type}}" ng-show="alert.login.display">
-        <button class="close" type="button" ng-click="alert.login=false">×</button>
+
+      <div class="alert {{alert.login.type}}"
+           ng-show="alert.login.display">
+        <button class="close"
+                type="button"
+                ng-click="alert.login=false">×</button>
         {{alert.login.message}}
       </div>
-		  <input
-		    class=""
-		    type="text"
-		    ng-model="logindata.username"
-		    placeholder="{{ui.login.placeholder_username}}"
-		    autofocus>
-		  <input
-		      class=""
-		      type="password"
-		      ng-model="logindata.password"
-		      placeholder="{{ui.login.placeholder_password}}">
+
+		  <input type="text"
+             ng-model="logindata.username"
+             placeholder="{{ui.login.placeholder_username}}"
+             autofocus>
+
+		  <input type="password"
+             ng-model="logindata.password"
+             placeholder="{{ui.login.placeholder_password}}">
+
 		  <label class="checkbox span3">
-		    <input
-		      type="checkbox"
-		      ng-model="logindata.remember">{{ui.login.label_rememberMe}}
+		    <input type="checkbox"
+               ng-model="logindata.remember">{{ui.login.label_rememberMe}}
 		  </label>
+
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.button_login}}</button>
+
 		  <p>
 		  	<small>
           <a ng-click="views.forgot=true; views.login=false;">{{ui.login.forgot_password}}</a>
@@ -49,6 +57,7 @@
 		  		<a ng-click="views.help=true">{{ui.help.help}}</a>
 		  	</small>
 		  </p>
+
 		  <p>
 		  	<small>
 			  	<a ng-click="changeLanguage('en')">English</a>
@@ -58,8 +67,10 @@
 		  </p>
 
 
-
-		  <span class="version"><a href="version.html" target="_blank">StandBy v{{config.version}}</a></span>
+      <img src="img/standby_logo_small.png" alt="StandBy Logo"/>
+		  <span class="version" style="margin-top: 0px">
+        <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
+      </span>
 		</form>
 	</div>
 	<!-- end loginForm -->
@@ -102,7 +113,11 @@
 
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
 		  <p><small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small></p>
-		  <span class="version"><a href="version.html" target="_blank">StandBy v{{config.version}}</a></span>
+
+      <img src="img/standby_logo_small.png" alt="StandBy Logo"/>
+		  <span class="version">
+        <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
+      </span>
 		</form>
 	</div>
 	<!-- end remember login -->

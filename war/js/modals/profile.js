@@ -15,10 +15,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
     {
       var Profile = $resource(
           $config.host + '/node/:id/:section',
+          {},
           {
-          },
-          {
-            get:  {
+            get: {
               method: 'GET',
               params: { id: '', section: 'resource' }
             },
@@ -27,13 +26,18 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               params: { section: 'resource' }
             },
             remove: {
-              method:  'DELETE',
-              params:  {},
+              method: 'DELETE',
+              params: {},
               isArray: true
             },
             role: {
-              method:  'PUT',
-              params:  { section: 'role' },
+              method: 'PUT',
+              params: { section: 'role' },
+              isArray: true
+            },
+            membership: {
+              method: 'PUT',
+              params: { id: '', section: 'membership' },
               isArray: true
             }
           }
@@ -48,8 +52,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           },
           {
             profile: {
-              method:  'GET',
-              params:  {uuid: '', pass: '', name: '', phone: ''},
+              method: 'GET',
+              params: {uuid: '', pass: '', name: '', phone: ''},
               isArray: true
             }
           }
@@ -61,18 +65,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
           },
           {
-            get:  {
+            get: {
               method: 'GET',
               params: {}
             },
             save: {
               method: 'POST',
-              params: {
-                /**
-                 * It seems like backend accepts data in request payload as body as well
-                 */
-                //tags: ''
-              }
+              params: {},
+              isArray: true
             }
           }
       );
@@ -108,12 +108,12 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
               {
                 Profile.prototype.save(
                   uuid, {
-                    firstName:    profile.firstName,
-                    lastName:     profile.lastName,
+                    firstName: profile.firstName,
+                    lastName: profile.lastName,
                     EmailAddress: profile.EmailAddress,
-                    PostAddress:  profile.PostAddress,
-                    PostZip:      profile.PostZip,
-                    PostCity:     profile.PostCity
+                    PostAddress: profile.PostAddress,
+                    PostZip: profile.PostZip,
+                    PostCity: profile.PostCity
                   }).then(
                   function (resourced)
                   {
@@ -125,7 +125,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                         calls.push(
                           Groups.addMember(
                             {
-                              id:    uuid,
+                              id: uuid,
                               group: group
                             }));
                       });
@@ -137,9 +137,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                         deferred.resolve(
                           {
                             registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
-                            roled:     roled,
+                            roled: roled,
                             resourced: resourced,
-                            grouped:   grouped
+                            grouped: grouped
                           });
                       });
 
@@ -206,6 +206,36 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
       /**
+       * Set the groups for user
+       */
+      Profile.prototype.membership = function (id, groups)
+      {
+        var deferred = $q.defer(),
+            groupIds = [];
+
+        angular.forEach(
+          groups,
+          function (group) { groupIds.push(group.uuid) }
+        );
+
+        Profile.membership(
+          { id: id },
+          groupIds,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
        * Get profile of given user
        */
       Profile.prototype.get = function (id, localize)
@@ -213,17 +243,22 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         var deferred = $q.defer();
 
         Profile.get(
-          {
-            id: id
-          },
+          { id: id },
           function (result)
           {
-            if (id == $rootScope.app.resources.uuid) $rootScope.app.resources = result;
+            if (id == $rootScope.app.resources.uuid)
+            {
+              $rootScope.app.resources = result;
+            }
 
-            if (localize) Storage.add('resources', angular.toJson(result));
+            if (localize)
+            {
+              Storage.add('resources', angular.toJson(result));
+            }
 
             deferred.resolve({resources: result});
-          });
+          }
+        );
 
         return deferred.promise;
       };
@@ -242,9 +277,9 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
             Slots.user(
               {
-                user:  id,
+                user: id,
                 start: params.start,
-                end:   params.end
+                end: params.end
               }
             ).then(
               function (slots)
@@ -252,8 +287,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
                 deferred.resolve(
                   angular.extend(
                     resources, {
-                      slots:   slots,
-                      synced:  new Date().getTime(),
+                      slots: slots,
+                      synced: new Date().getTime(),
                       periods: {
                         start: params.start * 1000,
                         end: params.end * 1000
@@ -283,11 +318,11 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
             deferred.resolve(
               {
-                slots:   slots,
-                synced:  new Date().getTime(),
+                slots: slots,
+                synced: new Date().getTime(),
                 periods: {
                   start: params.start,
-                  end:   params.end
+                  end: params.end
                 }
               });
           });

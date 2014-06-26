@@ -131,6 +131,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
             pass: '',
             key:  ''
           }
+          ,
+          isArray: true
         }
       });
 
@@ -270,18 +272,18 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 	    /**
 	     * RE-FACTORY
 	     */
-	    changePassword.get({
+	    changePassword.reset({
           uuid: uuid,
           pass: newpass,
           key:  key
         },
 	      function (result)
 	      {
-	        deferred.resolve(result);
+          deferred.resolve(result);
 	      },
 	      function (error)
 	      {
-	        deferred.resolve(error);
+          deferred.resolve(error);
 	      }
 	    );
 	    

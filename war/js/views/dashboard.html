@@ -205,7 +205,7 @@
 
     <div class="head">
       <h4>
-        Overzicht beschikbaarheid{{current.group | groupIdToName | toTitleCase}}
+        Overzicht beschikbaarheid{{current.group | groupIdToName:true | toTitleCase}}
         <span ng-show="(current.division != 'all')">({{current.division | divisionIdToName}})</span>
       </h4>
 
@@ -257,7 +257,9 @@
 
               <div class="sa-member-card">
                 <h5>
-                  <a href="#/profile/{{member.id}}#profile">{{member.name | toTitleCase}}</a>
+                  <a href="#/profile/{{member.id}}#profile">
+                    {{member.name | toTitleCase}}
+                  </a>
                 </h5>
                 <hr/>
                 <span>{{states[member.state].label}}</span>

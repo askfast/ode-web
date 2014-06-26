@@ -39,6 +39,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             send: {
               method: 'POST',
               params: {action: 'sendDirectMessage'}
+              //,isArray: true
             },
             save: {
               method: 'POST',
@@ -414,7 +415,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             receivers.push(
               {
                 id: member.uuid,
-                name: member.name,
+                // name: member.name,
+                name: member.resources.firstName + ' ' + member.resources.lastName,
                 lastName: member.resources.lastName,
                 firstName: member.resources.firstName,
                 group: $rootScope.ui.message.receiversUsers
@@ -478,18 +480,30 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
         };
 
         Messages.send(
-          null, message,
+          null,
+          message,
           function (result)
           {
+            console.log('result ->', result, angular.isArray(result) );
+
             var returned = '';
 
+            var chunks = (angular.isArray(result)) ? result[0] : result;
+
+            console.log('chunk result ->', result);
+
             angular.forEach(
-              result,
+              chunks,
               function (chr)
               {
-                returned += chr;
+                if (chr.length == 1 && !angular.isObject(chr))
+                {
+                  returned += chr;
+                }
               }
             );
+
+            console.log('returned ->', returned);
 
             deferred.resolve(returned);
           },

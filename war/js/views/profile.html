@@ -3,7 +3,7 @@
 
 
 <div class="page-header">
-  <h2>{{data.resources.name}}</h2>
+  <h2>{{data.resources.firstName}} {{data.resources.lastName}}</h2>
 </div>
 
 
@@ -135,6 +135,23 @@
                 ng-options="id as label for (id, label) in roles">
                 <option value="">-- {{ui.profile.choose}} --</option>
               </select>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <!--<label class="control-label">{{ui.groups.firstName}}</label>-->
+            <label class="control-label">Groups</label>
+            <!--<p>{{groups}}</p>-->
+            <div class="controls">
+              <select data-placeholder=" "
+                      multiple
+                      class="chzn-select"
+                      style="width:530px"
+                      chosen
+                      ng-model="profilemeta.groups"
+                      ng-options="group.name for group in availableGroups">
+              </select>
+              <!--<p ng-repeat="group in profilemeta.groups"><strong>{{group.uuid}}</strong></p>-->
             </div>
           </div>
 

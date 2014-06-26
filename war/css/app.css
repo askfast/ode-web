@@ -85,7 +85,6 @@ dl dd {
   position: fixed;
   bottom: 50px;
   right: -10px;
-  z-index: 1;
   width: 400px;
   height: 400px;
 }
@@ -299,6 +298,19 @@ dl dd {
 }
 .scheadule-icons div .mail {
   margin-left: 2px;
+}
+
+#download-footer ul.dropdown-menu li {
+  min-width: 100%;
+}
+#download-footer ul.dropdown-menu li a {
+  display: block;
+}
+
+#footer #bullhorn {
+  position: absolute;
+  bottom: 17px;
+  left: 15px;
 }
 
 #welcome {
@@ -928,7 +940,7 @@ label {
 #wrap {
   z-index: 99;
   position: relative;
-  margin: 0 auto -60px;
+  margin: 0 auto -50px;
   min-height: 100%;
   height: auto !important;
   height: 100%;
@@ -944,7 +956,7 @@ label {
 
 /* Set the fixed height of the footer here */
 #push {
-  height: 60px;
+  height: 50px;
 }
 
 .header {
@@ -993,7 +1005,7 @@ label {
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 60px;
+  height: 50px;
   width: 100%;
   background-color: #433c2d;
   z-index: 100;
@@ -1009,7 +1021,7 @@ label {
 }
 #footer p.muted {
   float: left;
-  margin-top: 12px;
+  margin-top: 4px;
 }
 #footer p.muted img {
   margin-right: 5px;

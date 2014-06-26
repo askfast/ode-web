@@ -1,7 +1,5 @@
 <section id="planboard" ng-controller="timeline">
 
-
-
   <!-- page header -->
   <div class="page-header">
     <h2>{{ui.planboard.planboard}}</h2>
@@ -55,8 +53,6 @@
     </div>
   </div>
   <!-- end page header -->
-
-
 
   <!-- timeline controls -->
   <div class="row-fluid"
@@ -135,11 +131,6 @@
 
   </div>
   <!-- end timeline controls -->
-
-
-
-
-
 
 
   <!-- slot controls -->
@@ -378,18 +369,11 @@
     </form>
   </div>
   <!-- end slot controls -->
-  
-
-
-
-
-
 
 
   <!-- timelines & statistics -->
   <div class="row-fluid">
     <div class="tabbable tabs-left">
-      
 
 
       <!-- tabs -->
@@ -408,15 +392,8 @@
       <!-- end tabs -->
 
 
-
-
-
-
       <!-- tabs content -->
       <div class="tab-content">
-
-
-
 
 
         <!-- timelines -->
@@ -609,12 +586,6 @@
         <!-- end timelines -->
 
 
-
-
-
-
-
-
         <!-- statistics -->
         <div class="tab-pane" id="statisticsTab">
 
@@ -714,7 +685,7 @@
                 <div id="groupPie-{{agg.division.id}}" class="groupPies"></div>
 
                 <div class="groupStatInfo">
-                <h3>{{agg.id | groupIdToName}} <span ng-hide="!agg.division.label">&nbsp; ({{ agg.division.label }})</span></h3>
+                <h3>{{agg.id | groupIdToName | toTitleCase}} <span ng-hide="!agg.division.label">&nbsp; ({{ agg.division.label }})</span></h3>
                 <hr>
                 <ul>
                   <li>
@@ -780,6 +751,7 @@
               <ul>
                 <li ng-repeat="member in data.members">
                   <h4>{{member.id | convertUserIdToName}}</h4>
+                  <!--<h4>{{member.id}}</h4>-->
                   <div class="progress">
                     <div  ng-repeat="stat in member.stats" 
                           class="bar {{stat.state}}" 
@@ -816,16 +788,13 @@
         <!-- end statistics -->
 
 
-
       </div>
       <!-- end tabs content -->
-
 
 
     </div>
   </div>
   <!-- end timelines & statistics -->
-
 
 
 </section>

@@ -480,7 +480,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
         }
         else
         {
-          return members[id].name;
+          return members[id].resources.firstName + ' ' + members[id].resources.lastName;
         }
       };
     }
@@ -566,7 +566,10 @@ angular.module('WebPaige.Filters', ['ngResource'])
   {
     return function (string)
     {
-      if (string) return string.split('>')[1].split('<')[0];
+      if (string)
+      {
+        return string.split('>')[1].split('<')[0];
+      }
     }
   }
 )
@@ -581,14 +584,26 @@ angular.module('WebPaige.Filters', ['ngResource'])
     'Storage',
     function (Storage)
     {
-      return function (id)
+      return function (id, comma)
       {
-        var groups = angular.fromJson(Storage.get('groups'));
+        var groups = angular.fromJson(Storage.get('groups')),
+            names = '';
 
         for (var i in groups)
         {
-          if (groups[i].uuid == id) return ', ' + groups[i].name;
+          if (groups[i].uuid == id)
+          {
+            if (comma)
+            {
+              names += ', ';
+            }
+
+            names += groups[i].name;
+          }
         }
+
+        // if (names[0] == ',' && names[1] == '')
+        return names;
       }
     }
   ])

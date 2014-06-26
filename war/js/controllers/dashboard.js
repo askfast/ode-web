@@ -40,8 +40,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        * Defaults for loaders
        */
       $scope.loading = {
-        pies:       true,
-        alerts:     true,
+        pies: true,
+        alerts: true,
         smartAlarm: true
       };
 
@@ -51,7 +51,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.more = {
         status: false,
-        text:   $rootScope.ui.dashboard.showMore
+        text: $rootScope.ui.dashboard.showMore
       };
 
 
@@ -60,7 +60,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       $scope.synced = {
         alarms: new Date().getTime(),
-        pies:   new Date().getTime()
+        pies: new Date().getTime()
       };
 
 
@@ -73,10 +73,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       angular.forEach(
         Storage.local.settings().app.widgets.groups,
-        function (value, group)
-        {
-          selection[group] = value;
-        }
+        function (value, group) { selection[group] = value }
       );
 
       angular.forEach(
@@ -86,17 +83,17 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           if (! selection[group.uuid])
           {
             selection[group.uuid] = {
-              divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0),
-              status:    false
+              divisions: ($rootScope.config.timeline.config.divisions.length > 0),
+              status: false
             };
           }
         }
       );
 
       $scope.popover = {
-        groups:    groups,
+        groups: groups,
         selection: selection,
-        divisions: ! ! ($rootScope.config.timeline.config.divisions.length > 0)
+        divisions: ($rootScope.config.timeline.config.divisions.length > 0)
       };
 
       $scope.checkAnyPies = function ()
@@ -106,13 +103,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $scope.loading.pies = false;
 
         angular.forEach(
-          Storage.local.settings().app.widgets.groups, function (group)
+          Storage.local.settings().app.widgets.groups,
+          function (group)
           {
             if (group.status === true)
             {
               ret = false;
             }
-          });
+          }
+        );
 
         return ret;
       };
@@ -149,11 +148,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                 $scope.periods = {
                   start: pies[0].weeks.current.start.date,
-                  end:   pies[0].weeks.next.end.date
+                  end: pies[0].weeks.next.end.date
                 };
 
                 angular.forEach(
-                  pies, function (pie)
+                  pies,
+                  function (pie)
                   {
                     // Check whether if it is an array what data processor gives back
                     if (pie.weeks.current.state instanceof Array)
@@ -180,16 +180,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                                                     new Date(pie.weeks.current.state.start * 1000)
                                                       .toString($rootScope.config.formats.datetime) :
-                      $rootScope.ui.dashboard.possiblyAvailable;
+                                                    $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
                                                   new Date(pie.weeks.current.state.end * 1000)
                                                     .toString($rootScope.config.formats.datetime) :
-                      $rootScope.ui.dashboard.possiblyAvailable;
+                                                  $rootScope.ui.dashboard.possiblyAvailable;
 
                     pie.shortages = {
                       current: pie.weeks.current.shortages,
-                      next:    pie.weeks.next.shortages,
+                      next: pie.weeks.next.shortages,
                       total: pie.weeks.current.shortages.length + pie.weeks.next.shortages.length
                     };
 
@@ -199,7 +199,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     delete(pie.weeks.current.state);
 
                     $scope.shortageHolders['shortages-' + pie.id] = false;
-                  });
+                  }
+                );
 
                 $scope.pies = pies;
               }
@@ -208,11 +209,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             function ()
             {
               angular.forEach(
-                $scope.pies, function (pie)
+                $scope.pies,
+                function (pie)
                 {
                   pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
                   pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
-                });
+                }
+              );
 
               function pieMaker ($id, id, _ratios)
               {
@@ -241,7 +244,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                         xratios = [];
 
                     angular.forEach(
-                      _ratios, function (ratio, index)
+                      _ratios,
+                      function (ratio, index)
                       {
                         if (ratio !== 0)
                         {
@@ -249,29 +253,32 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                             {
                               ratio: ratio,
                               color: colorMap[index]
-                            });
+                            }
+                          );
                         }
-                      });
+                      }
+                    );
 
                     ratios = ratios.sort(
-                      function (a, b)
-                      {
-                        return b.ratio - a.ratio;
-                      });
+                      function (a, b) { return b.ratio - a.ratio }
+                    );
 
                     angular.forEach(
-                      ratios, function (ratio)
+                      ratios,
+                      function (ratio)
                       {
                         colors.push(ratio.color);
                         xratios.push(ratio.ratio);
-                      });
+                      }
+                    );
 
                     var r = new Raphael($id + id),
                         pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
 
                   }, $rootScope.config.timers.TICKER);
               }
-            });
+            }
+          );
         }
         else
         {
@@ -294,7 +301,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         var cached = angular.fromJson(Storage.get('guard'));
 
         $scope.saMembers = {
-          truck:    [],
+          truck: [],
           reserves: []
         };
 
@@ -314,25 +321,27 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               case 'bevelvoerder':
                 $scope.saMembers.truck.push(
                   {
-                    rank:  1,
-                    icon:  $rootScope.ui.dashboard.alarmRoles.commanderInitial,
-                    role:  $rootScope.ui.dashboard.alarmRoles.commander,
+                    rank: 1,
+                    icon: $rootScope.ui.dashboard.alarmRoles.commanderInitial,
+                    role: $rootScope.ui.dashboard.alarmRoles.commander,
                     class: 'sa-icon-commander',
-                    name:  translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    name: translateName(selection.user),
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'chauffeur':
                 $scope.saMembers.truck.push(
                   {
-                    rank:  0,
-                    icon:  $rootScope.ui.dashboard.alarmRoles.driverInitial,
-                    role:  $rootScope.ui.dashboard.alarmRoles.driver,
+                    rank: 0,
+                    icon: $rootScope.ui.dashboard.alarmRoles.driverInitial,
+                    role: $rootScope.ui.dashboard.alarmRoles.driver,
                     class: 'sa-icon-driver',
-                    name:  translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    name: translateName(selection.user),
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.1':
@@ -342,8 +351,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M1',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.2':
@@ -353,8 +363,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M2',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.3':
@@ -364,8 +375,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M3',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
 
               case 'manschap.4':
@@ -375,8 +387,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M4',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
                     name: translateName(selection.user),
-                    uuid:  selection.user
-                  });
+                    uuid: selection.user
+                  }
+                );
                 break;
             }
 
@@ -414,8 +427,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       {
                         reserves[state].push(
                           {
-                            id:    userID,
-                            name:  meta.name,
+                            id: userID,
+                            name: meta.name,
                             state: meta.state
                           }
                         );
@@ -492,10 +505,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       $scope.states['no-state'] = {
         className: 'no-state',
-        label:     $rootScope.ui.dashboard.possiblyAvailable,
-        color:     '#a0a0a0',
-        type:      $rootScope.ui.dashboard.noPlanning,
-        display:   false
+        label: $rootScope.ui.dashboard.possiblyAvailable,
+        color: '#a0a0a0',
+        type: $rootScope.ui.dashboard.noPlanning,
+        display: false
       };
 
       $scope.divisions = $rootScope.config.timeline.config.divisions;
@@ -506,7 +519,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         {
           $scope.divisions.unshift(
             {
-              id:    'all',
+              id: 'all',
               label: $rootScope.ui.dashboard.allDivisions
             }
           );
@@ -514,7 +527,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       }
 
       $scope.current = {
-        group:    initGroup,
+        group: initGroup,
         division: 'all'
       };
 
@@ -535,13 +548,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
           divisionID = $scope.current.division;
         }
 
-        Slots.getMemberAvailabilities(groupID, divisionID)
-          .then(
+        Slots.getMemberAvailabilities(
+          groupID,
+          divisionID
+        ).then(
           function (results)
           {
             var ordered = {};
 
-            // Quick fix unwrapping $promise and $resolved
             angular.forEach(
               angular.fromJson(angular.toJson(results.members)),
               function (slots, id)
@@ -552,8 +566,10 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
                   end: (slots.length > 0 && slots[0].end !== undefined) ?
                        slots[0].end * 1000 :
-                    $rootScope.ui.dashboard.possiblyAvailable,
-                  name: (members && members[id]) ? members[id].name : id
+                       $rootScope.ui.dashboard.possiblyAvailable,
+                  name: (members && members[id]) ?
+                        members[id].resources.firstName + ' ' + members[id].resources.lastName :
+                        id
                 };
 
                 if (slots.length > 0)
@@ -631,9 +647,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             };
 
             if (ordered.hasOwnProperty('available'))
-            { ordered.available.sort(sortByEnd) }
+            {
+              ordered.available.sort(sortByEnd);
+            }
+
             if (ordered.hasOwnProperty('unavailable'))
-            { ordered.unavailable.sort(sortByEnd) }
+            {
+              ordered.unavailable.sort(sortByEnd);
+            }
 
             var _availables = [];
 
@@ -642,7 +663,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -651,7 +674,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.Available')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -660,7 +685,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -669,7 +696,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               function (available)
               {
                 if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                { _availables.push(available) }
+                {
+                  _availables.push(available);
+                }
               }
             );
 
@@ -705,25 +734,27 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
         angular.forEach(
-          selection, function (selected)
+          selection,
+          function (selected)
           {
             if (! selected.status)
             {
               selected.divisions = false;
             }
-          });
+          }
+        );
 
         Settings.save(
-          $rootScope.app.resources.uuid, {
+          $rootScope.app.resources.uuid,
+          {
             user: Storage.local.settings().user,
-            app:  {
-              group:   Storage.local.settings().app.group,
+            app: {
+              group: Storage.local.settings().app.group,
               widgets: {
                 groups: selection
               }
             }
-          })
-          .then(
+          }).then(
           function ()
           {
             $rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
@@ -732,7 +763,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               .then(
               function () { getOverviews() }
             );
-          });
+          }
+        );
       };
 
 
@@ -752,7 +784,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             $scope.alarms.list = $scope.alarms.short;
 
             $scope.synced.alarms = result.synced;
-          });
+          }
+        );
       };
 
 
@@ -833,7 +866,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                 top: $('#dashboardPopoverBtn').css('top'),
                 left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
                   + 'px'
-              });
+              }
+            );
           }, $rootScope.config.timers.TICKER);
       };
 
@@ -845,9 +879,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       {
         $.ajax(
           {
-            url:      $rootScope.config.profile.p2000.url,
+            url: $rootScope.config.profile.p2000.url,
             dataType: 'json',
-            success:  function (results)
+            success: function (results)
             {
               $rootScope.statusBar.off();
 
@@ -868,13 +902,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   $scope.alarms.list = $scope.alarms.short;
 
                   $scope.synced.alarms = result.synced;
-                });
+                }
+              );
             },
-            error:    function ()
+            error: function ()
             {
               console.log('ERROR with getting p2000 for the first time!');
             }
-          });
+          }
+        );
       }
       else
       {
@@ -888,10 +924,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             angular.forEach(
               capcodes,
-              function (code)
-              {
-                _capcodes += code + ', ';
-              }
+              function (code) { _capcodes += code + ', ' }
             );
 
             $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
@@ -900,7 +933,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               {
                 url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
                 dataType: 'jsonp',
-                success:  function (results)
+                success: function (results)
                 {
                   $rootScope.statusBar.off();
 
@@ -921,14 +954,17 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       $scope.alarms.list = $scope.alarms.short;
 
                       $scope.synced.alarms = result.synced;
-                    });
+                    }
+                  );
                 },
-                error:    function ()
+                error: function ()
                 {
                   console.log('ERROR with getting p2000 for the first time!');
                 }
-              });
-          });
+              }
+            );
+          }
+        );
       }
 
 
@@ -938,11 +974,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $scope.setPrefixedAvailability = function (availability, period)
       {
         Storage.session.add(
-          'setPrefixedAvailability', angular.toJson(
+          'setPrefixedAvailability',
+          angular.toJson(
             {
               availability: availability,
-              period:       period
-            }));
+              period: period
+            }
+          )
+        );
 
         $location.path('/planboard').search({ setPrefixedAvailability: true });
       }
