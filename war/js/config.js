@@ -79,7 +79,7 @@ angular.module('WebPaige')
         color:    '#e0c100',
         type:     'Beschikbaar',
         display:  true,
-        minRole:  2
+        minRole:  5
       },
       'com.ask-cs.State.Unreached':
       {
