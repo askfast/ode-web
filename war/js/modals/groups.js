@@ -479,7 +479,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
                 function (group) { calls.push(Groups.prototype.get(group.uuid)) }
               );
 
-              // calls.push(Groups.prototype.get('all'));
+//              calls.push(Groups.prototype.get('all'));
 
               $q.all(calls)
                 .then(

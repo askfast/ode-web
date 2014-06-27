@@ -3983,8 +3983,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
       var Notifications = $resource(
           $config.host + '/notification/:uuid',
-          {
-          },
+          {},
           {
             query: {
               method: 'GET',
@@ -3997,11 +3996,13 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             save: {
               method: 'POST',
-              params: {}
+              params: {},
+              isArray: true
             },
             edit: {
               method: 'PUT',
-              params: {uuid: ''}
+              params: {uuid: ''},
+              isArray: true
             },
             remove: {
               method: 'DELETE',
@@ -4042,8 +4043,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
             Messages.prototype.unreadCount();
 
-            if (! $rootScope.config.profile.smartAlarm)
-            {
+//            if (! $rootScope.config.profile.smartAlarm)
+//            {
               Messages.prototype.scheaduled.list()
                 .then(
                 function (scheadules)
@@ -4054,15 +4055,15 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
                       scheadules: scheadules
                     });
                 });
-            }
-            else
-            {
-              deferred.resolve(
-                {
-                  messages: Messages.prototype.filter(messages),
-                  scheadules: {}
-                });
-            }
+//            }
+//            else
+//            {
+//              deferred.resolve(
+//                {
+//                  messages: Messages.prototype.filter(messages),
+//                  scheadules: {}
+//                });
+//            }
 
           },
           function (error)
@@ -5208,7 +5209,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
                 function (group) { calls.push(Groups.prototype.get(group.uuid)) }
               );
 
-              // calls.push(Groups.prototype.get('all'));
+//              calls.push(Groups.prototype.get('all'));
 
               $q.all(calls)
                 .then(
