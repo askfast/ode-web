@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------------------------------------
 
 2.3.20
-- feature: Added more FAQ videos. 27-6-2014
+- feature: Added more FAQ videos for web app section. 27-6-2014
 - fix: Fixed issues with links of download mobile app buttons. 27-6-2014
 - feature: Disable timeline state based on user role. 27-6-2014
 
