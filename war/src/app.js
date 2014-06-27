@@ -10432,8 +10432,21 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
       );
 
+      var filteredGroups = [];
+
+      angular.forEach(
+        groups,
+        function (group)
+        {
+          if (group.uuid != 'all')
+          {
+            filteredGroups.push(group);
+          }
+        }
+      );
+
       $scope.popover = {
-        groups: groups,
+        groups: filteredGroups,
         selection: selection,
         divisions: ($rootScope.config.timeline.config.divisions.length > 0)
       };
