@@ -120,27 +120,49 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
             Messages.prototype.unreadCount();
 
+
+
+
+
+
+
 //            if (! $rootScope.config.profile.smartAlarm)
 //            {
-              Messages.prototype.scheaduled.list()
-                .then(
-                function (scheadules)
-                {
-                  deferred.resolve(
-                    {
-                      messages: Messages.prototype.filter(messages),
-                      scheadules: scheadules
-                    });
-                });
+
+
+
+//              Messages.prototype.scheaduled.list()
+//                .then(
+//                function (scheadules)
+//                {
+//                  deferred.resolve(
+//                    {
+//                      messages: Messages.prototype.filter(messages),
+//                      scheadules: scheadules
+//                    });
+//                });
+
+
+
 //            }
 //            else
 //            {
-//              deferred.resolve(
-//                {
-//                  messages: Messages.prototype.filter(messages),
-//                  scheadules: {}
-//                });
+
+
+
+              deferred.resolve(
+                {
+                  messages: Messages.prototype.filter(messages),
+                  scheadules: {}
+                });
+
+
 //            }
+
+
+
+
+
 
           },
           function (error)

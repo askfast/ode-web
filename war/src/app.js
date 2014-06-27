@@ -1108,7 +1108,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.19',
+    version:  '2.3.20',
     lang:     'nl',
 
     fullscreen: true,
@@ -4043,27 +4043,49 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
             Messages.prototype.unreadCount();
 
+
+
+
+
+
+
 //            if (! $rootScope.config.profile.smartAlarm)
 //            {
-              Messages.prototype.scheaduled.list()
-                .then(
-                function (scheadules)
-                {
-                  deferred.resolve(
-                    {
-                      messages: Messages.prototype.filter(messages),
-                      scheadules: scheadules
-                    });
-                });
+
+
+
+//              Messages.prototype.scheaduled.list()
+//                .then(
+//                function (scheadules)
+//                {
+//                  deferred.resolve(
+//                    {
+//                      messages: Messages.prototype.filter(messages),
+//                      scheadules: scheadules
+//                    });
+//                });
+
+
+
 //            }
 //            else
 //            {
-//              deferred.resolve(
-//                {
-//                  messages: Messages.prototype.filter(messages),
-//                  scheadules: {}
-//                });
+
+
+
+              deferred.resolve(
+                {
+                  messages: Messages.prototype.filter(messages),
+                  scheadules: {}
+                });
+
+
 //            }
+
+
+
+
+
 
           },
           function (error)
@@ -11851,45 +11873,45 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
 
-      angular.extend($scope.timeline.config.states, {
-        // TODO: Remove these properties afterwards
-        'com.ask-cs.State.Planner':
-        {
-          className:'state-unreached',
-          label:    '- Planner state',
-          color:    '#65619b',
-          type:     'Niet Beschikbaar',
-          display:  true,
-          minRole:  1
-        },
-        'com.ask-cs.State.TeamLeader':
-        {
-          className:'state-unreached',
-          label:    '- Team leader state',
-          color:    '#65619b',
-          type:     'Niet Beschikbaar',
-          display:  true,
-          minRole:  2
-        },
-        'com.ask-cs.State.Standard':
-        {
-          className:'state-unreached',
-          label:    '- Standard state',
-          color:    '#65619b',
-          type:     'Niet Beschikbaar',
-          display:  true,
-          minRole:  3
-        },
-        'com.ask-cs.State.Viewer':
-        {
-          className:'state-unreached',
-          label:    '- Viewer state',
-          color:    '#65619b',
-          type:     'Niet Beschikbaar',
-          display:  true,
-          minRole:  4
-        }
-      });
+//      angular.extend($scope.timeline.config.states, {
+//        // TODO: Remove these properties afterwards
+//        'com.ask-cs.State.Planner':
+//        {
+//          className:'state-unreached',
+//          label:    '- Planner state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  1
+//        },
+//        'com.ask-cs.State.TeamLeader':
+//        {
+//          className:'state-unreached',
+//          label:    '- Team leader state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  2
+//        },
+//        'com.ask-cs.State.Standard':
+//        {
+//          className:'state-unreached',
+//          label:    '- Standard state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  3
+//        },
+//        'com.ask-cs.State.Viewer':
+//        {
+//          className:'state-unreached',
+//          label:    '- Viewer state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  4
+//        }
+//      });
 
 
 

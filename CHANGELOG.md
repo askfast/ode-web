@@ -1,6 +1,11 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.3.20
+- feature: Added more FAQ videos. 27-6-2014
+- fix: Fixed issues with links of download mobile app buttons. 27-6-2014
+- feature: Disable timeline state based on user role. 27-6-2014
+
 2.3.19
 - fix: Response of send direct message is more compatible with multiple types of returns. 26-6-2014</i>
 - fix: Solved an issue with password reset. 26-6-2014
