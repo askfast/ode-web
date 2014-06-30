@@ -4054,16 +4054,16 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 
 
-//              Messages.prototype.scheaduled.list()
-//                .then(
-//                function (scheadules)
-//                {
-//                  deferred.resolve(
-//                    {
-//                      messages: Messages.prototype.filter(messages),
-//                      scheadules: scheadules
-//                    });
-//                });
+              Messages.prototype.scheaduled.list()
+                .then(
+                function (scheadules)
+                {
+                  deferred.resolve(
+                    {
+                      messages: Messages.prototype.filter(messages),
+                      scheadules: scheadules
+                    });
+                });
 
 
 
@@ -4073,11 +4073,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 
 
-              deferred.resolve(
-                {
-                  messages: Messages.prototype.filter(messages),
-                  scheadules: {}
-                });
+//              deferred.resolve(
+//                {
+//                  messages: Messages.prototype.filter(messages),
+//                  scheadules: {}
+//                });
 
 
 //            }
@@ -14418,10 +14418,10 @@ angular.module('WebPaige.Controllers.Messages', [])
         setNotificationView(id);
 
         $scope.$watch(
-          $location.search(), function ()
-          {
-            $location.search({uuid: id});
-          });
+          $location.search(),
+          function ()
+          { $location.search({uuid: id}) }
+        );
 
         $rootScope.statusBar.off();
       };
@@ -14458,10 +14458,10 @@ angular.module('WebPaige.Controllers.Messages', [])
           $scope.scheadulerPane = false;
 
           angular.forEach(
-            $("div#composeTab select.chzn-select option"), function (option)
-            {
-              option.selected = false;
-            });
+            $("div#composeTab select.chzn-select option"),
+            function (option)
+            { option.selected = false }
+          );
 
           $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
@@ -14503,10 +14503,10 @@ angular.module('WebPaige.Controllers.Messages', [])
         var flag = (master) ? true : false;
 
         angular.forEach(
-          messages, function (message)
-          {
-            $scope.selection[inbox][message.uuid] = flag;
-          });
+          messages,
+          function (message)
+          { $scope.selection[inbox][message.uuid] = flag }
+        );
       };
 
 
@@ -14550,7 +14550,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $rootScope.statusBar.off();
                 });
             }
-          });
+          }
+        );
       };
 
 
@@ -14566,10 +14567,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var ids = [];
 
         angular.forEach(
-          selection, function (flag, id)
-          {
-            if (flag) ids.push(id);
-          });
+          selection,
+          function (flag, id) { if (flag) ids.push(id) }
+        );
 
         Messages.remove(ids)
           .then(
@@ -14594,7 +14594,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
           });
       };

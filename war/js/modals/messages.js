@@ -131,16 +131,16 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 
 
-//              Messages.prototype.scheaduled.list()
-//                .then(
-//                function (scheadules)
-//                {
-//                  deferred.resolve(
-//                    {
-//                      messages: Messages.prototype.filter(messages),
-//                      scheadules: scheadules
-//                    });
-//                });
+              Messages.prototype.scheaduled.list()
+                .then(
+                function (scheadules)
+                {
+                  deferred.resolve(
+                    {
+                      messages: Messages.prototype.filter(messages),
+                      scheadules: scheadules
+                    });
+                });
 
 
 
@@ -150,11 +150,11 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
 
 
-              deferred.resolve(
-                {
-                  messages: Messages.prototype.filter(messages),
-                  scheadules: {}
-                });
+//              deferred.resolve(
+//                {
+//                  messages: Messages.prototype.filter(messages),
+//                  scheadules: {}
+//                });
 
 
 //            }

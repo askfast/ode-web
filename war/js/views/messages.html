@@ -16,9 +16,6 @@
 <div class="row-fluid">
   <div class="tabbable tabs-left">
 
-
-
-
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
 
@@ -54,14 +51,14 @@
         </a>
       </li>
 
-      <!--<li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}">-->
-        <!--&lt;!&ndash;ng-hide="config.profile.smartAlarm">&ndash;&gt;-->
-        <!--<a href="messages#notificationsTab"-->
-            <!--data-toggle="tab"-->
-            <!--ng-click="resetViews(); setViewTo('notifications')">-->
-          <!--<span class="entypo">&#128276;</span> {{ui.message.notifications}}-->
-        <!--</a>-->
-      <!--</li>-->
+      <li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}">
+        <!--ng-hide="config.profile.smartAlarm">-->
+        <a href="messages#notificationsTab"
+            data-toggle="tab"
+            ng-click="resetViews(); setViewTo('notifications')">
+          <span class="entypo">&#128276;</span> {{ui.message.notifications}}
+        </a>
+      </li>
 
       <li class="{{(views.trash==true ) && 'active'}}">
         <a href="messages#trashTab"
@@ -75,19 +72,8 @@
     <!-- end tabs -->
 
 
-
-
     <!-- tabs content -->
     <div class="tab-content">
-
-
-
-
-
-
-
-
-
 
       
       <!-- composeTab -->
@@ -182,22 +168,22 @@
             <!-- end subject -->
 
             <!-- schedulerPane toggle -->
-            <!--<div class="control-group">-->
-                 <!--&lt;!&ndash;ng-hide="scheadulerPane || config.profile.smartAlarm">&ndash;&gt;-->
-              <!--<label class="control-label">{{ui.message.repeat}}</label>-->
+            <div class="control-group">
+                 <!--ng-hide="scheadulerPane || config.profile.smartAlarm">-->
+              <label class="control-label">{{ui.message.repeat}}</label>
 
-              <!--<div  class="btn-group"-->
-                    <!--bs-buttons-checkbox=""-->
-                    <!--data-toggle="buttons-checkbox">-->
+              <div  class="btn-group"
+                    bs-buttons-checkbox=""
+                    data-toggle="buttons-checkbox">
 
-                <!--<button type="button"-->
-                        <!--class="btn btn-small"-->
-                        <!--ng-model="scheadulerPane"-->
-                        <!--ng-click="scheadulerPane == !scheadulerPane"-->
-                        <!--bs-button="">{{ui.message.repeatOn}}</button>-->
+                <button type="button"
+                        class="btn btn-small"
+                        ng-model="scheadulerPane"
+                        ng-click="scheadulerPane == !scheadulerPane"
+                        bs-button="">{{ui.message.repeatOn}}</button>
 
-              <!--</div>-->
-            <!--</div>-->
+              </div>
+            </div>
             <!-- end scheduler toggle -->
 
             <!-- scheduler -->
@@ -318,16 +304,6 @@
       <!-- end composeTab -->
 
 
-
-
-
-
-
-
-
-
-
-
       <!-- viewTab -->
       <div class="tab-pane {{(views.message==true) && 'active'}}" id="viewTab" ng-show="views.message">
         <div class="tab-header">
@@ -376,18 +352,6 @@
         </form>
       </div>
       <!-- end viewTab -->
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       <!-- inboxTab -->
@@ -495,20 +459,6 @@
       <!-- end inboxTab -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <!-- outboxTab -->
       <div class="tab-pane {{(views.outbox==true) && 'active'}}" id="outboxTab">
 
@@ -604,19 +554,6 @@
       <!-- end outboxTab -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
       <!-- notificationsTab -->
       <div class="tab-pane {{(views.notifications==true) && 'active'}}" id="notificationsTab">
 
@@ -639,7 +576,7 @@
                 <th>{{ui.message.notificationHeaderLabel}}</th>
                 <th>{{ui.message.notificationHeaderReceivers}}</th>
                 <th>{{ui.message.notificationHeaderFrequency}}</th>
-                <th width="60"></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -677,20 +614,6 @@
 
       </div>
       <!-- end notificationsTab -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       <!-- trashTab -->
@@ -798,22 +721,8 @@
       <!-- end trashTab -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
     <!-- end tabs content -->
-
 
 
   </div>
