@@ -1451,23 +1451,19 @@ angular.module('WebPaige')
           controller: 'profile',
           resolve: {
             data: [
-              '$rootScope', 'Profile', '$route',
-              function ($rootScope, Profile, $route)
+              '$rootScope', 'Profile', '$route', 'Dater',
+              function ($rootScope, Profile, $route, Dater)
               {
                 if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
                 {
-                  // IE route fix
-                  var firstOfJanuary = new Date(new Date().getFullYear(), 0, 1);
-
-                  var periods = angular.fromJson(localStorage.getItem('WebPaige.periods')),
-                      current = Math.ceil((((new Date() - firstOfJanuary) / 86400000) + firstOfJanuary.getDay() + 1) / 7);
+                  var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
 
                   return Profile.getWithSlots(
                     $route.current.params.userId.toLowerCase(),
                     false,
                     {
-                      start: periods.weeks[current - 1].first.timeStamp / 1000,
-                      end: periods.weeks[current - 1].last.timeStamp / 1000
+                      start: periods.weeks[Dater.current.week()].first.timeStamp / 1000,
+                      end: periods.weeks[Dater.current.week()].last.timeStamp / 1000
                     }
                   );
                 }
