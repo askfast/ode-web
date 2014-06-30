@@ -36,7 +36,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/standby/profile.js"></script>
+    <script src="profiles/demo/profile.js"></script>
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
     <!--[if IE 8]>    <link rel="stylesheet" href="css/ie8.css">                                 <![endif]-->
@@ -312,6 +312,12 @@
                       <a href="https://play.google.com/store/apps/details?id=com.askcs.standbydemo"
                          target="_blank">
                         Download Android App
+                      </a>
+                    </li>
+                    <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'demo')">
+                      <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+                         target="itunes_store">
+                        Download iPhone App
                       </a>
                     </li>
                     <!--end Demo-->
