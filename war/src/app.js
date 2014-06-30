@@ -1466,8 +1466,8 @@ angular.module('WebPaige')
                     $route.current.params.userId.toLowerCase(),
                     false,
                     {
-                      start: periods.weeks[current].first.timeStamp / 1000,
-                      end: periods.weeks[current].last.timeStamp / 1000
+                      start: periods.weeks[current - 1].first.timeStamp / 1000,
+                      end: periods.weeks[current - 1].last.timeStamp / 1000
                     }
                   );
                 }
@@ -12379,8 +12379,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 layouts: $scope.timeline.current.layouts,
                 month: $scope.timeline.current.month,
                 stamps: stamps
-              })
-              .then(
+              }
+            ).then(
               function (data)
               {
                 if (data.error)
@@ -12401,13 +12401,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 {
                   getWishes();
                 }
-              });
+              }
+            );
           }
           else
           {
             Profile.getSlots(
-              $scope.timeline.user.id, stamps)
-              .then(
+              $scope.timeline.user.id,
+              stamps
+            ).then(
               function (data)
               {
                 if (data.error)
@@ -12425,7 +12427,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
                   $rootScope.statusBar.off();
                 }
-              });
+              }
+            );
           }
         },
 
@@ -12488,7 +12491,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
       /**
        * Init timeline
        */
-      if ($scope.timeline) { $scope.timeliner.init() }
+      if ($scope.timeline)
+      {
+        $scope.timeliner.init();
+      }
 
 
       /**
@@ -16253,10 +16259,11 @@ angular.module('WebPaige.Controllers.Profile', [])
        * Pass current
        */
       $scope.current = {
-        day: Date.today().getDayOfYear() + 1,
-        week: new Date().getWeek(),
-        month: new Date().getMonth() + 1
+        day: Dater.current.today() + 1,
+        week: Dater.current.week(),
+        month: Dater.current.month()
       };
+
 
       /**
        * Set data for view

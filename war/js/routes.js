@@ -184,8 +184,8 @@ angular.module('WebPaige')
                     $route.current.params.userId.toLowerCase(),
                     false,
                     {
-                      start: periods.weeks[current].first.timeStamp / 1000,
-                      end: periods.weeks[current].last.timeStamp / 1000
+                      start: periods.weeks[current - 1].first.timeStamp / 1000,
+                      end: periods.weeks[current - 1].last.timeStamp / 1000
                     }
                   );
                 }
