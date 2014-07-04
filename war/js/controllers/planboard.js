@@ -156,10 +156,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
        * Legend defaults
        */
       angular.forEach(
-        $rootScope.config.timeline.config.states, function (state, index)
-        {
-          $scope.timeline.config.legenda[index] = true;
-        });
+        $rootScope.config.timeline.config.states,
+        function (state, index) { $scope.timeline.config.legenda[index] = true }
+      );
 
 
       /**
@@ -184,12 +183,63 @@ angular.module('WebPaige.Controllers.Planboard', [])
        */
       var states = {};
 
+
+
+
+
+
+//      angular.extend($scope.timeline.config.states, {
+//        // TODO: Remove these properties afterwards
+//        'com.ask-cs.State.Planner':
+//        {
+//          className:'state-unreached',
+//          label:    '- Planner state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  1
+//        },
+//        'com.ask-cs.State.TeamLeader':
+//        {
+//          className:'state-unreached',
+//          label:    '- Team leader state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  2
+//        },
+//        'com.ask-cs.State.Standard':
+//        {
+//          className:'state-unreached',
+//          label:    '- Standard state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  3
+//        },
+//        'com.ask-cs.State.Viewer':
+//        {
+//          className:'state-unreached',
+//          label:    '- Viewer state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  4
+//        }
+//      });
+
+
+
+
+
+
+
       angular.forEach(
         $scope.timeline.config.states,
         function (state, key)
         {
           // show only user editable states
-          if (state.display)
+          if (state.display && $rootScope.app.resources.role <= state.minRole)
           {
             states[key] = state.label;
           }
@@ -226,10 +276,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
         angular.forEach(
           $scope.divisions,
-          function (division)
-          {
-            $scope.groupPieHide[division.id] = false;
-          }
+          function (division) { $scope.groupPieHide[division.id] = false }
         );
       }
 

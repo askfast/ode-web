@@ -314,8 +314,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 layouts: $scope.timeline.current.layouts,
                 month: $scope.timeline.current.month,
                 stamps: stamps
-              })
-              .then(
+              }
+            ).then(
               function (data)
               {
                 if (data.error)
@@ -336,13 +336,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 {
                   getWishes();
                 }
-              });
+              }
+            );
           }
           else
           {
             Profile.getSlots(
-              $scope.timeline.user.id, stamps)
-              .then(
+              $scope.timeline.user.id,
+              stamps
+            ).then(
               function (data)
               {
                 if (data.error)
@@ -360,7 +362,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
                   $rootScope.statusBar.off();
                 }
-              });
+              }
+            );
           }
         },
 
@@ -423,7 +426,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
       /**
        * Init timeline
        */
-      if ($scope.timeline) { $scope.timeliner.init() }
+      if ($scope.timeline)
+      {
+        $scope.timeliner.init();
+      }
 
 
       /**

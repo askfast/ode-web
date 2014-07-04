@@ -847,9 +847,9 @@ var ui = {
         postcode: 'Postcode',
         city: 'Stad',
         username: 'Gebruikersnaam',
-        editProfile: 'Profiel wijzigen...',
+        editProfile: 'Profiel wijzigen',
         name: 'Naam',
-        saveProfile: 'Profiel opslaan...',
+        saveProfile: 'Profiel opslaan',
         passChange: 'Wachtwoord wijzigen...',
         currentPass: 'Huidig wachtwoord',
         newPass: 'Nieuw wachtwoord',
@@ -1108,7 +1108,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.19',
+    version:  '2.3.21',
     lang:     'nl',
 
     fullscreen: true,
@@ -1138,7 +1138,8 @@ angular.module('WebPaige')
         label:    'Beschikbaar',
         color:    '#4f824f',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.KNRM.BeschikbaarNoord':
       {
@@ -1146,7 +1147,8 @@ angular.module('WebPaige')
         label:    'Beschikbaar voor Noord',
         color:    '#000',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.KNRM.BeschikbaarZuid':
       {
@@ -1154,7 +1156,8 @@ angular.module('WebPaige')
         label:    'Beschikbaar voor Zuid',
         color:    '#e08a0c',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.Unavailable':
       {
@@ -1162,7 +1165,8 @@ angular.module('WebPaige')
         label:    'Niet Beschikbaar',
         color:    '#a93232',
         type:     'Niet Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.KNRM.SchipperVanDienst':
       {
@@ -1170,7 +1174,8 @@ angular.module('WebPaige')
         label:    'Schipper van Dienst',
         color:    '#e0c100',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.Unreached':
       {
@@ -1178,7 +1183,8 @@ angular.module('WebPaige')
         label:    'Niet Bereikt',
         color:    '#65619b',
         type:     'Niet Beschikbaar',
-        display:  false
+        display:  false,
+        minRole:  5
       }
     },
 
@@ -1445,23 +1451,19 @@ angular.module('WebPaige')
           controller: 'profile',
           resolve: {
             data: [
-              '$rootScope', 'Profile', '$route',
-              function ($rootScope, Profile, $route)
+              '$rootScope', 'Profile', '$route', 'Dater',
+              function ($rootScope, Profile, $route, Dater)
               {
                 if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
                 {
-                  // IE route fix
-                  var firstOfJanuary = new Date(new Date().getFullYear(), 0, 1);
-
-                  var periods = angular.fromJson(localStorage.getItem('WebPaige.periods')),
-                      current = Math.ceil((((new Date() - firstOfJanuary) / 86400000) + firstOfJanuary.getDay() + 1) / 7);
+                  var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
 
                   return Profile.getWithSlots(
                     $route.current.params.userId.toLowerCase(),
                     false,
                     {
-                      start: periods.weeks[current].first.timeStamp / 1000,
-                      end: periods.weeks[current].last.timeStamp / 1000
+                      start: periods.weeks[Dater.current.week()].first.timeStamp / 1000,
+                      end: periods.weeks[Dater.current.week()].last.timeStamp / 1000
                     }
                   );
                 }
@@ -3977,8 +3979,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
       var Notifications = $resource(
           $config.host + '/notification/:uuid',
-          {
-          },
+          {},
           {
             query: {
               method: 'GET',
@@ -3991,11 +3992,13 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             save: {
               method: 'POST',
-              params: {}
+              params: {},
+              isArray: true
             },
             edit: {
               method: 'PUT',
-              params: {uuid: ''}
+              params: {uuid: ''},
+              isArray: true
             },
             remove: {
               method: 'DELETE',
@@ -4036,8 +4039,17 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
             Messages.prototype.unreadCount();
 
-            if (! $rootScope.config.profile.smartAlarm)
-            {
+
+
+
+
+
+
+//            if (! $rootScope.config.profile.smartAlarm)
+//            {
+
+
+
               Messages.prototype.scheaduled.list()
                 .then(
                 function (scheadules)
@@ -4048,15 +4060,28 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
                       scheadules: scheadules
                     });
                 });
-            }
-            else
-            {
-              deferred.resolve(
-                {
-                  messages: Messages.prototype.filter(messages),
-                  scheadules: {}
-                });
-            }
+
+
+
+//            }
+//            else
+//            {
+
+
+
+//              deferred.resolve(
+//                {
+//                  messages: Messages.prototype.filter(messages),
+//                  scheadules: {}
+//                });
+
+
+//            }
+
+
+
+
+
 
           },
           function (error)
@@ -5202,6 +5227,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
                 function (group) { calls.push(Groups.prototype.get(group.uuid)) }
               );
 
+//              calls.push(Groups.prototype.get('all'));
+
               $q.all(calls)
                 .then(
                 function (results)
@@ -5663,6 +5690,30 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       /**
        * Set role of given user
        */
+      Profile.prototype.membership = function (id, groups)
+      {
+        var deferred = $q.defer();
+
+        Profile.membership(
+          { id: id },
+          role,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Set role of given user
+       */
       Profile.prototype.role = function (id, role)
       {
         var deferred = $q.defer();
@@ -5713,17 +5764,17 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
        */
       Profile.prototype.membership = function (id, groups)
       {
-        var deferred = $q.defer(),
-            groupIds = [];
+        var deferred = $q.defer();
+//            groupIds = [];
 
-        angular.forEach(
-          groups,
-          function (group) { groupIds.push(group.uuid) }
-        );
+//        angular.forEach(
+//          groups,
+//          function (group) { groupIds.push(group.uuid) }
+//        );
 
         Profile.membership(
           { id: id },
-          groupIds,
+          groups,
           function (result)
           {
             deferred.resolve(result);
@@ -10432,8 +10483,21 @@ angular.module('WebPaige.Controllers.Dashboard', [])
         }
       );
 
+      var filteredGroups = [];
+
+      angular.forEach(
+        groups,
+        function (group)
+        {
+          if (group.uuid != 'all')
+          {
+            filteredGroups.push(group);
+          }
+        }
+      );
+
       $scope.popover = {
-        groups: groups,
+        groups: filteredGroups,
         selection: selection,
         divisions: ($rootScope.config.timeline.config.divisions.length > 0)
       };
@@ -11797,10 +11861,9 @@ angular.module('WebPaige.Controllers.Planboard', [])
        * Legend defaults
        */
       angular.forEach(
-        $rootScope.config.timeline.config.states, function (state, index)
-        {
-          $scope.timeline.config.legenda[index] = true;
-        });
+        $rootScope.config.timeline.config.states,
+        function (state, index) { $scope.timeline.config.legenda[index] = true }
+      );
 
 
       /**
@@ -11825,12 +11888,63 @@ angular.module('WebPaige.Controllers.Planboard', [])
        */
       var states = {};
 
+
+
+
+
+
+//      angular.extend($scope.timeline.config.states, {
+//        // TODO: Remove these properties afterwards
+//        'com.ask-cs.State.Planner':
+//        {
+//          className:'state-unreached',
+//          label:    '- Planner state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  1
+//        },
+//        'com.ask-cs.State.TeamLeader':
+//        {
+//          className:'state-unreached',
+//          label:    '- Team leader state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  2
+//        },
+//        'com.ask-cs.State.Standard':
+//        {
+//          className:'state-unreached',
+//          label:    '- Standard state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  3
+//        },
+//        'com.ask-cs.State.Viewer':
+//        {
+//          className:'state-unreached',
+//          label:    '- Viewer state',
+//          color:    '#65619b',
+//          type:     'Niet Beschikbaar',
+//          display:  true,
+//          minRole:  4
+//        }
+//      });
+
+
+
+
+
+
+
       angular.forEach(
         $scope.timeline.config.states,
         function (state, key)
         {
           // show only user editable states
-          if (state.display)
+          if (state.display && $rootScope.app.resources.role <= state.minRole)
           {
             states[key] = state.label;
           }
@@ -11867,10 +11981,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
         angular.forEach(
           $scope.divisions,
-          function (division)
-          {
-            $scope.groupPieHide[division.id] = false;
-          }
+          function (division) { $scope.groupPieHide[division.id] = false }
         );
       }
 
@@ -12288,8 +12399,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 layouts: $scope.timeline.current.layouts,
                 month: $scope.timeline.current.month,
                 stamps: stamps
-              })
-              .then(
+              }
+            ).then(
               function (data)
               {
                 if (data.error)
@@ -12310,13 +12421,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
                 {
                   getWishes();
                 }
-              });
+              }
+            );
           }
           else
           {
             Profile.getSlots(
-              $scope.timeline.user.id, stamps)
-              .then(
+              $scope.timeline.user.id,
+              stamps
+            ).then(
               function (data)
               {
                 if (data.error)
@@ -12334,7 +12447,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
                   $rootScope.statusBar.off();
                 }
-              });
+              }
+            );
           }
         },
 
@@ -12397,7 +12511,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
       /**
        * Init timeline
        */
-      if ($scope.timeline) { $scope.timeliner.init() }
+      if ($scope.timeline)
+      {
+        $scope.timeliner.init();
+      }
 
 
       /**
@@ -14321,10 +14438,10 @@ angular.module('WebPaige.Controllers.Messages', [])
         setNotificationView(id);
 
         $scope.$watch(
-          $location.search(), function ()
-          {
-            $location.search({uuid: id});
-          });
+          $location.search(),
+          function ()
+          { $location.search({uuid: id}) }
+        );
 
         $rootScope.statusBar.off();
       };
@@ -14361,10 +14478,10 @@ angular.module('WebPaige.Controllers.Messages', [])
           $scope.scheadulerPane = false;
 
           angular.forEach(
-            $("div#composeTab select.chzn-select option"), function (option)
-            {
-              option.selected = false;
-            });
+            $("div#composeTab select.chzn-select option"),
+            function (option)
+            { option.selected = false }
+          );
 
           $("div#composeTab select.chzn-select").trigger("liszt:updated");
 
@@ -14406,10 +14523,10 @@ angular.module('WebPaige.Controllers.Messages', [])
         var flag = (master) ? true : false;
 
         angular.forEach(
-          messages, function (message)
-          {
-            $scope.selection[inbox][message.uuid] = flag;
-          });
+          messages,
+          function (message)
+          { $scope.selection[inbox][message.uuid] = flag }
+        );
       };
 
 
@@ -14453,7 +14570,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $rootScope.statusBar.off();
                 });
             }
-          });
+          }
+        );
       };
 
 
@@ -14469,10 +14587,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var ids = [];
 
         angular.forEach(
-          selection, function (flag, id)
-          {
-            if (flag) ids.push(id);
-          });
+          selection,
+          function (flag, id) { if (flag) ids.push(id) }
+        );
 
         Messages.remove(ids)
           .then(
@@ -14497,7 +14614,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
           });
       };
@@ -16162,10 +16280,11 @@ angular.module('WebPaige.Controllers.Profile', [])
        * Pass current
        */
       $scope.current = {
-        day: Date.today().getDayOfYear() + 1,
-        week: new Date().getWeek(),
-        month: new Date().getMonth() + 1
+        day: Dater.current.today() + 1,
+        week: Dater.current.week(),
+        month: Dater.current.month()
       };
+
 
       /**
        * Set data for view
@@ -16205,7 +16324,7 @@ angular.module('WebPaige.Controllers.Profile', [])
         ).then(
           function ()
           {
-            $rootScope.notifier.success($rootScope.ui.profile.changedRole);
+            // $rootScope.notifier.success($rootScope.ui.profile.changedRole);
 
             $rootScope.statusBar.off();
           }
@@ -16229,15 +16348,15 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.passwords = {
         current: '',
-        new1:    '',
-        new2:    ''
+        new1: '',
+        new2: ''
       };
 
       /**
        * Default form views
        */
       $scope.forms = {
-        add:  false,
+        add: false,
         edit: false
       };
 
@@ -16258,23 +16377,23 @@ angular.module('WebPaige.Controllers.Profile', [])
               $scope.slot = {};
 
               $scope.slot = {
-                start:     {
-                  date:     new Date().toString($rootScope.config.formats.date),
-                  time:     new Date().toString($rootScope.config.formats.time),
+                start: {
+                  date: new Date().toString($rootScope.config.formats.date),
+                  time: new Date().toString($rootScope.config.formats.time),
                   datetime: new Date().toISOString()
                 },
-                end:       {
-                  date:     new Date().toString($rootScope.config.formats.date),
-                  time:     new Date().addHours(1).toString($rootScope.config.formats.time),
+                end: {
+                  date: new Date().toString($rootScope.config.formats.date),
+                  time: new Date().addHours(1).toString($rootScope.config.formats.time),
                   datetime: new Date().toISOString()
                 },
-                state:     '',
+                state: '',
                 recursive: false,
-                id:        ''
+                id: ''
               };
 
               $scope.forms = {
-                add:  true,
+                add: true,
                 edit: false
               };
             }, 20
@@ -16295,7 +16414,7 @@ angular.module('WebPaige.Controllers.Profile', [])
             $scope.original = {};
 
             $scope.forms = {
-              add:  false,
+              add: false,
               edit: false
             };
           }, 20
@@ -16309,6 +16428,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       function setGroupSelection ()
       {
+        $scope.userGroups = [];
+
         angular.forEach(
           $("div#editTab select.chzn-select option"),
           function (option)
@@ -16319,6 +16440,8 @@ angular.module('WebPaige.Controllers.Profile', [])
               {
                 if (option.innerHTML == userGroup.name)
                 {
+                  $scope.userGroups.push(userGroup);
+
                   option.selected = true;
                 }
               }
@@ -16335,8 +16458,8 @@ angular.module('WebPaige.Controllers.Profile', [])
       function setView (hash)
       {
         $scope.views = {
-          profile:  false,
-          edit:     false,
+          profile: false,
+          edit: false,
           password: false,
           timeline: false
         };
@@ -16383,12 +16506,13 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       );
 
+
       /**
        * Save user
        */
-      $scope.save = function (resources)
+      $scope.save_Work = function (resources)
       {
-        if (!$rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
+        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
         {
           $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
@@ -16426,11 +16550,21 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
+
+
+
               $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
+
+              var userGroups = [];
+
+              angular.forEach(
+                $scope.userGroups,
+                function (group) { userGroups.push(group.uuid) }
+              );
 
               Profile.membership(
                 $route.current.params.userId,
-                $scope.profilemeta.groups
+                userGroups
               ).then(
                 function (result)
                 {
@@ -16490,7 +16624,164 @@ angular.module('WebPaige.Controllers.Profile', [])
                   }
                 }
               );
+
+
+
             }
+
+
+
+
+          }
+        );
+      };
+
+
+      /**
+       * Save user
+       */
+      $scope.save = function (resources)
+      {
+        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
+        $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
+
+        if (resources.Password)
+        {
+          resources.askPass = MD5(resources.Password);
+        }
+
+        if (resources.PhoneAddress)
+        {
+          var parsed = phoneNumberParser(resources.PhoneAddress, 'NL');
+
+          resources.PhoneAddress = parsed.formatting.e164;
+        }
+
+        Profile.save(
+          $route.current.params.userId,
+          resources
+        ).then(
+          function (result)
+          {
+            if (result.error)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.profile.save);
+              console.warn('error ->', result);
+            }
+            else
+            {
+
+
+              $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
+
+              Profile.role(
+                data.resources.uuid,
+                $scope.data.resources.role
+              ).then(
+                function (result)
+                {
+                  if (result.error)
+                  {
+                    console.warn('error with changing user role!');
+                  }
+                  else
+                  {
+
+
+                    $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
+
+                    var userGroups = [];
+
+                    angular.forEach(
+                      $scope.userGroups,
+                      function (group) { userGroups.push(group.uuid) }
+                    );
+
+                    Profile.membership(
+                      $route.current.params.userId,
+                      userGroups
+                    ).then(
+                      function (result)
+                      {
+                        if (result.error)
+                        {
+                          $rootScope.notifier.error($rootScope.ui.errors.profile.settingGroups);
+                          console.warn('error ->', result);
+                        }
+                        else
+                        {
+                          $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+                          Groups.query().
+                            then(
+                            function (data)
+                            {
+                              if (data.error)
+                              {
+                                $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                                console.warn('error ->', data);
+                              }
+                              else
+                              {
+                                $scope.groups = $route.current.params.userId &&
+                                                Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+
+                                $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
+
+                                var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid);
+
+                                Profile.get(
+                                  $route.current.params.userId.toLowerCase(),
+                                  flag
+                                ).then(
+                                  function (data)
+                                  {
+                                    if (data.error)
+                                    {
+                                      $rootScope.notifier.error($rootScope.ui.errors.profile.get);
+                                      console.warn('error ->', data);
+                                    }
+                                    else
+                                    {
+                                      $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
+
+                                      $scope.data = data;
+
+                                      $rootScope.statusBar.off();
+
+                                      $('body').scrollTop(0);
+                                    }
+                                  }
+                                );
+                              }
+                            }
+                          );
+                        }
+                      }
+                    );
+
+
+                  }
+                }
+              );
+
+
+
+            }
+
+
+
+
           }
         );
       };
@@ -16590,26 +16881,26 @@ angular.module('WebPaige.Controllers.Profile', [])
       function timelinebooter ()
       {
         $scope.timeline = {
-          id:      'userTimeline',
-          main:    false,
-          user:    {
+          id: 'userTimeline',
+          main: false,
+          user: {
             id: $route.current.params.userId
           },
           current: $scope.current,
           options: {
             start: new Date($scope.periods.weeks[$scope.current.week].first.day),
-            end:   new Date($scope.periods.weeks[$scope.current.week].last.day),
-            min:   new Date($scope.periods.weeks[$scope.current.week].first.day),
-            max:   new Date($scope.periods.weeks[$scope.current.week].last.day)
+            end: new Date($scope.periods.weeks[$scope.current.week].last.day),
+            min: new Date($scope.periods.weeks[$scope.current.week].first.day),
+            max: new Date($scope.periods.weeks[$scope.current.week].last.day)
           },
-          range:   {
+          range: {
             start: $scope.periods.weeks[$scope.current.week].first.day,
-            end:   $scope.periods.weeks[$scope.current.week].last.day
+            end: $scope.periods.weeks[$scope.current.week].last.day
           },
-          config:  {
-            legenda:    {},
+          config: {
+            legenda: {},
             legendarer: $rootScope.config.timeline.config.legendarer,
-            states:     $rootScope.config.timeline.config.states
+            states: $rootScope.config.timeline.config.states
           }
         };
 

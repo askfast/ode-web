@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.19',
+    version:  '2.3.21',
     lang:     'nl',
 
     fullscreen: true,
@@ -42,7 +42,8 @@ angular.module('WebPaige')
         label:    'Beschikbaar',
         color:    '#4f824f',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.KNRM.BeschikbaarNoord':
       {
@@ -50,7 +51,8 @@ angular.module('WebPaige')
         label:    'Beschikbaar voor Noord',
         color:    '#000',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.KNRM.BeschikbaarZuid':
       {
@@ -58,7 +60,8 @@ angular.module('WebPaige')
         label:    'Beschikbaar voor Zuid',
         color:    '#e08a0c',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.Unavailable':
       {
@@ -66,7 +69,8 @@ angular.module('WebPaige')
         label:    'Niet Beschikbaar',
         color:    '#a93232',
         type:     'Niet Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.KNRM.SchipperVanDienst':
       {
@@ -74,7 +78,8 @@ angular.module('WebPaige')
         label:    'Schipper van Dienst',
         color:    '#e0c100',
         type:     'Beschikbaar',
-        display:  true
+        display:  true,
+        minRole:  5
       },
       'com.ask-cs.State.Unreached':
       {
@@ -82,7 +87,8 @@ angular.module('WebPaige')
         label:    'Niet Bereikt',
         color:    '#65619b',
         type:     'Niet Beschikbaar',
-        display:  false
+        display:  false,
+        minRole:  5
       }
     },
 
