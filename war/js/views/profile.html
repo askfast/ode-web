@@ -74,29 +74,48 @@
 
         <hr>
 
+        <!--<pre>{{data.resources | json}}</pre>-->
+
         <!-- profile info -->
         <dl>
           <dt>{{ui.profile.userGroups}}</dt>
-            <dd>
-              <span ng-repeat="group in groups">
-                <span ng-hide="app.resources.role > 1"><a href="#/groups?uuid={{group.uuid}}#view">{{group.name}}</a>,</span>
-                <span ng-show="app.resources.role > 1">{{group.name}}, </span>
-              </span>
+            <dd ng-hide="groups.length > 0">
+              -
+            </dd>
+            <dd ng-show="groups.length > 0">
+              <ol>
+                <li ng-repeat="group in groups">
+                  <span ng-hide="app.resources.role > 1">
+                    <a href="#/groups?uuid={{group.uuid}}#view">{{group.name}}</a>
+                  </span>
+                  <span ng-show="app.resources.role > 1">{{group.name}}</span>
+                </li>
+              </ol>
           </dd>
 
           <dt>{{ui.profile.role}}</dt>
             <dd>{{data.resources.role|translateRole}}</dd>
 
           <dt>{{ui.profile.email}}</dt>
+            <!--<dd ng-show="data.resources.EmailAddress == ''">-</dd>-->
             <dd>{{data.resources.EmailAddress}}</dd>
+
           <dt>{{ui.profile.phone}}</dt>
+            <!--<dd ng-show="data.resources.PhoneAddress == ''">-</dd>-->
             <dd>{{data.resources.PhoneAddress}}</dd>
+
           <dt>{{ui.profile.address}}</dt>
+            <!--<dd ng-show="data.resources.PostAddress == ''">-</dd>-->
             <dd>{{data.resources.PostAddress}}</dd>
+
           <dt>{{ui.profile.postcode}}</dt>
+            <!--<dd ng-show="data.resources.PostZip == ''">-</dd>-->
             <dd>{{data.resources.PostZip}}</dd>
+
           <dt>{{ui.profile.city}}</dt>
+            <!--<dd ng-show="data.resources.PostCity == ''">-</dd>-->
             <dd>{{data.resources.PostCity}}</dd>
+
           <dt>{{ui.profile.username}}</dt>
             <dd>{{data.resources.uuid}}</dd>
         </dl>

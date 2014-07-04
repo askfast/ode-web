@@ -328,7 +328,7 @@
               <span ng-repeat="receiver in message.responder">
                 <a href="#/profile/{{receiver|convertEve}}#profile">
                   {{receiver|convertEve|convertUserIdToName}}
-                </a>,
+                </a> &nbsp;
               </span>
             </dd>
           <dt>{{ui.message.date}}</dt>
@@ -507,7 +507,7 @@
                   <span ng-repeat="receiver in message.responder">
                   <a href="#/profile/{{receiver | convertEve}}#profile">
                     {{receiver | convertEve | convertUserIdToName}}
-                  </a>,
+                  </a> &nbsp;
                   </span>
                 </td>
                 <td><a ng-click="requestMessage(message.uuid, 'outbox')">{{message.subject}}</a></td>
@@ -626,7 +626,7 @@
             <button type="button" 
                   ng-click="emptyTrash()" 
                   class="btn btn-danger pull-left">
-                  <i class="icon-trash icon-white"></i>{{ui.message.emptyTrash}}</button>
+                  <i class="icon-trash icon-white"></i> {{ui.message.emptyTrash}}</button>
           </div>
           <!-- end empty trash button -->
           <!-- filter messages -->
@@ -674,7 +674,7 @@
                   <span ng-repeat="receiver in message.responder">
                     <a href="#/profile/{{receiver | convertEve}}#profile">
                       {{receiver | convertEve | convertUserIdToName}}
-                    </a>,
+                    </a> &nbsp;
                   </span>
                 </td>
                 <td><a ng-click="requestMessage(message.uuid, 'trash')">{{message.subject}}</a></td>
@@ -693,7 +693,7 @@
           <button type="button" 
                   ng-click="restoreMessages(selection.trash)" 
                   class="btn btn-small btn-success pull-left">
-                  <i class="icon-thumbs-up icon-white"></i>{{ui.message.restoreSelected}}</button>
+                  <i class="icon-thumbs-up icon-white"></i> {{ui.message.restoreSelected}}</button>
 
           <div class="btn-toolbar pull-right" style="margin: 0;">
             <div class="btn-group">
