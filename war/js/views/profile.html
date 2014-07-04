@@ -129,9 +129,9 @@
                ng-hide="app.resources.role > 1">
             <label class="control-label">{{ui.profile.role}}</label>
             <div class="controls">
+                <!--ng-change="changeRole(role)"-->
               <select
                 ng-model="data.resources.role"
-                ng-change="changeRole(role)"
                 ng-options="id as label for (id, label) in roles">
                 <option value="">-- {{ui.profile.choose}} --</option>
               </select>

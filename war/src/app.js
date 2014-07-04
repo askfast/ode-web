@@ -16510,7 +16510,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       /**
        * Save user
        */
-      $scope.save = function (resources)
+      $scope.save_Work = function (resources)
       {
         if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
         {
@@ -16640,7 +16640,7 @@ angular.module('WebPaige.Controllers.Profile', [])
       /**
        * Save user
        */
-      $scope.saveWithRole = function (resources)
+      $scope.save = function (resources)
       {
         if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
         {
