@@ -16,6 +16,7 @@
     
     <!-- tabs -->
     <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0px;">
+
       <li class="{{(views.profile==true) && 'active'}}">
         <a href="{{data.resources.uuid}}#profileTab"
             data-toggle="tab"
@@ -23,13 +24,16 @@
           <span class="entypo">&#128100;</span> {{ui.profile.profile}}
         </a>
       </li>
-      <li class="{{(views.edit==true) && 'active'}}">
+
+      <li class="{{(views.edit==true) && 'active'}}"
+          ng-hide="(app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
         <a href="{{data.resources.uuid}}#editTab"
             data-toggle="tab"
             ng-click="fixTabHeight('editTab'); setViewTo('edit')">
           <span class="entypo">&#9998;</span> {{ui.profile.edit}}
         </a>
       </li>
+
       <li class="{{(views.password==true) && 'active'}}"
           ng-show="views.user">
         <a href="{{data.resources.uuid}}#passwordTab"
@@ -38,13 +42,17 @@
           <span class="entypo">&#128274;</span> {{ui.profile.password}}
         </a>
       </li>
-      <li class="{{(views.timeline==true) && 'active'}}" ng-hide="views.user">
+
+      <li class="{{(views.timeline==true) && 'active'}}"
+          ng-hide="(app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
         <a href="{{data.resources.uuid}}#userTimelineTab"
-            data-toggle="tab"
-            ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline'); redraw()">
+           data-toggle="tab"
+           ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline'); redraw()"
+           ng-hide="views.user">
           <span class="entypo">&#128340;</span> {{ui.profile.timeline}}
         </a>
       </li>
+
     </ul>
     <!-- end tabs -->
 

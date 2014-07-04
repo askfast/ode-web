@@ -104,9 +104,15 @@
             </span>
 
           <div class="sa-member-card">
+
+
+            <!--<h5 ng-hide="app.resources.role > 1">-->
             <h5>
               <a href="#/profile/{{trucker.uuid}}#profile">{{trucker.name}}</a>
             </h5>
+            <!--<h5 ng-show="app.resources.role > 1">here {{trucker.name}}</h5>-->
+
+
             <hr/>
             <span>{{trucker.role}}</span>
           </div>
@@ -125,9 +131,14 @@
             </span>
 
           <div class="sa-member-card">
+
+
             <h5>
               <a href="#/profile/{{reserve.id}}#profile">{{reserve.name}}</a>
             </h5>
+            <!--<h5>{{reserve.name}}</h5>-->
+
+
             <hr/>
             <span>Beschikbaar</span>
           </div>
@@ -140,9 +151,14 @@
             </span>
 
           <div class="sa-member-card">
+
+
             <h5>
               <a href="#/profile/{{reserve.id}}#profile">{{reserve.name}}</a>
             </h5>
+            <!--<h5>{{reserve.name}}</h5>-->
+
+
             <hr/>
             <span>Niet beschikbaar</span>
           </div>
@@ -163,9 +179,14 @@
             </span>
 
           <div class="sa-member-card">
+
+
             <h5>
               <a href="#/profile/{{reserve.id}}#profile">{{reserve.name}}</a>
             </h5>
+            <!--<h5>{{reserve.name}}</h5>-->
+
+
             <hr/>
             <span>Mogelijk inzetbaar</span>
           </div>
@@ -256,11 +277,16 @@
                 </span>
 
               <div class="sa-member-card">
+
+
                 <h5>
                   <a href="#/profile/{{member.id}}#profile">
                     {{member.name | toTitleCase}}
                   </a>
                 </h5>
+                <!--<h5>{{member.name | toTitleCase}}</h5>-->
+
+
                 <hr/>
                 <span>{{states[member.state].label}}</span>
                 <br/>
@@ -292,9 +318,14 @@
                 </span>
 
               <div class="sa-member-card">
+
+
                 <h5>
                   <a href="#/profile/{{member.id}}#profile">{{member.name | toTitleCase}}</a>
                 </h5>
+                <!--<h5>{{member.name | toTitleCase}}</h5>-->
+
+
                 <hr/>
                 <span>{{states[member.state].label}}</span>
                 <br/>
@@ -327,9 +358,14 @@
             </span>
 
               <div class="sa-member-card">
+
+
                 <h5>
                   <a href="#/profile/{{member.id}}#profile">{{member.name | toTitleCase}}</a>
                 </h5>
+                <!--<h5>{{member.name | toTitleCase}}</h5>-->
+
+
                 <hr/>
                 <span>{{states[member.state].label}}</span>
 
