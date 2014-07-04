@@ -1,9 +1,10 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
-2.3.20
+2.3.21
 - feature: Updated manual. 4-7-2014
 - fix: Fixed an issue with groups editing. 27-6-2014
+- feature: Added more FAQ videos for Android section. 2-7-2014
 
 2.3.20
 - feature: Added more FAQ videos for web app section. 27-6-2014
