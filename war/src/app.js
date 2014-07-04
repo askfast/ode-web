@@ -5690,6 +5690,30 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       /**
        * Set role of given user
        */
+      Profile.prototype.membership = function (id, groups)
+      {
+        var deferred = $q.defer();
+
+        Profile.membership(
+          { id: id },
+          role,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Set role of given user
+       */
       Profile.prototype.role = function (id, role)
       {
         var deferred = $q.defer();
@@ -5740,17 +5764,17 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
        */
       Profile.prototype.membership = function (id, groups)
       {
-        var deferred = $q.defer(),
-            groupIds = [];
+        var deferred = $q.defer();
+//            groupIds = [];
 
-        angular.forEach(
-          groups,
-          function (group) { groupIds.push(group.uuid) }
-        );
+//        angular.forEach(
+//          groups,
+//          function (group) { groupIds.push(group.uuid) }
+//        );
 
         Profile.membership(
           { id: id },
-          groupIds,
+          groups,
           function (result)
           {
             deferred.resolve(result);
@@ -16324,15 +16348,15 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.passwords = {
         current: '',
-        new1:    '',
-        new2:    ''
+        new1: '',
+        new2: ''
       };
 
       /**
        * Default form views
        */
       $scope.forms = {
-        add:  false,
+        add: false,
         edit: false
       };
 
@@ -16353,23 +16377,23 @@ angular.module('WebPaige.Controllers.Profile', [])
               $scope.slot = {};
 
               $scope.slot = {
-                start:     {
-                  date:     new Date().toString($rootScope.config.formats.date),
-                  time:     new Date().toString($rootScope.config.formats.time),
+                start: {
+                  date: new Date().toString($rootScope.config.formats.date),
+                  time: new Date().toString($rootScope.config.formats.time),
                   datetime: new Date().toISOString()
                 },
-                end:       {
-                  date:     new Date().toString($rootScope.config.formats.date),
-                  time:     new Date().addHours(1).toString($rootScope.config.formats.time),
+                end: {
+                  date: new Date().toString($rootScope.config.formats.date),
+                  time: new Date().addHours(1).toString($rootScope.config.formats.time),
                   datetime: new Date().toISOString()
                 },
-                state:     '',
+                state: '',
                 recursive: false,
-                id:        ''
+                id: ''
               };
 
               $scope.forms = {
-                add:  true,
+                add: true,
                 edit: false
               };
             }, 20
@@ -16390,7 +16414,7 @@ angular.module('WebPaige.Controllers.Profile', [])
             $scope.original = {};
 
             $scope.forms = {
-              add:  false,
+              add: false,
               edit: false
             };
           }, 20
@@ -16404,6 +16428,8 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       function setGroupSelection ()
       {
+        $scope.userGroups = [];
+
         angular.forEach(
           $("div#editTab select.chzn-select option"),
           function (option)
@@ -16414,6 +16440,8 @@ angular.module('WebPaige.Controllers.Profile', [])
               {
                 if (option.innerHTML == userGroup.name)
                 {
+                  $scope.userGroups.push(userGroup);
+
                   option.selected = true;
                 }
               }
@@ -16430,8 +16458,8 @@ angular.module('WebPaige.Controllers.Profile', [])
       function setView (hash)
       {
         $scope.views = {
-          profile:  false,
-          edit:     false,
+          profile: false,
+          edit: false,
           password: false,
           timeline: false
         };
@@ -16478,12 +16506,35 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       );
 
+      //      $scope.$watch(
+      //        'profilemeta.groups',
+      //        function (oldValue, newValue)
+      //        {
+      //          console.log('groups ->', oldValue, newValue);
+      //        }
+      //      );
+
+
+      $scope.changeGroups = function ()
+      {
+
+
+
+
+
+      }
+
+
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
-        if (!$rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
+
+
+        // $scope.changeGroups();
+
+        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
         {
           $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
@@ -16508,6 +16559,7 @@ angular.module('WebPaige.Controllers.Profile', [])
           resources.PhoneAddress = parsed.formatting.e164;
         }
 
+
         Profile.save(
           $route.current.params.userId,
           resources
@@ -16521,11 +16573,21 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
+
+
+
               $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
+
+              var userGroups = [];
+
+              angular.forEach(
+                $scope.userGroups,
+                function (group) { userGroups.push(group.uuid) }
+              );
 
               Profile.membership(
                 $route.current.params.userId,
-                $scope.profilemeta.groups
+                userGroups
               ).then(
                 function (result)
                 {
@@ -16537,6 +16599,11 @@ angular.module('WebPaige.Controllers.Profile', [])
                   else
                   {
                     $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+
+
+
+
+
 
                     Groups.query().
                       then(
@@ -16582,12 +16649,25 @@ angular.module('WebPaige.Controllers.Profile', [])
                         }
                       }
                     );
+
+
+
+
+
+
                   }
+
+
                 }
               );
+
+
+
             }
           }
         );
+
+
       };
 
       /**
@@ -16685,26 +16765,26 @@ angular.module('WebPaige.Controllers.Profile', [])
       function timelinebooter ()
       {
         $scope.timeline = {
-          id:      'userTimeline',
-          main:    false,
-          user:    {
+          id: 'userTimeline',
+          main: false,
+          user: {
             id: $route.current.params.userId
           },
           current: $scope.current,
           options: {
             start: new Date($scope.periods.weeks[$scope.current.week].first.day),
-            end:   new Date($scope.periods.weeks[$scope.current.week].last.day),
-            min:   new Date($scope.periods.weeks[$scope.current.week].first.day),
-            max:   new Date($scope.periods.weeks[$scope.current.week].last.day)
+            end: new Date($scope.periods.weeks[$scope.current.week].last.day),
+            min: new Date($scope.periods.weeks[$scope.current.week].first.day),
+            max: new Date($scope.periods.weeks[$scope.current.week].last.day)
           },
-          range:   {
+          range: {
             start: $scope.periods.weeks[$scope.current.week].first.day,
-            end:   $scope.periods.weeks[$scope.current.week].last.day
+            end: $scope.periods.weeks[$scope.current.week].last.day
           },
-          config:  {
-            legenda:    {},
+          config: {
+            legenda: {},
             legendarer: $rootScope.config.timeline.config.legendarer,
-            states:     $rootScope.config.timeline.config.states
+            states: $rootScope.config.timeline.config.states
           }
         };
 
