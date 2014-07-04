@@ -51,14 +51,14 @@
         </a>
       </li>
 
-      <li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}">
-        <!--ng-hide="config.profile.smartAlarm">-->
-        <a href="messages#notificationsTab"
-            data-toggle="tab"
-            ng-click="resetViews(); setViewTo('notifications')">
-          <span class="entypo">&#128276;</span> {{ui.message.notifications}}
-        </a>
-      </li>
+      <!--<li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}">-->
+        <!--&lt;!&ndash;ng-hide="config.profile.smartAlarm">&ndash;&gt;-->
+        <!--<a href="messages#notificationsTab"-->
+            <!--data-toggle="tab"-->
+            <!--ng-click="resetViews(); setViewTo('notifications')">-->
+          <!--<span class="entypo">&#128276;</span> {{ui.message.notifications}}-->
+        <!--</a>-->
+      <!--</li>-->
 
       <li class="{{(views.trash==true ) && 'active'}}">
         <a href="messages#trashTab"
@@ -168,22 +168,22 @@
             <!-- end subject -->
 
             <!-- schedulerPane toggle -->
-            <div class="control-group">
-                 <!--ng-hide="scheadulerPane || config.profile.smartAlarm">-->
-              <label class="control-label">{{ui.message.repeat}}</label>
+            <!--<div class="control-group">-->
+                 <!--&lt;!&ndash;ng-hide="scheadulerPane || config.profile.smartAlarm">&ndash;&gt;-->
+              <!--<label class="control-label">{{ui.message.repeat}}</label>-->
 
-              <div  class="btn-group"
-                    bs-buttons-checkbox=""
-                    data-toggle="buttons-checkbox">
+              <!--<div  class="btn-group"-->
+                    <!--bs-buttons-checkbox=""-->
+                    <!--data-toggle="buttons-checkbox">-->
 
-                <button type="button"
-                        class="btn btn-small"
-                        ng-model="scheadulerPane"
-                        ng-click="scheadulerPane == !scheadulerPane"
-                        bs-button="">{{ui.message.repeatOn}}</button>
+                <!--<button type="button"-->
+                        <!--class="btn btn-small"-->
+                        <!--ng-model="scheadulerPane"-->
+                        <!--ng-click="scheadulerPane == !scheadulerPane"-->
+                        <!--bs-button="">{{ui.message.repeatOn}}</button>-->
 
-              </div>
-            </div>
+              <!--</div>-->
+            <!--</div>-->
             <!-- end scheduler toggle -->
 
             <!-- scheduler -->
