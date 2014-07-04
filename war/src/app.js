@@ -16302,6 +16302,8 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.data = data;
 
+      $scope.profileRole = data.resources.role;
+
       /**
        * Grab and set roles for view
        */
@@ -16313,23 +16315,6 @@ angular.module('WebPaige.Controllers.Profile', [])
       );
 
       $scope.roles = roles;
-
-      $scope.changeRole = function ()
-      {
-        $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
-
-        Profile.role(
-          data.resources.uuid,
-          $scope.data.resources.role
-        ).then(
-          function ()
-          {
-            // $rootScope.notifier.success($rootScope.ui.profile.changedRole);
-
-            $rootScope.statusBar.off();
-          }
-        )
-      };
 
       /**
        * Pass profile information
@@ -16680,13 +16665,12 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
-
-
               $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
               Profile.role(
                 data.resources.uuid,
-                $scope.data.resources.role
+                $scope.profileRole
+                // $scope.data.resources.role
               ).then(
                 function (result)
                 {
@@ -16696,8 +16680,6 @@ angular.module('WebPaige.Controllers.Profile', [])
                   }
                   else
                   {
-
-
                     $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
 
                     var userGroups = [];
@@ -16769,19 +16751,10 @@ angular.module('WebPaige.Controllers.Profile', [])
                         }
                       }
                     );
-
-
                   }
                 }
               );
-
-
-
             }
-
-
-
-
           }
         );
       };

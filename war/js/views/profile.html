@@ -129,6 +129,8 @@
 
         <hr>
 
+        <!--<pre>resources {{app.resources | json}}</pre>-->
+
         <!-- edit profile form -->
         <form class="form-vertical"
               name="profileForm">
@@ -139,7 +141,7 @@
             <div class="controls">
                 <!--ng-change="changeRole(role)"-->
               <select
-                ng-model="data.resources.role"
+                ng-model="profileRole"
                 ng-options="id as label for (id, label) in roles">
                 <option value="">-- {{ui.profile.choose}} --</option>
               </select>
