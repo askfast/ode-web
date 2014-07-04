@@ -355,34 +355,12 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       );
 
-      //      $scope.$watch(
-      //        'profilemeta.groups',
-      //        function (oldValue, newValue)
-      //        {
-      //          console.log('groups ->', oldValue, newValue);
-      //        }
-      //      );
-
-
-      $scope.changeGroups = function ()
-      {
-
-
-
-
-
-      }
-
 
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
-
-
-        // $scope.changeGroups();
-
         if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
         {
           $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
@@ -408,7 +386,6 @@ angular.module('WebPaige.Controllers.Profile', [])
           resources.PhoneAddress = parsed.formatting.e164;
         }
 
-
         Profile.save(
           $route.current.params.userId,
           resources
@@ -422,9 +399,6 @@ angular.module('WebPaige.Controllers.Profile', [])
             }
             else
             {
-
-
-
               $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
 
               var userGroups = [];
@@ -448,11 +422,6 @@ angular.module('WebPaige.Controllers.Profile', [])
                   else
                   {
                     $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-
-
-
-
 
                     Groups.query().
                       then(
@@ -498,25 +467,12 @@ angular.module('WebPaige.Controllers.Profile', [])
                         }
                       }
                     );
-
-
-
-
-
-
                   }
-
-
                 }
               );
-
-
-
             }
           }
         );
-
-
       };
 
       /**
