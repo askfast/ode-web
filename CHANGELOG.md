@@ -2,6 +2,10 @@
 -----------------------------------------------------------------------------------------------------------
 
 2.3.20
+- feature: Updated manual. 4-7-2014
+- fix: Fixed an issue with groups editing. 27-6-2014
+
+2.3.20
 - feature: Added more FAQ videos for web app section. 27-6-2014
 - fix: Fixed issues with links of download mobile app buttons. 27-6-2014
 - feature: Disable timeline state based on user role. 27-6-2014
