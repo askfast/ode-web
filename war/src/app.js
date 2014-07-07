@@ -2510,6 +2510,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
         null,
 	      function (result) 
 	      {
+          result.role = (result.role) ? result.role : 3;
+
 	        if (angular.equals(result, [])) 
 	        {
 	          deferred.reject("User has no resources!");
@@ -5800,6 +5802,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           { id: id },
           function (result)
           {
+            result.role = (!angular.isDefined((result.role))) ? result.role : 3;
+
             if (id == $rootScope.app.resources.uuid)
             {
               $rootScope.app.resources = result;

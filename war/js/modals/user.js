@@ -325,6 +325,8 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
         null,
 	      function (result) 
 	      {
+          result.role = (result.role) ? result.role : 3;
+
 	        if (angular.equals(result, [])) 
 	        {
 	          deferred.reject("User has no resources!");

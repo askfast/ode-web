@@ -270,6 +270,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           { id: id },
           function (result)
           {
+            result.role = (!angular.isDefined((result.role))) ? result.role : 3;
+
             if (id == $rootScope.app.resources.uuid)
             {
               $rootScope.app.resources = result;
