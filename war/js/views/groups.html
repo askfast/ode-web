@@ -313,7 +313,18 @@
               <div class="controls">
                 <input  type="text" 
                         class="span3" 
-                        ng-model="memberForm.username">
+                        ng-model="memberForm.username"
+                        ng-change="userExists()">
+                <p class="text-error" ng-hide="userExistsValidation">
+                  <small><i>User name exists!</i></small>
+                  <!--<small><i>{{phoneNumberParsed.message}}</i></small>-->
+                </p>
+                <p class="text-success" ng-show="userExistsValidation">
+                  <small>
+                    <i>This one is good to go!</i>
+                    <!--<i>{{phoneNumberParsed.message}}</i>-->
+                  </small>
+                </p>
               </div>
             </div>
 

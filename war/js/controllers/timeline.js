@@ -593,16 +593,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
               }
             }
 
+            var getDateTimeToPicker = function (d)
+            {
+              var d1 = new Date(d);
+              // var offset = d.getTimezoneOffset() / 60;
+              d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset());
+
+              return d1.toISOString().replace("Z", "");
+            };
+
             $scope.slot = {
               start: {
                 date: new Date(values.start).toString($rootScope.config.formats.date),
                 time: new Date(values.start).toString($rootScope.config.formats.time),
-                datetime: new Date(values.start).toISOString().replace("Z", "")
+                // datetime: new Date(values.start).toISOString().replace("Z", "")
+
+                // datetime: new Date(values.start).toUTCString()
+                datetime: getDateTimeToPicker(values.start)
               },
               end: {
                 date: new Date(values.end).toString($rootScope.config.formats.date),
                 time: new Date(values.end).toString($rootScope.config.formats.time),
-                datetime: new Date(values.end).toISOString().replace("Z", "")
+                // datetime: new Date(values.end).toISOString().replace("Z", "")
+
+                // datetime: new Date(values.end).toUTCString()
+                datetime: getDateTimeToPicker(values.end)
               },
               state: content.state,
               recursive: content.recursive,
@@ -886,6 +901,19 @@ angular.module('WebPaige.Controllers.Timeline', [])
       }
 
 
+      var getDateTimeFromPicker = function (date)
+      {
+        if (typeof(date) == 'undefined' || date == null || date == '') return "";
+
+        var tmpDate = new Date(date);
+
+        var offset = tmpDate.getTimezoneOffset();
+
+        var newDate = tmpDate.addMinutes(offset);
+
+        return newDate.toISOString();
+      };
+
       /**
        * Add slot trigger start view
        */
@@ -965,7 +993,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         else
         {
           var start = ($rootScope.browser.mobile) ?
-                      Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
+                      // Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
+                      Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() / 1000)) :
                       Dater.convert.absolute(slot.start.date, slot.start.time, true);
 
           if (start < nowStamp && slot.recursive == false)
@@ -976,7 +1005,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           values = {
             start: start,
             end: ($rootScope.browser.mobile) ?
-                 Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
+                 Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() / 1000)) :
                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
             recursive: (slot.recursive) ? true : false,
             text: slot.state
@@ -1081,10 +1110,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           changed = {
             start: ($rootScope.browser.mobile) ?
-                   new Date(slot.start.datetime).getTime() :
+                   // new Date(slot.start.datetime).getTime() :
+                   new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() :
                    Dater.convert.absolute(slot.start.date, slot.start.time, false),
             end: ($rootScope.browser.mobile) ?
-                 new Date(slot.end.datetime).getTime() :
+                 // new Date(slot.end.datetime).getTime() :
+                 new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() :
                  Dater.convert.absolute(slot.end.date, slot.end.time, false),
             content: {
               recursive: slot.recursive,

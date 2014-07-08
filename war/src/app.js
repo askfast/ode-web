@@ -5591,6 +5591,19 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           }
       );
 
+      // http://dev.ask-cs.com/user_exists?username=devsven
+      var UserExists = $resource(
+          $config.host + '/user_exists',
+          {},
+          {
+            check: {
+              method: 'GET',
+              params: {username: ''},
+              isArray: true
+            }
+          }
+      );
+
 
       var Resources = $resource(
           $config.host + '/resources',
@@ -5688,6 +5701,30 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         return deferred.promise;
       };
 
+
+      /**
+       * Set role of given user
+       */
+      Profile.prototype.userExists = function (username)
+      {
+        var deferred = $q.defer();
+
+        console.log('username ->', username);
+
+        UserExists.check(
+          { username: username },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
 
       /**
        * Set role of given user
@@ -12682,16 +12719,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
               }
             }
 
+            var getDateTimeToPicker = function (d)
+            {
+              var d1 = new Date(d);
+              // var offset = d.getTimezoneOffset() / 60;
+              d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset());
+
+              return d1.toISOString().replace("Z", "");
+            };
+
             $scope.slot = {
               start: {
                 date: new Date(values.start).toString($rootScope.config.formats.date),
                 time: new Date(values.start).toString($rootScope.config.formats.time),
-                datetime: new Date(values.start).toISOString().replace("Z", "")
+                // datetime: new Date(values.start).toISOString().replace("Z", "")
+
+                // datetime: new Date(values.start).toUTCString()
+                datetime: getDateTimeToPicker(values.start)
               },
               end: {
                 date: new Date(values.end).toString($rootScope.config.formats.date),
                 time: new Date(values.end).toString($rootScope.config.formats.time),
-                datetime: new Date(values.end).toISOString().replace("Z", "")
+                // datetime: new Date(values.end).toISOString().replace("Z", "")
+
+                // datetime: new Date(values.end).toUTCString()
+                datetime: getDateTimeToPicker(values.end)
               },
               state: content.state,
               recursive: content.recursive,
@@ -12975,6 +13027,19 @@ angular.module('WebPaige.Controllers.Timeline', [])
       }
 
 
+      var getDateTimeFromPicker = function (date)
+      {
+        if (typeof(date) == 'undefined' || date == null || date == '') return "";
+
+        var tmpDate = new Date(date);
+
+        var offset = tmpDate.getTimezoneOffset();
+
+        var newDate = tmpDate.addMinutes(offset);
+
+        return newDate.toISOString();
+      };
+
       /**
        * Add slot trigger start view
        */
@@ -13054,7 +13119,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         else
         {
           var start = ($rootScope.browser.mobile) ?
-                      Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
+                      // Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
+                      Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() / 1000)) :
                       Dater.convert.absolute(slot.start.date, slot.start.time, true);
 
           if (start < nowStamp && slot.recursive == false)
@@ -13065,7 +13131,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           values = {
             start: start,
             end: ($rootScope.browser.mobile) ?
-                 Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
+                 Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() / 1000)) :
                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
             recursive: (slot.recursive) ? true : false,
             text: slot.state
@@ -13170,10 +13236,12 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           changed = {
             start: ($rootScope.browser.mobile) ?
-                   new Date(slot.start.datetime).getTime() :
+                   // new Date(slot.start.datetime).getTime() :
+                   new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() :
                    Dater.convert.absolute(slot.start.date, slot.start.time, false),
             end: ($rootScope.browser.mobile) ?
-                 new Date(slot.end.datetime).getTime() :
+                 // new Date(slot.end.datetime).getTime() :
+                 new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() :
                  Dater.convert.absolute(slot.end.date, slot.end.time, false),
             content: {
               recursive: slot.recursive,
@@ -15901,6 +15969,39 @@ angular.module('WebPaige.Controllers.Groups', [])
           });
       };
 
+      var CHECK_USERNAME_DELAY = 500;
+
+      $scope.userExistsValidation = true;
+
+      $scope.userExists = function ()
+      {
+        if ($scope.checkUsername)
+        {
+          clearTimeout($scope.checkUsername);
+
+          $scope.checkUsername = null;
+        }
+
+        $scope.checkUsername = setTimeout(
+          function ()
+          {
+            $scope.checkUsername = null;
+
+            Profile.userExists($scope.memberForm.username)
+              .then(
+              function (result)
+              {
+                var res = ((result.hasOwnProperty('error')));
+
+                console.log('result ->', result, res, $scope.userExistsValidation);
+
+                $scope.userExistsValidation = res;
+              }
+            );
+          }, CHECK_USERNAME_DELAY);
+      };
+
+      $scope.checkUsername = null;
 
       /**
        * Save a member
@@ -15943,6 +16044,8 @@ angular.module('WebPaige.Controllers.Groups', [])
                   $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
                   $rootScope.statusBar.off();
+
+                  $('body').scrollTop(0);
                 }
                 else if (result.error.status === 403)
                 {

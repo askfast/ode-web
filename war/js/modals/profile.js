@@ -59,6 +59,19 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           }
       );
 
+      // http://dev.ask-cs.com/user_exists?username=devsven
+      var UserExists = $resource(
+          $config.host + '/user_exists',
+          {},
+          {
+            check: {
+              method: 'GET',
+              params: {username: ''},
+              isArray: true
+            }
+          }
+      );
+
 
       var Resources = $resource(
           $config.host + '/resources',
@@ -156,6 +169,30 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         return deferred.promise;
       };
 
+
+      /**
+       * Set role of given user
+       */
+      Profile.prototype.userExists = function (username)
+      {
+        var deferred = $q.defer();
+
+        console.log('username ->', username);
+
+        UserExists.check(
+          { username: username },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
 
       /**
        * Set role of given user
