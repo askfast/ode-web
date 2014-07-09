@@ -623,5 +623,7 @@ angular.module('WebPaige')
           }
         }
       };
+
+      $('.nav a').on('click', function() { $('.btn-navbar').click() });
     }
   ]);
