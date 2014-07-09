@@ -331,7 +331,12 @@ var ui = {
         searchFor: 'first name, last name...',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
-        requiredPeople: 'Required'
+        requiredPeople: 'Required',
+        registerUserName: {
+          exists: 'This username is already taken. Please choose an another one.',
+          goodToGo: 'This username is free.',
+          pleaseChooseAnother: 'This username is already taken. Please choose an another one.'
+        }
       },
       profile: {
         profile: 'Profile',
@@ -830,7 +835,12 @@ var ui = {
         searchFor: 'voornaam, achternaam..',
         widgetSave: 'Opslaan',
         widgetCancel: 'Annuleren',
-        requiredPeople: 'Behoefte'
+        requiredPeople: 'Behoefte',
+        registerUserName: {
+          exists: 'Deze gebruikersnaam bestaat al. Kies een andere naam aub.',
+          goodToGo: 'Deze gebruikersnaam is vrij.',
+          pleaseChooseAnother: 'Deze gebruikersnaam bestaat al. Kies een andere naam aub.'
+        }
       },
       profile: {
         profile: 'Profiel',

@@ -207,23 +207,23 @@
             </div>
             <hr>
 
-            <div class="control-group">
-              <label class="control-label">{{ui.groups.firstName}}</label>
-              <div class="controls">
-                <input  type="text"
-                        class="span4"
-                        ng-model="memberForm.firstName">
-              </div>
-            </div>
+            <!--<div class="control-group">-->
+              <!--<label class="control-label">{{ui.groups.firstName}}</label>-->
+              <!--<div class="controls">-->
+                <!--<input  type="text"-->
+                        <!--class="span4"-->
+                        <!--ng-model="memberForm.firstName">-->
+              <!--</div>-->
+            <!--</div>-->
 
-            <div class="control-group">
-              <label class="control-label">{{ui.groups.lastName}}</label>
-              <div class="controls">
-                <input  type="text"
-                        class="span4"
-                        ng-model="memberForm.lastName">
-              </div>
-            </div>
+            <!--<div class="control-group">-->
+              <!--<label class="control-label">{{ui.groups.lastName}}</label>-->
+              <!--<div class="controls">-->
+                <!--<input  type="text"-->
+                        <!--class="span4"-->
+                        <!--ng-model="memberForm.lastName">-->
+              <!--</div>-->
+            <!--</div>-->
 
             <div class="control-group">
               <label class="control-label">{{ui.groups.email}}</label>
@@ -316,13 +316,11 @@
                         ng-model="memberForm.username"
                         ng-change="userExists()">
                 <p class="text-error" ng-hide="userExistsValidation">
-                  <small><i>User name exists!</i></small>
-                  <!--<small><i>{{phoneNumberParsed.message}}</i></small>-->
+                  <small><i>{{ui.groups.registerUserName.exists}}</i></small>
                 </p>
-                <p class="text-success" ng-show="userExistsValidation">
+                <p class="text-success" ng-show="userExistsValidation && memberForm.username.length > 0">
                   <small>
-                    <i>This one is good to go!</i>
-                    <!--<i>{{phoneNumberParsed.message}}</i>-->
+                    <i>{{ui.groups.registerUserName.goodToGo}}</i>
                   </small>
                 </p>
               </div>

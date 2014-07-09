@@ -66,8 +66,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           {
             check: {
               method: 'GET',
-              params: {username: ''},
-              isArray: true
+              params: {username: ''}
             }
           }
       );
@@ -177,19 +176,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       {
         var deferred = $q.defer();
 
-        console.log('username ->', username);
-
-        UserExists.check(
-          { username: username },
-          function (result)
-          {
-            deferred.resolve(result);
-          },
-          function (error)
-          {
-            deferred.resolve({error: error});
-          }
-        );
+        if (username != '' || username.length > 0)
+        {
+          UserExists.check(
+            { username: username },
+            function () { deferred.resolve(true) },
+            function () { deferred.resolve(false) }
+          );
+        }
 
         return deferred.promise;
       };

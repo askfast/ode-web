@@ -617,41 +617,43 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
-      var CHECK_USERNAME_DELAY = 500;
+      var CHECK_USERNAME_DELAY = 250;
 
       $scope.userExistsValidation = true;
 
       $scope.userExists = function ()
       {
-        if ($scope.checkUsername)
+        if ($scope.memberForm.username != '' || $scope.memberForm.username.length > 0)
         {
-          clearTimeout($scope.checkUsername);
-
-          $scope.checkUsername = null;
-        }
-
-        $scope.checkUsername = setTimeout(
-          function ()
+          if ($scope.checkUsername)
           {
+            clearTimeout($scope.checkUsername);
+
             $scope.checkUsername = null;
+          }
 
-            Profile.userExists($scope.memberForm.username)
-              .then(
-              function (result)
-              {
-                var res = ((result.hasOwnProperty('error')));
+          $scope.checkUsername = setTimeout(
+            function ()
+            {
+              $scope.checkUsername = null;
 
-                console.log('result ->', result, res, $scope.userExistsValidation);
-
-                $scope.userExistsValidation = res;
-              }
-            );
-          }, CHECK_USERNAME_DELAY);
+              Profile.userExists($scope.memberForm.username)
+                .then(
+                function (result) { $scope.userExistsValidation = result }
+              );
+            }, CHECK_USERNAME_DELAY);
+        }
+        else
+        {
+          $scope.memberForm.username = '';
+        }
       };
 
       $scope.checkUsername = null;
@@ -664,6 +666,15 @@ angular.module('WebPaige.Controllers.Groups', [])
         if (member.username == '' || member.password == '')
         {
           $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
+
+          $('body').scrollTop(0);
+
+          return;
+        }
+
+        if (! $scope.userExistsValidation)
+        {
+          $rootScope.notifier.error($rootScope.ui.groups.registerUserName.pleaseChooseAnother);
 
           $('body').scrollTop(0);
 
