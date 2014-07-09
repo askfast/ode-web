@@ -70,12 +70,14 @@
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="#dashboard">{{config.profile.title}}</a>
+
           <!-- nav-collapse -->
-          <div class="nav-collapse collapse">
+          <div id="collapsed" class="nav-collapse collapse">
+
             <!-- main nav -->
             <ul class="nav">
               <li data-match-route="/dashboard">
-                <a href="#dashboard">Dashboard</a>
+                <a href="#dashboard" ng-click="collapseNav()">Dashboard</a>
               </li>
               <li data-match-route="/planboard">
                 <a href="#planboard">Agenda</a>
@@ -163,6 +165,7 @@
 
           </div>
           <!-- end nav-collapse -->
+
         </div>
       </div>
     </div>
@@ -386,7 +389,7 @@
     <script src="libs/angular/1.2.17/angular/angular.js"></script>
     <script src="libs/angular/1.2.17/angular-resource/angular-resource.min.js"></script>
     <script src="libs/angular/1.2.17/angular-route/angular-route.min.js"></script>
-    <script src="libs/bootstrap/bootstrap.min.js"></script>
+    <script src="libs/bootstrap/bootstrap.js"></script>
     
     <!--<script src="dist/app.min.js"></script>-->
     <script src="src/app.js"></script>
