@@ -12837,10 +12837,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
         angular.forEach(
           $scope.divisions,
-          function (division)
-          {
-            $scope.groupPieHide[division.id] = false;
-          }
+          function (division) { $scope.groupPieHide[division.id] = false }
         );
 
         if ($scope.timeline.current.division !== 'all')
@@ -13183,6 +13180,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
               content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
             };
 
+        var convertDateTimeToLocal = function (d)
+        {
+          var d1 = new Date(d);
+
+          d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset());
+
+          return d1.toISOString().replace("Z", "");
+        };
+
         $scope.$apply(
           function ()
           {
@@ -13190,12 +13196,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
               start: {
                 date: new Date(values.start).toString($rootScope.config.formats.date),
                 time: new Date(values.start).toString($rootScope.config.formats.time),
-                datetime: new Date(values.start).toISOString()
+                // datetime: new Date(values.start).toISOString()
+                datetime: convertDateTimeToLocal(values.start)
               },
               end: {
                 date: new Date(values.end).toString($rootScope.config.formats.date),
                 time: new Date(values.end).toString($rootScope.config.formats.time),
-                datetime: new Date(values.end).toISOString()
+                // datetime: new Date(values.end).toISOString()
+                datetime: convertDateTimeToLocal(values.end)
               },
               state: options.content.state,
               recursive: options.content.recursive,
@@ -13227,11 +13235,9 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           changed = {
             start: ($rootScope.browser.mobile) ?
-                   // new Date(slot.start.datetime).getTime() :
                    new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() :
                    Dater.convert.absolute(slot.start.date, slot.start.time, false),
             end: ($rootScope.browser.mobile) ?
-                 // new Date(slot.end.datetime).getTime() :
                  new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() :
                  Dater.convert.absolute(slot.end.date, slot.end.time, false),
             content: {
