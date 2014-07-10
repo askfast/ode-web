@@ -188,29 +188,6 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         return deferred.promise;
       };
 
-      /**
-       * Change groups of user
-       */
-      Profile.prototype.membership = function (id, groups)
-      {
-        var deferred = $q.defer();
-
-        Profile.membership(
-          { id: id },
-          groups,
-          function (result)
-          {
-            deferred.resolve(result);
-          },
-          function (error)
-          {
-            deferred.resolve({error: error});
-          }
-        );
-
-        return deferred.promise;
-      };
-
 
       /**
        * Set role of given user
@@ -266,12 +243,6 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       Profile.prototype.membership = function (id, groups)
       {
         var deferred = $q.defer();
-//            groupIds = [];
-
-//        angular.forEach(
-//          groups,
-//          function (group) { groupIds.push(group.uuid) }
-//        );
 
         Profile.membership(
           { id: id },
