@@ -1118,7 +1118,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.4.0',
+    version:  '2.4.0 (Snapshot)',
     lang:     'nl',
 
     fullscreen: true,
@@ -4016,7 +4016,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             remove: {
               method: 'DELETE',
-              params: {uuid: ''}
+              params: {uuid: ''},
+              isArray: true
             }
           }
       );
@@ -4053,17 +4054,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
             Messages.prototype.unreadCount();
 
-
-
-
-
-
-
 //            if (! $rootScope.config.profile.smartAlarm)
 //            {
-
-
-
               Messages.prototype.scheaduled.list()
                 .then(
                 function (scheadules)
@@ -4073,30 +4065,17 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
                       messages: Messages.prototype.filter(messages),
                       scheadules: scheadules
                     });
-                });
-
-
-
+                }
+              );
 //            }
 //            else
 //            {
-
-
-
 //              deferred.resolve(
 //                {
 //                  messages: Messages.prototype.filter(messages),
 //                  scheadules: {}
 //                });
-
-
 //            }
-
-
-
-
-
-
           },
           function (error)
           {
@@ -9499,8 +9478,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'nicelyOffsets',
   [
-    'Dater', 'Storage', 'Offsetter',
-    function (Dater, Storage, Offsetter)
+    '$sce', 'Dater', 'Storage', 'Offsetter',
+    function ($sce, Dater, Storage, Offsetter)
     {
       return function (data)
       {
@@ -9508,7 +9487,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
             compiled = '';
 
         angular.forEach(
-          offsets, function (offset)
+          offsets,
+          function (offset)
           {
             compiled += '<div style="display:block; margin-bottom: 5px;">';
 
@@ -9529,9 +9509,10 @@ angular.module('WebPaige.Filters', ['ngResource'])
             compiled += '</div>';
 
             compiled = compiled.substring(0, compiled.length);
-          });
+          }
+        );
 
-        return compiled;
+        return $sce.trustAsHtml(compiled);
       }
     }
   ])

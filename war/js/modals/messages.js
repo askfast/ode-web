@@ -83,7 +83,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
             },
             remove: {
               method: 'DELETE',
-              params: {uuid: ''}
+              params: {uuid: ''},
+              isArray: true
             }
           }
       );
@@ -120,17 +121,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
             Messages.prototype.unreadCount();
 
-
-
-
-
-
-
 //            if (! $rootScope.config.profile.smartAlarm)
 //            {
-
-
-
               Messages.prototype.scheaduled.list()
                 .then(
                 function (scheadules)
@@ -140,30 +132,17 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
                       messages: Messages.prototype.filter(messages),
                       scheadules: scheadules
                     });
-                });
-
-
-
+                }
+              );
 //            }
 //            else
 //            {
-
-
-
 //              deferred.resolve(
 //                {
 //                  messages: Messages.prototype.filter(messages),
 //                  scheadules: {}
 //                });
-
-
 //            }
-
-
-
-
-
-
           },
           function (error)
           {

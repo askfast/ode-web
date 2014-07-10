@@ -590,7 +590,7 @@
                 </td>
                 <td><a ng-click="requestNotification(scheadule.uuid)">{{scheadule.label}}</a></td>
                 <td><span class="muted"><small><i>{{scheadule.recipients | nicelyAudience}}</i></small></span></td>
-                <td><span ng-bind-html-unsafe="scheadule.offsets | nicelyOffsets"></span></td>
+                <td><div ng-bind-html="scheadule.offsets | nicelyOffsets"></div></td>
                 <td>
                   <div class="pull-right">
                     <button class="btn btn-mini"

@@ -3,6 +3,7 @@
 
 2.4.0
 
+- feature: Repeating and scheduled messages. 10-7-2014
 - fix: User with planner profile loses Groups tab when clicking on own profile. 10-7-2014
   [link](https://trello.com/c/b2fNeIWO/1622-standby-web-user-with-planner-profile-loses-groups-tab-when-clicking-on-own-profile)
 - fix: Deleted group exists in user's resources and causes loading timeline to break. 10-7-2014
