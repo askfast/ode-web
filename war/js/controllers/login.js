@@ -459,19 +459,13 @@ angular.module('WebPaige.Controllers.Login', [])
                                             {
                                               if (_group.uuid != settings.app.group)
                                               {
-                                                console.log('does not exist!');
                                                 exists = false;
-                                              }
-                                              else
-                                              {
-                                                console.log('there is one');
                                               }
                                             }
                                           );
 
                                           if (! exists)
                                           {
-                                            defaults.app.group = groups[0].uuid;
                                             sync = true;
                                           }
                                         }
@@ -520,7 +514,7 @@ angular.module('WebPaige.Controllers.Login', [])
                                           .then(
                                           function (_parent)
                                           {
-                                            console.warn('parent group been fetched ->', _parent);
+                                            // console.warn('parent group been fetched ->', _parent);
 
                                             if (_parent != null)
                                             {
@@ -565,7 +559,6 @@ angular.module('WebPaige.Controllers.Login', [])
 
                                         defaults.app.group = groups[0].uuid;
 
-
                                         Settings.save(
                                           resources.uuid,
                                           defaults
@@ -585,8 +578,6 @@ angular.module('WebPaige.Controllers.Login', [])
                                             );
                                           }
                                         );
-
-
                                       }
                                     }
                                     else

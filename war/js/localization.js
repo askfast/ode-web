@@ -896,7 +896,7 @@ var ui = {
         application: 'Applicatie',
         userSettings: 'Gebruikersinstellingen',
         appSettings: 'Applicatie-instellingen',
-        saveSettings: 'Instellingen Opslaan',
+        saveSettings: 'Instellingen opslaan',
         langSetting: 'Taal',
         saving: 'Instellingen wijzigen...',
         refreshing: 'Instellingen vernieuwen...',
