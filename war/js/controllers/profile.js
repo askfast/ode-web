@@ -151,11 +151,7 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.data = data;
 
-      console.log(' data ->', data);
-
       $scope.profileRole = data.resources.role;
-
-      console.log('$scope.profileRole ->', $scope.profileRole);
 
       /**
        * Grab and set roles for view
@@ -348,136 +344,6 @@ angular.module('WebPaige.Controllers.Profile', [])
       /**
        * Save user
        */
-      $scope.save_Work = function (resources)
-      {
-        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
-        {
-          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
-
-          $rootScope.statusBar.off();
-
-          $('body').scrollTop(0);
-
-          return false;
-        }
-
-        $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
-
-        if (resources.Password)
-        {
-          resources.askPass = MD5(resources.Password);
-        }
-
-        if (resources.PhoneAddress)
-        {
-          var parsed = phoneNumberParser(resources.PhoneAddress, 'NL');
-
-          resources.PhoneAddress = parsed.formatting.e164;
-        }
-
-        Profile.save(
-          $route.current.params.userId,
-          resources
-        ).then(
-          function (result)
-          {
-            if (result.error)
-            {
-              $rootScope.notifier.error($rootScope.ui.errors.profile.save);
-              console.warn('error ->', result);
-            }
-            else
-            {
-
-
-
-              $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
-
-              var userGroups = [];
-
-              angular.forEach(
-                $scope.userGroups,
-                function (group) { userGroups.push(group.uuid) }
-              );
-
-              Profile.membership(
-                $route.current.params.userId,
-                userGroups
-              ).then(
-                function (result)
-                {
-                  if (result.error)
-                  {
-                    $rootScope.notifier.error($rootScope.ui.errors.profile.settingGroups);
-                    console.warn('error ->', result);
-                  }
-                  else
-                  {
-                    $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-
-                    Groups.query().
-                      then(
-                      function (data)
-                      {
-                        if (data.error)
-                        {
-                          $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                          console.warn('error ->', data);
-                        }
-                        else
-                        {
-                          $scope.groups = $route.current.params.userId &&
-                                          Groups.getMemberGroups($route.current.params.userId.toLowerCase());
-
-                          $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
-
-                          var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid);
-
-                          Profile.get(
-                            $route.current.params.userId.toLowerCase(),
-                            flag
-                          ).then(
-                            function (data)
-                            {
-                              if (data.error)
-                              {
-                                $rootScope.notifier.error($rootScope.ui.errors.profile.get);
-                                console.warn('error ->', data);
-                              }
-                              else
-                              {
-                                $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
-
-                                $scope.data = data;
-
-                                $rootScope.statusBar.off();
-
-                                $('body').scrollTop(0);
-                              }
-                            }
-                          );
-                        }
-                      }
-                    );
-                  }
-                }
-              );
-
-
-
-            }
-
-
-
-
-          }
-        );
-      };
-
-
-      /**
-       * Save user
-       */
       $scope.save = function (resources)
       {
         if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
@@ -519,6 +385,13 @@ angular.module('WebPaige.Controllers.Profile', [])
             else
             {
               $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
+
+              console.log('$scope.profileRole ->', $scope.profileRole);
+
+              if (!angular.isDefined($scope.profileRole) || $scope.profileRole == '')
+              {
+                $scope.profileRole = 3;
+              }
 
               Profile.role(
                 data.resources.uuid,
