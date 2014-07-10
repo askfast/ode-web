@@ -41,7 +41,7 @@
         <section id="versions">
           <div class="container-narrow">
             <div class="masthead">
-              <h4 class="pull-right"><span class="muted">Current version:</span> 2.3.21</h4>
+              <h4 class="pull-right"><span class="muted">Current version:</span> 2.4.0</h4>
               <h3 class="muted">Change Log</h3>
             </div>
             <hr>
@@ -59,25 +59,91 @@
 
                   <li>
                     <p>
+                    <h4>2.4.0</h4>
+                    <i class="text-info pull-right">?-7-2014</i>
+                    </p>
+                    <hr/>
+                    <ul>
+                      <li>
+                        <span class="label label-important">fix</span>
+                        User with planner profile loses Groups tab when clicking on own profile.
+                      </li>
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Deleted group exists in user's resources and causes loading timeline to break.
+                      </li>
+                      <li>
+                        <span class="label label-important">fix</span>
+                        UX improvement for not automatically hiding main navigation after selecting on touch devices.
+                      </li>
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Not clickable menu items at quick availability button for touch devices.
+                      </li>
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Android (Also any iOS device) tablet (standby web) report time difference of two hours for
+                        Groeneveld (tab 10.1, chrome browser).
+                      </li>
+                      <li>
+                        <span class="label label-success">feature</span>
+                        Feature of checking of user existence during registration.
+                      </li>
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Disabling any admin related rights for standard user in profile page mainly editing an another
+                        profile, interaction coming through with clicking on the link of a user from dashboard.
+                      </li>
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Right backend status code on times when there is a conflicting user registration.
+                      </li>
+
+                      <li>
+                        <span class="label label-important">fix</span>
+                        In case of not having any profile (role) for user, fall back to standard role for viewing
+                        intern pages.
+                      </li>
+
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Some small static improvements related to unneeded commas at lists and the groups of user from
+                        profile page is being displayed as an ordered list.
+                      </li>
+
+                      <li>
+                        <span class="label label-success">feature</span>
+                        The user name links on dashboard are now redirecting to only user profile information if user
+                        does not have admin role.
+                      </li>
+
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Changing profile has been taken into the profile saving chain functions, so it does not happen
+                        immediately but the action is run when profile is saved.
+                      </li>
+
+                      <li>
+                        <span class="label label-important">fix</span>
+                        Solved an issue with groups editing at profile edit page.
+                      </li>
+                    </ul>
+                  </li>
+
+                  <li>
+                    <p>
                     <h4>2.3.21</h4>
                     <i class="text-info pull-right">4-7-2014</i>
                     </p>
                     <hr/>
                     <ul>
                       <li>
-                        <span class="label label-success">feature</span>
-                        Updated manual.
-                        <!--<i class="text-info">4-7-2014</i>-->
-                      </li>
-                      <li>
                         <span class="label label-important">fix</span>
                         Fixed an issue with groups editing.
-                        <!--<i class="text-info">4-7-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Added more FAQ videos for Android section.
-                        <!--<i class="text-info">2-7-2014</i>-->
                       </li>
                     </ul>
                   </li>
@@ -92,17 +158,14 @@
                       <li>
                         <span class="label label-success">feature</span>
                         Added more FAQ videos for web app section.
-                        <!--<i class="text-info">27-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Fixed issues with links of download mobile app buttons.
-                        <!--<i class="text-info">27-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Disable timeline state based on user role.
-                        <!--<i class="text-info">27-6-2014</i>-->
                       </li>
                     </ul>
                   </li>
@@ -117,47 +180,38 @@
                       <li>
                         <span class="label label-important">fix</span>
                         Response of send direct message is more compatible with multiple types of returns.
-                        <!--<i class="text-info">26-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Solved an issue with password reset.
-                        <!--<i class="text-info">26-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Solved inconsistency problems with names. More usage of first name and last names.
-                        <!--<i class="text-info">25-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Communicate only e164 formatted phone numbers to backend.
-                        <!--<i class="text-info">25-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Groups editing for profile edit view.
-                        <!--<i class="text-info">25-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         User interface improvements for footer bar and download buttons and brandt identity of web app.
-                        <!--<i class="text-info">25-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Fixed a bug on delete user modal password matching.
-                        <!--<i class="text-info">22-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Fixed an issue with deleting a group.
-                        <!--<i class="text-info">22-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Prevention matrix implementation for any past related timeline mutations
-                        <!--<i class="text-info">22-6-2014</i>-->
+                        Prevention matrix implementation for any past related timeline mutations.
                       </li>
                     </ul>
                   </li>
@@ -172,42 +226,34 @@
                       <li>
                         <span class="label label-success">feature</span>
                         Added FAQ section with linked tutorial videos.
-                        <!--<i class="text-info">20-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Solved issue with not creating planning for recursive timeline in past.
-                        <!--<i class="text-info">19-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Improved user credentials validation by registration.
-                        <!--<i class="text-info">19-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Improved email validation.
-                        <!--<i class="text-info">19-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Issue with not closing planning for in profile timeline section.
-                        <!--<i class="text-info">18-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Phone number validation.
-                        <!--<i class="text-info">18-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Enabling logging in for redirected users coming from portal.
-                        <!--<i class="text-info">18-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        User profile enhancements and fixes
-                        <!--<i class="text-info">17-6-2014</i>-->
+                        User profile enhancements and fixes.
                       </li>
                     </ul>
                   </li>
@@ -221,33 +267,27 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Auto logout when session expires
-                        <!--<i class="text-info">11-6-2014</i>-->
+                        Auto logout when session expires.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         User deleting functionality.
-                        <!--<i class="text-info">5-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Issue with not showing receiver or recipient name helped out.
-                        <!--<i class="text-info">4-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Refresh inbox messages after sending a message and closing the message view.
-                        <!--<i class="text-info">4-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         'No subject' placeholder in case of no subjects for the messages.
-                        <!--<i class="text-info">3-6-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Correctly displaying cap-codes with leading zeros.
-                        <!--<i class="text-info">29-5-2014</i>-->
                       </li>
                     </ul>
                   </li>
@@ -261,43 +301,35 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Added new profile for 'demo' installation
-                        <!--<i class="text-info">19-5-2014</i>-->
+                        Added new profile for 'demo' installation.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        All timer related integer values are taken into profiles
-                        <!--<i class="text-info">19-5-2014</i>-->
+                        All timer related integer values are taken into profiles.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Scheduled messaging temporarily disabled
-                        <!--<i class="text-info">16-5-2014</i>-->
+                        Scheduled messaging temporarily disabled.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Fix for TV-refreshing bug
-                        <!--<i class="text-info">16-5-2014</i>-->
+                        Fix for TV-refreshing bug.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        New Dashboard widget for one-snap-overview for everyone or group-member's availabilities
-                        <!--<i class="text-info">16-5-2014</i>-->
+                        New Dashboard widget for one-snap-overview for everyone or group-member's availabilities.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Planboard custom time-line line indicator & Google authorization disabled
-                        <!--<i class="text-info">15-5-2014</i>-->
+                        Planboard custom time-line line indicator & Google authorization disabled.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Firefox login fix: Disable auto-complete for fields in the login form
-                        <!--<i class="text-info">12-5-2014</i>-->
+                        Firefox login fix: Disable auto-complete for fields in the login form.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        More friendly error message for (Fix for Standby Agenda tab bug: Planning for others)
-                        <!--<i class="text-info">8-5-2014</i>-->
+                        More friendly error message for (Fix for Standby Agenda tab bug: Planning for others).
                       </li>
                     </ul>
                   </li>
@@ -311,8 +343,7 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Domain dimension for Google Analytics tracking
-                        <!--<i class="text-info">7-5-2014</i>-->
+                        Domain dimension for Google Analytics tracking.
                       </li>
                     </ul>
                   </li>
@@ -326,8 +357,7 @@
                     <ul>
                       <li>
                         <span class="label label-important">fix</span>
-                        Fix for Standby Agenda tab bug: Planning for others
-                        <!--<i class="text-info">7-5-2014</i>-->
+                        Fix for Standby Agenda tab bug: Planning for others.
                       </li>
                     </ul>
                   </li>
@@ -342,7 +372,6 @@
                       <li>
                         <span class="label label-important">fix</span>
                         Date picker bug. (Day button)
-                        <!--<i class="text-info">1-5-2014</i>-->
                       </li>
                     </ul>
                   </li>
@@ -357,12 +386,10 @@
                       <li>
                         <span class="label label-success">feature</span>
                         States are dynamically fetched from server based on the profile.
-                        <!--<i class="text-info">15-4-2014</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Some minor issue fixes.
-                        <!--<i class="text-info">15-4-2014</i>-->
                       </li>
                     </ul>
                   </li>
@@ -377,7 +404,6 @@
                       <li>
                         <span class="label label-success">feature</span>
                         Implementation for dynamic divisions and cap-codes.
-                        <!--<i class="text-info">11-4-2014</i>-->
                       </li>
                     </ul>
                   </li>
@@ -392,7 +418,6 @@
                       <li>
                         <span class="label label-important">fix</span>
                         Fix for the function of the forward and back button in the timeline navigation bar.
-                        <!--<i class="text-info">2-1-2014</i>-->
                       </li>
                     </ul>
                   </li>
@@ -407,57 +432,46 @@
                       <li>
                         <span class="label label-important">fix</span>
                         For not selectable newly created groups in group selector widget in dashboard.
-                        <!--<i class="text-info">6-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Re-designed password reset emails.
-                        <!--<i class="text-info">5-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Friendly error messages for background sync mechanism of agenda data.
-                        <!--<i class="text-info">5-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Changing amount of required members in group view.
-                        <!--<i class="text-info">5-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Fast availability button web app.
-                        <!--<i class="text-info">5-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Removed ‘WebPaige’ terms from web app.
-                        <!--<i class="text-info">5-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         TV monitor views for smartAlarming.
-                        <!--<i class="text-info">3-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Enhancing the smartAlarming widget in dashboard with real availabilities.
-                        <!--<i class="text-info">3-12-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Rounding end time based on the start time (#54).
-                        <!--<i class="text-info">25-11-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Cache mechanism for smartAlarming team members list.
-                        <!--<i class="text-info">11-11-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Hooking new P2000 api with new StandBy installations.
-                        <!--<i class="text-info">11-11-2013</i>-->
                       </li>
                     </ul>
                   </li>
@@ -471,13 +485,11 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Easy planning for later years
-                        <!--<i class="text-info">20-11-2013</i>-->
+                        Easy planning for later years.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Message broadcast buttons replaced with checkboxes (#51)
-                        <!--<i class="text-info">19-11-2013</i>-->
+                        Message broadcast buttons replaced with checkboxes (#51).
                       </li>
                     </ul>
                   </li>
@@ -494,46 +506,37 @@
                         Fix for not correctly switching timeline navigational scope buttons (day-week-month).
                         Fix made in this week where the daylight time saving occurs so this fix will cover other
                         daylight saving periods as well.
-                        <!--<i class="text-info">25-10-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Sorting alphabetically on search results.
-                        <!--<i class="text-info">24-10-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Fix on not displaying receiver names on replying a message.
-                        <!--<i class="text-info">24-10-2013</i></li>-->
                       <li>
                         <span class="label label-important">fix</span>
                         Fix on not displaying success message by removing multiple users from a group.
-                        <!--<i class="text-info">24-10-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Fix on 'undefined' values by registering new users with empty phone fields.
-                        <!--<i class="text-info">24-10-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         IOS7 corrections and enhancements targeting iPad users.
-                        <!--<i class="text-info">23-10-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Fix on not displaying correct error message on wrong credential login attempts.
-                        <!--<i class="text-info">21-10-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Enhancement of forcing search results to refresh after adding user to an another group.
-                        <!--<i class="text-info">21-1-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Enhancement of smart alarming functionality in the web application.
-                        <!--<i class="text-info">14-10-2013</i>-->
                       </li>
                     </ul>
                   </li>
@@ -547,13 +550,11 @@
                     <ul>
                       <li>
                         <span class="label label-important">fix</span>
-                        Bug fix for lower cased user names on registering
-                        <!--<i class="text-info">11-10-2013</i>-->
+                        Bug fix for lower cased user names on registering.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Bug fix for re-setting name during the login
-                        <!--<i class="text-info">9-10-2013</i>-->
+                        Bug fix for re-setting name during the login.
                       </li>
                     </ul>
                   </li>
@@ -567,13 +568,12 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Sorting on last name in agenda, message receivers and groups&users listings (#44)
-                        <!--<i class="text-info">26-8-2013</i>-->
+                        Sorting on last name in agenda, message receivers and groups&users listings (#44).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Added the possibility to download an experimental version of the app, with geo-fencing functionality
-                        <!--<i class="text-info">23-8-2013</i>-->
+                        Added the possibility to download an experimental version of the app, with geo-fencing
+                        functionality.
                       </li>
                     </ul>
                   </li>
@@ -588,8 +588,7 @@
                       <li>
                         <span class="label label-success">feature</span>
                         Addressed monitoring when used with multiple divisions,
-                        enhancing division monitoring in both agenda and dashboard view (#14)
-                        <!--<i class="text-info">21-8-2013</i>-->
+                        enhancing division monitoring in both agenda and dashboard view (#14).
                       </li>
                     </ul>
                   </li>
@@ -603,29 +602,24 @@
                     <ul>
                       <li>
                         <span class="label label-important">fix</span>
-                        Fixed issues with IE8 (not displaying title and missing data in planboard)
-                        <!--<i class="text-info">26-7-2013</i>-->
+                        Fixed issues with IE8 (not displaying title and missing data in planboard).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Improved translations (#33)
-                        <!--<i class="text-info">12-7-2013</i>-->
+                        Improved translations (#33).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Implement the moving of time-slots starting in the past and ending in the future by slicing
-                        them
-                        <!--<i class="text-info">10-7-2013</i>-->
+                        them.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Enabling changing of group member passwords for planners
-                        <!--<i class="text-info">9-7-2013</i>-->
+                        Enabling changing of group member passwords for planners.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Multiple IE bugs fix for library loading order issue
-                        <!--<i class="text-info">9-7-2013</i>-->
+                        Multiple IE bugs fix for library loading order issue.
                       </li>
                     </ul>
                   </li>
@@ -639,25 +633,21 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Applying alphabetical sorting on receivers list when composing a message
-                        <!--<i class="text-info">8-7-2013</i>-->
+                        Applying alphabetical sorting on receivers list when composing a message.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Internationalization updates with a focus on the Dutch language
-                        <!--<i class="text-info">8-7-2013</i>-->
+                        Internationalization updates with a focus on the Dutch language.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Major performance improvement when adding, modifying or deleting
-                        new time-slots (back-end improvement)
-                        <!--<i class="text-info">8-7-2013</i>-->
+                        new time-slots (back-end improvement).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Addressed a bug in the functionality of
-                        changing the availability of another team member
-                        <!--<i class="text-info">8-7-2013</i>-->
+                        changing the availability of another team member.
                       </li>
                     </ul>
                   </li>
@@ -672,58 +662,47 @@
                       <li>
                         <span class="label label-important">fix</span>
                         Hot fix for bug in changing view (e.g. jump back to week-view)
-                        after mutating planboard (#26/#3)
-                        <!--<i class="text-info">3-7-2013</i>-->
+                        after mutating planboard (#26/#3).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Performance issues: Live instance (#25)
-                        <!--<i class="text-info">28-6-2013</i>-->
+                        Performance issues: Live instance (#25).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Performance issues: Grouped calls for member time-lines (#25)
-                        <!--<i class="text-info">28-6-2013</i>-->
+                        Performance issues: Grouped calls for member time-lines (#25).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Background syncing for P2000 alerts (#32)
-                        <!--<i class="text-info">2-7-2013</i>-->
+                        Background syncing for P2000 alerts (#32).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Extreme mutations in the past has been reviewed and blocked (#31)
-                        <!--<i class="text-info">2-7-2013</i>-->
+                        Extreme mutations in the past has been reviewed and blocked (#31).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Show slot form fields already filled with time and date when opening (#2)
-                        <!--<i class="text-info">1-7-2013</i>-->
+                        Show slot form fields already filled with time and date when opening (#2).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Adjust slot form times when mutation planboard items (#37)
-                        <!--<i class="text-info">1-7-2013</i>-->
+                        Adjust slot form times when mutation planboard items (#37).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Auto-refresh kicks in while mutating (#28)
-                        <!--<i class="text-info">1-7-2013</i>-->
+                        Auto-refresh kicks in while mutating (#28).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Remove slot form after planboard mutation (#36)
-                        <!--<i class="text-info">1-7-2013</i>-->
+                        Remove slot form after planboard mutation (#36).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Clicking today shows yesterday (#35)
-                        <!--<i class="text-info">1-7-2013</i>-->
+                        Clicking today shows yesterday (#35).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Set standard agenda view to today +6 days (#30)
-                        <!--<i class="text-info">1-7-2013</i>-->
+                        Set standard agenda view to today +6 days (#30).
                       </li>
                     </ul>
                   </li>
@@ -737,38 +716,31 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Always change a time-slot through slot form in planboard
-                        <!--<i class="text-info">27-6-2013</i>-->
+                        Always change a time-slot through slot form in planboard.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Planboard auto refresher is being blocked while working on planboard
-                        <!--<i class="text-info">27-6-2013</i>-->
+                        Planboard auto refresher is being blocked while working on planboard.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Hot fix for not clearing cache for users
-                        <!--<i class="text-info">20-6-2013</i>-->
+                        Hot fix for not clearing cache for users.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Percentage counter for members timeline in status bar
-                        <!--<i class="text-info">5-6-2013</i>-->
+                        Percentage counter for members timeline in status bar.
                       </li>
                       <li>
                         <span class="label label-info">release</span>
-                        Live release for 120G
-                        <!--<i class="text-info">5-6-2013</i>-->
+                        Live release for 120G.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Help & Support
-                        <!--<i class="text-info">4-6-2013</i>-->
+                        Help & Support.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Download mobile app functionality.
-                        <!--<i class="text-info">4-6-2013</i>-->
                       </li>
                     </ul>
                   </li>
@@ -782,33 +754,27 @@
                     <ul>
                       <li>
                         <span class="label label-important">fix</span>
-                        Hot fix for stability issues in profile timeline
-                        <!--<i class="text-info">15-5-2013</i>-->
+                        Hot fix for stability issues in profile timeline.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Hot fix for not displaying user information on profile editing form
-                        <!--<i class="text-info">15-5-2013</i>-->
+                        Hot fix for not displaying user information on profile editing form.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Background planboard sync (60 seconds interval)
-                        <!--<i class="text-info">13-5-2013</i>-->
+                        Background planboard sync (60 seconds interval).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Message job scheduler
-                        <!--<i class="text-info">13-5-2013</i>-->
+                        Message job scheduler.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        IE 8/9/10 planboard stabilization
-                        <!--<i class="text-info">13-5-2013</i>-->
+                        IE 8/9/10 planboard stabilization.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Hot fix for not going further than 6th page in pagination in messages
-                        <!--<i class="text-info">4-5-2013</i>-->
+                        Hot fix for not going further than 6th page in pagination in messages.
                       </li>
                     </ul>
                   </li>
@@ -822,48 +788,39 @@
                     <ul>
                       <li>
                         <span class="label label-important">fix</span>
-                        IE9 & IE10 support, IE8 (temporarily) and less are blocked
-                        <!--<i class="text-info">3-5-2013</i>-->
+                        IE9 & IE10 support, IE8 (temporarily) and less are blocked.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Google Analytics implemented
-                        <!--<i class="text-info">3-5-2013</i>-->
+                        Google Analytics implemented.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Pagination in messages center
-                        <!--<i class="text-info">2-5-2013</i>-->
+                        Pagination in messages center.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Instruct user with email address placeholder when remembering account info at login
-                        <!--<i class="text-info">29-4-2013</i>-->
+                        Instruct user with email address placeholder when remembering account info at login.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Conflict error message by registering same username
-                        <!--<i class="text-info">29-4-2013</i>-->
+                        Conflict error message by registering same username.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Fixed not displaying alarm messages in dashboard
-                        <!--<i class="text-info">26-4-2013</i>-->
+                        Fixed not displaying alarm messages in dashboard.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Fixed centering styling issue for login button in login screen for IE8
-                        <!--<i class="text-info">26-4-2013</i>-->
+                        Fixed centering styling issue for login button in login screen for IE8.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Language corrections in planboard statistics
-                        <!--<i class="text-info">19-4-2013</i>-->
+                        Language corrections in planboard statistics.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Hot fix for not displaying correct weeks by previous/future weeks in profile timeline
-                        <!--<i class="text-info">19-4-2013</i>-->
+                        Hot fix for not displaying correct weeks by previous/future weeks in profile timeline.
                       </li>
                     </ul>
                   </li>
@@ -877,87 +834,71 @@
                     <ul>
                       <li>
                         <span class="label label-success">feature</span>
-                        Core modules separated
-                        <!--<i class="text-info">17-4-2013</i>-->
+                        Core modules separated.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Background syncing for every minute and displaying webkit desktop notification
-                        for new messages
+                        for new messages.
                         <span class="text-warning">(still in development, temporarily disabled)</span>
-                        <!--<i class="text-info">16-4-2013</i>-->
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        By adding a new slot, slot form now opens with time of now and 1 hour later
-                        <!--<i class="text-info">15-4-2013</i>-->
+                        By adding a new slot, slot form now opens with time of now and 1 hour later.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Full screen ability for webkit browsers
-                        <!--<i class="text-info">15-4-2013</i>-->
+                        Full screen ability for webkit browsers.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Compressed third party libraries (performance tweak)
-                        <!--<i class="text-info">15-4-2013</i>-->
+                        Compressed third party libraries (performance tweak).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        AMD support added for loading third-party-libraries (performance tweak)
-                        <!--<i class="text-info">15-4-2013</i>-->
+                        AMD support added for loading third-party-libraries (performance tweak).
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Major app loading performance tweaks with reducing requests and minimized
-                        and compiled to one version of app libraries
-                        <!--<i class="text-info">13-4-2013</i>-->
+                        and compiled to one version of app libraries.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
                         Meridian time (hour) issue with selecting time range with mouse either
-                        by shift or ctrl keys is resolved
-                        <!--<i class="text-info">12-4-2013</i>-->
+                        by shift or ctrl keys is resolved.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Tablet issues has been solved
-                        <!--<i class="text-info">12-4-2013</i>-->
+                        Tablet issues has been solved.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Corrected a localization issue with 'no messages' in the box
-                        <!--<i class="text-info">11-4-2013</i>-->
+                        Corrected a localization issue with 'no messages' in the box.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Tablet datetime selectors for planboard and profile timeline
-                        <!--<i class="text-info">11-4-2013</i>-->
+                        Tablet datetime selectors for planboard and profile timeline.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Removed footer for mobile and tablets and changed it to portable pre-loader
-                        <!--<i class="text-info">10-4-2013</i>-->
+                        Removed footer for mobile and tablets and changed it to portable pre-loader.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Main navigation menu more friendly with apple or android tablets or mobiles
-                        <!--<i class="text-info">10-4-2013</i>-->
+                        Main navigation menu more friendly with apple or android tablets or mobiles.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        First group to render setting functionality
-                        <!--<i class="text-info">10-4-2013</i>-->
+                        First group to render setting functionality.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Default wish value setting for groups
-                        <!--<i class="text-info">9-4-2013</i>-->
+                        Default wish value setting for groups.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
                         Dashboard 2.0
-                        <!--<i class="text-info">8-4-2013</i>-->
                       </li>
                     </ul>
                   </li>
@@ -971,34 +912,28 @@
                     <ul>
                       <li>
                         <span class="label label-important">fix</span>
-                        Fixed rendering issues with pie chart of totals in statistics in plan
-                        <!--<i class="text-info">5-4-2013</i>-->
+                        Fixed rendering issues with pie chart of totals in statistics in plan.
                       </li>
                       <li>
                         <span class="label label-success">feature</span>
-                        Dynamic listing for legend based on available states of that particular installation
-                        <!--<i class="text-info">4-4-2013</i>-->
+                        Dynamic listing for legend based on available states of that particular installation.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Hot fix for not displaying date time conversions in message center
-                        <!--<i class="text-info">4-4-2013</i>-->
+                        Hot fix for not displaying date time conversions in message center.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Case-insensitive login
-                        <!--<i class="text-info">4-4-2013</i>-->
+                        Case-insensitive login.
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        Quick css fix for IE. (Not showing time-slots)
-                        <!--<i class="text-info">3-4-2013</i>-->
+                        Quick css fix for IE. (Not showing time-slots).
                       </li>
                       <li>
                         <span class="label label-important">fix</span>
-                        CSS fix for tabs left border.
-                        (Bug with dynamic height sizing when there is no content in tab is still open !)
-                        <!--<i class="text-info">3-4-2013</i>-->
+                        CSS fix for tabs left border. (Bug with dynamic height sizing when there is no content in tab
+                        is still open !)
                       </li>
                     </ul>
                   </li>
