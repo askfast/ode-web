@@ -73,21 +73,21 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
       //
 
-
-      $scope.breakGroupSetting = function ()
-      {
-//        Settings.save(
-//          $rootScope.app.resources.uuid,
+//
+//      $scope.breakGroupSetting = function ()
+//      {
+////        Settings.save(
+////          $rootScope.app.resources.uuid,
+////          { role: '' }
+////        ).then(function (resulted) { console.log('broken resources ->', resulted) });
+//
+//
+//        Profile.save(
+//          // $rootScope.app.resources.uuid,
+//          'devleonie',
 //          { role: '' }
 //        ).then(function (resulted) { console.log('broken resources ->', resulted) });
-
-
-        Profile.save(
-          // $rootScope.app.resources.uuid,
-          'devleonie',
-          { role: '' }
-        ).then(function (resulted) { console.log('broken resources ->', resulted) });
-      };
+//      };
 
       //
 
