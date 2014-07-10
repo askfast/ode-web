@@ -151,7 +151,11 @@ angular.module('WebPaige.Controllers.Profile', [])
        */
       $scope.data = data;
 
+      console.log(' data ->', data);
+
       $scope.profileRole = data.resources.role;
+
+      console.log('$scope.profileRole ->', $scope.profileRole);
 
       /**
        * Grab and set roles for view

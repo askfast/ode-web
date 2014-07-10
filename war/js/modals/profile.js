@@ -189,7 +189,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       };
 
       /**
-       * Set role of given user
+       * Change groups of user
        */
       Profile.prototype.membership = function (id, groups)
       {
@@ -197,7 +197,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
         Profile.membership(
           { id: id },
-          role,
+          groups,
           function (result)
           {
             deferred.resolve(result);
