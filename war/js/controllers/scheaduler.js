@@ -54,7 +54,9 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
                 if (time[1] != offset.minute) offset.minute = time[1];
 
                 if (offset.exact != exact)
-                { offset.exact = exact; }
+                {
+                  offset.exact = exact;
+                }
 
               }
             );
@@ -99,7 +101,7 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 
 
       /**
-       * Remove a scheadule
+       * Remove a schedule
        */
       $scope.remover = function (key)
       {

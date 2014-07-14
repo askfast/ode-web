@@ -179,9 +179,10 @@ angular.module('WebPaige.Controllers.Messages', [])
 
 
       /**
+       * TODO: Remove later on!
        * Default toggle for scheduler pane
        */
-      $scope.scheadulerPane = false;
+      $scope.scheadulerPane = true;
 
 
       /**
