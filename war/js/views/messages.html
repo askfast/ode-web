@@ -193,8 +193,13 @@
               <header>
                 <h4>{{ui.message.repeat}}</h4>
                 <div class="pull-right">
-                  <button type="button" class="btn btn-small" ng-click="scheadulerPane = false" ng-hide="views.scheaduler">{{ui.message.repeatOff}}</button>
-                  <button type="button" class="btn btn-small btn-success" ng-click="addNewOffset()">{{ui.message.repeatNew}}
+                  <button type="button"
+                          class="btn btn-small"
+                          ng-click="scheadulerPane = false"
+                          ng-hide="views.scheaduler">{{ui.message.repeatOff}}</button>
+                  <button type="button"
+                          class="btn btn-small btn-success"
+                          ng-click="addNewOffset()">{{ui.message.repeatNew}}
                   </button>
                 </div>
               </header>
@@ -228,7 +233,10 @@
                 <!-- <span style="font-size:11px" ng-repeat="o in offsets"> {{o}}<br></span> -->
 
                 <!-- notification items -->
-                <notification-item ng-repeat="offset in scheaduled.offsets" scheadule="offset" remover="remover()">
+                <notification-item ng-repeat="offset in scheaduled.offsets"
+                                   scheadule="offset"
+                                   remover="remover()"
+                                   days="days">
                 </notification-item>
                 <!-- end notification items -->
 

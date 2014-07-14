@@ -67,7 +67,8 @@ angular.module('WebPaige.Directives', ['ngResource'])
         };
       },
       scope: {
-        scheadule: '='
+        scheadule: '=',
+        days: '='
       }
     };
 
