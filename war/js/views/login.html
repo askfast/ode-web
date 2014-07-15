@@ -24,7 +24,8 @@
 		  <img ng-src="{{config.profile.logos.login}}"
            alt="{{config.profile.title}}" />
 
-      <h4 class="form-signin-heading">{{ui.login.header}}</h4>
+      <h4 class="form-signin-heading" ng-show="config.profile.own">{{config.profile.title}}</h4>
+      <h4 class="form-signin-heading" ng-hide="config.profile.own">{{ui.login.header}}</h4>
 
       <div class="alert {{alert.login.type}}"
            ng-show="alert.login.display">
@@ -67,7 +68,7 @@
 		  </p>
 
 
-      <img src="img/standby_logo_small.png" alt="StandBy Logo"/>
+      <img src="img/standby_logo_small.png" alt="StandBy Logo" ng-hide="config.profile.own"/>
 		  <span class="version" style="margin-top: 0px">
         <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
       </span>
@@ -115,7 +116,7 @@
 		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
 		  <p><small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small></p>
 
-      <img src="img/standby_logo_small.png" alt="StandBy Logo"/>
+      <img src="img/standby_logo_small.png" alt="StandBy Logo" ng-hide="config.profile.own"/>
 		  <span class="version">
         <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
       </span>
@@ -138,8 +139,7 @@
 			<input class="" type="password" ng-model="changeData.retypePass" placeholder="{{ui.login.ph_retypePass}}">
 			
 			<button class="btn btn-large btn-primary" type="submit">{{ui.login.changePassword}}</button>
-
-		    <br><span class="version"><a href="version.html" target="_blank">StandBy v{{config.version}}</a></span>
+		  <br><span class="version"><a href="version.html" target="_blank">StandBy v{{config.version}}</a></span>
 		</form>
 	</div>
 	<!-- end change pass -->

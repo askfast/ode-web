@@ -5,6 +5,8 @@ var profile = {
 
   meta: 'monster',
 
+  own: false,
+
   title: 'REDDINGSBRIGADE',
 
 	host: function ()

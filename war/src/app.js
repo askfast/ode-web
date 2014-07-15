@@ -1130,6 +1130,7 @@ angular.module('WebPaige')
 
     profile: {
       meta:   profile.meta,
+      own:   profile.own,
       title:  profile.title,
       logos: {
         login:  'profiles/' + profile.meta + '/img/login_logo.png',

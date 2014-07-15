@@ -5,6 +5,8 @@ var profile = {
 
   meta: 'knrm',
 
+  own: false,
+
   title: 'KNRM',
 
   host: function ()
