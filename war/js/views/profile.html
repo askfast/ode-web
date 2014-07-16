@@ -296,6 +296,9 @@
                       value="{{data.resources.PostCity}}">
             </div>
           </div>
+
+          <hr/>
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.username}}</label>
             <div class="controls">
@@ -311,12 +314,21 @@
                ng-hide="app.resources.role > 1 || views.user">
             <label class="control-label">{{ui.profile.password}}</label>
             <div class="controls">
-              <input  type="text" 
-                      class="span3" 
+              <input  type="text"
+                      class="span3"
                       ng-model="profilemeta.Password">
               <span class="help-block" style="margin-top: -5px;">
                 <small><i>{{ui.profile.passwordChangeWarning}}</i></small>
               </span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">{{ui.profile.pincode}}</label>
+            <div class="controls">
+              <input  type="text"
+                      class="span3"
+                      ng-model="profilemeta.pincode">
             </div>
           </div>
 

@@ -378,9 +378,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         }
 
         Profile.save(
-          {
-            id: id
-          },
+          { id: id },
           resources,
           function (result)
           {
