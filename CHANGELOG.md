@@ -3,6 +3,8 @@
 
 2.4.0
 
+- feature: Make phone-in pincode login code visible/editable in profile page. 16-7-2014
+  [link](https://trello.com/c/TTQilKSR/1539-1-1-standby-web-make-phone-in-inloggen-code-visible-in-profile-page)
 - feature: Repeating and scheduled messages. 10-7-2014
 - fix: User with planner profile loses Groups tab when clicking on own profile. 10-7-2014
   [link](https://trello.com/c/b2fNeIWO/1622-standby-web-user-with-planner-profile-loses-groups-tab-when-clicking-on-own-profile)
