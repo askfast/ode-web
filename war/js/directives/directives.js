@@ -40,7 +40,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
  * Notification item
  */
 .directive('notificationItem',
-  function ($compile)
+  function ()
   {
     return {
       restrict: 'E',
@@ -48,26 +48,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
       templateUrl: 'dist/views/messages-scheadule-item.html',
       link: function (scope, element, attrs)
       {
-        /**
-         * Pass the scheadule data
-         */
         scope.s = scope.scheadule;
 
-        // element.html(template).show();
-        // $compile(element.contents())(scope);
-
-        /**
-         * Serve to the controller
-         */
-        scope.remover = function (key)
-        {
-          // console.log('coming to remover');
-
-          scope.$parent.$parent.remover(key);
-        };
+        scope.remover = function (key) { scope.$parent.$parent.remover(key) };
       },
       scope: {
-        scheadule: '='
+        scheadule: '=',
+        days: '='
       }
     };
 

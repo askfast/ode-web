@@ -396,7 +396,7 @@ var ui = {
         langSetting: 'Language',
         saving: 'Saving settings...',
         refreshing: 'Refreshing settings...',
-        saved: 'Settings successfully saved.'
+        saved: 'Instellingen succesvol gewijzigd.'
       },
       help: {
         help: 'Help',
@@ -508,6 +508,15 @@ var ui = {
           message: 'You have entered a correct number. Number is registered for ',
           as: ' and number type is '
         }
+      },
+      days: {
+        mon: 'monday',
+        tue: 'tuesday',
+        wed: 'wednesday',
+        thu: 'thursday',
+        fri: 'friday',
+        sat: 'saturday',
+        sun: 'sunday'
       }
     },
     nl: {
@@ -900,7 +909,7 @@ var ui = {
         langSetting: 'Taal',
         saving: 'Instellingen wijzigen...',
         refreshing: 'Instellingen vernieuwen...',
-        saved: 'Instellingen succesvol gewijzigd.'
+        saved: 'Settings successfully saved.'
       },
       help: {
         help: 'Hulp',
@@ -1010,6 +1019,15 @@ var ui = {
           message: 'Ingevoerd telefoonnummer is correct. Nummer is geregistreerd in ',
           as: ' als '
         }
+      },
+      days: {
+        mon: 'maandag',
+        tue: 'dinsdag',
+        wed: 'woensdag',
+        thu: 'donderdag',
+        fri: 'vrijdag',
+        sat: 'zaterdag',
+        sun: 'zondag'
       }
     }
 };;/*jslint node: true */
@@ -6084,7 +6102,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
  * Notification item
  */
 .directive('notificationItem',
-  function ($compile)
+  function ()
   {
     return {
       restrict: 'E',
@@ -6092,26 +6110,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
       templateUrl: 'dist/views/messages-scheadule-item.html',
       link: function (scope, element, attrs)
       {
-        /**
-         * Pass the scheadule data
-         */
         scope.s = scope.scheadule;
 
-        // element.html(template).show();
-        // $compile(element.contents())(scope);
-
-        /**
-         * Serve to the controller
-         */
-        scope.remover = function (key)
-        {
-          // console.log('coming to remover');
-
-          scope.$parent.$parent.remover(key);
-        };
+        scope.remover = function (key) { scope.$parent.$parent.remover(key) };
       },
       scope: {
-        scheadule: '='
+        scheadule: '=',
+        days: '='
       }
     };
 
@@ -14185,6 +14190,14 @@ angular.module('WebPaige.Controllers.Messages', [])
       };
 
 
+
+
+
+
+
+      
+
+
       /**
        * Default scheduled config
        */
@@ -14193,6 +14206,15 @@ angular.module('WebPaige.Controllers.Messages', [])
         offsets: {},
         status: false
       };
+
+
+
+
+
+
+
+
+
 
 
       /**
@@ -14260,10 +14282,12 @@ angular.module('WebPaige.Controllers.Messages', [])
       setView(view);
 
 
-      /**
-       * Default toggle for scheduler pane
-       */
-      $scope.scheadulerPane = false;
+
+
+
+
+
+
 
 
       /**
@@ -14280,6 +14304,13 @@ angular.module('WebPaige.Controllers.Messages', [])
           setMessageView($location.search().uuid);
         }
       }
+
+
+
+
+
+
+
 
 
       /**
@@ -14364,6 +14395,18 @@ angular.module('WebPaige.Controllers.Messages', [])
       };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
       /**
        * Count the schedules
        */
@@ -14386,8 +14429,6 @@ angular.module('WebPaige.Controllers.Messages', [])
       function setNotificationView (id)
       {
         $scope.origin = 'notifications';
-
-        $scope.scheadulerPane = true;
 
         var scheaduled = Messages.scheaduled.find(id);
 
@@ -14508,10 +14549,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var count = 0;
 
         angular.forEach(
-          $scope.scheaduled.offsets, function (offset)
-          {
-            count ++;
-          });
+          $scope.scheaduled.offsets,
+          function (offset) { count ++ }
+        );
 
         $scope.scheaduleCount = count;
 
@@ -14534,12 +14574,21 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         $scope.$watch(
           $location.search(),
-          function ()
-          { $location.search({uuid: id}) }
+          function () { $location.search({uuid: id}) }
         );
 
         $rootScope.statusBar.off();
       };
+
+
+
+
+
+
+
+
+
+
 
 
       /**
@@ -14560,7 +14609,6 @@ angular.module('WebPaige.Controllers.Messages', [])
         else
         {
           /**
-           * TODO: Why not working properly? Look into this one
            * Reset them
            */
           $location.search({});
@@ -14569,8 +14617,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
           $scope.broadcast.sms = false;
           $scope.broadcast.email = false;
-
-          $scope.scheadulerPane = false;
 
           angular.forEach(
             $("div#composeTab select.chzn-select option"),
@@ -14619,8 +14665,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         angular.forEach(
           messages,
-          function (message)
-          { $scope.selection[inbox][message.uuid] = flag }
+          function (message) { $scope.selection[inbox][message.uuid] = flag }
         );
       };
 
@@ -14663,7 +14708,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.closeTabs();
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
           }
         );
@@ -14712,7 +14758,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                 }
               );
             }
-          });
+          }
+        );
       };
 
 
@@ -14750,9 +14797,11 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
@@ -14766,10 +14815,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var ids = [];
 
         angular.forEach(
-          selection, function (flag, id)
-          {
-            if (flag) ids.push(id);
-          });
+          selection,
+          function (flag, id) { if (flag) ids.push(id) }
+        );
 
         Messages.restore(ids)
           .then(
@@ -14794,9 +14842,11 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
@@ -15042,18 +15092,9 @@ angular.module('WebPaige.Controllers.Messages', [])
        * Bulk cleaners for mailboxes
        */
       $scope.clean = {
-        inbox: function ()
-        {
-          Messages.clean($scope.messages.inbox);
-        },
-        outbox: function ()
-        {
-          Messages.clean($scope.messages.outbox);
-        },
-        trash: function ()
-        {
-          Messages.clean($scope.messages.trash);
-        }
+        inbox: function () { Messages.clean($scope.messages.inbox) },
+        outbox: function () { Messages.clean($scope.messages.outbox) },
+        trash: function () { Messages.clean($scope.messages.trash) }
       };
 
 
@@ -15071,10 +15112,9 @@ angular.module('WebPaige.Controllers.Messages', [])
               types = [];
 
           angular.forEach(
-            message.receivers, function (receiver)
-            {
-              members.push(receiver.id);
-            });
+            message.receivers,
+            function (receiver) { members.push(receiver.id) }
+          );
 
           types.push('paige');
 
@@ -15119,7 +15159,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                 callback();
               }
-            });
+            }
+          );
         },
 
 
@@ -15144,7 +15185,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                 $scope.scheaduled = result;
               }
-            });
+            }
+          );
         },
 
 
@@ -15188,10 +15230,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                 $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
 
                 self.list(
-                  function ()
-                  {
-                    $scope.setViewTo('notifications');
-                  });
+                  function () { $scope.setViewTo('notifications') }
+                );
               }
             });
         },
@@ -15256,10 +15296,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                 $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
 
                 self.list(
-                  function ()
-                  {
-                    $scope.setViewTo('notifications');
-                  });
+                  function () { $scope.setViewTo('notifications') }
+                );
               }
             });
         }
@@ -15275,100 +15313,113 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 
 
 /**
- * Scheadule controller
+ * Schedule controller
  */
-.controller('scheaduler', 
-[
-	'$scope', '$rootScope',
-	function ($scope, $rootScope) 
-	{
-		/**
-		 * Watch offsets
-		 */
-		$scope.$watch(function ()
-		{
-			if ($scope.scheaduled)
-			{
-				angular.forEach($scope.scheaduled.offsets, function (offset, index)
-				{
-					/**
-					 * If all the days are unchecked make monday checked as default
-					 */
-					if (offset.mon == false && 
-							offset.tue == false && 
-							offset.wed == false && 
-							offset.thu == false && 
-							offset.fri == false && 
-							offset.sat == false && 
-							offset.sun == false)
-					{
-						offset.mon = true;
-					}
-
-					// var hour    = 1000 * 60 * 60,
-				 //      minute  = 1000 * 60,
-					var hour    = 60 * 60,
-				      minute  = 60,
-				      time 		= offset.time.split(':'),
-				      exact 	= (time[0] * hour) + (time[1] * minute);
-
-					if (time[0] != offset.hour) 	offset.hour 	= time[0];
-					if (time[1] != offset.minute) offset.minute = time[1];
-
-					if (offset.exact != exact) { offset.exact = exact; }
-
-				});	
-			}
-		});
-
-
-    /**
-     * Add a new offset
-     */
-    $scope.addNewOffset = function ()
+  .controller(
+  'scheaduler',
+  [
+    '$scope', '$rootScope',
+    function ($scope, $rootScope)
     {
-    	if ($scope.scheaduled.offsets[0])
-    	{
-	  		var hour    = 60 * 60,
-		        minute  = 60,
-		        time 		= $scope.scheaduled.offsets[0].time.split(':'),
-		        exact 	= (time[0] * hour) + (time[1] * minute);
+      $scope.days = $rootScope.ui.days;
 
-		   	$scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
+      /**
+       * Watch offsets
+       */
+      $scope.$watch(
+        function ()
+        {
+          if ($scope.scheaduled)
+          {
+            angular.forEach(
+              $scope.scheaduled.offsets,
+              function (offset)
+              {
+                /**
+                 * If all the days are unchecked make monday checked as default
+                 */
+                if (offset.mon == false &&
+                    offset.tue == false &&
+                    offset.wed == false &&
+                    offset.thu == false &&
+                    offset.fri == false &&
+                    offset.sat == false &&
+                    offset.sun == false)
+                {
+                  offset.mon = true;
+                }
 
-		   	$scope.scheaduled.offsets[exact].exact = exact;
-    	}
+                // var hour    = 1000 * 60 * 60,
+                //      minute  = 1000 * 60,
+                var hour = 60 * 60,
+                    minute = 60,
+                    time = offset.time.split(':'),
+                    exact = (time[0] * hour) + (time[1] * minute);
 
-    	$scope.scheaduled.offsets[0] = {
-        mon: 		true,
-        tue: 		false,
-        wed: 		false,
-        thu: 		false,
-        fri: 		false,
-        sat: 		false,
-        sun: 		false,
-	      hour: 	0,
-	      minute: 0,
-	      time: 	'00:00',
-	      exact: 	0
-    	};
+                if (time[0] != offset.hour)  offset.hour = time[0];
+                if (time[1] != offset.minute) offset.minute = time[1];
 
-    	$scope.scheaduleCounter();
-    };
+                if (offset.exact != exact)
+                {
+                  offset.exact = exact;
+                }
+
+              }
+            );
+          }
+        }
+      );
 
 
-  	/**
-  	 * Remove a scheadule
-  	 */
-  	$scope.remover = function (key)
-  	{
-  		delete $scope.scheaduled.offsets[key];
+      /**
+       * Add a new offset
+       */
+      $scope.addNewOffset = function ()
+      {
+        if ($scope.scheaduled.offsets[0])
+        {
+          var hour = 60 * 60,
+              minute = 60,
+              time = $scope.scheaduled.offsets[0].time.split(':'),
+              exact = (time[0] * hour) + (time[1] * minute);
 
-  		$scope.scheaduleCounter();
-  	};
+          $scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
 
-	}
-]);;/*jslint node: true */
+          $scope.scheaduled.offsets[exact].exact = exact;
+        }
+
+        $scope.scheaduled.offsets[0] = {
+          mon: true,
+          tue: false,
+          wed: false,
+          thu: false,
+          fri: false,
+          sat: false,
+          sun: false,
+          hour: 0,
+          minute: 0,
+          time: '00:00',
+          exact: 0
+        };
+
+        $scope.scheaduleCounter();
+      };
+
+      $scope.addNewOffset();
+
+
+      /**
+       * Remove a schedule
+       */
+      $scope.remover = function (key)
+      {
+        delete $scope.scheaduled.offsets[key];
+
+        $scope.scheaduleCounter();
+      };
+
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 

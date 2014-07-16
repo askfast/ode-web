@@ -103,6 +103,14 @@ angular.module('WebPaige.Controllers.Messages', [])
       };
 
 
+
+
+
+
+
+
+
+
       /**
        * Default scheduled config
        */
@@ -111,6 +119,15 @@ angular.module('WebPaige.Controllers.Messages', [])
         offsets: {},
         status: false
       };
+
+
+
+
+
+
+
+
+
 
 
       /**
@@ -178,10 +195,12 @@ angular.module('WebPaige.Controllers.Messages', [])
       setView(view);
 
 
-      /**
-       * Default toggle for scheduler pane
-       */
-      $scope.scheadulerPane = false;
+
+
+
+
+
+
 
 
       /**
@@ -198,6 +217,13 @@ angular.module('WebPaige.Controllers.Messages', [])
           setMessageView($location.search().uuid);
         }
       }
+
+
+
+
+
+
+
 
 
       /**
@@ -282,6 +308,18 @@ angular.module('WebPaige.Controllers.Messages', [])
       };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
       /**
        * Count the schedules
        */
@@ -304,8 +342,6 @@ angular.module('WebPaige.Controllers.Messages', [])
       function setNotificationView (id)
       {
         $scope.origin = 'notifications';
-
-        $scope.scheadulerPane = true;
 
         var scheaduled = Messages.scheaduled.find(id);
 
@@ -426,10 +462,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var count = 0;
 
         angular.forEach(
-          $scope.scheaduled.offsets, function (offset)
-          {
-            count ++;
-          });
+          $scope.scheaduled.offsets,
+          function (offset) { count ++ }
+        );
 
         $scope.scheaduleCount = count;
 
@@ -452,12 +487,21 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         $scope.$watch(
           $location.search(),
-          function ()
-          { $location.search({uuid: id}) }
+          function () { $location.search({uuid: id}) }
         );
 
         $rootScope.statusBar.off();
       };
+
+
+
+
+
+
+
+
+
+
 
 
       /**
@@ -478,7 +522,6 @@ angular.module('WebPaige.Controllers.Messages', [])
         else
         {
           /**
-           * TODO: Why not working properly? Look into this one
            * Reset them
            */
           $location.search({});
@@ -487,8 +530,6 @@ angular.module('WebPaige.Controllers.Messages', [])
 
           $scope.broadcast.sms = false;
           $scope.broadcast.email = false;
-
-          $scope.scheadulerPane = false;
 
           angular.forEach(
             $("div#composeTab select.chzn-select option"),
@@ -537,8 +578,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         angular.forEach(
           messages,
-          function (message)
-          { $scope.selection[inbox][message.uuid] = flag }
+          function (message) { $scope.selection[inbox][message.uuid] = flag }
         );
       };
 
@@ -581,7 +621,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.closeTabs();
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
           }
         );
@@ -630,7 +671,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                 }
               );
             }
-          });
+          }
+        );
       };
 
 
@@ -668,9 +710,11 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
@@ -684,10 +728,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var ids = [];
 
         angular.forEach(
-          selection, function (flag, id)
-          {
-            if (flag) ids.push(id);
-          });
+          selection,
+          function (flag, id) { if (flag) ids.push(id) }
+        );
 
         Messages.restore(ids)
           .then(
@@ -712,9 +755,11 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
@@ -960,18 +1005,9 @@ angular.module('WebPaige.Controllers.Messages', [])
        * Bulk cleaners for mailboxes
        */
       $scope.clean = {
-        inbox: function ()
-        {
-          Messages.clean($scope.messages.inbox);
-        },
-        outbox: function ()
-        {
-          Messages.clean($scope.messages.outbox);
-        },
-        trash: function ()
-        {
-          Messages.clean($scope.messages.trash);
-        }
+        inbox: function () { Messages.clean($scope.messages.inbox) },
+        outbox: function () { Messages.clean($scope.messages.outbox) },
+        trash: function () { Messages.clean($scope.messages.trash) }
       };
 
 
@@ -989,10 +1025,9 @@ angular.module('WebPaige.Controllers.Messages', [])
               types = [];
 
           angular.forEach(
-            message.receivers, function (receiver)
-            {
-              members.push(receiver.id);
-            });
+            message.receivers,
+            function (receiver) { members.push(receiver.id) }
+          );
 
           types.push('paige');
 
@@ -1037,7 +1072,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                 callback();
               }
-            });
+            }
+          );
         },
 
 
@@ -1062,7 +1098,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                 $scope.scheaduled = result;
               }
-            });
+            }
+          );
         },
 
 
@@ -1106,10 +1143,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                 $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
 
                 self.list(
-                  function ()
-                  {
-                    $scope.setViewTo('notifications');
-                  });
+                  function () { $scope.setViewTo('notifications') }
+                );
               }
             });
         },
@@ -1174,10 +1209,8 @@ angular.module('WebPaige.Controllers.Messages', [])
                 $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
 
                 self.list(
-                  function ()
-                  {
-                    $scope.setViewTo('notifications');
-                  });
+                  function () { $scope.setViewTo('notifications') }
+                );
               }
             });
         }

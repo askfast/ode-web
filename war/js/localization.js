@@ -396,7 +396,7 @@ var ui = {
         langSetting: 'Language',
         saving: 'Saving settings...',
         refreshing: 'Refreshing settings...',
-        saved: 'Settings successfully saved.'
+        saved: 'Instellingen succesvol gewijzigd.'
       },
       help: {
         help: 'Help',
@@ -508,6 +508,15 @@ var ui = {
           message: 'You have entered a correct number. Number is registered for ',
           as: ' and number type is '
         }
+      },
+      days: {
+        mon: 'monday',
+        tue: 'tuesday',
+        wed: 'wednesday',
+        thu: 'thursday',
+        fri: 'friday',
+        sat: 'saturday',
+        sun: 'sunday'
       }
     },
     nl: {
@@ -900,7 +909,7 @@ var ui = {
         langSetting: 'Taal',
         saving: 'Instellingen wijzigen...',
         refreshing: 'Instellingen vernieuwen...',
-        saved: 'Instellingen succesvol gewijzigd.'
+        saved: 'Settings successfully saved.'
       },
       help: {
         help: 'Hulp',
@@ -1010,6 +1019,15 @@ var ui = {
           message: 'Ingevoerd telefoonnummer is correct. Nummer is geregistreerd in ',
           as: ' als '
         }
+      },
+      days: {
+        mon: 'maandag',
+        tue: 'dinsdag',
+        wed: 'woensdag',
+        thu: 'donderdag',
+        fri: 'vrijdag',
+        sat: 'zaterdag',
+        sun: 'zondag'
       }
     }
 };
