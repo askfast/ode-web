@@ -7,7 +7,7 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 
 
 /**
- * Scheadule controller
+ * Schedule controller
  */
   .controller(
   'scheaduler',
@@ -98,6 +98,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 
         $scope.scheaduleCounter();
       };
+
+      $scope.addNewOffset();
 
 
       /**

@@ -166,105 +166,42 @@
             </div>
             <!-- end subject -->
 
+
+
+
+
             <!-- schedulerPane toggle -->
             <div class="control-group">
-                 <!--ng-hide="scheadulerPane || config.profile.smartAlarm">-->
               <label class="control-label">{{ui.message.repeat}}</label>
 
+              <!-- status toggle -->
+              <div  class="btn-group"
+                    data-toggle="buttons-radio">
+
+                <button type="button"
+                        class="btn btn-small {{(scheaduled.status) && 'btn-success active'}}"
+                        ng-model="scheaduled.status"
+                        ng-click="scheaduled.status = true">{{ui.message.repeatOn}}</button>
 
 
-              <!--<div  class="btn-group"-->
-                    <!--bs-buttons-checkbox=""-->
-                    <!--data-toggle="buttons-checkbox">-->
-
-                <!--<button type="button"-->
-                        <!--class="btn btn-small"-->
-                        <!--ng-model="scheadulerPane"-->
-                        <!--ng-click="scheadulerPane == !scheadulerPane"-->
-                        <!--bs-button="">{{ui.message.repeatOn}}</button>-->
-
-              <!--</div>-->
-
-
-
-
-              <!-- scheaduler status -->
-              <div class="control-group">
-                <!--<label class="control-label">{{ui.message.notificationStatus}}</label>-->
-
-                <!-- status toggle -->
-                <div  class="btn-group"
-                      data-toggle="buttons-radio">
-                  <!--<button type="button"-->
-                          <!--class="btn btn-small btn-success {{(scheaduled.status) && 'active'}}"-->
-                          <!--ng-model="scheaduled.status"-->
-                          <!--ng-show="scheaduled.status">{{ui.message.repeatOn}}</button>-->
-                          <!--ng-click="scheaduled.status = true">{{ui.message.repeatOn}}</button>-->
-
-                  <button type="button"
-                          class="btn btn-small {{(scheaduled.status) && 'btn-success active'}}"
-                          ng-model="scheaduled.status"
-                          ng-click="scheaduled.status = true">{{ui.message.repeatOn}}</button>
-
-
-                  <button type="button"
-                          class="btn btn-small {{(!scheaduled.status) && 'active'}}"
-                          ng-model="scheaduled.status"
-                          ng-click="scheaduled.status = false">{{ui.message.repeatOff}}</button>
-
-                </div>
-                <!-- end status toggle -->
-
-                <!-- status indicator -->
-                <!--<div style="margin-left: 10px; display: inline;">-->
-                  <!--<span class="label label-success"-->
-                        <!--ng-show="scheaduled.status">{{ui.message.enabled}}</span>-->
-                  <!--<span class="label"-->
-                        <!--ng-hide="scheaduled.status">{{ui.message.disabled}}</span>-->
-                <!--</div>-->
-                <!-- end status indicator -->
+                <button type="button"
+                        class="btn btn-small {{(!scheaduled.status) && 'active'}}"
+                        ng-model="scheaduled.status"
+                        ng-click="scheaduled.status = false">{{ui.message.repeatOff}}</button>
 
               </div>
-              <!-- end scheduler status -->
-
-
+              <!-- end status toggle -->
 
             </div>
             <!-- end scheduler toggle -->
 
+
+
+
+
             <!-- scheduler -->
             <section id="scheaduler-pane"
                      ng-show="scheaduled.status">
-
-              <!-- scheduler header -->
-              <header>
-                <h4>{{ui.message.repeat}}</h4>
-                <div class="pull-right">
-                  <button type="button"
-                          class="btn btn-small"
-                          ng-click="scheadulerPane = false"
-                          ng-hide="views.scheaduler">{{ui.message.repeatOff}}</button>
-                  <button type="button"
-                          class="btn btn-small btn-success"
-                          ng-click="addNewOffset()">{{ui.message.repeatNew}}
-                  </button>
-                </div>
-              </header>
-              <!-- end scheduler header -->
-
-              <hr>
-
-              <!-- notification title -->
-              <div class="control-group">
-                <label class="control-label">{{ui.message.notificationLabel}}</label>
-
-                <input type="text" 
-                      class="span6"
-                      ng-model="scheaduled.title"
-                      placeholder="{{ui.message.notificationLabel}}">
-
-              </div>
-              <!-- end notification title -->
 
               <!-- no notifications -->
               <div class="control-group" ng-hide="scheaduleCount > 0">
@@ -293,6 +230,11 @@
 
             </section>
             <!-- end scheduler -->
+
+
+
+
+
 
             <!-- compose form actions -->
             <div class="form-actions">
