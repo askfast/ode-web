@@ -384,7 +384,8 @@ var ui = {
         },
         settingGroups: 'Setting up selected groups...',
         changingRole: 'Changing user role...',
-        changedRole: 'User role has been changed.'
+        changedRole: 'User role has been changed.',
+        pincode: 'Pincode'
       },
       settings: {
         settings: 'Settings',
@@ -897,7 +898,8 @@ var ui = {
         },
         settingGroups: 'Groeplijst aan het toepassen...',
         changingRole: 'Gebruiker profiel aan het aanpassen...',
-        changedRole: 'Gebruiker profiel aangepast.'
+        changedRole: 'Gebruiker profiel aangepast.',
+        pincode: 'Pincode'
       },
       settings: {
         settings: 'Instellingen',
