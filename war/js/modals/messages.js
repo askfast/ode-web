@@ -131,7 +131,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
                     {
                       messages: Messages.prototype.filter(messages),
                       scheadules: scheadules
-                    });
+                    }
+                  );
                 }
               );
 //            }
@@ -172,15 +173,19 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
               Storage.add('notifications', angular.toJson(result));
 
               angular.forEach(
-                result, function (scheadule)
+                result,
+                function (scheadule)
                 {
                   angular.forEach(
-                    scheadule.types, function (type)
+                    scheadule.types,
+                    function (type)
                     {
                       if (type == 'sms') scheadule.sms = true;
                       if (type == 'email') scheadule.mail = true;
-                    });
-                });
+                    }
+                  );
+                }
+              );
 
               deferred.resolve(result);
             },
@@ -209,10 +214,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
               var returned = '';
 
               angular.forEach(
-                result, function (chr)
-                {
-                  returned += chr;
-                });
+                result,
+                function (chr) { returned += chr }
+              );
 
               deferred.resolve(returned);
             },
@@ -233,7 +237,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var deferred = $q.defer();
 
           Notifications.edit(
-            {uuid: uuid}, angular.toJson(notification),
+            { uuid: uuid },
+            angular.toJson(notification),
             function (result)
             {
               deferred.resolve(result);
@@ -255,7 +260,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var deferred = $q.defer();
 
           Notifications.get(
-            {uuid: uuid},
+            { uuid: uuid },
             function (result)
             {
               deferred.resolve(result);
@@ -277,10 +282,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var gem;
 
           angular.forEach(
-            this.local(), function (notification)
+            this.local(),
+            function (notification)
             {
               if (notification.uuid == id) gem = notification;
-            });
+            }
+          );
 
           return gem;
         },
@@ -298,7 +305,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var deferred = $q.defer();
 
           Notifications.remove(
-            {uuid: uuid},
+            { uuid: uuid },
             function (result)
             {
               deferred.resolve(result);

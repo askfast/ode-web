@@ -1148,6 +1148,7 @@ angular.module('WebPaige')
 
     profile: {
       meta:   profile.meta,
+      own:   profile.own,
       title:  profile.title,
       logos: {
         login:  'profiles/' + profile.meta + '/img/login_logo.png',
@@ -4082,7 +4083,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
                     {
                       messages: Messages.prototype.filter(messages),
                       scheadules: scheadules
-                    });
+                    }
+                  );
                 }
               );
 //            }
@@ -4123,15 +4125,19 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
               Storage.add('notifications', angular.toJson(result));
 
               angular.forEach(
-                result, function (scheadule)
+                result,
+                function (scheadule)
                 {
                   angular.forEach(
-                    scheadule.types, function (type)
+                    scheadule.types,
+                    function (type)
                     {
                       if (type == 'sms') scheadule.sms = true;
                       if (type == 'email') scheadule.mail = true;
-                    });
-                });
+                    }
+                  );
+                }
+              );
 
               deferred.resolve(result);
             },
@@ -4160,10 +4166,9 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
               var returned = '';
 
               angular.forEach(
-                result, function (chr)
-                {
-                  returned += chr;
-                });
+                result,
+                function (chr) { returned += chr }
+              );
 
               deferred.resolve(returned);
             },
@@ -4184,7 +4189,8 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var deferred = $q.defer();
 
           Notifications.edit(
-            {uuid: uuid}, angular.toJson(notification),
+            { uuid: uuid },
+            angular.toJson(notification),
             function (result)
             {
               deferred.resolve(result);
@@ -4206,7 +4212,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var deferred = $q.defer();
 
           Notifications.get(
-            {uuid: uuid},
+            { uuid: uuid },
             function (result)
             {
               deferred.resolve(result);
@@ -4228,10 +4234,12 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var gem;
 
           angular.forEach(
-            this.local(), function (notification)
+            this.local(),
+            function (notification)
             {
               if (notification.uuid == id) gem = notification;
-            });
+            }
+          );
 
           return gem;
         },
@@ -4249,7 +4257,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           var deferred = $q.defer();
 
           Notifications.remove(
-            {uuid: uuid},
+            { uuid: uuid },
             function (result)
             {
               deferred.resolve(result);
@@ -6072,51 +6080,63 @@ angular.module('WebPaige.Directives', ['ngResource'])
 /**
  * Chosen
  */
-.directive('chosen',
+  .directive(
+  'chosen',
   function ()
   {
-    var linker = function (scope,element,attr)
-    {
-      scope.$watch('receviersList', function ()
-      {
-         element.trigger('liszt:updated');
-      });
-
-      scope.$watch('message.receviers', function ()
-      {
-        $(element[0]).trigger('liszt:updated');
-      });
-
-      element.chosen();
-    };
-
     return {
       restrict: 'A',
-      link:     linker
+      link: function (scope, element, attr)
+      {
+        scope.$watch(
+          'receviersList',
+          function () { element.trigger('liszt:updated') }
+        );
+
+        scope.$watch(
+          'message.receviers',
+          function () { $(element[0]).trigger('liszt:updated') }
+        );
+
+        element.chosen();
+      }
     };
-  }
-)
+  })
 
 
 /**
  * Notification item
  */
-.directive('notificationItem',
-  function ()
+  .directive(
+  'notificationItem',
+  function ($compile)
   {
     return {
       restrict: 'E',
-      rep1ace:  true,
+      rep1ace: true,
       templateUrl: 'dist/views/messages-scheadule-item.html',
       link: function (scope, element, attrs)
       {
+        /**
+         * Pass the scheadule data
+         */
         scope.s = scope.scheadule;
 
-        scope.remover = function (key) { scope.$parent.$parent.remover(key) };
+        // element.html(template).show();
+        // $compile(element.contents())(scope);
+
+        /**
+         * Serve to the controller
+         */
+        scope.remover = function (key)
+        {
+          // console.log('coming to remover');
+
+          scope.$parent.$parent.remover(key);
+        };
       },
       scope: {
-        scheadule: '=',
-        days: '='
+        scheadule: '='
       }
     };
 
@@ -6127,152 +6147,80 @@ angular.module('WebPaige.Directives', ['ngResource'])
 /**
  * Daterangepicker
  */
-.directive('daterangepicker',
-[
-  '$rootScope',
-  function ($rootScope)
-  {
-    return {
-      restrict: 'A',
+  .directive(
+  'daterangepicker',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return {
+        restrict: 'A',
 
-      link: function postLink(scope, element, attrs, controller)
-      {
-        // var startDate = Date.create().addDays(-6),
-        //     endDate   = Date.create();
-        //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
-
-        var options = {
-          // startDate: startDate,
-          // endDate: endDate,
-          ranges: {}
-        };
-
-        options.ranges[$rootScope.ui.planboard.daterangerToday]     = ['today', 'tomorrow'];
-        options.ranges[$rootScope.ui.planboard.daterangerTomorrow]  = ['tomorrow', new Date.today().addDays(2)];
-        options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
-        options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
-        options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
-
-        element.daterangepicker(options,
-        function (start, end)
+        link: function postLink (scope, element, attrs, controller)
         {
-          scope.$apply(function ()
-          {
-            var diff = end.getTime() - start.getTime();
+          // var startDate = Date.create().addDays(-6),
+          //     endDate   = Date.create();
+          //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
-            /**
-             * Scope is a day
-             */
-            if (diff <= 86400000)
+          var options = {
+            // startDate: startDate,
+            // endDate: endDate,
+            ranges: {}
+          };
+
+          options.ranges[$rootScope.ui.planboard.daterangerToday] = ['today', 'tomorrow'];
+          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = ['tomorrow', new Date.today().addDays(2)];
+          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
+          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
+          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
+
+          element.daterangepicker(
+            options,
+            function (start, end)
             {
-              scope.timeline.range = {
-                start:  start,
-                end:    start
-              };
-              scope.timeline.scope = {
-                day:    true,
-                week:   false,
-                month:  false
-              };
+              scope.$apply(
+                function ()
+                {
+                  var diff = end.getTime() - start.getTime();
+
+                  scope.timeline.scope = {
+                    day: false,
+                    week: false,
+                    month: false
+                  };
+
+                  // Scope is a day
+                  if (diff <= 86400000)
+                  { scope.timeline.scope.day = true }
+                  // Scope is less than a week
+                  else if (diff < 604800000)
+                  { scope.timeline.scope.week = true }
+                  // Scope is more than a week
+                  else if (diff > 604800000)
+                  { scope.timeline.scope.month = true }
+
+                  var periods = {
+                    start: start,
+                    end: start
+                  };
+
+                  scope.timeline.range = periods;
+
+                  $rootScope.$broadcast('timeliner', periods);
+                }
+              );
             }
-            /**
-             * Scope is less than a week
-             */
-            else if (diff < 604800000)
-            {
-              scope.timeline.range = {
-                start:  start,
-                end:    end
-              };
-              scope.timeline.scope = {
-                day:    false,
-                week:   true,
-                month:  false
-              };
-            }
-            /**
-             * Scope is more than a week
-             */
-            else if (diff > 604800000)
-            {
-              scope.timeline.range = {
-                start:  start,
-                end:    end
-              };
-              scope.timeline.scope = {
-                day:    false,
-                week:   false,
-                month:  true
-              };
-            }
+          );
 
-            $rootScope.$broadcast('timeliner', {
-              start:  start,
-              end:    end
-            });
+          // Set data toggle
+          element.attr('data-toggle', 'daterangepicker');
 
-          });
-        });
-
-        /**
-         * Set data toggle
-         */
-        element.attr('data-toggle', 'daterangepicker');
-
-        /**
-         * TODO: Investigate if its really needed!!
-         */
-        element.daterangepicker({
-          autoclose: true
-        });
-      }
-    };
-  }
-]);
-
-
-/**
- * ???
- */
-// .directive('wpName', 
-// [
-//   'Storage', 
-//   function (Storage)
-//   {
-//     return {
-//       restrict : 'A',
-//       link : function linkfn(scope, element, attrs)
-//       {
-//         var getmemberName = function (uid)
-//         {
-//           var members = angular.fromJson(Storage.get('members')),
-//               retName = uid;
-
-//           angular.forEach(members , function (mem, i)
-//           {
-//             if (mem.uuid == uid)
-//             {
-//               retName = mem.name;
-
-//               return false;
-//             };
-//           });
-
-//           return retName;
-//         };
-//         scope.$watch(attrs.wpName, function (uid)
-//         {
-//           element.text(getmemberName(uid)); 
-//         });
-//       }
-//     }
-//   }
-// ]);
-
-
-
-
-;/**
+          // TODO: Investigate if its really needed!!
+          element.daterangepicker({ autoclose: true });
+        }
+      };
+    }
+  ]);;/**
  * AngularStrap - Twitter Bootstrap directives for AngularJS
  * @version v0.7.0 - 2013-03-11
  * @link http://mgcrea.github.com/angular-strap
@@ -14190,14 +14138,6 @@ angular.module('WebPaige.Controllers.Messages', [])
       };
 
 
-
-
-
-
-
-      
-
-
       /**
        * Default scheduled config
        */
@@ -14206,15 +14146,6 @@ angular.module('WebPaige.Controllers.Messages', [])
         offsets: {},
         status: false
       };
-
-
-
-
-
-
-
-
-
 
 
       /**
@@ -14282,12 +14213,10 @@ angular.module('WebPaige.Controllers.Messages', [])
       setView(view);
 
 
-
-
-
-
-
-
+      /**
+       * Default toggle for scheduler pane
+       */
+      $scope.scheadulerPane = false;
 
 
       /**
@@ -14304,13 +14233,6 @@ angular.module('WebPaige.Controllers.Messages', [])
           setMessageView($location.search().uuid);
         }
       }
-
-
-
-
-
-
-
 
 
       /**
@@ -14395,18 +14317,6 @@ angular.module('WebPaige.Controllers.Messages', [])
       };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
       /**
        * Count the schedules
        */
@@ -14429,6 +14339,8 @@ angular.module('WebPaige.Controllers.Messages', [])
       function setNotificationView (id)
       {
         $scope.origin = 'notifications';
+
+        $scope.scheadulerPane = true;
 
         var scheaduled = Messages.scheaduled.find(id);
 
@@ -14549,9 +14461,10 @@ angular.module('WebPaige.Controllers.Messages', [])
         var count = 0;
 
         angular.forEach(
-          $scope.scheaduled.offsets,
-          function (offset) { count ++ }
-        );
+          $scope.scheaduled.offsets, function (offset)
+          {
+            count ++;
+          });
 
         $scope.scheaduleCount = count;
 
@@ -14574,21 +14487,12 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         $scope.$watch(
           $location.search(),
-          function () { $location.search({uuid: id}) }
+          function ()
+          { $location.search({uuid: id}) }
         );
 
         $rootScope.statusBar.off();
       };
-
-
-
-
-
-
-
-
-
-
 
 
       /**
@@ -14609,6 +14513,7 @@ angular.module('WebPaige.Controllers.Messages', [])
         else
         {
           /**
+           * TODO: Why not working properly? Look into this one
            * Reset them
            */
           $location.search({});
@@ -14617,6 +14522,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
           $scope.broadcast.sms = false;
           $scope.broadcast.email = false;
+
+          $scope.scheadulerPane = false;
 
           angular.forEach(
             $("div#composeTab select.chzn-select option"),
@@ -14665,7 +14572,8 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         angular.forEach(
           messages,
-          function (message) { $scope.selection[inbox][message.uuid] = flag }
+          function (message)
+          { $scope.selection[inbox][message.uuid] = flag }
         );
       };
 
@@ -14708,8 +14616,7 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.closeTabs();
 
                   $rootScope.statusBar.off();
-                }
-              );
+                });
             }
           }
         );
@@ -14758,8 +14665,7 @@ angular.module('WebPaige.Controllers.Messages', [])
                 }
               );
             }
-          }
-        );
+          });
       };
 
 
@@ -14797,11 +14703,9 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                }
-              );
+                });
             }
-          }
-        );
+          });
       };
 
 
@@ -14815,9 +14719,10 @@ angular.module('WebPaige.Controllers.Messages', [])
         var ids = [];
 
         angular.forEach(
-          selection,
-          function (flag, id) { if (flag) ids.push(id) }
-        );
+          selection, function (flag, id)
+          {
+            if (flag) ids.push(id);
+          });
 
         Messages.restore(ids)
           .then(
@@ -14842,11 +14747,9 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                }
-              );
+                });
             }
-          }
-        );
+          });
       };
 
 
@@ -15092,9 +14995,18 @@ angular.module('WebPaige.Controllers.Messages', [])
        * Bulk cleaners for mailboxes
        */
       $scope.clean = {
-        inbox: function () { Messages.clean($scope.messages.inbox) },
-        outbox: function () { Messages.clean($scope.messages.outbox) },
-        trash: function () { Messages.clean($scope.messages.trash) }
+        inbox: function ()
+        {
+          Messages.clean($scope.messages.inbox);
+        },
+        outbox: function ()
+        {
+          Messages.clean($scope.messages.outbox);
+        },
+        trash: function ()
+        {
+          Messages.clean($scope.messages.trash);
+        }
       };
 
 
@@ -15112,9 +15024,10 @@ angular.module('WebPaige.Controllers.Messages', [])
               types = [];
 
           angular.forEach(
-            message.receivers,
-            function (receiver) { members.push(receiver.id) }
-          );
+            message.receivers, function (receiver)
+            {
+              members.push(receiver.id);
+            });
 
           types.push('paige');
 
@@ -15159,8 +15072,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                 callback();
               }
-            }
-          );
+            });
         },
 
 
@@ -15185,8 +15097,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                 $scope.scheaduled = result;
               }
-            }
-          );
+            });
         },
 
 
@@ -15230,8 +15141,10 @@ angular.module('WebPaige.Controllers.Messages', [])
                 $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
 
                 self.list(
-                  function () { $scope.setViewTo('notifications') }
-                );
+                  function ()
+                  {
+                    $scope.setViewTo('notifications');
+                  });
               }
             });
         },
@@ -15296,8 +15209,10 @@ angular.module('WebPaige.Controllers.Messages', [])
                 $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
 
                 self.list(
-                  function () { $scope.setViewTo('notifications') }
-                );
+                  function ()
+                  {
+                    $scope.setViewTo('notifications');
+                  });
               }
             });
         }
@@ -15313,7 +15228,7 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
 
 
 /**
- * Schedule controller
+ * Scheadule controller
  */
   .controller(
   'scheaduler',
@@ -15321,8 +15236,6 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
     '$scope', '$rootScope',
     function ($scope, $rootScope)
     {
-      $scope.days = $rootScope.ui.days;
-
       /**
        * Watch offsets
        */
@@ -15332,8 +15245,7 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
           if ($scope.scheaduled)
           {
             angular.forEach(
-              $scope.scheaduled.offsets,
-              function (offset)
+              $scope.scheaduled.offsets, function (offset, index)
               {
                 /**
                  * If all the days are unchecked make monday checked as default
@@ -15360,15 +15272,11 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
                 if (time[1] != offset.minute) offset.minute = time[1];
 
                 if (offset.exact != exact)
-                {
-                  offset.exact = exact;
-                }
+                { offset.exact = exact; }
 
-              }
-            );
+              });
           }
-        }
-      );
+        });
 
 
       /**
@@ -15405,11 +15313,9 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
         $scope.scheaduleCounter();
       };
 
-      $scope.addNewOffset();
-
 
       /**
-       * Remove a schedule
+       * Remove a scheadule
        */
       $scope.remover = function (key)
       {

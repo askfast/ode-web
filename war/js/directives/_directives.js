@@ -39,39 +39,29 @@ angular.module('WebPaige.Directives', ['ngResource'])
  */
   .directive(
   'notificationItem',
-  function ($compile)
+  function ()
   {
     return {
       restrict: 'E',
       rep1ace: true,
       templateUrl: 'dist/views/messages-scheadule-item.html',
+      scope: {
+        scheadule: '=',
+        days: '='
+      },
       link: function (scope, element, attrs)
       {
-        /**
-         * Pass the scheadule data
-         */
+        // scope.s = angular.extend({}, scope.scheadule);
         scope.s = scope.scheadule;
 
-        // element.html(template).show();
-        // $compile(element.contents())(scope);
+        console.log('s value ->', scope.s);
 
-        /**
-         * Serve to the controller
-         */
-        scope.remover = function (key)
-        {
-          // console.log('coming to remover');
-
-          scope.$parent.$parent.remover(key);
-        };
-      },
-      scope: {
-        scheadule: '='
+        scope.remover = function (key) { scope.$parent.$parent.remover(key) };
+        
+        scope.addNewOffset = function () { scope.$parent.$parent.addNewOffset() }
       }
     };
-
-  }
-)
+  })
 
 
 /**
@@ -120,14 +110,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
                   };
 
                   // Scope is a day
-                  if (diff <= 86400000)
-                  { scope.timeline.scope.day = true }
+                  if (diff <= 86400000) { scope.timeline.scope.day = true }
                   // Scope is less than a week
-                  else if (diff < 604800000)
-                  { scope.timeline.scope.week = true }
+                  else if (diff < 604800000) { scope.timeline.scope.week = true }
                   // Scope is more than a week
-                  else if (diff > 604800000)
-                  { scope.timeline.scope.month = true }
+                  else if (diff > 604800000) { scope.timeline.scope.month = true }
 
                   var periods = {
                     start: start,

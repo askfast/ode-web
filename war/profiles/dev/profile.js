@@ -3,22 +3,24 @@
  */
 var profile = {
 
-  meta: 'isparaat',
+  meta: 'dev',
 
-  title: 'BRANDWEER',
+  own: true,
 
-	host: function ()
-	{
-    return ($.browser.msie) ? '/proxy/ns_knrmtest' : 'http://3rc2.ask-services.appspot.com/ns_knrmtest';
-	},
+  title: 'Development',
+
+  host: function ()
+  {
+    return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com';
+  },
 
   states: [],
 
   timeline: {
     config: {
       layouts: {
-        groups:   true,
-        members:  true
+        groups:  true,
+        members: true
       }
     }
   },
@@ -46,23 +48,29 @@ var profile = {
 
   p2000: {
     status: true,
-    url:    'http://backend.ask-cs.com/~ask/p2000/p2000.php',
-    codes:  '0104517'
+    url:    'http://couchdb.ask-cs.com:5984/p2000/_design/search/_view/standby?limit=4&descending=true',
+    // url:    'http://backend.ask-cs.com/~ask/p2000/p2000.php',
+    codes:  '1201958'
   },
 
   mobileApp: {
-    status:   false,
+    status:       true,
     experimental: false
   },
 
   analytics: {
+    url:    'dev.standby.ask-cs.com',
+    // url: 'test.standby.ask-cs.com',
+    // url: 'brandweer.standby.ask-cs.com',
+
+    // Depreciated
     status: false,
     code:   function ()
     {
     }
   },
 
-  smartAlarm: false,
+  smartAlarm: true,
 
   timers: {
     TICKER:                 100,

@@ -36,7 +36,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/test/profile.js"></script>
+    <script src="profiles/dev/profile.js"></script>
 
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
@@ -240,13 +240,15 @@
     </div>
     <!-- end mobile status bar -->
 
-    <div ng-show="browser.mobile && config.profile.mobileApp.status && ((config.profile.meta=='standby') || (config.profile.meta=='monster'))"
+    <!--<div ng-show="browser.mobile && config.profile.mobileApp.status && ((config.profile.meta=='standby') || (config.profile.meta=='monster'))"-->
+    <div ng-show="browser.mobile && config.profile.mobileApp.status"
          class="ng-cloak text-center">
       <ul style="list-style: none; position: relative; z-index: 20000; margin: 0;">
 
-        <li style="display: inline;">
+        <li ng-show="(config.profile.meta == 'demo')">
           <a class="btn btn-success btn-large"
-             href="https://play.google.com/store/apps/details?id=com.askcs.standby">
+            href="https://play.google.com/store/apps/details?id=com.askcs.standbydemo"
+             target="_blank">
             Download Android App
           </a>
         </li>
@@ -254,25 +256,25 @@
         <br ng-show="browser.screen.width < 768" />
         <br ng-show="browser.screen.width < 768" />
 
-        <li style="display: inline">
-          <a ng-show="(config.profile.meta=='standby')"
-             class="btn btn-success btn-large"
-             href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
-             target="itunes_store">
-            Download iPhone App
+        <li ng-hide="(config.profile.meta == 'demo')">
+          <a class="btn btn-success btn-large"
+             href="https://play.google.com/store/apps/details?id=com.askcs.standby"
+             target="_blank">
+            Download Android App
           </a>
-          <a ng-show="(config.profile.meta=='monster')"
-             id="popupBtn" class="btn btn-success btn-large"
-             data-toggle="popover"
-             data-placement="top"
-             data-content="Binnenkort te downloaden."
-             title=""
-             data-original-title="Download iPhone App"
-             onclick="console.log($(this).popover())">Download iPhone App</a>
         </li>
 
         <br ng-show="browser.screen.width < 768" />
         <br ng-show="browser.screen.width < 768" />
+
+        <li>
+          <a class="btn btn-success btn-large"
+             href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+             target="itunes_store">
+            Download iPhone App
+          </a>
+        </li>
+
       </ul>
     </div>
 
@@ -288,59 +290,34 @@
           <div id="download-footer">
             <ul>
 
-              <li>
+              <li ng-show="config.profile.mobileApp.status">
                 <div class="btn-group dropup">
                   <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                     Download mobiele app <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu pull-right">
 
-                    <!--Monster-->
-                    <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
-                      <a href="https://play.google.com/store/apps/details?id=com.askcs.standby"
-                         target="_blank">
-                        Download Android App
-                      </a>
-                    </li>
-                    <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'monster')">
-                      <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
-                         target="itunes_store">
-                        Download iPhone App
-                      </a>
-                    </li>
-                    <!--end Monster-->
-
-                    <!--Demo-->
-                    <li
-                      ng-show="config.profile.mobileApp.status && (config.profile.meta == 'demo')">
+                    <li ng-show="(config.profile.meta == 'demo')">
                       <a href="https://play.google.com/store/apps/details?id=com.askcs.standbydemo"
                          target="_blank">
                         Download Android App
                       </a>
                     </li>
-                    <li ng-show="config.profile.mobileApp.status && (config.profile.meta == 'demo')">
-                      <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
-                         target="itunes_store">
-                        Download iPhone App
-                      </a>
-                    </li>
-                    <!--end Demo-->
 
-                    <!--Others-->
-                    <li
-                      ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
+                    <li ng-hide="(config.profile.meta == 'demo')">
                       <a href="https://play.google.com/store/apps/details?id=com.askcs.standby"
                          target="_blank">
                         Download Android App
                       </a>
                     </li>
-                    <li ng-show="config.profile.mobileApp.status && ((config.profile.meta == 'standby') || (config.profile.meta == 'knrm'))">
+
+                    <li>
                       <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
                          target="itunes_store">
                         Download iPhone App
                       </a>
                     </li>
-                    <!--end Others-->
+
                   </ul>
                 </div>
               </li>

@@ -5,7 +5,9 @@ var profile = {
 
   meta: 'demo',
 
-  title: 'BRANDWEER',
+  own: true,
+
+  title: 'Demo',
 
   host: function ()
   {
