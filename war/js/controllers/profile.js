@@ -340,6 +340,40 @@ angular.module('WebPaige.Controllers.Profile', [])
         }
       );
 
+      var CHECK_PINCODE_DELAY = 250;
+
+      $scope.pincodeExistsValidation = true;
+
+      $scope.pincodeExists = function ()
+      {
+        if ($scope.profilemeta.pincode != '' || $scope.profilemeta.pincode.length > 0)
+        {
+          if ($scope.checkPincode)
+          {
+            clearTimeout($scope.checkPincode);
+
+            $scope.checkPincode = null;
+          }
+
+          $scope.checkPincode = setTimeout(
+            function ()
+            {
+              $scope.checkPincode = null;
+
+              Profile.pincodeExists($scope.profilemeta.pincode)
+                .then(
+                function (result) { $scope.pincodeExistsValidation = result }
+              );
+            }, CHECK_PINCODE_DELAY);
+        }
+        else
+        {
+          $scope.profilemeta.pincode = '';
+        }
+      };
+
+      $scope.checkPincode = null;
+
 
       /**
        * Save user

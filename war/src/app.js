@@ -385,7 +385,8 @@ var ui = {
         settingGroups: 'Setting up selected groups...',
         changingRole: 'Changing user role...',
         changedRole: 'User role has been changed.',
-        pincode: 'Pincode'
+        pincode: 'Pincode',
+        pincodeInUse: 'This pincode is in use. Please choose another one.'
       },
       settings: {
         settings: 'Settings',
@@ -899,7 +900,8 @@ var ui = {
         settingGroups: 'Groeplijst aan het toepassen...',
         changingRole: 'Gebruiker profiel aan het aanpassen...',
         changedRole: 'Gebruiker profiel aangepast.',
-        pincode: 'Pincode'
+        pincode: 'Pincode',
+        pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.'
       },
       settings: {
         settings: 'Instellingen',
@@ -5622,6 +5624,18 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           }
       );
 
+      // http://dev.ask-cs.com/pincode_exists?pincode=1234
+      var PincodeExists = $resource(
+          $config.host + '/pincode_exists',
+          {},
+          {
+            check: {
+              method: 'GET',
+              params: {pincode: ''}
+            }
+          }
+      );
+
 
       var Resources = $resource(
           $config.host + '/resources',
@@ -5721,7 +5735,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
       /**
-       * Set role of given user
+       * Check if username exists
        */
       Profile.prototype.userExists = function (username)
       {
@@ -5731,6 +5745,26 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         {
           UserExists.check(
             { username: username },
+            function () { deferred.resolve(true) },
+            function () { deferred.resolve(false) }
+          );
+        }
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Check if pincode exists
+       */
+      Profile.prototype.pincodeExists = function (pincode)
+      {
+        var deferred = $q.defer();
+
+        if (pincode != '' || pincode.length > 0)
+        {
+          PincodeExists.check(
+            { pincode: pincode },
             function () { deferred.resolve(true) },
             function () { deferred.resolve(false) }
           );
@@ -16588,6 +16622,40 @@ angular.module('WebPaige.Controllers.Profile', [])
           }
         }
       );
+
+      var CHECK_PINCODE_DELAY = 250;
+
+      $scope.pincodeExistsValidation = true;
+
+      $scope.pincodeExists = function ()
+      {
+        if ($scope.profilemeta.pincode != '' || $scope.profilemeta.pincode.length > 0)
+        {
+          if ($scope.checkPincode)
+          {
+            clearTimeout($scope.checkPincode);
+
+            $scope.checkPincode = null;
+          }
+
+          $scope.checkPincode = setTimeout(
+            function ()
+            {
+              $scope.checkPincode = null;
+
+              Profile.pincodeExists($scope.profilemeta.pincode)
+                .then(
+                function (result) { $scope.pincodeExistsValidation = result }
+              );
+            }, CHECK_PINCODE_DELAY);
+        }
+        else
+        {
+          $scope.profilemeta.pincode = '';
+        }
+      };
+
+      $scope.checkPincode = null;
 
 
       /**

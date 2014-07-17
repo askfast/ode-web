@@ -198,6 +198,7 @@
                       value="{{data.resources.firstName}}">
             </div>
           </div>
+
           <div class="control-group">
             <label class="control-label">{{ui.groups.lastName}}</label>
             <div class="controls">
@@ -207,8 +208,6 @@
                       value="{{data.resources.lastName}}">
             </div>
           </div>
-
-
 
           <div class="control-group">
             <label class="control-label">{{ui.profile.email}}</label>
@@ -244,7 +243,6 @@
             </div>
           </div>
 
-
           <div class="control-group">
             <label class="control-label">{{ui.profile.phone}}</label>
             <div class="controls">
@@ -267,7 +265,6 @@
               </p>
             </div>
           </div>
-
 
           <div class="control-group">
             <label class="control-label">{{ui.profile.address}}</label>
@@ -328,7 +325,11 @@
             <div class="controls">
               <input  type="text"
                       class="span3"
-                      ng-model="profilemeta.pincode">
+                      ng-model="profilemeta.pincode"
+                      ng-change="pincodeExists(profilemeta.pincode)">
+              <p class="text-error" ng-hide="pincodeExistsValidation">
+                <small><i>{{ui.profile.pincodeInUse}}</i></small>
+              </p>
             </div>
           </div>
 

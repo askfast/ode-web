@@ -385,7 +385,8 @@ var ui = {
         settingGroups: 'Setting up selected groups...',
         changingRole: 'Changing user role...',
         changedRole: 'User role has been changed.',
-        pincode: 'Pincode'
+        pincode: 'Pincode',
+        pincodeInUse: 'This pincode is in use. Please choose another one.'
       },
       settings: {
         settings: 'Settings',
@@ -899,7 +900,8 @@ var ui = {
         settingGroups: 'Groeplijst aan het toepassen...',
         changingRole: 'Gebruiker profiel aan het aanpassen...',
         changedRole: 'Gebruiker profiel aangepast.',
-        pincode: 'Pincode'
+        pincode: 'Pincode',
+        pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.'
       },
       settings: {
         settings: 'Instellingen',
