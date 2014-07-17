@@ -386,7 +386,9 @@ var ui = {
         changingRole: 'Changing user role...',
         changedRole: 'User role has been changed.',
         pincode: 'Pincode',
-        pincodeInUse: 'This pincode is in use. Please choose another one.'
+        pincodeInUse: 'This pincode is in use. Please choose another one.',
+        pincodeNotValid: 'Please enter a valid pincode!',
+        pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.'
       },
       settings: {
         settings: 'Settings',
@@ -901,7 +903,9 @@ var ui = {
         changingRole: 'Gebruiker profiel aan het aanpassen...',
         changedRole: 'Gebruiker profiel aangepast.',
         pincode: 'Pincode',
-        pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.'
+        pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.',
+        pincodeNotValid: 'Vul a.u.b. een geldige pincode!',
+        pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.'
       },
       settings: {
         settings: 'Instellingen',
@@ -1111,7 +1115,8 @@ if ('localStorage' in window && window['localStorage'] !== null)
       { url: 'libs/daterangepicker/1.1.0/daterangepicker.min.js' },
       { url: 'libs/sugar/1.3.7/sugar.min.js' },
       { url: 'libs/raphael/2.1.0/raphael-min.js' },
-      { url: 'libs/web-lib-phonenumber/libphonenumber.js' }
+      { url: 'libs/web-lib-phonenumber/libphonenumber.js' },
+      { url: 'libs/angular-ui-utils/modules/mask/mask.js' }
     )
     .then(function ()
       {
@@ -1951,6 +1956,8 @@ angular.module('WebPaige')
           if ($location.path().match(/logout/))
           {
             $rootScope.location = 'logout';
+
+            $('#watermark').hide();
           }
 
           if (! $rootScope.location)
@@ -5612,7 +5619,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           }
       );
 
-      // http://dev.ask-cs.com/user_exists?username=devsven
+
       var UserExists = $resource(
           $config.host + '/user_exists',
           {},
@@ -5624,14 +5631,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           }
       );
 
-      // http://dev.ask-cs.com/pincode_exists?pincode=1234
+
       var PincodeExists = $resource(
-          $config.host + '/pincode_exists',
+          $config.host + '/node/:id/pincode_exists',
           {},
           {
             check: {
               method: 'GET',
-              params: {pincode: ''}
+              params: {}
             }
           }
       );
@@ -5757,14 +5764,17 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       /**
        * Check if pincode exists
        */
-      Profile.prototype.pincodeExists = function (pincode)
+      Profile.prototype.pincodeExists = function (id, pincode)
       {
         var deferred = $q.defer();
 
         if (pincode != '' || pincode.length > 0)
         {
           PincodeExists.check(
-            { pincode: pincode },
+            {
+              id: id,
+              pincode: pincode
+            },
             function () { deferred.resolve(true) },
             function () { deferred.resolve(false) }
           );
@@ -16286,7 +16296,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 'use strict';
 
 
-angular.module('WebPaige.Controllers.Profile', [])
+angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
 
 /**
@@ -16629,43 +16639,78 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.pincodeExists = function ()
       {
-        if ($scope.profilemeta.pincode != '' || $scope.profilemeta.pincode.length > 0)
+        if (! angular.isDefined($scope.profilemeta.pincode) ||
+            $scope.profilemeta.pincode == '')
         {
-          if ($scope.checkPincode)
-          {
-            clearTimeout($scope.checkPincode);
-
-            $scope.checkPincode = null;
-          }
-
-          $scope.checkPincode = setTimeout(
-            function ()
-            {
-              $scope.checkPincode = null;
-
-              Profile.pincodeExists($scope.profilemeta.pincode)
-                .then(
-                function (result) { $scope.pincodeExistsValidation = result }
-              );
-            }, CHECK_PINCODE_DELAY);
+          $scope.pincodeExistsValidation = false;
+          $scope.pincodeExistsValidationMessage = $rootScope.ui.profile.pincodeNotValid;
         }
         else
         {
-          $scope.profilemeta.pincode = '';
+          if (angular.isDefined($scope.profilemeta.pincode))
+          {
+            if ($scope.checkPincode)
+            {
+              clearTimeout($scope.checkPincode);
+
+              $scope.checkPincode = null;
+            }
+
+            $scope.checkPincode = setTimeout(
+              function ()
+              {
+                $scope.checkPincode = null;
+
+                Profile.pincodeExists(
+                  $scope.profilemeta.uuid,
+                  $scope.profilemeta.pincode
+                ).then(
+                  function (result)
+                  {
+                    $scope.pincodeExistsValidation = result;
+                    $scope.pincodeExistsValidationMessage = $rootScope.ui.profile.pincodeInUse;
+                  }
+                );
+              }, CHECK_PINCODE_DELAY);
+          }
         }
+
       };
 
       $scope.checkPincode = null;
-
 
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
+        if (! angular.isDefined($scope.profilemeta.pincode) ||
+            $scope.profilemeta.pincode == '' ||
+            ! $scope.pincodeExistsValidation)
+        {
+          $rootScope.notifier.error($rootScope.ui.profile.pincodeCorrect);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
         if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
         {
           $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
+        if (! $scope.pincodeExistsValidation)
+        {
+          $rootScope.notifier.error($rootScope.ui.profile.pincodeInUse);
 
           $rootScope.statusBar.off();
 

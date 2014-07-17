@@ -59,7 +59,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           }
       );
 
-      // http://dev.ask-cs.com/user_exists?username=devsven
+
       var UserExists = $resource(
           $config.host + '/user_exists',
           {},
@@ -71,14 +71,14 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           }
       );
 
-      // http://dev.ask-cs.com/pincode_exists?pincode=1234
+
       var PincodeExists = $resource(
-          $config.host + '/pincode_exists',
+          $config.host + '/node/:id/pincode_exists',
           {},
           {
             check: {
               method: 'GET',
-              params: {pincode: ''}
+              params: {}
             }
           }
       );
@@ -204,14 +204,17 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       /**
        * Check if pincode exists
        */
-      Profile.prototype.pincodeExists = function (pincode)
+      Profile.prototype.pincodeExists = function (id, pincode)
       {
         var deferred = $q.defer();
 
         if (pincode != '' || pincode.length > 0)
         {
           PincodeExists.check(
-            { pincode: pincode },
+            {
+              id: id,
+              pincode: pincode
+            },
             function () { deferred.resolve(true) },
             function () { deferred.resolve(false) }
           );

@@ -359,6 +359,8 @@ angular.module('WebPaige')
           if ($location.path().match(/logout/))
           {
             $rootScope.location = 'logout';
+
+            $('#watermark').hide();
           }
 
           if (! $rootScope.location)

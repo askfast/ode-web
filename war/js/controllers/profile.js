@@ -3,7 +3,7 @@
 'use strict';
 
 
-angular.module('WebPaige.Controllers.Profile', [])
+angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
 
 /**
@@ -346,43 +346,78 @@ angular.module('WebPaige.Controllers.Profile', [])
 
       $scope.pincodeExists = function ()
       {
-        if ($scope.profilemeta.pincode != '' || $scope.profilemeta.pincode.length > 0)
+        if (! angular.isDefined($scope.profilemeta.pincode) ||
+            $scope.profilemeta.pincode == '')
         {
-          if ($scope.checkPincode)
-          {
-            clearTimeout($scope.checkPincode);
-
-            $scope.checkPincode = null;
-          }
-
-          $scope.checkPincode = setTimeout(
-            function ()
-            {
-              $scope.checkPincode = null;
-
-              Profile.pincodeExists($scope.profilemeta.pincode)
-                .then(
-                function (result) { $scope.pincodeExistsValidation = result }
-              );
-            }, CHECK_PINCODE_DELAY);
+          $scope.pincodeExistsValidation = false;
+          $scope.pincodeExistsValidationMessage = $rootScope.ui.profile.pincodeNotValid;
         }
         else
         {
-          $scope.profilemeta.pincode = '';
+          if (angular.isDefined($scope.profilemeta.pincode))
+          {
+            if ($scope.checkPincode)
+            {
+              clearTimeout($scope.checkPincode);
+
+              $scope.checkPincode = null;
+            }
+
+            $scope.checkPincode = setTimeout(
+              function ()
+              {
+                $scope.checkPincode = null;
+
+                Profile.pincodeExists(
+                  $scope.profilemeta.uuid,
+                  $scope.profilemeta.pincode
+                ).then(
+                  function (result)
+                  {
+                    $scope.pincodeExistsValidation = result;
+                    $scope.pincodeExistsValidationMessage = $rootScope.ui.profile.pincodeInUse;
+                  }
+                );
+              }, CHECK_PINCODE_DELAY);
+          }
         }
+
       };
 
       $scope.checkPincode = null;
-
 
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
+        if (! angular.isDefined($scope.profilemeta.pincode) ||
+            $scope.profilemeta.pincode == '' ||
+            ! $scope.pincodeExistsValidation)
+        {
+          $rootScope.notifier.error($rootScope.ui.profile.pincodeCorrect);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
         if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
         {
           $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
+
+          $rootScope.statusBar.off();
+
+          $('body').scrollTop(0);
+
+          return false;
+        }
+
+        if (! $scope.pincodeExistsValidation)
+        {
+          $rootScope.notifier.error($rootScope.ui.profile.pincodeInUse);
 
           $rootScope.statusBar.off();
 

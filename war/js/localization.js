@@ -386,7 +386,9 @@ var ui = {
         changingRole: 'Changing user role...',
         changedRole: 'User role has been changed.',
         pincode: 'Pincode',
-        pincodeInUse: 'This pincode is in use. Please choose another one.'
+        pincodeInUse: 'This pincode is in use. Please choose another one.',
+        pincodeNotValid: 'Please enter a valid pincode!',
+        pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.'
       },
       settings: {
         settings: 'Settings',
@@ -901,7 +903,9 @@ var ui = {
         changingRole: 'Gebruiker profiel aan het aanpassen...',
         changedRole: 'Gebruiker profiel aangepast.',
         pincode: 'Pincode',
-        pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.'
+        pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.',
+        pincodeNotValid: 'Vul a.u.b. een geldige pincode!',
+        pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.'
       },
       settings: {
         settings: 'Instellingen',

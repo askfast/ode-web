@@ -248,7 +248,7 @@
             <div class="controls">
               <input  type="text"
                       id="inputPhoneNumber"
-                      class="span3" 
+                      class="span3"
                       ng-model="profilemeta.PhoneAddress"
                       ng-change="phoneNumberParser(profilemeta.PhoneAddress)"
                       value="{{data.resources.PhoneAddress}}">
@@ -269,21 +269,23 @@
           <div class="control-group">
             <label class="control-label">{{ui.profile.address}}</label>
             <div class="controls">
-              <input  type="text" 
-                      class="span5" 
+              <input  type="text"
+                      class="span5"
                       ng-model="profilemeta.PostAddress"
                       value="{{data.resources.PostAddress}}">
             </div>
           </div>
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.postcode}}</label>
             <div class="controls">
-              <input  type="text" 
-                      class="span2" 
+              <input  type="text"
+                      class="span2"
                       ng-model="profilemeta.PostZip"
                       value="{{data.resources.PostZip}}">
             </div>
           </div>
+
           <div class="control-group">
             <label class="control-label">{{ui.profile.city}}</label>
             <div class="controls">
@@ -324,11 +326,13 @@
             <label class="control-label">{{ui.profile.pincode}}</label>
             <div class="controls">
               <input  type="text"
-                      class="span3"
+                      class="span1"
                       ng-model="profilemeta.pincode"
-                      ng-change="pincodeExists(profilemeta.pincode)">
+                      ui-mask="9999"
+                      ng-change="pincodeExists()"
+                      name="pincode">
               <p class="text-error" ng-hide="pincodeExistsValidation">
-                <small><i>{{ui.profile.pincodeInUse}}</i></small>
+                <small><i>{{pincodeExistsValidationMessage}}</i></small>
               </p>
             </div>
           </div>
