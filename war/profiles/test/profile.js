@@ -11,7 +11,7 @@ var profile = {
 
   host: function ()
   {
-    return ($.browser.msie) ? '/proxy' : 'http://askpack.ask-cs.com';
+    return ($.browser.msie) ? '/proxy' : 'http://test.ask-cs.com';
   },
 
   states: [],
