@@ -109,10 +109,12 @@
 
           <div class="sa-member-card">
 
-
             <!--<h5 ng-hide="app.resources.role > 1">-->
             <h5>
-              <a href="#/profile/{{trucker.uuid}}#profile">{{trucker.name}}</a>
+              <a href="#/profile/{{trucker.uuid}}#profile" ng-show="trucker.uuid">
+                {{trucker.name}}
+              </a>
+              <span ng-hide="trucker.uuid">{{trucker.name}}</span>
             </h5>
             <!--<h5 ng-show="app.resources.role > 1">here {{trucker.name}}</h5>-->
 
@@ -215,6 +217,7 @@
     <button ng-click="toggleReserves=!toggleReserves"
             class="btn btn-mini pull-right"
             ng-hide="loading.smartAlarm">
+      <!-- TODO: Take them in localisation -->
       <span ng-hide="toggleReserves">Toon reserves</span>
       <span ng-show="toggleReserves">Verberg reserves</span>
     </button>
