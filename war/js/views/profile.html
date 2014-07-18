@@ -116,13 +116,16 @@
             <!--<dd ng-show="data.resources.PostCity == ''">-</dd>-->
             <dd>{{data.resources.PostCity}}</dd>
 
-          <hr/>
+          <section ng-hide="app.resources.role > 1">
+            <hr/>
 
-          <dt>{{ui.profile.username}}</dt>
+            <dt>{{ui.profile.username}}</dt>
             <dd>{{data.resources.uuid}}</dd>
 
-          <dt ng-show="data.resources.pincode">{{ui.profile.pincode}}</dt>
+            <dt ng-show="data.resources.pincode">{{ui.profile.pincode}}</dt>
             <dd ng-show="data.resources.pincode">{{data.resources.pincode}}</dd>
+          </section>
+
         </dl>
         <!-- end profile info -->
 
