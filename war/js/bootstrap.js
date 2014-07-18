@@ -385,20 +385,28 @@ angular.module('WebPaige')
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
-          $timeout(
-            function ()
+          ga(
+            'send', 'pageview',
             {
-              var root = $rootScope.$new();
-
-              ga(
-                'send', 'pageview',
-                {
-                  'page': '/index.html#/' + root.location || 'login',
-                  'title': root.location || 'login'
-                }
-              );
+              'page': '/index.html#/' + $rootScope.location || 'login',
+              'title': $rootScope.location || 'login'
             }
           );
+
+//          $timeout(
+//            function ()
+//            {
+//              var root = $rootScope.$new();
+//
+//              ga(
+//                'send', 'pageview',
+//                {
+//                  'page': '/index.html#/' + root.location || 'login',
+//                  'title': root.location || 'login'
+//                }
+//              );
+//            }
+//          );
 
           //Prevent deep linking
           if ($location.path() != '/tv')

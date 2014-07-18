@@ -45,6 +45,9 @@ angular.module('WebPaige.Directives', ['ngResource'])
       restrict: 'E',
       rep1ace: true,
       templateUrl: 'dist/views/messages-scheadule-item.html',
+      scope: {
+        scheadule: '='
+      },
       link: function (scope, element, attrs)
       {
         /**
@@ -64,9 +67,6 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
           scope.$parent.$parent.remover(key);
         };
-      },
-      scope: {
-        scheadule: '='
       }
     };
 

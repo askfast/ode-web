@@ -1981,20 +1981,28 @@ angular.module('WebPaige')
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
-          $timeout(
-            function ()
+          ga(
+            'send', 'pageview',
             {
-              var root = $rootScope.$new();
-
-              ga(
-                'send', 'pageview',
-                {
-                  'page': '/index.html#/' + root.location || 'login',
-                  'title': root.location || 'login'
-                }
-              );
+              'page': '/index.html#/' + $rootScope.location || 'login',
+              'title': $rootScope.location || 'login'
             }
           );
+
+//          $timeout(
+//            function ()
+//            {
+//              var root = $rootScope.$new();
+//
+//              ga(
+//                'send', 'pageview',
+//                {
+//                  'page': '/index.html#/' + root.location || 'login',
+//                  'title': root.location || 'login'
+//                }
+//              );
+//            }
+//          );
 
           //Prevent deep linking
           if ($location.path() != '/tv')
@@ -6179,6 +6187,9 @@ angular.module('WebPaige.Directives', ['ngResource'])
       restrict: 'E',
       rep1ace: true,
       templateUrl: 'dist/views/messages-scheadule-item.html',
+      scope: {
+        scheadule: '='
+      },
       link: function (scope, element, attrs)
       {
         /**
@@ -6198,9 +6209,6 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
           scope.$parent.$parent.remover(key);
         };
-      },
-      scope: {
-        scheadule: '='
       }
     };
 
