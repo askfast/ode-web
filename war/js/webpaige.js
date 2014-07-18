@@ -76,8 +76,6 @@ if ('localStorage' in window && window['localStorage'] !== null)
       { url: 'libs/sugar/1.3.7/sugar.min.js' },
       { url: 'libs/raphael/2.1.0/raphael-min.js' },
       { url: 'libs/web-lib-phonenumber/libphonenumber.js' }
-//    ,
-//      { url: 'libs/angular-ui-utils/modules/mask/mask.js' }
     )
     .then(function ()
       {

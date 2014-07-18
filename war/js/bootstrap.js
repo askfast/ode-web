@@ -12,7 +12,15 @@
 angular.module('WebPaige')
   .run(
   [
-    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
+    '$rootScope',
+    '$location',
+    '$timeout',
+    'Session',
+    'Dater',
+    'Storage',
+    'Messages',
+    '$config',
+    '$window',
     function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
     {
       /**
@@ -377,11 +385,20 @@ angular.module('WebPaige')
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
-          ga(
-            'send', 'pageview', {
-              'page': '/index.html#/' + $rootScope.location || 'login',
-              'title': $rootScope.location || 'login'
-            });
+          $timeout(
+            function ()
+            {
+              var root = $rootScope.$new();
+
+              ga(
+                'send', 'pageview',
+                {
+                  'page': '/index.html#/' + root.location || 'login',
+                  'title': root.location || 'login'
+                }
+              );
+            }
+          );
 
           //Prevent deep linking
           if ($location.path() != '/tv')
@@ -626,6 +643,6 @@ angular.module('WebPaige')
         }
       };
 
-      $('.nav a').on('click', function() { $('.btn-navbar').click() });
+      $('.nav a').on('click', function () { $('.btn-navbar').click() });
     }
   ]);

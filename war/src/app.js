@@ -1116,8 +1116,6 @@ if ('localStorage' in window && window['localStorage'] !== null)
       { url: 'libs/sugar/1.3.7/sugar.min.js' },
       { url: 'libs/raphael/2.1.0/raphael-min.js' },
       { url: 'libs/web-lib-phonenumber/libphonenumber.js' }
-//    ,
-//      { url: 'libs/angular-ui-utils/modules/mask/mask.js' }
     )
     .then(function ()
       {
@@ -1610,7 +1608,15 @@ angular.module('WebPaige')
 angular.module('WebPaige')
   .run(
   [
-    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
+    '$rootScope',
+    '$location',
+    '$timeout',
+    'Session',
+    'Dater',
+    'Storage',
+    'Messages',
+    '$config',
+    '$window',
     function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
     {
       /**
@@ -1975,11 +1981,20 @@ angular.module('WebPaige')
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
-          ga(
-            'send', 'pageview', {
-              'page': '/index.html#/' + $rootScope.location || 'login',
-              'title': $rootScope.location || 'login'
-            });
+          $timeout(
+            function ()
+            {
+              var root = $rootScope.$new();
+
+              ga(
+                'send', 'pageview',
+                {
+                  'page': '/index.html#/' + root.location || 'login',
+                  'title': root.location || 'login'
+                }
+              );
+            }
+          );
 
           //Prevent deep linking
           if ($location.path() != '/tv')
@@ -2224,7 +2239,7 @@ angular.module('WebPaige')
         }
       };
 
-      $('.nav a').on('click', function() { $('.btn-navbar').click() });
+      $('.nav a').on('click', function () { $('.btn-navbar').click() });
     }
   ]);;'use strict';
 
@@ -3328,34 +3343,38 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
        */
       Slots.prototype.currentState = function ()
       {
-        /**
-         * TODO: Use mathematical formula to calculate it
-         */
-        var now;
+        var resources = angular.fromJson(Storage.get('resources'));
 
-        now = String(Date.now().getTime());
-        now = Number(now.substr(0, now.length - 3));
+        if (resources)
+        {
+          // TODO: Use mathematical formula to calculate it
+          var now;
 
-        var deferred = $q.defer(),
-            params = {
-              user:  angular.fromJson(Storage.get('resources')).uuid,
-              start: now,
-              end: now + 1
-            };
+          now = String(Date.now().getTime());
+          now = Number(now.substr(0, now.length - 3));
 
-        Slots.query(
-          params,
-          function (result)
-          {
-            deferred.resolve(
-              (result.length > 0) ?
-              $rootScope.config.statesall[result[0]['text']] :
-              {
-                color: 'gray',
-                label: 'Mogelijk inzetbaar'
-              }
-            );
-          });
+          var deferred = $q.defer(),
+              params = {
+                user:  resources.uuid,
+                start: now,
+                end: now + 1
+              };
+
+          Slots.query(
+            params,
+            function (result)
+            {
+              deferred.resolve(
+                (result.length > 0) ?
+                $rootScope.config.statesall[result[0]['text']] :
+                {
+                  color: 'gray',
+                  label: 'Mogelijk inzetbaar'
+                }
+              );
+            }
+          );
+        }
 
         return deferred.promise;
       };
@@ -10433,7 +10452,8 @@ angular.module('WebPaige.Controllers.Logout', [])
 
           $window.location.href = 'logout.html';
         }
-      });
+      }
+    );
 	}
 ]);;/*jslint node: true */
 /*global angular */
