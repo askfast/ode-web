@@ -388,7 +388,8 @@ var ui = {
         pincode: 'Pincode',
         pincodeInUse: 'This pincode is in use. Please choose another one.',
         pincodeNotValid: 'Please enter a valid pincode!',
-        pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.'
+        pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.',
+        pincodeInfo: 'The pincode above is used for StandBy Call-in and is only requested when you are calling with a telephone number unknown by StandBy.'
       },
       settings: {
         settings: 'Settings',
@@ -905,7 +906,8 @@ var ui = {
         pincode: 'Pincode',
         pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.',
         pincodeNotValid: 'Vul a.u.b. een geldige pincode!',
-        pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.'
+        pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.',
+        pincodeInfo: 'De bovenstaande pincode gebruikt u voor StandBy Inbellen en heeft u alleen nodig als StandBy uw nummer niet herkent.'
       },
       settings: {
         settings: 'Instellingen',
