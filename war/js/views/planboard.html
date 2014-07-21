@@ -758,7 +758,7 @@
                   <div class="progress">
                     <div  ng-repeat="stat in member.stats" 
                           class="bar {{stat.state}}" 
-                          style="width: {{stat.ratio}}%;"></div>
+                          ng-style="{ 'width': stat.ratio + '%' }"></div>
                   </div>
                   <small class="muted">{{member.stats | convertRatios}}</small>
                 </li>
