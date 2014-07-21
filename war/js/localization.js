@@ -331,7 +331,12 @@ var ui = {
         searchFor: 'first name, last name...',
         widgetSave: 'Save',
         widgetCancel: 'Cancel',
-        requiredPeople: 'Required'
+        requiredPeople: 'Required',
+        registerUserName: {
+          exists: 'This username is already taken. Please choose an another one.',
+          goodToGo: 'This username is free.',
+          pleaseChooseAnother: 'This username is already taken. Please choose an another one.'
+        }
       },
       profile: {
         profile: 'Profile',
@@ -379,7 +384,12 @@ var ui = {
         },
         settingGroups: 'Setting up selected groups...',
         changingRole: 'Changing user role...',
-        changedRole: 'User role has been changed.'
+        changedRole: 'User role has been changed.',
+        pincode: 'Pincode',
+        pincodeInUse: 'This pincode is in use. Please choose another one.',
+        pincodeNotValid: 'Please enter a valid pincode!',
+        pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.',
+        pincodeInfo: 'The pincode above is used for StandBy Call-in and is only requested when you are calling with a telephone number unknown by StandBy.'
       },
       settings: {
         settings: 'Settings',
@@ -391,7 +401,7 @@ var ui = {
         langSetting: 'Language',
         saving: 'Saving settings...',
         refreshing: 'Refreshing settings...',
-        saved: 'Settings successfully saved.'
+        saved: 'Instellingen succesvol gewijzigd.'
       },
       help: {
         help: 'Help',
@@ -503,6 +513,15 @@ var ui = {
           message: 'You have entered a correct number. Number is registered for ',
           as: ' and number type is '
         }
+      },
+      days: {
+        mon: 'monday',
+        tue: 'tuesday',
+        wed: 'wednesday',
+        thu: 'thursday',
+        fri: 'friday',
+        sat: 'saturday',
+        sun: 'sunday'
       }
     },
     nl: {
@@ -830,7 +849,12 @@ var ui = {
         searchFor: 'voornaam, achternaam..',
         widgetSave: 'Opslaan',
         widgetCancel: 'Annuleren',
-        requiredPeople: 'Behoefte'
+        requiredPeople: 'Behoefte',
+        registerUserName: {
+          exists: 'Deze gebruikersnaam bestaat al. Kies een andere naam aub.',
+          goodToGo: 'Deze gebruikersnaam is vrij.',
+          pleaseChooseAnother: 'Deze gebruikersnaam bestaat al. Kies een andere naam aub.'
+        }
       },
       profile: {
         profile: 'Profiel',
@@ -878,7 +902,12 @@ var ui = {
         },
         settingGroups: 'Groeplijst aan het toepassen...',
         changingRole: 'Gebruiker profiel aan het aanpassen...',
-        changedRole: 'Gebruiker profiel aangepast.'
+        changedRole: 'Gebruiker profiel aangepast.',
+        pincode: 'Pincode',
+        pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.',
+        pincodeNotValid: 'Vul a.u.b. een geldige pincode!',
+        pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.',
+        pincodeInfo: 'De bovenstaande pincode gebruikt u voor StandBy Inbellen en heeft u alleen nodig als StandBy uw nummer niet herkent.'
       },
       settings: {
         settings: 'Instellingen',
@@ -886,11 +915,11 @@ var ui = {
         application: 'Applicatie',
         userSettings: 'Gebruikersinstellingen',
         appSettings: 'Applicatie-instellingen',
-        saveSettings: 'Instellingen Opslaan',
+        saveSettings: 'Instellingen opslaan',
         langSetting: 'Taal',
         saving: 'Instellingen wijzigen...',
         refreshing: 'Instellingen vernieuwen...',
-        saved: 'Instellingen succesvol gewijzigd.'
+        saved: 'Settings successfully saved.'
       },
       help: {
         help: 'Hulp',
@@ -1000,6 +1029,15 @@ var ui = {
           message: 'Ingevoerd telefoonnummer is correct. Nummer is geregistreerd in ',
           as: ' als '
         }
+      },
+      days: {
+        mon: 'maandag',
+        tue: 'dinsdag',
+        wed: 'woensdag',
+        thu: 'donderdag',
+        fri: 'vrijdag',
+        sat: 'zaterdag',
+        sun: 'zondag'
       }
     }
 };

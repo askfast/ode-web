@@ -39,6 +39,7 @@ angular.module('WebPaige.Controllers.Logout', [])
 
           $window.location.href = 'logout.html';
         }
-      });
+      }
+    );
 	}
 ]);

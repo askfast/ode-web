@@ -36,7 +36,22 @@ angular.module('WebPaige.Controllers.Planboard', [])
        * Get groups and settings
        */
       var groups = Storage.local.groups(),
-      settings = Storage.local.settings();
+      settings = Storage.local.settings(),
+      groupId,
+      validGroup = false;
+
+      angular.forEach(
+        groups,
+        function (_group)
+        {
+          if (_group.uuid == settings.app.group)
+          {
+            validGroup = true
+          }
+        }
+      );
+
+      groupId = (validGroup) ? settings.app.group : groups[0].uuid;
 
       /**
        * Pass current
@@ -54,7 +69,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
         week: Dater.current.week(),
         month: Dater.current.month(),
         year: Dater.current.year(),
-        group: settings.app.group,
+        group: groupId,
         division: 'all'
       };
 
@@ -183,56 +198,45 @@ angular.module('WebPaige.Controllers.Planboard', [])
        */
       var states = {};
 
-
-
-
-
-
-//      angular.extend($scope.timeline.config.states, {
-//        // TODO: Remove these properties afterwards
-//        'com.ask-cs.State.Planner':
-//        {
-//          className:'state-unreached',
-//          label:    '- Planner state',
-//          color:    '#65619b',
-//          type:     'Niet Beschikbaar',
-//          display:  true,
-//          minRole:  1
-//        },
-//        'com.ask-cs.State.TeamLeader':
-//        {
-//          className:'state-unreached',
-//          label:    '- Team leader state',
-//          color:    '#65619b',
-//          type:     'Niet Beschikbaar',
-//          display:  true,
-//          minRole:  2
-//        },
-//        'com.ask-cs.State.Standard':
-//        {
-//          className:'state-unreached',
-//          label:    '- Standard state',
-//          color:    '#65619b',
-//          type:     'Niet Beschikbaar',
-//          display:  true,
-//          minRole:  3
-//        },
-//        'com.ask-cs.State.Viewer':
-//        {
-//          className:'state-unreached',
-//          label:    '- Viewer state',
-//          color:    '#65619b',
-//          type:     'Niet Beschikbaar',
-//          display:  true,
-//          minRole:  4
-//        }
-//      });
-
-
-
-
-
-
+      //      angular.extend($scope.timeline.config.states, {
+      //        // TODO: Remove these properties afterwards
+      //        'com.ask-cs.State.Planner':
+      //        {
+      //          className:'state-unreached',
+      //          label:    '- Planner state',
+      //          color:    '#65619b',
+      //          type:     'Niet Beschikbaar',
+      //          display:  true,
+      //          minRole:  1
+      //        },
+      //        'com.ask-cs.State.TeamLeader':
+      //        {
+      //          className:'state-unreached',
+      //          label:    '- Team leader state',
+      //          color:    '#65619b',
+      //          type:     'Niet Beschikbaar',
+      //          display:  true,
+      //          minRole:  2
+      //        },
+      //        'com.ask-cs.State.Standard':
+      //        {
+      //          className:'state-unreached',
+      //          label:    '- Standard state',
+      //          color:    '#65619b',
+      //          type:     'Niet Beschikbaar',
+      //          display:  true,
+      //          minRole:  3
+      //        },
+      //        'com.ask-cs.State.Viewer':
+      //        {
+      //          className:'state-unreached',
+      //          label:    '- Viewer state',
+      //          color:    '#65619b',
+      //          type:     'Niet Beschikbaar',
+      //          display:  true,
+      //          minRole:  4
+      //        }
+      //      });
 
       angular.forEach(
         $scope.timeline.config.states,

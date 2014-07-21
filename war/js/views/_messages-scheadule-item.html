@@ -1,0 +1,72 @@
+<div class="scheadule">
+
+  <pre><small>{{s}}</small></pre>
+
+  <div class="timer">
+    <input name="time-start"
+           type="text"
+           ng-model="s.time"
+           bs-timepicker>
+    <i class="icon-time"></i>
+  </div>
+  <ul>
+    <li>
+      <label for="monday-{{s.exact}}">
+        <input type="checkbox"
+               id="monday-{{s.exact}}"
+               ng-model="s.mon">&nbsp;{{days.mon}}
+      </label>
+    </li>
+    <li>
+      <label for="tuesday-{{s.exact}}">
+        <input type="checkbox"
+               id="tuesday-{{s.exact}}"
+               ng-model="s.tue">&nbsp;{{days.tue}}
+      </label>
+    </li>
+    <li>
+      <label for="wednesday-{{s.exact}}">
+        <input type="checkbox"
+               id="wednesday-{{s.exact}}"
+               ng-model="s.wed">&nbsp;{{days.wed}}
+      </label>
+    </li>
+    <li>
+      <label for="thursday-{{s.exact}}">
+        <input type="checkbox"
+               id="thursday-{{s.exact}}"
+               ng-model="s.thu">&nbsp;{{days.thu}}
+      </label>
+    </li>
+    <li>
+      <label for="friday-{{s.exact}}">
+        <input type="checkbox"
+               id="friday-{{s.exact}}"
+               ng-model="s.fri">&nbsp;{{days.fri}}
+      </label>
+    </li>
+    <li>
+      <label for="saturday-{{s.exact}}">
+        <input type="checkbox"
+               id="saturday-{{s.exact}}"
+               ng-model="s.sat">&nbsp;{{days.sat}}
+      </label>
+    </li>
+    <li>
+      <label for="sunday-{{s.exact}}">
+        <input type="checkbox"
+               id="sunday-{{s.exact}}"
+               ng-model="s.sun">&nbsp;{{days.sun}}
+      </label>
+    </li>
+    <li><i class="icon-calendar"></i></li>
+  </ul>
+  <button class="btn btn-small btn-danger"
+          type="button"
+          ng-click="remover(s.exact)"><i class="icon-trash icon-white"></i></button>
+  <button type="button"
+          class="btn btn-small btn-success"
+          ng-click="addNewOffset()"><i class="icon-white icon-plus-sign"></i> Add new
+          <!--ng-click="addNewOffset()">{{ui.message.repeatNew}}-->
+  </button>
+</div>

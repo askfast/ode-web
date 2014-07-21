@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.3.21',
+    version:  '2.4.0',
     lang:     'nl',
 
     fullscreen: true,
@@ -24,6 +24,7 @@ angular.module('WebPaige')
 
     profile: {
       meta:   profile.meta,
+      own:   profile.own,
       title:  profile.title,
       logos: {
         login:  'profiles/' + profile.meta + '/img/login_logo.png',

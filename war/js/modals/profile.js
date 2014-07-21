@@ -60,6 +60,30 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       );
 
 
+      var UserExists = $resource(
+          $config.host + '/user_exists',
+          {},
+          {
+            check: {
+              method: 'GET',
+              params: {username: ''}
+            }
+          }
+      );
+
+
+      var PincodeExists = $resource(
+          $config.host + '/node/:id/pincode_exists',
+          {},
+          {
+            check: {
+              method: 'GET',
+              params: {}
+            }
+          }
+      );
+
+
       var Resources = $resource(
           $config.host + '/resources',
           {
@@ -158,24 +182,43 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
 
 
       /**
-       * Set role of given user
+       * Check if username exists
        */
-      Profile.prototype.membership = function (id, groups)
+      Profile.prototype.userExists = function (username)
       {
         var deferred = $q.defer();
 
-        Profile.membership(
-          { id: id },
-          role,
-          function (result)
-          {
-            deferred.resolve(result);
-          },
-          function (error)
-          {
-            deferred.resolve({error: error});
-          }
-        );
+        if (username != '' || username.length > 0)
+        {
+          UserExists.check(
+            { username: username },
+            function () { deferred.resolve(true) },
+            function () { deferred.resolve(false) }
+          );
+        }
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Check if pincode exists
+       */
+      Profile.prototype.pincodeExists = function (id, pincode)
+      {
+        var deferred = $q.defer();
+
+        if (pincode != '' || pincode.length > 0)
+        {
+          PincodeExists.check(
+            {
+              id: id,
+              pincode: pincode
+            },
+            function () { deferred.resolve(true) },
+            function () { deferred.resolve(false) }
+          );
+        }
 
         return deferred.promise;
       };
@@ -235,12 +278,6 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
       Profile.prototype.membership = function (id, groups)
       {
         var deferred = $q.defer();
-//            groupIds = [];
-
-//        angular.forEach(
-//          groups,
-//          function (group) { groupIds.push(group.uuid) }
-//        );
 
         Profile.membership(
           { id: id },
@@ -270,6 +307,8 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           { id: id },
           function (result)
           {
+            result.role = (result.role) ? result.role : 3;
+
             if (id == $rootScope.app.resources.uuid)
             {
               $rootScope.app.resources = result;
@@ -374,9 +413,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
         }
 
         Profile.save(
-          {
-            id: id
-          },
+          { id: id },
           resources,
           function (result)
           {

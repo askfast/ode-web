@@ -617,11 +617,46 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                     $rootScope.statusBar.off();
                   }
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
+      var CHECK_USERNAME_DELAY = 250;
+
+      $scope.userExistsValidation = true;
+
+      $scope.userExists = function ()
+      {
+        if ($scope.memberForm.username != '' || $scope.memberForm.username.length > 0)
+        {
+          if ($scope.checkUsername)
+          {
+            clearTimeout($scope.checkUsername);
+
+            $scope.checkUsername = null;
+          }
+
+          $scope.checkUsername = setTimeout(
+            function ()
+            {
+              $scope.checkUsername = null;
+
+              Profile.userExists($scope.memberForm.username)
+                .then(
+                function (result) { $scope.userExistsValidation = result }
+              );
+            }, CHECK_USERNAME_DELAY);
+        }
+        else
+        {
+          $scope.memberForm.username = '';
+        }
+      };
+
+      $scope.checkUsername = null;
 
       /**
        * Save a member
@@ -631,6 +666,15 @@ angular.module('WebPaige.Controllers.Groups', [])
         if (member.username == '' || member.password == '')
         {
           $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
+
+          $('body').scrollTop(0);
+
+          return;
+        }
+
+        if (! $scope.userExistsValidation)
+        {
+          $rootScope.notifier.error($rootScope.ui.groups.registerUserName.pleaseChooseAnother);
 
           $('body').scrollTop(0);
 
@@ -664,6 +708,8 @@ angular.module('WebPaige.Controllers.Groups', [])
                   $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
                   $rootScope.statusBar.off();
+
+                  $('body').scrollTop(0);
                 }
                 else if (result.error.status === 403)
                 {

@@ -1,6 +1,42 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+Not yet
+- feature: Repeating and scheduled messages. 10-7-2014
+
+2.4.0
+
+- feature: Make phone-in pincode login code visible/editable in profile page. 16-7-2014
+  [link](https://trello.com/c/TTQilKSR/1539-1-1-standby-web-make-phone-in-inloggen-code-visible-in-profile-page)
+- fix: User with planner profile loses Groups tab when clicking on own profile. 10-7-2014
+  [link](https://trello.com/c/b2fNeIWO/1622-standby-web-user-with-planner-profile-loses-groups-tab-when-clicking-on-own-profile)
+- fix: Deleted group exists in user's resources and causes loading timeline to break. 10-7-2014
+  [link](https://trello.com/c/4jynR48g/1619-2-5-3-standby-web-and-backend-deleted-group-exists-in-user-s-resources)
+- fix: UX improvement for not automatically hiding main navigation after selecting on touch devices. 9-7-2014
+  [link](https://trello.com/c/KLgeMdkK/1617-45-45-standby-web-ux-improvement-for-not-automatically-hiding-main-navigation-after-selecting-on-touch-devices)
+- fix: Not clickable menu items at quick availability button for touch devices. 9-7-2014
+  [link](https://trello.com/c/QjvYXRHV/1615-5-5-standby-web-fix-for-not-clickable-menu-items-at-quick-availability-button-for-touch-devices)
+- fix: Android (Also any iOS device) tablet (standby web) report time difference of two hours for Groeneveld (tab 10.1, 
+chrome browser). 9-7-2014
+  [link](https://trello.com/c/QOaviIOk/1613-3-5-3-5-standby-web-android-tablet-standby-web-report-time-diifference-of-two-hours-for-groeneveld-tab-10-1-chrome-browser)
+- feature: Feature of checking of user existence during registration. 9-7-2014
+  [link](https://trello.com/c/MXhmNZGs/1620-2-5-2-standby-web-feature-of-checking-of-user-exists-during-registration)
+- fix: Disabling any admin related rights for standard user in profile page mainly editing an another profile, 
+interaction coming through with clicking on the link of a user from dashboard. 8-7-2014
+  [link](https://trello.com/c/bVwBT9LY/1591-2-1-5-standby-web-2-3-20-bug-with-the-introduction-of-hyper-link-on-user-s-name-on-dashboard-standard-profile-user-is-also-able-)
+- fix: Right backend status code on times when there is a conflicting user registration. 8-7-2014
+  [link](https://trello.com/c/k8G0kNal/1612-1-1-standby-backend-status-code-for-confliction)
+- fix: In case of not having any profile (role) for user, fall back to standard role for viewing intern pages. 7-7-2014
+  [link](https://trello.com/c/ckFBfuqn/1595-2-2-standby-problemen-caused-by-missing-profile-of-a-user)
+- feature: Some small static improvements related to unneeded commas at lists and the groups of user from profile page
+ is being displayed as an ordered list. 4-7-2014
+- fix: The user name links on dashboard are now redirecting to only user profile information if user does not have 
+admin role. 4-7-2014
+- fix: Changing profile has been taken into the profile saving chain functions, so it does not happen immediately but
+ the action is run when profile is saved. 4-7-2014
+- fix: Solved an issue with groups editing at profile edit page. 4-7-2014 
+  [link](https://trello.com/c/2A6dVqk0/1574-4-2-standby-web-bug-in-the-group-editing-on-the-profile-page)
+
 2.3.21
 - feature: Updated manual. 4-7-2014
 - fix: Fixed an issue with groups editing. 27-6-2014

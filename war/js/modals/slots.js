@@ -488,34 +488,38 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
        */
       Slots.prototype.currentState = function ()
       {
-        /**
-         * TODO: Use mathematical formula to calculate it
-         */
-        var now;
+        var resources = angular.fromJson(Storage.get('resources'));
 
-        now = String(Date.now().getTime());
-        now = Number(now.substr(0, now.length - 3));
+        if (resources)
+        {
+          // TODO: Use mathematical formula to calculate it
+          var now;
 
-        var deferred = $q.defer(),
-            params = {
-              user:  angular.fromJson(Storage.get('resources')).uuid,
-              start: now,
-              end: now + 1
-            };
+          now = String(Date.now().getTime());
+          now = Number(now.substr(0, now.length - 3));
 
-        Slots.query(
-          params,
-          function (result)
-          {
-            deferred.resolve(
-              (result.length > 0) ?
-              $rootScope.config.statesall[result[0]['text']] :
-              {
-                color: 'gray',
-                label: 'Mogelijk inzetbaar'
-              }
-            );
-          });
+          var deferred = $q.defer(),
+              params = {
+                user:  resources.uuid,
+                start: now,
+                end: now + 1
+              };
+
+          Slots.query(
+            params,
+            function (result)
+            {
+              deferred.resolve(
+                (result.length > 0) ?
+                $rootScope.config.statesall[result[0]['text']] :
+                {
+                  color: 'gray',
+                  label: 'Mogelijk inzetbaar'
+                }
+              );
+            }
+          );
+        }
 
         return deferred.promise;
       };

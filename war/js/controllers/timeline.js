@@ -9,7 +9,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
   .controller(
   'timeline',
   [
-    '$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
+    '$rootScope',
+    '$scope',
+    '$q',
+    '$location',
+    '$route',
+    '$window',
+    'Slots',
+    'Dater',
+    'Storage',
+    'Sloter',
+    'Profile',
     function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile)
     {
       // TODO: Define diff in the watcher maybe?
@@ -164,7 +174,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
             id: ''
           };
 
-          console.log('slot initials ->', $scope.slot);
+          // console.log('slot initials ->', $scope.slot);
         }
       );
 
@@ -307,9 +317,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
           if ($scope.timeline.main)
           {
+            /**
+             * Get groups and settings
+             */
+            var groups = Storage.local.groups(),
+            settings = Storage.local.settings(),
+            groupId,
+            validGroup = false;
+
+            angular.forEach(
+              groups,
+              function (_group)
+              {
+                if (_group.uuid == settings.app.group)
+                {
+                  validGroup = true
+                }
+              }
+            );
+
+            groupId = (validGroup) ? settings.app.group : groups[0].uuid;
+
             Slots.all(
               {
-                groupId: $scope.timeline.current.group,
+                // groupId: $scope.timeline.current.group,
+                groupId: groupId,
                 division: $scope.timeline.current.division,
                 layouts: $scope.timeline.current.layouts,
                 month: $scope.timeline.current.month,
@@ -593,16 +625,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
               }
             }
 
+            var getDateTimeToPicker = function (d)
+            {
+              var d1 = new Date(d);
+              // var offset = d.getTimezoneOffset() / 60;
+              d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset());
+
+              return d1.toISOString().replace("Z", "");
+            };
+
             $scope.slot = {
               start: {
                 date: new Date(values.start).toString($rootScope.config.formats.date),
                 time: new Date(values.start).toString($rootScope.config.formats.time),
-                datetime: new Date(values.start).toISOString().replace("Z", "")
+                // datetime: new Date(values.start).toISOString().replace("Z", "")
+
+                // datetime: new Date(values.start).toUTCString()
+                datetime: getDateTimeToPicker(values.start)
               },
               end: {
                 date: new Date(values.end).toString($rootScope.config.formats.date),
                 time: new Date(values.end).toString($rootScope.config.formats.time),
-                datetime: new Date(values.end).toISOString().replace("Z", "")
+                // datetime: new Date(values.end).toISOString().replace("Z", "")
+
+                // datetime: new Date(values.end).toUTCString()
+                datetime: getDateTimeToPicker(values.end)
               },
               state: content.state,
               recursive: content.recursive,
@@ -705,10 +752,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
         angular.forEach(
           $scope.divisions,
-          function (division)
-          {
-            $scope.groupPieHide[division.id] = false;
-          }
+          function (division) { $scope.groupPieHide[division.id] = false }
         );
 
         if ($scope.timeline.current.division !== 'all')
@@ -886,6 +930,19 @@ angular.module('WebPaige.Controllers.Timeline', [])
       }
 
 
+      var getDateTimeFromPicker = function (date)
+      {
+        if (typeof(date) == 'undefined' || date == null || date == '') return "";
+
+        var tmpDate = new Date(date);
+
+        var offset = tmpDate.getTimezoneOffset();
+
+        var newDate = tmpDate.addMinutes(offset);
+
+        return newDate.toISOString();
+      };
+
       /**
        * Add slot trigger start view
        */
@@ -965,7 +1022,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
         else
         {
           var start = ($rootScope.browser.mobile) ?
-                      Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
+                      // Math.abs(Math.floor(new Date(slot.start.datetime).getTime() / 1000)) :
+                      Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() / 1000)) :
                       Dater.convert.absolute(slot.start.date, slot.start.time, true);
 
           if (start < nowStamp && slot.recursive == false)
@@ -976,7 +1034,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
           values = {
             start: start,
             end: ($rootScope.browser.mobile) ?
-                 Math.abs(Math.floor(new Date(slot.end.datetime).getTime() / 1000)) :
+                 Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() / 1000)) :
                  Dater.convert.absolute(slot.end.date, slot.end.time, true),
             recursive: (slot.recursive) ? true : false,
             text: slot.state
@@ -1037,6 +1095,15 @@ angular.module('WebPaige.Controllers.Timeline', [])
               content: angular.fromJson(values.content.match(/<span class="secret">(.*)<\/span>/)[1])
             };
 
+        var convertDateTimeToLocal = function (d)
+        {
+          var d1 = new Date(d);
+
+          d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset());
+
+          return d1.toISOString().replace("Z", "");
+        };
+
         $scope.$apply(
           function ()
           {
@@ -1044,12 +1111,14 @@ angular.module('WebPaige.Controllers.Timeline', [])
               start: {
                 date: new Date(values.start).toString($rootScope.config.formats.date),
                 time: new Date(values.start).toString($rootScope.config.formats.time),
-                datetime: new Date(values.start).toISOString()
+                // datetime: new Date(values.start).toISOString()
+                datetime: convertDateTimeToLocal(values.start)
               },
               end: {
                 date: new Date(values.end).toString($rootScope.config.formats.date),
                 time: new Date(values.end).toString($rootScope.config.formats.time),
-                datetime: new Date(values.end).toISOString()
+                // datetime: new Date(values.end).toISOString()
+                datetime: convertDateTimeToLocal(values.end)
               },
               state: options.content.state,
               recursive: options.content.recursive,
@@ -1081,10 +1150,10 @@ angular.module('WebPaige.Controllers.Timeline', [])
         {
           changed = {
             start: ($rootScope.browser.mobile) ?
-                   new Date(slot.start.datetime).getTime() :
+                   new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() :
                    Dater.convert.absolute(slot.start.date, slot.start.time, false),
             end: ($rootScope.browser.mobile) ?
-                 new Date(slot.end.datetime).getTime() :
+                 new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() :
                  Dater.convert.absolute(slot.end.date, slot.end.time, false),
             content: {
               recursive: slot.recursive,

@@ -12,7 +12,15 @@
 angular.module('WebPaige')
   .run(
   [
-    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$config', '$window',
+    '$rootScope',
+    '$location',
+    '$timeout',
+    'Session',
+    'Dater',
+    'Storage',
+    'Messages',
+    '$config',
+    '$window',
     function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
     {
       /**
@@ -359,6 +367,8 @@ angular.module('WebPaige')
           if ($location.path().match(/logout/))
           {
             $rootScope.location = 'logout';
+
+            $('#watermark').hide();
           }
 
           if (! $rootScope.location)
@@ -376,10 +386,27 @@ angular.module('WebPaige')
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
           ga(
-            'send', 'pageview', {
+            'send', 'pageview',
+            {
               'page': '/index.html#/' + $rootScope.location || 'login',
               'title': $rootScope.location || 'login'
-            });
+            }
+          );
+
+//          $timeout(
+//            function ()
+//            {
+//              var root = $rootScope.$new();
+//
+//              ga(
+//                'send', 'pageview',
+//                {
+//                  'page': '/index.html#/' + root.location || 'login',
+//                  'title': root.location || 'login'
+//                }
+//              );
+//            }
+//          );
 
           //Prevent deep linking
           if ($location.path() != '/tv')
@@ -395,7 +422,8 @@ angular.module('WebPaige')
           $rootScope.statusBar.display('Aan het laden...');
 
           $('div[ng-view]').hide();
-        });
+        }
+      );
 
 
       /**
@@ -623,5 +651,7 @@ angular.module('WebPaige')
           }
         }
       };
+
+      $('.nav a').on('click', function () { $('.btn-navbar').click() });
     }
   ]);

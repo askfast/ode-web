@@ -313,7 +313,16 @@
               <div class="controls">
                 <input  type="text" 
                         class="span3" 
-                        ng-model="memberForm.username">
+                        ng-model="memberForm.username"
+                        ng-change="userExists()">
+                <p class="text-error" ng-hide="userExistsValidation">
+                  <small><i>{{ui.groups.registerUserName.exists}}</i></small>
+                </p>
+                <p class="text-success" ng-show="userExistsValidation && memberForm.username.length > 0">
+                  <small>
+                    <i>{{ui.groups.registerUserName.goodToGo}}</i>
+                  </small>
+                </p>
               </div>
             </div>
 

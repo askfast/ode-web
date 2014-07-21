@@ -68,8 +68,31 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        * TODO: Check somewhere that user-settings widget-groups are synced with the
        * real groups list and if a group is missing in settings-groups add by default!
        */
-      var groups = Storage.local.groups(),
-      selection = {};
+      var groups = Storage.local.groups();
+
+
+      //
+
+//
+//      $scope.breakGroupSetting = function ()
+//      {
+////        Settings.save(
+////          $rootScope.app.resources.uuid,
+////          { role: '' }
+////        ).then(function (resulted) { console.log('broken resources ->', resulted) });
+//
+//
+//        Profile.save(
+//          // $rootScope.app.resources.uuid,
+//          'devleonie',
+//          { role: '' }
+//        ).then(function (resulted) { console.log('broken resources ->', resulted) });
+//      };
+
+      //
+
+
+      var selection = {};
 
       angular.forEach(
         Storage.local.settings().app.widgets.groups,
