@@ -422,7 +422,8 @@ angular.module('WebPaige')
           $rootScope.statusBar.display('Aan het laden...');
 
           $('div[ng-view]').hide();
-        });
+        }
+      );
 
 
       /**

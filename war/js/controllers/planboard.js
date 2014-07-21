@@ -36,7 +36,22 @@ angular.module('WebPaige.Controllers.Planboard', [])
        * Get groups and settings
        */
       var groups = Storage.local.groups(),
-      settings = Storage.local.settings();
+      settings = Storage.local.settings(),
+      groupId,
+      validGroup = false;
+
+      angular.forEach(
+        groups,
+        function (_group)
+        {
+          if (_group.uuid == settings.app.group)
+          {
+            validGroup = true
+          }
+        }
+      );
+
+      groupId = (validGroup) ? settings.app.group : groups[0].uuid;
 
       /**
        * Pass current
@@ -54,7 +69,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
         week: Dater.current.week(),
         month: Dater.current.month(),
         year: Dater.current.year(),
-        group: settings.app.group,
+        group: groupId,
         division: 'all'
       };
 

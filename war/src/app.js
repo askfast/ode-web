@@ -1144,7 +1144,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.4.0 (Snapshot)',
+    version:  '2.4.0',
     lang:     'nl',
 
     fullscreen: true,
@@ -1402,7 +1402,23 @@ angular.module('WebPaige')
               function ($route, Slots, Storage, Dater)
               {
                 var periods = Storage.local.periods(),
-                    settings = Storage.local.settings();
+                    settings = Storage.local.settings(),
+                    groups = Storage.local.groups(),
+                    groupId,
+                    validGroup = false;
+
+                angular.forEach(
+                  groups,
+                  function (_group)
+                  {
+                    if (_group.uuid == settings.app.group)
+                    {
+                      validGroup = true
+                    }
+                  }
+                );
+
+                groupId = (validGroup) ? settings.app.group : groups[0].uuid;
 
                 var stamps = {};
 
@@ -1423,7 +1439,7 @@ angular.module('WebPaige')
 
                 return  Slots.all(
                   {
-                    groupId: settings.app.group,
+                    groupId: groupId,
                     stamps: stamps,
                     month: Dater.current.month(),
                     layouts: {
@@ -1431,7 +1447,8 @@ angular.module('WebPaige')
                       group: true,
                       members: false
                     }
-                  });
+                  }
+                );
               }
             ]
           },
@@ -2018,7 +2035,8 @@ angular.module('WebPaige')
           $rootScope.statusBar.display('Aan het laden...');
 
           $('div[ng-view]').hide();
-        });
+        }
+      );
 
 
       /**
@@ -11836,7 +11854,22 @@ angular.module('WebPaige.Controllers.Planboard', [])
        * Get groups and settings
        */
       var groups = Storage.local.groups(),
-      settings = Storage.local.settings();
+      settings = Storage.local.settings(),
+      groupId,
+      validGroup = false;
+
+      angular.forEach(
+        groups,
+        function (_group)
+        {
+          if (_group.uuid == settings.app.group)
+          {
+            validGroup = true
+          }
+        }
+      );
+
+      groupId = (validGroup) ? settings.app.group : groups[0].uuid;
 
       /**
        * Pass current
@@ -11854,7 +11887,7 @@ angular.module('WebPaige.Controllers.Planboard', [])
         week: Dater.current.week(),
         month: Dater.current.month(),
         year: Dater.current.year(),
-        group: settings.app.group,
+        group: groupId,
         division: 'all'
       };
 
@@ -12178,7 +12211,17 @@ angular.module('WebPaige.Controllers.Timeline', [])
   .controller(
   'timeline',
   [
-    '$rootScope', '$scope', '$q', '$location', '$route', '$window', 'Slots', 'Dater', 'Storage', 'Sloter', 'Profile',
+    '$rootScope',
+    '$scope',
+    '$q',
+    '$location',
+    '$route',
+    '$window',
+    'Slots',
+    'Dater',
+    'Storage',
+    'Sloter',
+    'Profile',
     function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile)
     {
       // TODO: Define diff in the watcher maybe?
@@ -12333,7 +12376,7 @@ angular.module('WebPaige.Controllers.Timeline', [])
             id: ''
           };
 
-          console.log('slot initials ->', $scope.slot);
+          // console.log('slot initials ->', $scope.slot);
         }
       );
 
@@ -12476,9 +12519,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
           if ($scope.timeline.main)
           {
+            /**
+             * Get groups and settings
+             */
+            var groups = Storage.local.groups(),
+            settings = Storage.local.settings(),
+            groupId,
+            validGroup = false;
+
+            angular.forEach(
+              groups,
+              function (_group)
+              {
+                if (_group.uuid == settings.app.group)
+                {
+                  validGroup = true
+                }
+              }
+            );
+
+            groupId = (validGroup) ? settings.app.group : groups[0].uuid;
+
             Slots.all(
               {
-                groupId: $scope.timeline.current.group,
+                // groupId: $scope.timeline.current.group,
+                groupId: groupId,
                 division: $scope.timeline.current.division,
                 layouts: $scope.timeline.current.layouts,
                 month: $scope.timeline.current.month,

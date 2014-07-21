@@ -83,7 +83,23 @@ angular.module('WebPaige')
               function ($route, Slots, Storage, Dater)
               {
                 var periods = Storage.local.periods(),
-                    settings = Storage.local.settings();
+                    settings = Storage.local.settings(),
+                    groups = Storage.local.groups(),
+                    groupId,
+                    validGroup = false;
+
+                angular.forEach(
+                  groups,
+                  function (_group)
+                  {
+                    if (_group.uuid == settings.app.group)
+                    {
+                      validGroup = true
+                    }
+                  }
+                );
+
+                groupId = (validGroup) ? settings.app.group : groups[0].uuid;
 
                 var stamps = {};
 
@@ -104,7 +120,7 @@ angular.module('WebPaige')
 
                 return  Slots.all(
                   {
-                    groupId: settings.app.group,
+                    groupId: groupId,
                     stamps: stamps,
                     month: Dater.current.month(),
                     layouts: {
@@ -112,7 +128,8 @@ angular.module('WebPaige')
                       group: true,
                       members: false
                     }
-                  });
+                  }
+                );
               }
             ]
           },
