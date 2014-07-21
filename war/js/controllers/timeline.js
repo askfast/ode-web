@@ -317,31 +317,31 @@ angular.module('WebPaige.Controllers.Timeline', [])
 
           if ($scope.timeline.main)
           {
-            /**
-             * Get groups and settings
-             */
-            var groups = Storage.local.groups(),
-            settings = Storage.local.settings(),
-            groupId,
-            validGroup = false;
-
-            angular.forEach(
-              groups,
-              function (_group)
-              {
-                if (_group.uuid == settings.app.group)
-                {
-                  validGroup = true
-                }
-              }
-            );
-
-            groupId = (validGroup) ? settings.app.group : groups[0].uuid;
+//            /**
+//             * Get groups and settings
+//             */
+//            var groups = Storage.local.groups(),
+//            settings = Storage.local.settings(),
+//            groupId,
+//            validGroup = false;
+//
+//            angular.forEach(
+//              groups,
+//              function (_group)
+//              {
+//                if (_group.uuid == settings.app.group)
+//                {
+//                  validGroup = true
+//                }
+//              }
+//            );
+//
+//            groupId = (validGroup) ? settings.app.group : groups[0].uuid;
 
             Slots.all(
               {
-                // groupId: $scope.timeline.current.group,
-                groupId: groupId,
+                groupId: $scope.timeline.current.group,
+                // groupId: groupId,
                 division: $scope.timeline.current.division,
                 layouts: $scope.timeline.current.layouts,
                 month: $scope.timeline.current.month,
