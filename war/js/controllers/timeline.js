@@ -303,6 +303,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
               }, timeout);
           }
 
+          // $('.time-tip').tooltip();
+
           $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
         },
 

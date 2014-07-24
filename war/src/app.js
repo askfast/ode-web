@@ -1146,7 +1146,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.4.0',
+    version:  '2.5.0 (Snapshot)',
     lang:     'nl',
 
     fullscreen: true,
@@ -1263,16 +1263,28 @@ angular.module('WebPaige')
         states:     {},
         // divisions:  profile.divisions,
         divisions:  [],
+//        densities: {
+//          // less:   '#a0a0a0',
+//          less:   '#a93232',
+//          even:   '#ba6a24',
+//          one:    '#415e6b',
+//          two:    '#3d5865',
+//          three:  '#344c58',
+//          four:   '#2f4550',
+//          five:   '#2c424c',
+//          six:    '#253943',
+//          more:   '#486877'
+//        },
         densities: {
-          less:   '#a0a0a0',
+          less:   '#a93232',
           even:   '#ba6a24',
-          one:    '#415e6b',
-          two:    '#3d5865',
-          three:  '#344c58',
-          four:   '#2f4550',
-          five:   '#2c424c',
-          six:    '#253943',
-          more:   '#486877'
+          one:    '#4f824f',
+          two:    '#477547',
+          three:  '#436f43',
+          four:   '#3d673d',
+          five:   '#396039',
+          six:    '#335833',
+          more:   '#305330'
         }
       }
     },
@@ -2000,13 +2012,19 @@ angular.module('WebPaige')
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
-          ga(
-            'send', 'pageview',
-            {
-              'page': '/index.html#/' + $rootScope.location || 'login',
-              'title': $rootScope.location || 'login'
-            }
-          );
+          try {
+            ga(
+              'send', 'pageview',
+              {
+                'page': '/index.html#/' + $rootScope.location || 'login',
+                'title': $rootScope.location || 'login'
+              }
+            );
+          }
+          catch (err)
+          {
+            console.log('there has been an error with google analytics tracking: ', err);
+          }
 
 //          $timeout(
 //            function ()
@@ -7659,10 +7677,6 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
     function ($rootScope, Storage)
     {
       return {
-
-        /**
-         * Getters
-         */
         get: {
           groups: function ()
           {
@@ -7670,7 +7684,10 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
             angular.forEach(
               Storage.local.groups(),
-              function (group) { groups[group.uuid] = group.name }
+              function (group)
+              {
+                groups[group.uuid] = group.name;
+              }
             );
 
             return groups;
@@ -7682,8 +7699,10 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
             angular.forEach(
               Storage.local.members(),
-              // function (member) { members[member.uuid] = member.name }
-              function (member) { members[member.uuid] = member.resources.firstName + ' ' + member.resources.lastName }
+              function (member)
+              {
+                members[member.uuid] = member.resources.firstName + ' ' + member.resources.lastName;
+              }
             );
 
             return members;
@@ -7736,6 +7755,32 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
           return timedata;
         },
 
+        tooltip: function (periods)
+        {
+          var convertTimestamp = function (stamp)
+          {
+            return new Date(stamp * 1000).toString($rootScope.config.formats.datetime)
+          };
+
+          var content = convertTimestamp(periods.start) +
+                        ' / ' +
+                        convertTimestamp(periods.end);
+
+          if (periods.min)
+          {
+            content += ' / Huidig aantal beschikbaar: ' + periods.min;
+          }
+
+          if (periods.wish)
+          {
+            console.log('periods wish ->', periods.wish);
+
+            content += ' / Gewenst aantal mensen: ' + periods.wish;
+          }
+
+          return '<div class="time-tip" title="' + content + '">' + content + '</div>'
+        },
+
         /**
          * Handle user slots
          */
@@ -7760,23 +7805,24 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                         group: (slot.recursive) ?
                                _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
                                _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
-                        content: _this.secret(
-                          angular.toJson(
-                            {
-                              type: 'slot',
-                              id: index, // slot.id,
-                              recursive: slot.recursive,
-                              state: slot.text
-                            }
-                          )
-                        ),
+                        content: this.tooltip({ start: slot.start, end: slot.end }) +
+                                 _this.secret(
+                                   angular.toJson(
+                                     {
+                                       type: 'slot',
+                                       id: index, // slot.id,
+                                       recursive: slot.recursive,
+                                       state: slot.text
+                                     }
+                                   )
+                                 ),
                         className: 'slot-' + index + ' ' + config.states[slot.text].className,
                         editable: true
                       });
                   }
-                }
+                }.bind(this)
               );
-            }
+            }.bind(this)
           );
 
           timedata = _this.addLoading(
@@ -8095,7 +8141,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                         start: Math.round(slot.start * 1000),
                         end: Math.round(slot.end * 1000),
                         group: _this.wrapper('c') + name,
-                        content: cn +
+                        content: this.tooltip({ start: slot.start, end: slot.end, min: slot.diff }) +
+                                 // '<span class="badge badge-inverse">' + cn + '</span>' +
                                  _this.secret(
                                    angular.toJson(
                                      {
@@ -8110,13 +8157,13 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                   }
 
                   timedata = _this.addLoading(
-                    data, timedata, [
-                        _this.wrapper('c') + name
-                    ]
+                    data,
+                    timedata,
+                    [_this.wrapper('c') + name]
                   );
-                }
+                }.bind(this)
               );
-            }
+            }.bind(this)
           );
 
           return timedata;
@@ -8166,7 +8213,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                   start: Math.round(wish.start * 1000),
                   end: Math.round(wish.end * 1000),
                   group: _this.wrapper('c') + title,
-                  content: '<span class="badge badge-inverse">' + wish.count + '</span>' +
+                  content: this.tooltip({ start: wish.start, end: wish.end, wish: wish.count }) +
                            _this.secret(
                              angular.toJson(
                                {
@@ -8185,7 +8232,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                     _this.wrapper('c') + title
                 ]
               );
-            }
+            }.bind(this)
           );
 
           return timedata;
@@ -8264,25 +8311,26 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                             start: Math.round(slot.start * 1000),
                             end: Math.round(slot.end * 1000),
                             group: link,
-                            content: _this.secret(
-                              angular.toJson(
-                                {
-                                  type: 'member',
-                                  id: slot.id,
-                                  mid: member.id,
-                                  recursive: slot.recursive,
-                                  state: slot.text
-                                }
-                              )
-                            ),
+                            content: this.tooltip({ start: slot.start, end: slot.end }) +
+                                     _this.secret(
+                                       angular.toJson(
+                                         {
+                                           type: 'member',
+                                           id: slot.id,
+                                           mid: member.id,
+                                           recursive: slot.recursive,
+                                           state: slot.text
+                                         }
+                                       )
+                                     ),
                             className: config.states[slot.text].className,
                             editable: false
                           }
                         );
                       }
-                    }
+                    }.bind(this)
                   );
-                }
+                }.bind(this)
               );
 
               timedata.push(
@@ -8310,7 +8358,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                   stat.state = (stat.state.match(/bar-(.*)/)) ? stat.state : 'bar-' + state[0];
                 }
               );
-            }
+            }.bind(this)
           );
 
           return timedata;
@@ -8842,10 +8890,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
         var urole;
 
         angular.forEach(
-          $config.roles, function (prole)
+          $config.roles,
+          function (prole)
           {
-            if (prole.id == role) urole = prole.label;
-          });
+            if (prole.id == role)
+            {
+              urole = prole.label;
+            }
+          }
+        );
 
         return urole;
       }
@@ -8867,13 +8920,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
         var filtered;
 
         angular.forEach(
-          $config.timeline.config.divisions, function (division)
+          $config.timeline.config.divisions,
+          function (division)
           {
             if (division.id == divid)
             {
               filtered = division.label;
             }
-          });
+          }
+        );
 
         return filtered;
       }
@@ -9006,8 +9061,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'rangeInfoFilter',
   [
-    '$rootScope', 'Dater', 'Storage',
-    function ($rootScope, Dater, Storage)
+    '$rootScope', 'Dater',
+    function ($rootScope, Dater)
     {
       var periods = Dater.getPeriods();
 
@@ -9062,14 +9117,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'rangeInfoWeekFilter',
   [
-    '$rootScope', 'Dater', 'Storage',
-    function ($rootScope, Dater, Storage)
+    '$rootScope',
+    function ($rootScope)
     {
-      var periods = Dater.getPeriods();
-
       return function (timeline)
       {
-        if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+        if (timeline)
+        {
+          return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+        }
       };
     }
   ])
@@ -12520,6 +12576,8 @@ angular.module('WebPaige.Controllers.Timeline', [])
                   ), $scope.timeline.options);
               }, timeout);
           }
+
+          // $('.time-tip').tooltip();
 
           $scope.self.timeline.setVisibleChartRange($scope.timeline.options.start, $scope.timeline.options.end);
         },

@@ -385,13 +385,19 @@ angular.module('WebPaige')
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
-          ga(
-            'send', 'pageview',
-            {
-              'page': '/index.html#/' + $rootScope.location || 'login',
-              'title': $rootScope.location || 'login'
-            }
-          );
+          try {
+            ga(
+              'send', 'pageview',
+              {
+                'page': '/index.html#/' + $rootScope.location || 'login',
+                'title': $rootScope.location || 'login'
+              }
+            );
+          }
+          catch (err)
+          {
+            console.log('there has been an error with google analytics tracking: ', err);
+          }
 
 //          $timeout(
 //            function ()

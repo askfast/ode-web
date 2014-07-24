@@ -34,10 +34,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
         var urole;
 
         angular.forEach(
-          $config.roles, function (prole)
+          $config.roles,
+          function (prole)
           {
-            if (prole.id == role) urole = prole.label;
-          });
+            if (prole.id == role)
+            {
+              urole = prole.label;
+            }
+          }
+        );
 
         return urole;
       }
@@ -59,13 +64,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
         var filtered;
 
         angular.forEach(
-          $config.timeline.config.divisions, function (division)
+          $config.timeline.config.divisions,
+          function (division)
           {
             if (division.id == divid)
             {
               filtered = division.label;
             }
-          });
+          }
+        );
 
         return filtered;
       }
@@ -198,8 +205,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'rangeInfoFilter',
   [
-    '$rootScope', 'Dater', 'Storage',
-    function ($rootScope, Dater, Storage)
+    '$rootScope', 'Dater',
+    function ($rootScope, Dater)
     {
       var periods = Dater.getPeriods();
 
@@ -254,14 +261,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'rangeInfoWeekFilter',
   [
-    '$rootScope', 'Dater', 'Storage',
-    function ($rootScope, Dater, Storage)
+    '$rootScope',
+    function ($rootScope)
     {
-      var periods = Dater.getPeriods();
-
       return function (timeline)
       {
-        if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+        if (timeline)
+        {
+          return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+        }
       };
     }
   ])

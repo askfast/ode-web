@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.4.0',
+    version:  '2.5.0 (Snapshot)',
     lang:     'nl',
 
     fullscreen: true,
@@ -129,16 +129,28 @@ angular.module('WebPaige')
         states:     {},
         // divisions:  profile.divisions,
         divisions:  [],
+//        densities: {
+//          // less:   '#a0a0a0',
+//          less:   '#a93232',
+//          even:   '#ba6a24',
+//          one:    '#415e6b',
+//          two:    '#3d5865',
+//          three:  '#344c58',
+//          four:   '#2f4550',
+//          five:   '#2c424c',
+//          six:    '#253943',
+//          more:   '#486877'
+//        },
         densities: {
-          less:   '#a0a0a0',
+          less:   '#a93232',
           even:   '#ba6a24',
-          one:    '#415e6b',
-          two:    '#3d5865',
-          three:  '#344c58',
-          four:   '#2f4550',
-          five:   '#2c424c',
-          six:    '#253943',
-          more:   '#486877'
+          one:    '#4f824f',
+          two:    '#477547',
+          three:  '#436f43',
+          four:   '#3d673d',
+          five:   '#396039',
+          six:    '#335833',
+          more:   '#305330'
         }
       }
     },

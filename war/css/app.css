@@ -1746,15 +1746,15 @@ div.timeline-navigation-move-right {
 }*/
 /*.availableN {
   margin:0;*/
-  /* background-color: #3e673e; 
-  background-color: #4f824f;
-  border-top: 10px solid black;
-  text-indent: -9999px;
+/* background-color: #3e673e;
+background-color: #4f824f;
+border-top: 10px solid black;
+text-indent: -9999px;
 }
 
 .schipper {
-  margin:0;
-  /* background-color: #3e673e; */
+margin:0;
+/* background-color: #3e673e; */
 /*  background-color: #4f824f;
   border-top: 10px solid #e0c100;
   text-indent: -9999px;
@@ -1776,48 +1776,59 @@ div.timeline-navigation-move-right {
 div.timeline-event.state-available {
   margin: 0;
   background-color: #4f824f;
-  text-indent: -9999px;
+}
+div.timeline-event.state-available:hover {
+  background-color: #63a163;
 }
 
 div.timeline-event.state-available-south {
   margin: 0;
-  background-color: #e08a0c;
-  text-indent: -9999px;
+  background-color: #65619b;
+}
+div.timeline-event.state-available-south:hover {
+  background-color: #8380af;
 }
 
 div.timeline-event.state-available-north {
   margin: 0;
   background-color: black;
-  text-indent: -9999px;
+}
+div.timeline-event.state-available-north:hover {
+  background-color: #1a1a1a;
 }
 
 div.timeline-event.state-schipper-service {
   margin: 0;
   background-color: #e0c100;
-  text-indent: -9999px;
+}
+div.timeline-event.state-schipper-service:hover {
+  background-color: #ffde14;
 }
 
 div.timeline-event.state-unreached {
   margin: 0;
   background-color: #65619b;
-  text-indent: -9999px;
+}
+div.timeline-event.state-unreached:hover {
+  background-color: #8380af;
 }
 
 div.timeline-event.state-unavailable {
   margin: 0;
   background-color: #a93232;
-  text-indent: -9999px;
+}
+div.timeline-event.state-unavailable:hover {
+  background-color: #c84646;
 }
 
 div.timeline-event.state-new {
   margin: 0;
   background-color: #ddd;
-  text-indent: -9999px;
 }
 
 div.timeline-event div.timeline-event-content span.secret {
-  font-size: 1px;
-  text-indent: -9999px;
+  font-size: 0px !important;
+  text-indent: -9999px !important;
 }
 
 .state-loading-left {
@@ -1844,10 +1855,12 @@ div.timeline-event div.timeline-event-content span.secret {
 
 div.timeline-event.agg-less {
   margin: 0;
-  background-color: #a0a0a0;
+  background-color: #a93232;
   /*border:1px solid #a0a0a0;*/
   /*border-bottom: 10px solid #a0a0a0;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-less:hover {
+  background-color: #c84646;
 }
 
 div.timeline-event.agg-even {
@@ -1855,81 +1868,103 @@ div.timeline-event.agg-even {
   background-color: #ba6a24;
   /*border:1px solid #ba6a24;*/
   /*border-bottom: 10px solid #ba6a24;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-even:hover {
+  background-color: #d98338;
 }
 
 div.timeline-event.agg-1 {
   margin: 0;
-  background-color: #415e6b;
+  background-color: #4f824f;
   /*border:1px solid #415e6b;*/
   /*border-bottom: 10px solid #415e6b;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-1:hover {
+  background-color: #63a163;
 }
 
 div.timeline-event.agg-2 {
   margin: 0;
-  background-color: #3d5865;
+  background-color: #477547;
   /*border:1px solid #3d5865;*/
   /*border-bottom: 10px solid #3d5865;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-2:hover {
+  background-color: #5a955a;
 }
 
 div.timeline-event.agg-3 {
   margin: 0;
-  background-color: #344c58;
+  background-color: #436f43;
   /*border:1px solid #344c58;*/
   /*border-bottom: 10px solid #344c58;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-3:hover {
+  background-color: #568f56;
 }
 
 div.timeline-event.agg-4 {
   margin: 0;
-  background-color: #2f4550;
+  background-color: #3d673d;
   /*border:1px solid #2f4550;*/
   /*border-bottom: 10px solid #2f4550;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-4:hover {
+  background-color: #508750;
 }
 
 div.timeline-event.agg-5 {
   margin: 0;
-  background-color: #2c424c;
+  background-color: #396039;
   /*border:1px solid #2c424c;*/
   /*border-bottom: 10px solid #2c424c;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-5:hover {
+  background-color: #4c804c;
 }
 
 div.timeline-event.agg-6 {
   margin: 0;
-  background-color: #253943;
+  background-color: #335833;
   /*border:1px solid #253943;*/
   /*border-bottom: 10px solid #253943;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-6:hover {
+  background-color: #467846;
 }
 
 div.timeline-event.agg-more {
   margin: 0;
-  background-color: #486877;
+  background-color: #305330;
   /*border:1px solid #486877;*/
   /*border-bottom: 10px solid #486877;*/
-  text-indent: -9999px;
+}
+div.timeline-event.agg-more:hover {
+  background-color: #437343;
 }
 
 div.timeline-event.wishes-less {
   margin: 0;
-  background-color: #a0a0a0;
+  background-color: #a93232;
   /*border:1px solid #a0a0a0;*/
   /*border-bottom: 10px solid #a0a0a0;*/
   /*text-indent: -9999px;*/
   text-align: center;
 }
+div.timeline-event.wishes-less:hover {
+  background-color: #467846;
+}
 
 div.timeline-event.wishes-even {
   margin: 0;
-  background-color: #ba6a24;
+  background-color: #ddd;
   /*border:1px solid #ba6a24;*/
   /*border-bottom: 10px solid #ba6a24;*/
   /*text-indent: -9999px;*/
   text-align: center;
+}
+div.timeline-event.wishes-even:hover {
+  background-color: #f7f7f7;
 }
 
 div.timeline-event.wishes-1 {
@@ -1940,6 +1975,9 @@ div.timeline-event.wishes-1 {
   /*text-indent: -9999px;*/
   text-align: center;
 }
+div.timeline-event.wishes-1:hover {
+  background-color: #547a8b;
+}
 
 div.timeline-event.wishes-2 {
   margin: 0;
@@ -1948,6 +1986,9 @@ div.timeline-event.wishes-2 {
   /*border-bottom: 10px solid #3d5865;*/
   /*text-indent: -9999px;*/
   text-align: center;
+}
+div.timeline-event.wishes-2:hover {
+  background-color: #507485;
 }
 
 div.timeline-event.wishes-3 {
@@ -1958,6 +1999,9 @@ div.timeline-event.wishes-3 {
   /*text-indent: -9999px;*/
   text-align: center;
 }
+div.timeline-event.wishes-3:hover {
+  background-color: #476878;
+}
 
 div.timeline-event.wishes-4 {
   margin: 0;
@@ -1966,6 +2010,9 @@ div.timeline-event.wishes-4 {
   /*border-bottom: 10px solid #2f4550;*/
   /*text-indent: -9999px;*/
   text-align: center;
+}
+div.timeline-event.wishes-4:hover {
+  background-color: #426170;
 }
 
 div.timeline-event.wishes-5 {
@@ -1976,6 +2023,9 @@ div.timeline-event.wishes-5 {
   /*text-indent: -9999px;*/
   text-align: center;
 }
+div.timeline-event.wishes-5:hover {
+  background-color: #3f5e6c;
+}
 
 div.timeline-event.wishes-6 {
   margin: 0;
@@ -1985,6 +2035,9 @@ div.timeline-event.wishes-6 {
   /*text-indent: -9999px;*/
   text-align: center;
 }
+div.timeline-event.wishes-6:hover {
+  background-color: #375564;
+}
 
 div.timeline-event.wishes-more {
   margin: 0;
@@ -1993,6 +2046,9 @@ div.timeline-event.wishes-more {
   /*border-bottom: 10px solid #486877;*/
   /*text-indent: -9999px;*/
   text-align: center;
+}
+div.timeline-event.wishes-more:hover {
+  background-color: #5b8497;
 }
 
 /*
@@ -2035,7 +2091,6 @@ div.requirement {
 }*/
 div.timeline-event-range {
   position: relative;
-  overflow: visible;
   width: 100%;
   /*height: 100px;*/
   /*height: auto;*/
@@ -2253,7 +2308,7 @@ div.timeline-event-range {
   background-image: -moz-linear-gradient(top, #7772b5, #65619b);
   background-image: linear-gradient(top, #7772b5, #65619b);
   background-repeat: repeat-x;
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#6e69a8',  endColorstr='#7772b5', GradientType=0);
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#6e69a8', endColorstr='#7772b5', GradientType=0);
   filter: progid:dximagetransform.microsoft.gradient(enabled=false);
   *background-color: #7772b5;
   /*  background-color: #006dcc;
@@ -2266,8 +2321,8 @@ div.timeline-event-range {
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
     border-color: #0044cc #0044cc #002a80;
-  
-  
+
+
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);*/
   color: #fff;
@@ -2355,7 +2410,7 @@ div.timeline-event-range {
   background-image: 0;
   background-image: linear-gradient(top, #0088cc, #0044cc);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc',endColorstr='#0044cc', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
   border-color: #04c #04c #002a80;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
@@ -2401,7 +2456,7 @@ div.timeline-event-range {
   background-image: 0;
   background-image: linear-gradient(top, #0088cc, #0044cc);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc',endColorstr='#0044cc', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
   border-color: #04c #04c #002a80;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
@@ -2540,6 +2595,16 @@ div.timeline-event-range {
   display: block;
   height: 16px;
   width: 16px;
+}
+
+.time-tip {
+  z-index: 100000;
+  background-color: transparent;
+  display: inline-block;
+  padding: 4px 0;
+  width: 100%;
+  height: 100%;
+  text-indent: -9999px;
 }
 
 /*chosen*/
