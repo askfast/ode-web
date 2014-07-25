@@ -200,17 +200,24 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
                     if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
-                    if (pie.weeks.current.state.diff > 0)
+                    if (pie.weeks.current.state.wish == 0)
                     {
-                      pie.weeks.current.state.cls = 'more';
+                      pie.weeks.current.state.cls = 'disabled';
                     }
-                    else if (pie.weeks.current.state.diff === 0)
+                    else
                     {
-                      pie.weeks.current.state.cls = 'even';
-                    }
-                    else if (pie.weeks.current.state.diff < 0)
-                    {
-                      pie.weeks.current.state.cls = 'less';
+                      if (pie.weeks.current.state.diff > 0)
+                      {
+                        pie.weeks.current.state.cls = 'more';
+                      }
+                      else if (pie.weeks.current.state.diff === 0)
+                      {
+                        pie.weeks.current.state.cls = 'even';
+                      }
+                      else if (pie.weeks.current.state.diff < 0)
+                      {
+                        pie.weeks.current.state.cls = 'less';
+                      }
                     }
 
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
@@ -272,9 +279,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                     var ratios = [],
                         colorMap = {
-                          more: '#415e6b',
+                          more: '#4f824f',
+                          // more: '#415e6b',
                           even: '#ba6a24',
-                          less: '#a0a0a0'
+                          // even: '#ba6a24',
+                          less: '#a93232'
+                          // less: '#a0a0a0'
                         },
                         colors = [],
                         xratios = [];

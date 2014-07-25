@@ -288,7 +288,8 @@
 }
 
 .legenda-row .legenda-state-available-south .square {
-  background-color: #e08a0c;
+  // background-color: #e08a0c;
+  background-color: #65619b;
 }
 
 .legenda-row .legenda-state-unavailable .square {
@@ -299,12 +300,13 @@
   background-color: #e0c100;
 }
 
-.legenda-row .legenda-state-unreached .square {
-  background-color: #65619b;
-}
+//.legenda-row .legenda-state-unreached .square {
+//  background-color: #65619b;
+//}
 
 .legenda-row .legenda-more .square {
-  background-color: #415e6b;
+  // background-color: #415e6b;
+  background-color: #4f824f;
 }
 
 .legenda-row .legenda-even .square {
@@ -312,7 +314,8 @@
 }
 
 .legenda-row .legenda-less .square {
-  background-color: #a0a0a0;
+  // background-color: #a0a0a0;
+  background-color: #a93232;
 }
 
 #legends {
@@ -719,6 +722,7 @@ div.timeline-event div.timeline-event-content span.secret {
   // text-indent: -9999px;
   text-align: right;
 }
+
 
 .state-loading-right {
   margin: 0;

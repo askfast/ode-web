@@ -11,7 +11,7 @@ var profile = {
 
   host: function ()
   {
-    return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com:8080';
+    return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com';
   },
 
   states: [],

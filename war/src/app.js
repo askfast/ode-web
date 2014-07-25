@@ -2692,195 +2692,181 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
 /**
  * Dashboard modal
  */
-.factory('Dashboard',
-[
-	'$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
-	function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer)
-	{
-    /**
-     * TODO: Still being used?
-     */
-    var Dashboard = $resource(
-      'http://knrm.myask.me/rpc/client/p2000.php',
-      {
-      },
-      {
-        p2000: {
-          method: 'GET',
-          params: {},
-          isArray: true
-        }
-      }
-    );
-
-
-    /**
-     * TODO: Still being used?
-     */
-    var Backend = $resource(
-      $config.host + '/capcodes',
-      {},
-      {
-        capcodes: {
-          method: 'GET',
-          params: {},
-          isArray: true
-        }
-      }
-    );
-		
-
-		/**
-		 * Get group aggs for pie charts
-		 */
-		Dashboard.prototype.pies = function ()
-		{
-			var deferred  = $q.defer(),
-					groups    = angular.fromJson(Storage.get('groups')),
-					settings  = Storage.local.settings().app.widgets.groups,
-					calls     = [];
-
-			if (settings.length === 0) console.warn('no settings');
-
-      angular.forEach(groups, function(group)
-			{
-        if (settings[group.uuid] && settings[group.uuid].status)
-        {
-          if ($rootScope.config.timeline.config.divisions.length == 0)
-          {
-            calls.push(Slots.pie({
-              id:         group.uuid,
-              name:       group.name,
-              division:   'both'
-            }));
-          }
-          else
-          {
-            if (settings[group.uuid].divisions)
-            {
-              angular.forEach($rootScope.config.timeline.config.divisions, function (division)
-              {
-                if (division.id !== 'all')
-                {
-                  calls.push(Slots.pie({
-                    id:         group.uuid,
-                    name:       group.name,
-                    division:   division.id
-                  }));
-                }
-              });
-            }
-            else
-            {
-              calls.push(Slots.pie({
-                id:         group.uuid,
-                name:       group.name,
-                division:   'both'
-              }));
-            }
-          }
-        }
-			});
-
-			$q.all(calls)
-			.then(function (results)
-			{
-				$rootScope.statusBar.off();
-
-				deferred.resolve(results);
-			});
-
-			return deferred.promise;
-		};
-
-
-    Dashboard.prototype.getCapcodes = function ()
+  .factory(
+  'Dashboard',
+  [
+    '$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
+    function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer)
     {
-      var deferred = $q.defer();
-
-      function concatCode (code)
-      {
-        var _code = '';
-
-        angular.forEach(code, function (_c) { _code += _c; });
-
-        return String(_code);
-      }
-
-      Backend.capcodes(null,
-        function (results)
+      /**
+       * TODO: Still being used?
+       */
+      var Dashboard = $resource(
+        'http://knrm.myask.me/rpc/client/p2000.php',
         {
-          var codes = [];
-
-          angular.forEach(
-            results,
-            function (res) { codes.push(concatCode(res)) }
-          );
-
-          deferred.resolve(codes);
         },
-        function (error)
         {
-          deferred.resolve({error: error});
+          p2000: {
+            method: 'GET',
+            params: {},
+            isArray: true
+          }
         }
       );
 
-      return deferred.promise;
-    };
+
+      /**
+       * TODO: Still being used?
+       */
+      var Backend = $resource(
+          $config.host + '/capcodes',
+          {},
+          {
+            capcodes: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            }
+          }
+      );
 
 
-		/**
-     * TODO: Still being used since harcoded in controller itself?
-		 * Get p2000 announcements
-		 */
-		Dashboard.prototype.p2000 = function ()
-		{
-			var deferred = $q.defer();
-
-			$rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
-
-      if ($rootScope.config.profile.smartAlarm)
+      /**
+       * Get group aggs for pie charts
+       */
+      Dashboard.prototype.pies = function ()
       {
-        $.ajax({
-          url: $rootScope.config.profile.p2000.url,
-          dataType: 'json',
-          success: function (results)
+        var deferred = $q.defer(),
+            groups = angular.fromJson(Storage.get('groups')),
+            settings = Storage.local.settings().app.widgets.groups,
+            calls = [];
+
+        if (settings.length === 0) console.warn('no settings');
+
+        angular.forEach(
+          groups,
+          function (group)
+          {
+            if (settings[group.uuid] && settings[group.uuid].status)
+            {
+              if ($rootScope.config.timeline.config.divisions.length == 0)
+              {
+                calls.push(
+                  Slots.pie(
+                    {
+                      id: group.uuid,
+                      name: group.name,
+                      division: 'both'
+                    }));
+              }
+              else
+              {
+                if (settings[group.uuid].divisions)
+                {
+                  angular.forEach(
+                    $rootScope.config.timeline.config.divisions, function (division)
+                    {
+                      if (division.id !== 'all')
+                      {
+                        calls.push(
+                          Slots.pie(
+                            {
+                              id: group.uuid,
+                              name: group.name,
+                              division: division.id
+                            }));
+                      }
+                    });
+                }
+                else
+                {
+                  calls.push(
+                    Slots.pie(
+                      {
+                        id: group.uuid,
+                        name: group.name,
+                        division: 'both'
+                      }));
+                }
+              }
+            }
+          });
+
+        $q.all(calls)
+          .then(
+          function (results)
           {
             $rootScope.statusBar.off();
 
-            var processed = Announcer.process(results, true);
+            deferred.resolve(results);
+          });
 
-            deferred.resolve(
-              {
-                alarms: 	processed,
-                synced:   new Date().getTime()
-              });
+        return deferred.promise;
+      };
+
+
+      Dashboard.prototype.getCapcodes = function ()
+      {
+        var deferred = $q.defer();
+
+        function concatCode (code)
+        {
+          var _code = '';
+
+          angular.forEach(code, function (_c) { _code += _c; });
+
+          return String(_code);
+        }
+
+        Backend.capcodes(
+          null,
+          function (results)
+          {
+            var codes = [];
+
+            angular.forEach(
+              results,
+              function (res) { codes.push(concatCode(res)) }
+            );
+
+            deferred.resolve(codes);
           },
-          error: function ()
+          function (error)
           {
             deferred.resolve({error: error});
           }
-        });
+        );
 
-      }
-      else
+        return deferred.promise;
+      };
+
+
+      /**
+       * TODO: Still being used since harcoded in controller itself?
+       * Get p2000 announcements
+       */
+      Dashboard.prototype.p2000 = function ()
       {
-        Dashboard.prototype.getCapcodes().
-          then(function (capcodes)
-          {
-            $.ajax({
-              url: $config.profile.p2000.url + '?code=' + capcodes,
-              dataType: 'jsonp',
+        var deferred = $q.defer();
+
+        $rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
+
+        if ($rootScope.config.profile.smartAlarm)
+        {
+          $.ajax(
+            {
+              url: $rootScope.config.profile.p2000.url,
+              dataType: 'json',
               success: function (results)
               {
                 $rootScope.statusBar.off();
 
-                var processed = Announcer.process(results);
+                var processed = Announcer.process(results, true);
 
                 deferred.resolve(
                   {
-                    alarms: 	processed,
-                    synced:   new Date().getTime()
+                    alarms: processed,
+                    synced: new Date().getTime()
                   });
               },
               error: function ()
@@ -2888,18 +2874,47 @@ angular.module('WebPaige.Modals.Dashboard', ['ngResource'])
                 deferred.resolve({error: error});
               }
             });
-          });
+
+        }
+        else
+        {
+          Dashboard.prototype.getCapcodes().
+            then(
+            function (capcodes)
+            {
+              $.ajax(
+                {
+                  url: $config.profile.p2000.url + '?code=' + capcodes,
+                  dataType: 'jsonp',
+                  success: function (results)
+                  {
+                    $rootScope.statusBar.off();
+
+                    var processed = Announcer.process(results);
+
+                    deferred.resolve(
+                      {
+                        alarms: processed,
+                        synced: new Date().getTime()
+                      });
+                  },
+                  error: function ()
+                  {
+                    deferred.resolve({error: error});
+                  }
+                });
+            });
 
 
-      }
+        }
 
-			return deferred.promise;
-		};
+        return deferred.promise;
+      };
 
 
-		return new Dashboard();
-	}
-]);;'use strict';
+      return new Dashboard();
+    }
+  ]);;'use strict';
 
 
 angular.module('WebPaige.Modals.Slots', ['ngResource'])
@@ -10741,17 +10756,24 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
                     if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
-                    if (pie.weeks.current.state.diff > 0)
+                    if (pie.weeks.current.state.wish == 0)
                     {
-                      pie.weeks.current.state.cls = 'more';
+                      pie.weeks.current.state.cls = 'disabled';
                     }
-                    else if (pie.weeks.current.state.diff === 0)
+                    else
                     {
-                      pie.weeks.current.state.cls = 'even';
-                    }
-                    else if (pie.weeks.current.state.diff < 0)
-                    {
-                      pie.weeks.current.state.cls = 'less';
+                      if (pie.weeks.current.state.diff > 0)
+                      {
+                        pie.weeks.current.state.cls = 'more';
+                      }
+                      else if (pie.weeks.current.state.diff === 0)
+                      {
+                        pie.weeks.current.state.cls = 'even';
+                      }
+                      else if (pie.weeks.current.state.diff < 0)
+                      {
+                        pie.weeks.current.state.cls = 'less';
+                      }
                     }
 
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
@@ -10813,9 +10835,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                     var ratios = [],
                         colorMap = {
-                          more: '#415e6b',
+                          more: '#4f824f',
+                          // more: '#415e6b',
                           even: '#ba6a24',
-                          less: '#a0a0a0'
+                          // even: '#ba6a24',
+                          less: '#a93232'
+                          // less: '#a0a0a0'
                         },
                         colors = [],
                         xratios = [];
@@ -12053,11 +12078,31 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
       /**
+       * Filter states
+       */
+      $scope.filteredStates = [];
+
+      angular.forEach(
+        $rootScope.config.timeline.config.states,
+        function (state)
+        {
+          if (state.className != 'no-state')
+          {
+            $scope.filteredStates.push(state);
+          }
+        }
+      );
+
+
+      /**
        * Legend defaults
        */
       angular.forEach(
-        $rootScope.config.timeline.config.states,
-        function (state, index) { $scope.timeline.config.legenda[index] = true }
+        $scope.filteredStates,
+        function (state, index)
+        {
+          $scope.timeline.config.legenda[index] = true;
+        }
       );
 
 
