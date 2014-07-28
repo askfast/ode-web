@@ -12,8 +12,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
   .controller(
   'scheaduler',
   [
-    '$scope', '$rootScope',
-    function ($scope, $rootScope)
+    '$scope',
+    function ($scope)
     {
       /**
        * Watch offsets
@@ -24,7 +24,7 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
           if ($scope.scheaduled)
           {
             angular.forEach(
-              $scope.scheaduled.offsets, function (offset, index)
+              $scope.scheaduled.offsets, function (offset)
               {
                 /**
                  * If all the days are unchecked make monday checked as default
@@ -53,9 +53,11 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
                 if (offset.exact != exact)
                 { offset.exact = exact; }
 
-              });
+              }
+            );
           }
-        });
+        }
+      );
 
 
       /**
@@ -63,6 +65,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
        */
       $scope.addNewOffset = function ()
       {
+        console.log('adding a new offset..');
+
         if ($scope.scheaduled.offsets[0])
         {
           var hour = 60 * 60,

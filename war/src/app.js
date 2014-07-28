@@ -14718,10 +14718,9 @@ angular.module('WebPaige.Controllers.Messages', [])
         var count = 0;
 
         angular.forEach(
-          $scope.scheaduled.offsets, function (offset)
-          {
-            count ++;
-          });
+          $scope.scheaduled.offsets,
+          function () { count ++ }
+        );
 
         $scope.scheaduleCount = count;
 
@@ -14744,8 +14743,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         $scope.$watch(
           $location.search(),
-          function ()
-          { $location.search({uuid: id}) }
+          function () { $location.search({uuid: id}) }
         );
 
         $rootScope.statusBar.off();
@@ -14829,8 +14827,7 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         angular.forEach(
           messages,
-          function (message)
-          { $scope.selection[inbox][message.uuid] = flag }
+          function (message) { $scope.selection[inbox][message.uuid] = flag }
         );
       };
 
@@ -14960,9 +14957,11 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
@@ -15004,9 +15003,11 @@ angular.module('WebPaige.Controllers.Messages', [])
                   $scope.messages = messages.messages;
 
                   $rootScope.statusBar.off();
-                });
+                }
+              );
             }
-          });
+          }
+        );
       };
 
 
@@ -15146,9 +15147,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 
                       $rootScope.statusBar.off();
                     }
-                  });
+                  }
+                );
               }
-            });
+            }
+          );
         }
         else
         {
@@ -15168,17 +15171,22 @@ angular.module('WebPaige.Controllers.Messages', [])
         function ()
         {
           $.each(
-            $(this).next().find("ul li.result-selected"), function (i, li)
+            $(this).next().find("ul li.result-selected"),
+            function (i, li)
             {
               var name = $(li).html();
 
               $.each(
-                $("div#composeTab select.chzn-select option"), function (j, opt)
+                $("div#composeTab select.chzn-select option"),
+                function (j, opt)
                 {
                   if (opt.innerHTML == name) opt.selected = true;
-                });
-            });
-        });
+                }
+              );
+            }
+          );
+        }
+      );
 
 
       /**
@@ -15190,14 +15198,17 @@ angular.module('WebPaige.Controllers.Messages', [])
           $scope.message.receivers, function (receiver)
           {
             angular.forEach(
-              $("div#composeTab select.chzn-select option"), function (option)
+              $("div#composeTab select.chzn-select option"),
+              function (option)
               {
                 if (option.innerHTML == receiver.name)
                 {
                   option.selected = true;
                 }
-              });
-          });
+              }
+            );
+          }
+        );
 
         $("div#composeTab select.chzn-select").trigger("liszt:updated");
       }
@@ -15216,10 +15227,12 @@ angular.module('WebPaige.Controllers.Messages', [])
           function ()
           {
             angular.forEach(
-              $("div#composeTab select.chzn-select option"), function (option)
+              $("div#composeTab select.chzn-select option"),
+              function (option)
               {
                 if (option.innerHTML == name) option.selected = true;
-              });
+              }
+            );
 
             $("div#composeTab select.chzn-select").trigger("liszt:updated");
           }, $rootScope.config.timers.TICKER);
@@ -15252,18 +15265,9 @@ angular.module('WebPaige.Controllers.Messages', [])
        * Bulk cleaners for mailboxes
        */
       $scope.clean = {
-        inbox: function ()
-        {
-          Messages.clean($scope.messages.inbox);
-        },
-        outbox: function ()
-        {
-          Messages.clean($scope.messages.outbox);
-        },
-        trash: function ()
-        {
-          Messages.clean($scope.messages.trash);
-        }
+        inbox: function () { Messages.clean($scope.messages.inbox) },
+        outbox: function () { Messages.clean($scope.messages.outbox) },
+        trash: function () { Messages.clean($scope.messages.trash) }
       };
 
 
@@ -15490,8 +15494,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
   .controller(
   'scheaduler',
   [
-    '$scope', '$rootScope',
-    function ($scope, $rootScope)
+    '$scope',
+    function ($scope)
     {
       /**
        * Watch offsets
@@ -15502,7 +15506,7 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
           if ($scope.scheaduled)
           {
             angular.forEach(
-              $scope.scheaduled.offsets, function (offset, index)
+              $scope.scheaduled.offsets, function (offset)
               {
                 /**
                  * If all the days are unchecked make monday checked as default
@@ -15531,9 +15535,11 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
                 if (offset.exact != exact)
                 { offset.exact = exact; }
 
-              });
+              }
+            );
           }
-        });
+        }
+      );
 
 
       /**
@@ -15541,6 +15547,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
        */
       $scope.addNewOffset = function ()
       {
+        console.log('adding a new offset..');
+
         if ($scope.scheaduled.offsets[0])
         {
           var hour = 60 * 60,

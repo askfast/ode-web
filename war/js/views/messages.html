@@ -52,13 +52,13 @@
     </a>
   </li>
 
-  <!--<li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}">-->
-    <!--<a href="messages#notificationsTab"-->
-       <!--data-toggle="tab"-->
-       <!--ng-click="resetViews(); setViewTo('notifications')">-->
-      <!--<span class="entypo">&#128276;</span> {{ui.message.notifications}}-->
-    <!--</a>-->
-  <!--</li>-->
+  <li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}">
+    <a href="messages#notificationsTab"
+       data-toggle="tab"
+       ng-click="resetViews(); setViewTo('notifications')">
+      <span class="entypo">&#128276;</span> {{ui.message.notifications}}
+    </a>
+  </li>
 
   <li class="{{(views.trash==true ) && 'active'}}">
     <a href="messages#trashTab"
@@ -103,7 +103,12 @@
 <form ng-controller="scheaduler">
   <fieldset>
 
-    <div class="control-group">
+
+
+
+
+    <!--broadcasting types-->
+    <div class="control-group" style="display: none">
 
       <label class="control-label">{{ui.message.broadcast}}</label>
 
@@ -127,12 +132,15 @@
              style="display: inline">{{ui.message.email}}</label>
 
     </div>
-
-
     <!-- end broadcasting types -->
 
+
+
+
+
+
     <!-- receivers -->
-    <div class="control-group">
+    <div class="control-group" style="display: none">
       <label class="control-label">{{ui.message.receviers}}</label>
       <!-- {{ui.message.chooseRecept}} -->
 
@@ -149,8 +157,12 @@
     </div>
     <!-- end receivers -->
 
+
+
+
+
     <!-- subject -->
-    <div class="control-group">
+    <div class="control-group" style="display: none">
       <label class="control-label">{{ui.message.subject}}</label>
       <input type="text"
              class="span5"
@@ -159,8 +171,12 @@
     </div>
     <!-- end subject -->
 
+
+
+
+
     <!-- message -->
-    <div class="control-group">
+    <div class="control-group" style="display: none">
       <label class="control-label">{{ui.message.message}}</label>
       <textarea rows="7"
                 class="span7"
@@ -172,20 +188,20 @@
 
 
     <!-- schedulerPane toggle -->
-    <!--<div class="control-group">-->
-      <!--<label class="control-label">{{ui.message.repeat}}</label>-->
-      <!--<div  class="btn-group"-->
-            <!--data-toggle="buttons-radio">-->
-        <!--<button type="button"-->
-                <!--class="btn btn-small {{(scheaduled.status) && 'btn-success active'}}"-->
-                <!--ng-model="scheaduled.status"-->
-                <!--ng-click="scheaduled.status = true; addNewOffset()">{{ui.message.repeatOn}}</button>-->
-        <!--<button type="button"-->
-                <!--class="btn btn-small {{(!scheaduled.status) && 'active'}}"-->
-                <!--ng-model="scheaduled.status"-->
-                <!--ng-click="scheaduled.status = false">{{ui.message.repeatOff}}</button>-->
-      <!--</div>-->
-    <!--</div>-->
+    <div class="control-group">
+      <label class="control-label">{{ui.message.repeat}}</label>
+      <div  class="btn-group"
+            data-toggle="buttons-radio">
+        <button type="button"
+                class="btn btn-small {{(scheaduled.status) && 'btn-success active'}}"
+                ng-model="scheaduled.status"
+                ng-click="scheaduled.status = true; addNewOffset()">{{ui.message.repeatOn}}</button>
+        <button type="button"
+                class="btn btn-small {{(!scheaduled.status) && 'active'}}"
+                ng-model="scheaduled.status"
+                ng-click="scheaduled.status = false">{{ui.message.repeatOff}}</button>
+      </div>
+    </div>
     <!-- end scheduler toggle -->
 
 
@@ -201,12 +217,6 @@
       <header>
         <h4>{{ui.message.repeat}}</h4>
         <div class="pull-right">
-          <!--<button type="button" -->
-                  <!--class="btn btn-small" -->
-                  <!--ng-click="scheadulerPane=false" -->
-                  <!--ng-hide="views.scheaduler">-->
-            <!--{{ui.message.repeatOff}}-->
-          <!--</button>-->
           <button type="button"
                   class="btn btn-small btn-success"
                   ng-click="addNewOffset()">{{ui.message.repeatNew}}
@@ -217,17 +227,10 @@
 
       <hr>
 
-      <!-- notification title -->
-      <div class="control-group">
-        <label class="control-label">{{ui.message.notificationLabel}}</label>
 
-        <input type="text"
-               class="span6"
-               ng-model="scheaduled.title"
-               placeholder="{{ui.message.notificationLabel}}">
 
-      </div>
-      <!-- end notification title -->
+
+
 
       <!-- no notifications -->
       <div class="control-group" ng-hide="scheaduleCount > 0">
@@ -259,43 +262,6 @@
 
 
 
-      <!-- scheaduler status -->
-      <!--<div class="control-group">-->
-        <!--<label class="control-label">{{ui.message.notificationStatus}}</label>-->
-
-        <!--&lt;!&ndash; status toggler &ndash;&gt;-->
-        <!--<div class="btn-group"-->
-             <!--data-toggle="buttons-radio">-->
-
-          <!--<button type="button"-->
-                  <!--class="btn btn-small {{(scheaduled.status) && 'active'}}"-->
-                  <!--ng-model="scheaduled.status"-->
-                  <!--ng-click="scheaduled.status = true">{{ui.message.repeatOn}}-->
-          <!--</button>-->
-
-          <!--<button type="button"-->
-                  <!--class="btn btn-small {{(!scheaduled.status) && 'active'}}"-->
-                  <!--ng-model="scheaduled.status"-->
-                  <!--ng-click="scheaduled.status = false">{{ui.message.repeatOff}}-->
-          <!--</button>-->
-
-        <!--</div>-->
-        <!--&lt;!&ndash; end status toggle &ndash;&gt;-->
-
-        <!--&lt;!&ndash; status indicator &ndash;&gt;-->
-        <!--<div style="margin-left: 10px; display: inline;">-->
-          <!--<span class="label label-success" ng-show="scheaduled.status">{{ui.message.enabled}}</span>-->
-          <!--<span class="label" ng-hide="scheaduled.status">{{ui.message.disabled}}</span>-->
-        <!--</div>-->
-        <!--&lt;!&ndash; end status indicator &ndash;&gt;-->
-
-      <!--</div>-->
-      <!-- end scheduler status -->
-
-
-
-
-
     </section>
     <!-- end scheduler -->
 
@@ -319,35 +285,6 @@
               ng-click="send(message, broadcast)"
               class="btn btn-success">{{ui.message.sendMessage}}</button>
     </div>
-    <!-- end compose form actions -->
-
-    <!-- compose form actions -->
-    <!--<div class="form-actions">-->
-
-      <!--&lt;!&ndash; scheduler action buttons &ndash;&gt;-->
-      <!--<div ng-show="scheadulerPane">-->
-        <!--<button type="submit"-->
-                <!--ng-hide="scheaduleCount > 0"-->
-                <!--class="btn btn-success disabled">{{ui.message.notificationSave}}-->
-        <!--</button>-->
-
-        <!--<button type="submit"-->
-                <!--ng-click="scheaduler.save(message, broadcast, scheaduled)"-->
-                <!--ng-show="scheaduleCount > 0"-->
-                <!--class="btn btn-success">{{ui.message.notificationSave}}-->
-        <!--</button>-->
-      <!--</div>-->
-      <!--&lt;!&ndash; end scheduler action buttons &ndash;&gt;-->
-      <!---->
-      <!--&lt;!&ndash; message action buttons &ndash;&gt;-->
-      <!--<button type="submit"-->
-              <!--ng-hide="scheadulerPane"-->
-              <!--ng-click="send(message, broadcast)"-->
-              <!--class="btn btn-success">{{ui.message.sendMessage}}-->
-      <!--</button>-->
-      <!--&lt;!&ndash; end message action buttons &ndash;&gt;-->
-
-    <!--</div>-->
     <!-- end compose form actions -->
 
 
