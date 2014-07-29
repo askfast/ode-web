@@ -10925,7 +10925,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       /**
        * Get pie overviews
        */
-      getOverviews();
+      $timeout(
+        function ()
+        {
+          getOverviews()
+        }
+      );
 
 
       /**
