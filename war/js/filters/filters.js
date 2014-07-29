@@ -807,4 +807,30 @@ angular.module('WebPaige.Filters', ['ngResource'])
         }
       }
     }
+  ])
+
+
+/**
+ * Convert array of audience to a nice list
+ */
+.filter(
+  'convertToObject',
+  [
+    function ()
+    {
+      return function (arr)
+      {
+        if (arr)
+        {
+          var obj = {};
+
+          angular.forEach(
+            arr,
+            function (item, index) { obj[index] = item }.bind(obj)
+          );
+
+          return obj;
+        }
+      }
+    }
   ]);

@@ -386,6 +386,24 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
       $scope.checkPincode = null;
 
+
+      $scope.addPhoneNumber = function ()
+      {
+        $timeout(
+          function ()
+          {
+            $scope.data.resources.PhoneAddresses.push('123');
+          }
+        );
+      };
+
+      $scope.removePhoneNumber = function (index)
+      {
+        console.log('remove phone number ->', index);
+
+        $scope.data.resources.PhoneAddresses.splice(index, 1);
+      };
+
       /**
        * Save user
        */
@@ -455,7 +473,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             {
               $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
-              console.log('$scope.profileRole ->', $scope.profileRole);
+              // console.log('$scope.profileRole ->', $scope.profileRole);
 
               if (!angular.isDefined($scope.profileRole) || $scope.profileRole == '')
               {

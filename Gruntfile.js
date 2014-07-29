@@ -140,11 +140,12 @@ module.exports = function (grunt)
           'war/dist/views/planboard.html':                'war/js/views/planboard.html',
           'war/dist/views/messages.html':                 'war/js/views/messages.html',
           'war/dist/views/messages-scheadule-item.html':  'war/js/views/messages-scheadule-item.html',
+          'war/dist/views/phone-number.html':             'war/js/views/phone-number.html',
           'war/dist/views/groups.html':                   'war/js/views/groups.html',
           'war/dist/views/groups-wish.html':              'war/js/views/groups-wish.html',
           'war/dist/views/profile.html':                  'war/js/views/profile.html',
           'war/dist/views/settings.html':                 'war/js/views/settings.html',
-          'war/dist/views/faq.html':                     'war/js/views/faq.html',
+          'war/dist/views/faq.html':                      'war/js/views/faq.html',
           'war/dist/views/help.html':                     'war/js/views/help.html'
         }
       }
