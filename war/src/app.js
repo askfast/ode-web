@@ -1057,7 +1057,7 @@ localStorage.removeItem('WebPaige.periodsNext');
  */
 angular.module('WebPaige',[
   'ngResource',
-  'ngRoute',
+  // 'ngRoute',
   // modals
   'WebPaige.Modals.User',
   'WebPaige.Modals.Dashboard',
@@ -1086,7 +1086,7 @@ angular.module('WebPaige',[
   'WebPaige.Services.Session',
   'WebPaige.Services.Dater',
   'WebPaige.Services.EventBus',
-  'WebPaige.Services.Interceptor',
+  // 'WebPaige.Services.Interceptor',
   'WebPaige.Services.MD5',
   'WebPaige.Services.Storage',
   'WebPaige.Services.Strings',
@@ -1623,7 +1623,33 @@ angular.module('WebPaige')
       /**
        * Define interceptor
        */
-      $httpProvider.interceptors.push('Interceptor');
+      // $httpProvider.interceptors.push('Interceptor');
+
+      $httpProvider.responseInterceptors.push(
+        [
+          '$q',
+          function ($q)
+          {
+            return function (promise)
+            {
+              return promise.then(
+                function (response) { return response },
+                function (response)
+                {
+                  if (response.status == 403)
+                  {
+                    localStorage.setItem('sessionTimeout', '');
+
+                    window.location.href = 'logout.html';
+                  }
+
+                  return $q.reject(response);
+                }
+              );
+            }
+          }
+        ]
+      );
     }
   ]);;/*jslint node: true */
 /*global angular */
@@ -1648,7 +1674,8 @@ angular.module('WebPaige')
     'Messages',
     '$config',
     '$window',
-    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
+    '$http',
+    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, $http)
     {
       /**
        * Pass config and init dynamic config values
@@ -6248,6 +6275,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         /**
          * Pass the scheadule data
          */
+        // scope.s = angular.extend({}, scope.scheadule);
         scope.s = scope.scheadule;
 
         // element.html(template).show();
@@ -6887,7 +6915,8 @@ angular.module('WebPaige.Services.EventBus', ['ngResource'])
 ]);;'use strict';
 
 angular.module(
-  'WebPaige.Services.Interceptor', ['ngResource']).factory(
+  'WebPaige.Services.Interceptor', ['ngResource'])
+  .factory(
   'Interceptor', [
     '$window', '$q',
     function ($window, $q)
@@ -12078,31 +12107,11 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
       /**
-       * Filter states
-       */
-      $scope.filteredStates = [];
-
-      angular.forEach(
-        $rootScope.config.timeline.config.states,
-        function (state)
-        {
-          if (state.className != 'no-state')
-          {
-            $scope.filteredStates.push(state);
-          }
-        }
-      );
-
-
-      /**
        * Legend defaults
        */
       angular.forEach(
-        $scope.filteredStates,
-        function (state, index)
-        {
-          $scope.timeline.config.legenda[index] = true;
-        }
+        $rootScope.config.timeline.config.states,
+        function (state, index) { $scope.timeline.config.legenda[index] = true }
       );
 
 
@@ -15494,8 +15503,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
   .controller(
   'scheaduler',
   [
-    '$scope',
-    function ($scope)
+    '$scope', '$timeout',
+    function ($scope, $timeout)
     {
       /**
        * Watch offsets
@@ -15506,11 +15515,9 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
           if ($scope.scheaduled)
           {
             angular.forEach(
-              $scope.scheaduled.offsets, function (offset)
+              $scope.scheaduled.offsets,
+              function (offset)
               {
-                /**
-                 * If all the days are unchecked make monday checked as default
-                 */
                 if (offset.mon == false &&
                     offset.tue == false &&
                     offset.wed == false &&
@@ -15522,19 +15529,15 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
                   offset.mon = true;
                 }
 
-                // var hour    = 1000 * 60 * 60,
-                //      minute  = 1000 * 60,
                 var hour = 60 * 60,
                     minute = 60,
                     time = offset.time.split(':'),
                     exact = (time[0] * hour) + (time[1] * minute);
 
-                if (time[0] != offset.hour)  offset.hour = time[0];
-                if (time[1] != offset.minute) offset.minute = time[1];
+                if (time[0] != offset.hour) { offset.hour = time[0] }
+                if (time[1] != offset.minute) { offset.minute = time[1] }
 
-                if (offset.exact != exact)
-                { offset.exact = exact; }
-
+                if (offset.exact != exact) { offset.exact = exact }
               }
             );
           }
@@ -15547,35 +15550,38 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
        */
       $scope.addNewOffset = function ()
       {
-        console.log('adding a new offset..');
+        $timeout(
+          function ()
+          {
+            if ($scope.scheaduled.offsets[0])
+            {
+              var hour = 60 * 60,
+                  minute = 60,
+                  time = $scope.scheaduled.offsets[0].time.split(':'),
+                  exact = (time[0] * hour) + (time[1] * minute);
 
-        if ($scope.scheaduled.offsets[0])
-        {
-          var hour = 60 * 60,
-              minute = 60,
-              time = $scope.scheaduled.offsets[0].time.split(':'),
-              exact = (time[0] * hour) + (time[1] * minute);
+              $scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
 
-          $scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
+              $scope.scheaduled.offsets[exact].exact = exact;
+            }
 
-          $scope.scheaduled.offsets[exact].exact = exact;
-        }
+            $scope.scheaduled.offsets[0] = {
+              mon: true,
+              tue: false,
+              wed: false,
+              thu: false,
+              fri: false,
+              sat: false,
+              sun: false,
+              hour: 0,
+              minute: 0,
+              time: '00:00',
+              exact: 0
+            };
 
-        $scope.scheaduled.offsets[0] = {
-          mon: true,
-          tue: false,
-          wed: false,
-          thu: false,
-          fri: false,
-          sat: false,
-          sun: false,
-          hour: 0,
-          minute: 0,
-          time: '00:00',
-          exact: 0
-        };
-
-        $scope.scheaduleCounter();
+            $scope.scheaduleCounter();
+          }
+        )
       };
 
 

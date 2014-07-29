@@ -21,7 +21,8 @@ angular.module('WebPaige')
     'Messages',
     '$config',
     '$window',
-    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
+    '$http',
+    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, $http)
     {
       /**
        * Pass config and init dynamic config values

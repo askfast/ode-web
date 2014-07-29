@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module(
-  'WebPaige.Services.Interceptor', ['ngResource']).factory(
+  'WebPaige.Services.Interceptor', ['ngResource'])
+  .factory(
   'Interceptor', [
     '$window', '$q',
     function ($window, $q)
