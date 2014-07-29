@@ -53,6 +53,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         /**
          * Pass the scheadule data
          */
+        // scope.s = angular.extend({}, scope.scheadule);
         scope.s = scope.scheadule;
 
         // element.html(template).show();

@@ -723,8 +723,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'nicelyOffsets',
   [
-    '$sce', 'Dater', 'Storage', 'Offsetter',
-    function ($sce, Dater, Storage, Offsetter)
+    'Dater', 'Storage', 'Offsetter',
+    function (Dater, Storage, Offsetter)
     {
       return function (data)
       {
@@ -757,7 +757,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
           }
         );
 
-        return $sce.trustAsHtml(compiled);
+        return compiled;
+
+        // return $sce.trustAsHtml(compiled);
       }
     }
   ])

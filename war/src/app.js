@@ -9623,8 +9623,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'nicelyOffsets',
   [
-    '$sce', 'Dater', 'Storage', 'Offsetter',
-    function ($sce, Dater, Storage, Offsetter)
+    'Dater', 'Storage', 'Offsetter',
+    function (Dater, Storage, Offsetter)
     {
       return function (data)
       {
@@ -9657,7 +9657,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
           }
         );
 
-        return $sce.trustAsHtml(compiled);
+        return compiled;
+
+        // return $sce.trustAsHtml(compiled);
       }
     }
   ])
@@ -10611,7 +10613,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Profile',
     'Groups',
     'Announcer',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
+    '$timeout',
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage,
+              Settings, Profile, Groups, Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -10847,7 +10851,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               function pieMaker ($id, id, _ratios)
               {
-                setTimeout(
+                $timeout(
                   function ()
                   {
                     if ($.browser.msie && $.browser.version == '8.0')
