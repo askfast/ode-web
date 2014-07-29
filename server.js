@@ -1,7 +1,13 @@
-var express = require('express'),
-		cluster = require('cluster'),
-		os 			= require('os'),
+var express     = require('express'),
+	cluster     = require('cluster'),
+	os 			= require('os'),
+    httpProxy	= require('http-proxy'),
     app 		= express();
+
+var apiProxy = httpProxy.createProxyServer();
+var proxyHost = 'http://dev.ask-cs.com';
+
+
 
 app.configure(function ()
 {
@@ -13,20 +19,26 @@ app.configure(function ()
 	next();
   });*/
 
-  app.use(express.static(__dirname + '/war'));
+  app.use('/proxy', function (req, res)
+  {
+    apiProxy.web(req, res, { target: proxyHost });
+  });
 
+  app.use(express.static(__dirname + '/war'));
   app.use(express.logger('dev'));
 });
 
 app.get('/', function (req, res)
 {
-  res.sendfile(__dirname + '/war/index.html');
+    res.sendfile(__dirname + '/war/index.html');
 });
+
+
 
 
 app.use(function (req, res, next)
 {
-	res.sendfile(__dirname + req.url);
+    res.sendfile(__dirname + req.url);
 });
 
 
