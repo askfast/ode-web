@@ -265,23 +265,23 @@
 
               <div class="input-prepend"
                    ng-show="phoneViews.second">
-                <span class="add-on">1.</span>
+                <span class="add-on" style="width: 70px">Standaard</span>
                 <input type="text"
                        class="inputPhoneNumber-1"
                        ng-model="profilemeta.phones[1]"
                        ng-change="phoneNumberParser(profilemeta.phones[1])"
                        value="{{data.resources.PhoneAddresses[0]}}"
-                       style="width: 200px">
+                       style="width: 155px">
               </div>
 
               <div class="input-prepend input-append" ng-hide="phoneViews.second">
-                <span class="add-on">1.</span>
+                <span class="add-on" style="width: 70px">Standaard</span>
                 <input type="text"
                        class="inputPhoneNumber-1"
                        ng-model="profilemeta.phones[1]"
                        ng-change="phoneNumberParser(profilemeta.phones[1])"
                        value="{{data.resources.PhoneAddresses[0]}}"
-                       style="width: 200px">
+                       style="width: 155px">
                 <button class="btn btn-success"
                         type="button"
                         ng-click="addPhoneNumber('second')">
@@ -305,24 +305,24 @@
             <div class="controls" ng-show="phoneViews.second">
 
               <div class="input-prepend" ng-show="phoneViews.third">
-                <span class="add-on">2.</span>
+                <span class="add-on" style="width: 70px">Extra.2</span>
                 <input type="text"
                        class="inputPhoneNumber-2"
                        ng-model="profilemeta.phones[2]"
                        ng-change="phoneNumberParser(profilemeta.phones[2])"
                        value="{{data.resources.PhoneAddresses[1]}}"
-                       style="width: 200px">
+                       style="width: 155px">
               </div>
 
               <div class="input-prepend input-append"
                    ng-hide="phoneViews.third">
-                <span class="add-on">2.</span>
+                <span class="add-on" style="width: 70px">Extra.2</span>
                 <input type="text"
                        class="inputPhoneNumber-2"
                        ng-model="profilemeta.phones[2]"
                        ng-change="phoneNumberParser(profilemeta.phones[2])"
                        value="{{data.resources.PhoneAddresses[1]}}"
-                       style="width: 200px">
+                       style="width: 155px">
                 <button class="btn"
                         type="button"
                         ng-click="removePhoneNumber('second')">
@@ -351,13 +351,13 @@
 
             <div class="controls" ng-show="phoneViews.third">
               <div class="input-prepend input-append">
-                <span class="add-on">3.</span>
+                <span class="add-on" style="width: 70px">Extra.3</span>
                 <input type="text"
                        class="inputPhoneNumber-3"
                        ng-model="profilemeta.phones[3]"
                        ng-change="phoneNumberParser(profilemeta.phones[3])"
                        value="{{data.resources.PhoneAddresses[2]}}"
-                       style="width: 200px">
+                       style="width: 155px">
                 <button class="btn"
                         type="button"
                         ng-click="removePhoneNumber('third')">
