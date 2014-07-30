@@ -16871,6 +16871,31 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
        */
       $scope.profilemeta = data && data.resources;
 
+
+      console.log('phones ->', data.resources.PhoneAddresses);
+
+      $scope.profilemeta.phones = {
+        1: data.resources.PhoneAddresses[0],
+        2: data.resources.PhoneAddresses[1],
+        3: data.resources.PhoneAddresses[2]
+      };
+
+      $scope.phoneViews = {
+        second: angular.isDefined(data.resources.PhoneAddresses[1]),
+        third: angular.isDefined(data.resources.PhoneAddresses[2])
+      };
+
+      $scope.addPhoneNumber = function (index)
+      {
+        $scope.phoneViews[index] = true;
+      };
+
+      $scope.removePhoneNumber = function (index)
+      {
+        $scope.phoneViews[index] = false;
+      };
+
+
       /**
        * Get groups of user
        */
@@ -17087,32 +17112,13 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
       $scope.checkPincode = null;
 
-
-      $scope.addPhoneNumber = function ()
-      {
-        $timeout(
-          function ()
-          {
-            $scope.data.resources.PhoneAddresses.push('123');
-          }
-        );
-      };
-
-      $scope.removePhoneNumber = function (index)
-      {
-        console.log('remove phone number ->', index);
-
-        $scope.data.resources.PhoneAddresses.splice(index, 1);
-      };
-
       /**
        * Save user
        */
       $scope.save = function (resources)
       {
         if (! angular.isDefined($scope.profilemeta.pincode) ||
-            $scope.profilemeta.pincode == '' ||
-            ! $scope.pincodeExistsValidation)
+            $scope.profilemeta.pincode == '' || ! $scope.pincodeExistsValidation)
         {
           $rootScope.notifier.error($rootScope.ui.profile.pincodeCorrect);
 
@@ -17176,7 +17182,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
               // console.log('$scope.profileRole ->', $scope.profileRole);
 
-              if (!angular.isDefined($scope.profileRole) || $scope.profileRole == '')
+              if (! angular.isDefined($scope.profileRole) || $scope.profileRole == '')
               {
                 $scope.profileRole = 3;
               }
