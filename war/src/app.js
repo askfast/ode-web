@@ -6257,157 +6257,6 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
 
 /**
- * PhoneNumber item
- */
-  .directive(
-  'phone',
-  function ()
-  {
-    return {
-      restrict: 'E',
-      //rep1ace: true,
-      //templateUrl: 'dist/views/phone-number.html',
-      scope: {
-        index: '@',
-        number: '='
-      },
-      link: function (scope, element, attrs)
-      {
-        scope.n = scope.number;
-
-        scope.$watch(
-          'n',
-          function (newValue, oldValue)
-          {
-            // console.log('new ->', newValue);
-            // console.log('old ->', oldValue);
-            scope.number = newValue;
-          }
-        );
-
-        scope.resetPhoneNumberChecker = function ()
-        {
-          scope.phoneNumberParsed = {};
-
-          scope.phoneNumberParsed.result = false;
-        };
-
-        scope.resetPhoneNumberChecker();
-
-        scope.phoneNumberParser = function (checked)
-        {
-          if (checked != '')
-          {
-            if (checked && checked.length > 0)
-            {
-              var result, all;
-
-              result = all = phoneNumberParser(checked, 'NL');
-
-              scope.phoneNumberParsed.result = true;
-
-              if (result)
-              {
-//                var error = $rootScope.ui.errors.phone.notValid,
-//                    invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
-//                    message;
-
-                var error = 'not valid!',
-                    invalidCountry = 'invalid country',
-                    message;
-
-                if (result.error)
-                {
-                  scope.phoneNumberParsed = {
-                    result: false,
-                    message: error
-                  };
-                }
-                else
-                {
-                  if (! result.validation.isPossibleNumber)
-                  {
-                    switch (result.validation.isPossibleNumberWithReason)
-                    {
-                      case 'INVALID_COUNTRY_CODE':
-                        message = invalidCountry;
-                        break;
-                      case 'TOO_SHORT':
-                        // message = error + $rootScope.ui.errors.phone.tooShort;
-                        message = error + 'too short';
-                        break;
-                      case 'TOO_LONG':
-                        // message = error + $rootScope.ui.errors.phone.tooLong;
-                        message = error + 'too long';
-                        break;
-                    }
-
-                    scope.phoneNumberParsed = {
-                      result: false,
-                      message: message
-                    };
-                  }
-                  else
-                  {
-                    if (! result.validation.isValidNumber)
-                    {
-                      scope.phoneNumberParsed = {
-                        result: false,
-                        message: error
-                      };
-                    }
-                    else
-                    {
-                      if (! result.validation.isValidNumberForRegion)
-                      {
-                        scope.phoneNumberParsed = {
-                          result: false,
-                          message: invalidCountry
-                        };
-                      }
-                      else
-                      {
-                        scope.phoneNumberParsed = {
-                          result: true,
-                          message: 'Validated well!'
-//                          message: $rootScope.ui.success.phone.message +
-//                                   result.validation.phoneNumberRegion +
-//                                   $rootScope.ui.success.phone.as +
-//                                   result.validation.getNumberType
-                        };
-
-                        $('#inputPhoneNumber-' + scope.index).removeClass('error');
-                      }
-                    }
-                  }
-                }
-              }
-
-              scope.phoneNumberParsed.all = all;
-            }
-            else
-            {
-              scope.phoneNumberParsed.result = true;
-
-              delete scope.phoneNumberParsed.message;
-
-              $('#inputPhoneNumber-' + scope.index).removeClass('error');
-            }
-          }
-        };
-
-        scope.remove = function (index)
-        {
-          scope.$parent.$parent.removePhoneNumber(index);
-        };
-      }
-    };
-
-  }
-)
-
-
-/**
  * Notification item
  */
   .directive(
@@ -16871,8 +16720,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
        */
       $scope.profilemeta = data && data.resources;
 
-      console.log('phones ->', data.resources.PhoneAddresses);
-
       $scope.profilemeta.phones = {
         1: data.resources.PhoneAddresses[0],
         2: data.resources.PhoneAddresses[1],
@@ -16889,16 +16736,164 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         $scope.phoneViews[index] = true;
       };
 
-      $scope.removePhoneNumber = function (index)
+      $scope.removePhoneNumber = function (num, index)
       {
         $scope.phoneViews[index] = false;
+
+        $timeout(
+          function ()
+          {
+            $scope.data.resources.PhoneAddresses.splice(num - 1, 1);
+
+            delete $scope.profilemeta.phones[num];
+          }
+        );
       };
 
+
+      $scope.profilePhoneNumberParsed = {
+        1: {},
+        2: {},
+        3: {}
+      };
+
+      $scope.profileResetPhoneNumberChecker = function (index)
+      {
+        $scope.profilePhoneNumberParsed[index] = {};
+
+        $scope.profilePhoneNumberParsed[index].result = false;
+      };
+
+      $scope.$watch(
+        'profilemeta.phones[1]',
+        function (value) { if (value == '') { $scope.profileResetPhoneNumberChecker(1) }}
+      );
+
+      $scope.$watch(
+        'profilemeta.phones[2]',
+        function (value) { if (value == '') { $scope.profileResetPhoneNumberChecker(2) }}
+      );
+
+      $scope.$watch(
+        'profilemeta.phones[3]',
+        function (value) { if (value == '') { $scope.profileResetPhoneNumberChecker(3) }}
+      );
+
+      $scope.profileResetPhoneNumberChecker(1);
+      $scope.profileResetPhoneNumberChecker(2);
+      $scope.profileResetPhoneNumberChecker(3);
+
+      $scope.profilePhoneNumberParser = function (index, checked)
+      {
+        if (checked != '')
+        {
+          if (checked && checked.length > 0)
+          {
+            var result,
+                all;
+
+            result = all = phoneNumberParser(checked, 'NL');
+
+            $scope.profilePhoneNumberParsed[index].result = true;
+
+            if (result)
+            {
+              var error = $rootScope.ui.errors.phone.notValid,
+                  invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                  message;
+
+              if (result.error)
+              {
+                $scope.profilePhoneNumberParsed[index] = {
+                  result: false,
+                  message: error
+                };
+              }
+              else
+              {
+                if (! result.validation.isPossibleNumber)
+                {
+                  switch (result.validation.isPossibleNumberWithReason)
+                  {
+                    case 'INVALID_COUNTRY_CODE':
+                      message = invalidCountry;
+                      break;
+                    case 'TOO_SHORT':
+                      message = error + $rootScope.ui.errors.phone.tooShort;
+                      break;
+                    case 'TOO_LONG':
+                      message = error + $rootScope.ui.errors.phone.tooLong;
+                      break;
+                  }
+
+                  $scope.profilePhoneNumberParsed[index] = {
+                    result: false,
+                    message: message
+                  };
+                }
+                else
+                {
+                  if (! result.validation.isValidNumber)
+                  {
+                    $scope.profilePhoneNumberParsed[index] = {
+                      result: false,
+                      message: error
+                    };
+                  }
+                  else
+                  {
+                    if (! result.validation.isValidNumberForRegion)
+                    {
+                      $scope.profilePhoneNumberParsed[index] = {
+                        result: false,
+                        message: invalidCountry
+                      };
+                    }
+                    else
+                    {
+                      $scope.profilePhoneNumberParsed[index] = {
+                        result: true,
+                        message: $rootScope.ui.success.phone.message +
+                                 result.validation.phoneNumberRegion +
+                                 $rootScope.ui.success.phone.as +
+                                 result.validation.getNumberType
+                      };
+
+                      $('#inputPhoneNumber').removeClass('error');
+                    }
+                  }
+                }
+              }
+            }
+
+            $scope.profilePhoneNumberParsed[index].all = all;
+          }
+          else
+          {
+            $scope.profilePhoneNumberParsed[index].result = true;
+
+            delete $scope.profilePhoneNumberParsed[index].message;
+
+            $('.inputPhoneNumber-' + index).removeClass('error');
+          }
+        }
+      };
+
+      $timeout(
+        function ()
+        {
+          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
+          $scope.profilePhoneNumberParser(2, $scope.profilemeta.phones[2]);
+          $scope.profilePhoneNumberParser(3, $scope.profilemeta.phones[3]);
+        },
+        50
+      );
 
       /**
        * Get groups of user
        */
-      $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+      $scope.groups = $route.current.params.userId &&
+                      Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
       $scope.availableGroups = angular.fromJson(Storage.get('groups'));
 
@@ -17054,17 +17049,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         );
       };
 
-      $scope.$watch(
-        'profilemeta.PhoneAddress',
-        function (value)
-        {
-          if (value == '')
-          {
-            $rootScope.resetPhoneNumberChecker();
-          }
-        }
-      );
-
       var CHECK_PINCODE_DELAY = 250;
 
       $scope.pincodeExistsValidation = true;
@@ -17146,18 +17130,18 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           resources.askPass = MD5(resources.Password);
         }
 
+        if ((! $scope.profilePhoneNumberParsed[1].result && $scope.profilemeta.phones[1] != '') ||
+            (! $scope.profilePhoneNumberParsed[2].result && $scope.profilemeta.phones[2] != '') ||
+            (! $scope.profilePhoneNumberParsed[3].result && $scope.profilemeta.phones[3] != ''))
+        {
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
-//        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
-//        {
-//          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
-//
-//          $rootScope.statusBar.off();
-//
-//          $('body').scrollTop(0);
-//
-//          return false;
-//        }
+          $rootScope.statusBar.off();
 
+          $('body').scrollTop(0);
+
+          return false;
+        }
 
         var parsed;
 
@@ -17167,12 +17151,20 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           {
             if (angular.isDefined(phone))
             {
+              console.log('phone ->', phone);
+
               parsed = phoneNumberParser(resources.phones[index], 'NL');
+
+              console.log('parsed ->', parsed);
 
               resources.PhoneAddresses[index - 1] = parsed.formatting.e164;
             }
           }
         );
+
+        delete resources.phones;
+
+        $('body').scrollTop(0);
 
         Profile.save(
           $route.current.params.userId,
@@ -17264,6 +17256,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                                     }
                                     else
                                     {
+                                      console.log('successfully changed!');
+
                                       $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
 
                                       $scope.data = data;
