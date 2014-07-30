@@ -170,7 +170,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
        */
       $scope.profilemeta = data && data.resources;
 
-
       console.log('phones ->', data.resources.PhoneAddresses);
 
       $scope.profilemeta.phones = {
@@ -428,17 +427,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           return false;
         }
 
-        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
-        {
-          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
-
-          $rootScope.statusBar.off();
-
-          $('body').scrollTop(0);
-
-          return false;
-        }
-
         if (! $scope.pincodeExistsValidation)
         {
           $rootScope.notifier.error($rootScope.ui.profile.pincodeInUse);
@@ -457,12 +445,33 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           resources.askPass = MD5(resources.Password);
         }
 
-        if (resources.PhoneAddress)
-        {
-          var parsed = phoneNumberParser(resources.PhoneAddress, 'NL');
 
-          resources.PhoneAddress = parsed.formatting.e164;
-        }
+//        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
+//        {
+//          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
+//
+//          $rootScope.statusBar.off();
+//
+//          $('body').scrollTop(0);
+//
+//          return false;
+//        }
+
+
+        var parsed;
+
+        angular.forEach(
+          resources.phones,
+          function (phone, index)
+          {
+            if (angular.isDefined(phone))
+            {
+              parsed = phoneNumberParser(resources.phones[index], 'NL');
+
+              resources.PhoneAddresses[index - 1] = parsed.formatting.e164;
+            }
+          }
+        );
 
         Profile.save(
           $route.current.params.userId,
