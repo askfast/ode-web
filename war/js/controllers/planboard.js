@@ -177,31 +177,11 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
       /**
-       * Filter states
-       */
-      $scope.filteredStates = [];
-
-      angular.forEach(
-        $rootScope.config.timeline.config.states,
-        function (state)
-        {
-          if (state.className != 'no-state')
-          {
-            $scope.filteredStates.push(state);
-          }
-        }
-      );
-
-
-      /**
        * Legend defaults
        */
       angular.forEach(
-        $scope.filteredStates,
-        function (state, index)
-        {
-          $scope.timeline.config.legenda[index] = true;
-        }
+        $rootScope.config.timeline.config.states,
+        function (state, index) { $scope.timeline.config.legenda[index] = true }
       );
 
 

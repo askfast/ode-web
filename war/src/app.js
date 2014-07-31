@@ -389,7 +389,8 @@ var ui = {
         pincodeInUse: 'This pincode is in use. Please choose another one.',
         pincodeNotValid: 'Please enter a valid pincode!',
         pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.',
-        pincodeInfo: 'The pincode above is used for StandBy Call-in and is only requested when you are calling with a telephone number unknown by StandBy.'
+        pincodeInfo: 'The pincode above is used for StandBy Call-in and is only requested when you are calling with a telephone number unknown by StandBy.',
+        duplicateNumber: 'This phone number already exists. Please enter an another phone number.'
       },
       settings: {
         settings: 'Settings',
@@ -869,7 +870,7 @@ var ui = {
         phone: 'Telefoon',
         address: 'Adres',
         postcode: 'Postcode',
-        city: 'Stad',
+        city: 'Woonplaats',
         username: 'Gebruikersnaam',
         editProfile: 'Profiel wijzigen',
         name: 'Naam',
@@ -907,7 +908,8 @@ var ui = {
         pincodeInUse: 'Deze pincode is in gebruik. Kies een andere.',
         pincodeNotValid: 'Vul a.u.b. een geldige pincode!',
         pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.',
-        pincodeInfo: 'De bovenstaande pincode gebruikt u voor StandBy Inbellen en heeft u alleen nodig als StandBy uw nummer niet herkent.'
+        pincodeInfo: 'De bovenstaande pincode gebruikt u voor StandBy Inbellen en heeft u alleen nodig als StandBy uw nummer niet herkent.',
+        duplicateNumber: 'Nummer bestaat al. Andere nummer invoeren aub.'
       },
       settings: {
         settings: 'Instellingen',
@@ -953,7 +955,7 @@ var ui = {
           notValid: 'Geen valide telefoonnummer!',
           invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
           tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
-          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)',
+          tooLong: ' (Telefoonnummer niet correct: teveel cijfers.)',
           notValidOnSubmit: 'Vul alstublieft een geldig telefoonnummer in om op te slaan.'
         },
         dashboard: {
@@ -1057,7 +1059,7 @@ localStorage.removeItem('WebPaige.periodsNext');
  */
 angular.module('WebPaige',[
   'ngResource',
-  'ngRoute',
+  // 'ngRoute',
   // modals
   'WebPaige.Modals.User',
   'WebPaige.Modals.Dashboard',
@@ -1086,7 +1088,7 @@ angular.module('WebPaige',[
   'WebPaige.Services.Session',
   'WebPaige.Services.Dater',
   'WebPaige.Services.EventBus',
-  'WebPaige.Services.Interceptor',
+  // 'WebPaige.Services.Interceptor',
   'WebPaige.Services.MD5',
   'WebPaige.Services.Storage',
   'WebPaige.Services.Strings',
@@ -1623,7 +1625,33 @@ angular.module('WebPaige')
       /**
        * Define interceptor
        */
-      $httpProvider.interceptors.push('Interceptor');
+      // $httpProvider.interceptors.push('Interceptor');
+
+      $httpProvider.responseInterceptors.push(
+        [
+          '$q',
+          function ($q)
+          {
+            return function (promise)
+            {
+              return promise.then(
+                function (response) { return response },
+                function (response)
+                {
+                  if (response.status == 403)
+                  {
+                    localStorage.setItem('sessionTimeout', '');
+
+                    window.location.href = 'logout.html';
+                  }
+
+                  return $q.reject(response);
+                }
+              );
+            }
+          }
+        ]
+      );
     }
   ]);;/*jslint node: true */
 /*global angular */
@@ -1648,7 +1676,8 @@ angular.module('WebPaige')
     'Messages',
     '$config',
     '$window',
-    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
+    '$http',
+    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, $http)
     {
       /**
        * Pass config and init dynamic config values
@@ -6248,6 +6277,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
         /**
          * Pass the scheadule data
          */
+          // scope.s = angular.extend({}, scope.scheadule);
         scope.s = scope.scheadule;
 
         // element.html(template).show();
@@ -6887,7 +6917,8 @@ angular.module('WebPaige.Services.EventBus', ['ngResource'])
 ]);;'use strict';
 
 angular.module(
-  'WebPaige.Services.Interceptor', ['ngResource']).factory(
+  'WebPaige.Services.Interceptor', ['ngResource'])
+  .factory(
   'Interceptor', [
     '$window', '$q',
     function ($window, $q)
@@ -9594,8 +9625,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'nicelyOffsets',
   [
-    '$sce', 'Dater', 'Storage', 'Offsetter',
-    function ($sce, Dater, Storage, Offsetter)
+    'Dater', 'Storage', 'Offsetter',
+    function (Dater, Storage, Offsetter)
     {
       return function (data)
       {
@@ -9628,7 +9659,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
           }
         );
 
-        return $sce.trustAsHtml(compiled);
+        return compiled;
+
+        // return $sce.trustAsHtml(compiled);
       }
     }
   ])
@@ -9673,6 +9706,32 @@ angular.module('WebPaige.Filters', ['ngResource'])
             });
 
           return audience.substring(0, audience.length - 2);
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Convert array of audience to a nice list
+ */
+.filter(
+  'convertToObject',
+  [
+    function ()
+    {
+      return function (arr)
+      {
+        if (arr)
+        {
+          var obj = {};
+
+          angular.forEach(
+            arr,
+            function (item, index) { obj[index] = item }.bind(obj)
+          );
+
+          return obj;
         }
       }
     }
@@ -10582,7 +10641,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Profile',
     'Groups',
     'Announcer',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
+    '$timeout',
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage,
+              Settings, Profile, Groups, Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -10818,7 +10879,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               function pieMaker ($id, id, _ratios)
               {
-                setTimeout(
+                $timeout(
                   function ()
                   {
                     if ($.browser.msie && $.browser.version == '8.0')
@@ -10874,8 +10935,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    var r = new Raphael($id + id),
-                        pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                    $timeout(
+                      function ()
+                      {
+                        var r = new Raphael($id + id),
+                            pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                      }
+                    );
 
                   }, $rootScope.config.timers.TICKER);
               }
@@ -10892,7 +10958,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       /**
        * Get pie overviews
        */
-      getOverviews();
+      $timeout(function () { getOverviews() });
 
 
       /**
@@ -12078,31 +12144,11 @@ angular.module('WebPaige.Controllers.Planboard', [])
 
 
       /**
-       * Filter states
-       */
-      $scope.filteredStates = [];
-
-      angular.forEach(
-        $rootScope.config.timeline.config.states,
-        function (state)
-        {
-          if (state.className != 'no-state')
-          {
-            $scope.filteredStates.push(state);
-          }
-        }
-      );
-
-
-      /**
        * Legend defaults
        */
       angular.forEach(
-        $scope.filteredStates,
-        function (state, index)
-        {
-          $scope.timeline.config.legenda[index] = true;
-        }
+        $rootScope.config.timeline.config.states,
+        function (state, index) { $scope.timeline.config.legenda[index] = true }
       );
 
 
@@ -15494,8 +15540,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
   .controller(
   'scheaduler',
   [
-    '$scope',
-    function ($scope)
+    '$scope', '$timeout',
+    function ($scope, $timeout)
     {
       /**
        * Watch offsets
@@ -15506,11 +15552,9 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
           if ($scope.scheaduled)
           {
             angular.forEach(
-              $scope.scheaduled.offsets, function (offset)
+              $scope.scheaduled.offsets,
+              function (offset)
               {
-                /**
-                 * If all the days are unchecked make monday checked as default
-                 */
                 if (offset.mon == false &&
                     offset.tue == false &&
                     offset.wed == false &&
@@ -15522,19 +15566,15 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
                   offset.mon = true;
                 }
 
-                // var hour    = 1000 * 60 * 60,
-                //      minute  = 1000 * 60,
                 var hour = 60 * 60,
                     minute = 60,
                     time = offset.time.split(':'),
                     exact = (time[0] * hour) + (time[1] * minute);
 
-                if (time[0] != offset.hour)  offset.hour = time[0];
-                if (time[1] != offset.minute) offset.minute = time[1];
+                if (time[0] != offset.hour) { offset.hour = time[0] }
+                if (time[1] != offset.minute) { offset.minute = time[1] }
 
-                if (offset.exact != exact)
-                { offset.exact = exact; }
-
+                if (offset.exact != exact) { offset.exact = exact }
               }
             );
           }
@@ -15547,35 +15587,38 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
        */
       $scope.addNewOffset = function ()
       {
-        console.log('adding a new offset..');
+        $timeout(
+          function ()
+          {
+            if ($scope.scheaduled.offsets[0])
+            {
+              var hour = 60 * 60,
+                  minute = 60,
+                  time = $scope.scheaduled.offsets[0].time.split(':'),
+                  exact = (time[0] * hour) + (time[1] * minute);
 
-        if ($scope.scheaduled.offsets[0])
-        {
-          var hour = 60 * 60,
-              minute = 60,
-              time = $scope.scheaduled.offsets[0].time.split(':'),
-              exact = (time[0] * hour) + (time[1] * minute);
+              $scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
 
-          $scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
+              $scope.scheaduled.offsets[exact].exact = exact;
+            }
 
-          $scope.scheaduled.offsets[exact].exact = exact;
-        }
+            $scope.scheaduled.offsets[0] = {
+              mon: true,
+              tue: false,
+              wed: false,
+              thu: false,
+              fri: false,
+              sat: false,
+              sun: false,
+              hour: 0,
+              minute: 0,
+              time: '00:00',
+              exact: 0
+            };
 
-        $scope.scheaduled.offsets[0] = {
-          mon: true,
-          tue: false,
-          wed: false,
-          thu: false,
-          fri: false,
-          sat: false,
-          sun: false,
-          hour: 0,
-          minute: 0,
-          time: '00:00',
-          exact: 0
-        };
-
-        $scope.scheaduleCounter();
+            $scope.scheaduleCounter();
+          }
+        )
       };
 
 
@@ -16259,7 +16302,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         {
           $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
 
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
 
           return;
         }
@@ -16268,7 +16311,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         {
           $rootScope.notifier.error($rootScope.ui.groups.registerUserName.pleaseChooseAnother);
 
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
 
           return;
         }
@@ -16301,7 +16344,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                   $rootScope.statusBar.off();
 
-                  $('body').scrollTop(0);
+                  $(window).scrollTop(0);
                 }
                 else if (result.error.status === 403)
                 {
@@ -16309,7 +16352,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                   $rootScope.statusBar.off();
 
-                  $('body').scrollTop(0);
+                  $(window).scrollTop(0);
                 }
                 else
                 {
@@ -16352,7 +16395,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
           $rootScope.statusBar.off();
 
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
         }
       };
 
@@ -16648,7 +16691,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         month: Dater.current.month()
       };
 
-
       /**
        * Set data for view
        */
@@ -16665,7 +16707,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
        */
       $scope.data = data;
 
-      $scope.profileRole = data.resources.role;
+      $timeout(function () { $scope.profileRole = data.resources.role });
 
       /**
        * Grab and set roles for view
@@ -16679,15 +16721,236 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
       $scope.roles = roles;
 
+      if (! data.resources.PhoneAddresses)
+      {
+        data.resources.PhoneAddresses = [];
+      }
+
       /**
        * Pass profile information
        */
       $scope.profilemeta = data && data.resources;
 
+      $scope.profilemeta.phones = {
+        1: data.resources.PhoneAddresses[0] || '',
+        2: data.resources.PhoneAddresses[1],
+        3: data.resources.PhoneAddresses[2]
+      };
+
+      $scope.phoneViews = {
+        second: angular.isDefined(data.resources.PhoneAddresses[1]),
+        third: angular.isDefined(data.resources.PhoneAddresses[2])
+      };
+
+      $scope.addPhoneNumber = function (index)
+      {
+        $scope.phoneViews[index] = true;
+      };
+
+      $scope.removePhoneNumber = function (num, index)
+      {
+        $scope.phoneViews[index] = false;
+
+        $scope.profileResetPhoneNumberChecker(num);
+
+        $timeout(
+          function ()
+          {
+            $scope.data.resources.PhoneAddresses.splice(num - 1, 1);
+
+            delete $scope.profilemeta.phones[num];
+          }
+        );
+      };
+
+      $scope.profilePhoneNumberParsed = {
+        1: {},
+        2: {},
+        3: {}
+      };
+
+      $scope.profileResetPhoneNumberChecker = function (index)
+      {
+        $scope.profilePhoneNumberParsed[index] = {};
+
+        $scope.profilePhoneNumberParsed[index].result = true;
+      };
+
+      $scope.$watch(
+        'profilemeta.phones[1]',
+        function (value)
+        {
+          if (value == '')
+          {
+            $scope.profileResetPhoneNumberChecker(1);
+          }
+        }
+      );
+
+      $scope.$watch(
+        'profilemeta.phones[2]',
+        function (value)
+        {
+          if (value == '')
+          {
+            $scope.profileResetPhoneNumberChecker(2);
+          }
+        }
+      );
+
+      $scope.$watch(
+        'profilemeta.phones[3]',
+        function (value)
+        {
+          if (value == '')
+          {
+            $scope.profileResetPhoneNumberChecker(3);
+          }
+        }
+      );
+
+      $scope.profileResetPhoneNumberChecker(1);
+      $scope.profileResetPhoneNumberChecker(2);
+      $scope.profileResetPhoneNumberChecker(3);
+
+      $scope.profilePhoneNumberParser = function (index, checked)
+      {
+        angular.forEach(
+          [1, 2, 3],
+          function (index)
+          {
+            checked = $scope.profilemeta.phones[index];
+
+            if (checked != '')
+            {
+              if (checked && checked.length > 0)
+              {
+                var result,
+                    all;
+
+                result = all = phoneNumberParser(checked, 'NL');
+
+                $scope.profilePhoneNumberParsed[index].result = true;
+
+                if (result)
+                {
+                  var error = $rootScope.ui.errors.phone.notValid,
+                      invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                      message;
+
+                  if (result.error)
+                  {
+                    $scope.profilePhoneNumberParsed[index] = {
+                      result: false,
+                      message: error
+                    };
+                  }
+                  else
+                  {
+                    if (! result.validation.isPossibleNumber)
+                    {
+                      switch (result.validation.isPossibleNumberWithReason)
+                      {
+                        case 'INVALID_COUNTRY_CODE':
+                          message = invalidCountry;
+                          break;
+                        case 'TOO_SHORT':
+                          message = error + $rootScope.ui.errors.phone.tooShort;
+                          break;
+                        case 'TOO_LONG':
+                          message = error + $rootScope.ui.errors.phone.tooLong;
+                          break;
+                      }
+
+                      $scope.profilePhoneNumberParsed[index] = {
+                        result: false,
+                        message: message
+                      };
+                    }
+                    else
+                    {
+                      if (! result.validation.isValidNumber)
+                      {
+                        $scope.profilePhoneNumberParsed[index] = {
+                          result: false,
+                          message: error
+                        };
+                      }
+                      else
+                      {
+                        if (! result.validation.isValidNumberForRegion)
+                        {
+                          $scope.profilePhoneNumberParsed[index] = {
+                            result: false,
+                            message: invalidCountry
+                          };
+                        }
+                        else
+                        {
+                          $scope.profilePhoneNumberParsed[index] = {
+                            result: true,
+                            message: $rootScope.ui.success.phone.message +
+                                     result.validation.phoneNumberRegion +
+                                     $rootScope.ui.success.phone.as +
+                                     result.validation.getNumberType
+                          };
+
+                          $scope.profilemeta.phones[index] = result.formatting.e164;
+
+                          $('.inputPhoneNumbers').removeClass('error');
+
+                          angular.forEach(
+                            [1, 2, 3],
+                            function (_index)
+                            {
+                              if (index != _index)
+                              {
+                                if ($scope.profilemeta.phones[_index] == result.formatting.e164)
+                                {
+                                  $scope.profilePhoneNumberParsed[index] = {
+                                    result: false,
+                                    message: $rootScope.ui.profile.duplicateNumber
+                                  };
+                                }
+                              }
+                            }
+                          );
+                        }
+                      }
+                    }
+                  }
+                }
+
+                $scope.profilePhoneNumberParsed[index].all = all;
+              }
+              else
+              {
+                $scope.profilePhoneNumberParsed[index].result = true;
+
+                delete $scope.profilePhoneNumberParsed[index].message;
+
+                $('.inputPhoneNumber-' + index).removeClass('error');
+              }
+            }
+          }
+        )
+      };
+
+      $timeout(
+        function ()
+        {
+          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
+          $scope.profilePhoneNumberParser(2, $scope.profilemeta.phones[2]);
+          $scope.profilePhoneNumberParser(3, $scope.profilemeta.phones[3]);
+        },
+        50
+      );
+
       /**
        * Get groups of user
        */
-      $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+      $scope.groups = $route.current.params.userId &&
+                      Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
       $scope.availableGroups = angular.fromJson(Storage.get('groups'));
 
@@ -16843,17 +17106,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         );
       };
 
-      $scope.$watch(
-        'profilemeta.PhoneAddress',
-        function (value)
-        {
-          if (value == '')
-          {
-            $rootScope.resetPhoneNumberChecker();
-          }
-        }
-      );
-
       var CHECK_PINCODE_DELAY = 250;
 
       $scope.pincodeExistsValidation = true;
@@ -16906,25 +17158,13 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
       $scope.save = function (resources)
       {
         if (! angular.isDefined($scope.profilemeta.pincode) ||
-            $scope.profilemeta.pincode == '' ||
-            ! $scope.pincodeExistsValidation)
+            $scope.profilemeta.pincode == '' || ! $scope.pincodeExistsValidation)
         {
           $rootScope.notifier.error($rootScope.ui.profile.pincodeCorrect);
 
           $rootScope.statusBar.off();
 
-          $('body').scrollTop(0);
-
-          return false;
-        }
-
-        if (! $rootScope.phoneNumberParsed.result && $scope.profilemeta.PhoneAddress != '')
-        {
-          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
-
-          $rootScope.statusBar.off();
-
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -16935,7 +17175,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
           $rootScope.statusBar.off();
 
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -16947,12 +17187,58 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           resources.askPass = MD5(resources.Password);
         }
 
-        if (resources.PhoneAddress)
+        if ((! $scope.profilePhoneNumberParsed[1].result && $scope.profilemeta.phones[1] != '') ||
+            (! $scope.profilePhoneNumberParsed[2].result && $scope.profilemeta.phones[2] != '') ||
+            (! $scope.profilePhoneNumberParsed[3].result && $scope.profilemeta.phones[3] != ''))
         {
-          var parsed = phoneNumberParser(resources.PhoneAddress, 'NL');
+          $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
-          resources.PhoneAddress = parsed.formatting.e164;
+          $rootScope.statusBar.off();
+
+          $(window).scrollTop(0);
+
+          return false;
         }
+
+        var parsed;
+
+        angular.forEach(
+          resources.phones,
+          function (phone, index)
+          {
+            if (angular.isDefined(phone) && phone.length > 0)
+            {
+              parsed = phoneNumberParser(resources.phones[index], 'NL');
+
+              resources.PhoneAddresses[index - 1] = parsed.formatting.e164;
+            }
+            else
+            {
+              if (index == 1)
+              {
+                resources.PhoneAddresses = [];
+              }
+            }
+          }
+        );
+
+        // TODO: Long-term remove it since it will be depreciated!
+        delete resources.PhoneAddress;
+
+        var phones = [];
+
+        angular.forEach(
+          resources.PhoneAddresses,
+          function (phone)
+          {
+            if (phone !== undefined && phone !== null && phone !== "")
+            {
+              phones.push(phone);
+            }
+          }
+        );
+
+        resources.PhoneAddresses = phones;
 
         Profile.save(
           $route.current.params.userId,
@@ -16969,9 +17255,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             {
               $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
-              console.log('$scope.profileRole ->', $scope.profileRole);
-
-              if (!angular.isDefined($scope.profileRole) || $scope.profileRole == '')
+              if (! angular.isDefined($scope.profileRole) || $scope.profileRole == '')
               {
                 $scope.profileRole = 3;
               }
@@ -17046,11 +17330,58 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                                     {
                                       $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
 
-                                      $scope.data = data;
+                                      if ($scope.profilemeta.phones[1] == '' &&
+                                          $scope.profilemeta.phones[2] != '')
+                                      {
+                                        $scope.profilemeta.phones[1] = $scope.profilemeta.phones[2];
+
+                                        $scope.phoneViews.second = false;
+
+                                        if ($scope.profilemeta.phones[3] != '')
+                                        {
+                                          $scope.profilemeta.phones[2] = $scope.profilemeta.phones[3];
+
+                                          delete $scope.profilemeta.phones[3];
+
+                                          $scope.phoneViews.second = true;
+                                          $scope.phoneViews.third = false;
+                                        }
+                                        else
+                                        {
+                                          delete $scope.profilemeta.phones[2];
+                                        }
+                                      }
+
+                                      if ($scope.profilemeta.phones[2] == '' &&
+                                          $scope.profilemeta.phones[3] != '')
+                                      {
+                                        $scope.profilemeta.phones[2] = $scope.profilemeta.phones[3];
+
+                                        $scope.phoneViews.third = false;
+
+                                        delete $scope.profilemeta.phones[3];
+                                      }
+
+                                      $timeout(function () { $scope.data = data });
+
+                                      angular.forEach(
+                                        [
+                                          {id: 2, name: 'second'},
+                                          {id: 3, name: 'third'}
+                                        ],
+                                        function (rank)
+                                        {
+                                          if ($scope.profilemeta.phones[rank.id] == undefined ||
+                                              $scope.profilemeta.phones[rank.id] == '')
+                                          {
+                                            $scope.phoneViews[rank.name] = false;
+                                          }
+                                        }
+                                      );
 
                                       $rootScope.statusBar.off();
 
-                                      $('body').scrollTop(0);
+                                      $(window).scrollTop(0);
                                     }
                                   }
                                 );
@@ -17066,6 +17397,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             }
           }
         );
+
+
       };
 
       /**
@@ -17131,6 +17464,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         else
         {
           // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
+
           $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
         }
       };

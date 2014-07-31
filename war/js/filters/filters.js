@@ -723,8 +723,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'nicelyOffsets',
   [
-    '$sce', 'Dater', 'Storage', 'Offsetter',
-    function ($sce, Dater, Storage, Offsetter)
+    'Dater', 'Storage', 'Offsetter',
+    function (Dater, Storage, Offsetter)
     {
       return function (data)
       {
@@ -757,7 +757,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
           }
         );
 
-        return $sce.trustAsHtml(compiled);
+        return compiled;
+
+        // return $sce.trustAsHtml(compiled);
       }
     }
   ])
@@ -802,6 +804,32 @@ angular.module('WebPaige.Filters', ['ngResource'])
             });
 
           return audience.substring(0, audience.length - 2);
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Convert array of audience to a nice list
+ */
+.filter(
+  'convertToObject',
+  [
+    function ()
+    {
+      return function (arr)
+      {
+        if (arr)
+        {
+          var obj = {};
+
+          angular.forEach(
+            arr,
+            function (item, index) { obj[index] = item }.bind(obj)
+          );
+
+          return obj;
         }
       }
     }

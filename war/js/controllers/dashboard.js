@@ -26,7 +26,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Profile',
     'Groups',
     'Announcer',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
+    '$timeout',
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage,
+              Settings, Profile, Groups, Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -262,7 +264,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               function pieMaker ($id, id, _ratios)
               {
-                setTimeout(
+                $timeout(
                   function ()
                   {
                     if ($.browser.msie && $.browser.version == '8.0')
@@ -318,8 +320,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    var r = new Raphael($id + id),
-                        pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                    $timeout(
+                      function ()
+                      {
+                        var r = new Raphael($id + id),
+                            pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                      }
+                    );
 
                   }, $rootScope.config.timers.TICKER);
               }
@@ -336,7 +343,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       /**
        * Get pie overviews
        */
-      getOverviews();
+      $timeout(function () { getOverviews() });
 
 
       /**

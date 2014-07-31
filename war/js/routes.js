@@ -290,6 +290,32 @@ angular.module('WebPaige')
       /**
        * Define interceptor
        */
-      $httpProvider.interceptors.push('Interceptor');
+      // $httpProvider.interceptors.push('Interceptor');
+
+      $httpProvider.responseInterceptors.push(
+        [
+          '$q',
+          function ($q)
+          {
+            return function (promise)
+            {
+              return promise.then(
+                function (response) { return response },
+                function (response)
+                {
+                  if (response.status == 403)
+                  {
+                    localStorage.setItem('sessionTimeout', '');
+
+                    window.location.href = 'logout.html';
+                  }
+
+                  return $q.reject(response);
+                }
+              );
+            }
+          }
+        ]
+      );
     }
   ]);

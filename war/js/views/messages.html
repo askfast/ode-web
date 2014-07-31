@@ -108,7 +108,7 @@
 
 
     <!--broadcasting types-->
-    <div class="control-group" style="display: none">
+    <div class="control-group">
 
       <label class="control-label">{{ui.message.broadcast}}</label>
 
@@ -140,7 +140,7 @@
 
 
     <!-- receivers -->
-    <div class="control-group" style="display: none">
+    <div class="control-group">
       <label class="control-label">{{ui.message.receviers}}</label>
       <!-- {{ui.message.chooseRecept}} -->
 
@@ -162,7 +162,7 @@
 
 
     <!-- subject -->
-    <div class="control-group" style="display: none">
+    <div class="control-group">
       <label class="control-label">{{ui.message.subject}}</label>
       <input type="text"
              class="span5"
@@ -176,7 +176,7 @@
 
 
     <!-- message -->
-    <div class="control-group" style="display: none">
+    <div class="control-group">
       <label class="control-label">{{ui.message.message}}</label>
       <textarea rows="7"
                 class="span7"
@@ -227,9 +227,23 @@
 
       <hr>
 
+      <!-- notification title -->
+      <div class="control-group">
+        <label class="control-label">{{ui.message.notificationLabel}}</label>
+
+        <input type="text"
+               class="span6"
+               ng-model="scheaduled.title"
+               placeholder="{{ui.message.notificationLabel}}">
+
+      </div>
+      <!-- end notification title -->
 
 
 
+
+
+      <!--<pre><small>{{scheaduled.offsets}}</small></pre>-->
 
 
       <!-- no notifications -->
@@ -246,13 +260,12 @@
       <div class="control-group" ng-show="scheaduleCount > 0">
         <label class="control-label">{{ui.message.notifications}}</label>
 
-        <!-- <span style="font-size:11px" ng-repeat="o in offsets"> {{o}}<br></span> -->
+         <span style="font-size:11px" ng-repeat="o in offsets"> {{o}}<br></span>
 
         <!-- notification items -->
-        <notification-item ng-repeat="offset in scheaduled.offsets"
-                           scheadule="offset"
-                           remover="remover()">
-        </notification-item>
+        <div ng-repeat="offset in scheaduled.offsets">
+          <notification-item scheadule="offset" remover="remover()"></notification-item>
+        </div>
         <!-- end notification items -->
 
       </div>
@@ -267,11 +280,9 @@
 
 
 
-
-
     <!-- compose form actions -->
     <div class="form-actions">
-      <div ng-show="scheaduled.status">
+      <div ng-show="scheaduled.uuid || scheaduled.status">
         <button type="submit"
                 ng-hide="scheaduleCount > 0"
                 class="btn btn-success disabled">{{ui.message.notificationSave}}</button>
@@ -281,7 +292,7 @@
                 class="btn btn-success">{{ui.message.notificationSave}}</button>
       </div>
       <button type="submit"
-              ng-hide="scheaduled.status"
+              ng-hide="scheaduled.uuid || scheaduled.status"
               ng-click="send(message, broadcast)"
               class="btn btn-success">{{ui.message.sendMessage}}</button>
     </div>
@@ -599,7 +610,7 @@
         <td><a ng-click="requestNotification(scheadule.uuid)">{{scheadule.label}}</a></td>
         <td><span class="muted"><small><i>{{scheadule.recipients | nicelyAudience}}</i></small></span></td>
         <td>
-          <div ng-bind-html="scheadule.offsets | nicelyOffsets"></div>
+          <div ng-bind-html-unsafe="scheadule.offsets | nicelyOffsets"></div>
         </td>
         <td>
           <div class="pull-right">

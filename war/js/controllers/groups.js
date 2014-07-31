@@ -667,7 +667,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         {
           $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
 
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
 
           return;
         }
@@ -676,7 +676,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         {
           $rootScope.notifier.error($rootScope.ui.groups.registerUserName.pleaseChooseAnother);
 
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
 
           return;
         }
@@ -709,7 +709,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                   $rootScope.statusBar.off();
 
-                  $('body').scrollTop(0);
+                  $(window).scrollTop(0);
                 }
                 else if (result.error.status === 403)
                 {
@@ -717,7 +717,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                   $rootScope.statusBar.off();
 
-                  $('body').scrollTop(0);
+                  $(window).scrollTop(0);
                 }
                 else
                 {
@@ -760,7 +760,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
           $rootScope.statusBar.off();
 
-          $('body').scrollTop(0);
+          $(window).scrollTop(0);
         }
       };
 
