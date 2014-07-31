@@ -16815,60 +16815,35 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
       $scope.profilePhoneNumberParser = function (index, checked)
       {
-        if (index != 1)
-        {
-          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
-        }
+//        if (index != 1)
+//        {
+//          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
+//        }
 
-        if (checked != '')
-        {
-          if (checked && checked.length > 0)
+        angular.forEach(
+          [1, 2, 3],
+          function (index)
           {
-            var result,
-                all;
+            checked = $scope.profilemeta.phones[index];
 
-            result = all = phoneNumberParser(checked, 'NL');
-
-            $scope.profilePhoneNumberParsed[index].result = true;
-
-            if (result)
+            if (checked != '')
             {
-              var error = $rootScope.ui.errors.phone.notValid,
-                  invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
-                  message;
-
-              if (result.error)
+              if (checked && checked.length > 0)
               {
-                $scope.profilePhoneNumberParsed[index] = {
-                  result: false,
-                  message: error
-                };
-              }
-              else
-              {
-                if (! result.validation.isPossibleNumber)
-                {
-                  switch (result.validation.isPossibleNumberWithReason)
-                  {
-                    case 'INVALID_COUNTRY_CODE':
-                      message = invalidCountry;
-                      break;
-                    case 'TOO_SHORT':
-                      message = error + $rootScope.ui.errors.phone.tooShort;
-                      break;
-                    case 'TOO_LONG':
-                      message = error + $rootScope.ui.errors.phone.tooLong;
-                      break;
-                  }
+                var result,
+                    all;
 
-                  $scope.profilePhoneNumberParsed[index] = {
-                    result: false,
-                    message: message
-                  };
-                }
-                else
+                result = all = phoneNumberParser(checked, 'NL');
+
+                $scope.profilePhoneNumberParsed[index].result = true;
+
+                if (result)
                 {
-                  if (! result.validation.isValidNumber)
+                  var error = $rootScope.ui.errors.phone.notValid,
+                      invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                      message;
+
+                  if (result.error)
                   {
                     $scope.profilePhoneNumberParsed[index] = {
                       result: false,
@@ -16877,60 +16852,93 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                   }
                   else
                   {
-                    if (! result.validation.isValidNumberForRegion)
+                    if (! result.validation.isPossibleNumber)
                     {
+                      switch (result.validation.isPossibleNumberWithReason)
+                      {
+                        case 'INVALID_COUNTRY_CODE':
+                          message = invalidCountry;
+                          break;
+                        case 'TOO_SHORT':
+                          message = error + $rootScope.ui.errors.phone.tooShort;
+                          break;
+                        case 'TOO_LONG':
+                          message = error + $rootScope.ui.errors.phone.tooLong;
+                          break;
+                      }
+
                       $scope.profilePhoneNumberParsed[index] = {
                         result: false,
-                        message: invalidCountry
+                        message: message
                       };
                     }
                     else
                     {
-                      $scope.profilePhoneNumberParsed[index] = {
-                        result: true,
-                        message: $rootScope.ui.success.phone.message +
-                                 result.validation.phoneNumberRegion +
-                                 $rootScope.ui.success.phone.as +
-                                 result.validation.getNumberType
-                      };
-
-                      $scope.profilemeta.phones[index] = result.formatting.e164;
-
-                      $('.inputPhoneNumbers').removeClass('error');
-
-                      angular.forEach(
-                        [1, 2, 3],
-                        function (_index)
+                      if (! result.validation.isValidNumber)
+                      {
+                        $scope.profilePhoneNumberParsed[index] = {
+                          result: false,
+                          message: error
+                        };
+                      }
+                      else
+                      {
+                        if (! result.validation.isValidNumberForRegion)
                         {
-                          if (index != _index)
-                          {
-                            if ($scope.profilemeta.phones[_index] == result.formatting.e164)
-                            {
-                              $scope.profilePhoneNumberParsed[index] = {
-                                result: false,
-                                message: $rootScope.ui.profile.duplicateNumber
-                              };
-                            }
-                          }
+                          $scope.profilePhoneNumberParsed[index] = {
+                            result: false,
+                            message: invalidCountry
+                          };
                         }
-                      );
+                        else
+                        {
+                          $scope.profilePhoneNumberParsed[index] = {
+                            result: true,
+                            message: $rootScope.ui.success.phone.message +
+                                     result.validation.phoneNumberRegion +
+                                     $rootScope.ui.success.phone.as +
+                                     result.validation.getNumberType
+                          };
+
+                          $scope.profilemeta.phones[index] = result.formatting.e164;
+
+                          $('.inputPhoneNumbers').removeClass('error');
+
+                          angular.forEach(
+                            [1, 2, 3],
+                            function (_index)
+                            {
+                              if (index != _index)
+                              {
+                                if ($scope.profilemeta.phones[_index] == result.formatting.e164)
+                                {
+                                  $scope.profilePhoneNumberParsed[index] = {
+                                    result: false,
+                                    message: $rootScope.ui.profile.duplicateNumber
+                                  };
+                                }
+                              }
+                            }
+                          );
+                        }
+                      }
                     }
                   }
                 }
+
+                $scope.profilePhoneNumberParsed[index].all = all;
+              }
+              else
+              {
+                $scope.profilePhoneNumberParsed[index].result = true;
+
+                delete $scope.profilePhoneNumberParsed[index].message;
+
+                $('.inputPhoneNumber-' + index).removeClass('error');
               }
             }
-
-            $scope.profilePhoneNumberParsed[index].all = all;
           }
-          else
-          {
-            $scope.profilePhoneNumberParsed[index].result = true;
-
-            delete $scope.profilePhoneNumberParsed[index].message;
-
-            $('.inputPhoneNumber-' + index).removeClass('error');
-          }
-        }
+        )
       };
 
       $timeout(
