@@ -1186,7 +1186,7 @@ angular.module('WebPaige')
       {
         className:'state-available-north',
         label:    'Beschikbaar voor Noord',
-        color:    '#242424',
+        color:    '#000',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
