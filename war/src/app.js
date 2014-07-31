@@ -1279,14 +1279,14 @@ angular.module('WebPaige')
 //        },
         densities: {
           less:   '#d34545',
-          even:   '#ba6a24',
+          even:   '#e09131',
           one:    '#6cad6c',
-          two:    '#477547',
-          three:  '#436f43',
-          four:   '#3d673d',
-          five:   '#396039',
-          six:    '#335833',
-          more:   '#305330'
+          two:    '#6cad6c',
+          three:  '#6cad6c',
+          four:   '#6cad6c',
+          five:   '#6cad6c',
+          six:    '#6cad6c',
+          more:   '#6cad6c'
         }
       }
     },
@@ -10687,28 +10687,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        */
       var groups = Storage.local.groups();
 
-
-      //
-
-//
-//      $scope.breakGroupSetting = function ()
-//      {
-////        Settings.save(
-////          $rootScope.app.resources.uuid,
-////          { role: '' }
-////        ).then(function (resulted) { console.log('broken resources ->', resulted) });
-//
-//
-//        Profile.save(
-//          // $rootScope.app.resources.uuid,
-//          'devleonie',
-//          { role: '' }
-//        ).then(function (resulted) { console.log('broken resources ->', resulted) });
-//      };
-
-      //
-
-
       var selection = {};
 
       angular.forEach(
@@ -10898,7 +10876,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                         colorMap = {
                           more: '#6cad6c',
                           // more: '#415e6b',
-                          even: '#ba6a24',
+                          even: '#e09131',
                           // even: '#ba6a24',
                           less: '#d34545'
                           // less: '#a0a0a0'
@@ -11174,7 +11152,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $scope.states['no-state'] = {
         className: 'no-state',
         label: $rootScope.ui.dashboard.possiblyAvailable,
-        color: '#a0a0a0',
+        color: '#ececec',
         type: $rootScope.ui.dashboard.noPlanning,
         display: false
       };
