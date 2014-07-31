@@ -279,11 +279,11 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                     var ratios = [],
                         colorMap = {
-                          more: '#4f824f',
+                          more: '#6cad6c',
                           // more: '#415e6b',
                           even: '#ba6a24',
                           // even: '#ba6a24',
-                          less: '#a93232'
+                          less: '#d34545'
                           // less: '#a0a0a0'
                         },
                         colors = [],

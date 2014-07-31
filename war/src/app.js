@@ -1175,7 +1175,7 @@ angular.module('WebPaige')
       {
         className:'state-available',
         label:    'Beschikbaar',
-        color:    '#4f824f',
+        color:    '#6cad6c',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
@@ -1184,7 +1184,7 @@ angular.module('WebPaige')
       {
         className:'state-available-north',
         label:    'Beschikbaar voor Noord',
-        color:    '#000',
+        color:    '#242424',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
@@ -1193,7 +1193,7 @@ angular.module('WebPaige')
       {
         className:'state-available-south',
         label:    'Beschikbaar voor Zuid',
-        color:    '#e08a0c',
+        color:    '#8a85c7',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
@@ -1202,7 +1202,7 @@ angular.module('WebPaige')
       {
         className:'state-unavailable',
         label:    'Niet Beschikbaar',
-        color:    '#a93232',
+        color:    '#d34545',
         type:     'Niet Beschikbaar',
         display:  true,
         minRole:  5
@@ -1211,7 +1211,7 @@ angular.module('WebPaige')
       {
         className:'state-schipper-service',
         label:    'Schipper van Dienst',
-        color:    '#e0c100',
+        color:    '#f6e500',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
@@ -1265,7 +1265,7 @@ angular.module('WebPaige')
         divisions:  [],
 //        densities: {
 //          // less:   '#a0a0a0',
-//          less:   '#a93232',
+//          less:   '#d34545',
 //          even:   '#ba6a24',
 //          one:    '#415e6b',
 //          two:    '#3d5865',
@@ -1276,9 +1276,9 @@ angular.module('WebPaige')
 //          more:   '#486877'
 //        },
         densities: {
-          less:   '#a93232',
+          less:   '#d34545',
           even:   '#ba6a24',
-          one:    '#4f824f',
+          one:    '#6cad6c',
           two:    '#477547',
           three:  '#436f43',
           four:   '#3d673d',
@@ -10835,11 +10835,11 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                     var ratios = [],
                         colorMap = {
-                          more: '#4f824f',
+                          more: '#6cad6c',
                           // more: '#415e6b',
                           even: '#ba6a24',
                           // even: '#ba6a24',
-                          less: '#a93232'
+                          less: '#d34545'
                           // less: '#a0a0a0'
                         },
                         colors = [],
