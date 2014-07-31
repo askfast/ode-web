@@ -870,7 +870,7 @@ var ui = {
         phone: 'Telefoon',
         address: 'Adres',
         postcode: 'Postcode',
-        city: 'Stad',
+        city: 'Woonplaats',
         username: 'Gebruikersnaam',
         editProfile: 'Profiel wijzigen',
         name: 'Naam',
@@ -955,7 +955,7 @@ var ui = {
           notValid: 'Geen valide telefoonnummer!',
           invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
           tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
-          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)',
+          tooLong: ' (Telefoonnummer niet correct: teveel cijfers.)',
           notValidOnSubmit: 'Vul alstublieft een geldig telefoonnummer in om op te slaan.'
         },
         dashboard: {

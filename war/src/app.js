@@ -870,7 +870,7 @@ var ui = {
         phone: 'Telefoon',
         address: 'Adres',
         postcode: 'Postcode',
-        city: 'Stad',
+        city: 'Woonplaats',
         username: 'Gebruikersnaam',
         editProfile: 'Profiel wijzigen',
         name: 'Naam',
@@ -955,7 +955,7 @@ var ui = {
           notValid: 'Geen valide telefoonnummer!',
           invalidCountry: 'Landcode incorrect! Alleen Nederlandse (+31) nummers toegestaan.',
           tooShort: ' (Telefoonnummer niet correct: te weining nummers.)',
-          tooLong: ' (Telefoonnummer niet correct: teveel nummers.)',
+          tooLong: ' (Telefoonnummer niet correct: teveel cijfers.)',
           notValidOnSubmit: 'Vul alstublieft een geldig telefoonnummer in om op te slaan.'
         },
         dashboard: {
@@ -10935,8 +10935,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    var r = new Raphael($id + id),
-                        pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                    $timeout(
+                      function ()
+                      {
+                        var r = new Raphael($id + id),
+                            pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                      }
+                    );
 
                   }, $rootScope.config.timers.TICKER);
               }
@@ -16297,7 +16302,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         {
           $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return;
         }
@@ -16306,7 +16311,7 @@ angular.module('WebPaige.Controllers.Groups', [])
         {
           $rootScope.notifier.error($rootScope.ui.groups.registerUserName.pleaseChooseAnother);
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return;
         }
@@ -16339,7 +16344,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                   $rootScope.statusBar.off();
 
-                  $(window).scrollTop(0);;
+                  $(window).scrollTop(0);
                 }
                 else if (result.error.status === 403)
                 {
@@ -16347,7 +16352,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
                   $rootScope.statusBar.off();
 
-                  $(window).scrollTop(0);;
+                  $(window).scrollTop(0);
                 }
                 else
                 {
@@ -16390,7 +16395,7 @@ angular.module('WebPaige.Controllers.Groups', [])
 
           $rootScope.statusBar.off();
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
         }
       };
 
@@ -16810,6 +16815,11 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
       $scope.profilePhoneNumberParser = function (index, checked)
       {
+        if (index != 1)
+        {
+          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
+        }
+
         if (checked != '')
         {
           if (checked && checked.length > 0)
@@ -16904,7 +16914,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                           }
                         }
                       );
-
                     }
                   }
                 }
@@ -17152,7 +17161,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
           $rootScope.statusBar.off();
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -17163,7 +17172,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
           $rootScope.statusBar.off();
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -17183,7 +17192,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
           $rootScope.statusBar.off();
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -17227,8 +17236,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             else
             {
               $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
-
-              // console.log('$scope.profileRole ->', $scope.profileRole);
 
               if (! angular.isDefined($scope.profileRole) || $scope.profileRole == '')
               {
@@ -17405,6 +17412,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         else
         {
           // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
+
           $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
         }
       };

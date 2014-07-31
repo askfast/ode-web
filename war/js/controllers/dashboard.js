@@ -320,8 +320,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    var r = new Raphael($id + id),
-                        pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                    $timeout(
+                      function ()
+                      {
+                        var r = new Raphael($id + id),
+                            pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                      }
+                    );
 
                   }, $rootScope.config.timers.TICKER);
               }

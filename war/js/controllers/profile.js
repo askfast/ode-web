@@ -258,6 +258,11 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
       $scope.profilePhoneNumberParser = function (index, checked)
       {
+        if (index != 1)
+        {
+          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
+        }
+
         if (checked != '')
         {
           if (checked && checked.length > 0)
@@ -352,7 +357,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                           }
                         }
                       );
-
                     }
                   }
                 }
@@ -600,7 +604,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
           $rootScope.statusBar.off();
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -611,7 +615,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
           $rootScope.statusBar.off();
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -631,7 +635,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
           $rootScope.statusBar.off();
 
-          $(window).scrollTop(0);;
+          $(window).scrollTop(0);
 
           return false;
         }
@@ -675,8 +679,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             else
             {
               $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
-
-              // console.log('$scope.profileRole ->', $scope.profileRole);
 
               if (! angular.isDefined($scope.profileRole) || $scope.profileRole == '')
               {
@@ -853,6 +855,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         else
         {
           // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
+
           $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
         }
       };
