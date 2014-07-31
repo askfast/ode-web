@@ -262,6 +262,8 @@
             <div class="control-group">
               <label class="control-label">{{ui.profile.phone}}</label>
 
+
+
               <div class="controls">
 
                 <div class="input-prepend"
@@ -269,12 +271,13 @@
                   <span class="add-on"
                         style="width: 70px">Standaard</span>
                   <input type="text"
-                         class="inputPhoneNumber-1"
+                         class="inputPhoneNumbers inputPhoneNumber-1"
                          ng-model="profilemeta.phones[1]"
                          ng-change="profilePhoneNumberParser(1, profilemeta.phones[1])"
-                         value="{{data.resources.PhoneAddresses[0]}}"
                          style="width: 155px">
+                         <!--value="{{data.resources.PhoneAddresses[0]}}"-->
                 </div>
+
                 <div class="input-prepend input-append"
                      ng-hide="phoneViews.second">
                   <span class="add-on"
@@ -282,43 +285,51 @@
                   <input type="text"
                          class="inputPhoneNumber-1"
                          ng-model="profilemeta.phones[1]"
-                         ng-change="profilePhoneNumberParser(profilemeta.phones[1])"
-                         value="{{data.resources.PhoneAddresses[0]}}"
+                         ng-change="profilePhoneNumberParser(1, profilemeta.phones[1])"
                          style="width: 155px">
+                         <!--value="{{data.resources.PhoneAddresses[0]}}"-->
                   <button class="btn btn-success"
                           type="button"
                           ng-click="addPhoneNumber('second')">
                     <i class="icon-white icon-plus"></i> Add new
                   </button>
                 </div>
+
                 <!--<p class="text-error"-->
                    <!--ng-show="!profilemeta.PhoneAddress">-->
                   <!--<small><i>Please fill your phone number!</i></small>-->
                 <!--</p>-->
                 <!--<pre><small>{{profilePhoneNumberParsed[1]}}</small></pre>-->
+
                 <p class="text-error"
                    ng-hide="profilePhoneNumberParsed[1].result">
                   <small><i>{{profilePhoneNumberParsed[1].message}}</i></small>
                 </p>
+
                 <p class="text-success"
                    ng-show="profilePhoneNumberParsed[1].result">
                   <small><i>{{profilePhoneNumberParsed[1].message}}</i></small>
                 </p>
+
               </div>
+
+
 
               <div class="controls"
                    ng-show="phoneViews.second">
+
                 <div class="input-prepend"
                      ng-show="phoneViews.third">
                   <span class="add-on"
                         style="width: 70px">Extra.1</span>
                   <input type="text"
-                         class="inputPhoneNumber-2"
+                         class="inputPhoneNumbers inputPhoneNumber-2"
                          ng-model="profilemeta.phones[2]"
                          ng-change="profilePhoneNumberParser(2, profilemeta.phones[2])"
-                         value="{{data.resources.PhoneAddresses[1]}}"
                          style="width: 155px">
+                         <!--value="{{data.resources.PhoneAddresses[1]}}"-->
                 </div>
+
                 <div class="input-prepend input-append"
                      ng-hide="phoneViews.third">
                   <span class="add-on"
@@ -327,8 +338,8 @@
                          class="inputPhoneNumber-2"
                          ng-model="profilemeta.phones[2]"
                          ng-change="profilePhoneNumberParser(2, profilemeta.phones[2])"
-                         value="{{data.resources.PhoneAddresses[1]}}"
                          style="width: 155px">
+                         <!--value="{{data.resources.PhoneAddresses[1]}}"-->
                   <button class="btn"
                           type="button"
                           ng-click="removePhoneNumber(2, 'second')">
@@ -341,54 +352,67 @@
                     <i class="icon-white icon-plus"></i> Add new
                   </button>
                 </div>
+
                 <!--<p class="text-error"-->
                    <!--ng-show="!profilemeta.PhoneAddress">-->
                   <!--<small><i>Please fill your phone number!</i></small>-->
                 <!--</p>-->
                 <!--<pre><small>{{profilePhoneNumberParsed[2]}}</small></pre>-->
+
                 <p class="text-error"
                    ng-hide="profilePhoneNumberParsed[2].result">
                   <small><i>{{profilePhoneNumberParsed[2].message}}</i></small>
                 </p>
+
                 <p class="text-success"
                    ng-show="profilePhoneNumberParsed[2].result">
                   <small><i>{{profilePhoneNumberParsed[2].message}}</i></small>
                 </p>
+
               </div>
+
+
 
               <div class="controls"
                    ng-show="phoneViews.third">
+
                 <div class="input-prepend input-append">
                   <span class="add-on"
                         style="width: 70px">Extra.2</span>
                   <input type="text"
-                         class="inputPhoneNumber-3"
+                         class="inputPhoneNumbers inputPhoneNumber-3"
                          ng-model="profilemeta.phones[3]"
                          ng-change="profilePhoneNumberParser(3, profilemeta.phones[3])"
-                         value="{{data.resources.PhoneAddresses[2]}}"
                          style="width: 155px">
+                         <!--value="{{data.resources.PhoneAddresses[2]}}"-->
                   <button class="btn"
                           type="button"
                           ng-click="removePhoneNumber(3, 'third')">
                     <i class="icon-remove"></i> Remove
                   </button>
                 </div>
+
                 <!--<p class="text-error"-->
                    <!--ng-show="!profilemeta.PhoneAddress">-->
                   <!--<small><i>Please fill your phone number!</i></small>-->
                 <!--</p>-->
                 <!--<pre><small>{{profilePhoneNumberParsed[3]}}</small></pre>-->
+
                 <p class="text-error"
                    ng-hide="profilePhoneNumberParsed[3].result">
                   <small><i>{{profilePhoneNumberParsed[3].message}}</i></small>
                 </p>
+
                 <p class="text-success"
                    ng-show="profilePhoneNumberParsed[3].result">
                   <small><i>{{profilePhoneNumberParsed[3].message}}</i></small>
                 </p>
+
               </div>
 
               <!--<pre><small>{{profilemeta.phones}}</small></pre>-->
+
+              <!--<pre><small>{{phoneViews}}</small></pre>-->
 
             </div>
 
