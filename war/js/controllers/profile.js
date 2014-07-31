@@ -258,11 +258,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
       $scope.profilePhoneNumberParser = function (index, checked)
       {
-//        if (index != 1)
-//        {
-//          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
-//        }
-
         angular.forEach(
           [1, 2, 3],
           function (index)
@@ -673,6 +668,21 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         // TODO: Long-term remove it since it will be depreciated!
         delete resources.PhoneAddress;
 
+        var phones = [];
+
+        angular.forEach(
+          resources.PhoneAddresses,
+          function (phone)
+          {
+            if (phone !== undefined && phone !== null && phone !== "")
+            {
+              phones.push(phone);
+            }
+          }
+        );
+
+        resources.PhoneAddresses = phones;
+
         Profile.save(
           $route.current.params.userId,
           resources
@@ -763,7 +773,39 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                                     {
                                       $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
 
-                                      $scope.data = data;
+                                      if ($scope.profilemeta.phones[1] == '' &&
+                                          $scope.profilemeta.phones[2] != '')
+                                      {
+                                        $scope.profilemeta.phones[1] = $scope.profilemeta.phones[2];
+
+                                        $scope.phoneViews.second = false;
+
+                                        if ($scope.profilemeta.phones[3] != '')
+                                        {
+                                          $scope.profilemeta.phones[2] = $scope.profilemeta.phones[3];
+
+                                          delete $scope.profilemeta.phones[3];
+
+                                          $scope.phoneViews.second = true;
+                                          $scope.phoneViews.third = false;
+                                        }
+                                        else
+                                        {
+                                          delete $scope.profilemeta.phones[2];
+                                        }
+                                      }
+
+                                      if ($scope.profilemeta.phones[2] == '' &&
+                                          $scope.profilemeta.phones[3] != '')
+                                      {
+                                        $scope.profilemeta.phones[2] = $scope.profilemeta.phones[3];
+
+                                        $scope.phoneViews.third = false;
+
+                                        delete $scope.profilemeta.phones[3];
+                                      }
+
+                                      $timeout(function () { $scope.data = data });
 
                                       angular.forEach(
                                         [
@@ -798,6 +840,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             }
           }
         );
+
+
       };
 
       /**
