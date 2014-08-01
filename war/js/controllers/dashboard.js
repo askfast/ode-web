@@ -298,11 +298,13 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    $timeout(
-                      function ()
+                    new Raphael($id + id)
+                      .piechart(
+                      40, 40, 40,
+                      xratios,
                       {
-                        var r = new Raphael($id + id),
-                            pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                        colors: colors,
+                        stroke: 'white'
                       }
                     );
 
