@@ -442,11 +442,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             var reserves = {};
 
+            console.log('setup ->', setup.reserves);
+
             // TODO: Kind of duplicate purpose with states
             var states = ['available', 'unavailable', 'noplanning'];
 
             angular.forEach(
-              states, function (state)
+              states,
+              function (state)
               {
                 reserves[state] = [];
 
@@ -454,10 +457,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   setup.reserves[state],
                   function (member)
                   {
+                    // console.log('members ->', member);
+
                     angular.forEach(
                       member,
                       function (meta, userID)
                       {
+                        // console.log('meta ->', meta);
+
                         reserves[state].push(
                           {
                             id: userID,
@@ -593,71 +600,75 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               angular.fromJson(angular.toJson(results.members)),
               function (slots, id)
               {
-                var _member = {
-                  id: id,
-                  state: (slots.length > 0) ? slots[0].state : 'no-state',
-                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
-                  end: (slots.length > 0 && slots[0].end !== undefined) ?
-                       slots[0].end * 1000 :
-                       $rootScope.ui.dashboard.possiblyAvailable,
-                  name: (members && members[id]) ?
-                        members[id].resources.firstName + ' ' + members[id].resources.lastName :
-                        id
-                };
-
-                if (slots.length > 0)
+                if (members[id] &&
+                    (members[id].resources.role != 0 && members[id].resources.role != 4))
                 {
-                  if (! ordered.available)
-                  {
-                    ordered.available = [];
-                  }
+                  var _member = {
+                    id: id,
+                    state: (slots.length > 0) ? slots[0].state : 'no-state',
+                    label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
+                    end: (slots.length > 0 && slots[0].end !== undefined) ?
+                         slots[0].end * 1000 :
+                         $rootScope.ui.dashboard.possiblyAvailable,
+                    name: (members && members[id]) ?
+                          members[id].resources.firstName + ' ' + members[id].resources.lastName :
+                          id
+                  };
 
-                  if (! ordered.unavailable)
+                  if (slots.length > 0)
                   {
-                    ordered.unavailable = [];
-                  }
+                    if (! ordered.available)
+                    {
+                      ordered.available = [];
+                    }
 
-                  if (slots[0].state == 'com.ask-cs.State.Unreached')
-                  {
-                    ordered.unavailable.push(_member);
-                  }
-                  else if (slots[0].state == 'com.ask-cs.State.Unavailable')
-                  {
-                    ordered.unavailable.push(_member);
+                    if (! ordered.unavailable)
+                    {
+                      ordered.unavailable = [];
+                    }
+
+                    if (slots[0].state == 'com.ask-cs.State.Unreached')
+                    {
+                      ordered.unavailable.push(_member);
+                    }
+                    else if (slots[0].state == 'com.ask-cs.State.Unavailable')
+                    {
+                      ordered.unavailable.push(_member);
+                    }
+                    else
+                    {
+                      if (slots[0].state == 'com.ask-cs.State.Available')
+                      {
+                        _member.style = 'sa-icon-reserve-available';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
+                      {
+                        _member.style = 'sa-icon-reserve-available-north';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
+                      {
+                        _member.style = 'sa-icon-reserve-available-south';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
+                      {
+                        _member.style = 'sa-icon-reserve-available-schipper';
+                      }
+
+                      ordered.available.push(_member);
+                    }
                   }
                   else
                   {
-                    if (slots[0].state == 'com.ask-cs.State.Available')
+                    if (! ordered.possible)
                     {
-                      _member.style = 'sa-icon-reserve-available';
+                      ordered.possible = [];
                     }
 
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                    {
-                      _member.style = 'sa-icon-reserve-available-north';
-                    }
-
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                    {
-                      _member.style = 'sa-icon-reserve-available-south';
-                    }
-
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                    {
-                      _member.style = 'sa-icon-reserve-available-schipper';
-                    }
-
-                    ordered.available.push(_member);
+                    ordered.possible.push(_member);
                   }
-                }
-                else
-                {
-                  if (! ordered.possible)
-                  {
-                    ordered.possible = [];
-                  }
-
-                  ordered.possible.push(_member);
                 }
               }
             );

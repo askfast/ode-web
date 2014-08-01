@@ -192,9 +192,12 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
                 {
                   _this.guard.users[user[0]] = {
                     name: (members && members[user[0]] && members[user[0]].name) || user[0],
-                    state: user[1]
+                    state: user[1],
+                    //role: members[user[0]].resources.role
                   };
                 }
+
+                console.log(' ->', members[user[0]]);
               }
             );
 
@@ -595,7 +598,10 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               angular.fromJson(Storage.get(group.uuid)),
               function (member)
               {
-                members[member.uuid] = member;
+                if (member.resources.role != 0 && member.resources.role != 4)
+                {
+                  members[member.uuid] = member;
+                }
               }
             );
 

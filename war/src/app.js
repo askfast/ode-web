@@ -2325,390 +2325,402 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
 /**
  * User
  */
-.factory('User', 
-[
-	'$resource', '$config', '$q', '$location', 'Storage', '$rootScope', 
-	function ($resource, $config, $q, $location, Storage, $rootScope) 
-	{
-	  var self = this;
-
-
-	  var User = $resource();
-
-
-	  var Login = $resource(
-	    $config.host + '/login',
-	    {
-	    },
-	    {
-	      process: {
-	        method: 'GET',
-	        params: {
-            uuid:'',
-            pass:''
-          }
-	      }
-	    }
-	  );
-
-
-	  var Logout = $resource(
-	    $config.host + '/logout',
-	    {
-	    },
-	    {
-	      process: {
-	        method: 'GET',
-	        params: {},
-          isArray: true
-	      }
-	    }
-	  );
-
-
-    var Resources = $resource(
-        $config.host + '/resources',
-      {
-      },
-      {
-        get: {
-          method: 'GET',
-          params: {}
-        }
-      }
-    );
-    
-    var Domain = $resource(
-        $config.host + '/domain',
-      {
-      },
-      {
-        get: {
-          method: 'GET',
-          params: {},
-          isArray: true
-        }
-      }
-    );
-
-
-    var Divisions = $resource(
-        $config.host + '/divisions',
-      {
-      },
-      {
-        get: {
-          method: 'GET',
-          params: {},
-          isArray: true
-        }
-      }
-    );
-
-
-    var States = $resource(
-        $config.host + '/states',
-      {
-      },
-      {
-        get: {
-          method: 'GET',
-          params: {},
-          isArray: true
-        }
-      }
-    );
-
-
-	  var Reset = $resource(
-	    $config.host + '/passwordReset',
-	    {
-	    },
-	    {
-	      password: {
-	        method: 'GET',
-	        params: {
-            uuid: '',
-            path:''
-          },
-          isArray: true
-	      }
-	    }
-	  );
-
-
-	  var changePassword = $resource(
-      $config.host + '/passwordReset',
-      {
-      },
-	    {
-        reset: {
-          method: 'GET',
-          params: {
-            uuid: '',
-            pass: '',
-            key:  ''
-          }
-          ,
-          isArray: true
-        }
-      });
-
-
-    /**
-     * Divisions
-     */
-    User.prototype.divisions = function ()
+  .factory(
+  'User',
+  [
+    '$resource', '$config', '$q', '$location', 'Storage', '$rootScope',
+    function ($resource, $config, $q, $location, Storage, $rootScope)
     {
-      var deferred = $q.defer();
+      var self = this;
 
-      Divisions.get(
-        {},
-        function (result)
-        {
-          deferred.resolve(result);
-        },
-        function (error)
-        {
-          deferred.resolve(error);
-        }
+
+      var User = $resource();
+
+
+      var Login = $resource(
+          $config.host + '/login',
+          {
+          },
+          {
+            process: {
+              method: 'GET',
+              params: {
+                uuid: '',
+                pass: ''
+              }
+            }
+          }
       );
 
-      return deferred.promise;
-    };
 
-
-    /**
-     * States
-     */
-    User.prototype.states = function ()
-    {
-      var deferred = $q.defer();
-
-      States.get(
-        {},
-        function (results)
-        {
-          var states = [];
-
-          angular.forEach(results, function (node)
+      var Logout = $resource(
+          $config.host + '/logout',
           {
-            var state = '';
+          },
+          {
+            process: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            }
+          }
+      );
 
-            angular.forEach(node, function (_s) { state += _s; });
 
-            states.push(state);
+      var Resources = $resource(
+          $config.host + '/resources',
+          {
+          },
+          {
+            get: {
+              method: 'GET',
+              params: {}
+            }
+          }
+      );
+
+      var Domain = $resource(
+          $config.host + '/domain',
+          {
+          },
+          {
+            get: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            }
+          }
+      );
+
+
+      var Divisions = $resource(
+          $config.host + '/divisions',
+          {
+          },
+          {
+            get: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            }
+          }
+      );
+
+
+      var States = $resource(
+          $config.host + '/states',
+          {
+          },
+          {
+            get: {
+              method: 'GET',
+              params: {},
+              isArray: true
+            }
+          }
+      );
+
+
+      var Reset = $resource(
+          $config.host + '/passwordReset',
+          {
+          },
+          {
+            password: {
+              method: 'GET',
+              params: {
+                uuid: '',
+                path: ''
+              },
+              isArray: true
+            }
+          }
+      );
+
+
+      var changePassword = $resource(
+          $config.host + '/passwordReset',
+          {
+          },
+          {
+            reset: {
+              method: 'GET',
+              params: {
+                uuid: '',
+                pass: '',
+                key: ''
+              },
+              isArray: true
+            }
           });
 
-          deferred.resolve(states);
-        },
-        function (error)
-        {
-          deferred.resolve(error);
-        }
-      );
 
-      return deferred.promise;
-    };
-	  
-	  
-	  /**
-	   * TODO: RE-FACTORY
-	   * User login
-	   */
-	  User.prototype.password = function (uuid)
-	  {
-	    var deferred = $q.defer();
+      /**
+       * Divisions
+       */
+      User.prototype.divisions = function ()
+      {
+        var deferred = $q.defer();
 
-	    Reset.password(
-	      {
-	        uuid: uuid.toLowerCase(),
-	        path: $location.absUrl()
-	      }, 
-	      function (result)
-	      {
-	        if (angular.equals(result, []) || angular.equals(result, [{}]))
-	        {
-	          deferred.resolve("ok");
-	        }
-	        else
-	        {
-	          deferred.resolve(result);
-	        }
-	      },
-	      function (error)
-	      {
-	        deferred.resolve(error);
-	      }
-	    );
+        Divisions.get(
+          {},
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve(error);
+          }
+        );
 
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * User login
-	   */
-	  User.prototype.login = function (uuid, pass) 
-	  {    
-	    var deferred = $q.defer();
+      /**
+       * States
+       */
+      User.prototype.states = function ()
+      {
+        var deferred = $q.defer();
 
-	    Login.process(
-        {
-          uuid: uuid,
-          pass: pass
-        },
-	      function (result) 
-	      {
-	        if (angular.equals(result, [])) 
-	        {
-	          deferred.reject("Something went wrong with login!");
-	        }
-	        else 
-	        {
-	          deferred.resolve(result);
-	        }
-	      },
-	      function (error)
-	      {
-	        deferred.resolve(error);
-	      }
-	    );
+        States.get(
+          {},
+          function (results)
+          {
+            var states = [];
 
-	    return deferred.promise;
-	  };
-	  
+            angular.forEach(
+              results,
+              function (node)
+              {
+                var state = '';
 
-	  /**
-	   * RE-FACTORY
-	   * change user password
-	   */
-	  User.prototype.changePass = function (uuid, newpass, key)
-	  {
-	    var deferred = $q.defer();
-	    
-	    /**
-	     * RE-FACTORY
-	     */
-	    changePassword.reset({
-          uuid: uuid,
-          pass: newpass,
-          key:  key
-        },
-	      function (result)
-	      {
-          deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-          deferred.resolve(error);
-	      }
-	    );
-	    
-	    return deferred.promise;
-	  };
+                angular.forEach(
+                  node,
+                  function (_s) { state += _s; });
+
+                states.push(state);
+              });
+
+            deferred.resolve(states);
+          },
+          function (error)
+          {
+            deferred.resolve(error);
+          }
+        );
+
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * User logout
-	   */
-	  User.prototype.logout = function () 
-	  {    
-	    var deferred = $q.defer();
+      /**
+       * TODO: RE-FACTORY
+       * User login
+       */
+      User.prototype.password = function (uuid)
+      {
+        var deferred = $q.defer();
 
-	    Logout.process(
-        null,
-	      function (result) 
-	      {
-	        deferred.resolve(result);
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        Reset.password(
+          {
+            uuid: uuid.toLowerCase(),
+            path: $location.absUrl()
+          },
+          function (result)
+          {
+            if (angular.equals(result, []) ||
+                angular.equals(
+                  result, [
+                    {}
+                  ]
+                )
+              )
+            {
+              deferred.resolve("ok");
+            }
+            else
+            {
+              deferred.resolve(result);
+            }
+          },
+          function (error)
+          {
+            deferred.resolve(error);
+          }
+        );
 
-	    return deferred.promise;
-	  };
-
-
-	  /**
-	   * Get user resources
-	   */
-	  User.prototype.resources = function () 
-	  {    
-	    var deferred = $q.defer();
-		
-	    Resources.get(
-        null,
-	      function (result) 
-	      {
-          result.role = (result.role) ? result.role : 3;
-
-	        if (angular.equals(result, [])) 
-	        {
-	          deferred.reject("User has no resources!");
-	        }
-	        else 
-	        {
-	          Storage.add('resources', angular.toJson(result));
-
-	          deferred.resolve(result);
-	        }
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
-
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Get user domain
-	   */
-	  User.prototype.domain = function ()
-	  {
-	    var deferred = $q.defer();
+      /**
+       * User login
+       */
+      User.prototype.login = function (uuid, pass)
+      {
+        var deferred = $q.defer();
 
-	    Domain.get(
-        null,
-	      function (results)
-	      {
-	        if (angular.equals(results, []))
-	        {
-	          deferred.reject("User has no domain!");
-	        }
-	        else
-	        {
-	          Storage.add('domain', angular.toJson(results));
-	          
-	          var domainnames = [];
-	          
-	          angular.forEach(results, function (node)
-	          {
-	            var domainname = '';
-	            angular.forEach(node, function (_s) { domainname += _s; });
-	            domainnames.push(domainname);
-	          });
-	          
-	          deferred.resolve(domainnames);
-	        }
-	      },
-	      function (error)
-	      {
-	        deferred.resolve({error: error});
-	      }
-	    );
+        Login.process(
+          {
+            uuid: uuid,
+            pass: pass
+          },
+          function (result)
+          {
+            if (angular.equals(result, []))
+            {
+              deferred.reject("Something went wrong with login!");
+            }
+            else
+            {
+              deferred.resolve(result);
+            }
+          },
+          function (error)
+          {
+            deferred.resolve(error);
+          }
+        );
 
-	    return deferred.promise;
-	  };
+        return deferred.promise;
+      };
 
-	  return new User;
-	}
-]);;/*jslint node: true */
+
+      /**
+       * RE-FACTORY
+       * change user password
+       */
+      User.prototype.changePass = function (uuid, newpass, key)
+      {
+        var deferred = $q.defer();
+
+        /**
+         * RE-FACTORY
+         */
+        changePassword.reset(
+          {
+            uuid: uuid,
+            pass: newpass,
+            key: key
+          },
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve(error);
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * User logout
+       */
+      User.prototype.logout = function ()
+      {
+        var deferred = $q.defer();
+
+        Logout.process(
+          null,
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get user resources
+       */
+      User.prototype.resources = function ()
+      {
+        var deferred = $q.defer();
+
+        Resources.get(
+          null,
+          function (result)
+          {
+            result.role = (result.role || result.role == 0) ? result.role : 3;
+
+            if (angular.equals(result, []))
+            {
+              deferred.reject("User has no resources!");
+            }
+            else
+            {
+              Storage.add('resources', angular.toJson(result));
+
+              deferred.resolve(result);
+            }
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+      /**
+       * Get user domain
+       */
+      User.prototype.domain = function ()
+      {
+        var deferred = $q.defer();
+
+        Domain.get(
+          null,
+          function (results)
+          {
+            if (angular.equals(results, []))
+            {
+              deferred.reject("User has no domain!");
+            }
+            else
+            {
+              Storage.add('domain', angular.toJson(results));
+
+              var domainnames = [];
+
+              angular.forEach(
+                results, function (node)
+                {
+                  var domainname = '';
+                  angular.forEach(node, function (_s) { domainname += _s; });
+                  domainnames.push(domainname);
+                });
+
+              deferred.resolve(domainnames);
+            }
+          },
+          function (error)
+          {
+            deferred.resolve({error: error});
+          }
+        );
+
+        return deferred.promise;
+      };
+
+      return new User;
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 /*global $ */
 /*global error */
@@ -3492,13 +3504,15 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           function (user)
           {
             angular.forEach(
-              user, function (slot)
+              user,
+              function (slot)
               {
                 if (! slot.recursive)
                 {
                   slot.recursive = false;
                 }
-              });
+              }
+            );
 
             /**
              * If group is on
@@ -3526,7 +3540,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     var allMembers = angular.fromJson(Storage.get(options.groupId)),
                         calls = [];
 
-
                     // console.log('all members ->', allMembers);
 
                     /**
@@ -3544,33 +3557,37 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                         var mems = [];
 
                         angular.forEach(
-                          members, function (mdata, index)
+                          members,
+                          function (mdata, index)
                           {
                             angular.forEach(
-                              mdata, function (tslot)
-                              {
-                                tslot.text = tslot.state;
-                              });
+                              mdata,
+                              function (tslot) { tslot.text = tslot.state }
+                            );
 
-                            var lastName;
+                            var member;
 
                             angular.forEach(
-                              allMembers, function (mem)
+                              allMembers,
+                              function (mem)
                               {
                                 if (index == mem.uuid)
                                 {
-                                  lastName = mem.resources.lastName;
+                                  member = mem;
                                 }
-                              });
+                              }
+                            );
 
                             mems.push(
                               {
                                 id:       index,
-                                lastName: lastName,
+                                lastName: member.resources.lastName,
+                                role:     member.resources.role,
                                 data:     mdata,
                                 stats:    Stats.member(mdata)
                               })
-                          });
+                          }
+                        );
 
 
                         deferred.resolve(
@@ -3584,12 +3601,10 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                               start: options.stamps.start,
                               end:   options.stamps.end
                             }
-                          });
+                          }
+                        );
                       },
-                      function (error)
-                      {
-                        deferred.resolve({error: error});
-                      }
+                      function (error) { deferred.resolve({error: error}) }
                     );
 
                     /**
@@ -5080,9 +5095,12 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
                 {
                   _this.guard.users[user[0]] = {
                     name: (members && members[user[0]] && members[user[0]].name) || user[0],
-                    state: user[1]
+                    state: user[1],
+                    //role: members[user[0]].resources.role
                   };
                 }
+
+                console.log(' ->', members[user[0]]);
               }
             );
 
@@ -5483,7 +5501,10 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               angular.fromJson(Storage.get(group.uuid)),
               function (member)
               {
-                members[member.uuid] = member;
+                if (member.resources.role != 0 && member.resources.role != 4)
+                {
+                  members[member.uuid] = member;
+                }
               }
             );
 
@@ -5977,7 +5998,7 @@ angular.module('WebPaige.Modals.Profile', ['ngResource'])
           { id: id },
           function (result)
           {
-            result.role = (result.role) ? result.role : 3;
+            result.role = (result.role || result.role == 0) ? result.role : 3;
 
             if (id == $rootScope.app.resources.uuid)
             {
@@ -8297,7 +8318,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             data.members,
             function (member)
             {
-              if (member.lastName != undefined)
+              if (member.lastName != undefined && member.role != 4 && member.role != 0)
               {
                 filtered.push(member);
               }
@@ -8942,6 +8963,10 @@ angular.module('WebPaige.Filters', ['ngResource'])
             if (prole.id == role)
             {
               urole = prole.label;
+            }
+            else if (role == 0)
+            {
+              urole = 'Super admin';
             }
           }
         );
@@ -9715,7 +9740,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Convert array of audience to a nice list
  */
-.filter(
+  .filter(
   'convertToObject',
   [
     function ()
@@ -9732,6 +9757,42 @@ angular.module('WebPaige.Filters', ['ngResource'])
           );
 
           return obj;
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Filter non-functional users
+ */
+  .filter(
+  'filterSupers',
+  [
+    function ()
+    {
+      return function (users)
+      {
+        if (users)
+        {
+          var filtered = {};
+
+          angular.forEach(
+            users,
+            function (user)
+            {
+              console.log('filtered.push(user); ->', user);
+
+//              if (user.resources &&
+//                  (user.resources.role != 0 || user.resources.role != 4)
+//                )
+//              {
+//                filtered.push(user);
+//              }
+            }
+          );
+
+          return users;
         }
       }
     }
@@ -11057,11 +11118,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             var reserves = {};
 
+            console.log('setup ->', setup.reserves);
+
             // TODO: Kind of duplicate purpose with states
             var states = ['available', 'unavailable', 'noplanning'];
 
             angular.forEach(
-              states, function (state)
+              states,
+              function (state)
               {
                 reserves[state] = [];
 
@@ -11069,10 +11133,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   setup.reserves[state],
                   function (member)
                   {
+                    // console.log('members ->', member);
+
                     angular.forEach(
                       member,
                       function (meta, userID)
                       {
+                        // console.log('meta ->', meta);
+
                         reserves[state].push(
                           {
                             id: userID,
@@ -11208,71 +11276,75 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               angular.fromJson(angular.toJson(results.members)),
               function (slots, id)
               {
-                var _member = {
-                  id: id,
-                  state: (slots.length > 0) ? slots[0].state : 'no-state',
-                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
-                  end: (slots.length > 0 && slots[0].end !== undefined) ?
-                       slots[0].end * 1000 :
-                       $rootScope.ui.dashboard.possiblyAvailable,
-                  name: (members && members[id]) ?
-                        members[id].resources.firstName + ' ' + members[id].resources.lastName :
-                        id
-                };
-
-                if (slots.length > 0)
+                if (members[id] &&
+                    (members[id].resources.role != 0 && members[id].resources.role != 4))
                 {
-                  if (! ordered.available)
-                  {
-                    ordered.available = [];
-                  }
+                  var _member = {
+                    id: id,
+                    state: (slots.length > 0) ? slots[0].state : 'no-state',
+                    label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
+                    end: (slots.length > 0 && slots[0].end !== undefined) ?
+                         slots[0].end * 1000 :
+                         $rootScope.ui.dashboard.possiblyAvailable,
+                    name: (members && members[id]) ?
+                          members[id].resources.firstName + ' ' + members[id].resources.lastName :
+                          id
+                  };
 
-                  if (! ordered.unavailable)
+                  if (slots.length > 0)
                   {
-                    ordered.unavailable = [];
-                  }
+                    if (! ordered.available)
+                    {
+                      ordered.available = [];
+                    }
 
-                  if (slots[0].state == 'com.ask-cs.State.Unreached')
-                  {
-                    ordered.unavailable.push(_member);
-                  }
-                  else if (slots[0].state == 'com.ask-cs.State.Unavailable')
-                  {
-                    ordered.unavailable.push(_member);
+                    if (! ordered.unavailable)
+                    {
+                      ordered.unavailable = [];
+                    }
+
+                    if (slots[0].state == 'com.ask-cs.State.Unreached')
+                    {
+                      ordered.unavailable.push(_member);
+                    }
+                    else if (slots[0].state == 'com.ask-cs.State.Unavailable')
+                    {
+                      ordered.unavailable.push(_member);
+                    }
+                    else
+                    {
+                      if (slots[0].state == 'com.ask-cs.State.Available')
+                      {
+                        _member.style = 'sa-icon-reserve-available';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
+                      {
+                        _member.style = 'sa-icon-reserve-available-north';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
+                      {
+                        _member.style = 'sa-icon-reserve-available-south';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
+                      {
+                        _member.style = 'sa-icon-reserve-available-schipper';
+                      }
+
+                      ordered.available.push(_member);
+                    }
                   }
                   else
                   {
-                    if (slots[0].state == 'com.ask-cs.State.Available')
+                    if (! ordered.possible)
                     {
-                      _member.style = 'sa-icon-reserve-available';
+                      ordered.possible = [];
                     }
 
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                    {
-                      _member.style = 'sa-icon-reserve-available-north';
-                    }
-
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                    {
-                      _member.style = 'sa-icon-reserve-available-south';
-                    }
-
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                    {
-                      _member.style = 'sa-icon-reserve-available-schipper';
-                    }
-
-                    ordered.available.push(_member);
+                    ordered.possible.push(_member);
                   }
-                }
-                else
-                {
-                  if (! ordered.possible)
-                  {
-                    ordered.possible = [];
-                  }
-
-                  ordered.possible.push(_member);
                 }
               }
             );
@@ -16739,6 +16811,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             $scope.data.resources.PhoneAddresses.splice(num - 1, 1);
 
             delete $scope.profilemeta.phones[num];
+
+            $scope.profilePhoneNumberParser();
           }
         );
       };
@@ -16793,8 +16867,10 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
       $scope.profileResetPhoneNumberChecker(2);
       $scope.profileResetPhoneNumberChecker(3);
 
-      $scope.profilePhoneNumberParser = function (index, checked)
+      $scope.profilePhoneNumberParser = function ()
       {
+        var checked;
+
         angular.forEach(
           [1, 2, 3],
           function (index)
@@ -16917,12 +16993,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
       };
 
       $timeout(
-        function ()
-        {
-          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
-          $scope.profilePhoneNumberParser(2, $scope.profilemeta.phones[2]);
-          $scope.profilePhoneNumberParser(3, $scope.profilemeta.phones[3]);
-        },
+        function () { $scope.profilePhoneNumberParser() },
         50
       );
 

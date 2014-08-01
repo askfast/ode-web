@@ -588,7 +588,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             data.members,
             function (member)
             {
-              if (member.lastName != undefined)
+              if (member.lastName != undefined && member.role != 4 && member.role != 0)
               {
                 filtered.push(member);
               }

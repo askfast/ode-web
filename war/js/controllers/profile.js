@@ -202,6 +202,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             $scope.data.resources.PhoneAddresses.splice(num - 1, 1);
 
             delete $scope.profilemeta.phones[num];
+
+            $scope.profilePhoneNumberParser();
           }
         );
       };
@@ -256,8 +258,10 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
       $scope.profileResetPhoneNumberChecker(2);
       $scope.profileResetPhoneNumberChecker(3);
 
-      $scope.profilePhoneNumberParser = function (index, checked)
+      $scope.profilePhoneNumberParser = function ()
       {
+        var checked;
+
         angular.forEach(
           [1, 2, 3],
           function (index)
@@ -380,12 +384,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
       };
 
       $timeout(
-        function ()
-        {
-          $scope.profilePhoneNumberParser(1, $scope.profilemeta.phones[1]);
-          $scope.profilePhoneNumberParser(2, $scope.profilemeta.phones[2]);
-          $scope.profilePhoneNumberParser(3, $scope.profilemeta.phones[3]);
-        },
+        function () { $scope.profilePhoneNumberParser() },
         50
       );
 
