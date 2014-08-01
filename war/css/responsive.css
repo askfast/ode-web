@@ -4,6 +4,7 @@
 @-ms-viewport {
   width: device-width;
 }
+
 .clearfix {
   *zoom: 1;
 }
