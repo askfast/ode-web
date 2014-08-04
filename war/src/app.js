@@ -8189,6 +8189,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 agg.data,
                 function (slot)
                 {
+                  // console.log('slot ->', slot);
+
                   var cn;
 
                   if (slot.diff >= 0 && slot.diff < 7)
@@ -8236,7 +8238,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                         start: Math.round(slot.start * 1000),
                         end: Math.round(slot.end * 1000),
                         group: _this.wrapper('c') + name,
-                        content: this.tooltip({ start: slot.start, end: slot.end, min: slot.diff }) +
+                        content: this.tooltip({ start: slot.start, end: slot.end, min: slot.wish + slot.diff }) +
                           // '<span class="badge badge-inverse">' + cn + '</span>' +
                                  _this.secret(
                                    angular.toJson(
@@ -10743,8 +10745,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Groups',
     'Announcer',
     '$timeout',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage,
-              Settings, Profile, Groups, Announcer, $timeout)
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups,
+              Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 

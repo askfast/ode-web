@@ -657,6 +657,30 @@ div.timeline-event.state-available {
   }
 }
 
+.bars-more {
+  background-color: #6cad6c;
+
+  &:hover {
+    background-color: lighten(#6cad6c, 10%);
+  }
+}
+
+.bars-less {
+  background-color: #d34545;
+
+  &:hover {
+    background-color: lighten(#d34545, 10%);
+  }
+}
+
+.bars-even {
+  background-color: #e09131;
+
+  &:hover {
+    background-color: lighten(#e09131, 10%);
+  }
+}
+
 div.timeline-event.state-available-south {
   margin: 0;
   background-color: #65619b;

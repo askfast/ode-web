@@ -27,8 +27,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Groups',
     'Announcer',
     '$timeout',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage,
-              Settings, Profile, Groups, Announcer, $timeout)
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups,
+              Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 
