@@ -34,10 +34,19 @@ angular.module('WebPaige.Filters', ['ngResource'])
         var urole;
 
         angular.forEach(
-          $config.roles, function (prole)
+          $config.roles,
+          function (prole)
           {
-            if (prole.id == role) urole = prole.label;
-          });
+            if (prole.id == role)
+            {
+              urole = prole.label;
+            }
+            else if (role == 0)
+            {
+              urole = 'Super admin';
+            }
+          }
+        );
 
         return urole;
       }
@@ -59,13 +68,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
         var filtered;
 
         angular.forEach(
-          $config.timeline.config.divisions, function (division)
+          $config.timeline.config.divisions,
+          function (division)
           {
             if (division.id == divid)
             {
               filtered = division.label;
             }
-          });
+          }
+        );
 
         return filtered;
       }
@@ -198,8 +209,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'rangeInfoFilter',
   [
-    '$rootScope', 'Dater', 'Storage',
-    function ($rootScope, Dater, Storage)
+    '$rootScope', 'Dater',
+    function ($rootScope, Dater)
     {
       var periods = Dater.getPeriods();
 
@@ -254,14 +265,15 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'rangeInfoWeekFilter',
   [
-    '$rootScope', 'Dater', 'Storage',
-    function ($rootScope, Dater, Storage)
+    '$rootScope',
+    function ($rootScope)
     {
-      var periods = Dater.getPeriods();
-
       return function (timeline)
       {
-        if (timeline) return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+        if (timeline)
+        {
+          return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
+        }
       };
     }
   ])
@@ -715,8 +727,8 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'nicelyOffsets',
   [
-    '$sce', 'Dater', 'Storage', 'Offsetter',
-    function ($sce, Dater, Storage, Offsetter)
+    'Dater', 'Storage', 'Offsetter',
+    function (Dater, Storage, Offsetter)
     {
       return function (data)
       {
@@ -749,7 +761,9 @@ angular.module('WebPaige.Filters', ['ngResource'])
           }
         );
 
-        return $sce.trustAsHtml(compiled);
+        return compiled;
+
+        // return $sce.trustAsHtml(compiled);
       }
     }
   ])
@@ -794,6 +808,66 @@ angular.module('WebPaige.Filters', ['ngResource'])
             });
 
           return audience.substring(0, audience.length - 2);
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Convert array of audience to a nice list
+ */
+  .filter(
+  'convertToObject',
+  [
+    function ()
+    {
+      return function (arr)
+      {
+        if (arr)
+        {
+          var obj = {};
+
+          angular.forEach(
+            arr,
+            function (item, index) { obj[index] = item }.bind(obj)
+          );
+
+          return obj;
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Filter non-functional users
+ */
+  .filter(
+  'filterSupers',
+  [
+    function ()
+    {
+      return function (users)
+      {
+        if (users)
+        {
+          var filtered = [];
+
+          angular.forEach(
+            users,
+            function (user)
+            {
+              if (user.resources &&
+                  (user.resources.role != 0 && user.resources.role != 4)
+                )
+              {
+                filtered.push(user);
+              }
+            }
+          );
+
+          return filtered;
         }
       }
     }

@@ -1,14 +1,15 @@
 <div class="page-header">
   <h2>{{ui.help.header}}</h2>
-  <div class="btn-group pull-right"
-       ng-show="(config.profile.meta=='knrm')">
-    <a href="../docs/manual.pdf"
+
+  <div class="btn-group pull-right">
+    <a href="../docs/manual{{(config.profile.meta=='knrm') && '-knrm' || ''}}.pdf"
        target="_blank"
        class="btn btn-success">
       <i class="icon-book icon-white"></i>
       {{ui.downloads.manual}}
     </a>
   </div>
+
 </div>
 
 

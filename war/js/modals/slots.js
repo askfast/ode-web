@@ -547,13 +547,15 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           function (user)
           {
             angular.forEach(
-              user, function (slot)
+              user,
+              function (slot)
               {
                 if (! slot.recursive)
                 {
                   slot.recursive = false;
                 }
-              });
+              }
+            );
 
             /**
              * If group is on
@@ -581,7 +583,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     var allMembers = angular.fromJson(Storage.get(options.groupId)),
                         calls = [];
 
-
                     // console.log('all members ->', allMembers);
 
                     /**
@@ -599,33 +600,37 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                         var mems = [];
 
                         angular.forEach(
-                          members, function (mdata, index)
+                          members,
+                          function (mdata, index)
                           {
                             angular.forEach(
-                              mdata, function (tslot)
-                              {
-                                tslot.text = tslot.state;
-                              });
+                              mdata,
+                              function (tslot) { tslot.text = tslot.state }
+                            );
 
-                            var lastName;
+                            var member;
 
                             angular.forEach(
-                              allMembers, function (mem)
+                              allMembers,
+                              function (mem)
                               {
                                 if (index == mem.uuid)
                                 {
-                                  lastName = mem.resources.lastName;
+                                  member = mem;
                                 }
-                              });
+                              }
+                            );
 
                             mems.push(
                               {
                                 id:       index,
-                                lastName: lastName,
+                                lastName: member.resources.lastName,
+                                role:     member.resources.role,
                                 data:     mdata,
                                 stats:    Stats.member(mdata)
                               })
-                          });
+                          }
+                        );
 
 
                         deferred.resolve(
@@ -639,12 +644,10 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                               start: options.stamps.start,
                               end:   options.stamps.end
                             }
-                          });
+                          }
+                        );
                       },
-                      function (error)
-                      {
-                        deferred.resolve({error: error});
-                      }
+                      function (error) { deferred.resolve({error: error}) }
                     );
 
                     /**

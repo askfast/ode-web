@@ -26,7 +26,9 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Profile',
     'Groups',
     'Announcer',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer)
+    '$timeout',
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups,
+              Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -69,28 +71,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        * real groups list and if a group is missing in settings-groups add by default!
        */
       var groups = Storage.local.groups();
-
-
-      //
-
-//
-//      $scope.breakGroupSetting = function ()
-//      {
-////        Settings.save(
-////          $rootScope.app.resources.uuid,
-////          { role: '' }
-////        ).then(function (resulted) { console.log('broken resources ->', resulted) });
-//
-//
-//        Profile.save(
-//          // $rootScope.app.resources.uuid,
-//          'devleonie',
-//          { role: '' }
-//        ).then(function (resulted) { console.log('broken resources ->', resulted) });
-//      };
-
-      //
-
 
       var selection = {};
 
@@ -200,17 +180,24 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
                     if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
-                    if (pie.weeks.current.state.diff > 0)
+                    if (pie.weeks.current.state.wish == 0)
                     {
-                      pie.weeks.current.state.cls = 'more';
+                      pie.weeks.current.state.cls = 'disabled';
                     }
-                    else if (pie.weeks.current.state.diff === 0)
+                    else
                     {
-                      pie.weeks.current.state.cls = 'even';
-                    }
-                    else if (pie.weeks.current.state.diff < 0)
-                    {
-                      pie.weeks.current.state.cls = 'less';
+                      if (pie.weeks.current.state.diff > 0)
+                      {
+                        pie.weeks.current.state.cls = 'more';
+                      }
+                      else if (pie.weeks.current.state.diff === 0)
+                      {
+                        pie.weeks.current.state.cls = 'even';
+                      }
+                      else if (pie.weeks.current.state.diff < 0)
+                      {
+                        pie.weeks.current.state.cls = 'less';
+                      }
                     }
 
                     pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
@@ -255,7 +242,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
               function pieMaker ($id, id, _ratios)
               {
-                setTimeout(
+                $timeout(
                   function ()
                   {
                     if ($.browser.msie && $.browser.version == '8.0')
@@ -272,9 +259,12 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
                     var ratios = [],
                         colorMap = {
-                          more: '#415e6b',
-                          even: '#ba6a24',
-                          less: '#a0a0a0'
+                          more: '#6cad6c',
+                          // more: '#415e6b',
+                          even: '#e09131',
+                          // even: '#ba6a24',
+                          less: '#d34545'
+                          // less: '#a0a0a0'
                         },
                         colors = [],
                         xratios = [];
@@ -308,8 +298,15 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    var r = new Raphael($id + id),
-                        pie = r.piechart(40, 40, 40, xratios, { colors: colors, stroke: 'white' });
+                    new Raphael($id + id)
+                      .piechart(
+                      40, 40, 40,
+                      xratios,
+                      {
+                        colors: colors,
+                        stroke: 'white'
+                      }
+                    );
 
                   }, $rootScope.config.timers.TICKER);
               }
@@ -326,7 +323,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       /**
        * Get pie overviews
        */
-      getOverviews();
+      $timeout(function () { getOverviews() }, 25);
 
 
       /**
@@ -445,11 +442,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             var reserves = {};
 
+            // console.log('setup ->', setup.reserves);
+
             // TODO: Kind of duplicate purpose with states
             var states = ['available', 'unavailable', 'noplanning'];
 
             angular.forEach(
-              states, function (state)
+              states,
+              function (state)
               {
                 reserves[state] = [];
 
@@ -457,17 +457,24 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   setup.reserves[state],
                   function (member)
                   {
+                    // console.log('member ->', member);
+
                     angular.forEach(
                       member,
                       function (meta, userID)
                       {
-                        reserves[state].push(
-                          {
-                            id: userID,
-                            name: meta.name,
-                            state: meta.state
-                          }
-                        );
+                        // console.log('meta ->', meta);
+
+                        if (meta.role != 0)
+                        {
+                          reserves[state].push(
+                            {
+                              id: userID,
+                              name: meta.name,
+                              state: meta.state
+                            }
+                          );
+                        }
                       }
                     );
                   }
@@ -542,7 +549,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $scope.states['no-state'] = {
         className: 'no-state',
         label: $rootScope.ui.dashboard.possiblyAvailable,
-        color: '#a0a0a0',
+        color: '#ececec',
         type: $rootScope.ui.dashboard.noPlanning,
         display: false
       };
@@ -596,71 +603,75 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               angular.fromJson(angular.toJson(results.members)),
               function (slots, id)
               {
-                var _member = {
-                  id: id,
-                  state: (slots.length > 0) ? slots[0].state : 'no-state',
-                  label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
-                  end: (slots.length > 0 && slots[0].end !== undefined) ?
-                       slots[0].end * 1000 :
-                       $rootScope.ui.dashboard.possiblyAvailable,
-                  name: (members && members[id]) ?
-                        members[id].resources.firstName + ' ' + members[id].resources.lastName :
-                        id
-                };
-
-                if (slots.length > 0)
+                if (members[id] &&
+                    (members[id].resources.role != 0 && members[id].resources.role != 4))
                 {
-                  if (! ordered.available)
-                  {
-                    ordered.available = [];
-                  }
+                  var _member = {
+                    id: id,
+                    state: (slots.length > 0) ? slots[0].state : 'no-state',
+                    label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
+                    end: (slots.length > 0 && slots[0].end !== undefined) ?
+                         slots[0].end * 1000 :
+                         $rootScope.ui.dashboard.possiblyAvailable,
+                    name: (members && members[id]) ?
+                          members[id].resources.firstName + ' ' + members[id].resources.lastName :
+                          id
+                  };
 
-                  if (! ordered.unavailable)
+                  if (slots.length > 0)
                   {
-                    ordered.unavailable = [];
-                  }
+                    if (! ordered.available)
+                    {
+                      ordered.available = [];
+                    }
 
-                  if (slots[0].state == 'com.ask-cs.State.Unreached')
-                  {
-                    ordered.unavailable.push(_member);
-                  }
-                  else if (slots[0].state == 'com.ask-cs.State.Unavailable')
-                  {
-                    ordered.unavailable.push(_member);
+                    if (! ordered.unavailable)
+                    {
+                      ordered.unavailable = [];
+                    }
+
+                    if (slots[0].state == 'com.ask-cs.State.Unreached')
+                    {
+                      ordered.unavailable.push(_member);
+                    }
+                    else if (slots[0].state == 'com.ask-cs.State.Unavailable')
+                    {
+                      ordered.unavailable.push(_member);
+                    }
+                    else
+                    {
+                      if (slots[0].state == 'com.ask-cs.State.Available')
+                      {
+                        _member.style = 'sa-icon-reserve-available';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
+                      {
+                        _member.style = 'sa-icon-reserve-available-north';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
+                      {
+                        _member.style = 'sa-icon-reserve-available-south';
+                      }
+
+                      if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
+                      {
+                        _member.style = 'sa-icon-reserve-available-schipper';
+                      }
+
+                      ordered.available.push(_member);
+                    }
                   }
                   else
                   {
-                    if (slots[0].state == 'com.ask-cs.State.Available')
+                    if (! ordered.possible)
                     {
-                      _member.style = 'sa-icon-reserve-available';
+                      ordered.possible = [];
                     }
 
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                    {
-                      _member.style = 'sa-icon-reserve-available-north';
-                    }
-
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                    {
-                      _member.style = 'sa-icon-reserve-available-south';
-                    }
-
-                    if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                    {
-                      _member.style = 'sa-icon-reserve-available-schipper';
-                    }
-
-                    ordered.available.push(_member);
+                    ordered.possible.push(_member);
                   }
-                }
-                else
-                {
-                  if (! ordered.possible)
-                  {
-                    ordered.possible = [];
-                  }
-
-                  ordered.possible.push(_member);
                 }
               }
             );

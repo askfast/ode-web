@@ -21,7 +21,8 @@ angular.module('WebPaige')
     'Messages',
     '$config',
     '$window',
-    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window)
+    '$http',
+    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $config, $window, $http)
     {
       /**
        * Pass config and init dynamic config values
@@ -385,13 +386,19 @@ angular.module('WebPaige')
 
           // console.log('$rootScope.location ->', $rootScope.location || 'login');
 
-          ga(
-            'send', 'pageview',
-            {
-              'page': '/index.html#/' + $rootScope.location || 'login',
-              'title': $rootScope.location || 'login'
-            }
-          );
+          try {
+            ga(
+              'send', 'pageview',
+              {
+                'page': '/index.html#/' + $rootScope.location || 'login',
+                'title': $rootScope.location || 'login'
+              }
+            );
+          }
+          catch (err)
+          {
+            console.log('there has been an error with google analytics tracking: ', err);
+          }
 
 //          $timeout(
 //            function ()

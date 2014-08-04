@@ -12,7 +12,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.4.0',
+    version:  '2.5.0',
     lang:     'nl',
 
     fullscreen: true,
@@ -41,7 +41,7 @@ angular.module('WebPaige')
       {
         className:'state-available',
         label:    'Beschikbaar',
-        color:    '#4f824f',
+        color:    '#6cad6c',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
@@ -59,7 +59,7 @@ angular.module('WebPaige')
       {
         className:'state-available-south',
         label:    'Beschikbaar voor Zuid',
-        color:    '#e08a0c',
+        color:    '#8a85c7',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
@@ -68,7 +68,7 @@ angular.module('WebPaige')
       {
         className:'state-unavailable',
         label:    'Niet Beschikbaar',
-        color:    '#a93232',
+        color:    '#d34545',
         type:     'Niet Beschikbaar',
         display:  true,
         minRole:  5
@@ -77,7 +77,7 @@ angular.module('WebPaige')
       {
         className:'state-schipper-service',
         label:    'Schipper van Dienst',
-        color:    '#e0c100',
+        color:    '#f6e500',
         type:     'Beschikbaar',
         display:  true,
         minRole:  5
@@ -129,22 +129,35 @@ angular.module('WebPaige')
         states:     {},
         // divisions:  profile.divisions,
         divisions:  [],
+//        densities: {
+//          // less:   '#a0a0a0',
+//          less:   '#d34545',
+//          even:   '#ba6a24',
+//          one:    '#415e6b',
+//          two:    '#3d5865',
+//          three:  '#344c58',
+//          four:   '#2f4550',
+//          five:   '#2c424c',
+//          six:    '#253943',
+//          more:   '#486877'
+//        },
         densities: {
-          less:   '#a0a0a0',
-          even:   '#ba6a24',
-          one:    '#415e6b',
-          two:    '#3d5865',
-          three:  '#344c58',
-          four:   '#2f4550',
-          five:   '#2c424c',
-          six:    '#253943',
-          more:   '#486877'
+          less:   '#d34545',
+          even:   '#e09131',
+          one:    '#6cad6c',
+          two:    '#6cad6c',
+          three:  '#6cad6c',
+          four:   '#6cad6c',
+          five:   '#6cad6c',
+          six:    '#6cad6c',
+          more:   '#6cad6c'
         }
       }
     },
 
     pie: {
-      colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+      // colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+      colors: ['#6cad6c', '#e09131', '#d34545']
     },
 
     defaults: {

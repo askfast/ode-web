@@ -12,8 +12,8 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
   .controller(
   'scheaduler',
   [
-    '$scope', '$rootScope',
-    function ($scope, $rootScope)
+    '$scope', '$timeout',
+    function ($scope, $timeout)
     {
       /**
        * Watch offsets
@@ -24,11 +24,9 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
           if ($scope.scheaduled)
           {
             angular.forEach(
-              $scope.scheaduled.offsets, function (offset, index)
+              $scope.scheaduled.offsets,
+              function (offset)
               {
-                /**
-                 * If all the days are unchecked make monday checked as default
-                 */
                 if (offset.mon == false &&
                     offset.tue == false &&
                     offset.wed == false &&
@@ -40,22 +38,20 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
                   offset.mon = true;
                 }
 
-                // var hour    = 1000 * 60 * 60,
-                //      minute  = 1000 * 60,
                 var hour = 60 * 60,
                     minute = 60,
                     time = offset.time.split(':'),
                     exact = (time[0] * hour) + (time[1] * minute);
 
-                if (time[0] != offset.hour)  offset.hour = time[0];
-                if (time[1] != offset.minute) offset.minute = time[1];
+                if (time[0] != offset.hour) { offset.hour = time[0] }
+                if (time[1] != offset.minute) { offset.minute = time[1] }
 
-                if (offset.exact != exact)
-                { offset.exact = exact; }
-
-              });
+                if (offset.exact != exact) { offset.exact = exact }
+              }
+            );
           }
-        });
+        }
+      );
 
 
       /**
@@ -63,33 +59,38 @@ angular.module('WebPaige.Controllers.Scheaduler', [])
        */
       $scope.addNewOffset = function ()
       {
-        if ($scope.scheaduled.offsets[0])
-        {
-          var hour = 60 * 60,
-              minute = 60,
-              time = $scope.scheaduled.offsets[0].time.split(':'),
-              exact = (time[0] * hour) + (time[1] * minute);
+        $timeout(
+          function ()
+          {
+            if ($scope.scheaduled.offsets[0])
+            {
+              var hour = 60 * 60,
+                  minute = 60,
+                  time = $scope.scheaduled.offsets[0].time.split(':'),
+                  exact = (time[0] * hour) + (time[1] * minute);
 
-          $scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
+              $scope.scheaduled.offsets[exact] = $scope.scheaduled.offsets[0];
 
-          $scope.scheaduled.offsets[exact].exact = exact;
-        }
+              $scope.scheaduled.offsets[exact].exact = exact;
+            }
 
-        $scope.scheaduled.offsets[0] = {
-          mon: true,
-          tue: false,
-          wed: false,
-          thu: false,
-          fri: false,
-          sat: false,
-          sun: false,
-          hour: 0,
-          minute: 0,
-          time: '00:00',
-          exact: 0
-        };
+            $scope.scheaduled.offsets[0] = {
+              mon: true,
+              tue: false,
+              wed: false,
+              thu: false,
+              fri: false,
+              sat: false,
+              sun: false,
+              hour: 0,
+              minute: 0,
+              time: '00:00',
+              exact: 0
+            };
 
-        $scope.scheaduleCounter();
+            $scope.scheaduleCounter();
+          }
+        )
       };
 
 
