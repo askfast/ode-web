@@ -7,12 +7,16 @@
 - feature: Repeating and scheduled messages.
   [link1](https://trello.com/c/3AA25MAI/)
   [link2](https://trello.com/c/Dolbiyqd)
-- feature: Display the start and end time of a time-slot with mouse over
+- feature: Display the start and end time of a time-slot with mouse over.
   [link](https://trello.com/c/SGlQle5Z)
-- fix: New color scheme for personal and group availabilities
-- feature: User can see the no. of current available users of a group by mouse over
-- fix: Disable non-functional users (admin, viewer, etc) from views
-- feature: IE bug for showing individual' statistics
+- feature: New color scheme for personal and group availabilities.
+  [link](https://trello.com/c/LlRCmmdP)
+- feature: User can see the no. of current available users of a group by mouse over.
+  [link](https://trello.com/c/rcKMPbtj)
+- feature: Disable non-functional users (admin, viewer, etc) from views.
+  [link](https://trello.com/c/kduaubGA)
+- fix: IE bug for showing individual' statistics.
+  [link](https://trello.com/c/9axdKh2l)
 
 2.4.0
 
