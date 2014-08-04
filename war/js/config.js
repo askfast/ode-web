@@ -156,7 +156,8 @@ angular.module('WebPaige')
     },
 
     pie: {
-      colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+      // colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+      colors: ['#6cad6c', '#e09131', '#d34545']
     },
 
     defaults: {

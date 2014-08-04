@@ -1292,7 +1292,8 @@ angular.module('WebPaige')
     },
 
     pie: {
-      colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+      // colors: ['#415e6b', '#ba6a24', '#a0a0a0']
+      colors: ['#6cad6c', '#e09131', '#d34545']
     },
 
     defaults: {
@@ -8458,10 +8459,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
               }
 
               var ratios = [],
+//                  colorMap = {
+//                    more: '#415e6b',
+//                    even: '#ba6a24',
+//                    less: '#a0a0a0'
+//                  },
                   colorMap = {
-                    more: '#415e6b',
-                    even: '#ba6a24',
-                    less: '#a0a0a0'
+                    more: '#6cad6c',
+                    even: '#e09131',
+                    less: '#d34545'
                   },
                   colors = [],
                   xratios = [];

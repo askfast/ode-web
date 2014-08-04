@@ -726,10 +726,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
               }
 
               var ratios = [],
+//                  colorMap = {
+//                    more: '#415e6b',
+//                    even: '#ba6a24',
+//                    less: '#a0a0a0'
+//                  },
                   colorMap = {
-                    more: '#415e6b',
-                    even: '#ba6a24',
-                    less: '#a0a0a0'
+                    more: '#6cad6c',
+                    even: '#e09131',
+                    less: '#d34545'
                   },
                   colors = [],
                   xratios = [];
