@@ -442,7 +442,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             var reserves = {};
 
-            console.log('setup ->', setup.reserves);
+            // console.log('setup ->', setup.reserves);
 
             // TODO: Kind of duplicate purpose with states
             var states = ['available', 'unavailable', 'noplanning'];
@@ -457,7 +457,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   setup.reserves[state],
                   function (member)
                   {
-                    // console.log('members ->', member);
+                    // console.log('member ->', member);
 
                     angular.forEach(
                       member,
@@ -465,13 +465,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       {
                         // console.log('meta ->', meta);
 
-                        reserves[state].push(
-                          {
-                            id: userID,
-                            name: meta.name,
-                            state: meta.state
-                          }
-                        );
+                        if (meta.role != 0)
+                        {
+                          reserves[state].push(
+                            {
+                              id: userID,
+                              name: meta.name,
+                              state: meta.state
+                            }
+                          );
+                        }
                       }
                     );
                   }

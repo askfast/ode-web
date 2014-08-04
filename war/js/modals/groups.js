@@ -188,16 +188,26 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               results.station,
               function (user)
               {
+                var _member;
+
                 if (user[0] != 'agent' || user[1] != 'state')
                 {
-                  _this.guard.users[user[0]] = {
+                  _member = {
                     name: (members && members[user[0]] && members[user[0]].name) || user[0],
-                    state: user[1],
-                    //role: members[user[0]].resources.role
+                    state: user[1]
                   };
-                }
 
-                console.log(' ->', members[user[0]]);
+                  if (members[user[0]])
+                  {
+                    _member.role = members[user[0]].resources.role;
+                  }
+                  else
+                  {
+                    _member.role = '0';
+                  }
+
+                  _this.guard.users[user[0]] = _member;
+                }
               }
             );
 

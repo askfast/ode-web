@@ -5092,16 +5092,26 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               results.station,
               function (user)
               {
+                var _member;
+
                 if (user[0] != 'agent' || user[1] != 'state')
                 {
-                  _this.guard.users[user[0]] = {
+                  _member = {
                     name: (members && members[user[0]] && members[user[0]].name) || user[0],
-                    state: user[1],
-                    //role: members[user[0]].resources.role
+                    state: user[1]
                   };
-                }
 
-                console.log(' ->', members[user[0]]);
+                  if (members[user[0]])
+                  {
+                    _member.role = members[user[0]].resources.role;
+                  }
+                  else
+                  {
+                    _member.role = '0';
+                  }
+
+                  _this.guard.users[user[0]] = _member;
+                }
               }
             );
 
@@ -11160,7 +11170,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
             var reserves = {};
 
-            console.log('setup ->', setup.reserves);
+            // console.log('setup ->', setup.reserves);
 
             // TODO: Kind of duplicate purpose with states
             var states = ['available', 'unavailable', 'noplanning'];
@@ -11175,7 +11185,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                   setup.reserves[state],
                   function (member)
                   {
-                    // console.log('members ->', member);
+                    // console.log('member ->', member);
 
                     angular.forEach(
                       member,
@@ -11183,13 +11193,16 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       {
                         // console.log('meta ->', meta);
 
-                        reserves[state].push(
-                          {
-                            id: userID,
-                            name: meta.name,
-                            state: meta.state
-                          }
-                        );
+                        if (meta.role != 0)
+                        {
+                          reserves[state].push(
+                            {
+                              id: userID,
+                              name: meta.name,
+                              state: meta.state
+                            }
+                          );
+                        }
                       }
                     );
                   }
