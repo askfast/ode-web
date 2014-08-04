@@ -5508,6 +5508,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               }
             );
 
+            // $rootScope.app.members = members;
+
             Storage.add('members', angular.toJson(members));
           }
         );
@@ -7992,13 +7994,13 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
           if (! agg.division)
           {
-            title = (privilage == 1) ? link : '<span>' + name + '</span>';
+            title = (privilage <= 1) ? link : '<span>' + name + '</span>';
           }
           else
           {
             var label;
 
-            title = (privilage == 1) ? link : '<span>' + name + '</span>';
+            title = (privilage <= 1) ? link : '<span>' + name + '</span>';
 
             title += ' <span class="label">' + agg.division.label + '</span>';
           }
@@ -8353,7 +8355,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             {
               var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
 
-              var link = (privilage == 1) ?
+              var link = (privilage <= 1) ?
                          _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                          '<a href="#/profile/' +
                          member.id +

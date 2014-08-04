@@ -605,6 +605,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               }
             );
 
+            // $rootScope.app.members = members;
+
             Storage.add('members', angular.toJson(members));
           }
         );

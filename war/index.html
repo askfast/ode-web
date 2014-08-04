@@ -117,7 +117,11 @@
 
               <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
+                <i class="icon-user icon-white"></i>
+                  {{app.resources.name}}
+                  <span ng-show="app.resources.role == 0">[SU]</span>
+                  <b class="caret"></b>
+                </a>
                 <ul class="dropdown-menu">
                   <li>
                     <a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a>
@@ -241,7 +245,6 @@
     </div>
     <!-- end mobile status bar -->
 
-    <!--<div ng-show="browser.mobile && config.profile.mobileApp.status && ((config.profile.meta=='standby') || (config.profile.meta=='monster'))"-->
     <div ng-show="browser.mobile && config.profile.mobileApp.status"
          class="ng-cloak text-center">
       <ul style="list-style: none; position: relative; z-index: 20000; margin: 0;">

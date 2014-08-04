@@ -347,6 +347,8 @@
     <!-- end new member tab -->
 
 
+    <!--<pre><small>{{app | json}}</small></pre>-->
+
 
     <!-- search tab -->
     <div class="tab-pane {{(views.search==true) && 'active'}}" id="searchTab" ng-show="views.search">
@@ -382,14 +384,17 @@
                 </span>
               </td>
               <td>
-                <select style="margin:0; width: 160px;" 
-                        ng-model="candidate.group" 
-                        ng-options="group.name for group in data.groups">
-                  <option value="">{{ui.groups.selectGroup}}</option>
-                </select>
-                <button style="margin-left: 5px;" 
-                        ng-click="addMember(candidate)" 
-                        class="btn btn-success btn-small">{{ui.groups.addToGroup}}</button>
+                <!--{{app.members[candidate.id].resources.role}}-->
+                <!--<div ng-hide="app.members[candidate.id].resources.role == 0">-->
+                  <select style="margin:0; width: 160px;"
+                          ng-model="candidate.group"
+                          ng-options="group.name for group in data.groups">
+                    <option value="">{{ui.groups.selectGroup}}</option>
+                  </select>
+                  <button style="margin-left: 5px;"
+                          ng-click="addMember(candidate)"
+                          class="btn btn-success btn-small">{{ui.groups.addToGroup}}</button>
+                <!--</div>-->
               </td>
             </tr>
           </tbody>
@@ -515,12 +520,17 @@
               <td>
                 <div class="pull-right">
                   <a href="#/profile/{{member.uuid}}#profile"
-                     class="btn btn-mini"><i class="icon-user"></i></a>&nbsp;
-                  <a href="#/profile/{{member.uuid}}#edit"
-                     class="btn btn-mini"><i class="icon-edit"></i></a>&nbsp;
-                  <button type="submit" 
-                          ng-click="removeMember(member.uuid, group.uuid)" 
-                          class="btn btn-danger btn-mini"><i class="icon-remove icon-white"></i></button>
+                     class="btn btn-mini"><i class="icon-user"></i></a>
+                  <span ng-hide="member.resources.role == 0">
+                    &nbsp;
+                    <a href="#/profile/{{member.uuid}}#edit"
+                       class="btn btn-mini">
+                      <i class="icon-edit"></i>
+                    </a>&nbsp;
+                    <button type="submit"
+                            ng-click="removeMember(member.uuid, group.uuid)"
+                            class="btn btn-danger btn-mini"><i class="icon-remove icon-white"></i></button>
+                  </span>
                 </div>
               </td>
             </tr>
