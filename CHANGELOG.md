@@ -1,8 +1,22 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
-Not yet
-- feature: Repeating and scheduled messages. 10-7-2014
+2.5.0
+- feature: Multiple phone numbers per user
+  [link](https://trello.com/c/PepqmklD)
+- feature: Repeating and scheduled messages.
+  [link1](https://trello.com/c/3AA25MAI/)
+  [link2](https://trello.com/c/Dolbiyqd)
+- feature: Display the start and end time of a time-slot with mouse over.
+  [link](https://trello.com/c/SGlQle5Z)
+- feature: New color scheme for personal and group availabilities.
+  [link](https://trello.com/c/LlRCmmdP)
+- feature: User can see the no. of current available users of a group by mouse over.
+  [link](https://trello.com/c/rcKMPbtj)
+- feature: Disable non-functional users (admin, viewer, etc) from views.
+  [link](https://trello.com/c/kduaubGA)
+- fix: IE bug for showing individual' statistics.
+  [link](https://trello.com/c/9axdKh2l)
 
 2.4.0
 

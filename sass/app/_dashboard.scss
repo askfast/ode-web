@@ -205,22 +205,22 @@
 
               .more {
                 // background-color: #415e6b;
-                background-color: #4f824f;
+                background-color: #6cad6c;
               }
 
               .even {
                 // background-color: #ba6a24;
-                background-color: #ba6a24;
+                background-color: #e09131;
               }
 
               .less {
                 // background-color: #a0a0a0;
-                background-color: #a93232;
+                background-color: #d34545;
               }
 
               .disabled {
-                // background-color: #a0a0a0;
                 background-color: #a0a0a0;
+                // background-color: #ececec;
               }
 
               .pie {
@@ -456,7 +456,8 @@
           color: #fff;
           margin-bottom: 5px;
           padding-top: 18px;
-          background-color: #415e6b;
+          // background-color: #415e6b;
+          background-color: #6cad6c;
 
           strong {
             font-size: 24px;
@@ -464,39 +465,43 @@
         }
 
         .sa-icon-driver {
-          background-color: #253943;
+          // background-color: #253943;
+          background-color: #f6e500;
         }
 
         .sa-icon-commander {
-          background-color: #ba6a24;
+          // background-color: #ba6a24;
+          background-color: #648ea0;
         }
 
         .sa-icon-reserve-available {
-          background-color: #4f824f;
+          background-color: #6cad6c;
         }
 
         .sa-icon-reserve-available-north {
-          background-color: black;
+          background-color: #242424;
         }
 
         .sa-icon-reserve-available-south {
-          background-color: #e08a0c;
+          background-color: #8a85c7;
         }
 
         .sa-icon-reserve-available-schipper {
-          background-color: #e0c100;
+          background-color: #f6e500;
         }
 
         .sa-icon-reserve-unavailable {
-          background-color: #a93232;
+          background-color: #d34545;
         }
 
+        // TODO: Depreciated!
         .sa-icon-reserve-unreached {
           background-color: #65619b;
         }
 
         .sa-icon-reserve-noplanning {
           background-color: #a0a0a0;
+          // background-color: #ececec;
         }
 
         .sa-member-card {

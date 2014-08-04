@@ -347,6 +347,8 @@
     <!-- end new member tab -->
 
 
+    <!--<pre><small>{{app | json}}</small></pre>-->
+
 
     <!-- search tab -->
     <div class="tab-pane {{(views.search==true) && 'active'}}" id="searchTab" ng-show="views.search">
@@ -378,18 +380,20 @@
               </td>
               <td>
                 <span ng-repeat="group in candidate.groups">
-                  <a ng-click="requestGroup(group.uuid, true)">{{group.name}}</a>,
+                  <a ng-click="requestGroup(group.uuid, true)">{{group.name}}</a><span ng-show="!$last">,&nbsp;</span>
                 </span>
               </td>
               <td>
-                <select style="margin:0; width: 160px;" 
-                        ng-model="candidate.group" 
-                        ng-options="group.name for group in data.groups">
-                  <option value="">{{ui.groups.selectGroup}}</option>
-                </select>
-                <button style="margin-left: 5px;" 
-                        ng-click="addMember(candidate)" 
-                        class="btn btn-success btn-small">{{ui.groups.addToGroup}}</button>
+                <div ng-hide="candidate.fields.role == 0">
+                  <select style="margin:0; width: 160px;"
+                          ng-model="candidate.group"
+                          ng-options="group.name for group in data.groups">
+                    <option value="">{{ui.groups.selectGroup}}</option>
+                  </select>
+                  <button style="margin-left: 5px;"
+                          ng-click="addMember(candidate)"
+                          class="btn btn-success btn-small">{{ui.groups.addToGroup}}</button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -489,7 +493,7 @@
                   <span ng-show="reverse">&#9660;</span>
                 </span>
               </th>
-              <th>
+              <th ng-show="PhoneAddressesExist">
                 {{ui.groups.tel}}
                 <!--<a ng-click="toggleSorter('resources.phoneAddress')">{{ui.groups.tel}}</a>&nbsp;-->
                 <!--<span ng-show="(sorter=='resources.phoneAddress')">-->
@@ -501,26 +505,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse">
+            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse|filterSupers">
               <td>
                 <input type="checkbox"
                         ng-model="selection[member.uuid]"
-                        ng-checked="selectionMaster">
+                        ng-checked="selectionMaster"
+                        ng-hide="member.resources.role == 0">
               </td>
               <td>{{member.resources.firstName}}</td>
               <td>{{member.resources.lastName}}</td>
               <!--<td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>-->
               <td>{{member.resources.role | translateRole}}</td>
-              <td>{{member.resources.PhoneAddress}}</td>
+              <td ng-show="PhoneAddressesExist">{{member.resources.PhoneAddresses[0]}}</td>
               <td>
                 <div class="pull-right">
                   <a href="#/profile/{{member.uuid}}#profile"
-                     class="btn btn-mini"><i class="icon-user"></i></a>&nbsp;
-                  <a href="#/profile/{{member.uuid}}#edit"
-                     class="btn btn-mini"><i class="icon-edit"></i></a>&nbsp;
-                  <button type="submit" 
-                          ng-click="removeMember(member.uuid, group.uuid)" 
-                          class="btn btn-danger btn-mini"><i class="icon-remove icon-white"></i></button>
+                     class="btn btn-mini"><i class="icon-user"></i></a>
+                  <span ng-hide="member.resources.role == 0">
+                    &nbsp;
+                    <a href="#/profile/{{member.uuid}}#edit"
+                       class="btn btn-mini">
+                      <i class="icon-edit"></i>
+                    </a>&nbsp;
+                    <button type="submit"
+                            ng-click="removeMember(member.uuid, group.uuid)"
+                            class="btn btn-danger btn-mini"><i class="icon-remove icon-white"></i></button>
+                  </span>
                 </div>
               </td>
             </tr>

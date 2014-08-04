@@ -36,7 +36,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/knrm/profile.js"></script>
+    <script src="profiles/dev/profile.js"></script>
 
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
@@ -91,7 +91,8 @@
                   <!-- end unread messages -->
                 </a>
               </li>
-              <li data-match-route="/groups" ng-hide="app.resources.role > 1">
+              <li data-match-route="/groups"
+                  ng-hide="app.resources.role > 1">
                 <a href="#groups">{{ui.groups.groups}}</a>
               </li>
             </ul>
@@ -116,7 +117,11 @@
 
               <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-user icon-white"></i> {{app.resources.name}} <b class="caret"></b></a>
+                <i class="icon-user icon-white"></i>
+                  {{app.resources.name}}
+                  <span ng-show="app.resources.role == 0">[SU]</span>
+                  <b class="caret"></b>
+                </a>
                 <ul class="dropdown-menu">
                   <li>
                     <a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a>
@@ -240,7 +245,6 @@
     </div>
     <!-- end mobile status bar -->
 
-    <!--<div ng-show="browser.mobile && config.profile.mobileApp.status && ((config.profile.meta=='standby') || (config.profile.meta=='monster'))"-->
     <div ng-show="browser.mobile && config.profile.mobileApp.status"
          class="ng-cloak text-center">
       <ul style="list-style: none; position: relative; z-index: 20000; margin: 0;">

@@ -42,7 +42,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             },
             search: {
               method: 'POST',
-              params: {id: '', action: 'searchPaigeUser'},
+              params: {id: '', action: 'searchPaigeUser', fields: 'role'},
               isArray: true
             }
           }
@@ -81,7 +81,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           {
             query: {
               method: 'GET',
-              params: {id: '', fields: '[role, settingsWebPaige]'},
+              params: {id: '', fields: '[role, settingsWebPaige, PhoneAddresses]'},
               isArray: true
             },
             get: {
@@ -188,12 +188,25 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               results.station,
               function (user)
               {
+                var _member;
+
                 if (user[0] != 'agent' || user[1] != 'state')
                 {
-                  _this.guard.users[user[0]] = {
+                  _member = {
                     name: (members && members[user[0]] && members[user[0]].name) || user[0],
                     state: user[1]
                   };
+
+                  if (members[user[0]])
+                  {
+                    _member.role = members[user[0]].resources.role;
+                  }
+                  else
+                  {
+                    _member.role = '0';
+                  }
+
+                  _this.guard.users[user[0]] = _member;
                 }
               }
             );
@@ -595,9 +608,14 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
               angular.fromJson(Storage.get(group.uuid)),
               function (member)
               {
-                members[member.uuid] = member;
+                if (member.resources.role != 0 && member.resources.role != 4)
+                {
+                  members[member.uuid] = member;
+                }
               }
             );
+
+            // $rootScope.app.members = members;
 
             Storage.add('members', angular.toJson(members));
           }
@@ -724,6 +742,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
                   {
                     id: result.id,
                     name: result.name,
+                    fields: result.fields,
                     groups: Groups.prototype.getMemberGroups(result.id)
                   }
                 );

@@ -94,6 +94,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
         tooltip: function (periods)
         {
+          // console.log('periods ->', periods);
+
           var convertTimestamp = function (stamp)
           {
             return new Date(stamp * 1000).toString($rootScope.config.formats.datetime)
@@ -103,16 +105,28 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                         ' / ' +
                         convertTimestamp(periods.end);
 
-          if (periods.min)
+          if (periods.hasOwnProperty('min'))
           {
             content += ' / Huidig aantal beschikbaar: ' + periods.min;
           }
 
-          if (periods.wish)
+          if (periods.hasOwnProperty('wish'))
           {
-            console.log('periods wish ->', periods.wish);
+            // console.log('periods wish ->', periods.wish);
 
             content += ' / Gewenst aantal mensen: ' + periods.wish;
+          }
+
+          if (periods.hasOwnProperty('member'))
+          {
+            content += ' / ' + periods.member;
+          }
+
+          if (periods.hasOwnProperty('state'))
+          {
+            // console.log('state ->', periods.state);
+
+            content += ' / ' + periods.state;
           }
 
           return '<div class="time-tip" title="' + content + '">' + content + '</div>'
@@ -262,13 +276,13 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
 
           if (! agg.division)
           {
-            title = (privilage == 1) ? link : '<span>' + name + '</span>';
+            title = (privilage <= 1) ? link : '<span>' + name + '</span>';
           }
           else
           {
             var label;
 
-            title = (privilage == 1) ? link : '<span>' + name + '</span>';
+            title = (privilage <= 1) ? link : '<span>' + name + '</span>';
 
             title += ' <span class="label">' + agg.division.label + '</span>';
           }
@@ -331,44 +345,54 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                     switch (slot.diff)
                     {
                       case 0:
-                        color = config.densities.even;
+                        // color = config.densities.even;
+                        color = 'bars-even';
                         break;
                       case 1:
-                        color = config.densities.one;
+                        // color = config.densities.one;
+                        color = 'bars-more';
                         break;
                       case 2:
-                        color = config.densities.two;
+                        // color = config.densities.two;
+                        color = 'bars-more';
                         break;
                       case 3:
-                        color = config.densities.three;
+                        // color = config.densities.three;
+                        color = 'bars-more';
                         break;
                       case 4:
-                        color = config.densities.four;
+                        // color = config.densities.four;
+                        color = 'bars-more';
                         break;
                       case 5:
-                        color = config.densities.five;
+                        // color = config.densities.five;
+                        color = 'bars-more';
                         break;
                       case 6:
-                        color = config.densities.six;
+                        // color = config.densities.six;
+                        color = 'bars-more';
                         break;
                     }
                   }
                   else if (slot.diff >= 7)
                   {
-                    color = config.densities.more;
+                    // color = config.densities.more;
+                    color = 'bars-more';
                   }
                   else
                   {
-                    color = config.densities.less;
+                    // color = config.densities.less;
+                    color = 'bars-less';
                   }
 
                   var span = '<span class="badge badge-inverse">' + slot.diff + '</span>';
 
                   if (xcurrent > xwish) height = minHeight;
 
-                  style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+                  // style = 'height:' + height + 'px;' + 'background-color: ' + color + ';';
+                  style = 'height:' + height + 'px;';
 
-                  var actual = '<div class="bar" style="' +
+                  var actual = '<div class="bar ' + color + '" style="' +
                                style +
                                '" ' +
                                ' title="Huidig aantal beschikbaar: ' +
@@ -431,6 +455,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                 agg.data,
                 function (slot)
                 {
+                  // console.log('slot ->', slot);
+
                   var cn;
 
                   if (slot.diff >= 0 && slot.diff < 7)
@@ -478,8 +504,8 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                         start: Math.round(slot.start * 1000),
                         end: Math.round(slot.end * 1000),
                         group: _this.wrapper('c') + name,
-                        content: this.tooltip({ start: slot.start, end: slot.end, min: slot.diff }) +
-                                 // '<span class="badge badge-inverse">' + cn + '</span>' +
+                        content: this.tooltip({ start: slot.start, end: slot.end, min: slot.wish + slot.diff }) +
+                          // '<span class="badge badge-inverse">' + cn + '</span>' +
                                  _this.secret(
                                    angular.toJson(
                                      {
@@ -588,7 +614,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             data.members,
             function (member)
             {
-              if (member.lastName != undefined)
+              if (member.lastName != undefined && member.role != 4 && member.role != 0)
               {
                 filtered.push(member);
               }
@@ -623,7 +649,7 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
             {
               var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
 
-              var link = (privilage == 1) ?
+              var link = (privilage <= 1) ?
                          _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
                          '<a href="#/profile/' +
                          member.id +
@@ -643,12 +669,19 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
                     {
                       if (slot.text == legenda && value)
                       {
+                        var tooltip = {
+                          start: slot.start,
+                          end: slot.end,
+                          member: members[member.id],
+                          state: config.states[slot.text].label
+                        };
+
                         timedata.push(
                           {
                             start: Math.round(slot.start * 1000),
                             end: Math.round(slot.end * 1000),
                             group: link,
-                            content: this.tooltip({ start: slot.start, end: slot.end }) +
+                            content: this.tooltip(tooltip) +
                                      _this.secret(
                                        angular.toJson(
                                          {
@@ -726,10 +759,15 @@ angular.module('WebPaige.Services.Sloter', ['ngResource'])
               }
 
               var ratios = [],
+                  //                  colorMap = {
+                  //                    more: '#415e6b',
+                  //                    even: '#ba6a24',
+                  //                    less: '#a0a0a0'
+                  //                  },
                   colorMap = {
-                    more: '#415e6b',
-                    even: '#ba6a24',
-                    less: '#a0a0a0'
+                    more: '#6cad6c',
+                    even: '#e09131',
+                    less: '#d34545'
                   },
                   colors = [],
                   xratios = [];

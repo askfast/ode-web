@@ -41,6 +41,10 @@ angular.module('WebPaige.Filters', ['ngResource'])
             {
               urole = prole.label;
             }
+            else if (role == 0)
+            {
+              urole = 'Super admin';
+            }
           }
         );
 
@@ -813,7 +817,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 /**
  * Convert array of audience to a nice list
  */
-.filter(
+  .filter(
   'convertToObject',
   [
     function ()
@@ -830,6 +834,40 @@ angular.module('WebPaige.Filters', ['ngResource'])
           );
 
           return obj;
+        }
+      }
+    }
+  ])
+
+
+/**
+ * Filter non-functional users
+ */
+  .filter(
+  'filterSupers',
+  [
+    function ()
+    {
+      return function (users)
+      {
+        if (users)
+        {
+          var filtered = [];
+
+          angular.forEach(
+            users,
+            function (user)
+            {
+              if (user.resources &&
+                  (user.resources.role != 0 && user.resources.role != 4)
+                )
+              {
+                filtered.push(user);
+              }
+            }
+          );
+
+          return filtered;
         }
       }
     }

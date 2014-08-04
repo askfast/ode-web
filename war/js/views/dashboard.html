@@ -29,7 +29,7 @@
 
         <span ng-show="app.guard.currentState=='available' || app.guard.currentState=='Beschikbaar'"
               class="label"
-              style="background-color: #4f824f">BESCHIKBAAR</span>
+              style="background-color: #6cad6c">BESCHIKBAAR</span>
 
         <span ng-show="app.guard.currentState=='noplanning' || app.guard.currentState=='Mogelijk inzetbaar'"
               class="label"
@@ -37,7 +37,7 @@
 
         <span ng-show="app.guard.currentState=='unavailable' || app.guard.currentState=='Niet Beschikbaar'"
               class="label"
-              style="background-color: #a93232">NIET BESCHIKBAAR</span>
+              style="background-color: #d34545">NIET BESCHIKBAAR</span>
 
         <span class="label label-inverse" style="margin-left: 5px;">{{app.guard.role.toUpperCase()}}</span>
 
@@ -94,6 +94,7 @@
     <hr/>
 
     <p ng-show="loading.smartAlarm">Indeling SlimAlarmeren lijst laden...</p>
+
 
     <!--smartAlarming listing-->
     <ul class="sa-setup"

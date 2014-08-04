@@ -20,7 +20,7 @@
         </li>
 
         <li class="{{(views.edit==true) && 'active'}}"
-            ng-hide="(app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
+            ng-hide="data.resources.role == 0 || (app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
           <a href="{{data.resources.uuid}}#editTab"
               data-toggle="tab"
               ng-click="fixTabHeight('editTab'); setViewTo('edit')">
@@ -38,7 +38,7 @@
         </li>
 
         <li class="{{(views.timeline==true) && 'active'}}"
-            ng-hide="(app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
+            ng-hide="data.resources.role == 0 || (app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
           <a href="{{data.resources.uuid}}#userTimelineTab"
              data-toggle="tab"
              ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline'); redraw()"
@@ -118,7 +118,7 @@
               <!--<dd ng-show="data.resources.PostCity == ''">-</dd>-->
               <dd>{{data.resources.PostCity}}</dd>
 
-            <section ng-hide="app.resources.role > 1">
+            <section ng-hide="data.resources.role == 0 || app.resources.role > 1">
               <hr/>
 
               <dt>{{ui.profile.username}}</dt>
@@ -261,7 +261,7 @@
                   <input type="text"
                          class="inputPhoneNumbers inputPhoneNumber-1"
                          ng-model="profilemeta.phones[1]"
-                         ng-change="profilePhoneNumberParser(1, profilemeta.phones[1])"
+                         ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
                          <!--value="{{data.resources.PhoneAddresses[0]}}"-->
                 </div>
@@ -273,7 +273,7 @@
                   <input type="text"
                          class="inputPhoneNumbers inputPhoneNumber-1"
                          ng-model="profilemeta.phones[1]"
-                         ng-change="profilePhoneNumberParser(1, profilemeta.phones[1])"
+                         ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
                          <!--value="{{data.resources.PhoneAddresses[0]}}"-->
                   <button class="btn btn-success"
@@ -311,7 +311,7 @@
                   <input type="text"
                          class="inputPhoneNumbers inputPhoneNumber-2"
                          ng-model="profilemeta.phones[2]"
-                         ng-change="profilePhoneNumberParser(2, profilemeta.phones[2])"
+                         ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
                          <!--value="{{data.resources.PhoneAddresses[1]}}"-->
                 </div>
@@ -323,7 +323,7 @@
                   <input type="text"
                          class="inputPhoneNumbers inputPhoneNumber-2"
                          ng-model="profilemeta.phones[2]"
-                         ng-change="profilePhoneNumberParser(2, profilemeta.phones[2])"
+                         ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
                          <!--value="{{data.resources.PhoneAddresses[1]}}"-->
                   <button class="btn"
@@ -366,7 +366,7 @@
                   <input type="text"
                          class="inputPhoneNumbers inputPhoneNumber-3"
                          ng-model="profilemeta.phones[3]"
-                         ng-change="profilePhoneNumberParser(3, profilemeta.phones[3])"
+                         ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
                          <!--value="{{data.resources.PhoneAddresses[2]}}"-->
                   <button class="btn"
