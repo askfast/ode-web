@@ -852,24 +852,22 @@ angular.module('WebPaige.Filters', ['ngResource'])
       {
         if (users)
         {
-          var filtered = {};
+          var filtered = [];
 
           angular.forEach(
             users,
             function (user)
             {
-              console.log('filtered.push(user); ->', user);
-
-//              if (user.resources &&
-//                  (user.resources.role != 0 || user.resources.role != 4)
-//                )
-//              {
-//                filtered.push(user);
-//              }
+              if (user.resources &&
+                  (user.resources.role != 0 && user.resources.role != 4)
+                )
+              {
+                filtered.push(user);
+              }
             }
           );
 
-          return users;
+          return filtered;
         }
       }
     }

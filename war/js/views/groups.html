@@ -493,7 +493,7 @@
                   <span ng-show="reverse">&#9660;</span>
                 </span>
               </th>
-              <th>
+              <th ng-show="PhoneAddressesExist">
                 {{ui.groups.tel}}
                 <!--<a ng-click="toggleSorter('resources.phoneAddress')">{{ui.groups.tel}}</a>&nbsp;-->
                 <!--<span ng-show="(sorter=='resources.phoneAddress')">-->
@@ -505,17 +505,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse">
+            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse|filterSupers">
               <td>
                 <input type="checkbox"
                         ng-model="selection[member.uuid]"
-                        ng-checked="selectionMaster">
+                        ng-checked="selectionMaster"
+                        ng-hide="member.resources.role == 0">
               </td>
               <td>{{member.resources.firstName}}</td>
               <td>{{member.resources.lastName}}</td>
               <!--<td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>-->
               <td>{{member.resources.role | translateRole}}</td>
-              <td>{{member.resources.PhoneAddress}}</td>
+              <td ng-show="PhoneAddressesExist">{{member.resources.PhoneAddresses[0]}}</td>
               <td>
                 <div class="pull-right">
                   <a href="#/profile/{{member.uuid}}#profile"

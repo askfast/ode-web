@@ -4985,7 +4985,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
           {
             query: {
               method: 'GET',
-              params: {id: '', fields: '[role, settingsWebPaige]'},
+              params: {id: '', fields: '[role, settingsWebPaige, PhoneAddresses]'},
               isArray: true
             },
             get: {
@@ -9827,24 +9827,22 @@ angular.module('WebPaige.Filters', ['ngResource'])
       {
         if (users)
         {
-          var filtered = {};
+          var filtered = [];
 
           angular.forEach(
             users,
             function (user)
             {
-              console.log('filtered.push(user); ->', user);
-
-//              if (user.resources &&
-//                  (user.resources.role != 0 || user.resources.role != 4)
-//                )
-//              {
-//                filtered.push(user);
-//              }
+              if (user.resources &&
+                  (user.resources.role != 0 && user.resources.role != 4)
+                )
+              {
+                filtered.push(user);
+              }
             }
           );
 
-          return users;
+          return filtered;
         }
       }
     }
@@ -15796,6 +15794,27 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.data = data;
 
+      var PhoneAddressesExist = false;
+
+      angular.forEach(
+        data.members,
+        function (members)
+        {
+          angular.forEach(
+            members,
+            function (member)
+            {
+              if (member.resources.PhoneAddresses)
+              {
+                PhoneAddressesExist = true;
+              }
+            }
+          )
+        }
+      );
+
+      $scope.PhoneAddressesExist = PhoneAddressesExist;
+
 
       /**
        * Grab and set roles for view
@@ -16234,54 +16253,67 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         var selected = false;
 
+        console.log('selection ->', selection);
+
         angular.forEach(
           selection,
-          function (value)
+          function (value, user)
           {
+            console.log('value ->', value, $rootScope.app.members[user]);
+
             if (value)
-            { selected = true }
+            {
+              selected = true;
+            }
           }
         );
 
         if (selected)
         {
-          Groups.removeMembers(selection, group)
-            .then(
-            function (result)
-            {
-              if (result.error)
-              {
-                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-                console.warn('error ->', result);
-              }
-              else
-              {
-                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+          console.log('seelction ->', selection);
 
-                $scope.selection = {};
 
-                Groups.query()
-                  .then(
-                  function (data)
-                  {
-                    if (data.error)
-                    {
-                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-                      console.warn('error ->', data);
-                    }
-                    else
-                    {
-                      $scope.data = data;
+//          Groups.removeMembers(selection, group)
+//            .then(
+//            function (result)
+//            {
+//              if (result.error)
+//              {
+//                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+//                console.warn('error ->', result);
+//              }
+//              else
+//              {
+//                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
+//
+//                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
+//
+//                $scope.selection = {};
+//
+//                Groups.query()
+//                  .then(
+//                  function (data)
+//                  {
+//                    if (data.error)
+//                    {
+//                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+//                      console.warn('error ->', data);
+//                    }
+//                    else
+//                    {
+//                      $scope.data = data;
+//
+//                      $rootScope.statusBar.off();
+//                    }
+//                  }
+//                );
+//              }
+//            }
+//          );
 
-                      $rootScope.statusBar.off();
-                    }
-                  }
-                );
-              }
-            }
-          );
+
+
         }
         else
         {
