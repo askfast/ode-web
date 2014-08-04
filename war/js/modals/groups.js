@@ -42,7 +42,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
             },
             search: {
               method: 'POST',
-              params: {id: '', action: 'searchPaigeUser'},
+              params: {id: '', action: 'searchPaigeUser', fields: 'role'},
               isArray: true
             }
           }
@@ -732,6 +732,7 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
                   {
                     id: result.id,
                     name: result.name,
+                    fields: result.fields,
                     groups: Groups.prototype.getMemberGroups(result.id)
                   }
                 );

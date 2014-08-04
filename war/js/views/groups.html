@@ -380,12 +380,11 @@
               </td>
               <td>
                 <span ng-repeat="group in candidate.groups">
-                  <a ng-click="requestGroup(group.uuid, true)">{{group.name}}</a>,
+                  <a ng-click="requestGroup(group.uuid, true)">{{group.name}}</a><span ng-show="!$last">,&nbsp;</span>
                 </span>
               </td>
               <td>
-                <!--{{app.members[candidate.id].resources.role}}-->
-                <!--<div ng-hide="app.members[candidate.id].resources.role == 0">-->
+                <div ng-hide="candidate.fields.role == 0">
                   <select style="margin:0; width: 160px;"
                           ng-model="candidate.group"
                           ng-options="group.name for group in data.groups">
@@ -394,7 +393,7 @@
                   <button style="margin-left: 5px;"
                           ng-click="addMember(candidate)"
                           class="btn btn-success btn-small">{{ui.groups.addToGroup}}</button>
-                <!--</div>-->
+                </div>
               </td>
             </tr>
           </tbody>
