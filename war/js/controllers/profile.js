@@ -55,7 +55,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
         if (userPassword != '' && userPassword != undefined)
         {
-          if ($rootScope.app.resources.role == 1)
+          if ($rootScope.app.resources.role <= 1)
           {
             if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
             {
