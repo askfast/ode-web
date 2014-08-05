@@ -438,7 +438,13 @@
                   style="margin-right:5px"
                   bs-popover="'dist/views/groups-wish.html'" 
                   data-placement="bottom"
-                  data-title="Behoefte wijzigen"><span class="badge badge-inset" ng-show="wished">{{wish}}</span>&nbsp;{{ui.groups.requiredPeople}}</button>
+                  data-title="Behoefte wijzigen">
+            <span class="badge badge-inset"
+                  ng-show="wished">
+              {{wish}}
+            </span>
+            &nbsp;{{ui.groups.requiredPeople}}
+          </button>
 
           <button type="button" 
                   ng-click="editGroup(group)" 
@@ -446,17 +452,20 @@
                   class="btn"><i class="icon-edit"></i>&nbsp;{{ui.groups.editGroup}}</button>
           <button type="button"
                   ng-click="confirmGroupDelete(group.uuid)"
-                  class="btn btn-danger"><i class="icon-trash icon-white"></i>&nbsp;{{ui.groups.deleteGroup}}</button>
+                  class="btn btn-danger">
+            <i class="icon-trash icon-white"></i>
+            &nbsp;{{ui.groups.deleteGroup}}
+          </button>
 
         </div>
       </div>
       <hr>
 
-      <p ng-hide="(data.members[group.uuid]|filter:filtered).length > 0">
+      <p ng-hide="(data.members[group.uuid]|filter:filtered|filterSupers).length > 0">
         {{ui.groups.noMembers}}
       </p>
 
-      <div ng-show="(data.members[group.uuid]|filter:filtered).length > 0">
+      <div ng-show="(data.members[group.uuid]|filter:filtered|filterSupers).length > 0">
 
         <!--<p>-->
           <!--selection -> {{selectionMaster}}-->
@@ -541,7 +550,11 @@
                 class="btn btn-small btn-danger pull-left">
                 <i class="icon-trash icon-white"></i>&nbsp;{{ui.groups.removeSelectedMembers}}</button>
         <span class="muted pull-right">
-          <small><i>{{(data.members[group.uuid]|filter:filtered).length | i18n_spec:'groups.memberCount'}}</i></small>
+          <small>
+            <i>
+              {{(data.members[group.uuid]|filter:filtered|filterSupers).length | i18n_spec:'groups.memberCount'}}
+            </i>
+          </small>
         </span>
       </div>
     </div>
