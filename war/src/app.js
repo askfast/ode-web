@@ -16859,7 +16859,30 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
        */
       $scope.data = data;
 
-      $timeout(function () { $scope.profileRole = data.resources.role });
+      $timeout(
+        function ()
+        {
+          if (data.hasOwnProperty('resources'))
+          {
+            $scope.profileRole = data.resources.role;
+
+            if (! data.resources.hasOwnProperty('PostAddress'))
+            {
+              $scope.data.resources.PostAddress = '-';
+            }
+
+            if (! data.resources.hasOwnProperty('PostZip'))
+            {
+              $scope.data.resources.PostZip = '-';
+            }
+
+            if (! data.resources.hasOwnProperty('PostCity'))
+            {
+              $scope.data.resources.PostCity = '-';
+            }
+          }
+        }, 25
+      );
 
       /**
        * Grab and set roles for view
