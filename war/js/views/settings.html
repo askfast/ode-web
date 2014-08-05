@@ -2,7 +2,6 @@
   <h2>{{ui.settings.settings}}</h2>
 </div>
 
-
 <!-- settings -->
 <div class="row-fluid">
   <div class="tabbable tabs-left">
@@ -20,7 +19,6 @@
       </li>
     </ul>
     <!-- end tabs -->
-
 
     <!-- tabs content -->
     <div class="tab-content">
@@ -91,7 +89,9 @@
             <div class="form-actions">
               <button type="submit" 
                       ng-click="save(settings)" 
-                      class="btn btn-success">{{ui.settings.saveSettings}}</button>
+                      class="btn btn-success">
+                {{ui.settings.saveSettings}}
+              </button>
             </div>
 
           </fieldset>

@@ -23,7 +23,8 @@ angular.module('WebPaige.Controllers.Groups', [])
     'Storage',
     'Slots',
     '$timeout',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout)
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage,
+              Slots, $timeout)
     {
       /**
        * Fix styles
@@ -96,10 +97,10 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       if (! params.uuid && ! $location.hash())
       {
-        uuid = data.groups[0].uuid;
+        uuid = Storage.local.settings().app.group;
         view = 'view';
 
-        $location.search({uuid: data.groups[0].uuid}).hash('view');
+        $location.search({uuid: uuid}).hash('view');
       }
       else
       {
@@ -530,50 +531,43 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         if (selected)
         {
+          Groups.removeMembers(selection, group)
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-          console.log('seelction ->', selection);
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
+                $scope.selection = {};
 
-//          Groups.removeMembers(selection, group)
-//            .then(
-//            function (result)
-//            {
-//              if (result.error)
-//              {
-//                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-//                console.warn('error ->', result);
-//              }
-//              else
-//              {
-//                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-//
-//                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-//
-//                $scope.selection = {};
-//
-//                Groups.query()
-//                  .then(
-//                  function (data)
-//                  {
-//                    if (data.error)
-//                    {
-//                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-//                      console.warn('error ->', data);
-//                    }
-//                    else
-//                    {
-//                      $scope.data = data;
-//
-//                      $rootScope.statusBar.off();
-//                    }
-//                  }
-//                );
-//              }
-//            }
-//          );
+                Groups.query()
+                  .then(
+                  function (data)
+                  {
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
 
-
-
+                      $rootScope.statusBar.off();
+                    }
+                  }
+                );
+              }
+            }
+          );
         }
         else
         {

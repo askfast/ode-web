@@ -459,7 +459,10 @@ angular.module('WebPaige.Controllers.Login', [])
                                             {
                                               if (_group.uuid != settings.app.group)
                                               {
-                                                exists = false;
+                                                if (! exists)
+                                                {
+                                                  exists = false;
+                                                }
                                               }
                                             }
                                           );

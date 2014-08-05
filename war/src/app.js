@@ -6218,51 +6218,49 @@ angular.module('WebPaige.Modals.Settings', ['ngResource'])
 /**
  * Settings module
  */
-.factory('Settings', 
-[
-	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Profile',
-	function ($rootScope, $config, $resource, $q, Storage, Profile) 
-	{
-	  /**
-	   * Define settings resource
-	   * In this case it empty :)
-	   */
-	  var Settings = $resource();
+  .factory(
+  'Settings',
+  [
+    '$rootScope', '$config', '$resource', '$q', 'Storage', 'Profile',
+    function ($rootScope, $config, $resource, $q, Storage, Profile)
+    {
+      /**
+       * Define settings resource
+       * In this case it empty :)
+       */
+      var Settings = $resource();
+
+      /**
+       * Get settings from localStorage
+       */
+      Settings.prototype.get = function ()
+      {
+        return angular.fromJson(Storage.get('resources')).settingsWebPaige || {};
+      };
+
+      /**
+       * Save settings
+       */
+      Settings.prototype.save = function (id, settings)
+      {
+        var deferred = $q.defer();
+
+        Profile.save(
+          id,
+          { settingsWebPaige: angular.toJson(settings) }
+        ).then(
+          function ()
+          {
+            deferred.resolve({ saved: true });
+          });
+
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Get settings from localStorage
-	   */
-	  Settings.prototype.get = function ()
-	  {
-	    return angular.fromJson(Storage.get('resources')).settingsWebPaige || {};
-	  };
-
-
-	  /**
-	   * Save settings
-	   */
-	  Settings.prototype.save = function (id, settings) 
-	  {
-	    var deferred = $q.defer();
-
-	    Profile.save(id, {
-	      settingsWebPaige: angular.toJson(settings)
-	    })
-	    .then(function ()
-	    {
-	      deferred.resolve({
-	        saved: true
-	      });
-	    });
-
-	    return deferred.promise;
-	  };
-
-
-	  return new Settings;
-	}
-]);;/*jslint node: true */
+      return new Settings;
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 /*global $ */
 'use strict';
@@ -10312,7 +10310,10 @@ angular.module('WebPaige.Controllers.Login', [])
                                             {
                                               if (_group.uuid != settings.app.group)
                                               {
-                                                exists = false;
+                                                if (! exists)
+                                                {
+                                                  exists = false;
+                                                }
                                               }
                                             }
                                           );
@@ -15774,7 +15775,8 @@ angular.module('WebPaige.Controllers.Groups', [])
     'Storage',
     'Slots',
     '$timeout',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout)
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage,
+              Slots, $timeout)
     {
       /**
        * Fix styles
@@ -15847,10 +15849,10 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       if (! params.uuid && ! $location.hash())
       {
-        uuid = data.groups[0].uuid;
+        uuid = Storage.local.settings().app.group;
         view = 'view';
 
-        $location.search({uuid: data.groups[0].uuid}).hash('view');
+        $location.search({uuid: uuid}).hash('view');
       }
       else
       {
@@ -16281,50 +16283,43 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         if (selected)
         {
+          Groups.removeMembers(selection, group)
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-          console.log('seelction ->', selection);
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
+                $scope.selection = {};
 
-//          Groups.removeMembers(selection, group)
-//            .then(
-//            function (result)
-//            {
-//              if (result.error)
-//              {
-//                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-//                console.warn('error ->', result);
-//              }
-//              else
-//              {
-//                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-//
-//                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-//
-//                $scope.selection = {};
-//
-//                Groups.query()
-//                  .then(
-//                  function (data)
-//                  {
-//                    if (data.error)
-//                    {
-//                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-//                      console.warn('error ->', data);
-//                    }
-//                    else
-//                    {
-//                      $scope.data = data;
-//
-//                      $rootScope.statusBar.off();
-//                    }
-//                  }
-//                );
-//              }
-//            }
-//          );
+                Groups.query()
+                  .then(
+                  function (data)
+                  {
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
 
-
-
+                      $rootScope.statusBar.off();
+                    }
+                  }
+                );
+              }
+            }
+          );
         }
         else
         {
@@ -17823,7 +17818,9 @@ angular.module('WebPaige.Controllers.Settings', [])
                 {
                   $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
 
-                  $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
+                  $rootScope.changeLanguage(
+                    angular.fromJson(result.resources.settingsWebPaige).user.language
+                  );
 
                   $rootScope.statusBar.off();
                 }
@@ -17845,7 +17842,10 @@ angular.module('WebPaige.Controllers.Settings', [])
                           '/' +
                           '&agentMethod=createGoogleAgents' +
                           '&applicationCallback=' +
-                          location.protocol + "//" + location.hostname + (location.port && ":" + location.port) +
+                          location.protocol +
+                          "//" +
+                          location.hostname +
+                          (location.port && ":" + location.port) +
                           '/index.html' +
                           /**
                            * Fix a return value

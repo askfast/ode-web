@@ -87,7 +87,9 @@ angular.module('WebPaige.Controllers.Settings', [])
                 {
                   $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
 
-                  $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
+                  $rootScope.changeLanguage(
+                    angular.fromJson(result.resources.settingsWebPaige).user.language
+                  );
 
                   $rootScope.statusBar.off();
                 }
@@ -109,7 +111,10 @@ angular.module('WebPaige.Controllers.Settings', [])
                           '/' +
                           '&agentMethod=createGoogleAgents' +
                           '&applicationCallback=' +
-                          location.protocol + "//" + location.hostname + (location.port && ":" + location.port) +
+                          location.protocol +
+                          "//" +
+                          location.hostname +
+                          (location.port && ":" + location.port) +
                           '/index.html' +
                           /**
                            * Fix a return value
