@@ -10,8 +10,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
   .factory(
   'Groups',
   [
-    '$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location',
-    function ($resource, $config, $q, Storage, $rootScope, Slots, $location)
+    '$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location', 'Strings',
+    function ($resource, $config, $q, Storage, $rootScope, Slots, $location, Strings)
     {
       var Groups = $resource(
           $config.host + '/network/:action/:id',
@@ -481,6 +481,11 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         Groups.query(
           function (groups)
           {
+            angular.forEach(
+              groups,
+              function (group) { group.name = Strings.toTitleCase(group.name) }
+            );
+
             Storage.add('groups', angular.toJson(groups));
 
             if (! only)
