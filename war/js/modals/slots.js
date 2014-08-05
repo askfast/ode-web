@@ -219,7 +219,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           options,
           function (result)
           {
-            var stats = Stats.aggs(result);
+            var stats = Stats.aggs(result, options.start, options.end);
 
             deferred.resolve(
               {
@@ -274,7 +274,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           params,
           function (results)
           {
-            deferred.resolve(processPies(results));
+            deferred.resolve(processPies(results, params.start, params.end));
           },
           function (error)
           {
@@ -282,7 +282,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           }
         );
 
-        function processPies (results)
+        function processPies (results, start, end)
         {
           var state;
 
@@ -368,7 +368,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.current.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(currents)
+                  ratios:    Stats.pies(currents, start, end)
                 },
                 next:    {
                   data:      weeks.next.data,
@@ -381,7 +381,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.next.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(weeks.next.data)
+                  ratios:    Stats.pies(weeks.next.data, start, end)
                 }
               }
             }
@@ -428,7 +428,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.current.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(currentWeek)
+                  ratios:    Stats.pies(currentWeek, start, end)
                 },
                 next:    {
                   data:      nextWeek,
@@ -441,7 +441,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.next.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(nextWeek)
+                  ratios:    Stats.pies(nextWeek, start, end)
                 }
               }
             }
@@ -627,7 +627,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                                 lastName: member.resources.lastName,
                                 role:     member.resources.role,
                                 data:     mdata,
-                                stats:    Stats.member(mdata)
+                                stats:    Stats.member(mdata, params.start, params.end)
                               })
                           }
                         );
@@ -779,7 +779,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
               {
                 id:    params.user,
                 data:  result,
-                stats: Stats.member(result)
+                stats: Stats.member(result, params.start, params.end)
               });
           },
           function (error)
