@@ -25,9 +25,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
     'Dater',
     'MD5',
     '$timeout',
-    function (
-      $rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout
-      )
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups,
+              Dater, MD5, $timeout)
     {
       $rootScope.notification.status = false;
 
