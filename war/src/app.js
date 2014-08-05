@@ -16727,8 +16727,9 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
     'Dater',
     'MD5',
     '$timeout',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups,
-              Dater, MD5, $timeout)
+    function (
+      $rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout
+      )
     {
       $rootScope.notification.status = false;
 
@@ -16847,13 +16848,6 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           data.user = data.slots.data;
         }
       }
-
-      $scope.isSuperUser = function ()
-      {
-        return (data.resources.role == 0 && $rootScope.app.resources.role != 0) ||
-               ($rootScope.app.resources.role > 1 &&
-                $rootScope.data.resources.uuid != $rootScope.app.resources.uuid)
-      };
 
       /**
        * Pass data container
