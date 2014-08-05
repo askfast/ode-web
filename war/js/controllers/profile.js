@@ -25,7 +25,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
     'Dater',
     'MD5',
     '$timeout',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout)
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups,
+              Dater, MD5, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -144,6 +145,13 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           data.user = data.slots.data;
         }
       }
+
+      $scope.isSuperUser = function ()
+      {
+        return (data.resources.role == 0 && $rootScope.app.resources.role != 0) ||
+               ($rootScope.app.resources.role > 1 &&
+                $rootScope.data.resources.uuid != $rootScope.app.resources.uuid)
+      };
 
       /**
        * Pass data container
@@ -529,7 +537,9 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
         $scope.views[hash] = true;
 
-        $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
+        $scope.views.user = (
+          $rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId
+          );
       }
 
       /**
@@ -750,15 +760,18 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                               }
                               else
                               {
+                                var userId = $route.current.params.userId.toLowerCase();
+
                                 $scope.groups = $route.current.params.userId &&
-                                                Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+                                                Groups.getMemberGroups(userId);
 
                                 $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
-                                var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid);
+
+                                var flag = (userId == $rootScope.app.resources.uuid);
 
                                 Profile.get(
-                                  $route.current.params.userId.toLowerCase(),
+                                  userId,
                                   flag
                                 ).then(
                                   function (data)

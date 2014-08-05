@@ -20,7 +20,7 @@
         </li>
 
         <li class="{{(views.edit==true) && 'active'}}"
-            ng-hide="data.resources.role == 0 || (app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
+            ng-hide="isSuperUser()">
           <a href="{{data.resources.uuid}}#editTab"
               data-toggle="tab"
               ng-click="fixTabHeight('editTab'); setViewTo('edit')">
@@ -38,7 +38,7 @@
         </li>
 
         <li class="{{(views.timeline==true) && 'active'}}"
-            ng-hide="data.resources.role == 0 || (app.resources.role > 1 && data.resources.uuid != app.resources.uuid)">
+            ng-hide="isSuperUser()">
           <a href="{{data.resources.uuid}}#userTimelineTab"
              data-toggle="tab"
              ng-click="fixTabHeight('userTimelineTab'); setViewTo('timeline'); redraw()"
@@ -489,7 +489,9 @@
 
 
         <!-- passwordTab -->
-        <div class="tab-pane {{(views.password==true) && 'active'}}" id="passwordTab" ng-show="views.user">
+        <div class="tab-pane {{(views.password==true) && 'active'}}"
+             id="passwordTab"
+             ng-show="views.user">
 
 
           <!-- tab header -->
