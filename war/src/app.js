@@ -17405,7 +17405,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
               if (! angular.isDefined($scope.profileRole) || $scope.profileRole == '')
               {
-                $scope.profileRole = 3;
+                $scope.profileRole = (data.resources.role == 0) ? '0' : '3';
               }
 
               Profile.role(

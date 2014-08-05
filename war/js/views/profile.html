@@ -165,7 +165,7 @@
                 name="profileForm">
 
             <div class="control-group"
-                 ng-hide="app.resources.role > 1">
+                 ng-hide="app.resources.role > 1 || profileRole == 0">
               <label class="control-label">{{ui.profile.role}}</label>
               <div class="controls">
                   <!--ng-change="changeRole(role)"-->
