@@ -395,9 +395,9 @@ angular.module('WebPaige')
               }
             );
           }
-          catch (err)
+          catch (e)
           {
-            console.log('there has been an error with google analytics tracking: ', err);
+            // console.warn('Google analytics tracking error ->', e);
           }
 
 //          $timeout(

@@ -2051,9 +2051,9 @@ angular.module('WebPaige')
               }
             );
           }
-          catch (err)
+          catch (e)
           {
-            console.log('there has been an error with google analytics tracking: ', err);
+            // console.warn('Google analytics tracking error ->', e);
           }
 
 //          $timeout(
@@ -10758,8 +10758,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Groups',
     'Announcer',
     '$timeout',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups,
-              Announcer, $timeout)
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage,
+              Settings, Profile, Groups, Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -11029,15 +11029,21 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    new Raphael($id + id)
-                      .piechart(
-                      40, 40, 40,
-                      xratios,
-                      {
-                        colors: colors,
-                        stroke: 'white'
-                      }
-                    );
+                    try {
+                      new Raphael($id + id)
+                        .piechart(
+                        40, 40, 40,
+                        xratios,
+                        {
+                          colors: colors,
+                          stroke: 'white'
+                        }
+                      );
+                    }
+                    catch (e)
+                    {
+                      // console.warn(' Raphael error ->', e);
+                    }
 
                   }, $rootScope.config.timers.TICKER);
               }
