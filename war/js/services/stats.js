@@ -125,6 +125,11 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
           total+=slotDiff;
         });
 
+        // If the total is 0 that means there were not slots.
+        if(total==0) {
+            total = end - start;
+        }
+
         return {
           less: Math.round((stats.less / total) * 100),
           even: Math.round((stats.even / total) * 100),
