@@ -50,12 +50,8 @@
       </ul>
       <!-- end tabs -->
 
-
-
       <!-- tabs content -->
       <div class="tab-content">
-
-
 
         <!-- profileTab -->
         <div class="tab-pane {{(views.profile==true) && 'active'}}" id="profileTab">
@@ -71,9 +67,7 @@
           <!-- profile info -->
           <dl>
             <dt>{{ui.profile.userGroups}}</dt>
-              <dd ng-hide="groups.length > 0">
-                -
-              </dd>
+              <dd ng-hide="groups.length > 0">-</dd>
               <dd ng-show="groups.length > 0">
                 <ol>
                   <li ng-repeat="group in groups">
@@ -89,11 +83,11 @@
               <dd>{{data.resources.role|translateRole}}</dd>
 
             <dt>{{ui.profile.email}}</dt>
-              <!--<dd ng-show="data.resources.EmailAddress == ''">-</dd>-->
-              <dd>{{data.resources.EmailAddress}}</dd>
+              <dd>{{(data.resources.EmailAddress == '') && '-' || data.resources.EmailAddress}}</dd>
 
             <dt>{{ui.profile.phone}}</dt>
-              <dd>
+              <dd ng-hide="data.resources.PhoneAddresses.length > 0">-</dd>
+              <dd ng-show="data.resources.PhoneAddresses.length > 0">
                 <table>
                   <tr ng-repeat="phone in data.resources.PhoneAddresses">
                     <td style="width: 75px">
@@ -106,17 +100,17 @@
                 </table>
               </dd>
 
+            <dt>{{ui.profile.pagerId}}</dt>
+              <dd>{{(data.resources.pagerId == '') && '-' || data.resources.pagerId}}</dd>
+
             <dt>{{ui.profile.address}}</dt>
-              <!--<dd ng-show="data.resources.PostAddress == ''">-</dd>-->
-              <dd>{{data.resources.PostAddress}}</dd>
+              <dd>{{(data.resources.PostAddress == '') && '-' || data.resources.PostAddress}}</dd>
 
             <dt>{{ui.profile.postcode}}</dt>
-              <!--<dd ng-show="data.resources.PostZip == ''">-</dd>-->
-              <dd>{{data.resources.PostZip}}</dd>
+              <dd>{{(data.resources.PostZip == '') && '-' || data.resources.PostZip}}</dd>
 
             <dt>{{ui.profile.city}}</dt>
-              <!--<dd ng-show="data.resources.PostCity == ''">-</dd>-->
-              <dd>{{data.resources.PostCity}}</dd>
+              <dd>{{(data.resources.PostCity == '') && '-' || data.resources.PostCity}}</dd>
 
             <section ng-hide="data.resources.role == 0 || app.resources.role > 1">
               <hr/>
@@ -133,8 +127,6 @@
 
         </div>
         <!-- end profileTab -->
-
-
 
         <!-- editTab -->
         <div class="tab-pane {{(views.edit==true) && 'active'}}" id="editTab">
@@ -263,7 +255,6 @@
                          ng-model="profilemeta.phones[1]"
                          ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
-                         <!--value="{{data.resources.PhoneAddresses[0]}}"-->
                 </div>
 
                 <div class="input-prepend input-append"
@@ -275,19 +266,12 @@
                          ng-model="profilemeta.phones[1]"
                          ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
-                         <!--value="{{data.resources.PhoneAddresses[0]}}"-->
                   <button class="btn btn-success"
                           type="button"
                           ng-click="addPhoneNumber('second')">
                     <i class="icon-white icon-plus"></i> Add new
                   </button>
                 </div>
-
-                <!--<p class="text-error"-->
-                   <!--ng-show="!profilemeta.PhoneAddress">-->
-                  <!--<small><i>Please fill your phone number!</i></small>-->
-                <!--</p>-->
-                <!--<pre><small>{{profilePhoneNumberParsed[1]}}</small></pre>-->
 
                 <p class="text-error"
                    ng-hide="profilePhoneNumberParsed[1].result">
@@ -313,7 +297,6 @@
                          ng-model="profilemeta.phones[2]"
                          ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
-                         <!--value="{{data.resources.PhoneAddresses[1]}}"-->
                 </div>
 
                 <div class="input-prepend input-append"
@@ -325,7 +308,6 @@
                          ng-model="profilemeta.phones[2]"
                          ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
-                         <!--value="{{data.resources.PhoneAddresses[1]}}"-->
                   <button class="btn"
                           type="button"
                           ng-click="removePhoneNumber(2, 'second')">
@@ -338,12 +320,6 @@
                     <i class="icon-white icon-plus"></i> Add new
                   </button>
                 </div>
-
-                <!--<p class="text-error"-->
-                   <!--ng-show="!profilemeta.PhoneAddress">-->
-                  <!--<small><i>Please fill your phone number!</i></small>-->
-                <!--</p>-->
-                <!--<pre><small>{{profilePhoneNumberParsed[2]}}</small></pre>-->
 
                 <p class="text-error"
                    ng-hide="profilePhoneNumberParsed[2].result">
@@ -368,19 +344,12 @@
                          ng-model="profilemeta.phones[3]"
                          ng-change="profilePhoneNumberParser()"
                          style="width: 155px">
-                         <!--value="{{data.resources.PhoneAddresses[2]}}"-->
                   <button class="btn"
                           type="button"
                           ng-click="removePhoneNumber(3, 'third')">
                     <i class="icon-remove"></i> Remove
                   </button>
                 </div>
-
-                <!--<p class="text-error"-->
-                   <!--ng-show="!profilemeta.PhoneAddress">-->
-                  <!--<small><i>Please fill your phone number!</i></small>-->
-                <!--</p>-->
-                <!--<pre><small>{{profilePhoneNumberParsed[3]}}</small></pre>-->
 
                 <p class="text-error"
                    ng-hide="profilePhoneNumberParsed[3].result">
@@ -394,12 +363,18 @@
 
               </div>
 
-              <!--<pre><small>{{profilemeta.phones}}</small></pre>-->
-
-              <!--<pre><small>{{phoneViews}}</small></pre>-->
-
             </div>
 
+            <div class="control-group"
+                 ng-show="app.resources.role == 0">
+              <label class="control-label">{{ui.profile.pagerId}}</label>
+              <div class="controls">
+                <input  type="text"
+                        class="span5"
+                        ng-model="profilemeta.pagerId"
+                        value="{{data.resources.pagerId}}">
+              </div>
+            </div>
 
             <div class="control-group">
               <label class="control-label">{{ui.profile.address}}</label>
@@ -486,8 +461,6 @@
         </div>
         <!-- end editTab -->
 
-
-
         <!-- passwordTab -->
         <div class="tab-pane {{(views.password==true) && 'active'}}"
              id="passwordTab"
@@ -541,8 +514,6 @@
 
         </div>
         <!-- end passwordTab -->
-
-
 
         <!-- userTimelineTab -->
         <div class="tab-pane {{(views.timeline==true) && 'active'}}"
@@ -846,9 +817,6 @@
   </div>
 </section>
 <!-- end profile -->
-
-
-
 
 <div id="deleteUserModal"
      class="modal hide fade"

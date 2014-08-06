@@ -390,7 +390,8 @@ var ui = {
         pincodeNotValid: 'Please enter a valid pincode!',
         pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.',
         pincodeInfo: 'The pincode above is used for StandBy Call-in and is only requested when you are calling with a telephone number unknown by StandBy.',
-        duplicateNumber: 'This phone number already exists. Please enter an another phone number.'
+        duplicateNumber: 'This phone number already exists. Please enter an another phone number.',
+        pagerId: 'PagerID'
       },
       settings: {
         settings: 'Settings',
@@ -918,7 +919,8 @@ var ui = {
         pincodeNotValid: 'Vul a.u.b. een geldige pincode!',
         pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.',
         pincodeInfo: 'De bovenstaande pincode gebruikt u voor StandBy Inbellen en heeft u alleen nodig als StandBy uw nummer niet herkent.',
-        duplicateNumber: 'Nummer bestaat al. Andere nummer invoeren aub.'
+        duplicateNumber: 'Nummer bestaat al. Andere nummer invoeren aub.',
+        pagerId: 'PagerID'
       },
       settings: {
         settings: 'Instellingen',
@@ -17057,19 +17059,29 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           {
             $scope.profileRole = data.resources.role;
 
+            if (! data.resources.hasOwnProperty('EmailAddress'))
+            {
+              $scope.data.resources.EmailAddress = '';
+            }
+
+            if (! data.resources.hasOwnProperty('pagerId'))
+            {
+              $scope.data.resources.pagerId = '';
+            }
+
             if (! data.resources.hasOwnProperty('PostAddress'))
             {
-              $scope.data.resources.PostAddress = '-';
+              $scope.data.resources.PostAddress = '';
             }
 
             if (! data.resources.hasOwnProperty('PostZip'))
             {
-              $scope.data.resources.PostZip = '-';
+              $scope.data.resources.PostZip = '';
             }
 
             if (! data.resources.hasOwnProperty('PostCity'))
             {
-              $scope.data.resources.PostCity = '-';
+              $scope.data.resources.PostCity = '';
             }
           }
         }, 25

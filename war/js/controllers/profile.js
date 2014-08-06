@@ -158,19 +158,29 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
           {
             $scope.profileRole = data.resources.role;
 
+            if (! data.resources.hasOwnProperty('EmailAddress'))
+            {
+              $scope.data.resources.EmailAddress = '';
+            }
+
+            if (! data.resources.hasOwnProperty('pagerId'))
+            {
+              $scope.data.resources.pagerId = '';
+            }
+
             if (! data.resources.hasOwnProperty('PostAddress'))
             {
-              $scope.data.resources.PostAddress = '-';
+              $scope.data.resources.PostAddress = '';
             }
 
             if (! data.resources.hasOwnProperty('PostZip'))
             {
-              $scope.data.resources.PostZip = '-';
+              $scope.data.resources.PostZip = '';
             }
 
             if (! data.resources.hasOwnProperty('PostCity'))
             {
-              $scope.data.resources.PostCity = '-';
+              $scope.data.resources.PostCity = '';
             }
           }
         }, 25
