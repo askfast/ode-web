@@ -109,29 +109,29 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
         var ndates = {
           start: {
-            real:  cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+            real: cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
             month: cFirst(Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-            day:   cFirst(Dater.translateToDutch(new Date(dates.start).toString('d'))),
-            year:  new Date(dates.start).toString('yyyy')
+            day: cFirst(Dater.translateToDutch(new Date(dates.start).toString('d'))),
+            year: new Date(dates.start).toString('yyyy')
           },
-          end:   {
-            real:  cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+          end: {
+            real: cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
             month: cFirst(Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-            day:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('d'))),
-            year:  new Date(dates.end).toString('yyyy')
+            day: cFirst(Dater.translateToDutch(new Date(dates.end).toString('d'))),
+            year: new Date(dates.end).toString('yyyy')
           }
         };
 
         var dates = {
               start: {
-                real:  new Date(dates.start).toString('dddd d MMMM'),
+                real: new Date(dates.start).toString('dddd d MMMM'),
                 month: new Date(dates.start).toString('MMMM'),
-                day:   new Date(dates.start).toString('d')
+                day: new Date(dates.start).toString('d')
               },
-              end:   {
-                real:  new Date(dates.end).toString('dddd d MMMM'),
+              end: {
+                real: new Date(dates.end).toString('dddd d MMMM'),
                 month: new Date(dates.end).toString('MMMM'),
-                day:   new Date(dates.end).toString('d')
+                day: new Date(dates.end).toString('d')
               }
             },
             monthNumber = Date.getMonthNumberFromName(dates.start.month);
@@ -185,7 +185,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
           var newDates = {
             start: cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-            end:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+            end: cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
           };
 
           return  newDates.start +
@@ -228,7 +228,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
           {
             var hours = {
               start: new Date(timeline.range.start).toString('HH:mm'),
-              end:   new Date(timeline.range.end).toString('HH:mm')
+              end: new Date(timeline.range.end).toString('HH:mm')
             };
 
             /**
@@ -287,26 +287,47 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'convertRatios',
   [
-    function ()
+    '$rootScope',
+    function ($rootScope)
     {
       return function (stats)
       {
         var ratios = '';
 
         angular.forEach(
-          stats, function (stat)
+          stats,
+          function (stat)
           {
             var state = stat.state.replace(/^bar-+/, '');
 
-            if (state == 'Available') state = 'Beschikbaar';
-            if (state == 'Unavailable') state = 'Niet Beschikbaar';
-            if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
-            if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
-            if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
-            if (state == 'Unreached') state = 'Niet Bereikt';
+            switch (state)
+            {
+              case 'Available':
+                state = $rootScope.ui.states.available;
+                break;
+              case 'Unavailable':
+                state = $rootScope.ui.states.notAvailable;
+                break;
+              case 'SchipperVanDienst':
+                state = $rootScope.ui.states.captain;
+                break;
+              case 'BeschikbaarNoord':
+                state = $rootScope.ui.states.availableNorth;
+                break;
+              case 'BeschikbaarZuid':
+                state = $rootScope.ui.states.availableSouth;
+                break;
+              case 'Unreached':
+                state = $rootScope.ui.states.notReached;
+                break;
+              case 'NoPlanning':
+                state = $rootScope.ui.states.eligible;
+                break;
+            }
 
             ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
-          });
+          }
+        );
 
         return ratios.substring(0, ratios.length - 2);
       };
@@ -344,14 +365,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
         if (hours != 0)
         {
-          if (days != 0) { output += $rootScope.ui.dashboard.time.days + ' : ' }
+          if (days != 0)
+          { output += $rootScope.ui.dashboard.time.days + ' : ' }
 
           output += hours;
         }
 
         if (minutes != 0)
         {
-          if (hours != 0) { output += $rootScope.ui.dashboard.time.hours + ' : ' }
+          if (hours != 0)
+          { output += $rootScope.ui.dashboard.time.hours + ' : ' }
 
           output += minutes + $rootScope.ui.dashboard.time.minutes
         }

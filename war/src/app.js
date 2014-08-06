@@ -523,6 +523,15 @@ var ui = {
         fri: 'friday',
         sat: 'saturday',
         sun: 'sunday'
+      },
+      states: {
+        available: 'Available',
+        notAvailable: 'Not available',
+        captain: 'Captain',
+        availableNorth: 'Available for north',
+        availableSouth: 'Available for south',
+        notReached: 'Not reached',
+        eligible: 'Eligible'
       }
     },
     nl: {
@@ -1040,6 +1049,15 @@ var ui = {
         fri: 'vrijdag',
         sat: 'zaterdag',
         sun: 'zondag'
+      },
+      states: {
+        available: 'Beschikbaar',
+        notAvailable: 'Niet beschikbaar',
+        captain: 'Schipper van dienst',
+        availableNorth: 'Beschikbaar voor noord',
+        availableSouth: 'Beschikbaar voor zuid',
+        notReached: 'Niet bereikt',
+        eligible: 'Mogeljk inzetbaar'
       }
     }
 };;/*jslint node: true */
@@ -8628,201 +8646,223 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
 /**
  * Planboard stats processors
  */
-.factory('Stats', 
-[
-  '$rootScope', 'Storage', 
-  function ($rootScope, Storage) 
-  {
-    return {
-      /**
-       * Group agg stats
-       */
-      aggs: function (data, start, end)
-      {
-        var stats = {
-              less: 0,
-              even: 0,
-              more: 0        
-            },
-            durations = {
-              less: 0,
-              even: 0,
-              more: 0,
-              total: 0
-            },
-            total = 0;
-
-        angular.forEach(data, function (slot, index)
+  .factory(
+  'Stats',
+  [
+    '$rootScope', 'Storage',
+    function ($rootScope, Storage)
+    {
+      return {
+        /**
+         * Group agg stats
+         */
+        aggs: function (data, start, end)
         {
-          var slotStart = slot.start;
-          if(slotStart<start) {
-            slotStart = start;
-          }
-          var slotEnd = slot.end;
-          if(slotEnd>end) {
-            slotEnd = end;
-          }
+          var stats = {
+                less: 0,
+                even: 0,
+                more: 0
+              },
+              durations = {
+                less: 0,
+                even: 0,
+                more: 0,
+                total: 0
+              },
+              total = 0;
 
-          var slotDiff = slotEnd - slotStart;
+          angular.forEach(
+            data,
+            function (slot)
+            {
+              var slotStart = slot.start;
 
-          if (slot.diff < 0)
-          {
-            stats.less+=slotDiff;
+              if (slotStart < start)
+              {
+                slotStart = start;
+              }
+
+              var slotEnd = slot.end;
+
+              if (slotEnd > end)
+              {
+                slotEnd = end;
+              }
+
+              var slotDiff = slotEnd - slotStart;
+
+              if (slot.diff < 0)
+              {
+                stats.less += slotDiff;
+              }
+              else if (slot.diff == 0)
+              {
+                stats.even += slotDiff;
+              }
+              else
+              {
+                stats.more += slotDiff;
+              }
+
+              total += slotDiff;
+
+              if (slot.diff < 0)
+              {
+                durations.less += slotDiff;
+              }
+              else if (slot.diff == 0)
+              {
+                durations.even += slotDiff;
+              }
+              else
+              {
+                durations.more += slotDiff;
+              }
+
+              durations.total += slotDiff;
+            });
+
+          // console.log('Total duration: ', durations.total, ' Total range: ', (end - start));
+
+          return {
+            ratios: {
+              less: Math.round((stats.less / total) * 100),
+              even: Math.round((stats.even / total) * 100),
+              more: Math.round((stats.more / total) * 100)
+            },
+            durations: durations
           }
-          else if (slot.diff == 0)
-          {
-            stats.even+=slotDiff;
-          }
-          else
-          {
-            stats.more+=slotDiff;
-          };
-          total += slotDiff;
+        },
 
-          if (slot.diff < 0)
-          {
-            durations.less += slotDiff;
-          }
-          else if (slot.diff == 0)
-          {
-            durations.even += slotDiff;
-          }
-          else
-          {
-            durations.more += slotDiff;
-          };
+        /**
+         * Group pie stats
+         */
+        pies: function (data, start, end)
+        {
+          var stats = {
+                less: 0,
+                even: 0,
+                more: 0
+              },
+              total = 0;
 
-          durations.total += slotDiff;
-        });
+          angular.forEach(
+            data,
+            function (slot)
+            {
+              var slotStart = slot.start;
 
-        console.log('Total duration: ',durations.total,' Total range: ',(end-start));
+              if (slotStart < start)
+              {
+                slotStart = start;
+              }
 
-        return {
-          ratios: {
+              var slotEnd = slot.end;
+
+              if (slotEnd > end)
+              {
+                slotEnd = end;
+              }
+
+              var slotDiff = slotEnd - slotStart;
+
+              if (slot.diff < 0)
+              {
+                stats.less += slotDiff;
+              }
+              else if (slot.diff == 0)
+              {
+                stats.even += slotDiff;
+              }
+              else
+              {
+                stats.more += slotDiff;
+              }
+
+              total += slotDiff;
+            }
+          );
+
+          return {
             less: Math.round((stats.less / total) * 100),
             even: Math.round((stats.even / total) * 100),
             more: Math.round((stats.more / total) * 100)
-          },
-          durations: durations
-        }
-      },
-
-      /**
-       * Group pie stats
-       */
-      pies: function (data, start, end)
-      {
-        var stats = {
-              less: 0,
-              even: 0,
-              more: 0        
-            },
-            total = 0;
-
-        angular.forEach(data, function (slot, index)
-        {
-          var slotStart = slot.start;
-          if(slotStart<start) {
-            slotStart = start;
-          }
-          var slotEnd = slot.end;
-          if(slotEnd>end) {
-            slotEnd = end;
-          }
-
-          var slotDiff = slotEnd - slotStart;
-          if (slot.diff < 0)
-          {
-            stats.less+=slotDiff;
-          }
-          else if (slot.diff == 0)
-          {
-            stats.even+=slotDiff;
-          }
-          else
-          {
-            stats.more+=slotDiff;
           };
-          total+=slotDiff;
-        });
+        },
 
-        return {
-          less: Math.round((stats.less / total) * 100),
-          even: Math.round((stats.even / total) * 100),
-          more: Math.round((stats.more / total) * 100)
-        };
-      },
-
-      /**
-       * Member stats
-       */
-      member: function (data, start, end)
-      {
-        var stats = {},
-            total = 0;
-
-        angular.forEach(data, function (slot, index)
+        /**
+         * Member stats
+         */
+        member: function (data, start, end)
         {
-          // Make sure calculations only go over the period which is requested!
-          var slotStart = slot.start;
-          if(slotStart<start) {
-            slotStart = start;
-          }
-          var slotEnd = slot.end;
-          if(slotEnd>end) {
-            slotEnd = end;
-          }
+          var stats = {},
+              total = 0;
 
-          var delta = slotEnd - slotStart;
-          if (stats[slot.text])
+          angular.forEach(
+            data, function (slot)
+            {
+              // Make sure calculations only go over the period which is requested!
+              var slotStart = slot.start;
+
+              if (slotStart < start)
+              {
+                slotStart = start;
+              }
+
+              var slotEnd = slot.end;
+
+              if (slotEnd > end)
+              {
+                slotEnd = end;
+              }
+
+              var delta = slotEnd - slotStart;
+
+              if (stats[slot.text])
+              {
+                stats[slot.text] += delta;
+              }
+              else
+              {
+                stats[slot.text] = delta;
+              }
+
+              total += delta;
+            });
+
+          // Based on the total requested period calculate the 'empty' time. And insert is as no planning.
+          var totalDiff = (end - start) - total;
+
+          if (totalDiff > 0)
           {
-            stats[slot.text] += delta;
-          }
-          else
-          {
-            stats[slot.text] = delta;
-          };
-
-          total+=delta;
-        });
-
-        // Based on the total requested period calculate the 'empty' time. And insert is as no planning.
-        var totalDiff = (end - start) - total;
-        if(totalDiff>0) {
             stats["com.ask-cs.State.NoPlanning"] = totalDiff;
+          }
+
+          total += totalDiff;
+
+          var ratios = [];
+
+          angular.forEach(
+            stats,
+            function (stat, index)
+            {
+              ratios.push(
+                {
+                  state: index,
+                  ratio: (stat / total) * 100
+                }
+              );
+            }
+          );
+
+          // console.log('ratios ->', ratios);
+
+          return ratios;
         }
-        total += totalDiff;
 
-        // console.warn('stats ->', stats, total);
-
-        var ratios = [];
-
-        angular.forEach(stats, function (stat, index)
-        {
-          ratios.push({
-            state: index,
-            ratio: (stat / total) * 100
-          });
-
-          //console.warn(stat, index);
-          //ratios[index] = (stat / total) * 100;
-        });
-
-        //console.warn('ratios ->', ratios);
-
-        // var confirm = 0;
-        // angular.forEach(ratios, function(ratio, index)
-        // {
-        //   confirm = confirm + ratio;
-        // });
-        // console.warn('confirm ->', confirm);
-        
-        return ratios;
       }
-
     }
-  }
-]);;/*jslint node: true */
+  ]);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -9306,26 +9346,47 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'convertRatios',
   [
-    function ()
+    '$rootScope',
+    function ($rootScope)
     {
       return function (stats)
       {
         var ratios = '';
 
         angular.forEach(
-          stats, function (stat)
+          stats,
+          function (stat)
           {
             var state = stat.state.replace(/^bar-+/, '');
 
-            if (state == 'Available') state = 'Beschikbaar';
-            if (state == 'Unavailable') state = 'Niet Beschikbaar';
-            if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
-            if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
-            if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
-            if (state == 'Unreached') state = 'Niet Bereikt';
+            switch (state)
+            {
+              case 'Available':
+                state = $rootScope.ui.states.available;
+                break;
+              case 'Unavailable':
+                state = $rootScope.ui.states.notAvailable;
+                break;
+              case 'SchipperVanDienst':
+                state = $rootScope.ui.states.captain;
+                break;
+              case 'BeschikbaarNoord':
+                state = $rootScope.ui.states.availableNorth;
+                break;
+              case 'BeschikbaarZuid':
+                state = $rootScope.ui.states.availableSouth;
+                break;
+              case 'Unreached':
+                state = $rootScope.ui.states.notReached;
+                break;
+              case 'NoPlanning':
+                state = $rootScope.ui.states.eligible;
+                break;
+            }
 
             ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
-          });
+          }
+        );
 
         return ratios.substring(0, ratios.length - 2);
       };
