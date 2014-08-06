@@ -140,6 +140,7 @@ module.exports = function (grunt)
           'war/dist/views/planboard.html':                'war/js/views/planboard.html',
           'war/dist/views/messages.html':                 'war/js/views/messages.html',
           'war/dist/views/messages-scheadule-item.html':  'war/js/views/messages-scheadule-item.html',
+          'war/dist/views/download-mobile-app.html':      'war/js/views/download-mobile-app.html',
           'war/dist/views/groups.html':                   'war/js/views/groups.html',
           'war/dist/views/groups-wish.html':              'war/js/views/groups-wish.html',
           'war/dist/views/profile.html':                  'war/js/views/profile.html',

@@ -1,6 +1,8 @@
+<download-mobile-app
+  ng-show="browser.mobile && browser.screen.width < 768"
+  align="center"></download-mobile-app>
+
 <div id="welcome">
-
-
 
 	<!-- preloader -->
 	<div id="preloader">
@@ -12,9 +14,6 @@
 	  <span class="muted"></span>
 	</div>
 	<!-- end preloader -->
-
-
-
 
 	<!-- loginForm -->
 	<div id="login"
@@ -75,10 +74,9 @@
       </span>
 
 		</form>
+
 	</div>
 	<!-- end loginForm -->
-
-
 
 	<!-- help -->
 	<div id="login" class="boxed" ng-show="views.help" ng-hide="views.login || views.forgot || views.changePass">
@@ -96,8 +94,6 @@
 		</form>
 	</div>
 	<!-- end help -->
-
-
 
 	<!-- remember login -->
 	<div id="forgot" class="boxed" ng-show="views.forgot">
@@ -125,8 +121,6 @@
 	</div>
 	<!-- end remember login -->
 
-
-	
 	<!-- change pass --> 
 	<div id="changePass" class="boxed" ng-show="views.changePass">
 		<form ng-submit="changePass()">
@@ -145,18 +139,8 @@
 	</div>
 	<!-- end change pass -->
 
-
 </div>
 
-
-<!-- knrm users -->
-<div id="demo_users" class="well" ng-show="demo_users">
-	<h4>Test users</h4>
-	<hr>
-	<ul>
-		<li ng-repeat="user in demo_users">
-			<a ng-click="knrmLogin(user)">{{user.name}} ({{user.resources.role|translateRole}})</a>
-		</li>
-	</ul>
-</div>
-<!-- end knrm users -->
+<download-mobile-app
+  ng-hide="browser.mobile && browser.screen.width < 768"
+  align="center"></download-mobile-app>

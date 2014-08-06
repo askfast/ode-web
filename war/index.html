@@ -245,44 +245,6 @@
     </div>
     <!-- end mobile status bar -->
 
-    <div ng-show="browser.mobile && config.profile.mobileApp.status"
-         class="ng-cloak text-center">
-      <ul style="list-style: none; position: relative; z-index: 20000; margin: 0;">
-
-        <li ng-show="(config.profile.meta == 'demo')">
-          <a class="btn btn-success btn-large"
-            href="https://play.google.com/store/apps/details?id=com.askcs.standbydemo"
-             target="_blank">
-            Download Android App
-          </a>
-        </li>
-
-        <br ng-show="browser.screen.width < 768" />
-        <br ng-show="browser.screen.width < 768" />
-
-        <li ng-hide="(config.profile.meta == 'demo')">
-          <a class="btn btn-success btn-large"
-             href="https://play.google.com/store/apps/details?id=com.askcs.standby"
-             target="_blank">
-            Download Android App
-          </a>
-        </li>
-
-        <br ng-show="browser.screen.width < 768" />
-        <br ng-show="browser.screen.width < 768" />
-
-        <li>
-          <a class="btn btn-success btn-large"
-             href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
-             target="itunes_store">
-            Download iPhone App
-          </a>
-        </li>
-
-      </ul>
-    </div>
-
-
     <!-- footer -->
     <div id="footer" ng-hide="browser.mobile" class="ng-cloak">
       <div class="container-fluid">
@@ -295,9 +257,10 @@
             <ul>
 
               <li ng-show="config.profile.mobileApp.status">
+
                 <div class="btn-group dropup">
                   <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                    Download mobiele app <span class="caret"></span>
+                    Download mobiele app
                   </button>
                   <ul class="dropdown-menu pull-right">
 
@@ -324,6 +287,7 @@
 
                   </ul>
                 </div>
+
               </li>
 
               <li>

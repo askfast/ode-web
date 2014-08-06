@@ -182,4 +182,24 @@ angular.module('WebPaige.Directives', ['ngResource'])
         }
       };
     }
-  ]);
+  ])
+
+
+/**
+ * Download mobile app
+ */
+  .directive(
+  'downloadMobileApp',
+  function ()
+  {
+    return {
+      restrict: 'E',
+      rep1ace: true,
+      templateUrl: 'dist/views/download-mobile-app.html',
+      link: function (scope, element, attrs)
+      {
+      }
+    };
+
+  }
+);
