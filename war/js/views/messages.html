@@ -53,7 +53,7 @@
     </li>
 
     <li class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}"
-        ng-hide="app.resources.role > 0">
+        ng-hide="app.resources.role > 1">
       <a href="messages#notificationsTab"
          data-toggle="tab"
          ng-click="resetViews(); setViewTo('notifications')">
@@ -170,7 +170,7 @@
 
           <!-- schedulerPane toggle -->
           <div class="control-group"
-               ng-hide="app.resources.role > 0">
+               ng-hide="app.resources.role > 1">
             <label class="control-label">{{ui.message.repeat}}</label>
             <div  class="btn-group"
                   data-toggle="buttons-radio">

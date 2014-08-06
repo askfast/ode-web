@@ -1,6 +1,14 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.5.1
+- hot fix: Planners can make scheduled messages.
+- hot fix: Superusers can edit their own profile.
+- hot fix: Solved stability issues with setting first group of choice.
+- hot fix: Corrected statistics for dashboard pies or member availability bars.
+- fix: Auto correction for title casing group names.
+- fix: Show dashes in case of absent address, postcode or city information in profile page.
+
 2.5.0
 - feature: Multiple phone numbers per user
   [link](https://trello.com/c/PepqmklD)
