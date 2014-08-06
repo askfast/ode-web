@@ -261,7 +261,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
               }
             },
             slicer = weeks.current.period.last.timeStamp;
-
         var params = {
           id: options.id,
           start: weeks.current.period.first.timeStamp / 1000,
@@ -274,7 +273,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           params,
           function (results)
           {
-            deferred.resolve(processPies(results, params.start, params.end));
+            deferred.resolve(processPies(results));
           },
           function (error)
           {
@@ -282,10 +281,9 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           }
         );
 
-        function processPies (results, start, end)
+        function processPies (results)
         {
           var state;
-
           // Check whether it is only one
           if (results.length > 1)
           {
@@ -309,7 +307,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             // slice extra timestamp from the last of current week data set and add that to week next
             var last = weeks.current.data[weeks.current.data.length - 1],
                 next = weeks.next.data[0],
-                difference = (last.end * 1000 - slicer) / 1000,
+                difference = (last.end * 1000) - slicer,
                 currents = [];
 
             // if start of current of is before the start reset it to start
@@ -319,8 +317,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             // week and add new slot to next week with same values
             if (difference > 0)
             {
-              last.end = slicer / 1000;
-
               weeks.next.data.unshift(
                 {
                   diff: last.diff,
@@ -368,7 +364,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.current.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(currents, start, end)
+                  ratios:    Stats.pies(currents, params.start, params.end)
                 },
                 next:    {
                   data:      weeks.next.data,
@@ -381,7 +377,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.next.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(weeks.next.data, start, end)
+                  ratios:    Stats.pies(weeks.next.data, params.start, params.end)
                 }
               }
             }
@@ -428,7 +424,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.current.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(currentWeek, start, end)
+                  ratios:    Stats.pies(currentWeek, params.start, params.end)
                 },
                 next:    {
                   data:      nextWeek,
@@ -441,7 +437,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.next.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(nextWeek, start, end)
+                  ratios:    Stats.pies(nextWeek, params.start, params.end)
                 }
               }
             }

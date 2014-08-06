@@ -10,8 +10,7 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
   .factory(
   'Stats',
   [
-    '$rootScope', 'Storage',
-    function ($rootScope, Storage)
+    function ()
     {
       return {
         /**
@@ -64,7 +63,7 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
               {
                 stats.more += slotDiff;
               }
-
+;
               total += slotDiff;
 
               if (slot.diff < 0)
@@ -81,7 +80,8 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
               }
 
               durations.total += slotDiff;
-            });
+            }
+          );
 
           // console.log('Total duration: ', durations.total, ' Total range: ', (end - start));
 
@@ -144,6 +144,12 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
             }
           );
 
+          // If the total is 0 that means there were not slots.
+          if (total == 0)
+          {
+            total = end - start;
+          }
+
           return {
             less: Math.round((stats.less / total) * 100),
             even: Math.round((stats.even / total) * 100),
@@ -160,7 +166,8 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
               total = 0;
 
           angular.forEach(
-            data, function (slot)
+            data,
+            function (slot)
             {
               // Make sure calculations only go over the period which is requested!
               var slotStart = slot.start;
@@ -189,7 +196,8 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
               }
 
               total += delta;
-            });
+            }
+          );
 
           // Based on the total requested period calculate the 'empty' time. And insert is as no planning.
           var totalDiff = (end - start) - total;
@@ -200,6 +208,8 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
           }
 
           total += totalDiff;
+
+          // console.warn('stats ->', stats, total);
 
           var ratios = [];
 
@@ -216,11 +226,9 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
             }
           );
 
-          // console.log('ratios ->', ratios);
-
           return ratios;
         }
-
       }
     }
-  ]);
+  ]
+);
