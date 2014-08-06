@@ -13357,29 +13357,6 @@ angular.module('WebPaige.Controllers.Timeline', [])
        */
       $scope.changeDivision = function ()
       {
-        //      var filtered = [];
-        //
-        //      if ($scope.timeline.current.division == 'all')
-        //      {
-        //        filtered = $scope.data.aggs;
-        //      }
-        //      else
-        //      {
-        //        angular.forEach($scope.data.aggs, function (agg)
-        //        {
-        //          if ($scope.timeline.current.division == agg.division.id)
-        //          {
-        //            filtered.push(agg);
-        //          }
-        //        });
-        //      }
-        //
-        //      $scope.data.filtered = filtered;
-
-        //      console.log('division ->', $scope.timeline.current.division);
-        //
-        //      console.log('div ->', $scope.groupPieHide);
-
         angular.forEach(
           $scope.divisions,
           function (division) { $scope.groupPieHide[division.id] = false }
@@ -13655,24 +13632,11 @@ angular.module('WebPaige.Controllers.Timeline', [])
                       Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.start.datetime)).getTime() / 1000)) :
                       Dater.convert.absolute(slot.start.date, slot.start.time, true);
 
-          if (start < nowStamp && slot.recursive == false)
-          {
-            start = nowStamp;
-          }
+          var end = ($rootScope.browser.mobile) ?
+                    Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() / 1000)) :
+                    Dater.convert.absolute(slot.end.date, slot.end.time, true);
 
-          values = {
-            start: start,
-            end: ($rootScope.browser.mobile) ?
-                 Math.abs(Math.floor(new Date(getDateTimeFromPicker(slot.end.datetime)).getTime() / 1000)) :
-                 Dater.convert.absolute(slot.end.date, slot.end.time, true),
-            recursive: (slot.recursive) ? true : false,
-            text: slot.state
-          };
-
-          /**
-           * Two minutes waiting time to take an action
-           */
-          if ((values.start * 1000) + 60000 * 2 < now && values.recursive == false)
+          if (start < nowStamp && end < nowStamp && slot.recursive == false)
           {
             $rootScope.notifier.error($rootScope.ui.errors.timeline.pastAdding);
 
@@ -13680,32 +13644,57 @@ angular.module('WebPaige.Controllers.Timeline', [])
           }
           else
           {
-            $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+            if (start < nowStamp && slot.recursive == false)
+            {
+              start = nowStamp;
+            }
 
-            Slots.add(
-              values,
-              $scope.timeline.user.id
-            ).then(
-              function (result)
-              {
-                $rootScope.$broadcast('resetPlanboardViews');
+            values = {
+              start: start,
+              end: end,
+              recursive: (slot.recursive) ? true : false,
+              text: slot.state
+            };
 
-                if (result.error)
+            /**
+             * Two minutes waiting time to take an action
+             */
+            if ((values.start * 1000) + 60000 * 2 < now && values.recursive == false)
+            {
+              $rootScope.notifier.error($rootScope.ui.errors.timeline.pastAdding);
+
+              $scope.timeliner.refresh();
+            }
+            else
+            {
+              $rootScope.statusBar.display($rootScope.ui.planboard.addTimeSlot);
+
+              Slots.add(
+                values,
+                $scope.timeline.user.id
+              ).then(
+                function (result)
                 {
-                  $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
-                  console.warn('error ->', result);
-                }
-                else
-                {
-                  $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
-                }
+                  $rootScope.$broadcast('resetPlanboardViews');
 
-                $scope.timeliner.refresh();
+                  if (result.error)
+                  {
+                    $rootScope.notifier.error($rootScope.ui.errors.timeline.add);
+                    console.warn('error ->', result);
+                  }
+                  else
+                  {
+                    $rootScope.notifier.success($rootScope.ui.planboard.slotAdded);
+                  }
 
-                $rootScope.planboardSync.start();
-              }
-            );
+                  $scope.timeliner.refresh();
+
+                  $rootScope.planboardSync.start();
+                }
+              );
+            }
           }
+
         }
       };
 
