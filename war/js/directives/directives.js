@@ -105,6 +105,30 @@ angular.module('WebPaige.Directives', ['ngResource'])
           options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
           options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
 
+//          options.ranges[$rootScope.ui.planboard.daterangerToday] = [
+//            new Date.today(),
+//            new Date.today().addDays(1)
+//          ];
+//
+//          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = [
+//            new Date.today().addDays(1),
+//            new Date.today().addDays(2)
+//          ];
+//
+//          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = [
+//            new Date.today().addDays(- 1),
+//            new Date.today()
+//          ];
+//
+//          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = [
+//            new Date.today(),
+//            new Date.create().addDays(3)
+//          ];
+//          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = [
+//            new Date.today(),
+//            new Date.create().addDays(7)
+//          ];
+
           element.daterangepicker(
             options,
             function (start, end)
@@ -122,17 +146,23 @@ angular.module('WebPaige.Directives', ['ngResource'])
 
                   // Scope is a day
                   if (diff <= 86400000)
-                  { scope.timeline.scope.day = true }
+                  {
+                    scope.timeline.scope.day = true;
+                  }
                   // Scope is less than a week
                   else if (diff < 604800000)
-                  { scope.timeline.scope.week = true }
+                  {
+                    scope.timeline.scope.week = true;
+                  }
                   // Scope is more than a week
                   else if (diff > 604800000)
-                  { scope.timeline.scope.month = true }
+                  {
+                    scope.timeline.scope.month = true;
+                  }
 
                   var periods = {
                     start: start,
-                    end: start
+                    end: end
                   };
 
                   scope.timeline.range = periods;
