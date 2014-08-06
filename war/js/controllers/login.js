@@ -457,9 +457,18 @@ angular.module('WebPaige.Controllers.Login', [])
                                             groups,
                                             function (_group)
                                             {
-                                              if (_group.uuid != settings.app.group)
+                                              var firstGroup = new RegExp(settings.app.group);
+
+                                              if (! firstGroup.test(_group.uuid))
                                               {
-                                                exists = false;
+                                                if (! exists)
+                                                {
+                                                  exists = false;
+                                                }
+                                              }
+                                              else
+                                              {
+                                                exists = true;
                                               }
                                             }
                                           );
@@ -595,7 +604,7 @@ angular.module('WebPaige.Controllers.Login', [])
                                       }
                                       catch (err)
                                       {
-                                        console.log('Something wrong with google analytics library!');
+                                        // console.warn('Google analytics library!', err);
                                       }
 
                                       finalize();
@@ -832,4 +841,5 @@ angular.module('WebPaige.Controllers.Login', [])
       }
 
     }
-  ]);
+  ])
+;

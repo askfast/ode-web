@@ -1375,6 +1375,16 @@ ul.nav-tabs-app li span.entypo {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff8a85c7', endColorstr='#ff8a85c7', GradientType=0);
 }
+#memberBars ul li .progress .bar-NoPlanning {
+  background-color: #ececec;
+  background-image: -moz-linear-gradient(top, #ececec, #ececec);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ececec), to(#ececec));
+  background-image: -webkit-linear-gradient(top, #ececec, #ececec);
+  background-image: -o-linear-gradient(top, #ececec, #ececec);
+  background-image: linear-gradient(to bottom, #ececec, #ececec);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffececec', endColorstr='#ffececec', GradientType=0);
+}
 
 /*legenda*/
 .legenda {
@@ -1432,6 +1442,10 @@ ul.nav-tabs-app li span.entypo {
 
 .last-legenda-row {
   margin-bottom: -5px;
+}
+
+.legenda-row .legenda-no-state .square {
+  background-color: #6cad6c;
 }
 
 .legenda-row .legenda-state-available .square {

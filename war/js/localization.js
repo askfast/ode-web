@@ -523,6 +523,15 @@ var ui = {
         fri: 'friday',
         sat: 'saturday',
         sun: 'sunday'
+      },
+      states: {
+        available: 'Available',
+        notAvailable: 'Not available',
+        captain: 'Captain',
+        availableNorth: 'Available for north',
+        availableSouth: 'Available for south',
+        notReached: 'Not reached',
+        eligible: 'Eligible'
       }
     },
     nl: {
@@ -1040,6 +1049,15 @@ var ui = {
         fri: 'vrijdag',
         sat: 'zaterdag',
         sun: 'zondag'
+      },
+      states: {
+        available: 'Beschikbaar',
+        notAvailable: 'Niet beschikbaar',
+        captain: 'Schipper van dienst',
+        availableNorth: 'Beschikbaar voor noord',
+        availableSouth: 'Beschikbaar voor zuid',
+        notReached: 'Niet bereikt',
+        eligible: 'Mogeljk inzetbaar'
       }
     }
 };

@@ -523,6 +523,15 @@ var ui = {
         fri: 'friday',
         sat: 'saturday',
         sun: 'sunday'
+      },
+      states: {
+        available: 'Available',
+        notAvailable: 'Not available',
+        captain: 'Captain',
+        availableNorth: 'Available for north',
+        availableSouth: 'Available for south',
+        notReached: 'Not reached',
+        eligible: 'Eligible'
       }
     },
     nl: {
@@ -1040,6 +1049,15 @@ var ui = {
         fri: 'vrijdag',
         sat: 'zaterdag',
         sun: 'zondag'
+      },
+      states: {
+        available: 'Beschikbaar',
+        notAvailable: 'Niet beschikbaar',
+        captain: 'Schipper van dienst',
+        availableNorth: 'Beschikbaar voor noord',
+        availableSouth: 'Beschikbaar voor zuid',
+        notReached: 'Niet bereikt',
+        eligible: 'Mogeljk inzetbaar'
       }
     }
 };;/*jslint node: true */
@@ -1148,7 +1166,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.5.0',
+    version:  '2.5.1',
     lang:     'nl',
 
     fullscreen: true,
@@ -2051,9 +2069,9 @@ angular.module('WebPaige')
               }
             );
           }
-          catch (err)
+          catch (e)
           {
-            console.log('there has been an error with google analytics tracking: ', err);
+            // console.warn('Google analytics tracking error ->', e);
           }
 
 //          $timeout(
@@ -3177,7 +3195,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
           options,
           function (result)
           {
-            var stats = Stats.aggs(result);
+            var stats = Stats.aggs(result, options.start, options.end);
 
             deferred.resolve(
               {
@@ -3219,7 +3237,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
               }
             },
             slicer = weeks.current.period.last.timeStamp;
-
         var params = {
           id: options.id,
           start: weeks.current.period.first.timeStamp / 1000,
@@ -3243,7 +3260,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
         function processPies (results)
         {
           var state;
-
           // Check whether it is only one
           if (results.length > 1)
           {
@@ -3267,7 +3283,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             // slice extra timestamp from the last of current week data set and add that to week next
             var last = weeks.current.data[weeks.current.data.length - 1],
                 next = weeks.next.data[0],
-                difference = (last.end * 1000 - slicer) / 1000,
+                difference = (last.end * 1000) - slicer,
                 currents = [];
 
             // if start of current of is before the start reset it to start
@@ -3277,8 +3293,6 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
             // week and add new slot to next week with same values
             if (difference > 0)
             {
-              last.end = slicer / 1000;
-
               weeks.next.data.unshift(
                 {
                   diff: last.diff,
@@ -3326,7 +3340,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.current.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(currents)
+                  ratios:    Stats.pies(currents, params.start, params.end)
                 },
                 next:    {
                   data:      weeks.next.data,
@@ -3339,7 +3353,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.next.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(weeks.next.data)
+                  ratios:    Stats.pies(weeks.next.data, params.start, params.end)
                 }
               }
             }
@@ -3386,7 +3400,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.current.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(currentWeek)
+                  ratios:    Stats.pies(currentWeek, params.start, params.end)
                 },
                 next:    {
                   data:      nextWeek,
@@ -3399,7 +3413,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                     date:      new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
                     timeStamp: weeks.next.period.last.timeStamp
                   },
-                  ratios:    Stats.pies(nextWeek)
+                  ratios:    Stats.pies(nextWeek, params.start, params.end)
                 }
               }
             }
@@ -3585,7 +3599,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
                                 lastName: member.resources.lastName,
                                 role:     member.resources.role,
                                 data:     mdata,
-                                stats:    Stats.member(mdata)
+                                stats:    Stats.member(mdata, params.start, params.end)
                               })
                           }
                         );
@@ -3737,7 +3751,7 @@ angular.module('WebPaige.Modals.Slots', ['ngResource'])
               {
                 id:    params.user,
                 data:  result,
-                stats: Stats.member(result)
+                stats: Stats.member(result, params.start, params.end)
               });
           },
           function (error)
@@ -4914,8 +4928,8 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
   .factory(
   'Groups',
   [
-    '$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location',
-    function ($resource, $config, $q, Storage, $rootScope, Slots, $location)
+    '$resource', '$config', '$q', 'Storage', '$rootScope', 'Slots', '$location', 'Strings',
+    function ($resource, $config, $q, Storage, $rootScope, Slots, $location, Strings)
     {
       var Groups = $resource(
           $config.host + '/network/:action/:id',
@@ -5385,6 +5399,11 @@ angular.module('WebPaige.Modals.Groups', ['ngResource'])
         Groups.query(
           function (groups)
           {
+            angular.forEach(
+              groups,
+              function (group) { group.name = Strings.toTitleCase(group.name) }
+            );
+
             Storage.add('groups', angular.toJson(groups));
 
             if (! only)
@@ -6213,51 +6232,49 @@ angular.module('WebPaige.Modals.Settings', ['ngResource'])
 /**
  * Settings module
  */
-.factory('Settings', 
-[
-	'$rootScope', '$config', '$resource', '$q', 'Storage', 'Profile',
-	function ($rootScope, $config, $resource, $q, Storage, Profile) 
-	{
-	  /**
-	   * Define settings resource
-	   * In this case it empty :)
-	   */
-	  var Settings = $resource();
+  .factory(
+  'Settings',
+  [
+    '$rootScope', '$config', '$resource', '$q', 'Storage', 'Profile',
+    function ($rootScope, $config, $resource, $q, Storage, Profile)
+    {
+      /**
+       * Define settings resource
+       * In this case it empty :)
+       */
+      var Settings = $resource();
+
+      /**
+       * Get settings from localStorage
+       */
+      Settings.prototype.get = function ()
+      {
+        return angular.fromJson(Storage.get('resources')).settingsWebPaige || {};
+      };
+
+      /**
+       * Save settings
+       */
+      Settings.prototype.save = function (id, settings)
+      {
+        var deferred = $q.defer();
+
+        Profile.save(
+          id,
+          { settingsWebPaige: angular.toJson(settings) }
+        ).then(
+          function ()
+          {
+            deferred.resolve({ saved: true });
+          });
+
+        return deferred.promise;
+      };
 
 
-	  /**
-	   * Get settings from localStorage
-	   */
-	  Settings.prototype.get = function ()
-	  {
-	    return angular.fromJson(Storage.get('resources')).settingsWebPaige || {};
-	  };
-
-
-	  /**
-	   * Save settings
-	   */
-	  Settings.prototype.save = function (id, settings) 
-	  {
-	    var deferred = $q.defer();
-
-	    Profile.save(id, {
-	      settingsWebPaige: angular.toJson(settings)
-	    })
-	    .then(function ()
-	    {
-	      deferred.resolve({
-	        saved: true
-	      });
-	    });
-
-	    return deferred.promise;
-	  };
-
-
-	  return new Settings;
-	}
-]);;/*jslint node: true */
+      return new Settings;
+    }
+  ]);;/*jslint node: true */
 /*global angular */
 /*global $ */
 'use strict';
@@ -8625,160 +8642,231 @@ angular.module('WebPaige.Services.Stats', ['ngResource'])
 /**
  * Planboard stats processors
  */
-.factory('Stats', 
-[
-  '$rootScope', 'Storage', 
-  function ($rootScope, Storage) 
-  {
-    return {
-      /**
-       * Group agg stats
-       */
-      aggs: function (data)
-      {
-        var stats = {
-              less: 0,
-              even: 0,
-              more: 0        
-            },
-            durations = {
-              less: 0,
-              even: 0,
-              more: 0,
-              total: 0
-            },
-            total = data.length;
-
-        angular.forEach(data, function (slot, index)
+  .factory(
+  'Stats',
+  [
+    function ()
+    {
+      return {
+        /**
+         * Group agg stats
+         */
+        aggs: function (data, start, end)
         {
-          if (slot.diff < 0)
-          {
-            stats.less++;
-          }
-          else if (slot.diff == 0)
-          {
-            stats.even++;
-          }
-          else
-          {
-            stats.more++;
-          };
+          var stats = {
+                less: 0,
+                even: 0,
+                more: 0
+              },
+              durations = {
+                less: 0,
+                even: 0,
+                more: 0,
+                total: 0
+              },
+              total = 0;
 
-          var slotDiff = slot.end - slot.start;
+          angular.forEach(
+            data,
+            function (slot)
+            {
+              var slotStart = slot.start;
 
-          if (slot.diff < 0)
-          {
-            durations.less = durations.less + slotDiff;
+              if (slotStart < start)
+              {
+                slotStart = start;
+              }
+
+              var slotEnd = slot.end;
+
+              if (slotEnd > end)
+              {
+                slotEnd = end;
+              }
+
+              var slotDiff = slotEnd - slotStart;
+
+              if (slot.diff < 0)
+              {
+                stats.less += slotDiff;
+              }
+              else if (slot.diff == 0)
+              {
+                stats.even += slotDiff;
+              }
+              else
+              {
+                stats.more += slotDiff;
+              }
+;
+              total += slotDiff;
+
+              if (slot.diff < 0)
+              {
+                durations.less += slotDiff;
+              }
+              else if (slot.diff == 0)
+              {
+                durations.even += slotDiff;
+              }
+              else
+              {
+                durations.more += slotDiff;
+              }
+
+              durations.total += slotDiff;
+            }
+          );
+
+          // console.log('Total duration: ', durations.total, ' Total range: ', (end - start));
+
+          return {
+            ratios: {
+              less: Math.round((stats.less / total) * 100),
+              even: Math.round((stats.even / total) * 100),
+              more: Math.round((stats.more / total) * 100)
+            },
+            durations: durations
           }
-          else if (slot.diff == 0)
+        },
+
+        /**
+         * Group pie stats
+         */
+        pies: function (data, start, end)
+        {
+          var stats = {
+                less: 0,
+                even: 0,
+                more: 0
+              },
+              total = 0;
+
+          angular.forEach(
+            data,
+            function (slot)
+            {
+              var slotStart = slot.start;
+
+              if (slotStart < start)
+              {
+                slotStart = start;
+              }
+
+              var slotEnd = slot.end;
+
+              if (slotEnd > end)
+              {
+                slotEnd = end;
+              }
+
+              var slotDiff = slotEnd - slotStart;
+
+              if (slot.diff < 0)
+              {
+                stats.less += slotDiff;
+              }
+              else if (slot.diff == 0)
+              {
+                stats.even += slotDiff;
+              }
+              else
+              {
+                stats.more += slotDiff;
+              }
+
+              total += slotDiff;
+            }
+          );
+
+          // If the total is 0 that means there were not slots.
+          if (total == 0)
           {
-            durations.even = durations.even + slotDiff;
+            total = end - start;
           }
-          else
-          {
-            durations.more = durations.more + slotDiff;
-          };
 
-          durations.total = durations.total + slotDiff;
-        });
-
-        return {
-          ratios: {
+          return {
             less: Math.round((stats.less / total) * 100),
             even: Math.round((stats.even / total) * 100),
             more: Math.round((stats.more / total) * 100)
-          },
-          durations: durations
+          };
+        },
+
+        /**
+         * Member stats
+         */
+        member: function (data, start, end)
+        {
+          var stats = {},
+              total = 0;
+
+          angular.forEach(
+            data,
+            function (slot)
+            {
+              // Make sure calculations only go over the period which is requested!
+              var slotStart = slot.start;
+
+              if (slotStart < start)
+              {
+                slotStart = start;
+              }
+
+              var slotEnd = slot.end;
+
+              if (slotEnd > end)
+              {
+                slotEnd = end;
+              }
+
+              var delta = slotEnd - slotStart;
+
+              if (stats[slot.text])
+              {
+                stats[slot.text] += delta;
+              }
+              else
+              {
+                stats[slot.text] = delta;
+              }
+
+              total += delta;
+            }
+          );
+
+          // Based on the total requested period calculate the 'empty' time. And insert is as no planning.
+          var totalDiff = (end - start) - total;
+
+          if (totalDiff > 0)
+          {
+            stats["com.ask-cs.State.NoPlanning"] = totalDiff;
+          }
+
+          total += totalDiff;
+
+          // console.warn('stats ->', stats, total);
+
+          var ratios = [];
+
+          angular.forEach(
+            stats,
+            function (stat, index)
+            {
+              ratios.push(
+                {
+                  state: index,
+                  ratio: (stat / total) * 100
+                }
+              );
+            }
+          );
+
+          return ratios;
         }
-      },
-
-      /**
-       * Group pie stats
-       */
-      pies: function (data)
-      {
-        var stats = {
-              less: 0,
-              even: 0,
-              more: 0        
-            },
-            total = data.length;
-
-        angular.forEach(data, function (slot, index)
-        {
-          if (slot.diff < 0)
-          {
-            stats.less++;
-          }
-          else if (slot.diff == 0)
-          {
-            stats.even++;
-          }
-          else
-          {
-            stats.more++;
-          };
-        });
-
-        return {
-          less: Math.round((stats.less / total) * 100),
-          even: Math.round((stats.even / total) * 100),
-          more: Math.round((stats.more / total) * 100)
-        };
-      },
-
-      /**
-       * Member stats
-       */
-      member: function (data)
-      {
-        var stats = {},
-            total = 0;
-
-        angular.forEach(data, function (slot, index)
-        {
-          if (stats[slot.text])
-          {
-            stats[slot.text]++;
-          }
-          else
-          {
-            stats[slot.text] = 1;
-          };
-
-          total++;
-        });
-
-        //console.warn('stats ->', stats, total);
-
-        var ratios = [];
-
-        angular.forEach(stats, function (stat, index)
-        {
-          ratios.push({
-            state: index,
-            ratio: (stat / total) * 100
-          });
-
-          //console.warn(stat, index);
-          //ratios[index] = (stat / total) * 100;
-        });
-
-        //console.warn('ratios ->', ratios);
-
-        // var confirm = 0;
-        // angular.forEach(ratios, function(ratio, index)
-        // {
-        //   confirm = confirm + ratio;
-        // });
-        // console.warn('confirm ->', confirm);
-        
-        return ratios;
       }
-
     }
-  }
-]);;/*jslint node: true */
+  ]
+);;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -9084,29 +9172,29 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
         var ndates = {
           start: {
-            real:  cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
+            real: cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
             month: cFirst(Dater.translateToDutch(new Date(dates.start).toString('MMMM'))),
-            day:   cFirst(Dater.translateToDutch(new Date(dates.start).toString('d'))),
-            year:  new Date(dates.start).toString('yyyy')
+            day: cFirst(Dater.translateToDutch(new Date(dates.start).toString('d'))),
+            year: new Date(dates.start).toString('yyyy')
           },
-          end:   {
-            real:  cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
+          end: {
+            real: cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM'))),
             month: cFirst(Dater.translateToDutch(new Date(dates.end).toString('MMMM'))),
-            day:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('d'))),
-            year:  new Date(dates.end).toString('yyyy')
+            day: cFirst(Dater.translateToDutch(new Date(dates.end).toString('d'))),
+            year: new Date(dates.end).toString('yyyy')
           }
         };
 
         var dates = {
               start: {
-                real:  new Date(dates.start).toString('dddd d MMMM'),
+                real: new Date(dates.start).toString('dddd d MMMM'),
                 month: new Date(dates.start).toString('MMMM'),
-                day:   new Date(dates.start).toString('d')
+                day: new Date(dates.start).toString('d')
               },
-              end:   {
-                real:  new Date(dates.end).toString('dddd d MMMM'),
+              end: {
+                real: new Date(dates.end).toString('dddd d MMMM'),
                 month: new Date(dates.end).toString('MMMM'),
-                day:   new Date(dates.end).toString('d')
+                day: new Date(dates.end).toString('d')
               }
             },
             monthNumber = Date.getMonthNumberFromName(dates.start.month);
@@ -9160,7 +9248,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
           var newDates = {
             start: cFirst(Dater.translateToDutch(new Date(dates.start).toString('dddd d MMMM'))),
-            end:   cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
+            end: cFirst(Dater.translateToDutch(new Date(dates.end).toString('dddd d MMMM')))
           };
 
           return  newDates.start +
@@ -9203,7 +9291,7 @@ angular.module('WebPaige.Filters', ['ngResource'])
           {
             var hours = {
               start: new Date(timeline.range.start).toString('HH:mm'),
-              end:   new Date(timeline.range.end).toString('HH:mm')
+              end: new Date(timeline.range.end).toString('HH:mm')
             };
 
             /**
@@ -9262,26 +9350,47 @@ angular.module('WebPaige.Filters', ['ngResource'])
   .filter(
   'convertRatios',
   [
-    function ()
+    '$rootScope',
+    function ($rootScope)
     {
       return function (stats)
       {
         var ratios = '';
 
         angular.forEach(
-          stats, function (stat)
+          stats,
+          function (stat)
           {
             var state = stat.state.replace(/^bar-+/, '');
 
-            if (state == 'Available') state = 'Beschikbaar';
-            if (state == 'Unavailable') state = 'Niet Beschikbaar';
-            if (state == 'SchipperVanDienst') state = 'Schipper Van Dienst';
-            if (state == 'BeschikbaarNoord') state = 'Beschikbaar Noord';
-            if (state == 'BeschikbaarZuid') state = 'Beschikbaar Zuid';
-            if (state == 'Unreached') state = 'Niet Bereikt';
+            switch (state)
+            {
+              case 'Available':
+                state = $rootScope.ui.states.available;
+                break;
+              case 'Unavailable':
+                state = $rootScope.ui.states.notAvailable;
+                break;
+              case 'SchipperVanDienst':
+                state = $rootScope.ui.states.captain;
+                break;
+              case 'BeschikbaarNoord':
+                state = $rootScope.ui.states.availableNorth;
+                break;
+              case 'BeschikbaarZuid':
+                state = $rootScope.ui.states.availableSouth;
+                break;
+              case 'Unreached':
+                state = $rootScope.ui.states.notReached;
+                break;
+              case 'NoPlanning':
+                state = $rootScope.ui.states.eligible;
+                break;
+            }
 
             ratios += stat.ratio.toFixed(1) + '% ' + state + ', ';
-          });
+          }
+        );
 
         return ratios.substring(0, ratios.length - 2);
       };
@@ -9319,14 +9428,16 @@ angular.module('WebPaige.Filters', ['ngResource'])
 
         if (hours != 0)
         {
-          if (days != 0) { output += $rootScope.ui.dashboard.time.days + ' : ' }
+          if (days != 0)
+          { output += $rootScope.ui.dashboard.time.days + ' : ' }
 
           output += hours;
         }
 
         if (minutes != 0)
         {
-          if (hours != 0) { output += $rootScope.ui.dashboard.time.hours + ' : ' }
+          if (hours != 0)
+          { output += $rootScope.ui.dashboard.time.hours + ' : ' }
 
           output += minutes + $rootScope.ui.dashboard.time.minutes
         }
@@ -10305,9 +10416,18 @@ angular.module('WebPaige.Controllers.Login', [])
                                             groups,
                                             function (_group)
                                             {
-                                              if (_group.uuid != settings.app.group)
+                                              var firstGroup = new RegExp(settings.app.group);
+
+                                              if (! firstGroup.test(_group.uuid))
                                               {
-                                                exists = false;
+                                                if (! exists)
+                                                {
+                                                  exists = false;
+                                                }
+                                              }
+                                              else
+                                              {
+                                                exists = true;
                                               }
                                             }
                                           );
@@ -10443,7 +10563,7 @@ angular.module('WebPaige.Controllers.Login', [])
                                       }
                                       catch (err)
                                       {
-                                        console.log('Something wrong with google analytics library!');
+                                        // console.warn('Google analytics library!', err);
                                       }
 
                                       finalize();
@@ -10680,7 +10800,8 @@ angular.module('WebPaige.Controllers.Login', [])
       }
 
     }
-  ]);;/*jslint node: true */
+  ])
+;;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -10753,8 +10874,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
     'Groups',
     'Announcer',
     '$timeout',
-    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups,
-              Announcer, $timeout)
+    function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage,
+              Settings, Profile, Groups, Announcer, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -11024,15 +11145,21 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                       }
                     );
 
-                    new Raphael($id + id)
-                      .piechart(
-                      40, 40, 40,
-                      xratios,
-                      {
-                        colors: colors,
-                        stroke: 'white'
-                      }
-                    );
+                    try {
+                      new Raphael($id + id)
+                        .piechart(
+                        40, 40, 40,
+                        xratios,
+                        {
+                          colors: colors,
+                          stroke: 'white'
+                        }
+                      );
+                    }
+                    catch (e)
+                    {
+                      // console.warn(' Raphael error ->', e);
+                    }
 
                   }, $rootScope.config.timers.TICKER);
               }
@@ -15763,7 +15890,9 @@ angular.module('WebPaige.Controllers.Groups', [])
     'Storage',
     'Slots',
     '$timeout',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout)
+    'Settings',
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams,
+              Storage, Slots, $timeout, Settings)
     {
       /**
        * Fix styles
@@ -15836,10 +15965,40 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       if (! params.uuid && ! $location.hash())
       {
-        uuid = data.groups[0].uuid;
+        var settings = Storage.local.settings();
+
+        uuid = settings.app.group;
+
+        var absent = false;
+
+        angular.forEach(
+          data.groups,
+          function (group)
+          {
+            var firstGroup = new RegExp(uuid);
+
+            if (! firstGroup.test(group.uuid))
+            {
+              if (! absent)
+              {
+                absent = false;
+              }
+            }
+            else
+            {
+              absent = true;
+            }
+          }
+        );
+
+        if (! absent)
+        {
+          uuid = data.groups[0].uuid;
+        }
+
         view = 'view';
 
-        $location.search({uuid: data.groups[0].uuid}).hash('view');
+        $location.search({uuid: uuid}).hash('view');
       }
       else
       {
@@ -16270,50 +16429,43 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         if (selected)
         {
+          Groups.removeMembers(selection, group)
+            .then(
+            function (result)
+            {
+              if (result.error)
+              {
+                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
+                console.warn('error ->', result);
+              }
+              else
+              {
+                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
-          console.log('seelction ->', selection);
+                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
+                $scope.selection = {};
 
-//          Groups.removeMembers(selection, group)
-//            .then(
-//            function (result)
-//            {
-//              if (result.error)
-//              {
-//                $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
-//                console.warn('error ->', result);
-//              }
-//              else
-//              {
-//                $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
-//
-//                $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
-//
-//                $scope.selection = {};
-//
-//                Groups.query()
-//                  .then(
-//                  function (data)
-//                  {
-//                    if (data.error)
-//                    {
-//                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
-//                      console.warn('error ->', data);
-//                    }
-//                    else
-//                    {
-//                      $scope.data = data;
-//
-//                      $rootScope.statusBar.off();
-//                    }
-//                  }
-//                );
-//              }
-//            }
-//          );
+                Groups.query()
+                  .then(
+                  function (data)
+                  {
+                    if (data.error)
+                    {
+                      $rootScope.notifier.error($rootScope.ui.errors.groups.query);
+                      console.warn('error ->', data);
+                    }
+                    else
+                    {
+                      $scope.data = data;
 
-
-
+                      $rootScope.statusBar.off();
+                    }
+                  }
+                );
+              }
+            }
+          );
         }
         else
         {
@@ -16721,7 +16873,8 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
     'Dater',
     'MD5',
     '$timeout',
-    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout)
+    function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups,
+              Dater, MD5, $timeout)
     {
       $rootScope.notification.status = false;
 
@@ -16749,7 +16902,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
         if (userPassword != '' && userPassword != undefined)
         {
-          if ($rootScope.app.resources.role == 1)
+          if ($rootScope.app.resources.role <= 1)
           {
             if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
             {
@@ -16846,7 +16999,30 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
        */
       $scope.data = data;
 
-      $timeout(function () { $scope.profileRole = data.resources.role });
+      $timeout(
+        function ()
+        {
+          if (data.hasOwnProperty('resources'))
+          {
+            $scope.profileRole = data.resources.role;
+
+            if (! data.resources.hasOwnProperty('PostAddress'))
+            {
+              $scope.data.resources.PostAddress = '-';
+            }
+
+            if (! data.resources.hasOwnProperty('PostZip'))
+            {
+              $scope.data.resources.PostZip = '-';
+            }
+
+            if (! data.resources.hasOwnProperty('PostCity'))
+            {
+              $scope.data.resources.PostCity = '-';
+            }
+          }
+        }, 25
+      );
 
       /**
        * Grab and set roles for view
@@ -17225,7 +17401,9 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
         $scope.views[hash] = true;
 
-        $scope.views.user = ($rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId);
+        $scope.views.user = (
+          $rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId
+          );
       }
 
       /**
@@ -17395,7 +17573,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
 
               if (! angular.isDefined($scope.profileRole) || $scope.profileRole == '')
               {
-                $scope.profileRole = 3;
+                $scope.profileRole = (data.resources.role == 0) ? '0' : '3';
               }
 
               Profile.role(
@@ -17446,15 +17624,18 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
                               }
                               else
                               {
+                                var userId = $route.current.params.userId.toLowerCase();
+
                                 $scope.groups = $route.current.params.userId &&
-                                                Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+                                                Groups.getMemberGroups(userId);
 
                                 $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
-                                var flag = ($route.current.params.userId.toLowerCase() == $rootScope.app.resources.uuid);
+
+                                var flag = (userId == $rootScope.app.resources.uuid);
 
                                 Profile.get(
-                                  $route.current.params.userId.toLowerCase(),
+                                  userId,
                                   flag
                                 ).then(
                                   function (data)
@@ -17776,7 +17957,9 @@ angular.module('WebPaige.Controllers.Settings', [])
                 {
                   $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
 
-                  $rootScope.changeLanguage(angular.fromJson(result.resources.settingsWebPaige).user.language);
+                  $rootScope.changeLanguage(
+                    angular.fromJson(result.resources.settingsWebPaige).user.language
+                  );
 
                   $rootScope.statusBar.off();
                 }
@@ -17798,7 +17981,10 @@ angular.module('WebPaige.Controllers.Settings', [])
                           '/' +
                           '&agentMethod=createGoogleAgents' +
                           '&applicationCallback=' +
-                          location.protocol + "//" + location.hostname + (location.port && ":" + location.port) +
+                          location.protocol +
+                          "//" +
+                          location.hostname +
+                          (location.port && ":" + location.port) +
                           '/index.html' +
                           /**
                            * Fix a return value
