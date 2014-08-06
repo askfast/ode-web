@@ -1166,7 +1166,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.5.0',
+    version:  '2.5.1',
     lang:     'nl',
 
     fullscreen: true,
@@ -10416,12 +10416,18 @@ angular.module('WebPaige.Controllers.Login', [])
                                             groups,
                                             function (_group)
                                             {
-                                              if (_group.uuid != settings.app.group)
+                                              var firstGroup = new RegExp(settings.app.group);
+
+                                              if (! firstGroup.test(_group.uuid))
                                               {
                                                 if (! exists)
                                                 {
                                                   exists = false;
                                                 }
+                                              }
+                                              else
+                                              {
+                                                exists = true;
                                               }
                                             }
                                           );
@@ -10557,7 +10563,7 @@ angular.module('WebPaige.Controllers.Login', [])
                                       }
                                       catch (err)
                                       {
-                                        console.log('Something wrong with google analytics library!');
+                                        // console.warn('Google analytics library!', err);
                                       }
 
                                       finalize();
@@ -10794,7 +10800,8 @@ angular.module('WebPaige.Controllers.Login', [])
       }
 
     }
-  ]);;/*jslint node: true */
+  ])
+;;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -15883,8 +15890,9 @@ angular.module('WebPaige.Controllers.Groups', [])
     'Storage',
     'Slots',
     '$timeout',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage,
-              Slots, $timeout)
+    'Settings',
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams,
+              Storage, Slots, $timeout, Settings)
     {
       /**
        * Fix styles
@@ -15957,7 +15965,37 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       if (! params.uuid && ! $location.hash())
       {
-        uuid = Storage.local.settings().app.group;
+        var settings = Storage.local.settings();
+
+        uuid = settings.app.group;
+
+        var absent = false;
+
+        angular.forEach(
+          data.groups,
+          function (group)
+          {
+            var firstGroup = new RegExp(uuid);
+
+            if (! firstGroup.test(group.uuid))
+            {
+              if (! absent)
+              {
+                absent = false;
+              }
+            }
+            else
+            {
+              absent = true;
+            }
+          }
+        );
+
+        if (! absent)
+        {
+          uuid = data.groups[0].uuid;
+        }
+
         view = 'view';
 
         $location.search({uuid: uuid}).hash('view');

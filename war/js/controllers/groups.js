@@ -23,8 +23,9 @@ angular.module('WebPaige.Controllers.Groups', [])
     'Storage',
     'Slots',
     '$timeout',
-    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage,
-              Slots, $timeout)
+    'Settings',
+    function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams,
+              Storage, Slots, $timeout, Settings)
     {
       /**
        * Fix styles
@@ -97,7 +98,37 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       if (! params.uuid && ! $location.hash())
       {
-        uuid = Storage.local.settings().app.group;
+        var settings = Storage.local.settings();
+
+        uuid = settings.app.group;
+
+        var absent = false;
+
+        angular.forEach(
+          data.groups,
+          function (group)
+          {
+            var firstGroup = new RegExp(uuid);
+
+            if (! firstGroup.test(group.uuid))
+            {
+              if (! absent)
+              {
+                absent = false;
+              }
+            }
+            else
+            {
+              absent = true;
+            }
+          }
+        );
+
+        if (! absent)
+        {
+          uuid = data.groups[0].uuid;
+        }
+
         view = 'view';
 
         $location.search({uuid: uuid}).hash('view');
