@@ -819,7 +819,7 @@ angular.module('WebPaige.Controllers.Messages', [])
           ).then(
             function (uuid)
             {
-              console.log('uuid ->', uuid);
+              // console.log('uuid ->', uuid);
 
               if (uuid.error)
               {

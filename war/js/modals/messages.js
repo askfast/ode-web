@@ -483,7 +483,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
 
         var message = {
           members: members,
-          content: message.body,
+          content: message.body || '',
           subject: message.subject,
           types: types
         };
@@ -493,13 +493,13 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
           message,
           function (result)
           {
-            console.log('result ->', result, angular.isArray(result) );
+            // console.log('result ->', result, angular.isArray(result) );
 
             var returned = '';
 
             var chunks = (angular.isArray(result)) ? result[0] : result;
 
-            console.log('chunk result ->', result);
+            // console.log('chunk result ->', result);
 
             angular.forEach(
               chunks,
@@ -512,7 +512,7 @@ angular.module('WebPaige.Modals.Messages', ['ngResource'])
               }
             );
 
-            console.log('returned ->', returned);
+            // console.log('returned ->', returned);
 
             deferred.resolve(returned);
           },
