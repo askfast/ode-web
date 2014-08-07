@@ -537,14 +537,14 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             var selectedGroups = [];
 
             angular.forEach(
-              $(".chzn-choices .search-choice"),
+              $(".chzn-choices .search-choice span"),
               function (option)
               {
                 angular.forEach(
                   Storage.local.groups(),
                   function (group)
                   {
-                    var _g = new RegExp(option.innerText);
+                    var _g = new RegExp(option.innerHTML);
 
                     if (_g.test(group.name))
                     {
@@ -558,7 +558,7 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
             $scope.userGroups = selectedGroups;
           }
         );
-      }
+      };
 
 
         /**
