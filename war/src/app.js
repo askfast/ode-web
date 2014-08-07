@@ -1168,7 +1168,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.5.1',
+    version:  '2.5.2',
     lang:     'nl',
 
     fullscreen: true,
@@ -17423,7 +17423,39 @@ angular.module('WebPaige.Controllers.Profile', ['ui.mask'])
         $("div#editTab select.chzn-select").trigger("liszt:updated");
       }
 
-      /**
+      $scope.detectChanges = function ()
+      {
+        $timeout(
+          function ()
+          {
+            var selectedGroups = [];
+
+            angular.forEach(
+              $(".chzn-choices .search-choice span"),
+              function (option)
+              {
+                angular.forEach(
+                  Storage.local.groups(),
+                  function (group)
+                  {
+                    var _g = new RegExp(option.innerHTML);
+
+                    if (_g.test(group.name))
+                    {
+                      selectedGroups.push(group);
+                    }
+                  }
+                )
+              }
+            );
+
+            $scope.userGroups = selectedGroups;
+          }
+        );
+      };
+
+
+        /**
        * View setter
        */
       function setView (hash)
