@@ -189,8 +189,8 @@
                         style="width:530px"
                         chosen
                         ng-model="userGroups"
-                        ng-options="group.name for group in availableGroups">
-                </select>
+                        ng-options="group.name for group in availableGroups"
+                        ng-change="detectChanges()"></select>
                 <!--<p ng-repeat="group in userGroups"><strong>{{group.uuid}}</strong></p>-->
               </div>
             </div>
