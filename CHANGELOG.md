@@ -1,6 +1,9 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.5.2
+- hot fix: Fixed issue with overwriting current groups during editing them in profile edit.
+
 2.5.1
 - hot fix: Planners can make scheduled messages.
 - hot fix: Superusers can edit their own profile.
