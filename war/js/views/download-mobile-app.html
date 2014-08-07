@@ -1,9 +1,16 @@
 <div class="row">
-  <div class="btn-group"
+
+  <!--<span ng-show="(browser.mozilla && browser.version == '11.0')">IE true</span>-->
+
+  <span ng-hide="browser.mobile && browser.screen.width < 768"><br/></span>
+
+  <div class="btn-group download-button"
        style="width: 190px; {{browser.screen.width > 768 && 'padding-left: 25px'}}">
 
-    <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-      Download mobiele app
+    <button class="btn btn-success dropdown-toggle"
+            data-toggle="dropdown"
+            style="width: 190px">
+      Download mobiele app {{position}}
     </button>
 
     <ul class="dropdown-menu pull-right">
@@ -22,4 +29,7 @@
     </ul>
 
   </div>
+
+  <span ng-show="browser.mobile && browser.screen.width < 768"><br/><br/></span>
+
 </div>
