@@ -1168,7 +1168,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.5.2',
+    version:  '2.6.0 (Snapshot)',
     lang:     'nl',
 
     fullscreen: true,
