@@ -451,12 +451,18 @@ angular.module('WebPaige.Controllers.Timeline', [])
         'timeliner',
         function ()
         {
-          $scope.timeliner.load(
-            {
-              start: new Date(arguments[1].start).getTime(),
-              end: new Date(arguments[1].end).getTime()
-            }
-          );
+          var periods = {
+            start: new Date(arguments[1].start).getTime(),
+            end: new Date(arguments[1].end).getTime()
+          };
+
+          if (periods.start == periods.end)
+          {
+            periods.end = new Date.create(arguments[1].end).addDays(1)
+          }
+
+
+          $scope.timeliner.load(periods);
         }
       );
 
