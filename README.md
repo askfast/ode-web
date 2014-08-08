@@ -1,3 +1,3 @@
 ## StandBy Web
 
-v2.6.0 (Snapshot)
+v2.6.0-SNAPSHOT
