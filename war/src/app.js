@@ -10048,7 +10048,8 @@ angular.module('WebPaige.Controllers.Login', [])
     'Settings',
     'Profile',
     'MD5',
-    function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5)
+    function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage,
+              $routeParams, Settings, Profile, MD5)
     {
       /**
        * Self this
@@ -10082,29 +10083,6 @@ angular.module('WebPaige.Controllers.Login', [])
           forgot: false
         };
       }
-
-
-      /**
-       * KNRM users for testing
-       */
-      if ($rootScope.config.demo_users && demo_users.length > 0)
-      {
-        $scope.demo_users = demo_users;
-      }
-
-
-      /**
-       * Real KNRM users for testing
-       */
-      $scope.knrmLogin = function (user)
-      {
-        $('#login button[type=submit]')
-          .text($rootScope.ui.login.button_loggingIn)
-          .attr('disabled', 'disabled');
-
-        self.auth(user.uuid, user.resources.askPass);
-      };
-
 
       /**
        * Set default alerts
@@ -10167,6 +10145,15 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       $scope.login = function ()
       {
+        var registeredNotifications = Storage.get('registeredNotifications');
+        var periods = Storage.get('periods');
+        var periodsNext = Storage.get('periodsNext');
+        Storage.clearAll();
+        Storage.session.clearAll();
+        Storage.add('registeredNotifications', registeredNotifications);
+        Storage.add('periods', periods);
+        Storage.add('periodsNext', periodsNext);
+
         $('#alertDiv').hide();
 
         if (! $scope.logindata || ! $scope.logindata.username || ! $scope.logindata.password)
