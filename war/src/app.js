@@ -15372,9 +15372,11 @@ angular.module('WebPaige.Controllers.Messages', [])
 
         // console.log('requester ->', message.requester);
 
-        var senderId = ($rootScope.config.profile.smartAlarm) ?
-                       message.requester :
-                       message.requester.split('personalagent/')[1].split('/')[0];
+//        var senderId = ($rootScope.config.profile.smartAlarm) ?
+//                       message.requester :
+//                       message.requester.split('personalagent/')[1].split('/')[0];
+
+        var senderId = message.requester;
 
         // console.log('processed requester ->', senderId);
 
