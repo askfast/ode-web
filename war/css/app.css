@@ -760,6 +760,9 @@ dl dd {
 .sa ul.sa-setup li .sa-member .sa-member-icon strong {
   font-size: 24px;
 }
+.sa ul.sa-setup li .sa-member .sa-icon-not-assigned {
+  background-color: #d34545;
+}
 .sa ul.sa-setup li .sa-member .sa-icon-driver {
   background-color: #f6e500;
 }

@@ -11253,6 +11253,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               return (user !== null) ? setup.users[user].name : $rootScope.ui.dashboard.notAssigned
             }
 
+            var saClass = (selection.user==null ? 'sa-icon-not-assigned' : null);
+
             switch (selection.role)
             {
               case 'bevelvoerder':
@@ -11261,7 +11263,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 1,
                     icon: $rootScope.ui.dashboard.alarmRoles.commanderInitial,
                     role: $rootScope.ui.dashboard.alarmRoles.commander,
-                    class: 'sa-icon-commander',
+                    class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-commander'),
                     name: translateName(selection.user),
                     uuid: selection.user
                   }
@@ -11274,7 +11276,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 0,
                     icon: $rootScope.ui.dashboard.alarmRoles.driverInitial,
                     role: $rootScope.ui.dashboard.alarmRoles.driver,
-                    class: 'sa-icon-driver',
+                    class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-driver'),
                     name: translateName(selection.user),
                     uuid: selection.user
                   }
@@ -11288,7 +11290,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M1',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                    class : saClass
                   }
                 );
                 break;
@@ -11300,7 +11303,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M2',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                      class : saClass
                   }
                 );
                 break;
@@ -11312,7 +11316,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M3',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                      class : saClass
                   }
                 );
                 break;
@@ -11324,7 +11329,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M4',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                      class : saClass
                   }
                 );
                 break;
