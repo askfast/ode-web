@@ -947,12 +947,11 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.toggleSelection = function (group, master)
       {
-        var flag = (master) ? false : true,
-            members = angular.fromJson(Storage.get(group.uuid));
+        var members = angular.fromJson(Storage.get(group.uuid));
 
         angular.forEach(
           members,
-          function (member) { $scope.selection[member.uuid] = flag }
+          function (member) { $scope.selection[member.uuid] = master }
         );
       };
 
