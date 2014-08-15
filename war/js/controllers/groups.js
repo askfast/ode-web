@@ -545,14 +545,10 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         var selected = false;
 
-        console.log('selection ->', selection);
-
         angular.forEach(
           selection,
           function (value, user)
           {
-            console.log('value ->', value, $rootScope.app.members[user]);
-
             if (value)
             {
               selected = true;
