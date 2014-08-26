@@ -92,11 +92,11 @@ angular.module('WebPaige.Controllers.Login', [])
       $('#footer').hide();
       $('#watermark').hide();
       // $('#notification').hide();
-      $('body').css(
-        {
-          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-          'backgroundSize': 'cover'
-        });
+//      $('body').css(
+//        {
+//          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+//          'backgroundSize': 'cover'
+//        });
 
       /**
        * Disable the autocomplete username/password for Firefox users
@@ -669,7 +669,7 @@ angular.module('WebPaige.Controllers.Login', [])
             // $('#mobile-status-bar').show();
             // $('#notification').show();
             if (! $rootScope.browser.mobile) $('#footer').show();
-            $('#watermark').show();
+            // $('#watermark').show();
             $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
           }, $rootScope.config.timers.TICKER);
       };

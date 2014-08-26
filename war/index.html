@@ -47,19 +47,6 @@
   </head>
   <body>
 
-
-    <!-- watermark for app -->
-    <div id="watermark"></div>
-    <script type="text/javascript">
-      $('#watermark').css({
-        backgroundImage: 'url(../profiles/' + profile.meta  + '/img/watermark.png)',
-        backgroundRepeat: 'no-repeat'
-      });
-      if ($.browser.mobile) $('#watermark').css({ bottom: '-10px' });
-    </script>
-    <!-- end watermark for app -->
-
-
     <!-- navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top ng-cloak" bs-navbar>
       <div class="navbar-inner">
@@ -82,15 +69,6 @@
               <li data-match-route="/planboard">
                 <a href="#planboard">Agenda</a>
               </li>
-              <!--<li data-match-route="/messages">-->
-                <!--<a href="#messages">{{ui.message.messages}}-->
-                  <!--&lt;!&ndash; unread messages &ndash;&gt;-->
-                  <!--<span ng-show="(app.unreadMessages > 0)" class="badge badge-success">-->
-                    <!--{{app.unreadMessages}}-->
-                  <!--</span>-->
-                  <!--&lt;!&ndash; end unread messages &ndash;&gt;-->
-                <!--</a>-->
-              <!--</li>-->
               <li data-match-route="/groups"
                   ng-hide="app.resources.role > 1">
                 <a href="#groups">{{ui.groups.groups}}</a>
@@ -103,18 +81,6 @@
             <!-- desktop version -->
             <ul class="nav pull-right" ng-hide="browser.mobile">
 
-              <!--<li>-->
-                <!--<a href="#faq#web">-->
-                  <!--<i class="icon-question-sign icon-white"></i> FAQ-->
-                <!--</a>-->
-              <!--</li>-->
-
-              <!--<li>-->
-                <!--<a href="#help#{{location}}">-->
-                  <!--<i class="icon-info-sign icon-white"></i> Handleiding-->
-                <!--</a>-->
-              <!--</li>-->
-
               <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-user icon-white"></i>
@@ -126,9 +92,9 @@
                   <li>
                     <a href="#profile"><i class="icon-user"></i> {{ui.profile.profile}}</a>
                   </li>
-                  <li>
-                    <a href="#settings"><i class="icon-wrench"></i> {{ui.settings.settings}}</a>
-                  </li>
+                  <!--<li>-->
+                    <!--<a href="#settings"><i class="icon-wrench"></i> {{ui.settings.settings}}</a>-->
+                  <!--</li>-->
                   <li class="divider"></li>
                   <li>
                     <a href="#logout"><i class="icon-off"></i> {{ui.login.logout}}</a>
@@ -151,12 +117,12 @@
                   <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.profile.profile}}</span>
                 </a>
               </li>
-              <li>
-                <a href="#settings">
-                  <i class="icon-wrench icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
-                  <span ng-show="browser.portrait || browser.screen.width < 768">{{ui.settings.settings}}</span>
-                </a>
-              </li>
+              <!--<li>-->
+                <!--<a href="#settings">-->
+                  <!--<i class="icon-wrench icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>-->
+                  <!--<span ng-show="browser.portrait || browser.screen.width < 768">{{ui.settings.settings}}</span>-->
+                <!--</a>-->
+              <!--</li>-->
               <li>
                 <a href="#logout">
                   <i class="icon-off icon-white" ng-hide="browser.portrait || browser.screen.width < 768"></i>
@@ -255,41 +221,6 @@
           <!-- download mobile app -->
           <div id="download-footer">
             <ul>
-
-              <li ng-show="config.profile.mobileApp.status">
-
-                <div class="btn-group dropup">
-                  <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                    Download mobiele app
-                  </button>
-                  <ul class="dropdown-menu pull-right">
-
-                    <li ng-show="(config.profile.meta == 'demo')">
-                      <a href="https://play.google.com/store/apps/details?id=com.askcs.standbydemo"
-                         target="_blank">
-                        Download Android App
-                      </a>
-                    </li>
-
-                    <li ng-hide="(config.profile.meta == 'demo')">
-                      <a href="https://play.google.com/store/apps/details?id=com.askcs.standby"
-                         target="_blank">
-                        Download Android App
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
-                         target="itunes_store">
-                        Download iPhone App
-                      </a>
-                    </li>
-
-                  </ul>
-                </div>
-
-              </li>
-
               <li>
                 <img src="img/standby_logo_footer.png" alt="StandBy Logo"/>
               </li>
@@ -297,8 +228,8 @@
               <li>
                 <span class="muted" style="display:block; margin-top: 4px">
                   <small>
-                    Ask Community Systems, 2013 &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <i><a href="version.html" target="_blank" style="color: #dddddd;">StandBy v{{config.version}}</a></i>
+                    Ask Community Systems, 2014 &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <i><a href="" target="_blank" style="color: #dddddd;">StandBy v{{config.version}}</a></i>
                   </small>
                 </span>
               </li>
@@ -308,10 +239,6 @@
 
         </div>
         <!-- end copyrights -->
-
-        <!--<span id="bullhorn">-->
-          <!--<i class="icon-bullhorn icon-white"></i>-->
-        <!--</span>-->
 
         <!-- general pre-loader -->
         <p class="muted" ng-show="loading.status">
@@ -340,30 +267,6 @@
     <!--<script src="dist/app.min.js"></script>-->
     <script src="src/app.js"></script>
     <!--<![endif]-->
-
-    
-    <script type="text/javascript">
-      // if (window.profile.analytics.status) window.profile.analytics.code();
-
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-44867560-2');
-      ga('send', 'pageview');
-
-      /*
-      if (location.host.split(':')[0] == 'localhost')
-        document.write(
-            '<script src="http://' + 
-            (location.host || 'localhost').split(':')[0] + 
-            ':35729/livereload.js?snipver=1"></' + 
-            'script>'
-        );
-        */
-    </script>
-
     
   </body>
 </html>

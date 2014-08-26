@@ -1168,7 +1168,7 @@ angular.module('WebPaige')
   '$config',
   {
     title:    'WebPaige',
-    version:  '2.6.0-SNAPSHOT',
+    version:  '0.1.0-ODE-SNAPSHOT',
     lang:     'nl',
 
     fullscreen: true,
@@ -2044,52 +2044,7 @@ angular.module('WebPaige')
           if ($location.path().match(/logout/))
           {
             $rootScope.location = 'logout';
-
-            $('#watermark').hide();
           }
-
-          if (! $rootScope.location)
-          {
-            try
-            {
-              ga('send', 'Undefined Page', $location.path());
-            }
-            catch (e)
-            {
-              console.log('something wrong with passing location to google analytics ->');
-            }
-          }
-
-          // console.log('$rootScope.location ->', $rootScope.location || 'login');
-
-          try {
-            ga(
-              'send', 'pageview',
-              {
-                'page': '/index.html#/' + $rootScope.location || 'login',
-                'title': $rootScope.location || 'login'
-              }
-            );
-          }
-          catch (e)
-          {
-            // console.warn('Google analytics tracking error ->', e);
-          }
-
-//          $timeout(
-//            function ()
-//            {
-//              var root = $rootScope.$new();
-//
-//              ga(
-//                'send', 'pageview',
-//                {
-//                  'page': '/index.html#/' + root.location || 'login',
-//                  'title': root.location || 'login'
-//                }
-//              );
-//            }
-//          );
 
           //Prevent deep linking
           if ($location.path() != '/tv')
@@ -10115,11 +10070,11 @@ angular.module('WebPaige.Controllers.Login', [])
       $('#footer').hide();
       $('#watermark').hide();
       // $('#notification').hide();
-      $('body').css(
-        {
-          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-          'backgroundSize': 'cover'
-        });
+//      $('body').css(
+//        {
+//          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+//          'backgroundSize': 'cover'
+//        });
 
       /**
        * Disable the autocomplete username/password for Firefox users
@@ -10692,7 +10647,7 @@ angular.module('WebPaige.Controllers.Login', [])
             // $('#mobile-status-bar').show();
             // $('#notification').show();
             if (! $rootScope.browser.mobile) $('#footer').show();
-            $('#watermark').show();
+            // $('#watermark').show();
             $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
           }, $rootScope.config.timers.TICKER);
       };
@@ -11230,201 +11185,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
       $timeout(function () { getOverviews() }, 25);
 
 
-      /**
-       * Process Smart Alarm team members for view
-       */
-      function prepareSaMembers (setup)
-      {
-        var cached = angular.fromJson(Storage.get('guard'));
-
-        $scope.saMembers = {
-          truck: [],
-          reserves: []
-        };
-
-        $scope.saSynced = cached.synced;
-
-        angular.forEach(
-          setup.selection,
-          function (selection)
-          {
-            function translateName (user)
-            {
-              return (user !== null) ? setup.users[user].name : $rootScope.ui.dashboard.notAssigned
-            }
-
-            var saClass = (selection.user==null ? 'sa-icon-not-assigned' : null);
-
-            switch (selection.role)
-            {
-              case 'bevelvoerder':
-                $scope.saMembers.truck.push(
-                  {
-                    rank: 1,
-                    icon: $rootScope.ui.dashboard.alarmRoles.commanderInitial,
-                    role: $rootScope.ui.dashboard.alarmRoles.commander,
-                    class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-commander'),
-                    name: translateName(selection.user),
-                    uuid: selection.user
-                  }
-                );
-                break;
-
-              case 'chauffeur':
-                $scope.saMembers.truck.push(
-                  {
-                    rank: 0,
-                    icon: $rootScope.ui.dashboard.alarmRoles.driverInitial,
-                    role: $rootScope.ui.dashboard.alarmRoles.driver,
-                    class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-driver'),
-                    name: translateName(selection.user),
-                    uuid: selection.user
-                  }
-                );
-                break;
-
-              case 'manschap.1':
-                $scope.saMembers.truck.push(
-                  {
-                    rank: 2,
-                    icon: 'M1',
-                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
-                    name: translateName(selection.user),
-                    uuid: selection.user,
-                    class : saClass
-                  }
-                );
-                break;
-
-              case 'manschap.2':
-                $scope.saMembers.truck.push(
-                  {
-                    rank: 3,
-                    icon: 'M2',
-                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
-                    name: translateName(selection.user),
-                    uuid: selection.user,
-                      class : saClass
-                  }
-                );
-                break;
-
-              case 'manschap.3':
-                $scope.saMembers.truck.push(
-                  {
-                    rank: 4,
-                    icon: 'M3',
-                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
-                    name: translateName(selection.user),
-                    uuid: selection.user,
-                      class : saClass
-                  }
-                );
-                break;
-
-              case 'manschap.4':
-                $scope.saMembers.truck.push(
-                  {
-                    rank: 5,
-                    icon: 'M4',
-                    role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
-                    name: translateName(selection.user),
-                    uuid: selection.user,
-                      class : saClass
-                  }
-                );
-                break;
-            }
-
-            $rootScope.app.guard.role = setup.role;
-
-            if (setup.users[$rootScope.app.resources.uuid])
-            {
-              $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
-            }
-            else
-            {
-              Slots.currentState()
-                .then(
-                function (state) { $rootScope.app.guard.currentState = state.label }
-              );
-            }
-
-            var reserves = {};
-
-            // console.log('setup ->', setup.reserves);
-
-            // TODO: Kind of duplicate purpose with states
-            var states = ['available', 'unavailable', 'noplanning'];
-
-            angular.forEach(
-              states,
-              function (state)
-              {
-                reserves[state] = [];
-
-                angular.forEach(
-                  setup.reserves[state],
-                  function (member)
-                  {
-                    // console.log('member ->', member);
-
-                    angular.forEach(
-                      member,
-                      function (meta, userID)
-                      {
-                        // console.log('meta ->', meta);
-
-                        if (meta.role != 0)
-                        {
-                          reserves[state].push(
-                            {
-                              id: userID,
-                              name: meta.name,
-                              state: meta.state
-                            }
-                          );
-                        }
-                      }
-                    );
-                  }
-                );
-              }
-            );
-
-            $scope.saMembers.reserves = reserves;
-
-            $scope.loading.smartAlarm = false;
-          }
-        );
-      }
-
-
-      /**
-       * Fetch smartAlarm information
-       */
-      if ($rootScope.config.profile.smartAlarm)
-      {
-        if (angular.fromJson(Storage.get('guard')).selection)
-        {
-          $scope.loading.smartAlarm = false;
-
-          prepareSaMembers(angular.fromJson(Storage.get('guard')));
-        }
-
-        Groups.guardMonitor()
-          .then(
-          function ()
-          {
-            Groups.guardRole()
-              .then(
-              function (setup) { prepareSaMembers(setup) }
-            );
-          }
-        );
-      }
-
-
       var members = Storage.local.members();
 
       angular.forEach(
@@ -11726,27 +11486,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
 
 
       /**
-       * Fetcher for p2000 alarm messages
-       */
-      $scope.getP2000 = function ()
-      {
-        Dashboard.p2000().
-          then(
-          function (result)
-          {
-            $scope.loading.alerts = false;
-
-            $scope.alarms = result.alarms;
-
-            $scope.alarms.list = $scope.alarms.short;
-
-            $scope.synced.alarms = result.synced;
-          }
-        );
-      };
-
-
-      /**
        * Alarm sync
        */
       $rootScope.alarmSync = {
@@ -11759,27 +11498,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               {
                 $scope.$apply()
                 {
-                  $scope.getP2000();
-
-                  if ($rootScope.config.profile.smartAlarm)
-                  {
-                    if (angular.fromJson(Storage.get('guard').selection))
-                    {
-                      prepareSaMembers(angular.fromJson(Storage.get('guard')));
-                    }
-
-                    Groups.guardRole()
-                      .then(
-                      function (setup)
-                      {
-                        prepareSaMembers(setup);
-                      }
-                    );
-                  }
-                  else
-                  {
-                    $scope.getAvailability($scope.current.group);
-                  }
+                  $scope.getAvailability($scope.current.group);
                 }
               }
             }, $rootScope.config.timers.ALARM_SYNC);
@@ -11792,19 +11511,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
        * Init the sync process
        */
       $rootScope.alarmSync.start();
-
-
-      /**
-       * Show more or less alarms
-       */
-      $scope.toggle = function (more)
-      {
-        $scope.alarms.list = (more) ? $scope.alarms.short : $scope.alarms.long;
-
-        $scope.more.text = (more) ? $rootScope.ui.dashboard.showMore : $rootScope.ui.dashboard.showLess;
-
-        $scope.more.status = ! $scope.more.status;
-      };
 
 
       /**
@@ -11827,102 +11533,6 @@ angular.module('WebPaige.Controllers.Dashboard', [])
             );
           }, $rootScope.config.timers.TICKER);
       };
-
-
-      /**
-       * Get alarms for the first time
-       */
-      if ($rootScope.config.profile.smartAlarm)
-      {
-        $.ajax(
-          {
-            url: $rootScope.config.profile.p2000.url,
-            dataType: 'json',
-            success: function (results)
-            {
-              $rootScope.statusBar.off();
-
-              var processed = Announcer.process(results, true);
-
-              var result = {
-                alarms: processed,
-                synced: new Date().getTime()
-              };
-
-              $scope.$apply(
-                function ()
-                {
-                  $scope.loading.alerts = false;
-
-                  $scope.alarms = result.alarms;
-
-                  $scope.alarms.list = $scope.alarms.short;
-
-                  $scope.synced.alarms = result.synced;
-                }
-              );
-            },
-            error: function ()
-            {
-              console.log('ERROR with getting p2000 for the first time!');
-            }
-          }
-        );
-      }
-      else
-      {
-        Dashboard.getCapcodes().
-          then(
-          function (capcodes)
-          {
-            var _capcodes = '';
-
-            capcodes = capcodes.sort();
-
-            angular.forEach(
-              capcodes,
-              function (code) { _capcodes += code + ', ' }
-            );
-
-            $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
-
-            $.ajax(
-              {
-                url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
-                dataType: 'jsonp',
-                success: function (results)
-                {
-                  $rootScope.statusBar.off();
-
-                  var processed = Announcer.process(results);
-
-                  var result = {
-                    alarms: processed,
-                    synced: new Date().getTime()
-                  };
-
-                  $scope.$apply(
-                    function ()
-                    {
-                      $scope.loading.alerts = false;
-
-                      $scope.alarms = result.alarms;
-
-                      $scope.alarms.list = $scope.alarms.short;
-
-                      $scope.synced.alarms = result.synced;
-                    }
-                  );
-                },
-                error: function ()
-                {
-                  console.log('ERROR with getting p2000 for the first time!');
-                }
-              }
-            );
-          }
-        );
-      }
 
 
       /**

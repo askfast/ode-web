@@ -1,7 +1,5 @@
 <div id="welcome">
 
-  <download-mobile-app ng-show="browser.mobile && browser.screen.width < 768"></download-mobile-app>
-
 	<!-- preloader -->
 	<div id="preloader">
 		<img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
@@ -57,18 +55,10 @@
 		  	</small>
 		  </p>
 
-		  <p>
-		  	<small>
-			  	<a ng-click="changeLanguage('en')">English</a>
-			  	&nbsp;|&nbsp;
-			  	<a ng-click="changeLanguage('nl')">Nederlands</a>
-		  	</small>
-		  </p>
-
 
       <img src="img/standby_logo_small.png" alt="StandBy Logo" ng-hide="config.profile.own"/>
 		  <span class="version" style="margin-top: 0px">
-        <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
+        <a href="" target="_blank">StandBy v{{config.version}}</a>
       </span>
 
 		</form>
@@ -113,7 +103,7 @@
 
       <img src="img/standby_logo_small.png" alt="StandBy Logo" ng-hide="config.profile.own"/>
 		  <span class="version">
-        <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
+        <a href="" target="_blank">StandBy v{{config.version}}</a>
       </span>
 		</form>
 	</div>
@@ -136,7 +126,5 @@
 		</form>
 	</div>
 	<!-- end change pass -->
-
-  <download-mobile-app ng-hide="browser.mobile && browser.screen.width < 768"></download-mobile-app>
 
 </div>

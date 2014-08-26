@@ -368,52 +368,7 @@ angular.module('WebPaige')
           if ($location.path().match(/logout/))
           {
             $rootScope.location = 'logout';
-
-            $('#watermark').hide();
           }
-
-          if (! $rootScope.location)
-          {
-            try
-            {
-              ga('send', 'Undefined Page', $location.path());
-            }
-            catch (e)
-            {
-              console.log('something wrong with passing location to google analytics ->');
-            }
-          }
-
-          // console.log('$rootScope.location ->', $rootScope.location || 'login');
-
-          try {
-            ga(
-              'send', 'pageview',
-              {
-                'page': '/index.html#/' + $rootScope.location || 'login',
-                'title': $rootScope.location || 'login'
-              }
-            );
-          }
-          catch (e)
-          {
-            // console.warn('Google analytics tracking error ->', e);
-          }
-
-//          $timeout(
-//            function ()
-//            {
-//              var root = $rootScope.$new();
-//
-//              ga(
-//                'send', 'pageview',
-//                {
-//                  'page': '/index.html#/' + root.location || 'login',
-//                  'title': root.location || 'login'
-//                }
-//              );
-//            }
-//          );
 
           //Prevent deep linking
           if ($location.path() != '/tv')
