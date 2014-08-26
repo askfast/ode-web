@@ -36,7 +36,7 @@
     <script src="dist/plugins.min.js"></script>
 
     <!-- profile configs -->
-    <script src="profiles/dev/profile.js"></script>
+    <script src="profiles/ode/profile.js"></script>
 
 
     <!--[if IE]>      <link rel="stylesheet" href="css/ie.css">                                  <![endif]-->
@@ -82,15 +82,15 @@
               <li data-match-route="/planboard">
                 <a href="#planboard">Agenda</a>
               </li>
-              <li data-match-route="/messages">
-                <a href="#messages">{{ui.message.messages}}
-                  <!-- unread messages -->
-                  <span ng-show="(app.unreadMessages > 0)" class="badge badge-success">
-                    {{app.unreadMessages}}
-                  </span>
-                  <!-- end unread messages -->
-                </a>
-              </li>
+              <!--<li data-match-route="/messages">-->
+                <!--<a href="#messages">{{ui.message.messages}}-->
+                  <!--&lt;!&ndash; unread messages &ndash;&gt;-->
+                  <!--<span ng-show="(app.unreadMessages > 0)" class="badge badge-success">-->
+                    <!--{{app.unreadMessages}}-->
+                  <!--</span>-->
+                  <!--&lt;!&ndash; end unread messages &ndash;&gt;-->
+                <!--</a>-->
+              <!--</li>-->
               <li data-match-route="/groups"
                   ng-hide="app.resources.role > 1">
                 <a href="#groups">{{ui.groups.groups}}</a>
@@ -103,17 +103,17 @@
             <!-- desktop version -->
             <ul class="nav pull-right" ng-hide="browser.mobile">
 
-              <li>
-                <a href="#faq#web">
-                  <i class="icon-question-sign icon-white"></i> FAQ
-                </a>
-              </li>
+              <!--<li>-->
+                <!--<a href="#faq#web">-->
+                  <!--<i class="icon-question-sign icon-white"></i> FAQ-->
+                <!--</a>-->
+              <!--</li>-->
 
-              <li>
-                <a href="#help#{{location}}">
-                  <i class="icon-info-sign icon-white"></i> Handleiding
-                </a>
-              </li>
+              <!--<li>-->
+                <!--<a href="#help#{{location}}">-->
+                  <!--<i class="icon-info-sign icon-white"></i> Handleiding-->
+                <!--</a>-->
+              <!--</li>-->
 
               <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown">
