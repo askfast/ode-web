@@ -47,29 +47,6 @@ angular.module('WebPaige')
 
 
       /**
-       * TV Monitor / Dashboard router
-       */
-        .when(
-        '/tv',
-        {
-          templateUrl: 'dist/views/tv.html',
-          controller: 'tv',
-          resolve: {
-            data: [
-              '$route', '$http',
-              function ($route, $http)
-              {
-                if ($route.current.params.sessionID)
-                {
-                  $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
-                }
-              }
-            ]
-          }
-        })
-
-
-      /**
        * Planboard router
        */
         .when(
@@ -138,24 +115,6 @@ angular.module('WebPaige')
 
 
       /**
-       * Messages router
-       */
-        .when(
-        '/messages',
-        {
-          templateUrl: 'dist/views/messages.html',
-          controller: 'messages',
-          resolve: {
-            data: [
-              '$route', 'Messages',
-              function ($route, Messages) { return Messages.query() }
-            ]
-          },
-          reloadOnSearch: false
-        })
-
-
-      /**
        * Groups router
        */
         .when(
@@ -169,6 +128,27 @@ angular.module('WebPaige')
               function (Groups)
               {
                 return Groups.query();
+              }
+            ]
+          },
+          reloadOnSearch: false
+        })
+
+
+      /**
+       * Logs router
+       */
+        .when(
+        '/logs',
+        {
+          templateUrl: 'dist/views/logs.html',
+          controller: 'logs',
+          resolve: {
+            data: [
+              'Logs',
+              function (Logs)
+              {
+                return Logs.fetch();
               }
             ]
           },
