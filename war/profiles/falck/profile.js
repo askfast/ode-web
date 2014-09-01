@@ -5,9 +5,13 @@ var profile = {
 
   meta: 'falck',
 
-  own: true,
+  own: false,
 
   title: 'Falck',
+
+  showBackground: false,
+
+  sublogo: 'falck_logo.png',
 
   host: function ()
   {

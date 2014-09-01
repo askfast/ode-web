@@ -213,4 +213,12 @@ angular.module('WebPaige.Directives', ['ngResource'])
     };
 
   }
-);
+)
+    .directive(
+    'logos',
+    function() {
+        return {
+            restrict: 'E',
+            templateUrl: 'dist/views/logos.html'
+        };
+    });

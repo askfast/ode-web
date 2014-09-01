@@ -9,6 +9,10 @@ var profile = {
 
   title: 'Demo',
 
+  showBackground: true,
+
+  subLogo: '',
+
   host: function ()
   {
     // return ($.browser.msie) ? '/proxy/standby' : 'http://backend.ask-cs.com/standby';
