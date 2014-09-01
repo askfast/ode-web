@@ -1505,7 +1505,12 @@ angular.module('WebPaige')
               'Logs',
               function (Logs)
               {
-                return Logs.fetch();
+                return Logs.fetch(
+                  {
+                    end: new Date.now().getTime(),
+                    start: new Date.today().addDays(- 7).getTime()
+                  }
+                );
               }
             ]
           },
@@ -1551,7 +1556,7 @@ angular.module('WebPaige')
 
 
       /**
-       * Profile (user hiself) router
+       * Profile (user himself) router
        */
         .when(
         '/profile',
@@ -1627,7 +1632,7 @@ angular.module('WebPaige')
       /**
        * Define interceptor
        */
-      // $httpProvider.interceptors.push('Interceptor');
+        // $httpProvider.interceptors.push('Interceptor');
 
       $httpProvider.responseInterceptors.push(
         [
@@ -5692,15 +5697,9 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
       {
         var refined = [];
 
-        var strip = function (number) {
-          if (/@/.test(number))
-          {
-            return number.split('@')[0];
-          }
-          else
-          {
-            return number
-          }
+        var strip = function (number)
+        {
+          return (/@/.test(number)) ? number.split('@')[0] : number;
         };
 
         var howLong = function (period)
@@ -5709,10 +5708,15 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
           {
             var duration = moment.duration(period);
 
+            var doubler = function (num)
+            {
+              return (String(num).length == 1) ? '0' + String(num) : num;
+            };
+
             return {
-              presentation:  ((duration.hours() == 0) ? '00' : duration.hours()) + ':' +
-                             ((duration.minutes() == 0) ? '00' : duration.minutes()) + ':' +
-                             duration.seconds(),
+              presentation: ((duration.hours() == 0) ? '00' : doubler(duration.hours())) + ':' +
+                            ((duration.minutes() == 0) ? '00' : doubler(duration.minutes())) + ':' +
+                            doubler(duration.seconds()),
               stamp: period
             }
           }
@@ -5725,11 +5729,31 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
           }
         };
 
+        var trackingID = null;
+
         angular.forEach(
           logs,
           function (log)
           {
+            var additionalInfo = angular.fromJson(log.additionalInfo);
+
+            var trackingToken = additionalInfo ?
+                                ((additionalInfo.hasOwnProperty('trackingToken')) ?
+                                 additionalInfo.trackingToken :
+                                 '') :
+                                '';
+
+            var tracked = (trackingToken == trackingID) ?
+                          (additionalInfo ?
+                           ((additionalInfo.hasOwnProperty('trackingToken')) ? true : '') :
+                           '') :
+                          '';
+
+            trackingID = trackingToken;
+
             var record = {
+              trackingToken: trackingToken,
+              tracked: tracked,
               from: strip(log.fromAddress),
               started: {
                 date: $filter('date')(log.start, 'medium'),
@@ -5758,18 +5782,30 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
         return refined;
       };
 
-      Logs.prototype.fetch = function ()
+      Logs.prototype.fetch = function (periods)
       {
         var deferred = $q.defer();
 
+        if (! periods)
+        {
+          periods = {
+            end: new Date.now().getTime(),
+            start: new Date.today().addDays(- 7).getTime()
+          }
+        }
+
         Logs.get(
-          {},
+          {
+            startTime: periods.start,
+            endTime: periods.end
+          },
           function (result)
           {
             deferred.resolve(
               {
                 logs: normalize(result),
-                synced: Date.now().getTime()
+                synced: Date.now().getTime(),
+                periods: periods
               }
             );
           },
@@ -6409,8 +6445,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
 
-  }
-)
+  })
 
 
 /**
@@ -6438,11 +6473,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
           };
 
           // lose this sugerJs related stuff later on!
-//          options.ranges[$rootScope.ui.planboard.daterangerToday] = ['today', 'tomorrow'];
-//          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = ['tomorrow', new Date.today().addDays(2)];
-//          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
-//          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
-//          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerToday] = ['today', 'tomorrow'];
+          //          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = ['tomorrow', new Date.today().addDays(2)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
+          //          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
 
           options.ranges[$rootScope.ui.planboard.daterangerToday] = [
             new Date.today(),
@@ -6550,8 +6585,70 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
 
-  }
-);;/**
+  })
+
+
+/**
+ * Daterangepicker for logs
+ */
+  .directive(
+  'logRanger',
+  [
+    '$rootScope',
+    function ($rootScope)
+    {
+      return {
+        restrict: 'A',
+
+        link: function postLink (scope, element, attrs, controller)
+        {
+          var options = {
+            ranges: {}
+          };
+
+          options.ranges['Vandaag'] = [
+            new Date.today(),
+            new Date.today().addDays(1)
+          ];
+
+          options.ranges['Gisteren'] = [
+            new Date.today().addDays(- 1),
+            new Date.today()
+          ];
+
+          options.ranges['Laatste 7 dagen'] = [
+            new Date.today(),
+            new Date.create().addDays(- 7)
+          ];
+
+          element.daterangepicker(
+            options,
+            function (start, end)
+            {
+              scope.$apply(
+                function ()
+                {
+                  $rootScope.$broadcast(
+                    'getLogRange',
+                    {
+                      start: start.getTime(),
+                      end: end.getTime()
+                    }
+                  );
+                }
+              );
+            }
+          );
+
+          // Set data toggle
+          element.attr('data-toggle', 'daterangepicker');
+
+          // TODO: Investigate if its really needed!!
+          element.daterangepicker({ autoclose: true });
+        }
+      };
+    }
+  ]);;/**
  * AngularStrap - Twitter Bootstrap directives for AngularJS
  * @version v0.7.0 - 2013-03-11
  * @link http://mgcrea.github.com/angular-strap
@@ -11671,9 +11768,10 @@ angular.module('WebPaige.Controllers.Logs', [])
   [
     '$scope',
     '$rootScope',
+    '$filter',
     'data',
     'Logs',
-    function ($scope, $rootScope, data, Logs)
+    function ($scope, $rootScope, $filter, data, Logs)
     {
       $rootScope.fixStyles();
 
@@ -11688,6 +11786,25 @@ angular.module('WebPaige.Controllers.Logs', [])
 
       $scope.ordered = 'started.stamp';
       $scope.reversed = true;
+
+      $scope.daterange = $filter('date')(data.periods.start, 'dd-MM-yyyy') + ' / ' +
+                         $filter('date')(data.periods.end, 'dd-MM-yyyy');
+
+      $rootScope.$on(
+        'getLogRange',
+        function ()
+        {
+          var periods = arguments[1];
+
+          Logs.fetch(periods)
+            .then(
+            function (data)
+            {
+              $scope.data = data;
+            }
+          );
+        }
+      );
     }
   ]);;/*jslint node: true */
 /*global angular */

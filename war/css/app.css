@@ -3231,3 +3231,14 @@ div.timeline-event-range {
     margin: 0 auto;
   }
 }
+.log-RECEIEVED {
+  background-color: #6cad6c;
+}
+
+.log-MISSED {
+  background-color: #d34545;
+}
+
+.log-SENT {
+  background-color: #e09131;
+}

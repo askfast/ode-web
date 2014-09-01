@@ -30,15 +30,9 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
       {
         var refined = [];
 
-        var strip = function (number) {
-          if (/@/.test(number))
-          {
-            return number.split('@')[0];
-          }
-          else
-          {
-            return number
-          }
+        var strip = function (number)
+        {
+          return (/@/.test(number)) ? number.split('@')[0] : number;
         };
 
         var howLong = function (period)
@@ -47,10 +41,15 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
           {
             var duration = moment.duration(period);
 
+            var doubler = function (num)
+            {
+              return (String(num).length == 1) ? '0' + String(num) : num;
+            };
+
             return {
-              presentation:  ((duration.hours() == 0) ? '00' : duration.hours()) + ':' +
-                             ((duration.minutes() == 0) ? '00' : duration.minutes()) + ':' +
-                             duration.seconds(),
+              presentation: ((duration.hours() == 0) ? '00' : doubler(duration.hours())) + ':' +
+                            ((duration.minutes() == 0) ? '00' : doubler(duration.minutes())) + ':' +
+                            doubler(duration.seconds()),
               stamp: period
             }
           }
@@ -63,11 +62,31 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
           }
         };
 
+        var trackingID = null;
+
         angular.forEach(
           logs,
           function (log)
           {
+            var additionalInfo = angular.fromJson(log.additionalInfo);
+
+            var trackingToken = additionalInfo ?
+                                ((additionalInfo.hasOwnProperty('trackingToken')) ?
+                                 additionalInfo.trackingToken :
+                                 '') :
+                                '';
+
+            var tracked = (trackingToken == trackingID) ?
+                          (additionalInfo ?
+                           ((additionalInfo.hasOwnProperty('trackingToken')) ? true : '') :
+                           '') :
+                          '';
+
+            trackingID = trackingToken;
+
             var record = {
+              trackingToken: trackingToken,
+              tracked: tracked,
               from: strip(log.fromAddress),
               started: {
                 date: $filter('date')(log.start, 'medium'),
@@ -96,18 +115,30 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
         return refined;
       };
 
-      Logs.prototype.fetch = function ()
+      Logs.prototype.fetch = function (periods)
       {
         var deferred = $q.defer();
 
+        if (! periods)
+        {
+          periods = {
+            end: new Date.now().getTime(),
+            start: new Date.today().addDays(- 7).getTime()
+          }
+        }
+
         Logs.get(
-          {},
+          {
+            startTime: periods.start,
+            endTime: periods.end
+          },
           function (result)
           {
             deferred.resolve(
               {
                 logs: normalize(result),
-                synced: Date.now().getTime()
+                synced: Date.now().getTime(),
+                periods: periods
               }
             );
           },

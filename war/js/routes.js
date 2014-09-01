@@ -148,7 +148,12 @@ angular.module('WebPaige')
               'Logs',
               function (Logs)
               {
-                return Logs.fetch();
+                return Logs.fetch(
+                  {
+                    end: new Date.now().getTime(),
+                    start: new Date.today().addDays(- 7).getTime()
+                  }
+                );
               }
             ]
           },
@@ -194,7 +199,7 @@ angular.module('WebPaige')
 
 
       /**
-       * Profile (user hiself) router
+       * Profile (user himself) router
        */
         .when(
         '/profile',
@@ -270,7 +275,7 @@ angular.module('WebPaige')
       /**
        * Define interceptor
        */
-      // $httpProvider.interceptors.push('Interceptor');
+        // $httpProvider.interceptors.push('Interceptor');
 
       $httpProvider.responseInterceptors.push(
         [

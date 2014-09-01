@@ -1,64 +1,29 @@
 <div class="page-header">
   <h2>Logs</h2>
-
-
-  <!-- groups buttons -->
-  <!--<div class="btn-group pull-right">-->
-  <!--<button type="button"-->
-  <!--ng-click="addGroupForm(); setViewTo('add')"-->
-  <!--class="btn btn-success {{(views.add==true) && 'active'}}">{{ui.groups.newGroup}}</button>-->
-  <!--<button type="button"-->
-  <!--ng-click="newMemberForm(); setViewTo('member')"-->
-  <!--class="btn btn-success {{(views.member==true) && 'active'}}">{{ui.groups.newMember}}</button>-->
-  <!--</div>-->
-  <!-- end groups buttons -->
-
-  <!-- search members -->
-  <!--<form class="form-search pull-right"-->
-  <!--ng-submit="searchMembers(search.query)">-->
-  <!--<div class="input-append">-->
-  <!--<input type="text"-->
-  <!--class="span2 search-query"-->
-  <!--placeholder="{{ui.groups.searchFor}}"-->
-  <!--ng-model="search.query">-->
-  <!--<button type="submit" class="btn"><i class="icon-search"></i>&nbsp;{{ui.groups.search}}</button>-->
-  <!--</div>-->
-  <!--</form>-->
-  <!-- end search members -->
 </div>
 
-<!-- groups and members -->
 <div class="tabbable tabs-left">
 
-  <!-- tabs links -->
   <ul class="nav nav-tabs nav-tabs-app" style="margin-right: 0;">
-    <!-- add group tab link -->
     <li class="active">
       <a href="" data-toggle="tab">
         <span class="entypo">&#59392;</span> Logs
       </a>
     </li>
-    <!-- end add group tab link -->
   </ul>
-  <!-- end tabs links -->
 
-  <!-- tabs content -->
   <div class="tab-content">
 
-
-    <!-- group tab -->
     <div class="tab-pane active" id="groupTab">
       <div class="tab-header">
 
-        <!-- groups list -->
-        <div class="pull-left">
-          <select ng-model="current"
-                  ng-options="group.uuid as group.name for group in groups"
-                  ng-selected="current"
-                  ng-change="requestGroup(current); sorter='resources.lastName'; reverse=false;">
-          </select>
+        <div class="control-group pull-left">
+          <input type="text"
+                 name="daterange"
+                 ng-model="daterange"
+                 log-ranger="">
+          <i class="icon-calendar" style="position: relative; margin: -3px 0 0 -24px;"></i>
         </div>
-        <!--end groups list -->
 
         <div class="pull-right">
           <input type="text"
@@ -70,13 +35,9 @@
       </div>
       <hr>
 
-      <p ng-hide="data.logs.length > 0">
-        Er zijn geen logs.
-      </p>
+      <p ng-hide="data.logs.length > 0">Er zijn geen logs.</p>
 
       <div ng-show="data.logs.length > 0">
-
-        <!--<pre><small>{{data.logs | json}}</small></pre>-->
 
         <table class="table table-striped">
           <thead>
@@ -120,7 +81,11 @@
           </thead>
           <tbody>
           <tr ng-repeat="log in data.logs | filter: filtered | orderBy:ordered : reversed">
-            <td><span class="label label-inverse">{{log.status}}</span></td>
+            <td>
+              <span ng-show="(ordered=='started.stamp')">{{(log.tracked) && '&angrt;'}}</span>
+              <span class="label label-inverse log-{{log.status}}">{{log.status}}</span>
+              <!--{{log.trackingToken}}-->
+            </td>
             <td>{{log.from}}</td>
             <td>{{log.to}}</td>
             <td>{{log.started.date}}</td>
@@ -128,17 +93,25 @@
           </tr>
           </tbody>
         </table>
-        <span class="muted pull-right">
-          <small>
-            <i>Er zijn {{data.logs.length}} logs.</i>
-          </small>
-        </span>
       </div>
-    </div>
-    <!-- end group tab -->
 
+      <hr/>
+      <small class="pull-left">
+        <span class="text-warning">{{ui.planboard.lastSyncTime}}</span>&nbsp;
+        <span class="muted">{{data.synced | date: 'medium'}}</span>
+        <br/>
+        <span class="text-warning">{{ui.planboard.dataRangeStart}} </span>
+        <span class="muted">{{data.periods.start | date: 'medium'}}</span>
+        &nbsp;|&nbsp;
+        <span class="text-warning">{{ui.planboard.dataRangeEnd}} </span>
+        <span class="muted">{{data.periods.end | date: 'medium'}}</span>
+      </small>
+
+      <small class="muted pull-right" ng-show="data.logs.length > 0">
+        <br/>
+        <i>Er zijn {{(data.logs|filter:filtered).length}} logs getoond.</i>
+      </small>
+    </div>
 
   </div>
-  <!-- end tabs content -->
 </div>
-<!-- end groups and members -->
