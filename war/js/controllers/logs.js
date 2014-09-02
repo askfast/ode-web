@@ -12,9 +12,10 @@ angular.module('WebPaige.Controllers.Logs', [])
     '$scope',
     '$rootScope',
     '$filter',
+    '$timeout',
     'data',
     'Logs',
-    function ($scope, $rootScope, $filter, data, Logs)
+    function ($scope, $rootScope, $filter, $timeout, data, Logs)
     {
       $rootScope.fixStyles();
 
@@ -37,6 +38,8 @@ angular.module('WebPaige.Controllers.Logs', [])
         'getLogRange',
         function ()
         {
+          $timeout(function () { $rootScope.statusBar.display('Logs aan het laden..') });
+
           var periods = arguments[1];
 
           Logs.fetch(periods)
@@ -44,6 +47,8 @@ angular.module('WebPaige.Controllers.Logs', [])
             function (data)
             {
               $scope.data = data;
+
+              $rootScope.statusBar.off();
             }
           );
         }

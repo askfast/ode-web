@@ -243,8 +243,8 @@ angular.module('WebPaige.Directives', ['ngResource'])
           ];
 
           options.ranges['Laatste 7 dagen'] = [
-            new Date.today(),
-            new Date.create().addDays(- 7)
+            new Date.create().addDays(- 7),
+            new Date.today()
           ];
 
           element.daterangepicker(

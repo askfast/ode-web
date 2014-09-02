@@ -73,14 +73,13 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
             var trackingToken = additionalInfo ?
                                 ((additionalInfo.hasOwnProperty('trackingToken')) ?
                                  additionalInfo.trackingToken :
-                                 '') :
-                                '';
+                                 log.start) :
+                                log.start;
 
             var tracked = (trackingToken == trackingID) ?
                           (additionalInfo ?
-                           ((additionalInfo.hasOwnProperty('trackingToken')) ? true : '') :
-                           '') :
-                          '';
+                           ((additionalInfo.hasOwnProperty('trackingToken')) ? true : false) :
+                           false) : false;
 
             trackingID = trackingToken;
 
@@ -110,6 +109,62 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
           }
         );
 
+        var groups = _.groupBy(refined, 'trackingToken');
+
+        _.each(
+          refined,
+          function (log)
+          {
+            if (typeof log.trackingToken != 'number')
+            {
+              log.records = [];
+
+              _.each(
+                groups[log.trackingToken],
+                function (token)
+                {
+                  log.records.push(
+                    {
+                      from: token.from,
+                      started: {
+                        date: token.started.date,
+                        stamp: token.started.stamp
+                      },
+                      status: token.status,
+                      to: token.to,
+                      duration: {
+                        presentation: token.duration.presentation,
+                        stamp: token.duration.stamp
+                      }
+                    }
+                  );
+                }
+              );
+            }
+          }
+        );
+
+        _.each(
+          refined,
+          function (log)
+          {
+            log.records && log.records.reverse();
+
+            if (log.records)
+            {
+              log.from = log.records[0].from;
+              log.started.date = log.records[0].started.date;
+              log.started.stamp = log.records[0].started.stamp;
+              log.status = log.records[0].status;
+              log.to = log.records[0].to;
+              log.duration.presentation = log.records[0].duration.presentation;
+              log.duration.stamp = log.records[0].duration.stamp;
+
+              log.records.shift();
+            }
+          }
+        );
+
         $filter('orderBy')(refined, 'started.stamp');
 
         return refined;
@@ -134,13 +189,13 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
           },
           function (result)
           {
-            deferred.resolve(
-              {
-                logs: normalize(result),
-                synced: Date.now().getTime(),
-                periods: periods
-              }
-            );
+            var returned = {
+              logs: normalize(result),
+              synced: Date.now().getTime(),
+              periods: periods
+            };
+
+            deferred.resolve(returned);
           },
           function (error)
           {
