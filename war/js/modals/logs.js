@@ -165,9 +165,18 @@ angular.module('WebPaige.Modals.Logs', ['ngResource'])
           }
         );
 
-        $filter('orderBy')(refined, 'started.stamp');
+        var indexed = _.indexBy(refined, 'trackingToken');
 
-        return refined;
+        var uniques = [];
+
+        _.each(
+          indexed,
+          function (token) { uniques.push(token) }
+        );
+
+        $filter('orderBy')(uniques, 'started.stamp');
+
+        return uniques;
       };
 
       Logs.prototype.fetch = function (periods)
