@@ -107,17 +107,9 @@
             </td>
             <td>
               {{log.started.date}}
-              <span ng-show="log.records.length > 0" ng-repeat="record in log.records">
-                <br/>
-                {{record.started.date}}
-              </span>
             </td>
             <td>
               {{log.duration.presentation}}
-              <span ng-show="log.records.length > 0" ng-repeat="record in log.records">
-                <br/>
-                {{record.duration.presentation}}
-              </span>
             </td>
           </tr>
           </tbody>
