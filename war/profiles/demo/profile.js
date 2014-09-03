@@ -64,6 +64,8 @@ var profile = {
   },
 
   mobileApp: {
+    android: 'https://play.google.com/store/apps/details?id=com.askcs.standbydemo',
+    ios: 'https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4',
     status:       true,
     experimental: false
   },

@@ -60,6 +60,8 @@ var profile = {
   },
 
   mobileApp: {
+    android: 'https://play.google.com/store/apps/details?id=com.askcs.standby_falck',
+    ios: null,
     status:       true,
     experimental: false
   },
