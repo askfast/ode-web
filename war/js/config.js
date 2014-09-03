@@ -28,12 +28,14 @@ angular.module('WebPaige')
       title:  profile.title,
       logos: {
         login:  'profiles/' + profile.meta + '/img/login_logo.png',
+        sublogin: (profile.sublogo ? 'profiles/' + profile.meta + '/img/' + profile.sublogo : ''),
         app:    ''
       },
       background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000:      profile.p2000,
       mobileApp:  profile.mobileApp,
-      smartAlarm: profile.smartAlarm
+      smartAlarm: profile.smartAlarm,
+      showBackground: (profile.showBackground==null ? true : profile.showBackground)
     },
 
     statesall: {

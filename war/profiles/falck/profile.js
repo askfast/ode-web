@@ -5,9 +5,13 @@ var profile = {
 
   meta: 'falck',
 
-  own: true,
+  own: false,
 
   title: 'Falck',
+
+  showBackground: false,
+
+  sublogo: 'falck_logo.png',
 
   host: function ()
   {
@@ -56,6 +60,8 @@ var profile = {
   },
 
   mobileApp: {
+    android: 'https://play.google.com/store/apps/details?id=com.askcs.standby_falck',
+    ios: null,
     status:       true,
     experimental: false
   },

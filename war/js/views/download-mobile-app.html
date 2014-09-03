@@ -14,14 +14,14 @@
     </button>
 
     <ul class="dropdown-menu pull-right">
-      <li>
-        <a href="https://play.google.com/store/apps/details?id=com.askcs.standby"
+      <li ng-show="config.profile.mobileApp.android">
+        <a ng-href="{{config.profile.mobileApp.android}}"
            target="_blank">
           Download Android App
         </a>
       </li>
-      <li>
-        <a href="https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4"
+      <li ng-show="config.profile.mobileApp.ios">
+        <a ng-href="{{config.profile.mobileApp.ios}}"
            target="itunes_store">
           Download iPhone App
         </a>
