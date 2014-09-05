@@ -7,8 +7,8 @@ define(
     services.factory(
       'Dashboard',
       [
-        '$rootScope', '$resource', '$config', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
-        function ($rootScope, $resource, $config, $q, Storage, Slots, Dater, Announcer)
+        '$rootScope', '$resource', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
+        function ($rootScope, $resource, $q, Storage, Slots, Dater, Announcer)
         {
           /**
            * TODO: Still being used?
@@ -31,7 +31,7 @@ define(
            * TODO: Still being used?
            */
           var Backend = $resource(
-              $config.host + '/capcodes',
+              config.host + '/capcodes',
               {},
               {
                 capcodes: {
@@ -196,7 +196,7 @@ define(
                 {
                   $.ajax(
                     {
-                      url: $config.profile.p2000.url + '?code=' + capcodes,
+                      url: config.profile.p2000.url + '?code=' + capcodes,
                       dataType: 'jsonp',
                       success: function (results)
                       {

@@ -7,11 +7,11 @@ define(
     services.factory(
       'Profile',
       [
-        '$rootScope', '$config', '$resource', '$q', 'Storage', 'Groups', 'Slots', 'MD5',
-        function ($rootScope, $config, $resource, $q, Storage, Groups, Slots, MD5)
+        '$rootScope', '$resource', '$q', 'Storage', 'Groups', 'Slots', 'MD5',
+        function ($rootScope, $resource, $q, Storage, Groups, Slots, MD5)
         {
           var Profile = $resource(
-              $config.host + '/node/:id/:section',
+              config.host + '/node/:id/:section',
               {},
               {
                 get: {
@@ -42,7 +42,7 @@ define(
 
 
           var Register = $resource(
-              $config.host + '/register',
+              config.host + '/register',
               {
                 direct: 'true',
                 module: 'default'
@@ -58,7 +58,7 @@ define(
 
 
           var UserExists = $resource(
-              $config.host + '/user_exists',
+              config.host + '/user_exists',
               {},
               {
                 check: {
@@ -70,7 +70,7 @@ define(
 
 
           var PincodeExists = $resource(
-              $config.host + '/node/:id/pincode_exists',
+              config.host + '/node/:id/pincode_exists',
               {},
               {
                 check: {
@@ -82,7 +82,7 @@ define(
 
 
           var Resources = $resource(
-              $config.host + '/resources',
+              config.host + '/resources',
               {
               },
               {

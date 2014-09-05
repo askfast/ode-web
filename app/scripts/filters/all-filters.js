@@ -23,15 +23,14 @@ define(
       .filter(
       'translateRole',
       [
-        '$config',
-        function ($config)
+        function ()
         {
           return function (role)
           {
             var urole;
 
             angular.forEach(
-              $config.roles,
+              config.roles,
               function (prole)
               {
                 if (prole.id == role)
@@ -57,15 +56,14 @@ define(
       .filter(
       'translateDivision',
       [
-        '$config',
-        function ($config)
+        function ()
         {
           return function (divid)
           {
             var filtered;
 
             angular.forEach(
-              $config.timeline.config.divisions,
+              config.timeline.config.divisions,
               function (division)
               {
                 if (division.id == divid)
@@ -465,14 +463,13 @@ define(
       .filter(
       'convertEve',
       [
-        '$config',
-        function ($config)
+        function ()
         {
           return function (url)
           {
             if (/\//.test(url))
             {
-              if ($config.profile.smartAlarm)
+              if (config.profile.smartAlarm)
               {
                 return url;
               }

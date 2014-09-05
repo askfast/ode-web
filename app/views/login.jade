@@ -1,78 +1,78 @@
 #welcome
 	download-mobile-app(ng-show='browser.mobile && browser.screen.width < 768')
-		
-		#preloader
+
+	#preloader
+		img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
+		h4 {{ui.login.setting_up_app}}
+		.span3
+			.bar
+		span.muted
+
+	#login.boxed(ng-show='views.login', ng-hide='views.help || views.changePass')
+		form(ng-submit='login()')
 			img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
-			h4 {{ui.login.setting_up_app}}
-			.span3
-				.bar
-			span.muted
+			h4.form-signin-heading(ng-show='config.profile.own') {{config.profile.title}}
+			h4.form-signin-heading(ng-hide='config.profile.own') {{ui.login.header}}
+			.alert(class="{{alert.login.type}}", ng-show='alert.login.display')
+				button.close(type='button', ng-click='alert.login=false') ×
+				| {{alert.login.message}}
+			input(type='text', ng-model='logindata.username', placeholder='{{ui.login.placeholder_username}}', autofocus='autofocus')
+			input(type='password', ng-model='logindata.password', placeholder='{{ui.login.placeholder_password}}')
+			label.checkbox.span3
+				input(type='checkbox', ng-model='logindata.remember')
+				| {{ui.login.label_rememberMe}}
+			button.btn.btn-large.btn-primary(type='submit') {{ui.login.button_login}}
+			p
+				small
+					a(ng-click='views.forgot=true; views.login=false;') {{ui.login.forgot_password}}
+					span  | 
+					a(ng-click='views.help=true') {{ui.help.help}}
+			p
+				small
+					a(ng-click='changeLanguage("en")') English
+					| |
+					a(ng-click='changeLanguage("nl")') Nederlands
+			img(src='images/standby_logo_small.png', alt='StandBy Logo', ng-hide='config.profile.own')
+			span.version(style='margin-top: 0px;')
+				a(href='version.html', target='_blank') StandBy v{{config.version}}
 
-		#login.boxed(ng-show='views.login', ng-hide='views.help || views.changePass')
-			form(ng-submit='login()')
-				img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
-				h4.form-signin-heading(ng-show='config.profile.own') {{config.profile.title}}
-				h4.form-signin-heading(ng-hide='config.profile.own') {{ui.login.header}}
-				.alert(class="{{alert.login.type}}", ng-show='alert.login.display')
-					button.close(type='button', ng-click='alert.login=false') ×
-					| {{alert.login.message}}
-				input(type='text', ng-model='logindata.username', placeholder='{{ui.login.placeholder_username}}', autofocus='autofocus')
-				input(type='password', ng-model='logindata.password', placeholder='{{ui.login.placeholder_password}}')
-				label.checkbox.span3
-					input(type='checkbox', ng-model='logindata.remember')
-					| {{ui.login.label_rememberMe}}
-				button.btn.btn-large.btn-primary(type='submit') {{ui.login.button_login}}
-				p
-					small
-						a(ng-click='views.forgot=true; views.login=false;') {{ui.login.forgot_password}}
-						span  | 
-						a(ng-click='views.help=true') {{ui.help.help}}
-				p
-					small
-						a(ng-click='changeLanguage("en")') English
-						| |
-						a(ng-click='changeLanguage("nl")') Nederlands
-				img(src='images/standby_logo_small.png', alt='StandBy Logo', ng-hide='config.profile.own')
-				span.version(style='margin-top: 0px;')
-					a(href='version.html', target='_blank') StandBy v{{config.version}}
+	#login.boxed(ng-show='views.help', ng-hide='views.login || views.forgot || views.changePass')
+		form(ng-submit='')
+			img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
+			h4.form-signin-heading {{ui.help.help}}
+			p(ng-repeat='content in ui.login.help.content', style='text-align: left;') {{content}}
+			p
+				small
+					a(ng-click='views.help=false; views.login=true') {{ui.login.help.cta}}
 
-		#login.boxed(ng-show='views.help', ng-hide='views.login || views.forgot || views.changePass')
-			form(ng-submit='')
-				img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
-				h4.form-signin-heading {{ui.help.help}}
-				p(ng-repeat='content in ui.login.help.content', style='text-align: left;') {{content}}
-				p
-					small
-						a(ng-click='views.help=false; views.login=true') {{ui.login.help.cta}}
+	#forgot.boxed(ng-show='views.forgot')
+		form(ng-submit='forgot()')
+			img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
+			h4.form-signin-heading {{ui.login.forgetPassword}}
+			.alert(class="{{alert.forget.type}}", ng-show='alert.forget.display')
+				button.close(type='button', ng-click='alert.forget=false') ×
+				| {{alert.forget.message}}
+			input(type='text', ng-model='remember.id', placeholder='{{ui.login.placeholder_username}}')
+			button.btn.btn-large.btn-primary(type='submit') {{ui.login.resetPassword}}
+			p
+				small
+					a(ng-click='views.login=true; views.forgot=false') {{ui.login.returnLogin}}
+			img(src='images/standby_logo_small.png', alt='StandBy Logo', ng-hide='config.profile.own')
+			span.version
+				a(href='version.html', target='_blank') StandBy v{{config.version}}
 
-		#forgot.boxed(ng-show='views.forgot')
-			form(ng-submit='forgot()')
-				img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
-				h4.form-signin-heading {{ui.login.forgetPassword}}
-				.alert(class="{{alert.forget.type}}", ng-show='alert.forget.display')
-					button.close(type='button', ng-click='alert.forget=false') ×
-					| {{alert.forget.message}}
-				input(type='text', ng-model='remember.id', placeholder='{{ui.login.placeholder_username}}')
-				button.btn.btn-large.btn-primary(type='submit') {{ui.login.resetPassword}}
-				p
-					small
-						a(ng-click='views.login=true; views.forgot=false') {{ui.login.returnLogin}}
-				img(src='images/standby_logo_small.png', alt='StandBy Logo', ng-hide='config.profile.own')
-				span.version
-					a(href='version.html', target='_blank') StandBy v{{config.version}}
+	#changePass.boxed(ng-show='views.changePass')
+		form(ng-submit='changePass()')
+			img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
+			h4.form-signin-heading {{changepass.uuid}}
+			.alert(class="{{alert.changePass.type}}", ng-show='alert.changePass.display')
+				button.close(type='button', ng-click='alert.changePass=false') ×
+				| {{alert.changePass.message}}
+			input(type='password', ng-model='changeData.newPass', placeholder='{{ui.login.ph_newPass}}')
+			input(type='password', ng-model='changeData.retypePass', placeholder='{{ui.login.ph_retypePass}}')
+			button.btn.btn-large.btn-primary(type='submit') {{ui.login.changePassword}}
+			br
+			span.version
+				a(href='version.html', target='_blank') StandBy v{{config.version}}
 
-		#changePass.boxed(ng-show='views.changePass')
-			form(ng-submit='changePass()')
-				img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
-				h4.form-signin-heading {{changepass.uuid}}
-				.alert(class="{{alert.changePass.type}}", ng-show='alert.changePass.display')
-					button.close(type='button', ng-click='alert.changePass=false') ×
-					| {{alert.changePass.message}}
-				input(type='password', ng-model='changeData.newPass', placeholder='{{ui.login.ph_newPass}}')
-				input(type='password', ng-model='changeData.retypePass', placeholder='{{ui.login.ph_retypePass}}')
-				button.btn.btn-large.btn-primary(type='submit') {{ui.login.changePassword}}
-				br
-				span.version
-					a(href='version.html', target='_blank') StandBy v{{config.version}}
-
-		download-mobile-app(ng-hide='browser.mobile && browser.screen.width < 768')
+	download-mobile-app(ng-hide='browser.mobile && browser.screen.width < 768')

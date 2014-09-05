@@ -22,7 +22,7 @@ require.config(
 
       // 'angular-strap':    '../vendors/angular-strap/dist/angular-strap.min',
       'angular-strap': 'removables/angular-strap.min',
-      'ui-bootstrap': 'removables/ui-bootstrap-custom', // TODO: Remove later
+      'ui-bootstrap': 'removables/ui-bootstrap-custom',
 
       lawnchair: '../vendors/lawnchair/src/Lawnchair',
       dom: '../vendors/lawnchair/src/adapters/dom',

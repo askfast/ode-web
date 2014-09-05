@@ -7,8 +7,8 @@ define(
     services.factory(
       'Settings',
       [
-        '$rootScope', '$config', '$resource', '$q', 'Storage', 'Profile',
-        function ($rootScope, $config, $resource, $q, Storage, Profile)
+        '$rootScope', '$resource', '$q', 'Storage', 'Profile',
+        function ($rootScope, $resource, $q, Storage, Profile)
         {
           /**
            * Define settings resource

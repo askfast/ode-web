@@ -7,14 +7,14 @@ define(
     services.factory(
       'Slots',
       [
-        '$rootScope', '$config', '$resource', '$q', 'Storage', 'Dater', 'Sloter', 'Stats',
-        function ($rootScope, $config, $resource, $q, Storage, Dater, Sloter, Stats)
+        '$rootScope', '$resource', '$q', 'Storage', 'Dater', 'Sloter', 'Stats',
+        function ($rootScope, $resource, $q, Storage, Dater, Sloter, Stats)
         {
           /**
            * Define Slot Resource from back-end
            */
           var Slots = $resource(
-              $config.host + '/askatars/:user/slots',
+              config.host + '/askatars/:user/slots',
               {
                 user: ''
               },
@@ -44,7 +44,7 @@ define(
            * Group aggs resource
            */
           var Aggs = $resource(
-              $config.host + '/calc_planning/:id',
+              config.host + '/calc_planning/:id',
               {
               },
               {
@@ -61,7 +61,7 @@ define(
            * Wishes resource
            */
           var Wishes = $resource(
-              $config.host + '/network/:id/wish',
+              config.host + '/network/:id/wish',
               {
               },
               {
@@ -82,7 +82,7 @@ define(
            * Members resource
            */
           var MemberSlots = $resource(
-              $config.host + '/network/:id/member/slots2',
+              config.host + '/network/:id/member/slots2',
               {
               },
               {
@@ -354,11 +354,11 @@ define(
                       state: state,
                       shortages: weeks.current.shortages,
                       start: {
-                        date: new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.current.period.first.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.current.period.first.timeStamp
                       },
                       end: {
-                        date: new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.current.period.last.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.current.period.last.timeStamp
                       },
                       ratios: Stats.pies(currents, params.start, params.end)
@@ -367,11 +367,11 @@ define(
                       data: weeks.next.data,
                       shortages: weeks.next.shortages,
                       start: {
-                        date: new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.next.period.first.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.next.period.first.timeStamp
                       },
                       end: {
-                        date: new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.next.period.last.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.next.period.last.timeStamp
                       },
                       ratios: Stats.pies(weeks.next.data, params.start, params.end)
@@ -414,11 +414,11 @@ define(
                       state: currentWeek,
                       shortages: weeks.current.shortages,
                       start: {
-                        date: new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.current.period.first.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.current.period.first.timeStamp
                       },
                       end: {
-                        date: new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.current.period.last.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.current.period.last.timeStamp
                       },
                       ratios: Stats.pies(currentWeek, params.start, params.end)
@@ -427,11 +427,11 @@ define(
                       data: nextWeek,
                       shortages: weeks.next.shortages,
                       start: {
-                        date: new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.next.period.first.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.next.period.first.timeStamp
                       },
                       end: {
-                        date: new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+                        date: new Date(weeks.next.period.last.timeStamp).toString(config.formats.date),
                         timeStamp: weeks.next.period.last.timeStamp
                       },
                       ratios: Stats.pies(nextWeek, params.start, params.end)
@@ -1026,11 +1026,11 @@ define(
           //                  state:  state,
           //                  shortages: weeks.current.shortages,
           //                  start: {
-          //                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.current.period.first.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.current.period.first.timeStamp
           //                  },
           //                  end: {
-          //                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.current.period.last.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.current.period.last.timeStamp
           //                  },
           //                  ratios: Stats.pies(currents)
@@ -1039,11 +1039,11 @@ define(
           //                  data:   weeks.next.data,
           //                  shortages: weeks.next.shortages,
           //                  start: {
-          //                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.next.period.first.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.next.period.first.timeStamp
           //                  },
           //                  end: {
-          //                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.next.period.last.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.next.period.last.timeStamp
           //                  },
           //                  ratios: Stats.pies(weeks.next.data)
@@ -1081,11 +1081,11 @@ define(
           //                  state: currentWeek,
           //                  shortages: weeks.current.shortages,
           //                  start: {
-          //                    date:       new Date(weeks.current.period.first.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.current.period.first.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.current.period.first.timeStamp
           //                  },
           //                  end: {
-          //                    date:       new Date(weeks.current.period.last.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.current.period.last.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.current.period.last.timeStamp
           //                  },
           //                  ratios: Stats.pies(currentWeek)
@@ -1094,11 +1094,11 @@ define(
           //                  data: nextWeek,
           //                  shortages: weeks.next.shortages,
           //                  start: {
-          //                    date:       new Date(weeks.next.period.first.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.next.period.first.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.next.period.first.timeStamp
           //                  },
           //                  end: {
-          //                    date:       new Date(weeks.next.period.last.timeStamp).toString($config.formats.date),
+          //                    date:       new Date(weeks.next.period.last.timeStamp).toString(config.formats.date),
           //                    timeStamp:  weeks.next.period.last.timeStamp
           //                  },
           //                  ratios: Stats.pies(nextWeek)
