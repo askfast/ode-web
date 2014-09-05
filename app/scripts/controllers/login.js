@@ -665,7 +665,7 @@ define(
                 // $('#notification').show();
                 if (! $rootScope.browser.mobile) $('#footer').show();
                 $('#watermark').show();
-                $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
+                $('body').css({ 'background': 'url(../images/bg.jpg) repeat' });
               }, $rootScope.config.timers.TICKER);
           };
 

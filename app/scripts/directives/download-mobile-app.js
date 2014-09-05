@@ -11,7 +11,7 @@ define(
         return {
           restrict: 'E',
           rep1ace: true,
-          templateUrl: 'dist/views/download-mobile-app.html',
+          templateUrl: 'views/download-mobile-app.html',
           link: function (scope, element, attrs)
           {
             scope.upwards = $.browser.mobile && $.browser.screen.width < 768;
