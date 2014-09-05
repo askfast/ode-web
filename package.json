@@ -1,0 +1,64 @@
+{
+  "name": "TeamUp",
+  "version": "0.3.0-alpha-2",
+  "description": "TeamUp description",
+  "author": "Cengiz Ulusoy - Micheal Yankun - Leonie van Dinten",
+  "dependencies": {
+    "grunt-svgmin": "^0.4.0"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-autoprefixer": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-compass": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-htmlmin": "*",
+    "grunt-contrib-imagemin": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-jade": "*",
+    "grunt-contrib-requirejs": "*",
+    "grunt-usemin": "*",
+    "grunt-rev": "*",
+    "grunt-karma": "*",
+    "grunt-concurrent": "*",
+    "grunt-ngmin": "*",
+    "matchdep": "*",
+    "connect-livereload": "*",
+    "karma": "*",
+    "karma-script-launcher": "*",
+    "karma-chrome-launcher": "*",
+    "karma-firefox-launcher": "*",
+    "karma-html2js-preprocessor": "*",
+    "karma-jasmine": "*",
+    "karma-requirejs": "*",
+    "karma-coffee-preprocessor": "*",
+    "karma-phantomjs-launcher": "*",
+    "karma-ng-scenario": "*",
+    "grunt-release": "*",
+    "grunt-conventional-changelog": "*",
+    "marked": "*",
+    "semver": "*",
+    "grunt-replace": "*"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "askcs/team-up-web"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "licenses": [
+    {
+      "type": "BSD"
+    }
+  ]
+}
