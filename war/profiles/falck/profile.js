@@ -3,15 +3,19 @@
  */
 var profile = {
 
-  meta: 'test',
+  meta: 'falck',
 
-  own: true,
+  own: false,
 
-  title: 'Test',
+  title: 'Falck',
+
+  showBackground: false,
+
+  sublogo: 'falck_logo.png',
 
   host: function ()
   {
-    return ($.browser.msie) ? '/proxy' : 'http://test.ask-cs.com';
+    return ($.browser.msie) ? '/proxy' : 'http://askpack.ask-cs.com';
   },
 
   states: [],
@@ -48,20 +52,23 @@ var profile = {
 
   p2000: {
     status: true,
-    url:    'http://couchdb.ask-cs.com:5984/p2000/_design/search/_view/standby?limit=4&descending=true',
+    // url:    'http://backend.ask-cs.com/p2000/ob.php',
+    // codes:  '1201999'
     // url:    'http://backend.ask-cs.com/~ask/p2000/p2000.php',
+    url:    'http://couchdb.ask-cs.com:5984/p2000/_design/search/_view/standby?limit=4&descending=true',
     codes:  '1201958'
   },
 
   mobileApp: {
-    android: 'https://play.google.com/store/apps/details?id=com.askcs.standby',
-    ios: 'https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4',
+    android: 'https://play.google.com/store/apps/details?id=com.askcs.standby_falck',
+    ios: null,
     status:       true,
     experimental: false
   },
 
   analytics: {
-    url:    'dev.standby.ask-cs.com',
+    url:    'falck.standby.ask-cs.com', // TODO: Does this url exist yet?
+    // url:    'dev.standby.ask-cs.com',
     // url: 'test.standby.ask-cs.com',
     // url: 'brandweer.standby.ask-cs.com',
 
@@ -72,14 +79,15 @@ var profile = {
     }
   },
 
-  smartAlarm: true,
+  smartAlarm: false,
 
   timers: {
     TICKER:                 100,
+
     NOTIFICATION_DELAY:     5000,
     MEMBER_TIMELINE_RENDER: 2000,
     ALARM_SYNC:             60000,
-    PLANBOARD_SYNC:         60000,
-    TV_SYNC:                60000
+    PLANBOARD_SYNC:         10000,
+    TV_SYNC:                8000
   }
 };

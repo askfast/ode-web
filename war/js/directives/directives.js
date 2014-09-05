@@ -99,11 +99,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
           };
 
           // lose this sugerJs related stuff later on!
-//          options.ranges[$rootScope.ui.planboard.daterangerToday] = ['today', 'tomorrow'];
-//          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = ['tomorrow', new Date.today().addDays(2)];
-//          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
-//          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
-//          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerToday] = ['today', 'tomorrow'];
+          //          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = ['tomorrow', new Date.today().addDays(2)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
+          //          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
 
           options.ranges[$rootScope.ui.planboard.daterangerToday] = [
             new Date.today(),
@@ -211,4 +211,13 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
 
+  })
+  .directive(
+  'logos',
+  function ()
+  {
+    return {
+      restrict: 'E',
+      templateUrl: 'dist/views/logos.html'
+    };
   });

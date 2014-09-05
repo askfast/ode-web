@@ -92,12 +92,13 @@ angular.module('WebPaige.Controllers.Login', [])
       $('#footer').hide();
       $('#watermark').hide();
       // $('#notification').hide();
-      $('body').css(
-        {
-          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-          'backgroundSize': 'cover'
-        });
-
+      if($rootScope.config.profile.showBackground) {
+          $('body').css(
+              {
+                  'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+                  'backgroundSize': 'cover'
+              });
+      }
       /**
        * Disable the autocomplete username/password for Firefox users
        */

@@ -1184,12 +1184,14 @@ angular.module('WebPaige')
       title:  profile.title,
       logos: {
         login:  'profiles/' + profile.meta + '/img/login_logo.png',
+        sublogin: (profile.sublogo ? 'profiles/' + profile.meta + '/img/' + profile.sublogo : ''),
         app:    ''
       },
       background: 'profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000:      profile.p2000,
       mobileApp:  profile.mobileApp,
-      smartAlarm: profile.smartAlarm
+      smartAlarm: profile.smartAlarm,
+      showBackground: (profile.showBackground==null ? true : profile.showBackground)
     },
 
     statesall: {
@@ -6349,8 +6351,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
 
-  }
-)
+  })
 
 
 /**
@@ -6378,11 +6379,11 @@ angular.module('WebPaige.Directives', ['ngResource'])
           };
 
           // lose this sugerJs related stuff later on!
-//          options.ranges[$rootScope.ui.planboard.daterangerToday] = ['today', 'tomorrow'];
-//          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = ['tomorrow', new Date.today().addDays(2)];
-//          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
-//          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
-//          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerToday] = ['today', 'tomorrow'];
+          //          options.ranges[$rootScope.ui.planboard.daterangerTomorrow] = ['tomorrow', new Date.today().addDays(2)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerYesterday] = ['yesterday', 'today'];
+          //          options.ranges[$rootScope.ui.planboard.daterangerNext3Days] = ['today', new Date.create().addDays(3)];
+          //          options.ranges[$rootScope.ui.planboard.daterangerNext7Days] = ['today', new Date.create().addDays(7)];
 
           options.ranges[$rootScope.ui.planboard.daterangerToday] = [
             new Date.today(),
@@ -6490,8 +6491,17 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
 
-  }
-);;/**
+  })
+  .directive(
+  'logos',
+  function ()
+  {
+    return {
+      restrict: 'E',
+      templateUrl: 'dist/views/logos.html'
+    };
+  });
+;/**
  * AngularStrap - Twitter Bootstrap directives for AngularJS
  * @version v0.7.0 - 2013-03-11
  * @link http://mgcrea.github.com/angular-strap
@@ -7315,8 +7325,7 @@ angular.module('WebPaige.Services.MD5', ['ngResource'])
      
       return temp.toLowerCase();
     }
-  }
-);;'use strict';
+  });;'use strict';
 
 
 angular.module('WebPaige.Services.Storage', ['ngResource'])
@@ -10115,12 +10124,13 @@ angular.module('WebPaige.Controllers.Login', [])
       $('#footer').hide();
       $('#watermark').hide();
       // $('#notification').hide();
-      $('body').css(
-        {
-          'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-          'backgroundSize': 'cover'
-        });
-
+      if($rootScope.config.profile.showBackground) {
+          $('body').css(
+              {
+                  'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+                  'backgroundSize': 'cover'
+              });
+      }
       /**
        * Disable the autocomplete username/password for Firefox users
        */
@@ -10851,8 +10861,8 @@ angular.module('WebPaige.Controllers.Login', [])
       }
 
     }
-  ])
-;;/*jslint node: true */
+  ]);
+;/*jslint node: true */
 /*global angular */
 'use strict';
 
@@ -11253,6 +11263,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
               return (user !== null) ? setup.users[user].name : $rootScope.ui.dashboard.notAssigned
             }
 
+            var saClass = (selection.user==null ? 'sa-icon-not-assigned' : null);
+
             switch (selection.role)
             {
               case 'bevelvoerder':
@@ -11261,7 +11273,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 1,
                     icon: $rootScope.ui.dashboard.alarmRoles.commanderInitial,
                     role: $rootScope.ui.dashboard.alarmRoles.commander,
-                    class: 'sa-icon-commander',
+                    class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-commander'),
                     name: translateName(selection.user),
                     uuid: selection.user
                   }
@@ -11274,7 +11286,7 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     rank: 0,
                     icon: $rootScope.ui.dashboard.alarmRoles.driverInitial,
                     role: $rootScope.ui.dashboard.alarmRoles.driver,
-                    class: 'sa-icon-driver',
+                    class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-driver'),
                     name: translateName(selection.user),
                     uuid: selection.user
                   }
@@ -11288,7 +11300,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M1',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                    class : saClass
                   }
                 );
                 break;
@@ -11300,7 +11313,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M2',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                      class : saClass
                   }
                 );
                 break;
@@ -11312,7 +11326,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M3',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                      class : saClass
                   }
                 );
                 break;
@@ -11324,7 +11339,8 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                     icon: 'M4',
                     role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
                     name: translateName(selection.user),
-                    uuid: selection.user
+                    uuid: selection.user,
+                      class : saClass
                   }
                 );
                 break;
@@ -16437,14 +16453,10 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         var selected = false;
 
-        console.log('selection ->', selection);
-
         angular.forEach(
           selection,
           function (value, user)
           {
-            console.log('value ->', value, $rootScope.app.members[user]);
-
             if (value)
             {
               selected = true;
@@ -16843,12 +16855,11 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.toggleSelection = function (group, master)
       {
-        var flag = (master) ? false : true,
-            members = angular.fromJson(Storage.get(group.uuid));
+        var members = angular.fromJson(Storage.get(group.uuid));
 
         angular.forEach(
           members,
-          function (member) { $scope.selection[member.uuid] = flag }
+          function (member) { $scope.selection[member.uuid] = master }
         );
       };
 

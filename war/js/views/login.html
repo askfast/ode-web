@@ -19,8 +19,7 @@
        ng-show="views.login"
        ng-hide="views.help || views.changePass">
 		<form ng-submit="login()">
-		  <img ng-src="{{config.profile.logos.login}}"
-           alt="{{config.profile.title}}" />
+        <logos></logos>
 
       <h4 class="form-signin-heading" ng-show="config.profile.own">{{config.profile.title}}</h4>
       <h4 class="form-signin-heading" ng-hide="config.profile.own">{{ui.login.header}}</h4>
@@ -79,7 +78,7 @@
 	<!-- help -->
 	<div id="login" class="boxed" ng-show="views.help" ng-hide="views.login || views.forgot || views.changePass">
 		<form ng-submit="">
-		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
+          <logos></logos>
 		  <h4 class="form-signin-heading">{{ui.help.help}}</h4>
 
 		  <p ng-repeat="content in ui.login.help.content" style="text-align: left;">{{content}}</p>
@@ -96,7 +95,7 @@
 	<!-- remember login -->
 	<div id="forgot" class="boxed" ng-show="views.forgot">
 		<form ng-submit="forgot()">
-		  <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
+          <logos></logos>
 		  <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>
 	      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
 	        <button class="close" type="button" ng-click="alert.forget=false">×</button>
@@ -122,7 +121,7 @@
 	<!-- change pass --> 
 	<div id="changePass" class="boxed" ng-show="views.changePass">
 		<form ng-submit="changePass()">
-			<img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
+            <logos></logos>
 			<h4 class="form-signin-heading">{{changepass.uuid}}</h4>
 			<div class="alert {{alert.changePass.type}}" ng-show="alert.changePass.display">
 				<button class="close" type="button" ng-click="alert.changePass=false">×</button>

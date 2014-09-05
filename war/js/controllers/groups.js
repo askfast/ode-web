@@ -545,14 +545,10 @@ angular.module('WebPaige.Controllers.Groups', [])
 
         var selected = false;
 
-        console.log('selection ->', selection);
-
         angular.forEach(
           selection,
           function (value, user)
           {
-            console.log('value ->', value, $rootScope.app.members[user]);
-
             if (value)
             {
               selected = true;
@@ -951,12 +947,11 @@ angular.module('WebPaige.Controllers.Groups', [])
        */
       $scope.toggleSelection = function (group, master)
       {
-        var flag = (master) ? false : true,
-            members = angular.fromJson(Storage.get(group.uuid));
+        var members = angular.fromJson(Storage.get(group.uuid));
 
         angular.forEach(
           members,
-          function (member) { $scope.selection[member.uuid] = flag }
+          function (member) { $scope.selection[member.uuid] = master }
         );
       };
 
