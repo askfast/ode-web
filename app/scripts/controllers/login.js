@@ -1,6 +1,6 @@
 define(
-  ['controllers/controllers'],
-  function (controllers)
+  ['controllers/controllers', 'config'],
+  function (controllers, config)
   {
     'use strict';
 
@@ -12,39 +12,41 @@ define(
         '$q',
         '$scope',
         'Session',
-        'Teams',
-        'Clients',
-        'Store',
+        'User',
+        'Groups',
+        'Messages',
+        'Storage',
         '$routeParams',
-        'TeamUp',
-        'Dater',
-        '$filter',
-        function (
-          $rootScope, $location, $q, $scope, Session, Teams, Clients, Store, $routeParams, TeamUp, Dater, $filter
-          )
+        'Settings',
+        'Profile',
+        'MD5',
+        function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage,
+                  $routeParams, Settings, Profile, MD5)
         {
-          // TODO: Soon not needed!
-          Dater.registerPeriods();
+          /**
+           * Self this
+           */
+          var self = this;
 
-          if ($location.path() == '/logout')
-          {
-            angular.element('body')
-              .css(
-              {
-                'backgroundColor': '#1dc8b6',
-                'backgroundImage': 'none'
-              }
-            );
-          }
+          /**
+           * Redirect to dashboard if logged in
+           */
+          // if (Session.check()) redirectToDashboard();
 
+
+          /**
+           * Set default views
+           */
           if ($routeParams.uuid && $routeParams.key)
           {
-            $scope.views = { changePass: true };
+            $scope.views = {
+              changePass: true
+            };
 
             $scope.changepass = {
               uuid: $routeParams.uuid,
               key: $routeParams.key
-            };
+            }
           }
           else
           {
@@ -54,6 +56,9 @@ define(
             };
           }
 
+          /**
+           * Set default alerts
+           */
           $scope.alert = {
             login: {
               display: false,
@@ -67,25 +72,63 @@ define(
             }
           };
 
-          if (! Store('app').get('app'))
+
+          /**
+           * Init rootScope app info container
+           */
+          if (! Storage.session.get('app')) Storage.session.add('app', '{}');
+
+
+          /**
+           * TODO:  Lose this jQuery stuff later on!
+           * Jquery solution of toggling between login and app view
+           */
+          $('.navbar').hide();
+          $('#footer').hide();
+          $('#watermark').hide();
+          // $('#notification').hide();
+          $('body').css(
+            {
+              'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+              'backgroundSize': 'cover'
+            });
+
+          /**
+           * Disable the autocomplete username/password for Firefox users
+           */
+          if (navigator.userAgent.indexOf("Firefox") >= 0)
           {
-            Store('app').save('app', '{}');
+            $('#login form').attr('autocomplete', 'off');
           }
 
-          angular.element('.navbar').hide();
-          angular.element('#footer').hide();
-          angular.element('#watermark').hide();
-          angular.element('body').css({ 'backgroundColor': '#1dc8b6' });
+          /**
+           * TODO: Use native JSON functions of angular and Store service
+           */
+          var logindata = angular.fromJson(Storage.get('logindata'));
 
-          var loginData = Store('app').get('loginData');
+          if (logindata && logindata.remember) $scope.logindata = logindata;
 
-          if (loginData && loginData.remember) $scope.loginData = loginData;
 
+          /**
+           * TODO: Remove unnecessary DOM manipulation
+           * Use cookies for user credentials
+           *
+           * Login trigger
+           */
           $scope.login = function ()
           {
-            angular.element('#alertDiv').hide();
+            var registeredNotifications = Storage.get('registeredNotifications');
+            var periods = Storage.get('periods');
+            var periodsNext = Storage.get('periodsNext');
+            Storage.clearAll();
+            Storage.session.clearAll();
+            Storage.add('registeredNotifications', registeredNotifications);
+            Storage.add('periods', periods);
+            Storage.add('periodsNext', periodsNext);
 
-            if (! $scope.loginData || ! $scope.loginData.username || ! $scope.loginData.password)
+            $('#alertDiv').hide();
+
+            if (! $scope.logindata || ! $scope.logindata.username || ! $scope.logindata.password)
             {
               $scope.alert = {
                 login: {
@@ -95,52 +138,71 @@ define(
                 }
               };
 
-              angular.element('#login button[type=submit]')
+              $('#login button[type=submit]')
                 .text($rootScope.ui.login.button_login)
                 .removeAttr('disabled');
 
               return false;
             }
 
-            angular.element('#login button[type=submit]')
+            $('#login button[type=submit]')
               .text($rootScope.ui.login.button_loggingIn)
               .attr('disabled', 'disabled');
 
-            Store('app').save(
-              'loginData',
-              {
-                username: $scope.loginData.username,
-                password: $scope.loginData.password,
-                remember: $scope.loginData.remember
-              }
+            Storage.add(
+              'logindata',
+              angular.toJson(
+                {
+                  username: $scope.logindata.username,
+                  password: $scope.logindata.password,
+                  remember: $scope.logindata.remember
+                }
+              )
             );
 
-            auth($scope.loginData.username, MD5.parse($scope.loginData.password));
+            Storage.add(
+              'askPass',
+              MD5($scope.logindata.password)
+            );
+
+            createLocalGuardContainer();
+
+            self.auth($scope.logindata.username, MD5($scope.logindata.password));
           };
 
-          var auth = function (uuid, pass)
+
+          function createLocalGuardContainer ()
           {
-            TeamUp._(
-              'login',
-              {
-                uuid: uuid,
-                pass: pass
-              }
+            /**
+             * Create storage for smart alarming guard values
+             */
+            if ($rootScope.config.smartAlarm)
+            {
+              Storage.add(
+                'guard',
+                angular.toJson(
+                  {
+                    monitor: '',
+                    role: ''
+                  }
+                )
+              );
+            }
+          }
+
+
+          /**
+           * Authorize user
+           */
+          self.auth = function (uuid, pass)
+          {
+            User.login(
+              uuid.toLowerCase(),
+              pass
             ).then(
               function (result)
               {
-                var status = 0;
-                if (result.status)
-                {
-                  status = result.status;
-                }
-                else if (result.error && result.error.status)
-                {
-                  status = result.error.status;
-                }
-                if (status == 400 ||
-                    status == 403 ||
-                    status == 404)
+                if (result.status == 400 || result.status == 404)
                 {
                   $scope.alert = {
                     login: {
@@ -150,233 +212,602 @@ define(
                     }
                   };
 
-                  angular.element('#login button[type=submit]')
-                    .text($rootScope.ui.login.button_loggingIn)
+                  $('#login button[type=submit]')
+                    .text($rootScope.ui.login.button_login)
                     .removeAttr('disabled');
 
-                  return false;
-                }
-                else if (result.status == 0)
-                {
-                  $scope.alert = {
-                    login: {
-                      display: true,
-                      type: 'alert-error',
-                      message: $rootScope.ui.login.alert_network
-                    }
-                  };
-
-                  angular.element('#login button[type=submit]')
-                    .text($rootScope.ui.login.button_loggingIn)
-                    .removeAttr('disabled');
-
-                  return false;
-                }
-                else if (result.error)
-                {
-                  $scope.alert = {
-                    login: {
-                      display: true,
-                      type: 'alert-error',
-                      message: $rootScope.ui.login.alert_wrongUserPass
-                    }
-                  };
-
-                  angular.element('#login button[type=submit]')
-                    .text($rootScope.ui.login.button_loggingIn)
-                    .removeAttr('disabled');
-
-                  console.log("Pay attention, this might caused by the Log module");
                   return false;
                 }
                 else
                 {
-                  Session.set(result['X-SESSION_ID']);
+                  Session.set(result["X-SESSION_ID"]);
 
-                  preLoader();
+                  self.preloader();
                 }
               }
-            )
+            );
           };
 
-          // TODO: Move this to somewhere later on!
-          function queryMembersNotInTeams ()
+          if ($location.search().username && $location.search().password)
           {
-            TeamUp._('teamMemberFree').then(
-              function (result) { Store('app').save('members', result) }
-            );
+            createLocalGuardContainer();
+
+            self.auth($location.search().username, $location.search().password);
           }
 
-          // Query the tasks for login user and all other unsigned task in login user's team
-          function queryTasks (teams)
+
+          /**
+           * TODO: What happens if preloader stucks?
+           * Optimize preloader and messages
+           *
+           * Initialize preloader
+           */
+          self.preloader = function ()
           {
-            // query my tasks
-            TeamUp._("taskMineQuery").then(
-              function (result) { Store('app').save('myTasks', result) }
-            );
+            $('#login').hide();
+            $('#download').hide();
+            $('#preloader').show();
 
-            // query unassigned tasks from each team
-            var allTasks = [];
+            self.progress(30, $rootScope.ui.login.loading_User);
 
-            angular.forEach(
-              teams,
-              function (team_obj)
+            User.states()
+              .then(
+              function (states)
               {
-                TeamUp._(
-                  "taskByTeam",
-                  {fourth: team_obj.uuid}
-                ).then(
-                  function (result)
-                  {
-                    angular.forEach(
-                      result,
-                      function (taskObj)
-                      {
-                        var foundTask = $filter('getByUuid')(allTasks, taskObj.uuid);
-
-                        if (foundTask == null)
-                        {
-                          allTasks.push(taskObj);
-                        }
-                      }
-                    );
-
-                    Store('app').save('allTasks', allTasks);
-                  }
-                );
-              }
-            );
-          }
-
-          function enhanceTasks ()
-          {
-            var taskGroups = ['myTasks', 'allTasks'];
-
-            angular.forEach(
-              taskGroups,
-              function (label)
-              {
-                var group = Store('app').get(label);
+                Storage.add('states', angular.toJson(states));
 
                 angular.forEach(
-                  group,
-                  function (task)
-                  {
-                    var client = $rootScope.getClientByID(task.relatedClientUuid);
-
-                    if (client != null)
-                    {
-                      // console.log(client);
-                      task.relatedClientName = client.firstName + ' ' + client.lastName;
-                    }
-                  }
+                  states,
+                  function (state) { $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state] }
                 );
 
-                Store('app').save(label, group);
-              }
-            );
-          }
+                User.divisions()
+                  .then(
+                  function (divisions)
+                  {
+                    $rootScope.config.timeline.config.divisions = divisions;
 
-          var preLoader = function ()
-          {
-            angular.element('#login').hide();
+                    Storage.add('divisions', angular.toJson(divisions));
 
-            angular.element('#download').hide();
-
-            angular.element('#preloader').show();
-
-            progress(20, $rootScope.ui.login.loading_User);
-
-            TeamUp._('user')
-              .then(
-              function (resources)
-              {
-                if (resources.error)
-                {
-                  console.warn('error ->', resources);
-                }
-                else
-                {
-                  $rootScope.app.resources = resources;
-
-                  Store('app').save('resources', resources);
-
-                  progress(40, $rootScope.ui.login.loading_Teams);
-
-                  Teams.query(true, {})
-                    .then(
-                    function (teams)
-                    {
-                      queryMembersNotInTeams();
-
-                      queryTasks(teams);
-
-                      if (teams.error)
+                    User.resources()
+                      .then(
+                      function (resources)
                       {
-                        console.warn('error ->', teams);
-                      }
-
-                      progress(60, $rootScope.ui.login.loading_clientGroups);
-
-                      Teams.queryClientGroups(teams)
-                        .then(
-                        function ()
+                        if (resources.error)
                         {
-                          progress(80, $rootScope.ui.login.loading_clientGroups);
+                          console.warn('error ->', resources);
+                        }
+                        else
+                        {
+                          $rootScope.app.resources = resources;
 
-                          TeamUp._('clientsQuery')
+                          self.progress(60, $rootScope.ui.login.loading_Group);
+
+                          User.domain()
                             .then(
-                            function (allClients)
+                            function (domainnames)
                             {
-                              // Save all clients into the localStorage
-                              Store('app').save('clients', allClients);
+                              // NOTE: Currently using the first domainname, could be expanded
+                              // in case users can be in multiple domains
+                              $rootScope.app.domain = domainnames.first();
 
-                              Clients.query(false, {})
+                              self.progress(70, $rootScope.ui.login.loading_Group);
+
+                              Groups.query(true)
                                 .then(
-                                function ()
+                                function (groups)
                                 {
-                                  progress(100, $rootScope.ui.login.loading_everything);
+                                  if (groups.error)
+                                  {
+                                    console.warn('error ->', groups);
+                                  }
+                                  else
+                                  {
+                                    var calls = [];
 
-                                  // TODO: Blend it in the modal!
-                                  enhanceTasks();
+                                    angular.forEach(
+                                      groups,
+                                      function (group) { calls.push(Groups.get(group.uuid)) }
+                                    );
 
-                                  Teams.query()
-                                    .then(
-                                    function ()
-                                    {
-                                      $location.path('/tasks2');
+                                    $q.all(calls)
+                                      .then(
+                                      function ()
+                                      {
+                                        Groups.uniqueMembers();
 
-                                      setTimeout(
-                                        function ()
+                                        // TODO: Move settings checkup to a module!
+                                        var settings = angular.fromJson(resources.settingsWebPaige) || {},
+                                            sync = false,
+                                            parenting = false,
+                                            defaults = $rootScope.config.defaults.settingsWebPaige,
+                                            _groups = function (groups)
+                                            {
+                                              var _groups = {};
+                                              angular.forEach(
+                                                groups,
+                                                function (group)
+                                                {
+                                                  _groups[group.uuid] = {
+                                                    status: true,
+                                                    divisions: false
+                                                  };
+                                                }
+                                              );
+
+                                              return _groups;
+                                            };
+
+                                        // Check if there is any settings at all
+                                        if (settings != null || settings != undefined)
                                         {
-                                          angular.element('.navbar').show();
-                                          angular.element('body').css({ 'background': 'url(../images/bg.jpg) repeat' });
-
-                                          if (! $rootScope.browser.mobile)
+                                          // check for user settings-all
+                                          if (settings.user)
                                           {
-                                            angular.element('#footer').show();
+                                            // check for user-language settings
+                                            if (settings.user.language)
+                                            {
+                                              // console.warn('user HAS language settings');
+
+                                              $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+                                              defaults.user.language = settings.user.language;
+                                            }
+                                            else
+                                            {
+                                              // console.warn('user has NO language!!');
+
+                                              $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+                                              sync = true;
+                                            }
                                           }
-                                        }, 100);
-                                    }
-                                  );
+                                          else
+                                          {
+                                            // console.log('NO user settings at all !!');
+
+                                            sync = true;
+                                          }
+
+                                          // check for app settings-all
+                                          if (settings.app)
+                                          {
+                                            // check for app-widget settings
+                                            if (settings.app.widgets)
+                                            {
+                                              // check for app-widget-groups setting
+                                              if (settings.app.widgets.groups)
+                                              {
+                                                // console.log('settings for groups =>', settings.app.widgets.groups);
+
+                                                var oldGroupSetup = false;
+
+                                                if (! jQuery.isEmptyObject(settings.app.widgets.groups))
+                                                {
+                                                  angular.forEach(
+                                                    settings.app.widgets.groups,
+                                                    function (value)
+                                                    {
+                                                      // console.log('value ->', value);
+
+                                                      if (typeof value !== 'object' || value == {})
+                                                      {
+                                                        oldGroupSetup = true;
+                                                      }
+                                                    }
+                                                  );
+                                                }
+                                                else
+                                                {
+                                                  oldGroupSetup = true;
+                                                }
+
+                                                if (oldGroupSetup)
+                                                {
+                                                  // console.warn('OLD SETUP => user has NO app widgets groups!!');
+
+                                                  defaults.app.widgets.groups = _groups(groups);
+                                                  sync = true;
+                                                }
+                                                else
+                                                {
+                                                  // console.warn('user HAS app widgets groups settings');
+
+                                                  defaults.app.widgets.groups = settings.app.widgets.groups;
+                                                }
+                                              }
+                                              else
+                                              {
+                                                // console.warn('user has NO app widgets groups!!');
+
+                                                defaults.app.widgets.groups = _groups(groups);
+                                                sync = true;
+                                              }
+                                            }
+                                            else
+                                            {
+                                              // console.warn('user has NO widget settings!!');
+
+                                              defaults.app.widgets = { groups: _groups(groups) };
+                                              sync = true;
+                                            }
+
+                                            // check for app group setting
+                                            if (settings.app.group && settings.app.group != undefined)
+                                            {
+                                              var exists = true;
+
+                                              angular.forEach(
+                                                groups,
+                                                function (_group)
+                                                {
+                                                  var firstGroup = new RegExp(settings.app.group);
+
+                                                  if (! firstGroup.test(_group.uuid))
+                                                  {
+                                                    if (! exists)
+                                                    {
+                                                      exists = false;
+                                                    }
+                                                  }
+                                                  else
+                                                  {
+                                                    exists = true;
+                                                  }
+                                                }
+                                              );
+
+                                              if (! exists)
+                                              {
+                                                sync = true;
+                                              }
+                                            }
+                                            else
+                                            {
+                                              // console.warn('user has NO first group setting!!');
+
+                                              parenting = true;
+                                              sync = true;
+                                            }
+                                          }
+                                          else
+                                          {
+                                            // console.log('NO app settings!!');
+
+                                            defaults.app = { widgets: { groups: _groups(groups) } };
+
+                                            sync = true;
+                                          }
+                                        }
+                                        else
+                                        {
+                                          // console.log('NO SETTINGS AT ALL!!');
+
+                                          defaults = {
+                                            user: $rootScope.config.defaults.settingsWebPaige.user,
+                                            app: {
+                                              widgets: {
+                                                groups: _groups(groups)
+                                              },
+                                              group: groups[0].uuid
+                                            }
+                                          };
+
+                                          sync = true;
+                                        }
+
+                                        // sync settings with missing parts also parenting check
+                                        if (sync)
+                                        {
+                                          if (parenting)
+                                          {
+                                            // console.warn('setting up parent group for the user');
+
+                                            Groups.parents()
+                                              .then(
+                                              function (_parent)
+                                              {
+                                                // console.warn('parent group been fetched ->', _parent);
+
+                                                if (_parent != null)
+                                                {
+                                                  // console.warn('found parent parent -> ', _parent);
+
+                                                  defaults.app.group = _parent;
+                                                }
+                                                else
+                                                {
+                                                  // console.warn('setting the first group in the list for user ->', groups[0].uuid);
+
+                                                  defaults.app.group = groups[0].uuid;
+                                                }
+
+                                                // console.warn('SAVE ME (with parenting) ->', defaults);
+
+                                                Settings.save(
+                                                  resources.uuid,
+                                                  defaults
+                                                ).then(
+                                                  function ()
+                                                  {
+                                                    User.resources()
+                                                      .then(
+                                                      function (got)
+                                                      {
+                                                        // console.log('gotted (with setting parent group) ->', got);
+
+                                                        $rootScope.app.resources = got;
+
+                                                        finalize();
+                                                      }
+                                                    )
+                                                  }
+                                                );
+                                              }
+                                            );
+                                          }
+                                          else
+                                          {
+                                            // console.warn('SAVE ME ->', defaults);
+
+                                            defaults.app.group = groups[0].uuid;
+
+                                            Settings.save(
+                                              resources.uuid,
+                                              defaults
+                                            ).then(
+                                              function ()
+                                              {
+                                                User.resources()
+                                                  .then(
+                                                  function (got)
+                                                  {
+                                                    // console.log('gotted ->', got);
+
+                                                    $rootScope.app.resources = got;
+
+                                                    finalize();
+                                                  }
+                                                );
+                                              }
+                                            );
+                                          }
+                                        }
+                                        else
+                                        {
+                                          try
+                                          {
+                                            ga(
+                                              'send', 'pageview', {
+                                                'dimension1': resources.uuid,
+                                                'dimension2': $rootScope.app.domain
+                                              }
+                                            );
+
+                                            ga('send', 'event', 'Login', resources.uuid);
+                                          }
+                                          catch (err)
+                                          {
+                                            // console.warn('Google analytics library!', err);
+                                          }
+
+                                          finalize();
+                                        }
+                                      }
+                                    );
+                                  }
                                 }
                               );
                             }
                           );
                         }
-                      );
-                    }
-                  );
+                      }
+                    );
+                  }
+                );
+              }
+            );
+
+          };
+
+
+          /**
+           * Finalize the preloading
+           */
+          function finalize ()
+          {
+            self.progress(100, $rootScope.ui.login.loading_everything);
+
+            self.redirectToDashboard();
+
+            self.getMessages();
+          }
+
+
+          /**
+           * TODO: Implement an error handling
+           * Get messages (SILENTLY)
+           */
+          self.getMessages = function ()
+          {
+            Messages.query()
+              .then(
+              function (messages)
+              {
+                if (messages.error)
+                {
+                  console.warn('error ->', messages);
+                }
+                else
+                {
+                  $rootScope.app.unreadMessages = Messages.unreadCount();
+
+                  Storage.session.unreadMessages = Messages.unreadCount();
                 }
               }
             );
           };
 
-          var progress = function (ratio, message)
+
+          /**
+           * Redirect to dashboard
+           */
+          self.redirectToDashboard = function ()
           {
-            angular.element('#preloader .progress .bar').css({ width: ratio + '%' });
-            angular.element('#preloader span').text(message);
+            $location.search({});
+
+            $location.path('/dashboard');
+
+            setTimeout(
+              function ()
+              {
+                $('body').css({ 'background': 'none' });
+                $('.navbar').show();
+                // $('#mobile-status-bar').show();
+                // $('#notification').show();
+                if (! $rootScope.browser.mobile) $('#footer').show();
+                $('#watermark').show();
+                $('body').css({ 'background': 'url(../img/bg.jpg) repeat' });
+              }, $rootScope.config.timers.TICKER);
           };
+
+
+          /**
+           * Progress bar
+           */
+          self.progress = function (ratio, message)
+          {
+            $('#preloader .progress .bar').css({ width: ratio + '%' });
+            $('#preloader span').text(message);
+          };
+
+
+          /**
+           * TODO: RE-FACTORY Make button state change! Finish it!
+           * Forgot password
+           */
+          $scope.forgot = function ()
+          {
+            $('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
+
+            User.password($scope.remember.id)
+              .then(
+              function (result)
+              {
+                if (result == "ok")
+                {
+                  $scope.alert = {
+                    forget: {
+                      display: true,
+                      type: 'alert-success',
+                      message: $rootScope.ui.login.checkYourMail
+                    }
+                  };
+                }
+                else
+                {
+                  $scope.alert = {
+                    forget: {
+                      display: true,
+                      type: 'alert-error',
+                      message: $rootScope.ui.errors.login.forgotCantFind
+                    }
+                  };
+                }
+
+                $('#forgot button[type=submit]')
+                  .text($rootScope.ui.login.button_changePassword)
+                  .removeAttr('disabled');
+              });
+          };
+
+
+          /**
+           * TODO: RE-FACTORY
+           * Change password
+           */
+          self.changePass = function (uuid, newpass, key)
+          {
+            User.changePass(uuid, newpass, key)
+              .then(
+              function (result)
+              {
+                if (result.status == 400 || result.status == 500 || result.status == 409)
+                {
+                  $scope.alert = {
+                    changePass: {
+                      display: true,
+                      type: 'alert-error',
+                      message: $rootScope.ui.errors.login.changePass
+                    }
+                  };
+                }
+                else
+                { // successfully changed
+                  $scope.alert = {
+                    changePass: {
+                      display: true,
+                      type: 'alert-success',
+                      message: $rootScope.ui.login.passwordChanged
+                    }
+                  };
+
+                  $location.path("/message");
+                }
+
+                $('#changePass button[type=submit]')
+                  .text($rootScope.ui.login.button_changePassword)
+                  .removeAttr('disabled');
+              })
+          };
+
+
+          /**
+           * TODO: RE-FACTORY
+           * Change password
+           */
+          $scope.changePass = function ()
+          {
+            $('#alertDiv').hide();
+
+            if (! $scope.changeData || ! $scope.changeData.newPass || ! $scope.changeData.retypePass)
+            {
+              $scope.alert = {
+                changePass: {
+                  display: true,
+                  type: 'alert-error',
+                  message: $rootScope.ui.errors.login.changePassAllFields
+                }
+              };
+
+              $('#changePass button[type=submit]')
+                .text($rootScope.ui.login.button_changePassword)
+                .removeAttr('disabled');
+
+              return false;
+            }
+            else if ($scope.changeData.newPass != $scope.changeData.retypePass)
+            {
+              $scope.alert = {
+                changePass: {
+                  display: true,
+                  type: 'alert-error',
+                  message: $rootScope.ui.errors.login.changePassNoMatch
+                }
+              };
+
+              $('#changePass button[type=submit]')
+                .text($rootScope.ui.login.button_changePassword)
+                .removeAttr('disabled');
+
+              return false;
+            }
+
+            $('#changePass button[type=submit]')
+              .text($rootScope.ui.login.button_changingPassword)
+              .attr('disabled', 'disabled');
+
+            self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
+          };
+
 
           if (localStorage.hasOwnProperty('sessionTimeout'))
           {
@@ -386,10 +817,11 @@ define(
               login: {
                 display: true,
                 type: 'alert-error',
-                message: $rootScope.ui.teamup.sessionTimeout
+                message: $rootScope.ui.login.sessionTimeout
               }
             };
           }
+
         }
       ]);
   }

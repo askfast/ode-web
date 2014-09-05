@@ -7,15 +7,15 @@ ng\:form {
   display: block;
 }
 
-html, body {
-  margin: 0;
+html,body {
+  margin:0;
   height: 100%;
   min-height: 100%;
 }
 
-/*body {
+body {
   background: url(../images/bg.jpg) repeat;
-}*/
+}
 
 a {
   &:hover {
@@ -25,23 +25,18 @@ a {
 
 dl {
   dt {
-
+    
   }
   dd {
     margin-bottom: 15px;
   }
 }
 
-.titleIcon {
-  margin-right: 20px;
-  display: inline-block;
-}
-
 .left-border-fix {
-  width: 1px;
-  border-left: 1px solid red;
-  z-index: 10000;
-  /*  position: absolute;*/
+  width: 1px; 
+  border-left: 1px solid red; 
+  z-index: 10000; 
+/*  position: absolute;*/
   top: 0;
   left: 0;
   float: left;
@@ -58,7 +53,6 @@ dl {
   position: fixed;
   bottom: 50px;
   right: -10px;
-  z-index: 1;
   width: 400px;
   height: 400px
 }
@@ -75,17 +69,20 @@ dl {
 
 .label-more,
 .badge-more {
-  background-color: #415e6b;
+  // background-color: #415e6b;
+  background-color: #6cad6c;
 }
 
 .label-less,
 .badge-less {
-  background-color: #a0a0a0;
+  // background-color: #a0a0a0;
+  background-color: #d34545;
 }
 
 .label-even,
 .badge-even {
-  background-color: #ba6a24;
+  // background-color: #ba6a24;
+  background-color: #e09131;
 }
 
 .label-inset,
@@ -110,7 +107,7 @@ dl {
 
       label {
         font-weight: normal;
-
+        
         input[type=checkbox] {
           margin: -2px 3px 0 2px;
         }
@@ -118,6 +115,12 @@ dl {
     }
   }
 }
+
+
+
+
+
+
 
 #versions {
 
@@ -148,11 +151,48 @@ dl {
   .marketing {
     margin: 60px 0;
 
-    p + h4 {
-      margin-top: 28px;
+    ul {
+      list-style: none;
+
+      li {
+        margin-bottom: 30px;
+
+        ul {
+          li {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+
+    p {
+      min-height: 20px;
+      overflow: hidden;
+
+      i {
+        display: inline;
+        float: right;
+      }
+    }
+
+    h4 {
+      display: inline;
+      float: left;
+      margin-top: 0;
+    }
+
+    hr {
+      margin: 0 0 15px 0;
     }
   }
 }
+
+
+
+
+
+
+
 
 #groups-wish {
   form {
@@ -189,12 +229,6 @@ dl {
   }
 }
 
-// .navbar, #footer, #notification, #mobile-status-bar {
-//   display: none;
-// }
-
-
-//TODO: Check whether they are used!
 #scheaduler-pane {
   margin-top: 15px;
   padding: 15px;
@@ -270,13 +304,13 @@ dl {
 }
 
 .scheadule-icons {
-  width: 48px;
-  height: 24px;
+  width: 48px; 
+  height: 24px; 
   overflow: hidden;
 
   div {
     float: left;
-    display: inline;
+    display:inline;
     width: 24px;
     height: 24px;
 
@@ -296,9 +330,21 @@ dl {
 }
 
 
-.text-turq    { color: $turq }
-.text-orange  { color: $orange }
-.text-brown   { color: $brown }
-.text-beige   { color: $beige }
-.text-graytu  { color: $graytu }
-.text-red     { color: $red }
+#download-footer {
+  ul.dropdown-menu {
+    li {
+      min-width: 100%;
+      a {
+        display: block;
+      }
+    }
+  }
+}
+
+#footer {
+  #bullhorn {
+    position: absolute;
+    bottom: 17px;
+    left: 15px;
+  }
+}

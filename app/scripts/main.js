@@ -43,7 +43,9 @@ require.config(
 
       timepicker: 'removables/timepicker.min',
       underscore: '../vendors/underscore/underscore',
-      md5: '../vendors/web-lib-md5/md5.min',
+
+      // md5: '../vendors/web-lib-md5/md5.min',
+
       store: '../vendors/web-lib-store/dist/store',
       offline: '../vendors/web-lib-offline/dist/offline',
 
@@ -51,7 +53,8 @@ require.config(
 
       log: '../vendors/web-lib-log/dist/log',
       _moment: '../vendors/web-lib-moment/dist/moment',
-      session: '../vendors/web-lib-session/dist/session',
+
+      // session: '../vendors/web-lib-session/dist/session',
 
       // vis: '../vendors/vis/dist/vis.min',
       // 'ng-vis': '../vendors/web-lib-vis/public/dist/ng-vis',
@@ -83,7 +86,9 @@ require.config(
       treegrid: { deps: [], exports: 'treegrid' },
       datepicker: { deps: ['jquery', 'bootstrap'], exports: 'datepicker' },
       timepicker: { deps: ['jquery', 'bootstrap'], exports: 'timepicker' },
-      md5: { exports: 'md5'},
+
+      // md5: { exports: 'md5'},
+
       underscore: { exports: 'underscore'},
       store: { deps: ['angular', 'underscore']},
       offline: { deps: ['angular'] },
@@ -92,7 +97,8 @@ require.config(
 
       log: { deps: ['angular'] },
       _moment: { deps: ['angular', 'moment'] },
-      session: { deps: ['angular'] },
+
+      // session: { deps: ['angular'] },
 
       // vis: { exports: 'vis' },
       // 'ng-vis': { deps: ['angular', 'vis'], exports: 'ng-vis' },
@@ -132,36 +138,48 @@ require(
     'routes',
     'states',
 
-    'services/browsers',
-    'services/teamup',
-    'services/clients',
-    'services/dater', // TODO: Remove later on
-    'services/teams',
+    'services/announcer',
+    'services/dashboard',
+    'services/dater',
+    'services/groups',
+    'services/interceptor',
+    'services/md5',
+    'services/messages',
+    'services/offsetter',
+    'services/phone',
+    'services/profile',
+    'services/session',
+    'services/settings',
+    'services/sloter',
+    'services/slots',
+    'services/stats',
+    'services/storage',
+    'services/strings',
+    'services/user',
 
-    // 'services/googleGEO',
-
-    'directives/widgets',
-    // 'directives/treegrid',
+    'directives/chosen',
+    'directives/date-range-picker',
+    'directives/download-mobile-app',
+    'directives/notification-item',
 
     'modals/task',
 
-    'filters/avatars',
+    'filters/all-filters',
 
-    'controllers/clients',
+    'controllers/dashboard',
+    'controllers/faq',
+    'controllers/groups',
+    'controllers/help',
     'controllers/login',
-    'controllers/manage',
-    'controllers/treegridCtrl', // TODO: Remove it later on
+    'controllers/logout',
     'controllers/messages',
     'controllers/planboard',
-    'controllers/vis',
     'controllers/profile',
-    'controllers/teams',
-    'controllers/tasks',
-    'controllers/tasks2',
+    'controllers/scheaduler',
+    'controllers/settings',
     'controllers/timeline',
     'controllers/timeline-navigation',
-    'controllers/treegrid',
-    'controllers/support',
+    'controllers/tv',
 
     'bootstrap',
     'lawnchair',
@@ -171,14 +189,18 @@ require(
     'treegrid',
     'datepicker',
     'timepicker',
-    'md5',
+
+    // 'md5',
+
     'underscore',
     'store',
     'offline',
     // 'interceptor',
     'log',
     '_moment',
-    'session',
+
+    // 'session',
+
     // 'vis',
     // 'ng-vis',
     'jquery-form',

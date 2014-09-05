@@ -9,8 +9,12 @@ define(
         '$locationProvider', '$routeProvider', '$httpProvider',
         function ($locationProvider, $routeProvider, $httpProvider)
         {
-          $routeProvider
 
+
+          /**
+           * Login router
+           */
+          $routeProvider
             .when(
             '/login',
             {
@@ -18,181 +22,204 @@ define(
               controller: 'login'
             })
 
+
+          /**
+           * Logout router
+           */
             .when(
             '/logout',
-            { templateUrl: 'views/logout.html' })
-
-            .when(
-            '/tasks',
             {
-              templateUrl: 'views/tasks.html',
-              controller: 'tasksCtrl'
+              templateUrl: 'views/logout.html',
+              controller: 'logout'
             })
 
+
+          /**
+           * Dashboard router
+           */
             .when(
-            '/tasks2',
+            '/dashboard',
             {
-              templateUrl: 'views/tasks2.html',
-              controller: 'tasks2Ctrl'
+              templateUrl: 'views/dashboard.html',
+              controller: 'dashboard'
             })
 
+
+          /**
+           * TV Monitor / Dashboard router
+           */
             .when(
-            '/team',
+            '/tv',
             {
-              templateUrl: 'views/teams.html',
-              controller: 'teamCtrl',
-              reloadOnSearch: false,
+              templateUrl: 'views/tv.html',
+              controller: 'tv',
               resolve: {
                 data: [
-                  'Teams', '$route',
-                  function (Teams, $route)
+                  '$route', '$http',
+                  function ($route, $http)
                   {
-                    return ($route.current.params.local && $route.current.params.local == 'true') ?
-                           Teams.queryLocal() :
-                           Teams.query(false, $route.current.params);
+                    if ($route.current.params.sessionID)
+                    {
+                      $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
+                    }
                   }
                 ]
               }
             })
 
-            .when(
-            '/client',
-            {
-              templateUrl: 'views/clients.html',
-              controller: 'clientCtrl',
-              reloadOnSearch: false,
-              resolve: {
-                data: [
-                  'Clients', '$route',
-                  function (Clients, $route)
-                  {
-                    return ($route.current.params.local && $route.current.params.local == 'true') ?
-                           Clients.queryLocal() :
-                           Clients.query(false, $route.current.params);
-                  }
-                ]
-              }
-            })
 
-            .when(
-            '/clientProfile/:clientId',
-            {
-              templateUrl: 'views/clients.html',
-              controller: 'clientCtrl',
-              reloadOnSearch: false,
-              resolve: {
-                data: [
-                  '$rootScope', '$route',
-                  function ($rootScope, $route)
-                  {
-                    angular.element('.navbar #clientMenu').addClass('active');
-
-                    return { clientId: $route.current.params.clientId };
-                  }
-                ]
-              }
-            })
-
-            .when(
-            '/manage',
-            {
-              templateUrl: 'views/manage.html',
-              controller: 'manageCtrl',
-              reloadOnSearch: false,
-              resolve: {
-                data: [
-                  'Clients', 'Teams', '$location',
-                  function (ClientGroups, Teams, $location)
-                  {
-                    // TODO: Lose short property names and make them more readable!
-                    return (($location.hash() && $location.hash() == 'reload')) ?
-                           {
-                             t: Teams.query(),
-                             cg: ClientGroups.query()
-                           } :
-                           { local: true };
-                  }
-                ]
-              }
-            })
-
-            .when(
-            '/treegrid',
-            {
-              templateUrl: 'views/treegrid.html',
-              controller: 'treegridCtrl',
-              reloadOnSearch: false,
-              resolve: {
-                data: [
-                  'Clients', 'Teams', '$location',
-                  function (ClientGroups, Teams, $location)
-                  {
-                    // TODO: Lose short property names and make them more readable!
-                    return (($location.hash() && $location.hash() == 'reload')) ?
-                           {
-                             t: Teams.query(),
-                             cg: ClientGroups.query()
-                           } :
-                           { local: true };
-                  }
-                ]
-              }
-            })
-
+          /**
+           * Planboard router
+           */
             .when(
             '/planboard',
             {
               templateUrl: 'views/planboard.html',
               controller: 'planboard',
-              reloadOnSearch: false
-            })
-
-            .when(
-            '/messages',
-            {
-              templateUrl: 'views/messages.html',
-              controller: 'messages',
-              reloadOnSearch: false
-            })
-
-            .when(
-            '/profile/:userId',
-            {
-              templateUrl: 'views/profile.html',
-              controller: 'profileCtrl',
-              reloadOnSearch: false,
               resolve: {
                 data: [
-                  '$rootScope', '$route', 'TeamUp', 'Store',
-                  function ($rootScope, $route, TeamUp, Store)
+                  '$route', 'Slots', 'Storage', 'Dater',
+                  function ($route, Slots, Storage, Dater)
                   {
-                    return TeamUp._(
-                      'profileGet',
-                      { third: $route.current.params.userId },
-                      null,
-                      {
-                        success: function (resources)
-                        {
-                          // TODO: Move this callback with other identical ones to a central location
-                          if ($route.current.params.userId == $rootScope.app.resources.uuid)
-                          {
-                            $rootScope.app.resources = resources;
+                    var periods = Storage.local.periods(),
+                        settings = Storage.local.settings(),
+                        groups = Storage.local.groups(),
+                        groupId,
+                        validGroup = false;
 
-                            Store('app').save('resources', resources);
-                          }
+                    angular.forEach(
+                      groups,
+                      function (_group)
+                      {
+                        if (_group.uuid == settings.app.group)
+                        {
+                          validGroup = true
+                        }
+                      }
+                    );
+
+                    groupId = (validGroup) ? settings.app.group : groups[0].uuid;
+
+                    var stamps = {};
+
+                    if (Dater.current.today() > 360)
+                    {
+                      stamps = {
+                        start: periods.days[358].last.timeStamp,
+                        end: periods.days[365].last.timeStamp
+                      }
+                    }
+                    else
+                    {
+                      stamps = {
+                        start: periods.days[Dater.current.today() - 1].last.timeStamp,
+                        end: periods.days[Dater.current.today() + 6].last.timeStamp
+                      }
+                    }
+
+                    return  Slots.all(
+                      {
+                        groupId: groupId,
+                        stamps: stamps,
+                        month: Dater.current.month(),
+                        layouts: {
+                          user: true,
+                          group: true,
+                          members: false
                         }
                       }
                     );
                   }
                 ]
-              }
+              },
+              reloadOnSearch: false
             })
 
+
+          /**
+           * Messages router
+           */
+            .when(
+            '/messages',
+            {
+              templateUrl: 'views/messages.html',
+              controller: 'messages',
+              resolve: {
+                data: [
+                  '$route', 'Messages',
+                  function ($route, Messages) { return Messages.query() }
+                ]
+              },
+              reloadOnSearch: false
+            })
+
+
+          /**
+           * Groups router
+           */
+            .when(
+            '/groups',
+            {
+              templateUrl: 'views/groups.html',
+              controller: 'groups',
+              resolve: {
+                data: [
+                  'Groups',
+                  function (Groups)
+                  {
+                    return Groups.query();
+                  }
+                ]
+              },
+              reloadOnSearch: false
+            })
+
+
+          /**
+           * Profile (user specific) router
+           */
+            .when(
+            '/profile/:userId',
+            {
+              templateUrl: 'views/profile.html',
+              controller: 'profile',
+              resolve: {
+                data: [
+                  '$rootScope', 'Profile', '$route', 'Dater',
+                  function ($rootScope, Profile, $route, Dater)
+                  {
+                    if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid)
+                    {
+                      var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
+
+                      return Profile.getWithSlots(
+                        $route.current.params.userId.toLowerCase(),
+                        false,
+                        {
+                          start: periods.weeks[Dater.current.week()].first.timeStamp / 1000,
+                          end: periods.weeks[Dater.current.week()].last.timeStamp / 1000
+                        }
+                      );
+                    }
+                    else
+                    {
+                      return Profile.get($route.current.params.userId.toLowerCase(), false);
+                    }
+                  }
+                ]
+              },
+              reloadOnSearch: false
+            })
+
+
+          /**
+           * Profile (user hiself) router
+           */
             .when(
             '/profile',
             {
               templateUrl: 'views/profile.html',
-              controller: 'profileCtrl',
+              controller: 'profile',
               resolve: {
                 data: [
                   '$rootScope', '$route', '$location',
@@ -207,23 +234,57 @@ define(
               }
             })
 
+
+          /**
+           * Settings router
+           */
             .when(
-            '/vis',
+            '/settings',
             {
-              templateUrl: 'views/vis.html',
-              controller: 'vis',
-              reloadOnSearch: false
+              templateUrl: 'views/settings.html',
+              controller: 'settings',
+              resolve: {
+                data: [
+                  'Settings',
+                  function (Settings)
+                  {
+                    return angular.fromJson(Settings.get());
+                  }
+                ]
+              }
             })
 
+
+          /**
+           * FAQ router
+           */
             .when(
-            '/support',
+            '/faq',
             {
-              templateUrl: 'views/support.html',
-              controller: 'supportCtrl',
-              reloadOnSearch: false
+              templateUrl: 'views/faq.html',
+              controller: 'faq'
             })
 
-            .otherwise({ redirectTo: '/login' });
+
+          /**
+           * Help router
+           */
+            .when(
+            '/help',
+            {
+              templateUrl: 'views/help.html',
+              controller: 'help'
+            })
+
+
+          /**
+           * Router fallback
+           */
+            .otherwise(
+            {
+              redirectTo: '/login'
+            });
+
 
           $httpProvider.interceptors.push(
             [

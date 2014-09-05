@@ -1,16 +1,23 @@
+
+
+
 /* Lastly, apply responsive CSS fixes as necessary */
 
 @media (min-width: 768px) and (max-width: 979px) {
 }
 
+
 @media (max-width: 767px) {
 }
+
 
 @media (min-width: 1200px) {
 }
 
+
 @media (min-width: 768px) and (max-width: 979px) {
 }
+
 
 @media (max-width: 767px) {
   .navbar-fixed-top {
@@ -27,7 +34,7 @@
     padding-right: 15px;
     padding-left: 25px;
   }
-
+  
   #footer {
     margin-left: -20px;
     padding-right: 20px;
@@ -45,6 +52,7 @@
   }
 }
 
+
 @media (max-width: 979px) {
 
   .navbar-fixed-top {
@@ -61,8 +69,10 @@
   }
 }
 
+
 @media (min-width: 980px) {
 }
+
 
 @media (max-width: 480px) {
 

@@ -1,38 +1,34 @@
 extends layout
 
-// TODO: Fix icon locations
-block icons
-	link(rel='shortcut icon', href='favicon.ico')
-	link(rel='shortcut icon', href='/favicon.ico')
 
 
-// Not-used at the moment
-// TODO: Remove unneccessary IE styler files
-block iestuff
-	//if IE
-		link(rel='stylesheet', href='css/ie.css')
-	//if IE 8
-		link(rel='stylesheet', href='css/ie8.css')
-	//if lt IE 9
-		script(src='http://html5shiv.googlecode.com/svn/trunk/html5.js')
-	//if gt IE 7
-		script(src='scripts/js/libs/angular-ui/0.4.0/angular-ui-ieshiv.min.js')
-
-	//if lt IE 7
-		p.chromeframe
-			| You are using an outdated browser.
-			a(href='http://browsehappy.com/') Upgrade your browser today
-			| or
-			a(href='http://www.google.com/chromeframe/?redirect=true') install Google Chrome Frame
-			| to better experience this site.
-	//if lt IE 9
-		script(src='vendors/es5-shim/es5-shim.js')
-		script(src='vendors/json3/lib/json3.min.js')
+block watermark
+	#watermark
+	script.
+		$('#watermark').css({
+			backgroundImage: 'url(../profiles/' + profile.meta  + '/images/watermark.png)',
+			backgroundRepeat: 'no-repeat'
+		});
+		if ($.browser.mobile) $('#watermark').css({ bottom: '-10px' });
 
 
 
-// TODO: Look for ways to simplify mobile menu view options
-// TODO: Arrange correct styling
+block navbar_original
+	.navbar.navbar-inverse.navbar-fixed-top
+		.container
+			button.navbar-toggle(type='button', data-toggle='collapse', data-target='.bs-navbar-collapse')
+				span.icon-bar
+				span.icon-bar
+				span.icon-bar
+			a.navbar-brand(href='#/home') Home
+			.nav-collapse.collapse.bs-navbar-collapse
+				ul.nav.navbar-nav
+					li
+						a(href='#/partial1') Partial1
+					li
+						a(href='#/partial2') Partial2
+
+
 block navbar
 	.navbar.navbar-inverse.navbar-fixed-top.ng-cloak(
 	ng-hide='(location=="login" || location=="forgotpass" || location=="register")',
@@ -46,59 +42,151 @@ block navbar
 					span.icon-bar
 					span.icon-bar
 					// span.icon-bar {{ui.message.messages}}
-				a.navbar-brand(ng-click='nav("tasks2")') TeamUp
+				a.navbar-brand(ng-click='') StandBy
 				.navbar-collapse.collapse
 					ul.nav.navbar-nav
-						// li(data-match-route='/tasks')
-							// a(ng-click='nav("tasks")') Taken
-						li(data-match-route='/tasks2')
-							a(ng-click='nav("tasks2")') Taken
-						li(data-match-route='/team')
-							a(ng-click='nav("team")') {{ui.teamup.teams}}
-						li#clientMenu(data-match-route='/(:?client)')
-							a(ng-click='nav("client")') {{ui.teamup.clients}}
-						li(data-match-route='/manage',
-						ng-hide='app.resources.role > 1')
-							a(href='#manage') {{ui.teamup.manage}}
-						li(data-match-route='/planboard',
-						ng-hide='app.resources.role > 1')
-							a(ng-click='nav("planboard")') Agenda
-						li(data-match-route='/support')
-							a(ng-click='nav("support")') Support
-						//li(data-match-route='/planboard',
-						//ng-hide='app.resources.role > 1')
-						//	a(ng-click='nav("vis")') Vis
+						li(data-match-route='/dashboard')
+							a(href='#dashboard', ng-click='collapseNav()') Dashboard
+						li(data-match-route='/planboard')
+							a(href='#planboard') Agenda
+						li(data-match-route='/messages')
+							a(href='#messages')
+								| {{ui.message.messages}}
+								span.badge.badge-success(ng-show="(app.unreadMessages > 0)")
+								| {{app.unreadMessages}}
+						li(data-match-route='/groups', ng-hide='app.resources.role > 1')
+							a(href='#groups') {{ui.groups.groups}}
 
-					ul.nav.pull-right(ng-hide='browser.mobile')
-						//Disabled temporarily till the functionailty exists
-						//li.navbar-btn
-						//	a(href='#search')
-						//		i.icon-search
+					ul.nav.pull-right(ng-hide='browser.mobile', style='display:none')
 						li
-							a#account(ng-click='nav("profile")')
-								.roundedPicxSmall(back-img = '{{app.resources.uuid | avatar:"team":"80" }}',
-								class='{{app.resources.states|stateColor}}')
-								span {{app.resources.firstName}} {{app.resources.lastName}}
-						li.navbar-btn
-							a(ng-click='nav("logout")')
-								i.icon-off
-					ul.nav.pull-right(ng-show='browser.mobile', style='{{(browser.landscape) && "margin-right:-20px"}}')
+							a(href='#faq#web')
+								i.icon-question-sign.icon-white
+								| FAQ
+						li
+							a(href='#help#{{location}}')
+								i.icon-info-sign.icon-white
+								| Handleiding
+						li.dropdown
+							a.dropdown-toggle(href='', data-toggle='dropdown')
+								i.icon-user.icon-white
+								| {{app.resources.name}}
+								span(ng-show='app.resources.role == 0') [SU]
+								b.caret
+							ul.dropdown-menu
+								li
+									a(href='#profile')
+										i.icon-user
+										| {{ui.profile.profile}}
+								li
+									a(href='#settings')
+										i.icon-wrench
+										| {{ui.settings.settings}}
+								li.divider
+								li
+									a(href='#logout')
+										i.icon-off
+										| {{ui.login.logout}}
+						li#fullscreener(ng-show='config.fullscreen && browser.webkit')
+							a(ng-click='fullScreen()')
+								i.icon-fullscreen.icon-white
+
+					ul.nav.pull-right(ng-show='browser.mobile',
+					style='{{(browser.landscape) && "margin-right:-20px"}}; display:none')
 						li
 							a(href='#profile')
 								i.icon-user.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-								span(ng-show='browser.portrait || browser.screen.width < 768') Profile
+								span(ng-show='browser.portrait || browser.screen.width < 768')
 						li
 							a(href='#settings')
 								i.icon-wrench.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-								span(ng-show='browser.portrait || browser.screen.width < 768') Settings
+								span(ng-show='browser.portrait || browser.screen.width < 768')
 						li
 							a(href='#logout')
 								i.icon-off.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-								span(ng-show='browser.portrait || browser.screen.width < 768') Logout
+								span(ng-show='browser.portrait || browser.screen.width < 768')
 
 
 
-// TODO: Port loaders to a directive
+
+block navbar2
+	.navbar.navbar-inverse.navbar-fixed-top(bs-navbar='bs-navbar')
+		.container
+			button.navbar-toggle(type='button', data-toggle='collapse', data-target='.bs-navbar-collapse')
+				span.icon-bar
+				span.icon-bar
+				span.icon-bar
+			a.navbar-brand(href='#/home') Home
+			#collapsed.navbar-collapse.collapse
+				ul.nav
+					li(data-match-route='/dashboard')
+						a(href='#dashboard', ng-click='collapseNav()') Dashboard
+					li(data-match-route='/planboard')
+						a(href='#planboard') Agenda
+					li(data-match-route='/messages')
+						a(href='#messages')
+							| {{ui.message.messages}}
+							span.badge.badge-success(ng-show="(app.unreadMessages > 0)")
+								| {{app.unreadMessages}}
+					li(data-match-route='/groups', ng-hide='app.resources.role > 1')
+						a(href='#groups') {{ui.groups.groups}}
+				ul.nav.pull-right(ng-hide='browser.mobile')
+					li
+						a(href='#faq#web')
+							i.icon-question-sign.icon-white
+							| FAQ
+					li
+						a(href='#help#{{location}}')
+							i.icon-info-sign.icon-white
+							| Handleiding
+					li.dropdown
+						a.dropdown-toggle(href='', data-toggle='dropdown')
+							i.icon-user.icon-white
+							| {{app.resources.name}}
+							span(ng-show='app.resources.role == 0') [SU]
+							b.caret
+						ul.dropdown-menu
+							li
+								a(href='#profile')
+									i.icon-user
+									| {{ui.profile.profile}}
+							li
+								a(href='#settings')
+									i.icon-wrench
+									| {{ui.settings.settings}}
+							li.divider
+							li
+								a(href='#logout')
+									i.icon-off
+									| {{ui.login.logout}}
+					li#fullscreener(ng-show='config.fullscreen && browser.webkit')
+						a(ng-click='fullScreen()')
+							i.icon-fullscreen.icon-white
+				ul.nav.pull-right(ng-show='browser.mobile')
+					li
+						a(href='#profile')
+							i.icon-user.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+							span(ng-show='browser.portrait || browser.screen.width < 768')
+					li
+						a(href='#settings')
+							i.icon-wrench.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+							span(ng-show='browser.portrait || browser.screen.width < 768')
+					li
+						a(href='#logout')
+							i.icon-off.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+							span(ng-show='browser.portrait || browser.screen.width < 768')
+
+
+
+
+
+
+
+
+
+
+
+
+
 block loading
 	#loading.ng-cloak(ng-show='loadingBig')
 		div(ng-show='loaderIcons.general')
@@ -111,7 +199,7 @@ block loading
 				br
 				| {{ui.loading.dashboard}}
 		div(ng-show='loaderIcons.planboard')
-			span.entypo 🕔
+			span.entypo 
 			p
 				| {{ui.loading.general}}
 				br
@@ -123,13 +211,13 @@ block loading
 				br
 				| {{ui.loading.messages}}
 		div(ng-show='loaderIcons.groups')
-			span.entypo 👥
+			span.entypo 
 			p
 				| {{ui.loading.general}}
 				br
 				| {{ui.loading.groups}}
 		div(ng-show='loaderIcons.profile')
-			span.entypo 👤
+			span.entypo 
 			p
 				| {{ui.loading.general}}
 				br
@@ -143,75 +231,105 @@ block loading
 
 
 
-// TODO: Investigate the real usage of this
+
+
+
 block notifications
-	#notification.alert(ng-show='notification.status',
-	class='{{notification.type}}')
-		button.close(type='button',
-		ng-click='notification.status = false') ×
-		| {{notification.message}}
+	#notification.alert.ng-cloak(class='{{notification.type}}', ng-show='notification.status')
+		button.close(type='button', ng-click='notification.status = false') ×
+		span(ng-hide='notification.confirm') {{notification.message}}
+		span(ng-show='notification.confirm')
+			| {{ui.confirms.remove}}
+			button.btn.btn-mini.btn-danger(ng-click='fireDeleteRequest(notification.options)') Delete
 
 
 
-block chat
-	#chat.ng-cloak(ng-hide='(location=="login" || location=="forgotpass" || location=="register" || location=="logout")',
-	ng-controller='messagesCtrl')
-		#chat-btn(ng-click='openChat()')
-			span CHAT {{newCountShow}}
-		#chat-content(ng-show='toggleChat')
-			.chatHeader
-				h4 {{teamName}}
-			.mainContent
-				p.noMessages(ng-hide='messagesShow.length > 0') {{ui.teamup.noMessages}}
-				div(ng-repeat='message in messagesShow')
-					.chat-separator(ng-show='(message.date != "")')
-						span {{message.date}}
-						hr
-					.chat-separator.reportLink(ng-show='(message.type == "REPORT_NEW")')
-						a(href='#/client?uuid={{message.body.clientGroupId}}&reportUuid={{message.body.reportUuid}}#reports')
-							span {{message.title}}
-							hr
-					.message(class='{{message.msgRole}}' ng-show='(message.type == "CHAT" || message.type == null)')
-						.chatAvatar.roundedPicSmall(back-img = '{{message.member.uuid | avatar:"team":"80" }}',
-						class='{{message.member.states|stateColor}}')
-						.arrow(ng-show='(message.role == "other")')
-						.chatCloud
-							h5.name {{message.senderName}}
-							h5.time {{message.sendTime|nicelyTime}}
-							div: p {{message.body}}
-						.arrow(ng-hide='(message.role == "other")')
-
-			.input-area
-				input#messageField(type='text',
-				ng-model='newMessage',
-				ngenter='sendMessage(newMessage)')
-				button.btn.btn-success(ng-click='sendMessage(newMessage)') {{ui.message.send}}
 
 
 
-// TODO: Is it needed?
-block mobile-status
+block mobile-status-bar
 	#mobile-status-bar.ng-cloak(ng-show='loading.status && browser.mobile')
 		img(src='images/ajax-loader.gif')
 		small {{loading.message}}
 
 
 
-// TODO: Simplify it!
+
+
+
+
 block footer
-	#footer.ng-cloak(ng-hide='browser.mobile || (location=="login" || location=="forgotpass" || location=="register")')
+	#footer.ng-cloak(ng-hide='browser.mobile')
 		.container-fluid
 			#copyrights
-				span.muted
-					small Ask Community Systems, 2014
-						br
-						i
-							| TeamUp&nbsp;
-							a(href='versions.html',
-								title="{{ 'Current version is v%VERSION%. Released: %RELEASED%' | interpolate }}",
-								target='_blank') v{{config.app.version}}
+				#download-footer
+					ul
+						li(ng-show='config.profile.mobileApp.status')
+							.btn-group.dropup
+								button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
+									| Download mobiele app
+								ul.dropdown-menu.pull-right
+									li(ng-show='(config.profile.meta == "demo")')
+										a(href='https://play.google.com/store/apps/details?id=com.askcs.standbydemo', target='_blank')
+											| Download Android App
+									li(ng-hide='(config.profile.meta == "demo")')
+										a(href='https://play.google.com/store/apps/details?id=com.askcs.standby', target='_blank')
+											| Download Android App
+									li
+										a(href='https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4', target='itunes_store')
+											| Download iPhone App
+						li
+							img(src='images/standby_logo_footer.png', alt='StandBy Logo')
+						li
+							span.muted(style='display: block; margin-top: 4px;')
+								small
+									| Ask Community Systems, 2013   |
+									i
+										a(href='version.html', target='_blank', style='color: #dddddd;') StandBy v{{config.version}}
 			p.muted(ng-show='loading.status')
 				img(src='images/ajax-loader.gif')
 				small
 					span(ng-show='app.preloader.status') {{app.preloader.count}}%
 					| {{loading.message}}
+
+
+
+
+
+
+
+block footer2
+	footer
+		.container
+			p.text-muted.credit.pull-left
+				| Some footer text
+				a(href='#')  and a link
+			p.text-muted.pull-right(style='margin-top:20px')
+				| {{ 'Current version is v%VERSION%. Released: %RELEASED%' | interpolate }}
+
+
+
+
+
+block icons
+	link(rel='apple-touch-icon-precomposed', sizes='144x144', href='icons/apple-touch-icon-144-precomposed.png')
+	link(rel='apple-touch-icon-precomposed', sizes='114x114', href='icons/apple-touch-icon-114-precomposed.png')
+	link(rel='apple-touch-icon-precomposed', sizes='72x72', href='icons/apple-touch-icon-72-precomposed.png')
+	link(rel='apple-touch-icon-precomposed', href='icons/apple-touch-icon-57-precomposed.png')
+	link(rel='shortcut icon', href='icons/favicon.png')
+
+
+
+
+
+block iestuff
+	//if lt IE 7
+		p.chromeframe
+			| You are using an outdated browser.
+			a(href='http://browsehappy.com/') Upgrade your browser today
+			| or
+			a(href='http://www.google.com/chromeframe/?redirect=true') install Google Chrome Frame
+			| to better experience this site.
+	//if lt IE 9
+		script(src='vendors/es5-shim/es5-shim.js')
+		script(src='vendors/json3/lib/json3.min.js')

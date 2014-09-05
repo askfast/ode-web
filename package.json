@@ -1,8 +1,8 @@
 {
-  "name": "TeamUp",
-  "version": "0.3.0-alpha-2",
-  "description": "TeamUp description",
-  "author": "Cengiz Ulusoy - Micheal Yankun - Leonie van Dinten",
+  "name": "StandBy",
+  "version": "0.0.0",
+  "description": "StandBy description",
+  "author": "Cengiz Ulusoy",
   "dependencies": {
     "grunt-svgmin": "^0.4.0"
   },
@@ -51,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "askcs/team-up-web"
+    "url": "askcs/webpaigebase"
   },
   "scripts": {
     "test": "grunt test"

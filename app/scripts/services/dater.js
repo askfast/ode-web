@@ -7,18 +7,50 @@ define(
     services.factory(
       'Dater',
       [
-        '$rootScope', 'Store',
-        function ($rootScope, Store)
+        '$rootScope',
+        //'Storage',
+        function ($rootScope)
         {
           return {
+
             current: {
-              today: function () { return Date.today().getDayOfYear() + 1 },
-              week: function () { return Date.today().getWeekOfYear() },
-              month: function () { return new Date().getMonth() + 1 }
+              today: function ()
+              {
+                return Date.today().getDayOfYear() + 1;
+              },
+
+              week: function ()
+              {
+                /**
+                 * IE library does not exist bug
+                 */
+
+                if (new Date().getWeek())
+                {
+                  return new Date().getWeek();
+                }
+                else
+                {
+                  console.log('Date getWeek does not exist !');
+                }
+              },
+
+              month: function ()
+              {
+                return new Date().getMonth() + 1;
+              },
+
+              year: function ()
+              {
+                return new Date().toString('yyyy');
+              }
             },
 
             readable: {
-              date: function (date) { return  new Date(date).toString(config.app.formats.date) }
+              date: function (date)
+              {
+                return  new Date(date).toString($rootScope.config.formats.date);
+              }
             },
 
             convert: {
@@ -40,49 +72,71 @@ define(
             },
 
             calculate: {
-              diff: function (range) { return new Date(range.end).getTime() - new Date(range.start).getTime() }
+              diff: function (range)
+              {
+                return new Date(range.end).getTime() - new Date(range.start).getTime()
+              }
             },
 
-            getThisYear: function () { return new Date().toString('yyyy') },
-
-            getMonthTimeStamps: function ()
+            /**
+             * Get the current month
+             */
+            getThisMonth: function ()
             {
-              var months = {},
-                  year = this.getThisYear();
+              return new Date().toString('M');
+            },
+
+            /**
+             * Get the current year
+             */
+            getThisYear: function ()
+            {
+              return new Date().toString('yyyy');
+            },
+
+            /**
+             * Get begin and end timestamps of months
+             * in the current year
+             */
+            getMonthTimeStamps: function (year)
+            {
+              var months = {};
 
               for (var i = 0; i < 12; i ++)
               {
                 var firstDay = new Date(year, i).moveToFirstDayOfMonth(),
-                    lastDay = new Date(year, i).moveToLastDayOfMonth(),
-                    month = {
-                      first: {
-                        day: firstDay,
-                        timeStamp: firstDay.getTime()
-                      },
-                      last: {
-                        day: lastDay,
-                        timeStamp: lastDay.getTime()
-                      },
-                      totalDays: Date.getDaysInMonth(year, i)
-                    };
+                    lastDay = new Date(year, i).moveToLastDayOfMonth().addDays(1);
 
-                months[i + 1] = month;
+                months[i + 1] = {
+                  first: {
+                    day: firstDay,
+                    timeStamp: firstDay.getTime()
+                  },
+                  last: {
+                    day: lastDay,
+                    timeStamp: lastDay.getTime()
+                  },
+                  totalDays: Date.getDaysInMonth(year, i)
+                };
               }
 
               return months;
             },
 
-            getWeekTimeStamps: function ()
+            /**
+             * Get begin and end timestamps of weeks
+             */
+            getWeekTimeStamps: function (year)
             {
               var nweeks = [],
                   weeks = {},
-                  nextMonday,
-                  year = this.getThisYear(),
-                  firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth(),
+                  nextMonday;
+
+              var firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth(),
                   firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
                   firstMonday = new Date(firstMondayOfYear);
 
-              for (var i = 0; i < 53; i ++)
+              for (var i = 0; i < 54; i ++)
               {
                 if (i == 0)
                 {
@@ -98,34 +152,38 @@ define(
 
               nweeks.unshift(firstMonday);
 
-              var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
+              var firstMondayofNextYear = new Date(nweeks[54].addWeeks(1));
 
-              for (var i = 0; i < 55; i ++)
+              for (var n = 0; n < 55; n ++)
               {
-                weeks[i + 1] = {
+                weeks[n + 1] = {
                   first: {
-                    day: nweeks[i],
-                    timeStamp: new Date(nweeks[i]).getTime()
+                    day: nweeks[n],
+                    timeStamp: new Date(nweeks[n]).getTime()
                   },
                   last: {
-                    day: nweeks[i + 1],
-                    timeStamp: new Date(nweeks[i + 1]).getTime()
+                    day: nweeks[n + 1],
+                    timeStamp: new Date(nweeks[n + 1]).getTime()
                   }
                 }
               }
 
+              /**
+               * Remove unnecessary periods
+               */
               delete weeks[54];
               delete weeks[55];
 
               return weeks;
             },
 
-            getDayTimeStamps: function ()
+            /**
+             */
+            getDayTimeStamps: function (year)
             {
               var nextDay,
                   ndays = [],
                   days = {},
-                  year = this.getThisYear(),
                   firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
 
               for (var i = 0; i < 366; i ++)
@@ -142,20 +200,23 @@ define(
                 ndays.push(new Date(nextDay));
               }
 
-              for (var i = 0; i < 366; i ++)
+              for (var n = 0; n < 366; n ++)
               {
-                days[i + 1] = {
+                days[n + 1] = {
                   first: {
-                    day: ndays[i],
-                    timeStamp: new Date(ndays[i]).getTime()
+                    day: ndays[n],
+                    timeStamp: new Date(ndays[n]).getTime()
                   },
                   last: {
-                    day: ndays[i + 1],
-                    timeStamp: new Date(ndays[i + 1]).getTime()
+                    day: ndays[n + 1],
+                    timeStamp: new Date(ndays[n + 1]).getTime()
                   }
                 };
               }
 
+              /**
+               * Remove not existing date
+               */
               if (! days[366].timeStamp)
               {
                 delete days[366];
@@ -172,22 +233,77 @@ define(
 
             registerPeriods: function ()
             {
-              var periods = Store('app').get('periods') || '{}';
+//              var periods = angular.fromJson(Storage.get('periods') || '{}'),
+//                  periodsNext = angular.fromJson(Storage.get('periodsNext') || '{}');
+//
+//              var thisYear = this.getThisYear(),
+//                  nextYear = Number(thisYear) + 1;
+//
+//              Storage.add(
+//                'periods', angular.toJson(
+//                  {
+//                    months: this.getMonthTimeStamps(thisYear),
+//                    weeks: this.getWeekTimeStamps(thisYear),
+//                    days: this.getDayTimeStamps(thisYear)
+//                  }));
+//
+//              Storage.add(
+//                'periodsNext', angular.toJson(
+//                  {
+//                    months: this.getMonthTimeStamps(nextYear),
+//                    weeks: this.getWeekTimeStamps(nextYear),
+//                    days: this.getDayTimeStamps(nextYear)
+//                  }));
 
-              Store('app').save(
-                'periods', {
-                  months: this.getMonthTimeStamps(),
-                  weeks: this.getWeekTimeStamps(),
-                  days: this.getDayTimeStamps()
-                });
             },
 
-            getPeriods: function ()
+            getPeriods: function (next)
             {
-              return Store('app').get('periods');
+              return angular.fromJson(Storage.get((! next) ? 'periods' : 'periodsNext'));
+            },
+
+            translateToDutch: function (date)
+            {
+              var conversions = {
+                // days
+                Monday: 'maandag',
+                tuesday: 'dinsdag',
+                wednesday: 'woensdag',
+                thursday: 'donderdag',
+                friday: 'vrijdag',
+                saturday: 'zaterdag',
+                sunday: 'zondag',
+                // months
+                january: 'januari',
+                february: 'februari',
+                march: 'maart',
+                april: 'april',
+                may: 'mei',
+                june: 'juni',
+                july: 'juli',
+                august: 'augustus',
+                september: 'september',
+                october: 'oktober',
+                november: 'november',
+                december: 'december'
+              };
+
+              if (date)
+              {
+                angular.forEach(
+                  conversions, function (conversion, index)
+                  {
+                    date = date.replace(new RegExp(index, 'gi'), conversion)
+                  });
+
+                return date;
+              }
+
             }
           }
         }
       ]);
+
+
   }
 );

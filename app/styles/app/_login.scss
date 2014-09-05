@@ -1,30 +1,12 @@
-/**
- * Welcoming page styles
- */
-#welcomeLogo {
-  background-image: url("../images/logo.png");
-  margin: 0 auto 40px;
-  height: 82px;
-  width: 160px;
-}
-
-#welcomeArrow {
-  width: 0;
-  height: 0;
-  border-left: 32px solid transparent;
-  border-right: 32px solid transparent;
-  border-bottom: 15px solid $offwhite;
-  position: absolute;
-  left: 50%;
-  margin: -15px 0 0 -80px;
-}
-
+// Welcoming page styles
 #welcome {
-  margin: 0 auto 20px auto;
+  margin: 30px auto 20px auto;
   padding: 35px 29px 19px 29px;
   max-width: 300px;
-  border-radius: 20px;
-  background-color: $offwhite;
+  border: 1px solid #d0cec1;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(103,97,83,.05);
   text-align: center;
 
   h2 {
@@ -37,13 +19,11 @@
     text-align: center;
     font-weight: normal;
     font-size: 22px;
-    padding-bottom: 15px;
+    padding-bottom: 25px;
   }
 }
 
-/**
- * Box style
- */
+// Box style
 .boxed {
   margin: 0;
 
@@ -52,17 +32,15 @@
   }
 
   p {
-    margin-top: 16px;
+    margin-top:15px;
   }
 
   form {
     input[type=text], input[type=password] {
-      margin-bottom: 2px;
+      margin-bottom: 15px;
       padding: 7px 9px;
-      width: 93%;
+      width: 90%;
       height: auto;
-      background-color: #E3DDD7;
-      color: $brown;
     }
 
     button {
@@ -72,18 +50,17 @@
     }
 
     .checkbox {
-      margin: 6px 0 9px;
-      padding-left: 20px;
+      margin: 0 auto 25px;
+      padding-left: 35px;
       width: 90%;
       text-align: left;
-      color: $brown;
     }
 
     span.version {
       display: block;
-      margin-top: 17px;
-      margin-bottom: -12px;
-      text-align: right;
+      margin-top: 10px;
+      margin-bottom: -20px;
+      text-align: center;
       font-size: 11px;
 
       a {
@@ -113,21 +90,6 @@
   }
 }
 
-#separator {
-  margin-right: 8px;
-  margin-left: 3px;
-  color: $brown;
-}
-
-p.loginp {
-  float: left;
-
-  a {
-    color: $turq;
-    margin-right: 5px;
-  }
-}
-
 #demo_users {
   position: absolute;
   right: 20px;
@@ -136,9 +98,9 @@ p.loginp {
   ul {
     margin: 0;
     padding: 0;
-    list-style-type: none;
+    list-style-type: none; 
   }
 
-  li {
+  li {  
   }
 }

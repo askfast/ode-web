@@ -1,0 +1,13 @@
+.row
+	span(ng-hide='browser.mobile && browser.screen.width < 768')
+	.btn-group.download-button(style="width: 190px; {{browser.screen.width > 768 && 'padding-left: 25px'}}")
+	button.btn.btn-success.dropdown-toggle(data-toggle='dropdown', style='width: 190px;')
+		| Download mobiele app {{position}}
+		ul.dropdown-menu.pull-right
+			li
+				a(href='https://play.google.com/store/apps/details?id=com.askcs.standby', target='_blank')
+					| Download Android App
+			li
+				a(href='https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4', target='itunes_store')
+					| Download iPhone App
+	span(ng-show='browser.mobile && browser.screen.width < 768')

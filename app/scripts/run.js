@@ -4,68 +4,191 @@ define(
   {
     'use strict';
 
+
     app.run(
       [
         '$rootScope',
         '$location',
         '$timeout',
         'Session',
-        'Store',
-        '$window',
-        'Teams',
-        'Offline',
-        'States',
-        'Browsers',
         'Dater',
-        'TeamUp',
-        function (
-          $rootScope, $location, $timeout, Session, Store, $window, Teams, Offline, States, Browsers, Dater, TeamUp
-          )
+        'Storage',
+        'Messages',
+        '$window',
+        function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window)
         {
-          // TODO: Remove later on (Needed for timeline info filters)
-          if (! Dater.getPeriods())
+          /**
+           * Pass config and init dynamic config values
+           */
+          $rootScope.config = config;
+
+          $rootScope.config.init();
+
+
+          /**
+           * Turn off the display of notification on refresh @ login page
+           */
+          $('#notification').removeClass('ng-cloak');
+
+
+          /**
+           * TODO: Move these checks to jquery.browser
+           * Pass Jquery browser data to angular
+           */
+          $rootScope.browser = $.browser;
+
+          angular.extend($rootScope.browser, { screen: $window.screen });
+
+          if ($rootScope.browser.ios)
+          {
+            angular.extend(
+              $rootScope.browser, {
+                landscape: ! ! (Math.abs($window.orientation) == 90),
+                portrait: ! ! (Math.abs($window.orientation) != 90)
+              });
+          }
+          else
+          {
+            angular.extend(
+              $rootScope.browser, {
+                landscape: ! ! (Math.abs($window.orientation) != 90),
+                portrait: ! ! (Math.abs($window.orientation) == 90)
+              });
+          }
+
+          $window.onresize = function () { $rootScope.browser.screen = $window.screen };
+
+          $window.onorientationchange = function ()
+          {
+            $rootScope.$apply(
+              function ()
+              {
+                if ($rootScope.browser.ios)
+                {
+                  angular.extend(
+                    $rootScope.browser, {
+                      landscape: ! ! (Math.abs($window.orientation) == 90),
+                      portrait: ! ! (Math.abs($window.orientation) != 90)
+                    });
+                }
+                else
+                {
+                  angular.extend(
+                    $rootScope.browser, {
+                      landscape: ! ! (Math.abs($window.orientation) != 90),
+                      portrait: ! ! (Math.abs($window.orientation) == 90)
+                    });
+                }
+              });
+          };
+
+
+          /**
+           * Default language and change language
+           */
+          $rootScope.changeLanguage = function (lang) { $rootScope.ui = locals.ui[lang] };
+
+          $rootScope.ui = locals.ui[$rootScope.config.lang];
+
+
+          /**
+           * If periods are not present calculate them
+           */
+          if (! Storage.get('periods'))
           {
             Dater.registerPeriods();
           }
 
-          new Offline();
-
-          $rootScope.$on(
-            'connection',
-            function ()
-            {
-              console.log(
-                (! arguments[1]) ?
-                'connection restored :]' + Date.now() :
-                'connection lost :[' + Date.now()
-              );
-            }
-          );
-
-          angular.element('#notification').css({display: 'block'});
-
-          Session.check();
-
-
-          $rootScope.config = config;
-          $rootScope.ui = locals.ui[config.app.lang];
-
-
-          $rootScope.app = $rootScope.app || {};
-          $rootScope.app.resources = Store('app').get('resources');
 
           /**
-           * Status-Bar
+           * Set important info back if refreshed
            */
-          $rootScope.loading = {
-            status: false,
-            message: 'Loading..'
+          $rootScope.app = $rootScope.app || {};
+
+
+          /**
+           * Set up resources
+           */
+          $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+
+          $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
+
+          $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
+
+          angular.forEach(
+            angular.fromJson(Storage.get('states')),
+            function (state) { $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state] }
+          );
+
+          var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+
+          if (registeredNotifications)
+          {
+            $rootScope.registeredNotifications = registeredNotifications;
+          }
+          else
+          {
+            Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
+          }
+
+          $rootScope.registerNotification = function (setting, value)
+          {
+            $rootScope.registeredNotifications[setting] = value;
+
+            Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
           };
 
+
+          /**
+           * Count unread messages
+           */
+          if (! $rootScope.app.unreadMessages)
+          {
+            Messages.unreadCount();
+          }
+
+          /**
+           * Initialize empty guard data container for smart alarming
+           */
+          if (angular.fromJson(Storage.get('guard')))
+          {
+            $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
+          }
+          else
+          {
+            // TODO: Some changes in the constructor. Review this later on
+            $rootScope.app.guard = {
+              monitor: '',
+              role: '',
+              currentState: '',
+              currentStateClass: ''
+            };
+          }
+
+
+          /**
+           * Show action loading messages
+           */
           $rootScope.statusBar =
           {
+            init: function ()
+            {
+              $rootScope.loading = {
+                status: false,
+                message: 'Aan het laden..'
+              };
+
+              $rootScope.app.preloader = {
+                status: false,
+                total: 0,
+                count: 0
+              };
+            },
+
             display: function (message)
             {
+              $rootScope.app.preloader.status = false;
+
               $rootScope.loading = {
                 status: true,
                 message: message
@@ -75,19 +198,22 @@ define(
             off: function () { $rootScope.loading.status = false }
           };
 
+          $rootScope.statusBar.init();
 
-          /**
-           * Notification
-           */
+
           $rootScope.notification = {
             status: false,
             type: '',
             message: ''
           };
 
+
+          /**
+           * Show notifications
+           */
           $rootScope.notifier =
           {
-            init: function (status, type, message)
+            init: function (status, type, message, confirm, options)
             {
               $rootScope.notification.status = true;
 
@@ -100,7 +226,9 @@ define(
                 $rootScope.notification = {
                   status: status,
                   type: type,
-                  message: message
+                  message: message,
+                  confirm: confirm,
+                  options: options
                 };
               }
             },
@@ -109,14 +237,30 @@ define(
             {
               this.init(true, 'alert-success', message);
 
-              if (! permanent) this.destroy();
+              if (! permanent)
+              {
+                this.destroy();
+              }
             },
 
             error: function (message, permanent)
             {
               this.init(true, 'alert-danger', message);
 
-              if (! permanent) this.destroy();
+              if (! permanent)
+              {
+                this.destroy();
+              }
+            },
+
+            alert: function (message, permanent, confirm, options)
+            {
+              this.init(true, '', message, confirm, options);
+
+              if (! permanent)
+              {
+                this.destroy();
+              }
             },
 
             destroy: function ()
@@ -125,7 +269,7 @@ define(
                 function ()
                 {
                   $rootScope.notification.status = false;
-                }, 5000);
+                }, $rootScope.config.timers.NOTIFICATION_DELAY);
             }
           };
 
@@ -133,372 +277,387 @@ define(
 
 
           /**
-           * Fix styles
+           * Fire delete requests
            */
-            // TODO: Turn it to a jQuery plugin
+          $rootScope.fireDeleteRequest = function (options)
+          {
+            switch (options.section)
+            {
+              case 'groups':
+                $rootScope.$broadcast('fireGroupDelete', { id: options.id });
+                break;
+            }
+          };
+
+
+          /**
+           * Detect route change start
+           * Callback function accepts <event, next, current>
+           */
+          $rootScope.$on(
+            '$routeChangeStart',
+            function ()
+            {
+              function resetLoaders ()
+              {
+                $rootScope.loaderIcons = {
+                  general: false,
+                  dashboard: false,
+                  planboard: false,
+                  messages: false,
+                  groups: false,
+                  profile: false,
+                  settings: false
+                };
+              }
+
+              resetLoaders();
+
+              switch ($location.path())
+              {
+                case '/dashboard':
+                  $rootScope.loaderIcons.dashboard = true;
+
+                  $rootScope.location = 'dashboard';
+                  break;
+
+                case '/planboard':
+                  $rootScope.loaderIcons.planboard = true;
+
+                  $rootScope.location = 'planboard';
+                  break;
+
+                case '/messages':
+                  $rootScope.loaderIcons.messages = true;
+
+                  $rootScope.location = 'messages';
+                  break;
+
+                case '/groups':
+                  $rootScope.loaderIcons.groups = true;
+
+                  $rootScope.location = 'groups';
+                  break;
+
+                case '/settings':
+                  $rootScope.loaderIcons.settings = true;
+
+                  $rootScope.location = 'settings';
+                  break;
+
+                default:
+                  if ($location.path().match(/profile/))
+                  {
+                    $rootScope.loaderIcons.profile = true;
+
+                    $rootScope.location = 'profile';
+                  }
+                  else
+                  {
+                    $rootScope.loaderIcons.general = true;
+                  }
+              }
+
+              if ($location.path().match(/logout/))
+              {
+                $rootScope.location = 'logout';
+
+                $('#watermark').hide();
+              }
+
+              if (! $rootScope.location)
+              {
+                try
+                {
+                  ga('send', 'Undefined Page', $location.path());
+                }
+                catch (e)
+                {
+                  console.log('something wrong with passing location to google analytics ->');
+                }
+              }
+
+              // console.log('$rootScope.location ->', $rootScope.location || 'login');
+
+              try
+              {
+                ga(
+                  'send', 'pageview',
+                  {
+                    'page': '/index.html#/' + $rootScope.location || 'login',
+                    'title': $rootScope.location || 'login'
+                  }
+                );
+              }
+              catch (e)
+              {
+                // console.warn('Google analytics tracking error ->', e);
+              }
+
+              //          $timeout(
+              //            function ()
+              //            {
+              //              var root = $rootScope.$new();
+              //
+              //              ga(
+              //                'send', 'pageview',
+              //                {
+              //                  'page': '/index.html#/' + root.location || 'login',
+              //                  'title': root.location || 'login'
+              //                }
+              //              );
+              //            }
+              //          );
+
+              //Prevent deep linking
+              if ($location.path() != '/tv')
+              {
+                if (! Session.check())
+                {
+                  $location.path("/login");
+                }
+              }
+
+              $rootScope.loadingBig = true;
+
+              $rootScope.statusBar.display('Aan het laden...');
+
+              $('div[ng-view]').hide();
+            }
+          );
+
+
+          /**
+           * Route change successful
+           * Callback function accepts <event, current, previous>
+           */
+          $rootScope.$on(
+            '$routeChangeSuccess',
+            function ()
+            {
+              $rootScope.newLocation = $location.path();
+
+              $rootScope.loadingBig = false;
+
+              $rootScope.statusBar.off();
+
+              $('div[ng-view]').show();
+            }
+          );
+
+
+          /**
+           * TODO: A better way of dealing with this error!
+           * Route change is failed!
+           */
+          $rootScope.$on(
+            '$routeChangeError',
+            function (event, current, previous, rejection) { $rootScope.notifier.error(rejection) }
+          );
+
+
+          // TODO: Fix styles
           $rootScope.fixStyles = function ()
           {
-            var tabHeight = angular.element('.tabs-left .nav-tabs').height();
+            $rootScope.timelineLoaded = false;
+
+            var tabHeight = $('.tabs-left .nav-tabs').height();
 
             $.each(
-              angular.element('.tab-content').children(),
-              function ()
+              $('.tab-content').children(), function ()
               {
-                var $this = angular.element(this).attr('id'),
-                    contentHeight = angular.element('.tabs-left .tab-content #' + $this).height();
+                var $parent = $(this),
+                    $this = $(this).attr('id'),
+                    contentHeight = $('.tabs-left .tab-content #' + $this).height();
 
+                // Check if one is bigger than another
                 if (tabHeight > contentHeight)
                 {
-                  angular.element('.tabs-left .tab-content #' + $this)
-                    .css(
+                  $('.tabs-left .tab-content #' + $this).css(
                     {
-                      height: angular.element('.tabs-left .nav-tabs').height() + 6
+                      height: $('.tabs-left .nav-tabs').height() - 41
                     }
                   );
                 }
-                else if (contentHeight > tabHeight)
-                {
-                  // angular.element('.tabs-left .nav-tabs').css( { height: contentHeight } );
-                }
-              });
+              }
+            );
 
+            /**
+             * Correct icon-font-library icons for mac and linux
+             */
             if ($.os.mac || $.os.linux)
             {
-              angular.element('.nav-tabs-app li a span')
-                .css(
+              $('.nav-tabs-app li a span').css(
                 {
                   paddingTop: '10px',
                   marginBottom: '0px'
-                }
-              );
+                });
             }
           };
 
 
-          // Get team member by id (shared)
-          $rootScope.getTeamMemberById = function (memberId)
+          /**
+           * Experimental full screen ability
+           */
+          $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]) };
+
+
+          /**
+           * Detect OS for some specific styling issues
+           */
+          if ($.os.windows)
           {
-            if (memberId == null)
-            {
-              return null;
-            }
+            $('#loading p').css({ paddingTop: '130px' });
+          }
 
-            var member;
 
-            angular.forEach(
-              Store('app').get('teams'),
-              function (team)
+          /**
+           * IE8 fix for inability of - not ready for angular by loading
+           * especially for index.html
+           */
+          if ($.browser.msie && $.browser.version == '8.0')
+          {
+            document.title = $rootScope.config.profile.title;
+          }
+
+
+          /**
+           * TODO (Still functioning since there is a second download button?)
+           */
+          if (! config.profile.mobileApp.status)
+          {
+            $('#copyrights span.muted').css({ right: 0 });
+          }
+
+
+          /**
+           * Download mobile app button
+           */
+          $rootScope.downloadMobileApp = function (type)
+          {
+            $rootScope.statusBar.display($rootScope.ui.downloads.inAction);
+
+            Messages.email(type)
+              .then(
+              function ()
               {
-                angular.forEach(
-                  Store('app').get(team.uuid),
-                  function (_member)
+                $rootScope.notifier.success($rootScope.ui.downloads.success);
+
+                $rootScope.statusBar.off();
+              }
+            );
+          };
+
+
+          $rootScope.resetPhoneNumberChecker = function ()
+          {
+            $rootScope.phoneNumberParsed = {};
+
+            $rootScope.phoneNumberParsed.result = false;
+          };
+
+          $rootScope.resetPhoneNumberChecker();
+
+          $rootScope.phoneNumberParser = function (checked)
+          {
+            if (checked != '')
+            {
+              if (checked && checked.length > 0)
+              {
+                var result, all;
+
+                result = all = phoneNumberParser(checked, 'NL');
+
+                $rootScope.phoneNumberParsed.result = true;
+
+                if (result)
+                {
+                  var error = $rootScope.ui.errors.phone.notValid,
+                      invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                      message;
+
+                  if (result.error)
                   {
-                    if (_member.uuid == memberId)
-                    {
-                      member = _member;
-                      return;
-                    }
+                    $rootScope.phoneNumberParsed = {
+                      result: false,
+                      message: error
+                    };
                   }
-                );
-              }
-            );
-
-            if (typeof member == 'undefined')
-            {
-              member = {
-                uuid: memberId,
-                firstName: memberId,
-                lastName: ''
-              };
-            }
-
-            member.fullName = member.firstName +
-                              ' ' +
-                              member.lastName;
-
-            return member;
-          };
-
-          // Get client by id (shared)
-          $rootScope.getClientByID = function (clientId)
-          {
-            var result;
-
-            angular.forEach(
-              Store('app').get('clients'),
-              function (client)
-              {
-                if (clientId == client.uuid)
-                {
-                  result = client;
-
-                  // TODO: return is needed here?
-                  return;
-                }
-              }
-            );
-
-            if (result == null)
-            {
-              angular.forEach(
-                Store('app').get('ClientGroups'),
-                function (group)
-                {
-                  angular.forEach(
-                    Store('app').get(group.id),
-                    function (client)
+                  else
+                  {
+                    if (! result.validation.isPossibleNumber)
                     {
-                      if (client.uuid = clientId)
+                      switch (result.validation.isPossibleNumberWithReason)
                       {
-                        result = client;
+                        case 'INVALID_COUNTRY_CODE':
+                          message = invalidCountry;
+                          break;
+                        case 'TOO_SHORT':
+                          message = error + $rootScope.ui.errors.phone.tooShort;
+                          break;
+                        case 'TOO_LONG':
+                          message = error + $rootScope.ui.errors.phone.tooLong;
+                          break;
+                      }
 
-                        // TODO: return is needed here?
-                        return;
+                      $rootScope.phoneNumberParsed = {
+                        result: false,
+                        message: message
+                      };
+                    }
+                    else
+                    {
+                      if (! result.validation.isValidNumber)
+                      {
+                        $rootScope.phoneNumberParsed = {
+                          result: false,
+                          message: error
+                        };
+                      }
+                      else
+                      {
+                        if (! result.validation.isValidNumberForRegion)
+                        {
+                          $rootScope.phoneNumberParsed = {
+                            result: false,
+                            message: invalidCountry
+                          };
+                        }
+                        else
+                        {
+                          $rootScope.phoneNumberParsed = {
+                            result: true,
+                            message: $rootScope.ui.success.phone.message +
+                                     result.validation.phoneNumberRegion +
+                                     $rootScope.ui.success.phone.as +
+                                     result.validation.getNumberType
+                          };
+
+                          $('#inputPhoneNumber').removeClass('error');
+                        }
                       }
                     }
-                  );
-                }
-              );
-            }
-
-            return result;
-          };
-
-          // Get group name by id (shared)
-          $rootScope.getClientGroupName = function (groupId)
-          {
-            var groups = Store('app').get('ClientGroups');
-            var ret = groupId;
-
-            angular.forEach(
-              groups,
-              function (g)
-              {
-                if (g.id == groupId)
-                {
-                  ret = g.name;
-                }
-              }
-            );
-
-            return ret;
-          };
-
-          // Get team name by id (shared)
-          $rootScope.getTeamName = function (teamId)
-          {
-            var teams = Store('app').get('teams');
-            var ret = teamId;
-
-            angular.forEach(
-              teams,
-              function (t)
-              {
-                if (t.uuid == teamId)
-                {
-                  ret = t.name;
-                }
-              }
-            );
-
-            return ret;
-          };
-
-          /**
-           * Here we need to find the clients for this team member,
-           * 1> get the team,
-           * 2> find the groups belong to this team,
-           * 3> get all the clients under the group
-           */
-            // TODO: It is only called from planboard controller. Maybe move it to there?
-            // FIXME: It breaks down when the selected groups has no clientGroup on adding slot on timeline
-          $rootScope.getClientsByTeam = function (teamIds)
-          {
-            var clients = [],
-                clientIds = [];
-
-            angular.forEach(
-              teamIds,
-              function (teamId)
-              {
-                angular.forEach(
-                  Store('app').get('teamGroup_' + teamId),
-                  function (teamGroup)
-                  {
-                    var members = Store('app').get(teamGroup.id);
-
-                    if (members.length > 0)
-                    {
-                      angular.forEach(
-                        members,
-                        function (member)
-                        {
-                          // console.log('member ->', member);
-
-                          if (clientIds.indexOf(member.uuid) == - 1)
-                          {
-                            clientIds.push(member.uuid);
-
-                            clients.push(
-                              {
-                                uuid: member.uuid,
-                                name: member.firstName + ' ' + member.lastName
-                              }
-                            );
-                          }
-                        }
-                      );
-                    }
-
                   }
-                );
-              });
-
-            return clients;
-          };
-
-          /**
-           * Here we need to find the team members that can actually take this client
-           * 1> get the team link to this client group ,
-           * 2> get the members in the team.
-           */
-            // TODO: It is only called from planboard controller. Maybe move it to there?
-          $rootScope.getMembersByClient = function (clientGroup)
-          {
-            var members = [],
-                memberIds = [];
-
-            angular.forEach(
-              Store('app').get('teams'),
-              function (team)
-              {
-                angular.forEach(
-                  Store('app').get('teamGroup_' + team.uuid),
-                  function (teamGrp)
-                  {
-                    if (clientGroup == teamGrp.id)
-                    {
-                      angular.forEach(
-                        Store('app').get(team.uuid),
-                        function (member)
-                        {
-                          if (memberIds.indexOf(member.uuid) == - 1)
-                          {
-                            memberIds.push(member.uuid);
-
-                            members.push(
-                              {
-                                uuid: member.uuid,
-                                name: member.firstName + ' ' + member.lastName
-                              }
-                            );
-                          }
-                        }
-                      );
-                    }
-                  }
-                );
-              }
-            );
-
-            return members;
-          };
-
-          // TODO: Combine login and logout together
-          $rootScope.logout = function ()
-          {
-            angular.element('.navbar').hide();
-
-            angular.element('#footer').hide();
-
-            var loginData = Store('app').get('loginData');
-
-            TeamUp._('logout')
-              .then(
-              function (result)
-              {
-                if (result.error)
-                {
-                  console.warn('error ->', result);
                 }
-                else
-                {
-                  Session.clear();
 
-                  Store('app').nuke();
-
-                  Store('app').save('loginData', loginData);
-
-                  $window.location.href = 'logout.html';
-                }
+                $rootScope.phoneNumberParsed.all = all;
               }
-            );
-          };
+              else
+              {
+                $rootScope.phoneNumberParsed.result = true;
 
-          // TODO: Remove adding 1 pixel fix from url, implement a session related id in url
-          // Trick browser for avatar url change against caching
-          $rootScope.avatarChange = function (avatarId)
-          {
-            var list = Store('app').get('avatarChangeRecord');
+                delete $rootScope.phoneNumberParsed.message;
 
-            if (! angular.isArray(list))
-            {
-              list = [];
+                $('#inputPhoneNumber').removeClass('error');
+              }
             }
-
-            list.push(avatarId);
-            Store('app').save('avatarChangeRecord', list);
           };
 
-          // TODO: Investigate on this!
-          // Know how many times user changed the avatar from upload function.
-          $rootScope.getAvatarChangeTimes = function (id)
-          {
-            var changedTimes = 0;
-            var list = Store('app').get('avatarChangeRecord');
-
-            angular.forEach(
-              list,
-              function (avatarId)
-              {
-                if (avatarId == id)
-                {
-                  changedTimes ++;
-                }
-              });
-            return changedTimes;
-          };
-
-          // TODO: Investigate on this!
-          // Translate the error message
-          // Extract the team and group id from error message and trans them into the name
-          $rootScope.transError = function (errorMessage)
-          {
-            // assume all the words are devided by the space
-            var arr = errorMessage.split(" ");
-            var ret = errorMessage;
-
-            angular.forEach(
-              arr,
-              function (word)
-              {
-                if (word.indexOf('_cg') > - 1)
-                {
-                  // might be the group id , try to search it , replace it with name if we found it
-                  ret = ret.replace(word, $rootScope.getClientGroupName(word));
-                }
-                else if (word.indexOf('_team') > - 1)
-                {
-                  // might be the team id , try to search it , replace it with name if we found it
-                  ret = ret.replace(word, $rootScope.getTeamName(word));
-                }
-              });
-
-            return ret;
-          };
-
+          $('.nav a').on('click', function () { $('.btn-navbar').click() });
         }
       ]
     );
+
+
   }
 );

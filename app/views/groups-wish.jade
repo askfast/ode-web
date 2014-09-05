@@ -1,0 +1,8 @@
+section#groups-wish
+	form.form-inline
+		fieldset
+			.control-group
+				.controls
+					input.span1(type='text', ng-model='popover.wish')
+					button.btn.btn-primary.btn-small(type='button', ng-click='saveWish(popover.id, popover.wish); dismiss()') {{ui.groups.widgetSave}}
+					button.btn.btn-small(type='button', ng-click='dismiss()') {{ui.groups.widgetCancel}}
