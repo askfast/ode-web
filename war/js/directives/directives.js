@@ -71,8 +71,7 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
 
-  }
-)
+  })
 
 
 /**
@@ -212,5 +211,4 @@ angular.module('WebPaige.Directives', ['ngResource'])
       }
     };
 
-  }
-);
+  });

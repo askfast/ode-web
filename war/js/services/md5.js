@@ -242,5 +242,4 @@ angular.module('WebPaige.Services.MD5', ['ngResource'])
      
       return temp.toLowerCase();
     }
-  }
-);
+  });

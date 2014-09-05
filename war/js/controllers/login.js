@@ -828,5 +828,4 @@ angular.module('WebPaige.Controllers.Login', [])
       }
 
     }
-  ])
-;
+  ]);
