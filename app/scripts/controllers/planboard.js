@@ -45,7 +45,7 @@ define(
             groupId,
             validGroup = false;
 
-          angular.forEach(
+          _.each(
             groups,
             function (_group) {
               if (_group.uuid == settings.app.group) {
@@ -170,7 +170,7 @@ define(
           /**
            * Legend defaults
            */
-          angular.forEach(
+          _.each(
             $rootScope.config.timeline.config.states,
             function (state, index) {
               $scope.timeline.config.legenda[index] = true
@@ -242,7 +242,7 @@ define(
               //        }
               //      });
 
-              angular.forEach(
+              _.each(
                 $scope.timeline.config.states,
                 function (state, key) {
                   // show only user editable states
@@ -280,7 +280,7 @@ define(
 
             $scope.groupPieHide = {};
 
-            angular.forEach(
+            _.each(
               $scope.divisions,
               function (division) {
                 $scope.groupPieHide[division.id] = false

@@ -9,7 +9,7 @@ define(
         return {
           restrict: 'E',
           rep1ace: true,
-          templateUrl: 'dist/views/messages-scheadule-item.html',
+          templateUrl: 'views/messages-scheadule-item.html',
           scope: {
             scheadule: '='
           },

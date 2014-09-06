@@ -4,9 +4,7 @@ define(
       // version: '@@version',
       version: '0.6.0-SNAPSHOT',
       // version: '0.5.2',
-      released: '@@released',
-
-
+      released: '@@released'
     },
 
 

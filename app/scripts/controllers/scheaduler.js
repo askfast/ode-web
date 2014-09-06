@@ -14,7 +14,7 @@ define(
           $scope.$watch(
             function () {
               if ($scope.scheaduled) {
-                angular.forEach(
+                _.each(
                   $scope.scheaduled.offsets,
                   function (offset) {
                     if (offset.mon == false &&

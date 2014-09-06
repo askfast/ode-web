@@ -1,6 +1,5 @@
 .page-header
   h2 {{ui.message.messages}}
-
     .btn-group.pull-right
       button.btn.btn-success(type='submit',
       class="{{(views.compose==true) && 'active'}}",
@@ -13,28 +12,28 @@
       ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
         li(ng-show='views.compose', class="{{(views.compose==true) && 'active'}}")
           a(href='messages#composeTab', data-toggle='tab', ng-click='setViewTo("compose")')
-            span.entypo ✎
+            span.entypo &#9998;
             | {{ui.message.compose}}
         li(ng-show='views.message', class="{{(views.message==true) && 'active'}}")
           a(href='messages#viewTab', data-toggle='tab', ng-click='')
-            span.entypo 
+            span.entypo &#128196;
             | {{ui.message.message}}
         li(class="{{(views.inbox==true) && 'active'}}")
           a(href='messages#inboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("inbox")')
-            span.entypo 
+            span.entypo &#128229;
             | {{ui.message.inbox}}
         li(class="{{(views.outbox==true) && 'active'}}")
           a(href='messages#outboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("outbox")')
-            span.entypo 
+            span.entypo &#128228;
             | {{ui.message.outbox}}
         li(class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}",
         ng-hide='app.resources.role > 1')
           a(href='messages#notificationsTab', data-toggle='tab', ng-click='resetViews(); setViewTo("notifications")')
-            span.entypo 
+            span.entypo &#128276;
             | {{ui.message.notifications}}
         li(class="{{(views.trash==true) && 'active'}}")
           a(href='messages#trashTab', data-toggle='tab', ng-click='resetViews(); setViewTo("trash")')
-            span.entypo ☕
+            span.entypo &#9749;
             | {{ui.message.trash}}
 
       .tab-content

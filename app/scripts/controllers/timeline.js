@@ -655,7 +655,7 @@ define(
            * Change division
            */
           $scope.changeDivision = function () {
-            angular.forEach(
+            _.each(
               $scope.divisions,
               function (division) {
                 $scope.groupPieHide[division.id] = false

@@ -65,14 +65,14 @@ define(
 
           var selection = {};
 
-          angular.forEach(
+          _.each(
             Storage.local.settings().app.widgets.groups,
             function (value, group) {
               selection[group] = value
             }
           );
 
-          angular.forEach(
+          _.each(
             groups,
             function (group) {
               if (!selection[group.uuid]) {
@@ -86,7 +86,7 @@ define(
 
           var filteredGroups = [];
 
-          angular.forEach(
+          _.each(
             groups,
             function (group) {
               if (group.uuid != 'all') {
@@ -106,7 +106,7 @@ define(
 
             $scope.loading.pies = false;
 
-            angular.forEach(
+            _.each(
               Storage.local.settings().app.widgets.groups,
               function (group) {
                 if (group.status === true) {
@@ -148,7 +148,7 @@ define(
                       end: pies[0].weeks.next.end.date
                     };
 
-                    angular.forEach(
+                    _.each(
                       pies,
                       function (pie) {
                         // Check whether if it is an array what data processor gives back
@@ -204,7 +204,7 @@ define(
                 })
                 .then(
                 function () {
-                  angular.forEach(
+                  _.each(
                     $scope.pies,
                     function (pie) {
                       pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
@@ -236,7 +236,7 @@ define(
                           colors = [],
                           xratios = [];
 
-                        angular.forEach(
+                        _.each(
                           _ratios,
                           function (ratio, index) {
                             if (ratio !== 0) {
@@ -256,7 +256,7 @@ define(
                           }
                         );
 
-                        angular.forEach(
+                        _.each(
                           ratios,
                           function (ratio) {
                             colors.push(ratio.color);
@@ -311,7 +311,7 @@ define(
 
             $scope.saSynced = cached.synced;
 
-            angular.forEach(
+            _.each(
               setup.selection,
               function (selection) {
                 function translateName(user) {
@@ -417,17 +417,17 @@ define(
                 // TODO: Kind of duplicate purpose with states
                 var states = ['available', 'unavailable', 'noplanning'];
 
-                angular.forEach(
+                _.each(
                   states,
                   function (state) {
                     reserves[state] = [];
 
-                    angular.forEach(
+                    _.each(
                       setup.reserves[state],
                       function (member) {
                         // console.log('member ->', member);
 
-                        angular.forEach(
+                        _.each(
                           member,
                           function (meta, userID) {
                             // console.log('meta ->', meta);
@@ -482,7 +482,7 @@ define(
 
           var members = Storage.local.members();
 
-          angular.forEach(
+          _.each(
             groups,
             function (group) {
               group.name = group.name.replace(
@@ -556,7 +556,7 @@ define(
               function (results) {
                 var ordered = {};
 
-                angular.forEach(
+                _.each(
                   angular.fromJson(angular.toJson(results.members)),
                   function (slots, id) {
                     if (members[id] &&
@@ -643,7 +643,7 @@ define(
 
                 var _availables = [];
 
-                angular.forEach(
+                _.each(
                   ordered.available,
                   function (available) {
                     if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst') {
@@ -652,7 +652,7 @@ define(
                   }
                 );
 
-                angular.forEach(
+                _.each(
                   ordered.available,
                   function (available) {
                     if (available.state == 'com.ask-cs.State.Available') {
@@ -661,7 +661,7 @@ define(
                   }
                 );
 
-                angular.forEach(
+                _.each(
                   ordered.available,
                   function (available) {
                     if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord') {
@@ -670,7 +670,7 @@ define(
                   }
                 );
 
-                angular.forEach(
+                _.each(
                   ordered.available,
                   function (available) {
                     if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid') {
@@ -707,7 +707,7 @@ define(
           $scope.saveOverviewWidget = function (selection) {
             $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
-            angular.forEach(
+            _.each(
               selection,
               function (selected) {
                 if (!selected.status) {
@@ -881,7 +881,7 @@ define(
 
                 capcodes = capcodes.sort();
 
-                angular.forEach(
+                _.each(
                   capcodes,
                   function (code) {
                     _capcodes += code + ', '

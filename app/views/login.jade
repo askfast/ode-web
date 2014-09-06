@@ -2,9 +2,10 @@
   download-mobile-app(ng-show='browser.mobile && browser.screen.width < 768')
 
   #preloader
-    img(ng-src='{{config.profile.logos.login}}', alt='{{config.profile.title}}')
+    img(ng-src='{{config.profile.logos.login}}',
+    alt='{{config.profile.title}}')
     h4 {{ui.login.setting_up_app}}
-    .span3
+    .progress.progress-striped.active.span3
       .bar
     span.muted
 

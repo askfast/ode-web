@@ -149,6 +149,7 @@ require(
     'services/interceptor',
     'services/md5',
     'services/messages',
+    'services/notifications',
     'services/offsetter',
     'services/phone',
     'services/profile',

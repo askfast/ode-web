@@ -67,7 +67,7 @@ define(
 
             $scope.saSynced = cached.synced;
 
-            angular.forEach(
+            _.each(
               setup.selection, function (selection) {
                 function translateName(user) {
                   return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
@@ -141,13 +141,13 @@ define(
 
                 var states = ['available', 'unavailable', 'noplanning'];
 
-                angular.forEach(
+                _.each(
                   states, function (state) {
                     reserves[state] = [];
 
-                    angular.forEach(
+                    _.each(
                       setup.reserves[state], function (member) {
-                        angular.forEach(
+                        _.each(
                           member, function (meta, userID) {
                             reserves[state].push(
                               {
@@ -174,7 +174,7 @@ define(
             function (groups) {
               var calls = [];
 
-              angular.forEach(
+              _.each(
                 groups, function (group) {
                   calls.push(Groups.get(group.uuid));
                 });

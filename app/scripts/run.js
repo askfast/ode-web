@@ -2,8 +2,8 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
   'use strict';
 
   app.run([
-    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$window', 'States', 'Browsers',
-    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers) {
+    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$window', 'States', 'Browsers', 'Notifications',
+    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers, Notifications) {
       $rootScope.config = config;
       $rootScope.config.init();
 
@@ -66,95 +66,6 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
         };
       }
 
-      $rootScope.statusBar = {
-        init: function () {
-          $rootScope.loading = {
-            status: false,
-            message: 'Aan het laden..'
-          };
-
-          $rootScope.app.preloader = {
-            status: false,
-            total: 0,
-            count: 0
-          };
-        },
-
-        display: function (message) {
-          $rootScope.app.preloader.status = false;
-
-          $rootScope.loading = {
-            status: true,
-            message: message
-          };
-        },
-
-        off: function () {
-          $rootScope.loading.status = false
-        }
-      };
-
-      $rootScope.statusBar.init();
-
-
-      $rootScope.notification = {
-        status: false,
-        type: '',
-        message: ''
-      };
-
-      $rootScope.notifier =
-      {
-        init: function (status, type, message, confirm, options) {
-          $rootScope.notification.status = true;
-
-          if ($rootScope.browser.mobile && status == true) {
-            $window.alert(message);
-          } else {
-            $rootScope.notification = {
-              status: status,
-              type: type,
-              message: message,
-              confirm: confirm,
-              options: options
-            };
-          }
-        },
-
-        success: function (message, permanent) {
-          this.init(true, 'alert-success', message);
-
-          if (!permanent) {
-            this.destroy();
-          }
-        },
-
-        error: function (message, permanent) {
-          this.init(true, 'alert-danger', message);
-
-          if (!permanent) {
-            this.destroy();
-          }
-        },
-
-        alert: function (message, permanent, confirm, options) {
-          this.init(true, '', message, confirm, options);
-
-          if (!permanent) {
-            this.destroy();
-          }
-        },
-
-        destroy: function () {
-          setTimeout(
-            function () {
-              $rootScope.notification.status = false;
-            }, $rootScope.config.timers.NOTIFICATION_DELAY);
-        }
-      };
-
-      $rootScope.notifier.init(false, '', '');
-
       $rootScope.fireDeleteRequest = function (options) {
         switch (options.section) {
           case 'groups':
@@ -196,14 +107,6 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
       $rootScope.fullScreen = function () {
         screenfull.toggle($('html')[0])
       };
-
-      if ($.os.windows) {
-        $('#loading p').css({ paddingTop: '130px' });
-      }
-
-      if ($.browser.msie && $.browser.version == '8.0') {
-        document.title = $rootScope.config.profile.title;
-      }
 
       if (!config.profile.mobileApp.status) {
         $('#copyrights span.muted').css({ right: 0 });

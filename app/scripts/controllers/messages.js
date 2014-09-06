@@ -14,9 +14,8 @@ define(
         'data',
         'Messages',
         'Storage',
-        'Timer',
         'Offsetter',
-        function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) {
+        function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Offsetter) {
           $rootScope.notification.status = false;
 
           /**
@@ -228,7 +227,7 @@ define(
 
               var _inbox = [];
 
-              angular.forEach(
+              _.each(
                 $scope.messages.inbox,
                 function (message) {
                   if (message.uuid == $scope.message.uuid) {
@@ -271,7 +270,7 @@ define(
           $scope.scheaduleCounter = function () {
             var count = 0;
 
-            angular.forEach(
+            _.each(
               $scope.scheaduled.offsets,
               function () {
                 count++
@@ -292,7 +291,7 @@ define(
 
             var scheaduled = Messages.scheaduled.find(id);
 
-            angular.forEach(
+            _.each(
               scheaduled.types,
               function (type) {
                 if (type == 'sms')    $scope.broadcast.sms = true;
@@ -304,7 +303,7 @@ define(
               groups = angular.fromJson(Storage.get('groups')),
               receivers = [];
 
-            angular.forEach(
+            _.each(
               scheaduled.recipients,
               function (recipient) {
                 var name;
@@ -321,7 +320,7 @@ define(
                   );
                 }
                 else {
-                  angular.forEach(
+                  _.each(
                     groups,
                     function (group) {
                       if (group.uuid == recipient) {
@@ -347,10 +346,10 @@ define(
               receivers: receivers
             };
 
-            angular.forEach(
+            _.each(
               $("div#composeTab select.chzn-select option"),
               function (option) {
-                angular.forEach(
+                _.each(
                   scheaduled.recipients,
                   function (recipient) {
                     if (members[recipient]) {
@@ -359,7 +358,7 @@ define(
                       }
                     }
                     else {
-                      angular.forEach(
+                      _.each(
                         groups,
                         function (group) {
                           if (group.uuid == recipient) {
@@ -394,7 +393,7 @@ define(
 
             var count = 0;
 
-            angular.forEach(
+            _.each(
               $scope.scheaduled.offsets,
               function () {
                 count++
@@ -457,7 +456,7 @@ define(
 
               $scope.scheadulerPane = false;
 
-              angular.forEach(
+              _.each(
                 $("div#composeTab select.chzn-select option"),
                 function (option) {
                   option.selected = false
@@ -501,7 +500,7 @@ define(
           $scope.toggleSelection = function (messages, inbox, master) {
             var flag = (master) ? true : false;
 
-            angular.forEach(
+            _.each(
               messages,
               function (message) {
                 $scope.selection[inbox][message.uuid] = flag
@@ -560,7 +559,7 @@ define(
 
             var ids = [];
 
-            angular.forEach(
+            _.each(
               selection,
               function (flag, id) {
                 if (flag) ids.push(id)
@@ -638,7 +637,7 @@ define(
 
             var ids = [];
 
-            angular.forEach(
+            _.each(
               selection, function (flag, id) {
                 if (flag) ids.push(id);
               });
@@ -836,9 +835,9 @@ define(
            * Re-render receivers list
            */
           function renderReceiversList() {
-            angular.forEach(
+            _.each(
               $scope.message.receivers, function (receiver) {
-                angular.forEach(
+                _.each(
                   $("div#composeTab select.chzn-select option"),
                   function (option) {
                     if (option.innerHTML == receiver.name) {
@@ -863,7 +862,7 @@ define(
 
             setTimeout(
               function () {
-                angular.forEach(
+                _.each(
                   $("div#composeTab select.chzn-select option"),
                   function (option) {
                     if (option.innerHTML == name) option.selected = true;
@@ -925,7 +924,7 @@ define(
               var members = [],
                 types = [];
 
-              angular.forEach(
+              _.each(
                 message.receivers, function (receiver) {
                   members.push(receiver.id);
                 });

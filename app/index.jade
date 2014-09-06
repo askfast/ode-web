@@ -1,315 +1,175 @@
 extends layout
 
-
-
 block watermark
-	#watermark
-	script.
-		$('#watermark').css({
-			backgroundImage: 'url(../profiles/' + profile.meta  + '/images/watermark.png)',
-			backgroundRepeat: 'no-repeat'
-		});
-		if ($.browser.mobile) $('#watermark').css({ bottom: '-10px' });
-
-
+  #watermark
+  script.
+    $('#watermark').css({
+      backgroundImage: 'url(../profiles/' + profile.meta  + '/images/watermark.png)',
+      backgroundRepeat: 'no-repeat'
+    });
+    if ($.browser.mobile) $('#watermark').css({ bottom: '-10px' });
 
 block navbar
-	.navbar.navbar-inverse.navbar-fixed-top.ng-cloak(
+  .navbar.navbar-inverse.navbar-fixed-top.ng-cloak(
   ng-hide='(location=="login" || location=="forgotpass" || location=="register")',
   bs-navbar='')
-		.navbar-inner
-			.container-fluid
-				a.btn.btn-navbar(data-toggle='collapse',
+    .navbar-inner
+      .container-fluid
+        a.btn.btn-navbar(data-toggle='collapse',
         data-target='.nav-collapse')
-					span.icon-bar
-					span.icon-bar
-					span.icon-bar
-				a.brand(href='#dashboard') StandBy
-				#collapsed.nav-collapse.collapse
-					ul.nav
-						li(data-match-route='/dashboard')
-							a(href='#dashboard', ng-click='collapseNav()') Dashboard
-						li(data-match-route='/planboard')
-							a(href='#planboard') Agenda
-						li(data-match-route='/messages')
-							a(href='#messages')
-								| {{ui.message.messages}}
-								span.badge.badge-success(ng-show="(app.unreadMessages > 0)")
-								| {{app.unreadMessages}}
-						li(data-match-route='/groups', ng-hide='app.resources.role > 1')
-							a(href='#groups') {{ui.groups.groups}}
-					ul.nav.pull-right(ng-hide='browser.mobile')
-						li
-							a(href='#faq#web')
-								i.icon-question-sign.icon-white
-								| FAQ
-						li
-							a(href='#help#{{location}}')
-								i.icon-info-sign.icon-white
-								| Handleiding
-						li.dropdown
-							a.dropdown-toggle(href='', data-toggle='dropdown')
-								i.icon-user.icon-white
-								| {{app.resources.name}}
-								span(ng-show='app.resources.role == 0') [SU]
-								b.caret
-							ul.dropdown-menu
-								li
-									a(href='#profile')
-										i.icon-user
-										| {{ui.profile.profile}}
-								li
-									a(href='#settings')
-										i.icon-wrench
-										| {{ui.settings.settings}}
-								li.divider
-								li
-									a(href='#logout')
-										i.icon-off
-										| {{ui.login.logout}}
-						li#fullscreener(ng-show='config.fullscreen && browser.webkit')
-							a(ng-click='fullScreen()')
-								i.icon-fullscreen.icon-white
-					ul.nav.pull-right(ng-show='browser.mobile',
-					style='{{(browser.landscape) && "margin-right:-20px"}}; display:none')
-						li
-							a(href='#profile')
-								i.icon-user.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-								span(ng-show='browser.portrait || browser.screen.width < 768')
-						li
-							a(href='#settings')
-								i.icon-wrench.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-								span(ng-show='browser.portrait || browser.screen.width < 768')
-						li
-							a(href='#logout')
-								i.icon-off.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-								span(ng-show='browser.portrait || browser.screen.width < 768')
-
-
-
-
-block navbar2
-	.navbar.navbar-inverse.navbar-fixed-top(bs-navbar='bs-navbar')
-		.container
-			button.navbar-toggle(type='button', data-toggle='collapse', data-target='.bs-navbar-collapse')
-				span.icon-bar
-				span.icon-bar
-				span.icon-bar
-			a.navbar-brand(href='#/home') Home
-			#collapsed.navbar-collapse.collapse
-				ul.nav
-					li(data-match-route='/dashboard')
-						a(href='#dashboard', ng-click='collapseNav()') Dashboard
-					li(data-match-route='/planboard')
-						a(href='#planboard') Agenda
-					li(data-match-route='/messages')
-						a(href='#messages')
-							| {{ui.message.messages}}
-							span.badge.badge-success(ng-show="(app.unreadMessages > 0)")
-								| {{app.unreadMessages}}
-					li(data-match-route='/groups', ng-hide='app.resources.role > 1')
-						a(href='#groups') {{ui.groups.groups}}
-				ul.nav.pull-right(ng-hide='browser.mobile')
-					li
-						a(href='#faq#web')
-							i.icon-question-sign.icon-white
-							| FAQ
-					li
-						a(href='#help#{{location}}')
-							i.icon-info-sign.icon-white
-							| Handleiding
-					li.dropdown
-						a.dropdown-toggle(href='', data-toggle='dropdown')
-							i.icon-user.icon-white
-							| {{app.resources.name}}
-							span(ng-show='app.resources.role == 0') [SU]
-							b.caret
-						ul.dropdown-menu
-							li
-								a(href='#profile')
-									i.icon-user
-									| {{ui.profile.profile}}
-							li
-								a(href='#settings')
-									i.icon-wrench
-									| {{ui.settings.settings}}
-							li.divider
-							li
-								a(href='#logout')
-									i.icon-off
-									| {{ui.login.logout}}
-					li#fullscreener(ng-show='config.fullscreen && browser.webkit')
-						a(ng-click='fullScreen()')
-							i.icon-fullscreen.icon-white
-				ul.nav.pull-right(ng-show='browser.mobile')
-					li
-						a(href='#profile')
-							i.icon-user.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-							span(ng-show='browser.portrait || browser.screen.width < 768')
-					li
-						a(href='#settings')
-							i.icon-wrench.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-							span(ng-show='browser.portrait || browser.screen.width < 768')
-					li
-						a(href='#logout')
-							i.icon-off.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
-							span(ng-show='browser.portrait || browser.screen.width < 768')
-
-
-
-
-
-
-
-
-
-
-
-
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.brand(href='#dashboard') StandBy
+        #collapsed.nav-collapse.collapse
+          ul.nav
+            li(data-match-route='/dashboard')
+              a(href='#dashboard',
+              ng-click='collapseNav()') Dashboard
+            li(data-match-route='/planboard')
+              a(href='#planboard') Agenda
+            li(data-match-route='/messages')
+              a(href='#messages')
+                | {{ui.message.messages}} &nbsp;
+                span.badge.badge-success(ng-show="(app.unreadMessages > 0)")
+                  | {{app.unreadMessages}}
+            li(data-match-route='/groups',
+            ng-hide='app.resources.role > 1')
+              a(href='#groups') {{ui.groups.groups}}
+          ul.nav.pull-right(ng-hide='browser.mobile')
+            li
+              a(href='#faq#web')
+                i.icon-question-sign.icon-white
+                | FAQ
+            li
+              a(href='#help#{{location}}')
+                i.icon-info-sign.icon-white
+                | Handleiding
+            li.dropdown
+              a.dropdown-toggle(href='',
+              data-toggle='dropdown')
+                i.icon-user.icon-white
+                | {{app.resources.name}}
+                span(ng-show='app.resources.role == 0') [SU]
+                b.caret
+              ul.dropdown-menu
+                li
+                  a(href='#profile')
+                    i.icon-user
+                    | {{ui.profile.profile}}
+                li
+                  a(href='#settings')
+                    i.icon-wrench
+                    | {{ui.settings.settings}}
+                li.divider
+                li
+                  a(href='#logout')
+                    i.icon-off
+                    | {{ui.login.logout}}
+            li#fullscreener(ng-show='config.fullscreen && browser.webkit')
+              a(ng-click='fullScreen()')
+                i.icon-fullscreen.icon-white
+          ul.nav.pull-right(ng-show='browser.mobile',
+          style='{{(browser.landscape) && "margin-right:-20px"}}; display:none')
+            li
+              a(href='#profile')
+                i.icon-user.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+                span(ng-show='browser.portrait || browser.screen.width < 768')
+            li
+              a(href='#settings')
+                i.icon-wrench.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+                span(ng-show='browser.portrait || browser.screen.width < 768')
+            li
+              a(href='#logout')
+                i.icon-off.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+                span(ng-show='browser.portrait || browser.screen.width < 768')
 
 block loading
-	#loading.ng-cloak(ng-show='loadingBig')
-		div(ng-show='loaderIcons.general')
-			span.entypo ⏳
-			p {{ui.loading.general}}...
-		div(ng-show='loaderIcons.dashboard')
-			span.entypo ◴
-			p
-				| {{ui.loading.general}}
-				br
-				| {{ui.loading.dashboard}}
-		div(ng-show='loaderIcons.planboard')
-			span.entypo 
-			p
-				| {{ui.loading.general}}
-				br
-				| {{ui.loading.planboard}}
-		div(ng-show='loaderIcons.messages')
-			span.entypo 
-			p
-				| {{ui.loading.general}}
-				br
-				| {{ui.loading.messages}}
-		div(ng-show='loaderIcons.groups')
-			span.entypo 
-			p
-				| {{ui.loading.general}}
-				br
-				| {{ui.loading.groups}}
-		div(ng-show='loaderIcons.profile')
-			span.entypo 
-			p
-				| {{ui.loading.general}}
-				br
-				| {{ui.loading.profile}}
-		div(ng-show='loaderIcons.settings')
-			span.entypo ⚒
-			p
-				| {{ui.loading.general}}
-				br
-				| {{ui.loading.settings}}
-
-
-
-
-
+  #loading.ng-cloak(ng-show='loadingBig')
+    div(ng-show='loaderIcons.general')
+      span.entypo &#9203;
+      p {{ui.loading.general}}...
+    div(ng-show='loaderIcons.dashboard')
+      span.entypo &#9716;
+      p {{ui.loading.general}} {{ui.loading.dashboard}}
+    div(ng-show='loaderIcons.planboard')
+      span.entypo &#128340;
+      p {{ui.loading.general}} {{ui.loading.planboard}}
+    div(ng-show='loaderIcons.messages')
+      span.entypo &#59255;
+      p {{ui.loading.general}} {{ui.loading.messages}}
+    div(ng-show='loaderIcons.groups')
+      span.entypo &#128101;
+      p {{ui.loading.general}} {{ui.loading.groups}}
+    div(ng-show='loaderIcons.profile')
+      span.entypo &#128100;
+      p {{ui.loading.general}} {{ui.loading.profile}}
+    div(ng-show='loaderIcons.settings')
+      span.entypo &#9874;
+      p {{ui.loading.general}} {{ui.loading.settings}}
 
 block notifications
-	#notification.alert.ng-cloak(class='{{notification.type}}', ng-show='notification.status')
-		button.close(type='button', ng-click='notification.status = false') ×
-		span(ng-hide='notification.confirm') {{notification.message}}
-		span(ng-show='notification.confirm')
-			| {{ui.confirms.remove}}
-			button.btn.btn-mini.btn-danger(ng-click='fireDeleteRequest(notification.options)') Delete
-
-
-
-
-
+  #notification.alert.ng-cloak(class='{{notification.type}}', ng-show='notification.status')
+    button.close(type='button', ng-click='notification.status = false') ×
+    span(ng-hide='notification.confirm') {{notification.message}}
+    span(ng-show='notification.confirm')
+      | {{ui.confirms.remove}}
+      button.btn.btn-mini.btn-danger(ng-click='fireDeleteRequest(notification.options)') Delete
 
 block mobile-status-bar
-	#mobile-status-bar.ng-cloak(ng-show='loading.status && browser.mobile')
-		img(src='images/ajax-loader.gif')
-		small {{loading.message}}
-
-
-
-
-
-
+  #mobile-status-bar.ng-cloak(ng-show='loading.status && browser.mobile')
+    img(src='images/ajax-loader.gif')
+    small {{loading.message}}
 
 block footer
-	#footer.ng-cloak(ng-hide='browser.mobile')
-		.container-fluid
-			#copyrights
-				#download-footer
-					ul
-						li(ng-show='config.profile.mobileApp.status')
-							.btn-group.dropup
-								button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
-									| Download mobiele app
-								ul.dropdown-menu.pull-right
-									li(ng-show='(config.profile.meta == "demo")')
-										a(href='https://play.google.com/store/apps/details?id=com.askcs.standbydemo', target='_blank')
-											| Download Android App
-									li(ng-hide='(config.profile.meta == "demo")')
-										a(href='https://play.google.com/store/apps/details?id=com.askcs.standby', target='_blank')
-											| Download Android App
-									li
-										a(href='https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4', target='itunes_store')
-											| Download iPhone App
-						li
-							img(src='images/standby_logo_footer.png', alt='StandBy Logo')
-						li
-							span.muted(style='display: block; margin-top: 4px;')
-								small
-									| Ask Community Systems, 2013   |
-									i
-										a(href='version.html', target='_blank', style='color: #dddddd;') StandBy v{{config.version}}
-			p.muted(ng-show='loading.status')
-				img(src='images/ajax-loader.gif')
-				small
-					span(ng-show='app.preloader.status') {{app.preloader.count}}%
-					| {{loading.message}}
-
-
-
-
-
-
-
-block footer2
-	footer
-		.container
-			p.text-muted.credit.pull-left
-				| Some footer text
-				a(href='#')  and a link
-			p.text-muted.pull-right(style='margin-top:20px')
-				| {{ 'Current version is v%VERSION%. Released: %RELEASED%' | interpolate }}
-
-
-
-
+  #footer.ng-cloak(ng-hide='browser.mobile')
+    .container-fluid
+      #copyrights
+        #download-footer
+          ul
+            li(ng-show='config.profile.mobileApp.status')
+              .btn-group.dropup
+                button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
+                  | Download mobiele app
+                ul.dropdown-menu.pull-right
+                  li(ng-show='(config.profile.meta == "demo")')
+                    a(href='https://play.google.com/store/apps/details?id=com.askcs.standbydemo', target='_blank')
+                      | Download Android App
+                  li(ng-hide='(config.profile.meta == "demo")')
+                    a(href='https://play.google.com/store/apps/details?id=com.askcs.standby', target='_blank')
+                      | Download Android App
+                  li
+                    a(href='https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4', target='itunes_store')
+                      | Download iPhone App
+            li
+              img(src='images/standby_logo_footer.png', alt='StandBy Logo')
+            li
+              span.muted(style='display: block; margin-top: 4px;')
+                small
+                  | Ask Community Systems, 2013   |
+                  i
+                    a(href='version.html', target='_blank', style='color: #dddddd;') StandBy v{{config.version}}
+      p.muted(ng-show='loading.status')
+        img(src='images/ajax-loader.gif')
+        small
+          span(ng-show='app.preloader.status') {{app.preloader.count}}%
+          | {{loading.message}}
 
 block icons
-	link(rel='apple-touch-icon-precomposed', sizes='144x144', href='icons/apple-touch-icon-144-precomposed.png')
-	link(rel='apple-touch-icon-precomposed', sizes='114x114', href='icons/apple-touch-icon-114-precomposed.png')
-	link(rel='apple-touch-icon-precomposed', sizes='72x72', href='icons/apple-touch-icon-72-precomposed.png')
-	link(rel='apple-touch-icon-precomposed', href='icons/apple-touch-icon-57-precomposed.png')
-	link(rel='shortcut icon', href='icons/favicon.png')
-
-
-
-
+  link(rel='apple-touch-icon-precomposed', sizes='144x144', href='icons/apple-touch-icon-144-precomposed.png')
+  link(rel='apple-touch-icon-precomposed', sizes='114x114', href='icons/apple-touch-icon-114-precomposed.png')
+  link(rel='apple-touch-icon-precomposed', sizes='72x72', href='icons/apple-touch-icon-72-precomposed.png')
+  link(rel='apple-touch-icon-precomposed', href='icons/apple-touch-icon-57-precomposed.png')
+  link(rel='shortcut icon', href='icons/favicon.png')
 
 block iestuff
-	//if lt IE 7
-		p.chromeframe
-			| You are using an outdated browser.
-			a(href='http://browsehappy.com/') Upgrade your browser today
-			| or
-			a(href='http://www.google.com/chromeframe/?redirect=true') install Google Chrome Frame
-			| to better experience this site.
-	//if lt IE 9
-		script(src='vendors/es5-shim/es5-shim.js')
-		script(src='vendors/json3/lib/json3.min.js')
+  //if lt IE 7
+    p.chromeframe
+      | You are using an outdated browser.
+      a(href='http://browsehappy.com/') Upgrade your browser today
+      | or
+      a(href='http://www.google.com/chromeframe/?redirect=true') install Google Chrome Frame
+      | to better experience this site.
+  //if lt IE 9
+    script(src='vendors/es5-shim/es5-shim.js')
+    script(src='vendors/json3/lib/json3.min.js')

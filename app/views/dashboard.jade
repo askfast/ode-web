@@ -172,10 +172,11 @@ section#dashboard
           span.muted {{availability.synced | nicelyDate}}
 
   .row-fluid
+
     .widget(class="{{(!browser.mobile) && 'span9' || 'span12'}}")
       .head
         h4 {{ui.dashboard.overview}}
-        button#dashboardPopoverBtn.btn.btn-small(bs-popover='"views/dashboard-pies.html"',
+        button#dashboardPopoverBtn.btn.btn-small(bs-popover__='"views/dashboard-pies.html"',
         data-placement='{{(browser.mobile) && "left" || "bottom"}}',
         data-title='Overzicht instellingen',
         ng-click='fixPopoverPos()')
@@ -248,6 +249,7 @@ section#dashboard
             | {{periods.start}}
             | |
             | {{periods.end}}
+
     .widget(ng-show='config.profile.p2000.status', class="{{(!browser.mobile) && 'span3' || 'span12'}}")
       .head
         h4 {{ui.dashboard.announcements}}
@@ -269,9 +271,9 @@ section#dashboard
                 | {{alarm.body}}
             tr
               td(colspan='2')
-                small.
-                    i.icon-bullhorn(style='margin-top: -2px; color: #a0a0a0 !important;')
-                    i {{alarm.msgCode}}
+                small
+                  i.icon-bullhorn(style='margin-top: -2px; color: #a0a0a0 !important;')
+                  i {{alarm.msgCode}}
       hr.lastline(ng-hide='loading.alerts')
       p(ng-hide='loading.alerts')
         small.pull-left

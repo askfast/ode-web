@@ -50,10 +50,10 @@ define(
 
           var PhoneAddressesExist = false;
 
-          angular.forEach(
+          _.each(
             data.members,
             function (members) {
-              angular.forEach(
+              _.each(
                 members,
                 function (member) {
                   if (member.resources.PhoneAddresses) {
@@ -92,7 +92,7 @@ define(
 
             var absent = false;
 
-            angular.forEach(
+            _.each(
               data.groups,
               function (group) {
                 var firstGroup = new RegExp(uuid);
@@ -138,7 +138,7 @@ define(
            * Set given group for view
            */
           function setGroupView(id) {
-            angular.forEach(
+            _.each(
               data.groups, function (group) {
                 if (group.uuid == id) $scope.group = group;
               });
@@ -478,7 +478,7 @@ define(
 
             console.log('selection ->', selection);
 
-            angular.forEach(
+            _.each(
               selection,
               function (value, user) {
                 console.log('value ->', value, $rootScope.app.members[user]);
@@ -560,12 +560,12 @@ define(
 
                         $scope.data = data;
 
-                        angular.forEach(
+                        _.each(
                           data.groups, function (group) {
                             if (group.uuid == returned) {
                               $scope.groups = data.groups;
 
-                              angular.forEach(
+                              _.each(
                                 data.groups, function (g) {
                                   if (g.uuid == group.uuid) {
                                     $scope.group = g;
@@ -766,7 +766,7 @@ define(
                         /**
                          * TODO: Is this really supposed to be like this?
                          */
-                        angular.forEach(
+                        _.each(
                           data.groups,
                           function (group, index) {
                             $scope.groups = data.groups;
@@ -828,7 +828,7 @@ define(
             var flag = (master) ? false : true,
               members = angular.fromJson(Storage.get(group.uuid));
 
-            angular.forEach(
+            _.each(
               members,
               function (member) {
                 $scope.selection[member.uuid] = flag

@@ -7,8 +7,8 @@ ng\:form {
   display: block;
 }
 
-html,body {
-  margin:0;
+html, body {
+  margin: 0;
   height: 100%;
   min-height: 100%;
 }
@@ -25,7 +25,7 @@ a {
 
 dl {
   dt {
-    
+
   }
   dd {
     margin-bottom: 15px;
@@ -33,10 +33,10 @@ dl {
 }
 
 .left-border-fix {
-  width: 1px; 
-  border-left: 1px solid red; 
-  z-index: 10000; 
-/*  position: absolute;*/
+  width: 1px;
+  border-left: 1px solid red;
+  z-index: 10000;
+  /*  position: absolute;*/
   top: 0;
   left: 0;
   float: left;
@@ -93,7 +93,7 @@ dl {
 
 .navbar {
   .badge-success {
-    background-color: $btnSuccessBackground;
+    background-color: $btnSuccessBackground !important;
   }
 }
 
@@ -107,7 +107,7 @@ dl {
 
       label {
         font-weight: normal;
-        
+
         input[type=checkbox] {
           margin: -2px 3px 0 2px;
         }
@@ -115,12 +115,6 @@ dl {
     }
   }
 }
-
-
-
-
-
-
 
 #versions {
 
@@ -186,13 +180,6 @@ dl {
     }
   }
 }
-
-
-
-
-
-
-
 
 #groups-wish {
   form {
@@ -304,13 +291,13 @@ dl {
 }
 
 .scheadule-icons {
-  width: 48px; 
-  height: 24px; 
+  width: 48px;
+  height: 24px;
   overflow: hidden;
 
   div {
     float: left;
-    display:inline;
+    display: inline;
     width: 24px;
     height: 24px;
 
@@ -328,7 +315,6 @@ dl {
     }
   }
 }
-
 
 #download-footer {
   ul.dropdown-menu {

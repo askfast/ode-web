@@ -164,7 +164,7 @@ define(
            */
           var roles = {};
 
-          angular.forEach(
+          _.each(
             $rootScope.config.roles,
             function (role) {
               roles[role.id] = role.label
@@ -259,7 +259,7 @@ define(
           $scope.profilePhoneNumberParser = function () {
             var checked;
 
-            angular.forEach(
+            _.each(
               [1, 2, 3],
               function (index) {
                 checked = $scope.profilemeta.phones[index];
@@ -330,7 +330,7 @@ define(
 
                               $('.inputPhoneNumbers').removeClass('error');
 
-                              angular.forEach(
+                              _.each(
                                 [1, 2, 3],
                                 function (_index) {
                                   if (index != _index) {
@@ -458,10 +458,10 @@ define(
           function setGroupSelection() {
             $scope.userGroups = [];
 
-            angular.forEach(
+            _.each(
               $("div#editTab select.chzn-select option"),
               function (option) {
-                angular.forEach(
+                _.each(
                   $scope.groups,
                   function (userGroup) {
                     if (option.innerHTML == userGroup.name) {
@@ -482,10 +482,10 @@ define(
               function () {
                 var selectedGroups = [];
 
-                angular.forEach(
+                _.each(
                   $(".chzn-choices .search-choice span"),
                   function (option) {
-                    angular.forEach(
+                    _.each(
                       Storage.local.groups(),
                       function (group) {
                         var _g = new RegExp(option.innerHTML);
@@ -631,7 +631,7 @@ define(
 
             var parsed;
 
-            angular.forEach(
+            _.each(
               resources.phones,
               function (phone, index) {
                 if (angular.isDefined(phone) && phone.length > 0) {
@@ -652,7 +652,7 @@ define(
 
             var phones = [];
 
-            angular.forEach(
+            _.each(
               resources.PhoneAddresses,
               function (phone) {
                 if (phone !== undefined && phone !== null && phone !== "") {
@@ -693,7 +693,7 @@ define(
 
                         var userGroups = [];
 
-                        angular.forEach(
+                        _.each(
                           $scope.userGroups,
                           function (group) {
                             userGroups.push(group.uuid)
@@ -774,7 +774,7 @@ define(
                                             $scope.data = data
                                           });
 
-                                          angular.forEach(
+                                          _.each(
                                             [
                                               {id: 2, name: 'second'},
                                               {id: 3, name: 'third'}
@@ -914,7 +914,7 @@ define(
 
             var states = {};
 
-            angular.forEach(
+            _.each(
               $scope.timeline.config.states,
               function (state, key) {
                 states[key] = state.label
@@ -923,7 +923,7 @@ define(
 
             $scope.states = states;
 
-            angular.forEach(
+            _.each(
               $rootScope.config.timeline.config.states,
               function (state, index) {
                 $scope.timeline.config.legenda[index] = true;
