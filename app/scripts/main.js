@@ -7,7 +7,7 @@ if (window.location.port == '8080') {
 require.config(
   {
     paths: {
-      date: 'removables/date',
+      date: 'libs/date/1.0/date.min',
       angular: '../vendors/angular/angular.min',
       jquery: '../vendors/jquery/dist/jquery.min',
       plugins: 'plugins',
@@ -28,32 +28,31 @@ require.config(
       dom: '../vendors/lawnchair/src/adapters/dom',
       // moment: '../vendors/momentjs/min/moment.min',
 
-      // timeline:           '../vendors/chap-links-library/js/src/timeline/timeline-min',
-      timeline: 'removables/timeline',
+      chosen: 'libs/chosen/chosen.jquery.min',
+      timeline: 'libs/chaps/timeline/2.4.0/timeline_modified',
+      datepicker: 'libs/bootstrap-datepicker/bootstrap-datepicker.min',
+      timepicker: 'libs/bootstrap-timepicker/bootstrap-timepicker.min',
+      daterangepicker: 'libs/daterangepicker/1.1.0/daterangepicker.min',
 
-      // treegrid:           '../vendors/chap-links-library/js/src/treegrid/treegrid-min',
-      treegrid: 'removables/treegrid',
+      // TODO: Still needed?
+      sugar: 'libs/sugar/1.3.7/sugar.min',
 
-      // datepicker:         '../vendors/bootstrap-datepicker/js/bootstrap-datepicker',
-      datepicker: 'removables/datepicker.min',
+      raphael: 'libs/raphael/2.1.0/raphael-min',
+      'g-raphael': 'libs/g-raphael/0.5.1/g.raphael-min',
+      'g-pie': 'libs/g-raphael/0.5.1/g.pie-min',
 
-      // datepicker:         '../vendors/angular-ui-bootstrap/src/datepicker/datepicker',
-      // datepicker:         '../vendors/jquery-ui/ui/jquery.ui.datepicker',
-      // timepicker:         '../vendors/bootstrap-timepicker/js/bootstrap-timepicker.min'
-
-      timepicker: 'removables/timepicker.min',
       underscore: '../vendors/underscore/underscore',
 
       // md5: '../vendors/web-lib-md5/md5.min',
 
+      mask: 'libs/angular-ui-utils/modules/mask/mask',
+
       store: '../vendors/web-lib-store/dist/store',
       offline: '../vendors/web-lib-offline/dist/offline',
-
+      phone: '../vendors/web-lib-phonenumber/libphonenumber',
       // interceptor: '../vendors/web-lib-interceptor/dist/interceptor',
-
       log: '../vendors/web-lib-log/dist/log',
       // _moment: '../vendors/web-lib-moment/dist/moment',
-
       // session: '../vendors/web-lib-session/dist/session',
 
       // vis: '../vendors/vis/dist/vis.min',
@@ -67,7 +66,8 @@ require.config(
 
       // 'jquery-ui':        '../vendors/jquery-ui/ui/jquery-ui',      
       // 'ui-sortable':      '../vendors/angular-ui-sortable/sortable',      
-      'ui.bootstrap.pagination': '../vendors/angular-ui-bootstrap/src/pagination/pagination',
+      // 'ui.bootstrap.pagination': '../vendors/angular-ui-bootstrap/src/pagination/pagination',
+
       'locale_nl': 'i18n/angular-locale_nl'
     },
     shim: {
@@ -84,16 +84,28 @@ require.config(
       lawnchair: { deps: [], exports: 'lawnchair' },
       dom: { deps: ['lawnchair'], exports: 'dom' },
       // moment: { deps: [], exports: 'moment' },
+
+      chosen: { deps: ['jquery'], exports: 'chosen' },
       timeline: { deps: [], exports: 'timeline' },
-      treegrid: { deps: [], exports: 'treegrid' },
       datepicker: { deps: ['jquery', 'bootstrap'], exports: 'datepicker' },
       timepicker: { deps: ['jquery', 'bootstrap'], exports: 'timepicker' },
+      daterangepicker: { deps: ['jquery', 'bootstrap'], exports: 'daterangepicker' },
+
+      sugar: { exports: 'sugar' },
+
+      raphael: { deps: ['jquery'], exports: 'raphael' },
+      'g-raphael': { deps: ['raphael'] },
+      'g-pie': { deps: ['raphael', 'g-raphael'] },
 
       // md5: { exports: 'md5'},
 
       underscore: { exports: 'underscore'},
+
+      mask: { deps: ['angular'] },
+
       store: { deps: ['angular', 'underscore']},
       offline: { deps: ['angular'] },
+      phone: { deps: ['angular'] },
 
       // interceptor: { deps: ['angular'] },
 
@@ -114,7 +126,8 @@ require.config(
       // 'angular-dragdrop': { deps: ['jquery','jquery-ui'], exports: 'dragdrop'},
       // 'ui-sortable':      { deps: ['jquery','jquery-ui'], exports: 'ui-sortable' },      
 
-      'ui.bootstrap.pagination': { deps: ['angular'] },
+      // 'ui.bootstrap.pagination': { deps: ['angular'] },
+
       'locale_nl': { deps: ['angular'] }
     }
   }
@@ -188,16 +201,27 @@ require(
     'lawnchair',
     'dom',
     // 'moment',
+
+    'chosen',
     'timeline',
-    'treegrid',
     'datepicker',
     'timepicker',
+    'daterangepicker',
+
+    'sugar',
+
+    // 'raphael',
+    // 'g-raphael',
+    // 'g-pie',
 
     // 'md5',
+
+    'mask',
 
     'underscore',
     'store',
     'offline',
+    'phone',
     // 'interceptor',
     'log',
     // '_moment',
@@ -214,7 +238,7 @@ require(
     // 'jquery-ui',
     // 'angular-dragdrop',
     // 'ui-sortable',  
-    'locale_nl',
+    'locale_nl'
   ],
   function (angular, domReady) {
     'use strict';
