@@ -1,13 +1,11 @@
 define(
   ['directives/directives'],
-  function (directives)
-  {
+  function (directives) {
     'use strict';
 
     directives.directive(
       'notificationItem',
-      function ($compile)
-      {
+      function ($compile) {
         return {
           restrict: 'E',
           rep1ace: true,
@@ -15,8 +13,7 @@ define(
           scope: {
             scheadule: '='
           },
-          link: function (scope, element, attrs)
-          {
+          link: function (scope, element, attrs) {
             /**
              * Pass the scheadule data
              */
@@ -29,8 +26,7 @@ define(
             /**
              * Serve to the controller
              */
-            scope.remover = function (key)
-            {
+            scope.remover = function (key) {
               // console.log('coming to remover');
 
               scope.$parent.$parent.remover(key);

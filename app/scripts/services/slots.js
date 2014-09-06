@@ -1,42 +1,40 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Slots',
       [
         '$rootScope', '$resource', '$q', 'Storage', 'Dater', 'Sloter', 'Stats',
-        function ($rootScope, $resource, $q, Storage, Dater, Sloter, Stats)
-        {
+        function ($rootScope, $resource, $q, Storage, Dater, Sloter, Stats) {
           /**
            * Define Slot Resource from back-end
            */
           var Slots = $resource(
               config.host + '/askatars/:user/slots',
-              {
-                user: ''
+            {
+              user: ''
+            },
+            {
+              query: {
+                method: 'GET',
+                params: {start: '', end: ''},
+                isArray: true
               },
-              {
-                query: {
-                  method: 'GET',
-                  params: {start: '', end: ''},
-                  isArray: true
-                },
-                change: {
-                  method: 'PUT',
-                  params: {start: '', end: '', text: '', recursive: ''}
-                },
-                save: {
-                  method: 'POST',
-                  params: {}
-                },
-                remove: {
-                  method: 'DELETE',
-                  params: {}
-                }
+              change: {
+                method: 'PUT',
+                params: {start: '', end: '', text: '', recursive: ''}
+              },
+              save: {
+                method: 'POST',
+                params: {}
+              },
+              remove: {
+                method: 'DELETE',
+                params: {}
               }
+            }
           );
 
 
@@ -45,15 +43,15 @@ define(
            */
           var Aggs = $resource(
               config.host + '/calc_planning/:id',
-              {
-              },
-              {
-                query: {
-                  method: 'GET',
-                  params: {id: '', start: '', end: ''},
-                  isArray: true
-                }
+            {
+            },
+            {
+              query: {
+                method: 'GET',
+                params: {id: '', start: '', end: ''},
+                isArray: true
               }
+            }
           );
 
 
@@ -62,19 +60,19 @@ define(
            */
           var Wishes = $resource(
               config.host + '/network/:id/wish',
-              {
+            {
+            },
+            {
+              query: {
+                method: 'GET',
+                params: {id: '', start: '', end: ''},
+                isArray: true
               },
-              {
-                query: {
-                  method: 'GET',
-                  params: {id: '', start: '', end: ''},
-                  isArray: true
-                },
-                save: {
-                  method: 'PUT',
-                  params: {id: ''}
-                }
+              save: {
+                method: 'PUT',
+                params: {id: ''}
               }
+            }
           );
 
 
@@ -83,39 +81,36 @@ define(
            */
           var MemberSlots = $resource(
               config.host + '/network/:id/member/slots2',
-              {
-              },
-              {
-                query: {
-                  method: 'GET',
-                  params: {id: '', start: '', end: ''}
-                  // ,
-                  // isArray: true
-                }
+            {
+            },
+            {
+              query: {
+                method: 'GET',
+                params: {id: '', start: '', end: ''}
+                // ,
+                // isArray: true
               }
+            }
           );
 
 
           /**
            * Get group wishes
            */
-          Slots.prototype.wishes = function (options)
-          {
+          Slots.prototype.wishes = function (options) {
             var deferred = $q.defer(),
-                params = {
-                  id: options.id,
-                  start: options.start,
-                  end: options.end
-                };
+              params = {
+                id: options.id,
+                start: options.start,
+                end: options.end
+              };
 
             Wishes.query(
               params,
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -127,24 +122,21 @@ define(
           /**
            * Set group wish
            */
-          Slots.prototype.setWish = function (options)
-          {
+          Slots.prototype.setWish = function (options) {
             var deferred = $q.defer(),
-                params = {
-                  start: options.start,
-                  end: options.end,
-                  wish: options.wish,
-                  recurring: options.recursive
-                };
+              params = {
+                start: options.start,
+                end: options.end,
+                wish: options.wish,
+                recurring: options.recursive
+              };
 
             Wishes.save(
               {id: options.id}, params,
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -156,18 +148,14 @@ define(
           /**
            * Get group aggs
            */
-          Slots.prototype.aggs = function (options)
-          {
+          Slots.prototype.aggs = function (options) {
             var deferred = $q.defer(),
-                calls = [];
+              calls = [];
 
-            if ($rootScope.config.timeline.config.divisions.length > 0)
-            {
+            if ($rootScope.config.timeline.config.divisions.length > 0) {
               angular.forEach(
-                $rootScope.config.timeline.config.divisions, function (division)
-                {
-                  if (division.id !== 'all')
-                  {
+                $rootScope.config.timeline.config.divisions, function (division) {
+                  if (division.id !== 'all') {
                     var params = {
                       id: options.id,
                       start: options.start,
@@ -183,8 +171,7 @@ define(
                   }
                 });
             }
-            else
-            {
+            else {
               calls.push(
                 Slots.prototype.agg(
                   {
@@ -196,8 +183,7 @@ define(
 
             $q.all(calls)
               .then(
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               });
 
@@ -208,14 +194,12 @@ define(
           /**
            * Fetch calculated planning of one group
            */
-          Slots.prototype.agg = function (options)
-          {
+          Slots.prototype.agg = function (options) {
             var deferred = $q.defer();
 
             Aggs.query(
               options,
-              function (result)
-              {
+              function (result) {
                 var stats = Stats.aggs(result, options.start, options.end);
 
                 deferred.resolve(
@@ -227,8 +211,7 @@ define(
                     durations: stats.durations
                   });
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               });
 
@@ -239,25 +222,24 @@ define(
           /**
            * Get group aggs for pie charts
            */
-          Slots.prototype.pie = function (options)
-          {
+          Slots.prototype.pie = function (options) {
             var deferred = $q.defer(),
-                now = Math.floor(Date.now().getTime() / 1000),
-                periods = Dater.getPeriods(),
-                current = Dater.current.week(),
-                weeks = {
-                  current: {
-                    period: periods.weeks[current],
-                    data: [],
-                    shortages: []
-                  },
-                  next: {
-                    period: periods.weeks[current + 1],
-                    data: [],
-                    shortages: []
-                  }
+              now = Math.floor(Date.now().getTime() / 1000),
+              periods = Dater.getPeriods(),
+              current = Dater.current.week(),
+              weeks = {
+                current: {
+                  period: periods.weeks[current],
+                  data: [],
+                  shortages: []
                 },
-                slicer = weeks.current.period.last.timeStamp;
+                next: {
+                  period: periods.weeks[current + 1],
+                  data: [],
+                  shortages: []
+                }
+              },
+              slicer = weeks.current.period.last.timeStamp;
             var params = {
               id: options.id,
               start: weeks.current.period.first.timeStamp / 1000,
@@ -268,52 +250,44 @@ define(
 
             Aggs.query(
               params,
-              function (results)
-              {
+              function (results) {
                 deferred.resolve(processPies(results));
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
 
-            function processPies (results)
-            {
+            function processPies(results) {
               var state;
               // Check whether it is only one
-              if (results.length > 1)
-              {
+              if (results.length > 1) {
                 angular.forEach(
-                  results, function (slot)
-                  {
+                  results, function (slot) {
                     // Fish out the current
                     if (now >= slot.start && now <= slot.end) state = slot;
 
                     // Slice from end of first week
-                    if (slicer <= slot.start * 1000)
-                    {
+                    if (slicer <= slot.start * 1000) {
                       weeks.next.data.push(slot);
                     }
-                    else if (slicer >= slot.start * 1000)
-                    {
+                    else if (slicer >= slot.start * 1000) {
                       weeks.current.data.push(slot)
                     }
                   });
 
                 // slice extra timestamp from the last of current week data set and add that to week next
                 var last = weeks.current.data[weeks.current.data.length - 1],
-                    next = weeks.next.data[0],
-                    difference = (last.end * 1000) - slicer,
-                    currents = [];
+                  next = weeks.next.data[0],
+                  difference = (last.end * 1000) - slicer,
+                  currents = [];
 
                 // if start of current of is before the start reset it to start
                 weeks.current.data[0].start = weeks.current.period.first.timeStamp / 1000;
 
                 // if there is a leak to next week adjust the last one of current
                 // week and add new slot to next week with same values
-                if (difference > 0)
-                {
+                if (difference > 0) {
                   weeks.next.data.unshift(
                     {
                       diff: last.diff,
@@ -326,8 +300,7 @@ define(
                 // shortages and back-end gives more than asked sometimes, with returning
                 // values out of the range which being asked !
                 angular.forEach(
-                  weeks.current.data, function (slot)
-                  {
+                  weeks.current.data, function (slot) {
                     if (slot.end - slot.start > 0) currents.push(slot);
 
                     // add to shortages
@@ -339,8 +312,7 @@ define(
 
                 // add to shortages
                 angular.forEach(
-                  weeks.next.data, function (slot)
-                  {
+                  weeks.next.data, function (slot) {
                     if (slot.diff < 0) weeks.next.shortages.push(slot);
                   });
 
@@ -379,27 +351,26 @@ define(
                   }
                 }
               }
-              else
-              {
+              else {
                 if (results[0].diff == null) results[0].diff = 0;
                 if (results[0].wish == null) results[0].wish = 0;
 
                 var currentWeek = [
-                      {
-                        start: weeks.current.period.first.timeStamp / 1000,
-                        end: weeks.current.period.last.timeStamp / 1000,
-                        wish: results[0].wish,
-                        diff: results[0].diff
-                      }
-                    ],
-                    nextWeek = [
-                      {
-                        start: weeks.next.period.first.timeStamp / 1000,
-                        end: weeks.next.period.last.timeStamp / 1000,
-                        wish: results[0].wish,
-                        diff: results[0].diff
-                      }
-                    ];
+                    {
+                      start: weeks.current.period.first.timeStamp / 1000,
+                      end: weeks.current.period.last.timeStamp / 1000,
+                      wish: results[0].wish,
+                      diff: results[0].diff
+                    }
+                  ],
+                  nextWeek = [
+                    {
+                      start: weeks.next.period.first.timeStamp / 1000,
+                      end: weeks.next.period.last.timeStamp / 1000,
+                      wish: results[0].wish,
+                      diff: results[0].diff
+                    }
+                  ];
 
                 if (currentWeek[0].diff < 0) weeks.current.shortages.push(currentWeek[0]);
                 if (nextWeek[0].diff < 0) weeks.next.shortages.push(nextWeek[0]);
@@ -454,8 +425,7 @@ define(
             /**
              * Init preloader
              */
-            init: function (total)
-            {
+            init: function (total) {
               $rootScope.app.preloader = {
                 status: true,
                 total: total,
@@ -467,8 +437,7 @@ define(
             /**
              * Countdown
              */
-            count: function ()
-            {
+            count: function () {
               $rootScope.app.preloader.count = Math.abs(Math.floor($rootScope.app.preloader.count + (100 / $rootScope.app.preloader.total)));
 
               $rootScope.app.preloader.stopped = Date.now().getTime();
@@ -479,12 +448,10 @@ define(
           /**
            * Get current state of the user
            */
-          Slots.prototype.currentState = function ()
-          {
+          Slots.prototype.currentState = function () {
             var resources = angular.fromJson(Storage.get('resources'));
 
-            if (resources)
-            {
+            if (resources) {
               // TODO: Use mathematical formula to calculate it
               var now;
 
@@ -492,19 +459,18 @@ define(
               now = Number(now.substr(0, now.length - 3));
 
               var deferred = $q.defer(),
-                  params = {
-                    user: resources.uuid,
-                    start: now,
-                    end: now + 1
-                  };
+                params = {
+                  user: resources.uuid,
+                  start: now,
+                  end: now + 1
+                };
 
               Slots.query(
                 params,
-                function (result)
-                {
+                function (result) {
                   deferred.resolve(
                     (result.length > 0) ?
-                    $rootScope.config.statesall[result[0]['text']] :
+                      $rootScope.config.statesall[result[0]['text']] :
                     {
                       color: 'gray',
                       label: 'Mogelijk inzetbaar'
@@ -521,30 +487,26 @@ define(
           /**
            * Get slot bundels user, group aggs and members
            */
-          Slots.prototype.all = function (options)
-          {
+          Slots.prototype.all = function (options) {
             /**
              * Define vars
              */
             var deferred = $q.defer(),
-            periods = Dater.getPeriods(),
-            params = {
-              user: angular.fromJson(Storage.get('resources')).uuid, // user hardcoded!!
-              start: options.stamps.start / 1000,
-              end: options.stamps.end / 1000
-            },
-            data = {};
+              periods = Dater.getPeriods(),
+              params = {
+                user: angular.fromJson(Storage.get('resources')).uuid, // user hardcoded!!
+                start: options.stamps.start / 1000,
+                end: options.stamps.end / 1000
+              },
+              data = {};
 
             Slots.query(
               params,
-              function (user)
-              {
+              function (user) {
                 angular.forEach(
                   user,
-                  function (slot)
-                  {
-                    if (! slot.recursive)
-                    {
+                  function (slot) {
+                    if (!slot.recursive) {
                       slot.recursive = false;
                     }
                   }
@@ -553,8 +515,7 @@ define(
                 /**
                  * If group is on
                  */
-                if (options.layouts.group)
-                {
+                if (options.layouts.group) {
                   var groupParams = {
                     id: options.groupId,
                     start: params.start,
@@ -566,15 +527,13 @@ define(
 
                   Slots.prototype.aggs(groupParams)
                     .then(
-                    function (aggs)
-                    {
+                    function (aggs) {
                       /**
                        * If members are on
                        */
-                      if (options.layouts.members)
-                      {
+                      if (options.layouts.members) {
                         var allMembers = angular.fromJson(Storage.get(options.groupId)),
-                            calls = [];
+                          calls = [];
 
                         // console.log('all members ->', allMembers);
 
@@ -588,27 +547,25 @@ define(
                             end: params.end,
                             type: 'both'
                           },
-                          function (members)
-                          {
+                          function (members) {
                             var mems = [];
 
                             angular.forEach(
                               members,
-                              function (mdata, index)
-                              {
+                              function (mdata, index) {
                                 angular.forEach(
                                   mdata,
-                                  function (tslot) { tslot.text = tslot.state }
+                                  function (tslot) {
+                                    tslot.text = tslot.state
+                                  }
                                 );
 
                                 var member;
 
                                 angular.forEach(
                                   allMembers,
-                                  function (mem)
-                                  {
-                                    if (index == mem.uuid)
-                                    {
+                                  function (mem) {
+                                    if (index == mem.uuid) {
                                       member = mem;
                                     }
                                   }
@@ -640,7 +597,9 @@ define(
                               }
                             );
                           },
-                          function (error) { deferred.resolve({error: error}) }
+                          function (error) {
+                            deferred.resolve({error: error})
+                          }
                         );
 
                         /**
@@ -674,8 +633,7 @@ define(
                         //   });
                         // });
                       }
-                      else
-                      {
+                      else {
                         deferred.resolve(
                           {
                             user: user,
@@ -690,8 +648,7 @@ define(
                       }
                     });
                 }
-                else
-                {
+                else {
                   deferred.resolve(
                     {
                       user: user,
@@ -703,8 +660,7 @@ define(
                     });
                 }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -716,8 +672,7 @@ define(
           /**
            * Get member availabilities
            */
-          Slots.prototype.getMemberAvailabilities = function (groupID, divisionID)
-          {
+          Slots.prototype.getMemberAvailabilities = function (groupID, divisionID) {
             var deferred = $q.defer();
 
             var now = Math.floor(Date.now().getTime() / 1000);
@@ -731,8 +686,7 @@ define(
                 start: now,
                 end: now + 1000
               },
-              function (members)
-              {
+              function (members) {
                 deferred.resolve(
                   {
                     members: members,
@@ -740,8 +694,7 @@ define(
                   }
                 );
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -755,14 +708,12 @@ define(
            * This is needed as a seperate promise object
            * for making the process wait in Slots.all call bundle
            */
-          Slots.prototype.user = function (params)
-          {
+          Slots.prototype.user = function (params) {
             var deferred = $q.defer();
 
             Slots.query(
               params,
-              function (result)
-              {
+              function (result) {
                 /**
                  * Countdown on preloader
                  */
@@ -775,8 +726,7 @@ define(
                     stats: Stats.member(result, params.start, params.end)
                   });
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -788,24 +738,23 @@ define(
           /**
            * Return local slots
            */
-          Slots.prototype.local = function () { return angular.fromJson(Storage.get('slots')); };
+          Slots.prototype.local = function () {
+            return angular.fromJson(Storage.get('slots'));
+          };
 
 
           /**
            * Slot adding process
            */
-          Slots.prototype.add = function (slot, user)
-          {
+          Slots.prototype.add = function (slot, user) {
             var deferred = $q.defer();
 
             Slots.save(
               {user: user}, slot,
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -823,18 +772,15 @@ define(
            *
            * Slot changing process
            */
-          Slots.prototype.change = function (original, changed, user)
-          {
+          Slots.prototype.change = function (original, changed, user) {
             var deferred = $q.defer();
 
             Slots.change(
               angular.extend(naturalize(changed), {user: user}), naturalize(original),
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -846,18 +792,15 @@ define(
           /**
            * Slot delete process
            */
-          Slots.prototype.remove = function (slot, user)
-          {
+          Slots.prototype.remove = function (slot, user) {
             var deferred = $q.defer();
 
             Slots.remove(
               angular.extend(naturalize(slot), {user: user}),
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -869,8 +812,7 @@ define(
           /**
            * Naturalize Slot for back-end injection
            */
-          function naturalize (slot)
-          {
+          function naturalize(slot) {
             var content = angular.fromJson(slot.content);
 
             return {

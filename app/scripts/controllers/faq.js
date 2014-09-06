@@ -1,15 +1,13 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
       'faq',
       [
         '$rootScope', '$scope', '$location',
-        function ($rootScope, $scope, $location)
-        {
+        function ($rootScope, $scope, $location) {
           $rootScope.notification.status = false;
 
           /**
@@ -21,8 +19,7 @@ define(
           /**
            * View setter
            */
-          function setView (hash)
-          {
+          function setView(hash) {
             $scope.views = {
               web: false,
               ios: false,
@@ -36,12 +33,10 @@ define(
           /**
            * Switch between the views and set hash accordingly
            */
-          $scope.setViewTo = function (hash)
-          {
+          $scope.setViewTo = function (hash) {
             $scope.$watch(
               hash,
-              function ()
-              {
+              function () {
                 $location.hash(hash);
 
                 setView(hash);
@@ -55,14 +50,12 @@ define(
            */
           var view;
 
-          if (! $location.hash())
-          {
+          if (!$location.hash()) {
             view = 'dashboard';
 
             $location.hash('dashboard');
           }
-          else
-          {
+          else {
             view = $location.hash();
           }
 

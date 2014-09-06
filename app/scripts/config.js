@@ -7,15 +7,7 @@ define(
       released: '@@released',
 
 
-
-
-
-
     },
-
-
-
-
 
 
     title: 'WebPaige',
@@ -189,12 +181,10 @@ define(
 
     timers: profile.timers,
 
-    init: function ()
-    {
+    init: function () {
       angular.forEach(
         profile.states,
-        (function (state, index)
-        {
+        (function (state, index) {
           this.timeline.config.states[state] = this.statesall[state];
         }).bind(this)
       );

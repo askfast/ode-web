@@ -1,15 +1,13 @@
 define(
   ['services/services'],
-  function (services)
-  {
+  function (services) {
     'use strict';
 
     services.factory(
       'Browsers',
       [
         '$rootScope', '$window',
-        function ($rootScope, $window)
-        {
+        function ($rootScope, $window) {
           $rootScope.browser = $.browser;
 
           angular.extend(
@@ -19,8 +17,7 @@ define(
           );
 
           // TODO: Is this for all?
-          if ($.os.windows)
-          {
+          if ($.os.windows) {
             angular.element('#loading p')
               .css(
               {
@@ -29,8 +26,7 @@ define(
             );
           }
 
-          if ($rootScope.browser.ios)
-          {
+          if ($rootScope.browser.ios) {
             angular.extend(
               $rootScope.browser, {
                 landscape: Math.abs($window.orientation) == 90 ? true : false,
@@ -38,8 +34,7 @@ define(
               }
             );
           }
-          else
-          {
+          else {
             angular.extend(
               $rootScope.browser, {
                 landscape: Math.abs($window.orientation) != 90 ? true : false,
@@ -48,15 +43,14 @@ define(
             );
           }
 
-          $window.onresize = function () { $rootScope.browser.screen = $window.screen };
+          $window.onresize = function () {
+            $rootScope.browser.screen = $window.screen
+          };
 
-          $window.onorientationchange = function ()
-          {
+          $window.onorientationchange = function () {
             $rootScope.$apply(
-              function ()
-              {
-                if ($rootScope.browser.ios)
-                {
+              function () {
+                if ($rootScope.browser.ios) {
                   angular.extend(
                     $rootScope.browser, {
                       landscape: Math.abs($window.orientation) == 90 ? true : false,
@@ -64,8 +58,7 @@ define(
                     }
                   );
                 }
-                else
-                {
+                else {
                   angular.extend(
                     $rootScope.browser, {
                       landscape: Math.abs($window.orientation) != 90 ? true : false,

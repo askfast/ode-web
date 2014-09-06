@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers'],
-  function (controllers)
-  {
+  function (controllers) {
     'use strict';
 
     controllers.controller(
@@ -18,24 +17,21 @@ define(
         'data',
         'TeamUp',
         '$timeout',
-        function ($rootScope, $scope, $location, Clients, $route, $routeParams, Store, Teams, $window, data, TeamUp, $timeout)
-        {
-          function loadData (data)
-          {
+        function ($rootScope, $scope, $location, Clients, $route, $routeParams, Store, Teams, $window, data, TeamUp, $timeout) {
+          function loadData(data) {
             // console.log('loading data -> ', new Date());
 
-            if (data && data.local)
-            {
+            if (data && data.local) {
               // console.log('loading local ->', data.local);
 
               var teamsLocal = Store('app').get('teams'),
-                  connections = {
-                    teamClients: {},
-                    teams: {},
-                    clients: {}
-                  },
-                  members = [],
-                  memberGlobalIds = [];
+                connections = {
+                  teamClients: {},
+                  teams: {},
+                  clients: {}
+                },
+                members = [],
+                memberGlobalIds = [];
 
               // console.log('teamsLocal ->', teamsLocal);
               // console.log('-------------------------------------------');
@@ -44,8 +40,7 @@ define(
 
               angular.forEach(
                 teamsLocal,
-                function (team)
-                {
+                function (team) {
                   data.teams.push(
                     {
                       'id': team.uuid,
@@ -57,12 +52,10 @@ define(
 
                   angular.forEach(
                     Store('app').get(team.uuid),
-                    function (member)
-                    {
+                    function (member) {
                       memberIds.push(member.uuid);
 
-                      if (memberGlobalIds.indexOf(member.uuid) == - 1)
-                      {
+                      if (memberGlobalIds.indexOf(member.uuid) == -1) {
                         members.push(
                           {
                             'name': member.firstName + ' ' + member.lastName,
@@ -86,10 +79,8 @@ define(
 
               angular.forEach(
                 Store('app').get('members'),
-                function (member)
-                {
-                  if (memberGlobalIds.indexOf(member.uuid) == - 1)
-                  {
+                function (member) {
+                  if (memberGlobalIds.indexOf(member.uuid) == -1) {
                     members.push(
                       {
                         'name': member.firstName + ' ' + member.lastName,
@@ -109,23 +100,20 @@ define(
               // console.log('-------------------------------------------');
 
               var groupIds = [],
-                  clients = [],
-                  clientIds = [];
+                clients = [],
+                clientIds = [];
 
               angular.forEach(
                 data.groups,
-                function (group)
-                {
+                function (group) {
                   var clientIds = [];
 
                   angular.forEach(
                     Store('app').get(group.id),
-                    function (client)
-                    {
+                    function (client) {
                       clientIds.push(client.uuid);
 
-                      if (clientIds.indexOf(client.uuid) == - 1)
-                      {
+                      if (clientIds.indexOf(client.uuid) == -1) {
                         clientIds.push(client.uuid);
 
                         clients.push(
@@ -151,10 +139,8 @@ define(
 
               angular.forEach(
                 Store('app').get('clients'),
-                function (client)
-                {
-                  if (clientIds.indexOf(client.uuid) == - 1)
-                  {
+                function (client) {
+                  if (clientIds.indexOf(client.uuid) == -1) {
                     clientIds.push(client.uuid);
 
                     clients.push(
@@ -175,8 +161,7 @@ define(
 
               angular.forEach(
                 teamsLocal,
-                function (team)
-                {
+                function (team) {
                   var flag = true;
 
                   var _teamGroup = Store('app').get('teamGroup_' + team.uuid);
@@ -188,8 +173,7 @@ define(
 
                   // console.log('team ->', team.name, team.uuid);
 
-                  if (_teamGroup == [])
-                  {
+                  if (_teamGroup == []) {
                     // console.log('it is empty ->');
                   }
 
@@ -200,8 +184,7 @@ define(
 
                   angular.forEach(
                     _teamGroup,
-                    function (group)
-                    {
+                    function (group) {
                       // console.log('match? ->', groupIds.indexOf(group.id), group.id, flag);
 
                       //                      if (group.id == team.uuid && flag)
@@ -211,8 +194,7 @@ define(
                       //                        flag = false;
                       //                      }
 
-                      if (groupIds.indexOf(group.id) != - 1 && flag)
-                      {
+                      if (groupIds.indexOf(group.id) != -1 && flag) {
                         // console.log('putting in ->', group.id);
 
                         connections.teamClients[team.uuid] = group.id;
@@ -236,8 +218,7 @@ define(
                 con: connections
               };
             }
-            else
-            {
+            else {
               return {
                 data: {},
                 con: {}
@@ -257,8 +238,7 @@ define(
             right: []
           };
 
-          function setView (hash)
-          {
+          function setView(hash) {
             $scope.views = {
               teamClients: false,
               teams: false,
@@ -273,12 +253,9 @@ define(
             connections = localData.con;
           }
 
-          $scope.setViewTo = function (hash)
-          {
-            if (typeof $scope.dataChanged != 'undefined' && $scope.dataChanged($location.$$hash))
-            {
-              if (! confirm($rootScope.ui.teamup.managePanelchangePrompt))
-              {
+          $scope.setViewTo = function (hash) {
+            if (typeof $scope.dataChanged != 'undefined' && $scope.dataChanged($location.$$hash)) {
+              if (!confirm($rootScope.ui.teamup.managePanelchangePrompt)) {
                 event.preventDefault();
 
                 return false;
@@ -287,8 +264,7 @@ define(
 
             $scope.$watch(
               hash,
-              function ()
-              {
+              function () {
                 $location.hash(hash);
 
                 setView(hash);
@@ -307,14 +283,12 @@ define(
               teams: {},
               clients: {}
             },
-            teamClients: function ()
-            {
+            teamClients: function () {
               this.connections.teamClients = [];
 
               angular.forEach(
                 this.data.teamClients,
-                (function (groupId, teamId)
-                {
+                (function (groupId, teamId) {
                   var connection = {
                     sourceItems: [],
                     targetItem: {}
@@ -322,10 +296,8 @@ define(
 
                   angular.forEach(
                     data.teams,
-                    function (team)
-                    {
-                      if (team.id == teamId)
-                      {
+                    function (team) {
+                      if (team.id == teamId) {
                         connection.targetItem = team;
                       }
                     }
@@ -333,10 +305,8 @@ define(
 
                   var _group;
 
-                  for (var i = 0; i < data.groups.length; i ++)
-                  {
-                    if (data.groups[i].id == groupId)
-                    {
+                  for (var i = 0; i < data.groups.length; i++) {
+                    if (data.groups[i].id == groupId) {
                       _group = data.groups[i];
 
                       connection.sourceItems.push(_group);
@@ -350,26 +320,21 @@ define(
               return this.connections;
             },
 
-            populate: function (connections, data, section)
-            {
+            populate: function (connections, data, section) {
               var population = {};
 
               angular.forEach(
                 connections,
-                function (nodes, key)
-                {
+                function (nodes, key) {
                   population[key] = [];
 
                   angular.forEach(
                     nodes,
-                    function (kid)
-                    {
+                    function (kid) {
                       angular.forEach(
                         data,
-                        function (node)
-                        {
-                          if (node.id == kid)
-                          {
+                        function (node) {
+                          if (node.id == kid) {
                             population[key].push(
                               {
                                 _id: node.id,
@@ -388,8 +353,7 @@ define(
               return population;
             },
 
-            teams: function ()
-            {
+            teams: function () {
               this.connections.teams = {};
 
               this.connections.teams = this.populate(this.data.teams, data.members, 'teams_right_');
@@ -397,8 +361,7 @@ define(
               return this.connections;
             },
 
-            clients: function ()
-            {
+            clients: function () {
               this.connections.clients = {};
 
               this.connections.clients = this.populate(this.data.clients, data.clients, 'clients_right_');
@@ -407,10 +370,8 @@ define(
             }
           };
 
-          $scope.manage = function (grid)
-          {
-            switch (grid)
-            {
+          $scope.manage = function (grid) {
+            switch (grid) {
               case 'teamClients':
 
                 $rootScope.$broadcast(
@@ -457,28 +418,23 @@ define(
             }
           };
 
-          $scope.getChanges = function (beforeTeams, afterTeams)
-          {
+          $scope.getChanges = function (beforeTeams, afterTeams) {
             var changes = {};
 
             angular.forEach(
               beforeTeams,
-              function (_beforeTeam, teamId)
-              {
+              function (_beforeTeam, teamId) {
                 var notChanged = [],
-                    afterMembers = afterTeams[teamId];
+                  afterMembers = afterTeams[teamId];
 
                 // find the unchanged items
                 angular.forEach(
                   _beforeTeam,
-                  function (_beforeTeamMember)
-                  {
+                  function (_beforeTeamMember) {
                     angular.forEach(
                       afterMembers,
-                      function (afterTeam)
-                      {
-                        if (_beforeTeamMember == afterTeam)
-                        {
+                      function (afterTeam) {
+                        if (_beforeTeamMember == afterTeam) {
                           notChanged.push(_beforeTeamMember);
                         }
                       }
@@ -496,8 +452,7 @@ define(
 
                 angular.forEach(
                   notChanged,
-                  function (notChangedNode)
-                  {
+                  function (notChangedNode) {
                     _beforeTeam.splice(_beforeTeam.indexOf(notChangedNode), 1);
 
                     afterMembers.splice(afterMembers.indexOf(notChangedNode), 1);
@@ -505,16 +460,15 @@ define(
                 );
 
                 var addMembers = [],
-                    removeMembers = [];
+                  removeMembers = [];
 
                 angular.copy(_beforeTeam, removeMembers);
                 angular.copy(afterMembers, addMembers);
 
                 if (addMembers.length > 0 ||
-                    addMembers.length > 0 ||
-                    removeMembers.length > 0 ||
-                    removeMembers.length > 0)
-                {
+                  addMembers.length > 0 ||
+                  removeMembers.length > 0 ||
+                  removeMembers.length > 0) {
                   // TODO: More readable property names!
                   changes[teamId] = {
                     a: addMembers,
@@ -525,8 +479,7 @@ define(
                 // add the nonChanged item back
                 angular.forEach(
                   notChanged,
-                  function (notChangedNode)
-                  {
+                  function (notChangedNode) {
                     _beforeTeam.push(notChangedNode);
 
                     afterMembers.push(notChangedNode);
@@ -547,35 +500,29 @@ define(
            * temp solution
            */
           if ($rootScope.$$listeners['save:teamClients'] &&
-              $rootScope.$$listeners['save:teamClients'].length > 0)
-          {
+            $rootScope.$$listeners['save:teamClients'].length > 0) {
             $rootScope.$$listeners['save:teamClients'] = [];
           }
 
           if ($rootScope.$$listeners['save:teams'] &&
-              $rootScope.$$listeners['save:teams'].length > 0)
-          {
+            $rootScope.$$listeners['save:teams'].length > 0) {
             $rootScope.$$listeners['save:teams'] = [];
           }
 
           if ($rootScope.$$listeners['save:clients'] &&
-              $rootScope.$$listeners['save:clients'].length > 0)
-          {
+            $rootScope.$$listeners['save:clients'].length > 0) {
             $rootScope.$$listeners['save:clients'] = [];
           }
 
-          $scope.getChangesFromTeamClients = function (argument)
-          {
+          $scope.getChangesFromTeamClients = function (argument) {
             var beforeTeamClients = $scope.connections.teamClients,
-                afterTeamClients = argument,
-                teamIds = [];
+              afterTeamClients = argument,
+              teamIds = [];
 
             angular.forEach(
               beforeTeamClients,
-              function (teamClient, i)
-              {
-                if (teamIds.indexOf(i) == - 1)
-                {
+              function (teamClient, i) {
+                if (teamIds.indexOf(i) == -1) {
                   teamIds.push(i);
                 }
               }
@@ -583,10 +530,8 @@ define(
 
             angular.forEach(
               afterTeamClients,
-              function (teamClient, i)
-              {
-                if (teamIds.indexOf(i) == - 1)
-                {
+              function (teamClient, i) {
+                if (teamIds.indexOf(i) == -1) {
                   teamIds.push(i);
                 }
               }
@@ -596,18 +541,15 @@ define(
 
             angular.forEach(
               teamIds,
-              function (tId)
-              {
-                if (typeof beforeTeamClients[tId] == 'undefined' && afterTeamClients[tId])
-                {
+              function (tId) {
+                if (typeof beforeTeamClients[tId] == 'undefined' && afterTeamClients[tId]) {
                   // TODO: More readable property names!
                   changes[tId] = {
                     a: [afterTeamClients[tId]],
                     r: []
                   };
                 }
-                else if (typeof afterTeamClients[tId] == 'undefined' && beforeTeamClients[tId])
-                {
+                else if (typeof afterTeamClients[tId] == 'undefined' && beforeTeamClients[tId]) {
                   // TODO: More readable property names!
                   changes[tId] = {
                     r: [beforeTeamClients[tId]],
@@ -615,9 +557,8 @@ define(
                   };
                 }
                 else if (beforeTeamClients[tId] &&
-                         afterTeamClients[tId] &&
-                         beforeTeamClients[tId] != afterTeamClients[tId])
-                {
+                  afterTeamClients[tId] &&
+                  beforeTeamClients[tId] != afterTeamClients[tId]) {
                   // TODO: More readable property names!
                   changes[tId] = {
                     a: [afterTeamClients[tId]],
@@ -629,52 +570,44 @@ define(
             return changes;
           };
 
-          $scope.safeApply = function (fn)
-          {
+          $scope.safeApply = function (fn) {
             var phase = this.$root.$$phase;
 
-            if (phase == '$apply' || phase == '$digest')
-            {
-              if (fn && (typeof(fn) === 'function'))
-              {
+            if (phase == '$apply' || phase == '$digest') {
+              if (fn && (typeof(fn) === 'function')) {
                 fn();
               }
             }
-            else
-            {
+            else {
               this.$apply(fn);
             }
           };
 
-          $scope.applyTeamClientsChanges = function (changes)
-          {
+          $scope.applyTeamClientsChanges = function (changes) {
             $rootScope.statusBar.display($rootScope.ui.teamup.refreshing);
 
             Teams.manageGroups(changes)
               .then(
-              function (results)
-              {
+              function (results) {
                 var error = '';
 
                 angular.forEach(
                   results,
-                  function (result)
-                  {
-                    if (result.error)
-                    {
+                  function (result) {
+                    if (result.error) {
                       error += result.error.data.error;
                     }
                   }
                 );
 
-                if (error == '')
-                {
+                if (error == '') {
                   $rootScope.notifier.success($rootScope.ui.teamup.dataChanged);
 
-                  $timeout(function () { $route.reload() }, 250);
+                  $timeout(function () {
+                    $route.reload()
+                  }, 250);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.error(error);
                 }
 
@@ -685,40 +618,36 @@ define(
 
           $rootScope.$on(
             'save:teamClients',
-            function ()
-            {
+            function () {
               var changes = $scope.getChangesFromTeamClients(arguments[1]);
 
-              if (angular.equals({}, changes))
-              {
+              if (angular.equals({}, changes)) {
                 // console.log('no changes ! ');
               }
-              else
-              {
+              else {
                 $scope.applyTeamClientsChanges(changes);
               }
             }
           );
 
-          $scope.applyTeamsChanges = function (changes)
-          {
+          $scope.applyTeamsChanges = function (changes) {
             $rootScope.statusBar.display($rootScope.ui.teamup.refreshing);
 
             Teams.manage(changes)
               .then(
-              function ()
-              {
+              function () {
                 $rootScope.notifier.success($rootScope.ui.teamup.dataChanged);
 
                 TeamUp._('teamMemberFree')
                   .then(
-                  function (result)
-                  {
+                  function (result) {
                     Store('app').save('members', result);
 
                     $rootScope.statusBar.off();
 
-                    $timeout(function () { $route.reload() }, 250);
+                    $timeout(function () {
+                      $route.reload()
+                    }, 250);
                     //                    $timeout(
                     //                      function ()
                     //                      {
@@ -734,23 +663,22 @@ define(
                     //                      150
                     //                    );
                   },
-                  function (error) { console.log(error) });
+                  function (error) {
+                    console.log(error)
+                  });
               }
             );
           };
 
           $rootScope.$on(
             'save:teams',
-            function ()
-            {
+            function () {
               var changes = $scope.getChanges($scope.connections.teams, arguments[1]);
 
-              if (angular.equals({}, changes))
-              {
+              if (angular.equals({}, changes)) {
                 // console.log('no changes ! ');
               }
-              else
-              {
+              else {
                 $scope.applyTeamsChanges(changes);
               }
             }
@@ -758,52 +686,46 @@ define(
 
           $rootScope.$on(
             'save:clients',
-            function ()
-            {
+            function () {
               var changes = $scope.getChanges($scope.connections.clients, arguments[1]);
 
-              if (angular.equals({}, changes))
-              {
+              if (angular.equals({}, changes)) {
                 // console.log('no changes ! ');
               }
-              else
-              {
+              else {
                 $rootScope.statusBar.display($rootScope.ui.teamup.refreshing);
 
                 Clients.manage(changes)
                   .then(
-                  function ()
-                  {
+                  function () {
                     $rootScope.notifier.success($rootScope.ui.teamup.dataChanged);
                     $rootScope.statusBar.off();
 
-                    $timeout(function () { $route.reload() }, 250);
+                    $timeout(function () {
+                      $route.reload()
+                    }, 250);
                   }
                 );
               }
             }
           );
 
-          $scope.dataChanged = function (current)
-          {
+          $scope.dataChanged = function (current) {
             var parts = current.split('#'),
-                tab = parts[parts.length - 1],
-                changes = {};
+              tab = parts[parts.length - 1],
+              changes = {};
 
-            if (tab == 'teamClients')
-            {
+            if (tab == 'teamClients') {
               // TODO: Remove this intern angular method
               changes = $scope.getChangesFromTeamClients($scope.$$childTail.getData.teamClients());
             }
-            else if (tab == 'teams')
-            {
+            else if (tab == 'teams') {
               changes = $scope.getChanges(
                 $scope.connections.teams,
                 $scope.$$childTail.getData.teams()
               );
             }
-            else if (tab == 'clients')
-            {
+            else if (tab == 'clients') {
               changes = $scope.getChanges(
                 $scope.connections.clients,
                 $scope.$$childTail.getData.clients()

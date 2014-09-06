@@ -1,25 +1,21 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Sloter',
       [
         '$rootScope', 'Storage',
-        function ($rootScope, Storage)
-        {
+        function ($rootScope, Storage) {
           return {
             get: {
-              groups: function ()
-              {
+              groups: function () {
                 var groups = {};
 
                 angular.forEach(
                   Storage.local.groups(),
-                  function (group)
-                  {
+                  function (group) {
                     groups[group.uuid] = group.name;
                   }
                 );
@@ -27,14 +23,12 @@ define(
                 return groups;
               },
 
-              members: function ()
-              {
+              members: function () {
                 var members = {};
 
                 angular.forEach(
                   Storage.local.members(),
-                  function (member)
-                  {
+                  function (member) {
                     members[member.uuid] = member.resources.firstName + ' ' + member.resources.lastName;
                   }
                 );
@@ -46,22 +40,24 @@ define(
             /**
              * Wrap for sorting in list
              */
-            wrapper: function (rank) { return '<span style="display:none;">' + rank + '</span>' },
+            wrapper: function (rank) {
+              return '<span style="display:none;">' + rank + '</span>'
+            },
 
             /**
              * Wrap secrets in slot contents
              */
-            secret: function (content) { return '<span class="secret">' + content + '</span>' },
+            secret: function (content) {
+              return '<span class="secret">' + content + '</span>'
+            },
 
             /**
              * Add loading bars on both ends
              */
-            addLoading: function (data, timedata, rows)
-            {
+            addLoading: function (data, timedata, rows) {
               angular.forEach(
                 rows,
-                function (row)
-                {
+                function (row) {
                   timedata.push(
                     {
                       start: data.periods.end,
@@ -89,38 +85,32 @@ define(
               return timedata;
             },
 
-            tooltip: function (periods)
-            {
+            tooltip: function (periods) {
               // console.log('periods ->', periods);
 
-              var convertTimestamp = function (stamp)
-              {
+              var convertTimestamp = function (stamp) {
                 return new Date(stamp * 1000).toString($rootScope.config.formats.datetime)
               };
 
               var content = convertTimestamp(periods.start) +
-                            ' / ' +
-                            convertTimestamp(periods.end);
+                ' / ' +
+                convertTimestamp(periods.end);
 
-              if (periods.hasOwnProperty('min'))
-              {
+              if (periods.hasOwnProperty('min')) {
                 content += ' / Huidig aantal beschikbaar: ' + periods.min;
               }
 
-              if (periods.hasOwnProperty('wish'))
-              {
+              if (periods.hasOwnProperty('wish')) {
                 // console.log('periods wish ->', periods.wish);
 
                 content += ' / Gewenst aantal mensen: ' + periods.wish;
               }
 
-              if (periods.hasOwnProperty('member'))
-              {
+              if (periods.hasOwnProperty('member')) {
                 content += ' / ' + periods.member;
               }
 
-              if (periods.hasOwnProperty('state'))
-              {
+              if (periods.hasOwnProperty('state')) {
                 // console.log('state ->', periods.state);
 
                 content += ' / ' + periods.state;
@@ -132,38 +122,34 @@ define(
             /**
              * Handle user slots
              */
-            user: function (data, timedata, config)
-            {
+            user: function (data, timedata, config) {
               var _this = this;
 
               angular.forEach(
                 data.user,
-                function (slot, index)
-                {
+                function (slot, index) {
                   angular.forEach(
                     config.legenda,
-                    function (value, legenda)
-                    {
-                      if (slot.text == legenda && value)
-                      {
+                    function (value, legenda) {
+                      if (slot.text == legenda && value) {
                         timedata.push(
                           {
                             start: Math.round(slot.start * 1000),
                             end: Math.round(slot.end * 1000),
                             group: (slot.recursive) ?
-                                   _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
-                                   _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                              _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
+                              _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
                             content: this.tooltip({ start: slot.start, end: slot.end }) +
-                                     _this.secret(
-                                       angular.toJson(
-                                         {
-                                           type: 'slot',
-                                           id: index, // slot.id,
-                                           recursive: slot.recursive,
-                                           state: slot.text
-                                         }
-                                       )
-                                     ),
+                              _this.secret(
+                                angular.toJson(
+                                  {
+                                    type: 'slot',
+                                    id: index, // slot.id,
+                                    recursive: slot.recursive,
+                                    state: slot.text
+                                  }
+                                )
+                              ),
                             className: 'slot-' + index + ' ' + config.states[slot.text].className,
                             editable: true
                           });
@@ -187,28 +173,24 @@ define(
              *
              * Profile timeline data processing
              */
-            profile: function (data, config)
-            {
+            profile: function (data, config) {
               var _this = this,
-                  timedata = [];
+                timedata = [];
 
               angular.forEach(
                 data,
-                function (slot, index)
-                {
+                function (slot, index) {
                   angular.forEach(
                     config.legenda,
-                    function (value, legenda)
-                    {
-                      if (slot.text == legenda && value)
-                      {
+                    function (value, legenda) {
+                      if (slot.text == legenda && value) {
                         timedata.push(
                           {
                             start: Math.round(slot.start * 1000),
                             end: Math.round(slot.end * 1000),
                             group: (slot.recursive) ?
-                                   _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
-                                   _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
+                              _this.wrapper('b') + $rootScope.ui.planboard.weeklyPlanning + _this.wrapper('recursive') :
+                              _this.wrapper('a') + $rootScope.ui.planboard.planning + _this.wrapper('planning'),
                             content: _this.secret(
                               angular.toJson(
                                 {
@@ -257,26 +239,23 @@ define(
             /**
              * Handle group name whether divisions selected
              */
-            namer: function (agg, privilage)
-            {
+            namer: function (agg, privilage) {
               var groups = this.get.groups(),
-                  name = groups[agg.id];
+                name = groups[agg.id];
 
               name = name.charAt(0).toUpperCase() + name.slice(1);
 
               var link = '<a href="#/groups?uuid=' +
-                         agg.id +
-                         '#view">' +
-                         name +
-                         '</a>',
-                  title;
+                  agg.id +
+                  '#view">' +
+                  name +
+                  '</a>',
+                title;
 
-              if (! agg.division)
-              {
+              if (!agg.division) {
                 title = (privilage <= 1) ? link : '<span>' + name + '</span>';
               }
-              else
-              {
+              else {
                 var label;
 
                 title = (privilage <= 1) ? link : '<span>' + name + '</span>';
@@ -290,23 +269,19 @@ define(
             /**
              * Handle group aggs (with divisions) with bars
              */
-            bars: function (data, timedata, config, privilage, current)
-            {
+            bars: function (data, timedata, config, privilage, current) {
               var _this = this,
-                  maxh = 0;
+                maxh = 0;
 
               angular.forEach(
                 _this.filtered(data, current),
-                function (agg)
-                {
+                function (agg) {
                   var name = _this.namer(agg, privilage);
 
                   angular.forEach(
                     agg.data,
-                    function (slot)
-                    {
-                      if (slot.wish > maxh)
-                      {
+                    function (slot) {
+                      if (slot.wish > maxh) {
                         maxh = slot.wish;
                       }
                     }
@@ -314,20 +289,19 @@ define(
 
                   angular.forEach(
                     agg.data,
-                    function (slot)
-                    {
+                    function (slot) {
                       var maxNum = maxh,
-                          num = slot.wish,
-                          xwish = num,
-                          height = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
-                          minHeight = height,
-                          style = 'height:' + height + 'px;',
-                          requirement = '<div class="requirement" style="' +
-                                        style +
-                                        '" ' +
-                                        'title="' + 'Minimum aantal benodigden' + ': ' +
-                                        num +
-                                        ' personen"></div>';
+                        num = slot.wish,
+                        xwish = num,
+                        height = Math.round(num / maxNum * 80 + 20), // a percentage, with a lower bound on 20%
+                        minHeight = height,
+                        style = 'height:' + height + 'px;',
+                        requirement = '<div class="requirement" style="' +
+                          style +
+                          '" ' +
+                          'title="' + 'Minimum aantal benodigden' + ': ' +
+                          num +
+                          ' personen"></div>';
 
                       num = slot.wish + slot.diff;
 
@@ -335,12 +309,10 @@ define(
 
                       height = Math.round(num / maxNum * 80 + 20);
 
-                      if (slot.diff >= 0 && slot.diff < 7)
-                      {
+                      if (slot.diff >= 0 && slot.diff < 7) {
                         var color;
 
-                        switch (slot.diff)
-                        {
+                        switch (slot.diff) {
                           case 0:
                             // color = config.densities.even;
                             color = 'bars-even';
@@ -371,13 +343,11 @@ define(
                             break;
                         }
                       }
-                      else if (slot.diff >= 7)
-                      {
+                      else if (slot.diff >= 7) {
                         // color = config.densities.more;
                         color = 'bars-more';
                       }
-                      else
-                      {
+                      else {
                         // color = config.densities.less;
                         color = 'bars-less';
                       }
@@ -390,32 +360,31 @@ define(
                       style = 'height:' + height + 'px;';
 
                       var actual = '<div class="bar ' + color + '" style="' +
-                                   style +
-                                   '" ' +
-                                   ' title="Huidig aantal beschikbaar: ' +
-                                   num +
-                                   ' personen">' +
-                                   span +
-                                   '</div>';
+                        style +
+                        '" ' +
+                        ' title="Huidig aantal beschikbaar: ' +
+                        num +
+                        ' personen">' +
+                        span +
+                        '</div>';
 
                       if ((slot.diff > 0 && config.legenda.groups.more) ||
-                          (slot.diff == 0 && config.legenda.groups.even) ||
-                          (slot.diff < 0 && config.legenda.groups.less))
-                      {
+                        (slot.diff == 0 && config.legenda.groups.even) ||
+                        (slot.diff < 0 && config.legenda.groups.less)) {
                         timedata.push(
                           {
                             start: Math.round(slot.start * 1000),
                             end: Math.round(slot.end * 1000),
                             group: _this.wrapper('c') + name,
                             content: requirement +
-                                     actual +
-                                     _this.secret(
-                                       angular.toJson(
-                                         {
-                                           type: 'group',
-                                           diff: slot.diff,
-                                           group: name
-                                         })),
+                              actual +
+                              _this.secret(
+                                angular.toJson(
+                                  {
+                                    type: 'group',
+                                    diff: slot.diff,
+                                    group: name
+                                  })),
                             className: 'group-aggs',
                             editable: false
                           }
@@ -438,28 +407,23 @@ define(
             /**
              * Process plain group aggs
              */
-            aggs: function (data, timedata, config, privilage, current)
-            {
+            aggs: function (data, timedata, config, privilage, current) {
               var _this = this;
 
               angular.forEach(
                 _this.filtered(data, current),
-                function (agg)
-                {
+                function (agg) {
                   var name = _this.namer(agg, privilage);
 
                   angular.forEach(
                     agg.data,
-                    function (slot)
-                    {
+                    function (slot) {
                       // console.log('slot ->', slot);
 
                       var cn;
 
-                      if (slot.diff >= 0 && slot.diff < 7)
-                      {
-                        switch (slot.diff)
-                        {
+                      if (slot.diff >= 0 && slot.diff < 7) {
+                        switch (slot.diff) {
                           case 0:
                             cn = 'even';
                             break;
@@ -483,19 +447,16 @@ define(
                             break;
                         }
                       }
-                      else if (slot.diff >= 7)
-                      {
+                      else if (slot.diff >= 7) {
                         cn = 'more';
                       }
-                      else
-                      {
+                      else {
                         cn = 'less'
                       }
 
                       if ((slot.diff > 0 && config.legenda.groups.more) ||
-                          (slot.diff == 0 && config.legenda.groups.even) ||
-                          (slot.diff < 0 && config.legenda.groups.less))
-                      {
+                        (slot.diff == 0 && config.legenda.groups.even) ||
+                        (slot.diff < 0 && config.legenda.groups.less)) {
                         timedata.push(
                           {
                             start: Math.round(slot.start * 1000),
@@ -503,13 +464,13 @@ define(
                             group: _this.wrapper('c') + name,
                             content: this.tooltip({ start: slot.start, end: slot.end, min: slot.wish + slot.diff }) +
                               // '<span class="badge badge-inverse">' + cn + '</span>' +
-                                     _this.secret(
-                                       angular.toJson(
-                                         {
-                                           type: 'group',
-                                           diff: slot.diff,
-                                           group: name
-                                         })),
+                              _this.secret(
+                                angular.toJson(
+                                  {
+                                    type: 'group',
+                                    diff: slot.diff,
+                                    group: name
+                                  })),
                             className: 'agg-' + cn,
                             editable: false
                           }
@@ -532,18 +493,17 @@ define(
             /**
              * Wish slots
              */
-            wishes: function (data, timedata, privilage)
-            {
+            wishes: function (data, timedata, privilage) {
               var _this = this;
 
               var groups = this.get.groups(),
-                  name = groups[data.aggs[0].id],
-                  link = '<a href="#/groups?uuid=' +
-                         data.aggs[0].id +
-                         '#view">' +
-                         name +
-                         '</a>',
-                  title;
+                name = groups[data.aggs[0].id],
+                link = '<a href="#/groups?uuid=' +
+                  data.aggs[0].id +
+                  '#view">' +
+                  name +
+                  '</a>',
+                title;
 
               title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
@@ -551,20 +511,16 @@ define(
 
               angular.forEach(
                 data.aggs.wishes,
-                function (wish)
-                {
+                function (wish) {
                   var cn;
 
-                  if (wish.count >= 7)
-                  {
+                  if (wish.count >= 7) {
                     cn = 'wishes-more';
                   }
-                  else if (wish.count == 0)
-                  {
+                  else if (wish.count == 0) {
                     cn = 'wishes-even';
                   }
-                  else
-                  {
+                  else {
                     cn = 'wishes-' + wish.count;
                   }
 
@@ -574,14 +530,14 @@ define(
                       end: Math.round(wish.end * 1000),
                       group: _this.wrapper('c') + title,
                       content: this.tooltip({ start: wish.start, end: wish.end, wish: wish.count }) +
-                               _this.secret(
-                                 angular.toJson(
-                                   {
-                                     type: 'wish',
-                                     wish: wish.count,
-                                     group: title,
-                                     groupId: data.aggs[0].id
-                                   })),
+                        _this.secret(
+                          angular.toJson(
+                            {
+                              type: 'wish',
+                              wish: wish.count,
+                              group: title,
+                              groupId: data.aggs[0].id
+                            })),
                       className: cn,
                       editable: false
                     }
@@ -601,18 +557,15 @@ define(
             /**
              * Process members
              */
-            members: function (data, timedata, config, privilage)
-            {
+            members: function (data, timedata, config, privilage) {
               var _this = this,
-                  members = this.get.members(),
-                  filtered = [];
+                members = this.get.members(),
+                filtered = [];
 
               angular.forEach(
                 data.members,
-                function (member)
-                {
-                  if (member.lastName != undefined && member.role != 4 && member.role != 0)
-                  {
+                function (member) {
+                  if (member.lastName != undefined && member.role != 4 && member.role != 0) {
                     filtered.push(member);
                   }
                 }
@@ -621,18 +574,15 @@ define(
               data.members = filtered;
 
               data.members.sort(
-                function (a, b)
-                {
+                function (a, b) {
                   var aName = a.lastName.toLowerCase(),
-                      bName = b.lastName.toLowerCase();
+                    bName = b.lastName.toLowerCase();
 
-                  if (aName < bName)
-                  {
-                    return - 1;
+                  if (aName < bName) {
+                    return -1;
                   }
 
-                  if (aName > bName)
-                  {
+                  if (aName > bName) {
                     return 1;
                   }
 
@@ -642,30 +592,26 @@ define(
 
               angular.forEach(
                 data.members,
-                function (member)
-                {
+                function (member) {
                   var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
 
                   var link = (privilage <= 1) ?
-                             _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
-                             '<a href="#/profile/' +
-                             member.id +
-                             '#' + user + '">' +
-                             members[member.id] +
-                             '</a>' :
-                             _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
-                             members[member.id];
+                    _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
+                    '<a href="#/profile/' +
+                    member.id +
+                    '#' + user + '">' +
+                    members[member.id] +
+                    '</a>' :
+                    _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
+                    members[member.id];
 
                   angular.forEach(
                     member.data,
-                    function (slot)
-                    {
+                    function (slot) {
                       angular.forEach(
                         config.legenda,
-                        function (value, legenda)
-                        {
-                          if (slot.text == legenda && value)
-                          {
+                        function (value, legenda) {
+                          if (slot.text == legenda && value) {
                             var tooltip = {
                               start: slot.start,
                               end: slot.end,
@@ -679,17 +625,17 @@ define(
                                 end: Math.round(slot.end * 1000),
                                 group: link,
                                 content: this.tooltip(tooltip) +
-                                         _this.secret(
-                                           angular.toJson(
-                                             {
-                                               type: 'member',
-                                               id: slot.id,
-                                               mid: member.id,
-                                               recursive: slot.recursive,
-                                               state: slot.text
-                                             }
-                                           )
-                                         ),
+                                  _this.secret(
+                                    angular.toJson(
+                                      {
+                                        type: 'member',
+                                        id: slot.id,
+                                        mid: member.id,
+                                        recursive: slot.recursive,
+                                        state: slot.text
+                                      }
+                                    )
+                                  ),
                                 className: config.states[slot.text].className,
                                 editable: false
                               }
@@ -717,8 +663,7 @@ define(
                    */
                   angular.forEach(
                     member.stats,
-                    function (stat)
-                    {
+                    function (stat) {
                       var state = stat.state.split('.');
                       state.reverse();
 
@@ -734,49 +679,43 @@ define(
             /**
              * Produce pie charts
              */
-            pies: function (data, current)
-            {
+            pies: function (data, current) {
               var _this = this;
 
               angular.forEach(
                 _this.filtered(data, current),
-                function (agg)
-                {
+                function (agg) {
                   var id;
 
                   id = ($rootScope.config.timeline.config.divisions.length > 0) ?
-                       agg.division.id :
-                       '';
+                    agg.division.id :
+                    '';
 
-                  if ($.browser.msie && $.browser.version == '8.0')
-                  {
+                  if ($.browser.msie && $.browser.version == '8.0') {
                     $('#' + 'groupPie-' + id).html('');
                   }
-                  else
-                  {
+                  else {
                     document.getElementById('groupPie-' + id).innerHTML = '';
                   }
 
                   var ratios = [],
-                      //                  colorMap = {
-                      //                    more: '#415e6b',
-                      //                    even: '#ba6a24',
-                      //                    less: '#a0a0a0'
-                      //                  },
-                      colorMap = {
-                        more: '#6cad6c',
-                        even: '#e09131',
-                        less: '#d34545'
-                      },
-                      colors = [],
-                      xratios = [];
+                  //                  colorMap = {
+                  //                    more: '#415e6b',
+                  //                    even: '#ba6a24',
+                  //                    less: '#a0a0a0'
+                  //                  },
+                    colorMap = {
+                      more: '#6cad6c',
+                      even: '#e09131',
+                      less: '#d34545'
+                    },
+                    colors = [],
+                    xratios = [];
 
                   angular.forEach(
                     agg.ratios,
-                    function (ratio, index)
-                    {
-                      if (ratio != 0)
-                      {
+                    function (ratio, index) {
+                      if (ratio != 0) {
                         ratios.push(
                           {
                             ratio: ratio,
@@ -787,19 +726,20 @@ define(
                     }
                   );
 
-                  ratios = ratios.sort(function (a, b) { return b.ratio - a.ratio });
+                  ratios = ratios.sort(function (a, b) {
+                    return b.ratio - a.ratio
+                  });
 
                   angular.forEach(
                     ratios,
-                    function (ratio)
-                    {
+                    function (ratio) {
                       colors.push(ratio.color);
                       xratios.push(ratio.ratio);
                     }
                   );
 
                   var r = Raphael('groupPie-' + id),
-                      pie = r.piechart(120, 120, 100, xratios, { colors: colors });
+                    pie = r.piechart(120, 120, 100, xratios, { colors: colors });
                 });
             },
 
@@ -807,22 +747,17 @@ define(
             /**
              * Filter group agg data based on selected divisions
              */
-            filtered: function (data, current)
-            {
+            filtered: function (data, current) {
               var filtered = [];
 
-              if (current.division == 'all')
-              {
+              if (current.division == 'all') {
                 filtered = data.aggs;
               }
-              else
-              {
+              else {
                 angular.forEach(
                   data.aggs,
-                  function (agg)
-                  {
-                    if (current.division == agg.division.id)
-                    {
+                  function (agg) {
+                    if (current.division == agg.division.id) {
                       filtered.push(agg);
                     }
                   }
@@ -835,21 +770,17 @@ define(
             /**
              * Timeline data processing
              */
-            process: function (data, config, divisions, privilage, current)
-            {
+            process: function (data, config, divisions, privilage, current) {
               var _this = this,
-                  timedata = [];
+                timedata = [];
 
               if (data.user) timedata = _this.user(data, timedata, config);
 
-              if (data.aggs)
-              {
-                if (config.bar)
-                {
+              if (data.aggs) {
+                if (config.bar) {
                   timedata = _this.bars(data, timedata, config, privilage, current);
                 }
-                else
-                {
+                else {
                   timedata = _this.aggs(data, timedata, config, privilage, current);
                 }
               }
@@ -858,10 +789,11 @@ define(
 
               if (data.members) timedata = _this.members(data, timedata, config, privilage);
 
-              if (data.aggs)
-              {
+              if (data.aggs) {
                 setTimeout(
-                  function () { _this.pies(data, current) },
+                  function () {
+                    _this.pies(data, current)
+                  },
                   $rootScope.config.timers.TICKER
                 );
               }

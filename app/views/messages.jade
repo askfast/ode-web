@@ -1,391 +1,391 @@
 .page-header
-	h2 {{ui.message.messages}}
+  h2 {{ui.message.messages}}
 
-		.btn-group.pull-right
-			button.btn.btn-success(type='submit',
-			class="{{(views.compose==true) && 'active'}}",
-			ng-click='composeMessage(); setViewTo("compose")')
-				| {{ui.message.composeAMessage}}
+    .btn-group.pull-right
+      button.btn.btn-success(type='submit',
+      class="{{(views.compose==true) && 'active'}}",
+      ng-click='composeMessage(); setViewTo("compose")')
+        | {{ui.message.composeAMessage}}
 
-	.row-fluid
-		.tabbable.tabs-left
+  .row-fluid
+    .tabbable.tabs-left
 
-			ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
-				li(ng-show='views.compose', class="{{(views.compose==true) && 'active'}}")
-					a(href='messages#composeTab', data-toggle='tab', ng-click='setViewTo("compose")')
-						span.entypo ✎
-						| {{ui.message.compose}}
-				li(ng-show='views.message', class="{{(views.message==true) && 'active'}}")
-					a(href='messages#viewTab', data-toggle='tab', ng-click='')
-						span.entypo 
-						| {{ui.message.message}}
-				li(class="{{(views.inbox==true) && 'active'}}")
-					a(href='messages#inboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("inbox")')
-						span.entypo 
-						| {{ui.message.inbox}}
-				li(class="{{(views.outbox==true) && 'active'}}")
-					a(href='messages#outboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("outbox")')
-						span.entypo 
-						| {{ui.message.outbox}}
-				li(class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}",
-				ng-hide='app.resources.role > 1')
-					a(href='messages#notificationsTab', data-toggle='tab', ng-click='resetViews(); setViewTo("notifications")')
-						span.entypo 
-						| {{ui.message.notifications}}
-				li(class="{{(views.trash==true) && 'active'}}")
-					a(href='messages#trashTab', data-toggle='tab', ng-click='resetViews(); setViewTo("trash")')
-						span.entypo ☕
-						| {{ui.message.trash}}
+      ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
+        li(ng-show='views.compose', class="{{(views.compose==true) && 'active'}}")
+          a(href='messages#composeTab', data-toggle='tab', ng-click='setViewTo("compose")')
+            span.entypo ✎
+            | {{ui.message.compose}}
+        li(ng-show='views.message', class="{{(views.message==true) && 'active'}}")
+          a(href='messages#viewTab', data-toggle='tab', ng-click='')
+            span.entypo 
+            | {{ui.message.message}}
+        li(class="{{(views.inbox==true) && 'active'}}")
+          a(href='messages#inboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("inbox")')
+            span.entypo 
+            | {{ui.message.inbox}}
+        li(class="{{(views.outbox==true) && 'active'}}")
+          a(href='messages#outboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("outbox")')
+            span.entypo 
+            | {{ui.message.outbox}}
+        li(class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}",
+        ng-hide='app.resources.role > 1')
+          a(href='messages#notificationsTab', data-toggle='tab', ng-click='resetViews(); setViewTo("notifications")')
+            span.entypo 
+            | {{ui.message.notifications}}
+        li(class="{{(views.trash==true) && 'active'}}")
+          a(href='messages#trashTab', data-toggle='tab', ng-click='resetViews(); setViewTo("trash")')
+            span.entypo ☕
+            | {{ui.message.trash}}
 
-			.tab-content
+      .tab-content
 
-				#composeTab.tab-pane(ng-show='views.compose || views.scheaduler',
-				class="{{(views.compose==true || views.scheaduler==true) && 'active'}}")
-					.tab-header
-						h3.pull-left
-							span(ng-hide='views.scheaduler') {{ui.message.composeMessage}}
-							span(ng-show='views.scheaduler') {{scheaduled.title | toTitleCase}}
-						button.btn.pull-right(type='submit', ng-click='(origin=="inbox"); closeTabs()')
-							| {{ui.message.close}}
-					hr
-					form(ng-controller='scheaduler')
-						fieldset
-							.control-group
-								label.control-label {{ui.message.broadcast}}
-								input(type='checkbox',
-								ng-model='broadcast.sms',
-								ng-hide='app.resources.role > 2',
-								style="margin:-3px 5px 0 0",
-								id="broadcastSmsCheckBox")
-								label(for='broadcastSmsCheckBox', style='display: inline;')
-									span(ng-hide='app.resources.role > 2') {{ui.message.sms}}
-								input#broadcastEmailCheckBox(type='checkbox', ng-model='broadcast.email', style='margin: -3px 5px 0 15px;')
-								label(for='broadcastEmailCheckBox', style='display: inline;') {{ui.message.email}}
+        #composeTab.tab-pane(ng-show='views.compose || views.scheaduler',
+        class="{{(views.compose==true || views.scheaduler==true) && 'active'}}")
+          .tab-header
+            h3.pull-left
+              span(ng-hide='views.scheaduler') {{ui.message.composeMessage}}
+              span(ng-show='views.scheaduler') {{scheaduled.title | toTitleCase}}
+            button.btn.pull-right(type='submit', ng-click='(origin=="inbox"); closeTabs()')
+              | {{ui.message.close}}
+          hr
+          form(ng-controller='scheaduler')
+            fieldset
+              .control-group
+                label.control-label {{ui.message.broadcast}}
+                input(type='checkbox',
+                ng-model='broadcast.sms',
+                ng-hide='app.resources.role > 2',
+                style="margin:-3px 5px 0 0",
+                id="broadcastSmsCheckBox")
+                label(for='broadcastSmsCheckBox', style='display: inline;')
+                  span(ng-hide='app.resources.role > 2') {{ui.message.sms}}
+                input#broadcastEmailCheckBox(type='checkbox', ng-model='broadcast.email', style='margin: -3px 5px 0 15px;')
+                label(for='broadcastEmailCheckBox', style='display: inline;') {{ui.message.email}}
 
-							.control-group
-								label.control-label {{ui.message.receviers}}
-								select.chzn-select(data-placeholder=' ',
-								multiple='multiple',
-								style='width: 530px;',
-								chosen='chosen',
-								ng-model='message.receivers',
-								ng-options='receiver.name group by receiver.group for receiver in receviersList | orderBy:"lastName"')
+              .control-group
+                label.control-label {{ui.message.receviers}}
+                select.chzn-select(data-placeholder=' ',
+                multiple='multiple',
+                style='width: 530px;',
+                chosen='chosen',
+                ng-model='message.receivers',
+                ng-options='receiver.name group by receiver.group for receiver in receviersList | orderBy:"lastName"')
 
-							.control-group
-								label.control-label {{ui.message.subject}}
-								input.span5(type='text', ng-model='message.subject', placeholder='{{ui.message.typeSubject}}')
+              .control-group
+                label.control-label {{ui.message.subject}}
+                input.span5(type='text', ng-model='message.subject', placeholder='{{ui.message.typeSubject}}')
 
-							.control-group
-								label.control-label {{ui.message.message}}
-								textarea.span7(rows='7', ng-model='message.body')
+              .control-group
+                label.control-label {{ui.message.message}}
+                textarea.span7(rows='7', ng-model='message.body')
 
-							.control-group(ng-hide='app.resources.role > 1')
-								label.control-label {{ui.message.repeat}}
-								.btn-group(data-toggle='buttons-radio')
-									button.btn.btn-small(type='button',
-									class="{{(scheaduled.status) && 'btn-success.active'}}",
-									ng-model='scheaduled.status',
-									ng-click='scheaduled.status = true; addNewOffset()') {{ui.message.repeatOn}}
-									button.btn.btn-small(type='button',
-									class="{{(!scheaduled.status) && 'active'}}",
-									ng-model='scheaduled.status',
-									ng-click='scheaduled.status = false') {{ui.message.repeatOff}}
+              .control-group(ng-hide='app.resources.role > 1')
+                label.control-label {{ui.message.repeat}}
+                .btn-group(data-toggle='buttons-radio')
+                  button.btn.btn-small(type='button',
+                  class="{{(scheaduled.status) && 'btn-success.active'}}",
+                  ng-model='scheaduled.status',
+                  ng-click='scheaduled.status = true; addNewOffset()') {{ui.message.repeatOn}}
+                  button.btn.btn-small(type='button',
+                  class="{{(!scheaduled.status) && 'active'}}",
+                  ng-model='scheaduled.status',
+                  ng-click='scheaduled.status = false') {{ui.message.repeatOff}}
 
-							section#scheaduler-pane(ng-show='scheaduled.status')
-								header
-									h4 {{ui.message.repeat}}
-									.pull-right
-										button.btn.btn-small.btn-success(type='button', ng-click='addNewOffset()')
-											| {{ui.message.repeatNew}}
-								hr
-								.control-group
-									label.control-label {{ui.message.notificationLabel}}
-									input.span6(type='text', ng-model='scheaduled.title', placeholder='{{ui.message.notificationLabel}}')
+              section#scheaduler-pane(ng-show='scheaduled.status')
+                header
+                  h4 {{ui.message.repeat}}
+                  .pull-right
+                    button.btn.btn-small.btn-success(type='button', ng-click='addNewOffset()')
+                      | {{ui.message.repeatNew}}
+                hr
+                .control-group
+                  label.control-label {{ui.message.notificationLabel}}
+                  input.span6(type='text', ng-model='scheaduled.title', placeholder='{{ui.message.notificationLabel}}')
 
-								.control-group(ng-hide='scheaduleCount > 0')
-									label.control-label {{ui.message.notifications}}
-									p.muted
-										small
-											i {{ui.message.notificationsEmpty}}
+                .control-group(ng-hide='scheaduleCount > 0')
+                  label.control-label {{ui.message.notifications}}
+                  p.muted
+                    small
+                      i {{ui.message.notificationsEmpty}}
 
-								.control-group(ng-show='scheaduleCount > 0')
-									label.control-label {{ui.message.notifications}}
-									span(style='font-size: 11px;', ng-repeat='o in offsets')
-										| {{o}}
-										br
+                .control-group(ng-show='scheaduleCount > 0')
+                  label.control-label {{ui.message.notifications}}
+                  span(style='font-size: 11px;', ng-repeat='o in offsets')
+                    | {{o}}
+                    br
 
-									div(ng-repeat='offset in scheaduled.offsets')
-										notification-item(scheadule='offset', remover='remover()')
+                  div(ng-repeat='offset in scheaduled.offsets')
+                    notification-item(scheadule='offset', remover='remover()')
 
-							.form-actions
-								div(ng-show='scheaduled.uuid || scheaduled.status')
-									button(type='submit', ng-hide='scheaduleCount > 0')
-										| class="btn btn-success disabled"
-										| {{ui.message.notificationSave}}
-									button(type='submit',
-									ng-click='scheaduler.save(message, broadcast, scheaduled)',
-									ng-show='scheaduleCount > 0')
-										| class="btn btn-success"
-										| {{ui.message.notificationSave}}
-								button.btn.btn-success(type='submit',
-								ng-hide='scheaduled.uuid || scheaduled.status',
-								ng-click='send(message, broadcast)') {{ui.message.sendMessage}}
+              .form-actions
+                div(ng-show='scheaduled.uuid || scheaduled.status')
+                  button(type='submit', ng-hide='scheaduleCount > 0')
+                    | class="btn btn-success disabled"
+                    | {{ui.message.notificationSave}}
+                  button(type='submit',
+                  ng-click='scheaduler.save(message, broadcast, scheaduled)',
+                  ng-show='scheaduleCount > 0')
+                    | class="btn btn-success"
+                    | {{ui.message.notificationSave}}
+                button.btn.btn-success(type='submit',
+                ng-hide='scheaduled.uuid || scheaduled.status',
+                ng-click='send(message, broadcast)') {{ui.message.sendMessage}}
 
-				#viewTab.tab-pane(ng-show='views.message',
-				class="{{(views.message==true) && 'active'}}")
-					.tab-header
-						h3.pull-left {{message.subject}}
-						.pull-right
-							button.btn(type='button', ng-click='closeTabs()')
-								| {{ui.message.close}}
-					hr
-					dl
-						dt {{ui.message.sender}}
-						dd
-							a(href='#/profile/{{message.requester|convertEve}}#profile')
-								| {{message.requester|convertEve|convertUserIdToName}}
-						dt {{ui.message.receviers}}
-						dd
-							span(ng-repeat='receiver in message.responder')
-								a(href='#/profile/{{receiver|convertEve}}#profile')
-									| {{receiver|convertEve|convertUserIdToName}}
-						dt {{ui.message.date}}
-						dd {{message.creationTime | nicelyDate}}
-						dt {{ui.message.questionText}}
-						dd {{message.question_text}}
-					form
-						fieldset
-							.form-actions
-								button.btn.btn-success(type='button', ng-click='reply(message)')
-									| {{ui.message.reply}}
-								button.btn.btn-danger(type='button', ng-click='removeMessage(message.uuid)')
-									| {{ui.message.del}}
+        #viewTab.tab-pane(ng-show='views.message',
+        class="{{(views.message==true) && 'active'}}")
+          .tab-header
+            h3.pull-left {{message.subject}}
+            .pull-right
+              button.btn(type='button', ng-click='closeTabs()')
+                | {{ui.message.close}}
+          hr
+          dl
+            dt {{ui.message.sender}}
+            dd
+              a(href='#/profile/{{message.requester|convertEve}}#profile')
+                | {{message.requester|convertEve|convertUserIdToName}}
+            dt {{ui.message.receviers}}
+            dd
+              span(ng-repeat='receiver in message.responder')
+                a(href='#/profile/{{receiver|convertEve}}#profile')
+                  | {{receiver|convertEve|convertUserIdToName}}
+            dt {{ui.message.date}}
+            dd {{message.creationTime | nicelyDate}}
+            dt {{ui.message.questionText}}
+            dd {{message.question_text}}
+          form
+            fieldset
+              .form-actions
+                button.btn.btn-success(type='button', ng-click='reply(message)')
+                  | {{ui.message.reply}}
+                button.btn.btn-danger(type='button', ng-click='removeMessage(message.uuid)')
+                  | {{ui.message.del}}
 
-				#inboxTab.tab-pane(class="{{(views.inbox==true) && 'active'}}")
-					.tab-header
-						h3.pull-left {{ui.message.inbox}}
-						form.pull-right
-							input.span12.search-query(type='text',
-							placeholder='{{ui.message.ph_filterMessage}}',
-							ng-model='query.inbox')
-					hr
-					p(ng-hide='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
-						| {{ui.message.noMessage}}
-					div(ng-show='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
-						table.table.table-striped
-							thead
-								tr
-									th
-										input(type='checkbox',
-										ng-model='selectionMaster.inbox',
-										ng-click='toggleSelection(messages.inbox[page.inbox], "inbox", selectionMaster.inbox)')
-									th(width='60')
-									th {{ui.message.from}}
-									th {{ui.message.subject}}
-									th {{ui.message.date}}
-									th
-							tbody
-								tr(ng-repeat='message in messages.inbox[page.inbox] | filter:query.inbox | orderBy:"creationTime":true')
-									td
-										input(type='checkbox',
-										ng-model='selection.inbox[message.uuid]',
-										ng-checked='selection.inbox[message.uuid]')
-									td
-										span.label.label-warning(ng-show='(message.state=="NEW")') {{ui.message.newMsg}}
-									td
-										a(href='#/profile/{{message.requester | convertEve}}#profile')
-											| {{message.requester | convertEve | convertUserIdToName}}
-									td
-										a(ng-click='requestMessage(message.uuid, "inbox")') {{message.subject}}
-									td {{message.creationTime | nicelyDate}}
-									td
-										.pull-right
-											button.btn.btn-mini(ng-click='reply(message)')
-												i.icon-share-alt
-											button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMessage(message.uuid)')
-												i.icon-trash.icon-white
-						button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.inbox)')
-							i.icon-trash.icon-white
-							| {{ui.message.deleteSelected}}
-						.btn-toolbar.pull-right(style='margin: 0;')
-							.btn-group
-								button.btn.btn-small(ng-click='paginate.before("inbox")',
-								class="{{(page.inbox==0) && 'disabled'}}")
-									| « {{ui.message.paginationPrevious}}
-								button.btn.btn-small(ng-click='paginate.next("inbox")',
-								class="{{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}")
-									| {{ui.message.paginationNext}} »
-						br
-						br
-						span.muted.pull-right
-							small
-								i
-									| {{ui.message.paginationPage}}: {{page.inbox + 1}} {{ui.message.paginationOf}}
-									| {{messages.inbox.length}}, {{ui.message.paginationInTotal}}: {{messages.inbox | countBox}}
+        #inboxTab.tab-pane(class="{{(views.inbox==true) && 'active'}}")
+          .tab-header
+            h3.pull-left {{ui.message.inbox}}
+            form.pull-right
+              input.span12.search-query(type='text',
+              placeholder='{{ui.message.ph_filterMessage}}',
+              ng-model='query.inbox')
+          hr
+          p(ng-hide='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
+            | {{ui.message.noMessage}}
+          div(ng-show='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
+            table.table.table-striped
+              thead
+                tr
+                  th
+                    input(type='checkbox',
+                    ng-model='selectionMaster.inbox',
+                    ng-click='toggleSelection(messages.inbox[page.inbox], "inbox", selectionMaster.inbox)')
+                  th(width='60')
+                  th {{ui.message.from}}
+                  th {{ui.message.subject}}
+                  th {{ui.message.date}}
+                  th
+              tbody
+                tr(ng-repeat='message in messages.inbox[page.inbox] | filter:query.inbox | orderBy:"creationTime":true')
+                  td
+                    input(type='checkbox',
+                    ng-model='selection.inbox[message.uuid]',
+                    ng-checked='selection.inbox[message.uuid]')
+                  td
+                    span.label.label-warning(ng-show='(message.state=="NEW")') {{ui.message.newMsg}}
+                  td
+                    a(href='#/profile/{{message.requester | convertEve}}#profile')
+                      | {{message.requester | convertEve | convertUserIdToName}}
+                  td
+                    a(ng-click='requestMessage(message.uuid, "inbox")') {{message.subject}}
+                  td {{message.creationTime | nicelyDate}}
+                  td
+                    .pull-right
+                      button.btn.btn-mini(ng-click='reply(message)')
+                        i.icon-share-alt
+                      button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMessage(message.uuid)')
+                        i.icon-trash.icon-white
+            button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.inbox)')
+              i.icon-trash.icon-white
+              | {{ui.message.deleteSelected}}
+            .btn-toolbar.pull-right(style='margin: 0;')
+              .btn-group
+                button.btn.btn-small(ng-click='paginate.before("inbox")',
+                class="{{(page.inbox==0) && 'disabled'}}")
+                  | « {{ui.message.paginationPrevious}}
+                button.btn.btn-small(ng-click='paginate.next("inbox")',
+                class="{{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}")
+                  | {{ui.message.paginationNext}} »
+            br
+            br
+            span.muted.pull-right
+              small
+                i
+                  | {{ui.message.paginationPage}}: {{page.inbox + 1}} {{ui.message.paginationOf}}
+                  | {{messages.inbox.length}}, {{ui.message.paginationInTotal}}: {{messages.inbox | countBox}}
 
-				#outboxTab.tab-pane(class="{{(views.outbox==true) && 'active'}}")
-					.tab-header
-						h3.pull-left {{ui.message.outbox}}
-						form.pull-right
-							input.span12.search-query(type='text',
-							placeholder='{{ui.message.filterMessages}}',
-							ng-model='query.outbox')
-					hr
-					p(ng-hide='(messages.outbox[page.outbox] | filter:query.outbox).length > 0')
-						| {{ui.message.noMessage}}
-					div(ng-show='(messages.outbox[page.outbox] | filter:query.outbox).length > 0')
-						table.table.table-striped
-							thead
-								tr
-									th
-										input(type='checkbox',
-										ng-model='selectionMaster.outbox',
-										ng-click='toggleSelection(messages.outbox[page.outbox], "outbox", selectionMaster.outbox)')
-									th(style='max-width: 400px;') {{ui.message.receviers}}
-									th {{ui.message.subject}}
-									th {{ui.message.date}}
-									th
-							tbody
-								tr(ng-repeat='message in messages.outbox[page.outbox] | filter:query.outbox | orderBy:"creationTime":true')
-									td
-										input(type='checkbox',
-										ng-model='selection.outbox[message.uuid]',
-										ng-checked='selection.outbox[message.uuid]')
-									td
-										span(ng-repeat='receiver in message.responder')
-											a(href='#/profile/{{receiver | convertEve}}#profile')
-												| {{receiver | convertEve | convertUserIdToName}}
-									td
-										a(ng-click='requestMessage(message.uuid, "outbox")') {{message.subject}}
-									td {{message.creationTime | nicelyDate}}
-									td
-										.pull-right
-											button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMessage(message.uuid)')
-												i.icon-trash.icon-white
-						button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.outbox)')
-							i.icon-trash.icon-white
-							| {{ui.message.deleteSelected}}
-						.btn-toolbar.pull-right(style='margin: 0;')
-							.btn-group
-								button.btn.btn-small(ng-click='paginate.before("outbox")',
-								class="{{(page.outbox == 0) && 'disabled'}}")
-									| « {{ui.message.paginationPrevious}}
-								button.btn.btn-small(ng-click='paginate.next("outbox")',
-								class="{{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}")
-									| {{ui.message.paginationNext}} »
-						br
-						br
-						span.muted.pull-right
-							small
-								i
-									| {{ui.message.paginationPage}}: {{page.outbox + 1}} {{ui.message.paginationOf}}
-									| {{messages.outbox.length}}, {{ui.message.paginationInTotal}}: {{messages.outbox | countBox}}
+        #outboxTab.tab-pane(class="{{(views.outbox==true) && 'active'}}")
+          .tab-header
+            h3.pull-left {{ui.message.outbox}}
+            form.pull-right
+              input.span12.search-query(type='text',
+              placeholder='{{ui.message.filterMessages}}',
+              ng-model='query.outbox')
+          hr
+          p(ng-hide='(messages.outbox[page.outbox] | filter:query.outbox).length > 0')
+            | {{ui.message.noMessage}}
+          div(ng-show='(messages.outbox[page.outbox] | filter:query.outbox).length > 0')
+            table.table.table-striped
+              thead
+                tr
+                  th
+                    input(type='checkbox',
+                    ng-model='selectionMaster.outbox',
+                    ng-click='toggleSelection(messages.outbox[page.outbox], "outbox", selectionMaster.outbox)')
+                  th(style='max-width: 400px;') {{ui.message.receviers}}
+                  th {{ui.message.subject}}
+                  th {{ui.message.date}}
+                  th
+              tbody
+                tr(ng-repeat='message in messages.outbox[page.outbox] | filter:query.outbox | orderBy:"creationTime":true')
+                  td
+                    input(type='checkbox',
+                    ng-model='selection.outbox[message.uuid]',
+                    ng-checked='selection.outbox[message.uuid]')
+                  td
+                    span(ng-repeat='receiver in message.responder')
+                      a(href='#/profile/{{receiver | convertEve}}#profile')
+                        | {{receiver | convertEve | convertUserIdToName}}
+                  td
+                    a(ng-click='requestMessage(message.uuid, "outbox")') {{message.subject}}
+                  td {{message.creationTime | nicelyDate}}
+                  td
+                    .pull-right
+                      button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMessage(message.uuid)')
+                        i.icon-trash.icon-white
+            button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.outbox)')
+              i.icon-trash.icon-white
+              | {{ui.message.deleteSelected}}
+            .btn-toolbar.pull-right(style='margin: 0;')
+              .btn-group
+                button.btn.btn-small(ng-click='paginate.before("outbox")',
+                class="{{(page.outbox == 0) && 'disabled'}}")
+                  | « {{ui.message.paginationPrevious}}
+                button.btn.btn-small(ng-click='paginate.next("outbox")',
+                class="{{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}")
+                  | {{ui.message.paginationNext}} »
+            br
+            br
+            span.muted.pull-right
+              small
+                i
+                  | {{ui.message.paginationPage}}: {{page.outbox + 1}} {{ui.message.paginationOf}}
+                  | {{messages.outbox.length}}, {{ui.message.paginationInTotal}}: {{messages.outbox | countBox}}
 
-				#notificationsTab.tab-pane(class="{{(views.notifications==true) && 'active'}}")
-					.tab-header
-						h3.pull-left {{ui.message.notifications}}
-					hr
-					p(ng-hide='scheadules.length > 0')
-						| {{ui.message.notificationsEmpty}}
-					div(ng-show='scheadules.length > 0')
-						table.table.table-striped
-							thead
-								tr
-									th(width='60')
-									th(width='50')
-									th {{ui.message.notificationHeaderLabel}}
-									th {{ui.message.notificationHeaderReceivers}}
-									th {{ui.message.notificationHeaderFrequency}}
-									th
-							tbody
-								tr(ng-repeat='scheadule in scheadules')
-									td
-										span.label.label-success(ng-show='scheadule.active') {{ui.message.enabled}}
-										span.label(ng-hide='scheadule.active') {{ui.message.disabled}}
-									td.scheadule-icons
-										div
-											span.entypo.sms(ng-show='scheadule.sms') 
-										div
-											span.entypo.mail(ng-show='scheadule.mail') 
-									td
-										a(ng-click='requestNotification(scheadule.uuid)') {{scheadule.label}}
-									td
-										span.muted
-											small
-												i {{scheadule.recipients | nicelyAudience}}
-									td
-										div(ng-bind-html-unsafe='scheadule.offsets | nicelyOffsets')
-									td
-										.pull-right
-											button.btn.btn-mini(ng-click='requestNotification(scheadule.uuid)')
-												i.icon-edit
-											button.btn.btn-danger.btn-mini(type='submit', ng-click='scheaduler.remove(scheadule.uuid)')
-												i.icon-trash.icon-white
-						span.muted.pull-right
-							small
-								i {{ui.message.inTotal}}: {{scheadules.length}}
+        #notificationsTab.tab-pane(class="{{(views.notifications==true) && 'active'}}")
+          .tab-header
+            h3.pull-left {{ui.message.notifications}}
+          hr
+          p(ng-hide='scheadules.length > 0')
+            | {{ui.message.notificationsEmpty}}
+          div(ng-show='scheadules.length > 0')
+            table.table.table-striped
+              thead
+                tr
+                  th(width='60')
+                  th(width='50')
+                  th {{ui.message.notificationHeaderLabel}}
+                  th {{ui.message.notificationHeaderReceivers}}
+                  th {{ui.message.notificationHeaderFrequency}}
+                  th
+              tbody
+                tr(ng-repeat='scheadule in scheadules')
+                  td
+                    span.label.label-success(ng-show='scheadule.active') {{ui.message.enabled}}
+                    span.label(ng-hide='scheadule.active') {{ui.message.disabled}}
+                  td.scheadule-icons
+                    div
+                      span.entypo.sms(ng-show='scheadule.sms') 
+                    div
+                      span.entypo.mail(ng-show='scheadule.mail') 
+                  td
+                    a(ng-click='requestNotification(scheadule.uuid)') {{scheadule.label}}
+                  td
+                    span.muted
+                      small
+                        i {{scheadule.recipients | nicelyAudience}}
+                  td
+                    div(ng-bind-html-unsafe='scheadule.offsets | nicelyOffsets')
+                  td
+                    .pull-right
+                      button.btn.btn-mini(ng-click='requestNotification(scheadule.uuid)')
+                        i.icon-edit
+                      button.btn.btn-danger.btn-mini(type='submit', ng-click='scheaduler.remove(scheadule.uuid)')
+                        i.icon-trash.icon-white
+            span.muted.pull-right
+              small
+                i {{ui.message.inTotal}}: {{scheadules.length}}
 
-				#trashTab.tab-pane(class="{{(views.trash==true) && 'active'}}")
-					.tab-header
-						h3.pull-left {{ui.message.trash}}
-						.pull-right(style='margin-left: 10px;')
-							button.btn.btn-danger.pull-left(type='button', ng-click='emptyTrash()')
-								i.icon-trash.icon-white
-								| {{ui.message.emptyTrash}}
-						form.pull-right
-							input.span12.search-query(type='text',
-							placeholder='{{ui.message.filterMessages}}',
-							ng-model='query.trash')
-					hr
-					p(ng-hide='(messages.trash[page.trash] | filter:query.trash).length > 0')
-						| {{ui.message.noMsgInTrash}}
-					div(ng-show='(messages.trash[page.trash] | filter:query.trash).length > 0')
-						table.table.table-striped
-							thead
-								tr
-									th
-										input(type='checkbox',
-										ng-model='selectionMaster.trash',
-										ng-click='toggleSelection(messages.trash[page.trash], "trash", selectionMaster.trash)')
-									th(width='60') {{ui.message.box}}
-									th {{ui.message.persons}}
-									th {{ui.message.subject}}
-									th {{ui.message.date}}
-									th
-							tbody
-								tr(ng-repeat='message in messages.trash[page.trash] | filter:query.trash | orderBy:"creationTime":true')
-									td
-										input(type='checkbox',
-										ng-model='selection.trash[message.uuid]',
-										ng-checked='selection.trash[message.uuid]')
-									td
-										span.label {{message.box}}
-									td
-										span(ng-repeat='receiver in message.responder')
-											a(href='#/profile/{{receiver | convertEve}}#profile')
-												| {{receiver | convertEve | convertUserIdToName}}
-									td
-										a(ng-click='requestMessage(message.uuid, "trash")') {{message.subject}}
-									td {{message.creationTime | nicelyDate}}
-									td
-										.pull-right
-											button.btn.btn-success.btn-mini(type='submit', ng-click='restoreMessage(message.uuid)')
-												i.icon-thumbs-up.icon-white
-						button.btn.btn-small.btn-success.pull-left(type='button', ng-click='restoreMessages(selection.trash)')
-							i.icon-thumbs-up.icon-white
-							| {{ui.message.restoreSelected}}
-						.btn-toolbar.pull-right(style='margin: 0;')
-							.btn-group
-								button.btn.btn-small(ng-click='paginate.before("trash")',
-								class="{{(page.trash==0) && 'disabled'}}")
-									| « {{ui.message.paginationPrevious}}
-								button.btn.btn-small(ng-click='paginate.next("trash")',
-								class="{{(page.trash + 1 == messages.trash.length) && 'disabled'}}")
-									| {{ui.message.paginationNext}} »
-						br
-						br
-						span.muted.pull-right
-							small
-								i
-									| {{ui.message.paginationPage}}: {{page.trash + 1}} {{ui.message.paginationOf}}
-									| {{messages.trash.length}}, {{ui.message.paginationInTotal}}: {{messages.trash | countBox}}
+        #trashTab.tab-pane(class="{{(views.trash==true) && 'active'}}")
+          .tab-header
+            h3.pull-left {{ui.message.trash}}
+            .pull-right(style='margin-left: 10px;')
+              button.btn.btn-danger.pull-left(type='button', ng-click='emptyTrash()')
+                i.icon-trash.icon-white
+                | {{ui.message.emptyTrash}}
+            form.pull-right
+              input.span12.search-query(type='text',
+              placeholder='{{ui.message.filterMessages}}',
+              ng-model='query.trash')
+          hr
+          p(ng-hide='(messages.trash[page.trash] | filter:query.trash).length > 0')
+            | {{ui.message.noMsgInTrash}}
+          div(ng-show='(messages.trash[page.trash] | filter:query.trash).length > 0')
+            table.table.table-striped
+              thead
+                tr
+                  th
+                    input(type='checkbox',
+                    ng-model='selectionMaster.trash',
+                    ng-click='toggleSelection(messages.trash[page.trash], "trash", selectionMaster.trash)')
+                  th(width='60') {{ui.message.box}}
+                  th {{ui.message.persons}}
+                  th {{ui.message.subject}}
+                  th {{ui.message.date}}
+                  th
+              tbody
+                tr(ng-repeat='message in messages.trash[page.trash] | filter:query.trash | orderBy:"creationTime":true')
+                  td
+                    input(type='checkbox',
+                    ng-model='selection.trash[message.uuid]',
+                    ng-checked='selection.trash[message.uuid]')
+                  td
+                    span.label {{message.box}}
+                  td
+                    span(ng-repeat='receiver in message.responder')
+                      a(href='#/profile/{{receiver | convertEve}}#profile')
+                        | {{receiver | convertEve | convertUserIdToName}}
+                  td
+                    a(ng-click='requestMessage(message.uuid, "trash")') {{message.subject}}
+                  td {{message.creationTime | nicelyDate}}
+                  td
+                    .pull-right
+                      button.btn.btn-success.btn-mini(type='submit', ng-click='restoreMessage(message.uuid)')
+                        i.icon-thumbs-up.icon-white
+            button.btn.btn-small.btn-success.pull-left(type='button', ng-click='restoreMessages(selection.trash)')
+              i.icon-thumbs-up.icon-white
+              | {{ui.message.restoreSelected}}
+            .btn-toolbar.pull-right(style='margin: 0;')
+              .btn-group
+                button.btn.btn-small(ng-click='paginate.before("trash")',
+                class="{{(page.trash==0) && 'disabled'}}")
+                  | « {{ui.message.paginationPrevious}}
+                button.btn.btn-small(ng-click='paginate.next("trash")',
+                class="{{(page.trash + 1 == messages.trash.length) && 'disabled'}}")
+                  | {{ui.message.paginationNext}} »
+            br
+            br
+            span.muted.pull-right
+              small
+                i
+                  | {{ui.message.paginationPage}}: {{page.trash + 1}} {{ui.message.paginationOf}}
+                  | {{messages.trash.length}}, {{ui.message.paginationInTotal}}: {{messages.trash | countBox}}

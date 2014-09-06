@@ -1,7 +1,6 @@
 'use strict';
 
-if (window.location.port == '8080')
-{
+if (window.location.port == '8080') {
   document.getElementsByTagName('html')[0].setAttribute('ng-app');
 }
 
@@ -22,11 +21,12 @@ require.config(
 
       // 'angular-strap':    '../vendors/angular-strap/dist/angular-strap.min',
       'angular-strap': 'removables/angular-strap.min',
-      'ui-bootstrap': 'removables/ui-bootstrap-custom',
+
+      // 'ui-bootstrap': 'removables/ui-bootstrap-custom',
 
       lawnchair: '../vendors/lawnchair/src/Lawnchair',
       dom: '../vendors/lawnchair/src/adapters/dom',
-      moment: '../vendors/momentjs/min/moment.min',
+      // moment: '../vendors/momentjs/min/moment.min',
 
       // timeline:           '../vendors/chap-links-library/js/src/timeline/timeline-min',
       timeline: 'removables/timeline',
@@ -52,14 +52,14 @@ require.config(
       // interceptor: '../vendors/web-lib-interceptor/dist/interceptor',
 
       log: '../vendors/web-lib-log/dist/log',
-      _moment: '../vendors/web-lib-moment/dist/moment',
+      // _moment: '../vendors/web-lib-moment/dist/moment',
 
       // session: '../vendors/web-lib-session/dist/session',
 
       // vis: '../vendors/vis/dist/vis.min',
       // 'ng-vis': '../vendors/web-lib-vis/public/dist/ng-vis',
 
-      'jquery-form': '../vendors/jquery-form/jquery.form',
+      // 'jquery-form': '../vendors/jquery-form/jquery.form',
 
       //'async':            '../vendors/requirejs-plugins/src/async',
       // 'angular-google-maps': '../vendors/angular-google-maps/dist/angular-google-maps.min',
@@ -77,11 +77,13 @@ require.config(
       'angular-resource': { deps: ['angular'] },
       'angular-route': { deps: ['angular'] },
       'angular-strap': { deps: ['angular'], exports: 'angular-strap' },
-      'ui-bootstrap': { deps: ['angular', 'bootstrap'], exports: 'ui-bootstrap' },
+
+      // 'ui-bootstrap': { deps: ['angular', 'bootstrap'], exports: 'ui-bootstrap' },
+
       bootstrap: { deps: ['jquery'], exports: 'bootstrap' },
       lawnchair: { deps: [], exports: 'lawnchair' },
       dom: { deps: ['lawnchair'], exports: 'dom' },
-      moment: { deps: [], exports: 'moment' },
+      // moment: { deps: [], exports: 'moment' },
       timeline: { deps: [], exports: 'timeline' },
       treegrid: { deps: [], exports: 'treegrid' },
       datepicker: { deps: ['jquery', 'bootstrap'], exports: 'datepicker' },
@@ -96,14 +98,14 @@ require.config(
       // interceptor: { deps: ['angular'] },
 
       log: { deps: ['angular'] },
-      _moment: { deps: ['angular', 'moment'] },
+      // _moment: { deps: ['angular', 'moment'] },
 
       // session: { deps: ['angular'] },
 
       // vis: { exports: 'vis' },
       // 'ng-vis': { deps: ['angular', 'vis'], exports: 'ng-vis' },
 
-      'jquery-form': { deps: ['jquery'], exports: 'jquery-form' },
+      // 'jquery-form': { deps: ['jquery'], exports: 'jquery-form' },
 
       // 'angular-google-maps': { deps: ['angular'] },
       lodash: { deps: [], exports: 'lodash' },
@@ -129,7 +131,8 @@ require(
     'angular-resource',
     'angular-route',
     'angular-strap',
-    'ui-bootstrap', // TODO: Remove later on
+
+    // 'ui-bootstrap',
 
     'locals',
     'config',
@@ -162,8 +165,6 @@ require(
     'directives/download-mobile-app',
     'directives/notification-item',
 
-    'modals/task',
-
     'filters/all-filters',
 
     'controllers/dashboard',
@@ -184,7 +185,7 @@ require(
     'bootstrap',
     'lawnchair',
     'dom',
-    'moment',
+    // 'moment',
     'timeline',
     'treegrid',
     'datepicker',
@@ -197,13 +198,13 @@ require(
     'offline',
     // 'interceptor',
     'log',
-    '_moment',
+    // '_moment',
 
     // 'session',
 
     // 'vis',
     // 'ng-vis',
-    'jquery-form',
+    // 'jquery-form',
 
     'lodash',
     // 'angular-google-maps',
@@ -213,10 +214,11 @@ require(
     // 'ui-sortable',  
     'locale_nl',
   ],
-  function (angular, domReady)
-  {
+  function (angular, domReady) {
     'use strict';
 
-    domReady(function () { angular.bootstrap(document, ['TeamUp']) });
+    domReady(function () {
+      angular.bootstrap(document, ['StandBy'])
+    });
   }
 );

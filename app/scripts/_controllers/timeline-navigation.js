@@ -1,23 +1,19 @@
 define(
   ['controllers/controllers'],
-  function (controllers)
-  {
+  function (controllers) {
     'use strict';
 
     controllers.controller(
       'timeline-navigation',
       [
         '$rootScope', '$scope', '$window',
-        function ($rootScope, $scope, $window)
-        {
-          $scope.timelineScoper = function (period)
-          {
+        function ($rootScope, $scope, $window) {
+          $scope.timelineScoper = function (period) {
             $scope.timeline.current.day = $scope.current.day;
             $scope.timeline.current.week = $scope.current.week;
             $scope.timeline.current.month = $scope.current.month;
 
-            switch (period)
-            {
+            switch (period) {
               case 'day':
                 $scope.timeline.scope = {
                   day: true,
@@ -62,13 +58,10 @@ define(
             }
           };
 
-          $scope.timelineBefore = function ()
-          {
-            if ($scope.timeline.scope.day)
-            {
-              if ($scope.timeline.current.day != 1)
-              {
-                $scope.timeline.current.day --;
+          $scope.timelineBefore = function () {
+            if ($scope.timeline.scope.day) {
+              if ($scope.timeline.current.day != 1) {
+                $scope.timeline.current.day--;
 
                 $scope.timeliner.load(
                   {
@@ -77,11 +70,9 @@ define(
                   });
               }
             }
-            else if ($scope.timeline.scope.week)
-            {
-              if ($scope.timeline.current.week != 1)
-              {
-                $scope.timeline.current.week --;
+            else if ($scope.timeline.scope.week) {
+              if ($scope.timeline.current.week != 1) {
+                $scope.timeline.current.week--;
 
                 $scope.timeliner.load(
                   {
@@ -90,11 +81,9 @@ define(
                   });
               }
             }
-            else if ($scope.timeline.scope.month)
-            {
-              if ($scope.timeline.current.month != 1)
-              {
-                $scope.timeline.current.month --;
+            else if ($scope.timeline.scope.month) {
+              if ($scope.timeline.current.month != 1) {
+                $scope.timeline.current.month--;
 
                 $scope.timeliner.load(
                   {
@@ -105,13 +94,10 @@ define(
             }
           };
 
-          $scope.timelineAfter = function ()
-          {
-            if ($scope.timeline.scope.day)
-            {
-              if ($scope.timeline.current.day != $scope.periods.days.total)
-              {
-                $scope.timeline.current.day ++;
+          $scope.timelineAfter = function () {
+            if ($scope.timeline.scope.day) {
+              if ($scope.timeline.current.day != $scope.periods.days.total) {
+                $scope.timeline.current.day++;
 
                 $scope.timeliner.load(
                   {
@@ -120,11 +106,9 @@ define(
                   });
               }
             }
-            else if ($scope.timeline.scope.week)
-            {
-              if ($scope.timeline.current.week != 53)
-              {
-                $scope.timeline.current.week ++;
+            else if ($scope.timeline.scope.week) {
+              if ($scope.timeline.current.week != 53) {
+                $scope.timeline.current.week++;
 
                 $scope.timeliner.load(
                   {
@@ -133,11 +117,9 @@ define(
                   });
               }
             }
-            else if ($scope.timeline.scope.month)
-            {
-              if ($scope.timeline.current.month != 12)
-              {
-                $scope.timeline.current.month ++;
+            else if ($scope.timeline.scope.month) {
+              if ($scope.timeline.current.month != 12) {
+                $scope.timeline.current.month++;
 
                 $scope.timeliner.load(
                   {
@@ -148,10 +130,8 @@ define(
             }
           };
 
-          $scope.timelineThisWeek = function ()
-          {
-            if ($scope.timeline.current.week != new Date().getWeek())
-            {
+          $scope.timelineThisWeek = function () {
+            if ($scope.timeline.current.week != new Date().getWeek()) {
               $scope.timeliner.load(
                 {
                   start: $scope.periods.weeks[new Date().getWeek()].first.timeStamp,
@@ -165,11 +145,9 @@ define(
             }
           };
 
-          $scope.timelineWeekBefore = function ()
-          {
-            if ($scope.timeline.current.week != 1)
-            {
-              $scope.timeline.current.week --;
+          $scope.timelineWeekBefore = function () {
+            if ($scope.timeline.current.week != 1) {
+              $scope.timeline.current.week--;
 
               $scope.timeliner.load(
                 {
@@ -184,11 +162,9 @@ define(
             };
           };
 
-          $scope.timelineWeekAfter = function ()
-          {
-            if ($scope.timeline.current.week != 53)
-            {
-              $scope.timeline.current.week ++;
+          $scope.timelineWeekAfter = function () {
+            if ($scope.timeline.current.week != 53) {
+              $scope.timeline.current.week++;
 
               $scope.timeliner.load(
                 {
@@ -203,19 +179,21 @@ define(
             };
           };
 
-          $scope.timelineZoomIn = function ()
-          {
+          $scope.timelineZoomIn = function () {
             $scope.self.timeline.zoom(config.app.timeline.config.zoom, Date.now());
           };
 
-          $scope.timelineZoomOut = function ()
-          {
-            $scope.self.timeline.zoom(- config.app.timeline.config.zoom, Date.now());
+          $scope.timelineZoomOut = function () {
+            $scope.self.timeline.zoom(-config.app.timeline.config.zoom, Date.now());
           };
 
-          $window.onresize = function () { $scope.self.timeline.redraw() };
+          $window.onresize = function () {
+            $scope.self.timeline.redraw()
+          };
 
-          $scope.fullWidth = function () { $scope.self.timeline.redraw() }
+          $scope.fullWidth = function () {
+            $scope.self.timeline.redraw()
+          }
         }
       ]);
   }

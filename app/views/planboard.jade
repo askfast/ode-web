@@ -1,461 +1,461 @@
 section#planboard(ng-controller='timeline')
- 
-	.page-header
-		h2 {{ui.planboard.planboard}}
-		.btn-group.pull-right
-			.btn-group
-				button.btn.btn-success(type='submit', 
-				ng-click='toggleSlotForm()',
-				class="{{(views.slot.add==true) && 'active'}}")
-					| {{ui.planboard.newAvail}}
-				button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
-					span.caret
-				ul.dropdown-menu.fast-availability(style='right: 0; font-size: 13px;')
-					li
-						a(ng-click='setAvailability(true, 1)')
-							.square.available
-							| Beschikbaar (1 uur)
-					li
-						a(ng-click='setAvailability(true, 6)')
-							.square.available
-							| Beschikbaar (6 uur)
-					li
-						a(ng-click='setAvailability(true, 24)')
-							.square.available
-							| Beschikbaar (24 uur)
-					li.divider
-					li
-						a(ng-click='setAvailability(false, 1)')
-							.square.unavailable
-							| Niet beschikbaar (1 uur)
-					li
-						a(ng-click='setAvailability(false, 6)')
-							.square.unavailable
-							| Niet beschikbaar (6 uur)
-					li
-						a(ng-click='setAvailability(false, 24)')
-							.square.unavailable
-							| Niet beschikbaar (24 uur)
 
-	#timeline-controls.row-fluid(ng-controller='timeline-navigation')
+  .page-header
+    h2 {{ui.planboard.planboard}}
+    .btn-group.pull-right
+      .btn-group
+        button.btn.btn-success(type='submit',
+        ng-click='toggleSlotForm()',
+        class="{{(views.slot.add==true) && 'active'}}")
+          | {{ui.planboard.newAvail}}
+        button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
+          span.caret
+        ul.dropdown-menu.fast-availability(style='right: 0; font-size: 13px;')
+          li
+            a(ng-click='setAvailability(true, 1)')
+              .square.available
+              | Beschikbaar (1 uur)
+          li
+            a(ng-click='setAvailability(true, 6)')
+              .square.available
+              | Beschikbaar (6 uur)
+          li
+            a(ng-click='setAvailability(true, 24)')
+              .square.available
+              | Beschikbaar (24 uur)
+          li.divider
+          li
+            a(ng-click='setAvailability(false, 1)')
+              .square.unavailable
+              | Niet beschikbaar (1 uur)
+          li
+            a(ng-click='setAvailability(false, 6)')
+              .square.unavailable
+              | Niet beschikbaar (6 uur)
+          li
+            a(ng-click='setAvailability(false, 24)')
+              .square.unavailable
+              | Niet beschikbaar (24 uur)
 
-		.pull-left(style='margin-top: 10px;')
-			
-			.control-group.pull-left(style='margin-right: 10px;')
-				input(type='text', style='width: 190px;', name='daterange', ng-model='daterange', daterangepicker='')
-				i.icon-calendar(style='position: relative; margin: -3px 0 0 -24px;')
+  #timeline-controls.row-fluid(ng-controller='timeline-navigation')
 
-			.btn-group.pull-left(style='margin-right: 5px;')
-				button.btn(type='button', 
-				ng-model='timeline.scope.day', 
-				ng-click='timelineScoper("day")',
-				class="{{(timeline.scope.day==true) && 'active'}}") {{ui.planboard.day}}
-				button.btn(type='button',
-				ng-model='timeline.scope.week',
-				ng-click='timelineScoper("week")',
-				class="{{(timeline.scope.week==true) && 'active'}}") {{ui.planboard.week}}
-				button.btn(type='button',
-				ng-model='timeline.scope.month',
-				ng-click='timelineScoper("month")',
-				class="{{(timeline.scope.month==true) && 'active'}}") {{ui.planboard.month}}
+    .pull-left(style='margin-top: 10px;')
 
-			.btn-group.pull-left(style='margin-right: 5px;')
-				button#timelineBeforeBtn.btn(type='button', ng-click='timelineBefore(timeline.scope)')
-					i.icon-arrow-left
-				button#timelineZoomInBtn.btn(type='button', ng-click='timelineZoomIn()')
-					i.icon-zoom-in
-				button#timelineZoomOutBtn.btn(type='button', ng-click='timelineZoomOut()')
-					i.icon-zoom-out
-				button#timelineAfterBtn.btn(type='button', ng-click='timelineAfter(timeline.scope)')
-					i.icon-arrow-right
+      .control-group.pull-left(style='margin-right: 10px;')
+        input(type='text', style='width: 190px;', name='daterange', ng-model='daterange', daterangepicker='')
+        i.icon-calendar(style='position: relative; margin: -3px 0 0 -24px;')
 
-		div(class="{{ (browser.mobile) &&  'pull-left' || 'pull-right' }}",
-		style="text-align: {{(browser.mobile) &&  'left' || 'right' }}")
-			h4(style='font-weight: normal;')
-				| {{timeline.range | rangeMainFilter}}
-				br
-				div(style='font-size: 15px; font-weight: lighter;')
-					span {{timeline | rangeInfoFilter}}
+      .btn-group.pull-left(style='margin-right: 5px;')
+        button.btn(type='button',
+        ng-model='timeline.scope.day',
+        ng-click='timelineScoper("day")',
+        class="{{(timeline.scope.day==true) && 'active'}}") {{ui.planboard.day}}
+        button.btn(type='button',
+        ng-model='timeline.scope.week',
+        ng-click='timelineScoper("week")',
+        class="{{(timeline.scope.week==true) && 'active'}}") {{ui.planboard.week}}
+        button.btn(type='button',
+        ng-model='timeline.scope.month',
+        ng-click='timelineScoper("month")',
+        class="{{(timeline.scope.month==true) && 'active'}}") {{ui.planboard.month}}
 
-	.row-fluid(ng-show='views.slot.add || views.slot.edit || views.group || views.wish || views.member')
-		form.form-inline.form-toggled.well
-			button.close(ng-click='resetInlineForms()') ×
-			h4(ng-show='views.slot.add') {{ui.planboard.newAvail}}
-			h4(ng-show='views.slot.edit') {{ui.planboard.updateAvail}}
-			h4(ng-show='views.group') {{slot.group|stripHtml}}
-			h4(ng-show='views.wish') {{slot.group|stripHtml}} (Wishes)
-			h4(ng-show='views.member') {{slot.member|convertUserIdToName}}
-			hr
-			.form-elements-group(ng-show='browser.mobile')
-				label {{ui.planboard.from}}
+      .btn-group.pull-left(style='margin-right: 5px;')
+        button#timelineBeforeBtn.btn(type='button', ng-click='timelineBefore(timeline.scope)')
+          i.icon-arrow-left
+        button#timelineZoomInBtn.btn(type='button', ng-click='timelineZoomIn()')
+          i.icon-zoom-in
+        button#timelineZoomOutBtn.btn(type='button', ng-click='timelineZoomOut()')
+          i.icon-zoom-out
+        button#timelineAfterBtn.btn(type='button', ng-click='timelineAfter(timeline.scope)')
+          i.icon-arrow-right
 
-				.control-group.dater-mobile(ng-show='views.slot.add || views.slot.edit || views.wish')
-					input(name='date-start', type='datetime-local', ng-model='slot.start.datetime')
-				.control-group.dater-mobile(ng-show='views.group || views.member')
-					input(name='date-start',
-					type='datetime-local',
-					ng-model='slot.start.datetime',
-					disabled='disabled')
+    div(class="{{ (browser.mobile) &&  'pull-left' || 'pull-right' }}",
+    style="text-align: {{(browser.mobile) &&  'left' || 'right' }}")
+      h4(style='font-weight: normal;')
+        | {{timeline.range | rangeMainFilter}}
+        br
+        div(style='font-size: 15px; font-weight: lighter;')
+          span {{timeline | rangeInfoFilter}}
 
-			.form-elements-group(ng-hide='browser.mobile')
-				label {{ui.planboard.from}}
-				.control-group.dater(ng-show='views.slot.add || views.slot.edit || views.wish')
-					input(name='date-start',
-					type='text',
-					ng-model='slot.start.date',
-					data-date-format='dd-mm-yyyy',
-					bs-datepicker='')
-					i.icon-calendar
-				.control-group.dater(ng-show='views.group || views.member')
-					input(name='date-start', type='text', ng-model='slot.start.date', disabled='disabled')
-					i.icon-calendar
+  .row-fluid(ng-show='views.slot.add || views.slot.edit || views.group || views.wish || views.member')
+    form.form-inline.form-toggled.well
+      button.close(ng-click='resetInlineForms()') ×
+      h4(ng-show='views.slot.add') {{ui.planboard.newAvail}}
+      h4(ng-show='views.slot.edit') {{ui.planboard.updateAvail}}
+      h4(ng-show='views.group') {{slot.group|stripHtml}}
+      h4(ng-show='views.wish') {{slot.group|stripHtml}} (Wishes)
+      h4(ng-show='views.member') {{slot.member|convertUserIdToName}}
+      hr
+      .form-elements-group(ng-show='browser.mobile')
+        label {{ui.planboard.from}}
 
-				.control-group.timer(ng-show='views.slot.add || views.slot.edit || views.wish')
-					input(name='time-start', type='text', ng-model='slot.start.time', bs-timepicker='bs-timepicker')
-					i.icon-time
-				.control-group.timer(ng-show='views.group || views.member')
-					input(name='time-start', type='text', ng-model='slot.start.time', disabled='disabled')
-					i.icon-time
+        .control-group.dater-mobile(ng-show='views.slot.add || views.slot.edit || views.wish')
+          input(name='date-start', type='datetime-local', ng-model='slot.start.datetime')
+        .control-group.dater-mobile(ng-show='views.group || views.member')
+          input(name='date-start',
+          type='datetime-local',
+          ng-model='slot.start.datetime',
+          disabled='disabled')
 
-			.form-elements-group(ng-show='browser.mobile')
-				label {{ui.planboard.till}}
-				.control-group.dater-mobile(ng-show='views.slot.add || views.slot.edit || views.wish')
-					input(name='date-start', type='datetime-local', ng-model='slot.end.datetime')
-				.control-group.dater-mobile(ng-show='views.group || views.member')
-					input(name='date-start',
-					type='datetime-local',
-					ng-model='slot.end.datetime',
-					disabled='disabled')
-				br
-				br
+      .form-elements-group(ng-hide='browser.mobile')
+        label {{ui.planboard.from}}
+        .control-group.dater(ng-show='views.slot.add || views.slot.edit || views.wish')
+          input(name='date-start',
+          type='text',
+          ng-model='slot.start.date',
+          data-date-format='dd-mm-yyyy',
+          bs-datepicker='')
+          i.icon-calendar
+        .control-group.dater(ng-show='views.group || views.member')
+          input(name='date-start', type='text', ng-model='slot.start.date', disabled='disabled')
+          i.icon-calendar
 
-			.form-elements-group(ng-hide='browser.mobile')
-				label {{ui.planboard.till}}
-				.control-group.dater(ng-show='views.slot.add || views.slot.edit || views.wish')
-					input(name='date-end',
-					type='text',
-					ng-model='slot.end.date',
-					data-date-format='dd-mm-yyyy',
-					bs-datepicker='')
-					i.icon-calendar
-				.control-group.dater(ng-show='views.group || views.member')
-					input(name='date-end', type='text', ng-model='slot.end.date', disabled='disabled')
-					i.icon-calendar
-				.control-group.timer(ng-show='views.slot.add || views.slot.edit || views.wish')
-					input(name='time-end', type='text', ng-model='slot.end.time', bs-timepicker='bs-timepicker')
-					i.icon-time
-				.control-group.timer(ng-show='views.group || views.member')
-					input(name='time-end', type='text', ng-model='slot.end.time', disabled='disabled')
-					i.icon-time
+        .control-group.timer(ng-show='views.slot.add || views.slot.edit || views.wish')
+          input(name='time-start', type='text', ng-model='slot.start.time', bs-timepicker='bs-timepicker')
+          i.icon-time
+        .control-group.timer(ng-show='views.group || views.member')
+          input(name='time-start', type='text', ng-model='slot.start.time', disabled='disabled')
+          i.icon-time
 
-			.form-elements-group(ng-show='views.slot.add || views.slot.edit || views.member')
-				label {{ui.planboard.state}}
-				select(ng-model='slot.state',
-				ng-options='option as value for (option, value) in states',
-				ng-change='modifySlot(slot)',
-				ng-show='views.slot.add || views.slot.edit')
-				select(ng-model='slot.state',
-				disabled='disabled',
-				ng-options='option as value for (option, value) in states',
-				ng-show='views.member')
+      .form-elements-group(ng-show='browser.mobile')
+        label {{ui.planboard.till}}
+        .control-group.dater-mobile(ng-show='views.slot.add || views.slot.edit || views.wish')
+          input(name='date-start', type='datetime-local', ng-model='slot.end.datetime')
+        .control-group.dater-mobile(ng-show='views.group || views.member')
+          input(name='date-start',
+          type='datetime-local',
+          ng-model='slot.end.datetime',
+          disabled='disabled')
+        br
+        br
 
-			.form-elements-group.rightest(ng-show='views.slot.add')
-				label {{ui.planboard.reoccuring}}
-				input(type='checkbox', ng-model='slot.recursive')
+      .form-elements-group(ng-hide='browser.mobile')
+        label {{ui.planboard.till}}
+        .control-group.dater(ng-show='views.slot.add || views.slot.edit || views.wish')
+          input(name='date-end',
+          type='text',
+          ng-model='slot.end.date',
+          data-date-format='dd-mm-yyyy',
+          bs-datepicker='')
+          i.icon-calendar
+        .control-group.dater(ng-show='views.group || views.member')
+          input(name='date-end', type='text', ng-model='slot.end.date', disabled='disabled')
+          i.icon-calendar
+        .control-group.timer(ng-show='views.slot.add || views.slot.edit || views.wish')
+          input(name='time-end', type='text', ng-model='slot.end.time', bs-timepicker='bs-timepicker')
+          i.icon-time
+        .control-group.timer(ng-show='views.group || views.member')
+          input(name='time-end', type='text', ng-model='slot.end.time', disabled='disabled')
+          i.icon-time
 
-			.form-elements-group(ng-show='views.group')
-				small
-					i(ng-show="(slot.diff < 0)") {{slot.diff | i18n_spec:'planboard.lessPeople'}}
-					i(ng-show="(slot.diff == 0)") {{ui.planboard.samePeople}}
-					i(ng-show="(slot.diff > 0)") {{slot.diff | i18n_spec:'planboard.morePeople'}}
+      .form-elements-group(ng-show='views.slot.add || views.slot.edit || views.member')
+        label {{ui.planboard.state}}
+        select(ng-model='slot.state',
+        ng-options='option as value for (option, value) in states',
+        ng-change='modifySlot(slot)',
+        ng-show='views.slot.add || views.slot.edit')
+        select(ng-model='slot.state',
+        disabled='disabled',
+        ng-options='option as value for (option, value) in states',
+        ng-show='views.member')
 
-			.form-elements-group(ng-show='views.wish')
-				label {{ui.planboard.wished}}
-				input.input-mini(name='wish-count',
-				type='text',
-				ng-model='slot.wish',
-				ng-hide='app.resources.role > 1')
-				input.input-mini(name='wish-count',
-				type='text',
-				ng-model='slot.wish',
-				disabled='disabled',
-				ng-show='app.resources.role > 1')
+      .form-elements-group.rightest(ng-show='views.slot.add')
+        label {{ui.planboard.reoccuring}}
+        input(type='checkbox', ng-model='slot.recursive')
 
-			.form-elements-group(ng-show='views.member')
-				small: i {{ui.planboard.combine_reoccuring}}
+      .form-elements-group(ng-show='views.group')
+        small
+          i(ng-show="(slot.diff < 0)") {{slot.diff | i18n_spec:'planboard.lessPeople'}}
+          i(ng-show="(slot.diff == 0)") {{ui.planboard.samePeople}}
+          i(ng-show="(slot.diff > 0)") {{slot.diff | i18n_spec:'planboard.morePeople'}}
 
-			.form-elements-actions.pull-right
-				div(ng-show='ng-show')
-				div(ng-show='views.slot.add')
-					button.btn.btn-success(type='button',
-					ng-click='timelineOnAdd("true", slot)') {{ui.planboard.add}}
-				div(ng-show='views.slot.edit')
-					button.btn.btn-danger(type='button',
-					ng-click='timelineOnRemove()',
-					style='margin-right: 5px;') {{ui.planboard.del}}
-					button.btn.btn-success(type='button',
-					ng-click='timelineOnChange("true", original, slot)') {{ui.planboard.change}}
-				div(ng-show='views.wish')
-					button.btn.btn-success(type='button',
-					ng-click='wisher(slot)',
-					ng-hide='app.resources.role > 1')
-						| {{ui.planboard.setWish}}
+      .form-elements-group(ng-show='views.wish')
+        label {{ui.planboard.wished}}
+        input.input-mini(name='wish-count',
+        type='text',
+        ng-model='slot.wish',
+        ng-hide='app.resources.role > 1')
+        input.input-mini(name='wish-count',
+        type='text',
+        ng-model='slot.wish',
+        disabled='disabled',
+        ng-show='app.resources.role > 1')
 
-	.row-fluid
-		.tabbable.tabs-left
-			ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
-				li.active
-					a(href='planboard#timelineTab', data-toggle='tab', ng-click='destroy.statistics();')
-						span.entypo 
-						| {{ui.planboard.timeline}}
-				li
-					a(href='planboard#statisticsTab', data-toggle='tab', ng-click='destroy.timeline();')
-						span.entypo 
-						| {{ui.planboard.statistics}}
+      .form-elements-group(ng-show='views.member')
+        small: i {{ui.planboard.combine_reoccuring}}
 
-			.tab-content
-				#timelineTab.tab-pane.active
-					#timeline
-						#timeline-toolbar
-							.pull-left
-								select(ng-model='timeline.current.group',
-								ng-options='group.uuid as group.name for group in groups',
-								ng-selected='timeline.current.group',
-								ng-change='requestTimeline()',
-								ng-show='timeline.current.layouts.group')
-								select(ng-model='timeline.current.division',
-								ng-options='division.id as division.label for division in divisions',
-								ng-selected='timeline.current.division',
-								ng-change='changeDivision()',
-								ng-show='divisions.length > 0')
-							br(ng-show='browser.mobile')
-							br(ng-show='browser.mobile')
+      .form-elements-actions.pull-right
+        div(ng-show='ng-show')
+        div(ng-show='views.slot.add')
+          button.btn.btn-success(type='button',
+          ng-click='timelineOnAdd("true", slot)') {{ui.planboard.add}}
+        div(ng-show='views.slot.edit')
+          button.btn.btn-danger(type='button',
+          ng-click='timelineOnRemove()',
+          style='margin-right: 5px;') {{ui.planboard.del}}
+          button.btn.btn-success(type='button',
+          ng-click='timelineOnChange("true", original, slot)') {{ui.planboard.change}}
+        div(ng-show='views.wish')
+          button.btn.btn-success(type='button',
+          ng-click='wisher(slot)',
+          ng-hide='app.resources.role > 1')
+            | {{ui.planboard.setWish}}
 
-							div(class="{{ (browser.mobile) && 'pull-left' || 'pull-right' }}",
-								style="{{ (browser.mobile) && 'margin-left: -10px;' }}")
+  .row-fluid
+    .tabbable.tabs-left
+      ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
+        li.active
+          a(href='planboard#timelineTab', data-toggle='tab', ng-click='destroy.statistics();')
+            span.entypo 
+            | {{ui.planboard.timeline}}
+        li
+          a(href='planboard#statisticsTab', data-toggle='tab', ng-click='destroy.timeline();')
+            span.entypo 
+            | {{ui.planboard.statistics}}
 
-								.btn-group
-									button.btn(type='button',
-									class="{{(timeline.config.legendarer==true) && 'active'}}",
-									ng-click='showLegenda()',
-									ng-model='timeline.config.legendarer') {{ui.planboard.legenda}}
+      .tab-content
+        #timelineTab.tab-pane.active
+          #timeline
+            #timeline-toolbar
+              .pull-left
+                select(ng-model='timeline.current.group',
+                ng-options='group.uuid as group.name for group in groups',
+                ng-selected='timeline.current.group',
+                ng-change='requestTimeline()',
+                ng-show='timeline.current.layouts.group')
+                select(ng-model='timeline.current.division',
+                ng-options='division.id as division.label for division in divisions',
+                ng-selected='timeline.current.division',
+                ng-change='changeDivision()',
+                ng-show='divisions.length > 0')
+              br(ng-show='browser.mobile')
+              br(ng-show='browser.mobile')
 
-								.btn-group(ng-show='timeline.current.layouts.group')
-									button.btn(type='button',
-									class="{{(timeline.config.bar==true) && 'active'}}",
-									ng-click='barCharts()',
-									ng-model='timeline.config.bar') {{ui.planboard.barCharts}}
+              div(class="{{ (browser.mobile) && 'pull-left' || 'pull-right' }}",
+              style="{{ (browser.mobile) && 'margin-left: -10px;' }}")
 
-								.btn-group(ng-show='timeline.current.layouts.group')
-									button.btn(type='button',
-									class="{{(timeline.config.wishes==true) && 'active'}}",
-									ng-click='groupWishes()',
-									ng-model='timeline.config.wishes') {{ui.planboard.wishes}}
+                .btn-group
+                  button.btn(type='button',
+                  class="{{(timeline.config.legendarer==true) && 'active'}}",
+                  ng-click='showLegenda()',
+                  ng-model='timeline.config.legendarer') {{ui.planboard.legenda}}
 
-								.btn-group
-									button.btn(type='button',
-									class="{{(timeline.current.layouts.group==true) && 'active'}}",
-									ng-model='timeline.current.layouts.group',
-									ng-click='requestTimeline("group")') {{ui.planboard.group}}
-									button.btn(type='button',
-									class="{{(timeline.current.layouts.members==true) && 'active'}}",
-									ng-model='timeline.current.layouts.members',
-									ng-click='requestTimeline("members")',
-									ng-show='(app.resources.role < 3) || timeline.config.layouts.members')
+                .btn-group(ng-show='timeline.current.layouts.group')
+                  button.btn(type='button',
+                  class="{{(timeline.config.bar==true) && 'active'}}",
+                  ng-click='barCharts()',
+                  ng-model='timeline.config.bar') {{ui.planboard.barCharts}}
 
-						hr
-						.alert.alert-warning(ng-show='registeredNotifications.timeLineDragging')
-							button.close(type='button',
-							ng-click='registerNotification("timeLineDragging", false)',
-							data-dismiss='alert') ×
-							small
-								| U kunt ook uw
-								strong
-									i beschikbaarheid wijzigen
-								| door te
-								| dubbelklikken op reeds bestaande blokken of
-								strong
-									i door te slepen
-								| met uw muis met de linkermuisknop en de
-								strong SHIFT (Mac)
-								| of
-								strong CTRL (Windows)
-								| knop tegelijkertijd ingedrukt.
+                .btn-group(ng-show='timeline.current.layouts.group')
+                  button.btn(type='button',
+                  class="{{(timeline.config.wishes==true) && 'active'}}",
+                  ng-click='groupWishes()',
+                  ng-model='timeline.config.wishes') {{ui.planboard.wishes}}
 
-						.legenda(ng-show='timeline.config.legendarer')
-							.legenda-row
-								strong {{ui.planboard.members}}
-								ul
-									li(ng-repeat='(key, value) in timeline.config.states',
-									class="legenda-{{value.className}}")
-										label
-											.square
-											input(type='checkbox',
-											ng-click='alterLegenda(timeline.config.legenda)',
-											ng-model='timeline.config.legenda[key]')
-											| {{value.label}}
-							.legenda-row.last-legenda-row
-								strong {{ui.planboard.groups}}
-								ul
-									li.legenda-more
-										label
-											.square
-											input(type='checkbox',
-											ng-click='alterLegenda(timeline.config.legenda)',
-											ng-model='timeline.config.legenda.groups.more')
-											| {{ui.planboard.legendaLabels.morePeople}}
-									li.legenda-even
-										label
-											.square
-											input(type='checkbox',
-											ng-click='alterLegenda(timeline.config.legenda)',
-											ng-model='timeline.config.legenda.groups.even')
-											| {{ui.planboard.legendaLabels.enoughPeople}}
-									li.legenda-less
-										label
-											.square
-											input(type='checkbox',
-											ng-click='alterLegenda(timeline.config.legenda)',
-											ng-model='timeline.config.legenda.groups.less')
-											| {{ui.planboard.legendaLabels.lessPeople}}
-							hr
+                .btn-group
+                  button.btn(type='button',
+                  class="{{(timeline.current.layouts.group==true) && 'active'}}",
+                  ng-model='timeline.current.layouts.group',
+                  ng-click='requestTimeline("group")') {{ui.planboard.group}}
+                  button.btn(type='button',
+                  class="{{(timeline.current.layouts.members==true) && 'active'}}",
+                  ng-model='timeline.current.layouts.members',
+                  ng-click='requestTimeline("members")',
+                  ng-show='(app.resources.role < 3) || timeline.config.layouts.members')
 
-						#mainTimeline
+            hr
+            .alert.alert-warning(ng-show='registeredNotifications.timeLineDragging')
+              button.close(type='button',
+              ng-click='registerNotification("timeLineDragging", false)',
+              data-dismiss='alert') ×
+              small
+                | U kunt ook uw
+                strong
+                  i beschikbaarheid wijzigen
+                | door te
+                | dubbelklikken op reeds bestaande blokken of
+                strong
+                  i door te slepen
+                | met uw muis met de linkermuisknop en de
+                strong SHIFT (Mac)
+                | of
+                strong CTRL (Windows)
+                | knop tegelijkertijd ingedrukt.
 
-					hr
-					p
-						small.pull-left
-							span.text-warning {{ui.planboard.lastSyncTime}}
-							span.muted {{data.synced | nicelyDate}}
-						small.pull-right
-							span.text-warning {{ui.planboard.dataRangeStart}}
-							span.muted {{data.periods.start | nicelyDate}}
-							| |
-							span.text-warning {{ui.planboard.dataRangeEnd}}
-							span.muted {{data.periods.end | nicelyDate}}
+            .legenda(ng-show='timeline.config.legendarer')
+              .legenda-row
+                strong {{ui.planboard.members}}
+                ul
+                  li(ng-repeat='(key, value) in timeline.config.states',
+                  class="legenda-{{value.className}}")
+                    label
+                      .square
+                      input(type='checkbox',
+                      ng-click='alterLegenda(timeline.config.legenda)',
+                      ng-model='timeline.config.legenda[key]')
+                      | {{value.label}}
+              .legenda-row.last-legenda-row
+                strong {{ui.planboard.groups}}
+                ul
+                  li.legenda-more
+                    label
+                      .square
+                      input(type='checkbox',
+                      ng-click='alterLegenda(timeline.config.legenda)',
+                      ng-model='timeline.config.legenda.groups.more')
+                      | {{ui.planboard.legendaLabels.morePeople}}
+                  li.legenda-even
+                    label
+                      .square
+                      input(type='checkbox',
+                      ng-click='alterLegenda(timeline.config.legenda)',
+                      ng-model='timeline.config.legenda.groups.even')
+                      | {{ui.planboard.legendaLabels.enoughPeople}}
+                  li.legenda-less
+                    label
+                      .square
+                      input(type='checkbox',
+                      ng-click='alterLegenda(timeline.config.legenda)',
+                      ng-model='timeline.config.legenda.groups.less')
+                      | {{ui.planboard.legendaLabels.lessPeople}}
+              hr
 
-				#statisticsTab.tab-pane
-					#timeline-toolbar
-						.pull-left
-							select(ng-model='timeline.current.group',
-							ng-options='group.uuid as group.name for group in groups',
-							ng-selected='timeline.current.group',
-							ng-change='requestTimeline()')
-							select(ng-model='timeline.current.division',
-							ng-options='division.id as division.label for division in divisions',
-							ng-selected='timeline.current.division',
-							ng-change='changeDivision()',
-							ng-show='divisions.length > 0')
+            #mainTimeline
 
-						.pull-right
-							.btn-group
-								button.btn(type='button',
-								class="{{(timeline.current.layouts.group==true) && 'active'}}"
-								ng-model='timeline.current.layouts.group',
-								ng-click='requestTimeline("group")') {{ui.planboard.group}}
-								button.btn(type='button',
-								class="{{(timeline.current.layouts.members==true) && 'active'}}",
-								ng-model='timeline.current.layouts.members',
-								ng-click='requestTimeline("members")',
-								ng-show='(app.resources.role < 3) || timeline.config.layouts.members')
+          hr
+          p
+            small.pull-left
+              span.text-warning {{ui.planboard.lastSyncTime}}
+              span.muted {{data.synced | nicelyDate}}
+            small.pull-right
+              span.text-warning {{ui.planboard.dataRangeStart}}
+              span.muted {{data.periods.start | nicelyDate}}
+              | |
+              span.text-warning {{ui.planboard.dataRangeEnd}}
+              span.muted {{data.periods.end | nicelyDate}}
 
-					hr
-					.legenda
-						.legenda-row
-							strong {{ui.planboard.members}}
-							ul
-								li(ng-repeat='(key, value) in timeline.config.states',
-								class="legenda-{{value.className}}")
-									label
-										.square
-										| {{value.label}}
-						.legenda-row.last-legenda-row
-							strong {{ui.planboard.groups}}
-							ul
-								li.legenda-more
-									label
-										.square
-										| {{ui.planboard.legendaLabels.morePeople}}
-								li.legenda-even
-									label
-										.square
-										| {{ui.planboard.legendaLabels.enoughPeople}}
-								li.legenda-less
-									label
-										.square
-										| {{ui.planboard.legendaLabels.lessPeople}}
-						hr
+        #statisticsTab.tab-pane
+          #timeline-toolbar
+            .pull-left
+              select(ng-model='timeline.current.group',
+              ng-options='group.uuid as group.name for group in groups',
+              ng-selected='timeline.current.group',
+              ng-change='requestTimeline()')
+              select(ng-model='timeline.current.division',
+              ng-options='division.id as division.label for division in divisions',
+              ng-selected='timeline.current.division',
+              ng-change='changeDivision()',
+              ng-show='divisions.length > 0')
 
-					#stats
-						#groupStats(ng-repeat='agg in data.aggs')
-							div(ng-show='groupPieHide[agg.division.id] || (timeline.current.division == "all")')
-								.groupPies(id="groupPie-{{agg.division.id}}")
-								.groupStatInfo
-									h3
-										| {{agg.id | groupIdToName | toTitleCase}}
-										span(ng-hide='!agg.division.label')   ({{ agg.division.label }})
-									hr
-									ul
-										li
-											.ratios.more
-												span.ratio {{agg.ratios.more}}
-												span.percentage %
-											.info
-												h4 {{ui.planboard.statPeopleMore}}
-												h5 {{agg.durations.more | calculateTimeInDays}}
-												small.muted {{ui.planboard.statDays}}
-												| ,
-												h5 {{agg.durations.more | calculateTimeInHours}}
-												small.muted {{ui.planboard.statHours}}
-												| ,
-												h5 {{agg.durations.more | calculateTimeInMinutes}}
-												small.muted {{ui.planboard.statMinutes}}
-										li
-											.ratios.even
-												span.ratio {{agg.ratios.even}}
-												span.percentage %
-											.info
-												h4 {{ui.planboard.statPeopleEven}}
-												h5 {{agg.durations.even | calculateTimeInDays}}
-												small.muted {{ui.planboard.statDays}}
-												| ,
-												h5 {{agg.durations.even | calculateTimeInHours}}
-												small.muted {{ui.planboard.statHours}}
-												| ,
-												h5 {{agg.durations.even | calculateTimeInMinutes}}
-												small.muted {{ui.planboard.statMinutes}}
-										li
-											.ratios.less
-												span.ratio {{agg.ratios.less}}
-												span.percentage %
-											.info
-												h4 {{ui.planboard.statPeopleLess}}
-												h5 {{agg.durations.less | calculateTimeInDays}}
-												small.muted {{ui.planboard.statDays}}
-												| ,
-												h5 {{agg.durations.less | calculateTimeInHours}}
-												small.muted {{ui.planboard.statHours}}
-												| ,
-												h5 {{agg.durations.less | calculateTimeInMinutes}}
-												small.muted {{ui.planboard.statMinutes}}
+            .pull-right
+              .btn-group
+                button.btn(type='button',
+                class="{{(timeline.current.layouts.group==true) && 'active'}}"
+                ng-model='timeline.current.layouts.group',
+                ng-click='requestTimeline("group")') {{ui.planboard.group}}
+                button.btn(type='button',
+                class="{{(timeline.current.layouts.members==true) && 'active'}}",
+                ng-model='timeline.current.layouts.members',
+                ng-click='requestTimeline("members")',
+                ng-show='(app.resources.role < 3) || timeline.config.layouts.members')
 
-						#memberBars
-							ul
-								li(ng-repeat='member in data.members')
-									h4 {{member.id | convertUserIdToName}}
-									.progress
-										.bar(ng-repeat='stat in member.stats',
-										ng-style='{ "width": stat.ratio + "%" }',
-										class="{{stat.state}}")
-									small.muted {{member.stats | convertRatios}}
-					hr
-					p
-						small.pull-left
-							span.text-warning {{ui.planboard.lastSyncTime}}
-							span.muted {{data.synced | nicelyDate}}
-						small.pull-right
-							span.text-warning {{ui.planboard.dataRangeStart}}
-							span.muted {{data.periods.start | nicelyDate}}
-							| |
-							span.text-warning {{ui.planboard.dataRangeEnd}}
-							span.muted {{data.periods.end | nicelyDate}}
+          hr
+          .legenda
+            .legenda-row
+              strong {{ui.planboard.members}}
+              ul
+                li(ng-repeat='(key, value) in timeline.config.states',
+                class="legenda-{{value.className}}")
+                  label
+                    .square
+                    | {{value.label}}
+            .legenda-row.last-legenda-row
+              strong {{ui.planboard.groups}}
+              ul
+                li.legenda-more
+                  label
+                    .square
+                    | {{ui.planboard.legendaLabels.morePeople}}
+                li.legenda-even
+                  label
+                    .square
+                    | {{ui.planboard.legendaLabels.enoughPeople}}
+                li.legenda-less
+                  label
+                    .square
+                    | {{ui.planboard.legendaLabels.lessPeople}}
+            hr
+
+          #stats
+            #groupStats(ng-repeat='agg in data.aggs')
+              div(ng-show='groupPieHide[agg.division.id] || (timeline.current.division == "all")')
+                .groupPies(id="groupPie-{{agg.division.id}}")
+                .groupStatInfo
+                  h3
+                    | {{agg.id | groupIdToName | toTitleCase}}
+                    span(ng-hide='!agg.division.label')   ({{ agg.division.label }})
+                  hr
+                  ul
+                    li
+                      .ratios.more
+                        span.ratio {{agg.ratios.more}}
+                        span.percentage %
+                      .info
+                        h4 {{ui.planboard.statPeopleMore}}
+                        h5 {{agg.durations.more | calculateTimeInDays}}
+                        small.muted {{ui.planboard.statDays}}
+                        | ,
+                        h5 {{agg.durations.more | calculateTimeInHours}}
+                        small.muted {{ui.planboard.statHours}}
+                        | ,
+                        h5 {{agg.durations.more | calculateTimeInMinutes}}
+                        small.muted {{ui.planboard.statMinutes}}
+                    li
+                      .ratios.even
+                        span.ratio {{agg.ratios.even}}
+                        span.percentage %
+                      .info
+                        h4 {{ui.planboard.statPeopleEven}}
+                        h5 {{agg.durations.even | calculateTimeInDays}}
+                        small.muted {{ui.planboard.statDays}}
+                        | ,
+                        h5 {{agg.durations.even | calculateTimeInHours}}
+                        small.muted {{ui.planboard.statHours}}
+                        | ,
+                        h5 {{agg.durations.even | calculateTimeInMinutes}}
+                        small.muted {{ui.planboard.statMinutes}}
+                    li
+                      .ratios.less
+                        span.ratio {{agg.ratios.less}}
+                        span.percentage %
+                      .info
+                        h4 {{ui.planboard.statPeopleLess}}
+                        h5 {{agg.durations.less | calculateTimeInDays}}
+                        small.muted {{ui.planboard.statDays}}
+                        | ,
+                        h5 {{agg.durations.less | calculateTimeInHours}}
+                        small.muted {{ui.planboard.statHours}}
+                        | ,
+                        h5 {{agg.durations.less | calculateTimeInMinutes}}
+                        small.muted {{ui.planboard.statMinutes}}
+
+            #memberBars
+              ul
+                li(ng-repeat='member in data.members')
+                  h4 {{member.id | convertUserIdToName}}
+                  .progress
+                    .bar(ng-repeat='stat in member.stats',
+                    ng-style='{ "width": stat.ratio + "%" }',
+                    class="{{stat.state}}")
+                  small.muted {{member.stats | convertRatios}}
+          hr
+          p
+            small.pull-left
+              span.text-warning {{ui.planboard.lastSyncTime}}
+              span.muted {{data.synced | nicelyDate}}
+            small.pull-right
+              span.text-warning {{ui.planboard.dataRangeStart}}
+              span.muted {{data.periods.start | nicelyDate}}
+              | |
+              span.text-warning {{ui.planboard.dataRangeEnd}}
+              span.muted {{data.periods.end | nicelyDate}}

@@ -1,15 +1,13 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
       'settings',
       [
         '$rootScope', '$scope', '$window', 'data', 'Settings', 'Profile', 'Storage',
-        function ($rootScope, $scope, $window, data, Settings, Profile, Storage)
-        {
+        function ($rootScope, $scope, $window, data, Settings, Profile, Storage) {
           $rootScope.notification.status = false;
 
           /**
@@ -31,7 +29,9 @@ define(
 
           angular.forEach(
             ui,
-            function (lang) { languages[lang.meta.name] = lang.meta.label }
+            function (lang) {
+              languages[lang.meta.name] = lang.meta.label
+            }
           );
 
           $scope.languages = languages;
@@ -44,7 +44,9 @@ define(
 
           angular.forEach(
             Storage.local.groups(),
-            function (group) { groups[group.uuid] = group.name }
+            function (group) {
+              groups[group.uuid] = group.name
+            }
           );
 
           $scope.groups = groups;
@@ -53,16 +55,14 @@ define(
           /**
            * Save user settings
            */
-          $scope.save = function (settings)
-          {
+          $scope.save = function (settings) {
             $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
             Settings.save(
               $rootScope.app.resources.uuid,
               settings
             ).then(
-              function ()
-              {
+              function () {
                 $rootScope.notifier.success($rootScope.ui.settings.saved);
 
                 $rootScope.statusBar.display($rootScope.ui.settings.refreshing);
@@ -71,15 +71,12 @@ define(
                   $rootScope.app.resources.uuid,
                   true
                 ).then(
-                  function (result)
-                  {
-                    if (result.error)
-                    {
+                  function (result) {
+                    if (result.error) {
                       $rootScope.notifier.error($rootScope.ui.errors.settings.save);
                       console.warn('error ->', result);
                     }
-                    else
-                    {
+                    else {
                       $scope.settings = angular.fromJson(result.resources.settingsWebPaige);
 
                       $rootScope.changeLanguage(
@@ -98,26 +95,25 @@ define(
           /**
            * Google authorization
            */
-          $scope.authGoogle = function ()
-          {
+          $scope.authGoogle = function () {
             window.location = 'http://3rc2.ask-services.appspot.com/auth/google' +
-                              '?agentUrl=http://3rc2.ask-services.appspot.com/eveagents/personalagent/' +
-                              $rootScope.app.resources.uuid +
-                              '/' +
-                              '&agentMethod=createGoogleAgents' +
-                              '&applicationCallback=' +
-                              location.protocol +
-                              "//" +
-                              location.hostname +
-                              (location.port && ":" + location.port) +
-                              '/index.html' +
-                              /**
-                               * Fix a return value
-                               */
-                              '?account=' +
-                              $rootScope.app.resources.uuid +
-                              encodeURIComponent('#') +
-                              '/settings';
+              '?agentUrl=http://3rc2.ask-services.appspot.com/eveagents/personalagent/' +
+              $rootScope.app.resources.uuid +
+              '/' +
+              '&agentMethod=createGoogleAgents' +
+              '&applicationCallback=' +
+              location.protocol +
+              "//" +
+              location.hostname +
+              (location.port && ":" + location.port) +
+              '/index.html' +
+            /**
+             * Fix a return value
+             */
+              '?account=' +
+              $rootScope.app.resources.uuid +
+              encodeURIComponent('#') +
+              '/settings';
           };
         }
       ]

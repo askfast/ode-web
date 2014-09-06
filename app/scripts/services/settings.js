@@ -1,15 +1,13 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Settings',
       [
         '$rootScope', '$resource', '$q', 'Storage', 'Profile',
-        function ($rootScope, $resource, $q, Storage, Profile)
-        {
+        function ($rootScope, $resource, $q, Storage, Profile) {
           /**
            * Define settings resource
            * In this case it empty :)
@@ -19,24 +17,21 @@ define(
           /**
            * Get settings from localStorage
            */
-          Settings.prototype.get = function ()
-          {
+          Settings.prototype.get = function () {
             return angular.fromJson(Storage.get('resources')).settingsWebPaige || {};
           };
 
           /**
            * Save settings
            */
-          Settings.prototype.save = function (id, settings)
-          {
+          Settings.prototype.save = function (id, settings) {
             var deferred = $q.defer();
 
             Profile.save(
               id,
               { settingsWebPaige: angular.toJson(settings) }
             ).then(
-              function ()
-              {
+              function () {
                 deferred.resolve({ saved: true });
               });
 

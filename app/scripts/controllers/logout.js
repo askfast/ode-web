@@ -1,15 +1,13 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
       'logout',
       [
         '$rootScope', '$scope', '$window', 'Session', 'User', 'Storage',
-        function ($rootScope, $scope, $window, Session, User, Storage)
-        {
+        function ($rootScope, $scope, $window, Session, User, Storage) {
           $('.navbar').hide();
           $('#footer').hide();
           // $('#notification').hide();
@@ -19,14 +17,11 @@ define(
 
           User.logout()
             .then(
-            function (result)
-            {
-              if (result.error)
-              {
+            function (result) {
+              if (result.error) {
                 console.warn('error ->', result);
               }
-              else
-              {
+              else {
                 Storage.clearAll();
 
                 Storage.session.clearAll();

@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
@@ -19,9 +18,7 @@ define(
         'Slots',
         '$timeout',
         'Settings',
-        function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams,
-                  Storage, Slots, $timeout, Settings)
-        {
+        function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout, Settings) {
           /**
            * Fix styles
            */
@@ -55,14 +52,11 @@ define(
 
           angular.forEach(
             data.members,
-            function (members)
-            {
+            function (members) {
               angular.forEach(
                 members,
-                function (member)
-                {
-                  if (member.resources.PhoneAddresses)
-                  {
+                function (member) {
+                  if (member.resources.PhoneAddresses) {
                     PhoneAddressesExist = true;
                   }
                 }
@@ -86,13 +80,12 @@ define(
 
 
           var uuid,
-              view;
+            view;
 
           /**
            * If no params or hashes given in url
            */
-          if (! params.uuid && ! $location.hash())
-          {
+          if (!params.uuid && !$location.hash()) {
             var settings = Storage.local.settings();
 
             uuid = settings.app.group;
@@ -101,26 +94,21 @@ define(
 
             angular.forEach(
               data.groups,
-              function (group)
-              {
+              function (group) {
                 var firstGroup = new RegExp(uuid);
 
-                if (! firstGroup.test(group.uuid))
-                {
-                  if (! absent)
-                  {
+                if (!firstGroup.test(group.uuid)) {
+                  if (!absent) {
                     absent = false;
                   }
                 }
-                else
-                {
+                else {
                   absent = true;
                 }
               }
             );
 
-            if (! absent)
-            {
+            if (!absent) {
               uuid = data.groups[0].uuid;
             }
 
@@ -128,8 +116,7 @@ define(
 
             $location.search({uuid: uuid}).hash('view');
           }
-          else
-          {
+          else {
             uuid = params.uuid;
             view = $location.hash();
           }
@@ -150,50 +137,41 @@ define(
           /**
            * Set given group for view
            */
-          function setGroupView (id)
-          {
+          function setGroupView(id) {
             angular.forEach(
-              data.groups, function (group)
-              {
+              data.groups, function (group) {
                 if (group.uuid == id) $scope.group = group;
               });
 
             $scope.members = data.members[id];
 
             $scope.members.sort(
-              function (a, b)
-              {
+              function (a, b) {
                 var aName, bName;
 
-                if ($rootScope.config.profile.meta != 'demo')
-                {
+                if ($rootScope.config.profile.meta != 'demo') {
                   aName = a.resources.lastName.toLowerCase();
                   bName = b.resources.lastName.toLowerCase();
                 }
-                else
-                {
+                else {
                   if (typeof a.resources.lastName != 'undefined' &&
-                      a.resources.lastName != null &&
-                      typeof b.resources.lastName != 'undefined' &&
-                      b.resources.lastName != null)
-                  {
+                    a.resources.lastName != null &&
+                    typeof b.resources.lastName != 'undefined' &&
+                    b.resources.lastName != null) {
                     aName = a.resources.lastName.toLowerCase();
                     bName = b.resources.lastName.toLowerCase();
                   }
-                  else
-                  {
+                  else {
                     aName = a.uuid.toLowerCase();
                     bName = b.uuid.toLowerCase();
                   }
                 }
 
-                if (aName < bName)
-                {
-                  return - 1;
+                if (aName < bName) {
+                  return -1;
                 }
 
-                if (aName > bName)
-                {
+                if (aName > bName) {
                   return 1;
                 }
 
@@ -210,14 +188,12 @@ define(
           /**
            * Set wish
            */
-          function wisher (id)
-          {
+          function wisher(id) {
             $scope.wished = false;
 
             Groups.wish(id)
               .then(
-              function (wish)
-              {
+              function (wish) {
                 $scope.wished = true;
 
                 $scope.wish = wish.count;
@@ -233,8 +209,7 @@ define(
           /**
            * Set wish for the group
            */
-          $scope.saveWish = function (id, wish)
-          {
+          $scope.saveWish = function (id, wish) {
             $rootScope.statusBar.display($rootScope.ui.planboard.changingWish);
 
             Slots.setWish(
@@ -246,18 +221,15 @@ define(
                 wish: wish
               })
               .then(
-              function (result)
-              {
+              function (result) {
                 $rootScope.statusBar.off();
 
-                if (result.error)
-                {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.groups.saveWish);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.planboard.wishChanged);
                 }
 
@@ -271,20 +243,16 @@ define(
           /**
            * Request for a group
            */
-          $scope.requestGroup = function (current, switched)
-          {
+          $scope.requestGroup = function (current, switched) {
             setGroupView(current);
 
             $scope.$watch(
-              $location.search(), function ()
-              {
+              $location.search(), function () {
                 $location.search({uuid: current});
               });
 
-            if (switched)
-            {
-              if ($location.hash() != 'view')
-              {
+            if (switched) {
+              if ($location.hash() != 'view') {
                 $location.hash('view');
               }
 
@@ -296,8 +264,7 @@ define(
           /**
            * View setter
            */
-          function setView (hash)
-          {
+          function setView(hash) {
             $scope.views = {
               view: false,
               add: false,
@@ -313,11 +280,9 @@ define(
           /**
            * Switch between the views and set hash accordingly
            */
-          $scope.setViewTo = function (hash)
-          {
+          $scope.setViewTo = function (hash) {
             $scope.$watch(
-              hash, function ()
-              {
+              hash, function () {
                 $location.hash(hash);
 
                 setView(hash);
@@ -328,14 +293,11 @@ define(
           /**
            * Toggle new group button
            */
-          $scope.addGroupForm = function ()
-          {
-            if ($scope.views.add)
-            {
+          $scope.addGroupForm = function () {
+            if ($scope.views.add) {
               $scope.closeTabs();
             }
-            else
-            {
+            else {
               $scope.groupForm = {};
 
               $scope.setViewTo('add');
@@ -346,14 +308,11 @@ define(
           /**
            * New member
            */
-          $scope.newMemberForm = function ()
-          {
-            if ($scope.views.member)
-            {
+          $scope.newMemberForm = function () {
+            if ($scope.views.member) {
               $scope.closeTabs();
             }
-            else
-            {
+            else {
               $scope.memberForm = {};
               $scope.memberForm.PhoneAddress = '';
               $scope.memberForm.username = '';
@@ -370,8 +329,7 @@ define(
           /**
            * Edit a group
            */
-          $scope.editGroup = function (group)
-          {
+          $scope.editGroup = function (group) {
             $scope.setViewTo('edit');
 
             $scope.groupForm = {
@@ -384,11 +342,9 @@ define(
           /**
            * Close inline form
            */
-          $scope.closeTabs = function ()
-          {
+          $scope.closeTabs = function () {
             $timeout(
-              function ()
-              {
+              function () {
                 $scope.groupForm = {};
 
                 $scope.memberForm = {};
@@ -406,21 +362,17 @@ define(
           /**
            * Search for members
            */
-          $scope.searchMembers = function (query)
-          {
+          $scope.searchMembers = function (query) {
             $rootScope.statusBar.display($rootScope.ui.groups.searchingMembers);
 
             Groups.search(query).
               then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.groups.searchMembers);
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $scope.search = {
                     query: '',
                     queried: query
@@ -439,44 +391,36 @@ define(
           /**
            * Add member to a group
            */
-          $scope.addMember = function (candidate)
-          {
+          $scope.addMember = function (candidate) {
             $rootScope.statusBar.display($rootScope.ui.groups.addingNewMember);
 
             Groups.addMember(candidate).
               then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.groups.addMember);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.groups.memberAdded);
 
                   $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
                   Groups.query().
                     then(
-                    function (data)
-                    {
-                      if (data.error)
-                      {
+                    function (data) {
+                      if (data.error) {
                         $rootScope.notifier.error($rootScope.ui.errors.groups.query);
 
                         console.warn('error ->', data);
                       }
-                      else
-                      {
+                      else {
                         $scope.data = data;
 
                         $rootScope.statusBar.off();
 
-                        if ($location.hash() == 'search')
-                        {
+                        if ($location.hash() == 'search') {
                           $scope.searchMembers($scope.search.query);
                         }
                       }
@@ -489,38 +433,31 @@ define(
           /**
            * Remove member from a group
            */
-          $scope.removeMember = function (member, group)
-          {
+          $scope.removeMember = function (member, group) {
             $rootScope.statusBar.display($rootScope.ui.groups.removingMember);
 
             Groups.removeMember(member, group).
               then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.groups.removeMember);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
                   $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
                   Groups.query().
                     then(
-                    function (data)
-                    {
-                      if (data.error)
-                      {
+                    function (data) {
+                      if (data.error) {
                         $rootScope.notifier.error($rootScope.ui.errors.groups.query);
 
                         console.warn('error ->', data);
                       }
-                      else
-                      {
+                      else {
                         $scope.data = data;
 
                         $rootScope.statusBar.off();
@@ -534,8 +471,7 @@ define(
           /**
            * Remove members
            */
-          $scope.removeMembers = function (selection, group)
-          {
+          $scope.removeMembers = function (selection, group) {
             $rootScope.statusBar.display($rootScope.ui.groups.removingSelected);
 
             var selected = false;
@@ -544,30 +480,24 @@ define(
 
             angular.forEach(
               selection,
-              function (value, user)
-              {
+              function (value, user) {
                 console.log('value ->', value, $rootScope.app.members[user]);
 
-                if (value)
-                {
+                if (value) {
                   selected = true;
                 }
               }
             );
 
-            if (selected)
-            {
+            if (selected) {
               Groups.removeMembers(selection, group)
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.groups.removeMembers);
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     $rootScope.notifier.success($rootScope.ui.groups.memberRemoved);
 
                     $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
@@ -576,15 +506,12 @@ define(
 
                     Groups.query()
                       .then(
-                      function (data)
-                      {
-                        if (data.error)
-                        {
+                      function (data) {
+                        if (data.error) {
                           $rootScope.notifier.error($rootScope.ui.errors.groups.query);
                           console.warn('error ->', data);
                         }
-                        else
-                        {
+                        else {
                           $scope.data = data;
 
                           $rootScope.statusBar.off();
@@ -595,8 +522,7 @@ define(
                 }
               );
             }
-            else
-            {
+            else {
               $rootScope.notifier.error($rootScope.ui.errors.groups.noSelection);
             }
           };
@@ -605,54 +531,43 @@ define(
           /**
            * Save a group
            */
-          $scope.groupSubmit = function (group)
-          {
+          $scope.groupSubmit = function (group) {
             $rootScope.statusBar.display($rootScope.ui.groups.saving);
 
             Groups.save(group).
               then(
-              function (returned)
-              {
-                if (returned.error)
-                {
+              function (returned) {
+                if (returned.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.groups.groupSubmit);
 
                   console.warn('error ->', returned);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.groups.groupSaved);
 
                   $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
                   Groups.query().
                     then(
-                    function (data)
-                    {
-                      if (data.error)
-                      {
+                    function (data) {
+                      if (data.error) {
                         $rootScope.notifier.error($rootScope.ui.errors.groups.query);
 
                         console.warn('error ->', data);
                       }
-                      else
-                      {
+                      else {
                         $scope.closeTabs();
 
                         $scope.data = data;
 
                         angular.forEach(
-                          data.groups, function (group)
-                          {
-                            if (group.uuid == returned)
-                            {
+                          data.groups, function (group) {
+                            if (group.uuid == returned) {
                               $scope.groups = data.groups;
 
                               angular.forEach(
-                                data.groups, function (g)
-                                {
-                                  if (g.uuid == group.uuid)
-                                  {
+                                data.groups, function (g) {
+                                  if (g.uuid == group.uuid) {
                                     $scope.group = g;
                                   }
                                 });
@@ -662,8 +577,7 @@ define(
                               $scope.current = group.uuid;
 
                               $scope.$watch(
-                                $location.search(), function ()
-                                {
+                                $location.search(), function () {
                                   $location.search({uuid: group.uuid});
                                 });
                             }
@@ -682,30 +596,27 @@ define(
 
           $scope.userExistsValidation = true;
 
-          $scope.userExists = function ()
-          {
-            if ($scope.memberForm.username != '' || $scope.memberForm.username.length > 0)
-            {
-              if ($scope.checkUsername)
-              {
+          $scope.userExists = function () {
+            if ($scope.memberForm.username != '' || $scope.memberForm.username.length > 0) {
+              if ($scope.checkUsername) {
                 clearTimeout($scope.checkUsername);
 
                 $scope.checkUsername = null;
               }
 
               $scope.checkUsername = setTimeout(
-                function ()
-                {
+                function () {
                   $scope.checkUsername = null;
 
                   Profile.userExists($scope.memberForm.username)
                     .then(
-                    function (result) { $scope.userExistsValidation = result }
+                    function (result) {
+                      $scope.userExistsValidation = result
+                    }
                   );
                 }, CHECK_USERNAME_DELAY);
             }
-            else
-            {
+            else {
               $scope.memberForm.username = '';
             }
           };
@@ -715,10 +626,8 @@ define(
           /**
            * Save a member
            */
-          $scope.memberSubmit = function (member)
-          {
-            if (member.username == '' || member.password == '')
-            {
+          $scope.memberSubmit = function (member) {
+            if (member.username == '' || member.password == '') {
               $rootScope.notifier.error($rootScope.ui.errors.groups.emptyUserCredentials);
 
               $(window).scrollTop(0);
@@ -726,8 +635,7 @@ define(
               return;
             }
 
-            if (! $scope.userExistsValidation)
-            {
+            if (!$scope.userExistsValidation) {
               $rootScope.notifier.error($rootScope.ui.groups.registerUserName.pleaseChooseAnother);
 
               $(window).scrollTop(0);
@@ -737,15 +645,12 @@ define(
 
             $rootScope.statusBar.display($rootScope.ui.groups.registerNew);
 
-            if (member == undefined || member.PhoneAddress == '')
-            {
+            if (member == undefined || member.PhoneAddress == '') {
               $rootScope.phoneNumberParsed.result = true;
             }
 
-            if ($rootScope.phoneNumberParsed.result)
-            {
-              if (member.PhoneAddress)
-              {
+            if ($rootScope.phoneNumberParsed.result) {
+              if (member.PhoneAddress) {
                 var parsed = phoneNumberParser(member.PhoneAddress, 'NL');
 
                 member.PhoneAddress = parsed.formatting.e164;
@@ -753,50 +658,41 @@ define(
 
               Profile.register(member)
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
-                    if (result.error.status === 409)
-                    {
+                function (result) {
+                  if (result.error) {
+                    if (result.error.status === 409) {
                       $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegistered);
 
                       $rootScope.statusBar.off();
 
                       $(window).scrollTop(0);
                     }
-                    else if (result.error.status === 403)
-                    {
+                    else if (result.error.status === 403) {
                       $rootScope.notifier.error($rootScope.ui.errors.groups.failedRegistration);
 
                       $rootScope.statusBar.off();
 
                       $(window).scrollTop(0);
                     }
-                    else
-                    {
+                    else {
                       $rootScope.notifier.error($rootScope.ui.errors.groups.memberSubmitRegister);
                     }
 
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     $rootScope.notifier.success($rootScope.ui.groups.memberRegstered);
 
                     $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
                     Groups.query().
                       then(
-                      function (data)
-                      {
-                        if (data.error)
-                        {
+                      function (data) {
+                        if (data.error) {
                           $rootScope.notifier.error($rootScope.ui.errors.groups.query);
                           console.warn('error ->', data);
                         }
-                        else
-                        {
+                        else {
                           $scope.data = data;
 
                           $location.path('/profile/' + member.username).hash('profile');
@@ -808,8 +704,7 @@ define(
                 }
               );
             }
-            else
-            {
+            else {
               $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
               $rootScope.statusBar.off();
@@ -822,8 +717,7 @@ define(
           /**
            * Confirm deleting a group
            */
-          $scope.confirmGroupDelete = function (id)
-          {
+          $scope.confirmGroupDelete = function (id) {
             $rootScope.notifier.alert('', false, true, { section: 'groups', id: id });
           };
 
@@ -833,8 +727,7 @@ define(
            */
           $rootScope.$on(
             'fireGroupDelete',
-            function (event, group)
-            {
+            function (event, group) {
               $scope.deleteGroup(group.id);
             }
           );
@@ -843,38 +736,31 @@ define(
           /**
            * Delete a group
            */
-          $scope.deleteGroup = function (id)
-          {
+          $scope.deleteGroup = function (id) {
             $rootScope.statusBar.display($rootScope.ui.groups.deleting);
 
             Groups.remove(id).
               then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.groups.deleteGroup);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.groups.deleted);
 
                   $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
                   Groups.query().
                     then(
-                    function (data)
-                    {
-                      if (data.error)
-                      {
+                    function (data) {
+                      if (data.error) {
                         $rootScope.notifier.error($rootScope.ui.errors.groups.query);
 
                         console.warn('error ->', data);
                       }
-                      else
-                      {
+                      else {
                         $scope.data = data;
 
                         /**
@@ -882,8 +768,7 @@ define(
                          */
                         angular.forEach(
                           data.groups,
-                          function (group, index)
-                          {
+                          function (group, index) {
                             $scope.groups = data.groups;
 
                             $scope.group = data.groups[0];
@@ -894,8 +779,7 @@ define(
 
                             $scope.$watch(
                               $location.search(),
-                              function ()
-                              {
+                              function () {
                                 $location.search({uuid: data.groups[0].uuid});
                               }
                             );
@@ -916,12 +800,10 @@ define(
            * TODO: Not used in groups yet but login uses modal call..
            * Fetch parent groups
            */
-          $scope.fetchParent = function ()
-          {
+          $scope.fetchParent = function () {
             Groups.parents()
               .then(
-              function (result)
-              {
+              function (result) {
                 console.warn('parent -> ', result);
               });
           };
@@ -930,12 +812,10 @@ define(
            * TODO: Not used in groups yet..
            * Fetch parent groups
            */
-          $scope.fetchContainers = function (id)
-          {
+          $scope.fetchContainers = function (id) {
             Groups.containers(id)
               .then(
-              function (result)
-              {
+              function (result) {
                 console.warn('containers -> ', result);
               });
           };
@@ -944,14 +824,15 @@ define(
           /**
            * Selection toggle
            */
-          $scope.toggleSelection = function (group, master)
-          {
+          $scope.toggleSelection = function (group, master) {
             var flag = (master) ? false : true,
-                members = angular.fromJson(Storage.get(group.uuid));
+              members = angular.fromJson(Storage.get(group.uuid));
 
             angular.forEach(
               members,
-              function (member) { $scope.selection[member.uuid] = flag }
+              function (member) {
+                $scope.selection[member.uuid] = flag
+              }
             );
           };
 
@@ -966,9 +847,8 @@ define(
           /**
            * Toggle sorting
            */
-          $scope.toggleSorter = function (sorter)
-          {
-            $scope.reverse = ($scope.sorter == sorter) ? ! $scope.reverse : false;
+          $scope.toggleSorter = function (sorter) {
+            $scope.reverse = ($scope.sorter == sorter) ? !$scope.reverse : false;
 
             $scope.sorter = sorter;
           };

@@ -1,110 +1,104 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Messages',
       [
         '$rootScope', '$resource', '$q', 'Storage', '$http',
-        function ($rootScope, $resource, $q, Storage, $http)
-        {
+        function ($rootScope, $resource, $q, Storage, $http) {
           var Messages = $resource(
               config.host + '/question/:action',
-              {
+            {
+            },
+            {
+              query: {
+                method: 'GET',
+                params: {
+                  action: '',
+                  0: 'dm'
+                  // 0: 'all',
+                  // status: 'READ',
+                  // limit: 50,
+                  // offset: 0
+                },
+                isArray: true
               },
-              {
-                query: {
-                  method: 'GET',
-                  params: {
-                    action: '',
-                    0: 'dm'
-                    // 0: 'all',
-                    // status: 'READ',
-                    // limit: 50,
-                    // offset: 0
-                  },
-                  isArray: true
-                },
-                get: {
-                  method: 'GET',
-                  params: {}
-                },
-                send: {
-                  method: 'POST',
-                  params: {action: 'sendDirectMessage'}
-                  //,isArray: true
-                },
-                save: {
-                  method: 'POST',
-                  params: {}
-                },
-                changeState: {
-                  method: 'POST',
-                  params: {action: 'changeState'},
-                  isArray: true
-                },
-                remove: {
-                  method: 'POST',
-                  params: {action: 'deleteQuestions'}
-                }
+              get: {
+                method: 'GET',
+                params: {}
+              },
+              send: {
+                method: 'POST',
+                params: {action: 'sendDirectMessage'}
+                //,isArray: true
+              },
+              save: {
+                method: 'POST',
+                params: {}
+              },
+              changeState: {
+                method: 'POST',
+                params: {action: 'changeState'},
+                isArray: true
+              },
+              remove: {
+                method: 'POST',
+                params: {action: 'deleteQuestions'}
               }
+            }
           );
 
 
           var Notifications = $resource(
               config.host + '/notification/:uuid',
-              {},
-              {
-                query: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                },
-                get: {
-                  method: 'GET',
-                  params: {uuid: ''}
-                },
-                save: {
-                  method: 'POST',
-                  params: {},
-                  isArray: true
-                },
-                edit: {
-                  method: 'PUT',
-                  params: {uuid: ''},
-                  isArray: true
-                },
-                remove: {
-                  method: 'DELETE',
-                  params: {uuid: ''},
-                  isArray: true
-                }
+            {},
+            {
+              query: {
+                method: 'GET',
+                params: {},
+                isArray: true
+              },
+              get: {
+                method: 'GET',
+                params: {uuid: ''}
+              },
+              save: {
+                method: 'POST',
+                params: {},
+                isArray: true
+              },
+              edit: {
+                method: 'PUT',
+                params: {uuid: ''},
+                isArray: true
+              },
+              remove: {
+                method: 'DELETE',
+                params: {uuid: ''},
+                isArray: true
               }
+            }
           );
 
 
           /**
            * Query messages from back-end
            */
-          Messages.prototype.query = function ()
-          {
+          Messages.prototype.query = function () {
             var deferred = $q.defer();
 
             Messages.query(
-              function (results)
-              {
+              function (results) {
                 var messages = [];
 
                 angular.forEach(
                   results,
-                  function (message)
-                  {
+                  function (message) {
                     if (message.subject == null ||
-                        message.subject == undefined ||
-                        message.subject == '')
-                    {
+                      message.subject == undefined ||
+                      message.subject == '') {
                       message.subject = $rootScope.ui.message.noSubject;
                     }
 
@@ -120,8 +114,7 @@ define(
                 //            {
                 Messages.prototype.scheaduled.list()
                   .then(
-                  function (scheadules)
-                  {
+                  function (scheadules) {
                     deferred.resolve(
                       {
                         messages: Messages.prototype.filter(messages),
@@ -140,8 +133,7 @@ define(
                 //                });
                 //            }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -158,23 +150,19 @@ define(
             /**
              * List of the notifications
              */
-            list: function ()
-            {
+            list: function () {
               var deferred = $q.defer();
 
               Notifications.query(
-                function (result)
-                {
+                function (result) {
                   Storage.add('notifications', angular.toJson(result));
 
                   angular.forEach(
                     result,
-                    function (scheadule)
-                    {
+                    function (scheadule) {
                       angular.forEach(
                         scheadule.types,
-                        function (type)
-                        {
+                        function (type) {
                           if (type == 'sms') scheadule.sms = true;
                           if (type == 'email') scheadule.mail = true;
                         }
@@ -184,8 +172,7 @@ define(
 
                   deferred.resolve(result);
                 },
-                function (error)
-                {
+                function (error) {
                   deferred.resolve({error: error});
                 }
               );
@@ -196,27 +183,26 @@ define(
             /**
              * Create notifications
              */
-            create: function (notification)
-            {
+            create: function (notification) {
               // console.log('not ->', notification);
 
               var deferred = $q.defer();
 
               Notifications.save(
                 null, angular.toJson(notification),
-                function (result)
-                {
+                function (result) {
                   var returned = '';
 
                   angular.forEach(
                     result,
-                    function (chr) { returned += chr }
+                    function (chr) {
+                      returned += chr
+                    }
                   );
 
                   deferred.resolve(returned);
                 },
-                function (error)
-                {
+                function (error) {
                   deferred.resolve({error: error});
                 }
               );
@@ -227,19 +213,16 @@ define(
             /**
              * Edit notification
              */
-            edit: function (uuid, notification)
-            {
+            edit: function (uuid, notification) {
               var deferred = $q.defer();
 
               Notifications.edit(
                 { uuid: uuid },
                 angular.toJson(notification),
-                function (result)
-                {
+                function (result) {
                   deferred.resolve(result);
                 },
-                function (error)
-                {
+                function (error) {
                   deferred.resolve({error: error});
                 }
               );
@@ -250,18 +233,15 @@ define(
             /**
              * Get notification
              */
-            get: function (uuid)
-            {
+            get: function (uuid) {
               var deferred = $q.defer();
 
               Notifications.get(
                 { uuid: uuid },
-                function (result)
-                {
+                function (result) {
                   deferred.resolve(result);
                 },
-                function (error)
-                {
+                function (error) {
                   deferred.resolve({error: error});
                 }
               );
@@ -272,14 +252,12 @@ define(
             /**
              * Get a local notification
              */
-            find: function (id)
-            {
+            find: function (id) {
               var gem;
 
               angular.forEach(
                 this.local(),
-                function (notification)
-                {
+                function (notification) {
                   if (notification.uuid == id) gem = notification;
                 }
               );
@@ -290,23 +268,22 @@ define(
             /**
              * Get local cache of notifications
              */
-            local: function () { return angular.fromJson(Storage.get('notifications')); },
+            local: function () {
+              return angular.fromJson(Storage.get('notifications'));
+            },
 
             /**
              * Delete notifications
              */
-            remove: function (uuid)
-            {
+            remove: function (uuid) {
               var deferred = $q.defer();
 
               Notifications.remove(
                 { uuid: uuid },
-                function (result)
-                {
+                function (result) {
                   deferred.resolve(result);
                 },
-                function (error)
-                {
+                function (error) {
                   deferred.resolve({error: error});
                 }
               );
@@ -320,8 +297,7 @@ define(
           /**
            * Filter messages based on box
            */
-          Messages.prototype.filter = function (messages)
-          {
+          Messages.prototype.filter = function (messages) {
             var filtered = {
               inbox: [],
               outbox: [],
@@ -329,39 +305,33 @@ define(
             };
 
             angular.forEach(
-              messages, function (message)
-              {
+              messages, function (message) {
                 if (message.subject == '') message.subject = '-No Subject-';
 
                 if (message.box == 'inbox' &&
-                    message.state != 'TRASH')
-                {
+                  message.state != 'TRASH') {
                   filtered.inbox.push(message);
                 }
                 else if (message.box == 'outbox' &&
-                         message.state != 'TRASH')
-                {
+                  message.state != 'TRASH') {
                   filtered.outbox.push(message);
                 }
                 else if ((message.box == 'inbox' || message.box == 'outbox') &&
-                         message.state == 'TRASH')
-                {
+                  message.state == 'TRASH') {
                   filtered.trash.push(message);
                 }
               });
 
-            var butcher = function (box)
-            {
+            var butcher = function (box) {
               var limit = 50,
-                  total = box.length,
-                  offset = 0,
-                  newarr = [];
+                total = box.length,
+                offset = 0,
+                newarr = [];
 
-              while (offset * limit < total)
-              {
+              while (offset * limit < total) {
                 newarr[offset] = box.slice(offset * limit, ( offset + 1 ) * limit);
 
-                offset ++;
+                offset++;
               }
 
               return newarr;
@@ -378,14 +348,15 @@ define(
           /**
            * Serve messages from localStorage
            */
-          Messages.prototype.local = function () { return angular.fromJson(Storage.get('messages')) };
+          Messages.prototype.local = function () {
+            return angular.fromJson(Storage.get('messages'))
+          };
 
 
           /**
            * Find a message in cache
            */
-          Messages.prototype.find = function (id)
-          {
+          Messages.prototype.find = function (id) {
             var gem;
 
             // console.log('== asked message id ->', id);
@@ -393,8 +364,7 @@ define(
             // console.log('printing local messages ->', Messages.prototype.local());
 
             angular.forEach(
-              Messages.prototype.local(), function (message)
-              {
+              Messages.prototype.local(), function (message) {
                 // console.log('== listing message ->', message.uuid);
 
                 if (message.uuid == id) gem = message;
@@ -407,15 +377,13 @@ define(
           /**
            * Serve receivers list
            */
-          Messages.prototype.receviers = function ()
-          {
+          Messages.prototype.receviers = function () {
             var members = angular.fromJson(Storage.get('members')),
-                groups = angular.fromJson(Storage.get('groups')),
-                receivers = [];
+              groups = angular.fromJson(Storage.get('groups')),
+              receivers = [];
 
             angular.forEach(
-              members, function (member)
-              {
+              members, function (member) {
                 receivers.push(
                   {
                     id: member.uuid,
@@ -441,8 +409,7 @@ define(
             //      console.log('groups sorted ->', groups);
 
             angular.forEach(
-              groups, function (group)
-              {
+              groups, function (group) {
                 receivers.push(
                   {
                     id: group.uuid,
@@ -459,15 +426,16 @@ define(
           /**
            * Send a message
            */
-          Messages.prototype.send = function (message, broadcast)
-          {
+          Messages.prototype.send = function (message, broadcast) {
             var deferred = $q.defer(),
-                members = [],
-                types = [];
+              members = [],
+              types = [];
 
             angular.forEach(
               message.receivers,
-              function (receiver) { members.push(receiver.id) }
+              function (receiver) {
+                members.push(receiver.id)
+              }
             );
 
             types.push('paige');
@@ -486,8 +454,7 @@ define(
             Messages.send(
               null,
               message,
-              function (result)
-              {
+              function (result) {
                 // console.log('result ->', result, angular.isArray(result) );
 
                 var returned = '';
@@ -498,10 +465,8 @@ define(
 
                 angular.forEach(
                   chunks,
-                  function (chr)
-                  {
-                    if (chr.length == 1 && ! angular.isObject(chr))
-                    {
+                  function (chr) {
+                    if (chr.length == 1 && !angular.isObject(chr)) {
                       returned += chr;
                     }
                   }
@@ -511,8 +476,7 @@ define(
 
                 deferred.resolve(returned);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -524,18 +488,15 @@ define(
           /**
            * Send a message
            */
-          Messages.prototype.email = function (type)
-          {
+          Messages.prototype.email = function (type) {
             var deferred = $q.defer();
 
             var mailTemplate;
 
-            if (type == 'regular')
-            {
+            if (type == 'regular') {
               mailTemplate = '/mail/mobile_app.html';
             }
-            else if (type == 'experimental')
-            {
+            else if (type == 'experimental') {
               mailTemplate = '/mail/mobile_app_experimental.html';
             }
 
@@ -543,12 +504,11 @@ define(
               {
                 method: 'GET',
                 url: '../profiles/' +
-                     config.profile.meta +
-                     mailTemplate
+                  config.profile.meta +
+                  mailTemplate
               }).
               success(
-              function (content, status, headers, config)
-              {
+              function (content, status, headers, config) {
                 // content = content.replace('__download_link__', config.profile.mobileApp.link);
 
                 var message = {
@@ -561,27 +521,23 @@ define(
                 Messages.send(
                   null,
                   message,
-                  function (result)
-                  {
+                  function (result) {
                     var returned = '';
 
                     angular.forEach(
-                      result, function (chr)
-                      {
+                      result, function (chr) {
                         returned += chr;
                       });
 
                     deferred.resolve(returned);
                   },
-                  function (error)
-                  {
+                  function (error) {
                     deferred.resolve({error: error});
                   }
                 );
               }).
               error(
-              function (data, status, headers, config)
-              {
+              function (data, status, headers, config) {
                 console.log('Something went wrong terribly with emailing the message!', data, status, headers, config);
               });
 
@@ -593,14 +549,12 @@ define(
           /**
            * Get unread messages
            */
-          Messages.prototype.unread = function ()
-          {
+          Messages.prototype.unread = function () {
             var messages = Messages.prototype.local(),
-                unread = [];
+              unread = [];
 
             angular.forEach(
-              messages, function (message)
-              {
+              messages, function (message) {
                 if (message.box == 'inbox' && message.state == 'NEW') unread.push(message);
               });
 
@@ -611,17 +565,14 @@ define(
           /**
            * Count unread messages
            */
-          Messages.prototype.unreadCount = function ()
-          {
+          Messages.prototype.unreadCount = function () {
             var messages = Messages.prototype.local(),
-                counter = 0;
+              counter = 0;
 
             angular.forEach(
-              messages, function (message)
-              {
-                if (message.box == 'inbox' && message.state == 'NEW')
-                {
-                  counter ++;
+              messages, function (message) {
+                if (message.box == 'inbox' && message.state == 'NEW') {
+                  counter++;
 
                   // if ($rootScope.browser.webkit)
                   // {
@@ -648,8 +599,7 @@ define(
           /**
            * Change message state
            */
-          Messages.prototype.changeState = function (ids, state)
-          {
+          Messages.prototype.changeState = function (ids, state) {
             var deferred = $q.defer();
 
             Messages.changeState(
@@ -658,12 +608,10 @@ define(
                 ids: ids,
                 state: state
               },
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -671,17 +619,14 @@ define(
             /**
              * Change message state locally as well if it is READ
              */
-            if (state == 'READ')
-            {
+            if (state == 'READ') {
               var messages = angular.fromJson(Storage.get('messages')),
-                  converted = [];
+                converted = [];
 
               angular.forEach(
-                messages, function (message)
-                {
+                messages, function (message) {
                   angular.forEach(
-                    ids, function (id)
-                    {
+                    ids, function (id) {
                       if (message.uuid == id) message.state = 'READ';
                     });
 
@@ -702,14 +647,12 @@ define(
           /**
            * Delete message(s)
            */
-          Messages.prototype.remove = function (id)
-          {
+          Messages.prototype.remove = function (id) {
             var deferred = $q.defer();
 
             Messages.prototype.changeState(id, 'TRASH')
               .then(
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               });
 
@@ -720,14 +663,12 @@ define(
           /**
            * Restore message(s)
            */
-          Messages.prototype.restore = function (id)
-          {
+          Messages.prototype.restore = function (id) {
             var deferred = $q.defer();
 
             Messages.prototype.changeState(id, 'SEEN')
               .then(
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               });
 
@@ -738,15 +679,13 @@ define(
           /**
            * Delete forever
            */
-          Messages.prototype.emptyTrash = function (ids)
-          {
+          Messages.prototype.emptyTrash = function (ids) {
             var deferred = $q.defer(),
-                messages = Messages.prototype.local(),
-                bulk = [];
+              messages = Messages.prototype.local(),
+              bulk = [];
 
             angular.forEach(
-              messages, function (message)
-              {
+              messages, function (message) {
                 if ((message.box == 'inbox' || message.box == 'outbox') && message.state == 'TRASH') bulk.push(message.uuid);
               });
 
@@ -755,12 +694,10 @@ define(
               {
                 members: bulk
               },
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -772,19 +709,16 @@ define(
           /**
            * Clean the mailboxes
            */
-          Messages.prototype.clean = function (box)
-          {
+          Messages.prototype.clean = function (box) {
             var deferred = $q.defer(),
-                calls = [];
+              calls = [];
 
             angular.forEach(
-              box, function (bulk)
-              {
+              box, function (bulk) {
                 var ids = [];
 
                 angular.forEach(
-                  bulk, function (message)
-                  {
+                  bulk, function (message) {
                     ids.push(message.uuid);
                   });
 
@@ -797,8 +731,7 @@ define(
 
             $q.all(calls)
               .then(
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               });
 

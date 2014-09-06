@@ -15,6 +15,7 @@ html.no-js(lang='en')
 		meta(name='description', content='')
 		meta(name='viewport', content='width=device-width')
 		block icons
+
 		// build:css({.tmp,app}) styles/main.css
 		// link(rel='stylesheet', href='styles/main.css')
 		link(rel='stylesheet', href='styles/bootstrap.css')
@@ -22,7 +23,6 @@ html.no-js(lang='en')
 		link(rel='stylesheet', href='styles/app.css')
 		// endbuild
 
-		// script(src="scripts/localization.js")
 		script(src='scripts/profiles/dev/profile.js')
 
 		// script(src='//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
@@ -44,7 +44,7 @@ html.no-js(lang='en')
 		block notifications
 		#wrap
 			.container-fluid
-				div(ng-view='ng-view')
+				div(ng-view='')
 			#push
 		block mobile-status-bar
 		block footer

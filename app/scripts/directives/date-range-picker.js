@@ -1,20 +1,17 @@
 define(
   ['directives/directives'],
-  function (directives)
-  {
+  function (directives) {
     'use strict';
 
     directives.directive(
       'daterangepicker',
       [
         '$rootScope',
-        function ($rootScope)
-        {
+        function ($rootScope) {
           return {
             restrict: 'A',
 
-            link: function postLink (scope, element, attrs, controller)
-            {
+            link: function postLink(scope, element, attrs, controller) {
               // var startDate = Date.create().addDays(-6),
               //     endDate   = Date.create();
               //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
@@ -43,7 +40,7 @@ define(
               ];
 
               options.ranges[$rootScope.ui.planboard.daterangerYesterday] = [
-                new Date.today().addDays(- 1),
+                new Date.today().addDays(-1),
                 new Date.today()
               ];
 
@@ -58,11 +55,9 @@ define(
 
               element.daterangepicker(
                 options,
-                function (start, end)
-                {
+                function (start, end) {
                   scope.$apply(
-                    function ()
-                    {
+                    function () {
                       var diff = end.getTime() - start.getTime();
 
                       scope.timeline.scope = {
@@ -72,18 +67,15 @@ define(
                       };
 
                       // Scope is a day
-                      if (diff <= 86400000)
-                      {
+                      if (diff <= 86400000) {
                         scope.timeline.scope.day = true;
                       }
                       // Scope is less than a week
-                      else if (diff < 604800000)
-                      {
+                      else if (diff < 604800000) {
                         scope.timeline.scope.week = true;
                       }
                       // Scope is more than a week
-                      else if (diff > 604800000)
-                      {
+                      else if (diff > 604800000) {
                         scope.timeline.scope.month = true;
                       }
 

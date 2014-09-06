@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
@@ -20,12 +19,10 @@ define(
         'Groups',
         'Announcer',
         '$http',
-        function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer, $http)
-        {
+        function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer, $http) {
           $rootScope.notifier.destroy();
 
-          if (! $http.defaults.headers.common['X-SESSION_ID'])
-          {
+          if (!$http.defaults.headers.common['X-SESSION_ID']) {
             var session = angular.fromJson(Storage.cookie.get('session'));
 
             $http.defaults.headers.common['X-SESSION_ID'] = session.id;
@@ -60,8 +57,7 @@ define(
           /**
            * Process Smart Alarm team members for view
            */
-          function prepareSaMembers (setup)
-          {
+          function prepareSaMembers(setup) {
             var cached = angular.fromJson(Storage.get('guard'));
 
             $scope.saMembers = {
@@ -72,15 +68,12 @@ define(
             $scope.saSynced = cached.synced;
 
             angular.forEach(
-              setup.selection, function (selection)
-              {
-                function translateName (user)
-                {
+              setup.selection, function (selection) {
+                function translateName(user) {
                   return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
                 }
 
-                switch (selection.role)
-                {
+                switch (selection.role) {
                   case 'bevelvoerder':
                     $scope.saMembers.truck.push(
                       {
@@ -149,16 +142,13 @@ define(
                 var states = ['available', 'unavailable', 'noplanning'];
 
                 angular.forEach(
-                  states, function (state)
-                  {
+                  states, function (state) {
                     reserves[state] = [];
 
                     angular.forEach(
-                      setup.reserves[state], function (member)
-                      {
+                      setup.reserves[state], function (member) {
                         angular.forEach(
-                          member, function (meta, userID)
-                          {
+                          member, function (meta, userID) {
                             reserves[state].push(
                               {
                                 id: userID,
@@ -181,26 +171,22 @@ define(
            */
           Groups.query()
             .then(
-            function (groups)
-            {
+            function (groups) {
               var calls = [];
 
               angular.forEach(
-                groups, function (group)
-                {
+                groups, function (group) {
                   calls.push(Groups.get(group.uuid));
                 });
 
               $q.all(calls)
                 .then(
-                function ()
-                {
+                function () {
                   Groups.uniqueMembers();
 
                   var guard = angular.fromJson(Storage.get('guard'));
 
-                  if (guard && guard.selection)
-                  {
+                  if (guard && guard.selection) {
                     $scope.loading.smartAlarm = false;
 
                     prepareSaMembers(angular.fromJson(Storage.get('guard')));
@@ -209,12 +195,10 @@ define(
 
                   Groups.guardMonitor()
                     .then(
-                    function ()
-                    {
+                    function () {
                       Groups.guardRole()
                         .then(
-                        function (setup)
-                        {
+                        function (setup) {
                           prepareSaMembers(setup);
                         });
                     });
@@ -225,12 +209,10 @@ define(
           /**
            * Fetcher for p2000 alarm messages
            */
-          $scope.getP2000 = function ()
-          {
+          $scope.getP2000 = function () {
             Dashboard.p2000().
               then(
-              function (result)
-              {
+              function (result) {
                 $scope.loading.alerts = false;
 
                 $scope.alarms = result.alarms;
@@ -243,23 +225,20 @@ define(
 
 
           $window.setInterval(
-            function ()
-            {
+            function () {
               $scope.$apply()
               {
                 $scope.getP2000();
 
                 var guard = angular.fromJson(Storage.get('guard'));
 
-                if (guard && guard.selection)
-                {
+                if (guard && guard.selection) {
                   prepareSaMembers(angular.fromJson(Storage.get('guard')));
                 }
 
                 Groups.guardRole()
                   .then(
-                  function (setup)
-                  {
+                  function (setup) {
                     prepareSaMembers(setup);
                   });
               }
@@ -273,8 +252,7 @@ define(
             {
               url: $rootScope.config.profile.p2000.url,
               dataType: 'json',
-              success: function (results)
-              {
+              success: function (results) {
                 $rootScope.statusBar.off();
 
                 var processed = Announcer.process(results, true);
@@ -285,8 +263,7 @@ define(
                 };
 
                 $scope.$apply(
-                  function ()
-                  {
+                  function () {
                     $scope.loading.alerts = false;
 
                     $scope.alarms = result.alarms;
@@ -296,8 +273,7 @@ define(
                     $scope.synced.alarms = result.synced;
                   });
               },
-              error: function ()
-              {
+              error: function () {
                 console.log('ERROR with getting p2000 for the first time!');
               }
             });

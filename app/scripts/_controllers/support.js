@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers'],
-  function (controllers)
-  {
+  function (controllers) {
     'use strict';
 
     controllers.controller(
@@ -9,14 +8,12 @@ define(
         '$rootScope',
         '$scope',
         '$location',
-        function ($rootScope, $scope, $location)
-        {
+        function ($rootScope, $scope, $location) {
           $rootScope.fixStyles();
 
-          var view = (! $location.hash()) ? 'web' : $location.hash();
+          var view = (!$location.hash()) ? 'web' : $location.hash();
 
-          function resetViews ()
-          {
+          function resetViews() {
             $scope.views = {
               web: false,
               ios: false,
@@ -24,8 +21,7 @@ define(
             };
           }
 
-          var setView = function (hash)
-          {
+          var setView = function (hash) {
             resetViews();
 
             $scope.views[hash] = true;
@@ -33,12 +29,10 @@ define(
             $location.hash(hash);
           };
 
-          $scope.setViewTo = function (hash)
-          {
+          $scope.setViewTo = function (hash) {
             $scope.$watch(
               hash,
-              function ()
-              {
+              function () {
                 $location.hash(hash);
 
                 setView(hash);

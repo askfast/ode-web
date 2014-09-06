@@ -1,15 +1,13 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Offsetter',
       [
         '$rootScope',
-        function ($rootScope)
-        {
+        function ($rootScope) {
           /**
            * General offset constructor
            */
@@ -17,31 +15,29 @@ define(
             /**
              * Produce offsets for the view
              */
-            factory: function (data)
-            {
+            factory: function (data) {
               /**
                * Defaults
                */
               var max = 60 * 60 * 24 * 7,
-              day = 60 * 60 * 24,
-              hour = 60 * 60,
-              minute = 60,
-              gmt = ((Math.abs(Number(Date.today().getUTCOffset())) * 1) / 100) * hour,
-              offsets = [];
+                day = 60 * 60 * 24,
+                hour = 60 * 60,
+                minute = 60,
+                gmt = ((Math.abs(Number(Date.today().getUTCOffset())) * 1) / 100) * hour,
+                offsets = [];
 
               /**
                * Loop through array of offsets
                */
               angular.forEach(
-                data, function (offset, index)
-                {
+                data, function (offset, index) {
                   /**
                    * Reset and calculate
                    */
                   var days = 0,
-                  hours = 0,
-                  minutes = 0,
-                  offset_tmp;
+                    hours = 0,
+                    minutes = 0,
+                    offset_tmp;
 
                   offset = offset + gmt;
 
@@ -86,8 +82,7 @@ define(
                   /**
                    * Day togglers
                    */
-                  switch (total.days)
-                  {
+                  switch (total.days) {
                     case 1:
                       offset_tmp.mon = true;
                       break;
@@ -126,8 +121,7 @@ define(
                * Loop through the offsets array for contrcuting the new offsets object
                */
               angular.forEach(
-                offsets, function (offset, index)
-                {
+                offsets, function (offset, index) {
                   /**
                    * Check whether key(exact) is defined in the obejct otherwise create it
                    */
@@ -149,26 +143,26 @@ define(
                    * Pass day togglers if they exist or overwrite or create
                    */
                   noffs[offset.exact].mon = (noffs[offset.exact].mon) ?
-                                            noffs[offset.exact].mon :
-                                            offset.mon;
+                    noffs[offset.exact].mon :
+                    offset.mon;
                   noffs[offset.exact].tue = (noffs[offset.exact].tue) ?
-                                            noffs[offset.exact].tue :
-                                            offset.tue;
+                    noffs[offset.exact].tue :
+                    offset.tue;
                   noffs[offset.exact].wed = (noffs[offset.exact].wed) ?
-                                            noffs[offset.exact].wed :
-                                            offset.wed;
+                    noffs[offset.exact].wed :
+                    offset.wed;
                   noffs[offset.exact].thu = (noffs[offset.exact].thu) ?
-                                            noffs[offset.exact].thu :
-                                            offset.thu;
+                    noffs[offset.exact].thu :
+                    offset.thu;
                   noffs[offset.exact].fri = (noffs[offset.exact].fri) ?
-                                            noffs[offset.exact].fri :
-                                            offset.fri;
+                    noffs[offset.exact].fri :
+                    offset.fri;
                   noffs[offset.exact].sat = (noffs[offset.exact].sat) ?
-                                            noffs[offset.exact].sat :
-                                            offset.sat;
+                    noffs[offset.exact].sat :
+                    offset.sat;
                   noffs[offset.exact].sun = (noffs[offset.exact].sun) ?
-                                            noffs[offset.exact].sun :
-                                            offset.sun;
+                    noffs[offset.exact].sun :
+                    offset.sun;
                 });
 
               /**
@@ -181,41 +175,46 @@ define(
             /**
              * Convert to back-end friendly array
              */
-            arrayed: function (offsets)
-            {
+            arrayed: function (offsets) {
               /**
                * Defaults
                */
               var day = 60 * 60 * 24,
-              hour = 60 * 60,
-              minute = 60,
-              arrayed = [];
+                hour = 60 * 60,
+                minute = 60,
+                arrayed = [];
 
               /**
                * Loop through array of offsets
                */
               angular.forEach(
-                offsets, function (offset, index)
-                {
-                  var gmt = (Math.abs(Number(Date.today().getUTCOffset())) * - 1 ) / 100,
-                      hours = (Number(offset.hour) + gmt) * hour,
-                      minutes = Number(offset.minute) * minute,
-                      diff = hours + minutes;
+                offsets, function (offset, index) {
+                  var gmt = (Math.abs(Number(Date.today().getUTCOffset())) * -1 ) / 100,
+                    hours = (Number(offset.hour) + gmt) * hour,
+                    minutes = Number(offset.minute) * minute,
+                    diff = hours + minutes;
 
-                  if (offset.mon)
-                  { arrayed.push(diff + day); }
-                  if (offset.tue)
-                  { arrayed.push(diff + (day * 2)); }
-                  if (offset.wed)
-                  { arrayed.push(diff + (day * 3)); }
-                  if (offset.thu)
-                  { arrayed.push(diff + (day * 4)); }
-                  if (offset.fri)
-                  { arrayed.push(diff + (day * 5)); }
-                  if (offset.sat)
-                  { arrayed.push(diff + (day * 6)); }
-                  if (offset.sun)
-                  { arrayed.push(diff + (day * 7)); }
+                  if (offset.mon) {
+                    arrayed.push(diff + day);
+                  }
+                  if (offset.tue) {
+                    arrayed.push(diff + (day * 2));
+                  }
+                  if (offset.wed) {
+                    arrayed.push(diff + (day * 3));
+                  }
+                  if (offset.thu) {
+                    arrayed.push(diff + (day * 4));
+                  }
+                  if (offset.fri) {
+                    arrayed.push(diff + (day * 5));
+                  }
+                  if (offset.sat) {
+                    arrayed.push(diff + (day * 6));
+                  }
+                  if (offset.sun) {
+                    arrayed.push(diff + (day * 7));
+                  }
                 });
 
               return arrayed;

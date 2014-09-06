@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers'],
-  function (controllers)
-  {
+  function (controllers) {
     'use strict';
 
     controllers.controller(
@@ -19,15 +18,11 @@ define(
         'TeamUp',
         'Dater',
         '$filter',
-        function (
-          $rootScope, $location, $q, $scope, Session, Teams, Clients, Store, $routeParams, TeamUp, Dater, $filter
-          )
-        {
+        function ($rootScope, $location, $q, $scope, Session, Teams, Clients, Store, $routeParams, TeamUp, Dater, $filter) {
           // TODO: Soon not needed!
           Dater.registerPeriods();
 
-          if ($location.path() == '/logout')
-          {
+          if ($location.path() == '/logout') {
             angular.element('body')
               .css(
               {
@@ -37,8 +32,7 @@ define(
             );
           }
 
-          if ($routeParams.uuid && $routeParams.key)
-          {
+          if ($routeParams.uuid && $routeParams.key) {
             $scope.views = { changePass: true };
 
             $scope.changepass = {
@@ -46,8 +40,7 @@ define(
               key: $routeParams.key
             };
           }
-          else
-          {
+          else {
             $scope.views = {
               login: true,
               forgot: false
@@ -67,8 +60,7 @@ define(
             }
           };
 
-          if (! Store('app').get('app'))
-          {
+          if (!Store('app').get('app')) {
             Store('app').save('app', '{}');
           }
 
@@ -81,12 +73,10 @@ define(
 
           if (loginData && loginData.remember) $scope.loginData = loginData;
 
-          $scope.login = function ()
-          {
+          $scope.login = function () {
             angular.element('#alertDiv').hide();
 
-            if (! $scope.loginData || ! $scope.loginData.username || ! $scope.loginData.password)
-            {
+            if (!$scope.loginData || !$scope.loginData.username || !$scope.loginData.password) {
               $scope.alert = {
                 login: {
                   display: true,
@@ -118,8 +108,7 @@ define(
             auth($scope.loginData.username, MD5.parse($scope.loginData.password));
           };
 
-          var auth = function (uuid, pass)
-          {
+          var auth = function (uuid, pass) {
             TeamUp._(
               'login',
               {
@@ -127,21 +116,17 @@ define(
                 pass: pass
               }
             ).then(
-              function (result)
-              {
+              function (result) {
                 var status = 0;
-                if (result.status)
-                {
+                if (result.status) {
                   status = result.status;
                 }
-                else if (result.error && result.error.status)
-                {
+                else if (result.error && result.error.status) {
                   status = result.error.status;
                 }
                 if (status == 400 ||
-                    status == 403 ||
-                    status == 404)
-                {
+                  status == 403 ||
+                  status == 404) {
                   $scope.alert = {
                     login: {
                       display: true,
@@ -156,8 +141,7 @@ define(
 
                   return false;
                 }
-                else if (result.status == 0)
-                {
+                else if (result.status == 0) {
                   $scope.alert = {
                     login: {
                       display: true,
@@ -172,8 +156,7 @@ define(
 
                   return false;
                 }
-                else if (result.error)
-                {
+                else if (result.error) {
                   $scope.alert = {
                     login: {
                       display: true,
@@ -189,8 +172,7 @@ define(
                   console.log("Pay attention, this might caused by the Log module");
                   return false;
                 }
-                else
-                {
+                else {
                   Session.set(result['X-SESSION_ID']);
 
                   preLoader();
@@ -200,19 +182,21 @@ define(
           };
 
           // TODO: Move this to somewhere later on!
-          function queryMembersNotInTeams ()
-          {
+          function queryMembersNotInTeams() {
             TeamUp._('teamMemberFree').then(
-              function (result) { Store('app').save('members', result) }
+              function (result) {
+                Store('app').save('members', result)
+              }
             );
           }
 
           // Query the tasks for login user and all other unsigned task in login user's team
-          function queryTasks (teams)
-          {
+          function queryTasks(teams) {
             // query my tasks
             TeamUp._("taskMineQuery").then(
-              function (result) { Store('app').save('myTasks', result) }
+              function (result) {
+                Store('app').save('myTasks', result)
+              }
             );
 
             // query unassigned tasks from each team
@@ -220,22 +204,18 @@ define(
 
             angular.forEach(
               teams,
-              function (team_obj)
-              {
+              function (team_obj) {
                 TeamUp._(
                   "taskByTeam",
                   {fourth: team_obj.uuid}
                 ).then(
-                  function (result)
-                  {
+                  function (result) {
                     angular.forEach(
                       result,
-                      function (taskObj)
-                      {
+                      function (taskObj) {
                         var foundTask = $filter('getByUuid')(allTasks, taskObj.uuid);
 
-                        if (foundTask == null)
-                        {
+                        if (foundTask == null) {
                           allTasks.push(taskObj);
                         }
                       }
@@ -248,24 +228,20 @@ define(
             );
           }
 
-          function enhanceTasks ()
-          {
+          function enhanceTasks() {
             var taskGroups = ['myTasks', 'allTasks'];
 
             angular.forEach(
               taskGroups,
-              function (label)
-              {
+              function (label) {
                 var group = Store('app').get(label);
 
                 angular.forEach(
                   group,
-                  function (task)
-                  {
+                  function (task) {
                     var client = $rootScope.getClientByID(task.relatedClientUuid);
 
-                    if (client != null)
-                    {
+                    if (client != null) {
                       // console.log(client);
                       task.relatedClientName = client.firstName + ' ' + client.lastName;
                     }
@@ -277,8 +253,7 @@ define(
             );
           }
 
-          var preLoader = function ()
-          {
+          var preLoader = function () {
             angular.element('#login').hide();
 
             angular.element('#download').hide();
@@ -289,14 +264,11 @@ define(
 
             TeamUp._('user')
               .then(
-              function (resources)
-              {
-                if (resources.error)
-                {
+              function (resources) {
+                if (resources.error) {
                   console.warn('error ->', resources);
                 }
-                else
-                {
+                else {
                   $rootScope.app.resources = resources;
 
                   Store('app').save('resources', resources);
@@ -305,14 +277,12 @@ define(
 
                   Teams.query(true, {})
                     .then(
-                    function (teams)
-                    {
+                    function (teams) {
                       queryMembersNotInTeams();
 
                       queryTasks(teams);
 
-                      if (teams.error)
-                      {
+                      if (teams.error) {
                         console.warn('error ->', teams);
                       }
 
@@ -320,21 +290,18 @@ define(
 
                       Teams.queryClientGroups(teams)
                         .then(
-                        function ()
-                        {
+                        function () {
                           progress(80, $rootScope.ui.login.loading_clientGroups);
 
                           TeamUp._('clientsQuery')
                             .then(
-                            function (allClients)
-                            {
+                            function (allClients) {
                               // Save all clients into the localStorage
                               Store('app').save('clients', allClients);
 
                               Clients.query(false, {})
                                 .then(
-                                function ()
-                                {
+                                function () {
                                   progress(100, $rootScope.ui.login.loading_everything);
 
                                   // TODO: Blend it in the modal!
@@ -342,18 +309,15 @@ define(
 
                                   Teams.query()
                                     .then(
-                                    function ()
-                                    {
+                                    function () {
                                       $location.path('/tasks2');
 
                                       setTimeout(
-                                        function ()
-                                        {
+                                        function () {
                                           angular.element('.navbar').show();
                                           angular.element('body').css({ 'background': 'url(../images/bg.jpg) repeat' });
 
-                                          if (! $rootScope.browser.mobile)
-                                          {
+                                          if (!$rootScope.browser.mobile) {
                                             angular.element('#footer').show();
                                           }
                                         }, 100);
@@ -372,14 +336,12 @@ define(
             );
           };
 
-          var progress = function (ratio, message)
-          {
+          var progress = function (ratio, message) {
             angular.element('#preloader .progress .bar').css({ width: ratio + '%' });
             angular.element('#preloader span').text(message);
           };
 
-          if (localStorage.hasOwnProperty('sessionTimeout'))
-          {
+          if (localStorage.hasOwnProperty('sessionTimeout')) {
             localStorage.removeItem('sessionTimeout');
 
             $scope.alert = {

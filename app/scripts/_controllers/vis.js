@@ -1,38 +1,32 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
       'vis',
       [
         '$rootScope', '$scope', '$location', 'Store', 'Dater', 'TeamUp', 'Moment',
-        function ($rootScope, $scope, $location, Store, Dater, TeamUp, Moment)
-        {
+        function ($rootScope, $scope, $location, Store, Dater, TeamUp, Moment) {
           // $rootScope.fixStyles();
 
-          function resetViews ()
-          {
+          function resetViews() {
             $scope.views = {
               teams: false,
               clients: false
             };
           }
 
-          var setView = function (hash)
-          {
+          var setView = function (hash) {
             resetViews();
 
             $scope.views[hash] = true;
           };
 
-          $scope.setViewTo = function (hash)
-          {
+          $scope.setViewTo = function (hash) {
             $scope.$watch(
               hash,
-              function ()
-              {
+              function () {
                 $location.hash(hash);
 
                 setView(hash);
@@ -63,18 +57,15 @@ define(
           var debug = false;
 
 
-          $scope.simplifyItems = function (items)
-          {
+          $scope.simplifyItems = function (items) {
             var simplified = [];
 
             angular.forEach(
               items,
-              function (group, label)
-              {
+              function (group, label) {
                 angular.forEach(
                   group,
-                  function (item)
-                  {
+                  function (item) {
                     item.group = label;
 
                     simplified.push(item);
@@ -90,10 +81,8 @@ define(
            */
           $scope.timeline = {
 
-            select: function (selected)
-            {
-              if (debug)
-              {
+            select: function (selected) {
+              if (debug) {
                 console.log('selected items: ', selected.items);
               }
 
@@ -103,10 +92,8 @@ define(
 
               angular.forEach(
                 items,
-                function (item)
-                {
-                  if (item.id == selected.items[0])
-                  {
+                function (item) {
+                  if (item.id == selected.items[0]) {
                     $scope.slot = {
                       id: item.id,
                       start: Moment(item.start).format(format),
@@ -122,27 +109,22 @@ define(
 
             range: {},
 
-            rangeChange: function (period)
-            {
+            rangeChange: function (period) {
               this.range = $scope.timeline.getWindow();
 
-              if (! $scope.$$phase)
-              {
+              if (!$scope.$$phase) {
                 $scope.$apply();
               }
 
-              if (debug)
-              {
+              if (debug) {
                 console.log(
                   'rangeChange: start-> ',
                   period.start, ' end-> ', period.end);
               }
             },
 
-            rangeChanged: function (period)
-            {
-              if (debug)
-              {
+            rangeChanged: function (period) {
+              if (debug) {
                 console.log(
                   'rangeChange(d): start-> ',
                   period.start, ' end-> ', period.end);
@@ -151,118 +133,95 @@ define(
 
             customTime: null,
 
-            timeChange: function (period)
-            {
-              if (debug)
-              {
+            timeChange: function (period) {
+              if (debug) {
                 console.log('timeChange: ', period.time);
               }
 
               $scope.$apply(
-                function ()
-                {
+                function () {
                   $scope.timeline.customTime = period.time;
                 }
               );
             },
 
-            timeChanged: function (period)
-            {
-              if (debug)
-              {
+            timeChanged: function (period) {
+              if (debug) {
                 console.log('timeChange(d): ', period.time);
               }
             },
 
             slot: {
-              add: function (item, callback)
-              {
+              add: function (item, callback) {
                 item.content = prompt('Enter text content for new item:', item.content);
 
-                if (item.content != null)
-                {
+                if (item.content != null) {
                   callback(item); // send back adjusted new item
                 }
-                else
-                {
+                else {
                   callback(null); // cancel item creation
                 }
               },
 
-              move: function (item, callback)
-              {
+              move: function (item, callback) {
                 if (confirm(
                     'Do you really want to move the item to\n' +
                     'start: ' + item.start + '\n' +
-                    'end: ' + item.end + '?'))
-                {
+                    'end: ' + item.end + '?')) {
                   callback(item); // send back item as confirmation (can be changed
                 }
-                else
-                {
+                else {
                   callback(null); // cancel editing item
                 }
               },
 
-              update: function (item, callback)
-              {
+              update: function (item, callback) {
                 item.content = prompt('Edit items text:', item.content);
 
-                if (item.content != null)
-                {
+                if (item.content != null) {
                   callback(item); // send back adjusted item
                 }
-                else
-                {
+                else {
                   callback(null); // cancel updating the item
                 }
               },
 
-              remove: function (item, callback)
-              {
-                if (confirm('Remove item ' + item.content + '?'))
-                {
+              remove: function (item, callback) {
+                if (confirm('Remove item ' + item.content + '?')) {
                   callback(item); // confirm deletion
                 }
-                else
-                {
+                else {
                   callback(null); // cancel deletion
                 }
               }
             }
           };
 
-          $scope.getCustomTime = function ()
-          {
+          $scope.getCustomTime = function () {
             $scope.gotCustomDate = $scope.timeline.getCustomTime();
           };
 
-          $scope.getSelection = function ()
-          {
+          $scope.getSelection = function () {
             $scope.gotSelection = $scope.timeline.getSelection();
           };
 
-          $scope.setSelection = function (selection)
-          {
+          $scope.setSelection = function (selection) {
             selection = (angular.isArray(selection)) ? selection : [].concat(selection);
 
             $scope.timeline.setSelection(selection);
           };
 
-          $scope.getWindow = function ()
-          {
+          $scope.getWindow = function () {
             $scope.gotWindow = $scope.timeline.getWindow();
           };
 
-          $scope.setWindow = function (start, end)
-          {
+          $scope.setWindow = function (start, end) {
             $scope.timeline.setScope('custom');
 
             $scope.timeline.setWindow(start, end);
           };
 
-          $scope.setOptions = function (options)
-          {
+          $scope.setOptions = function (options) {
             $scope.timeline.setOptions(options);
           };
 
@@ -274,7 +233,7 @@ define(
           $scope.ns = config.app.ns;
 
           var teams = Store('app').get('teams'),
-              clients = Store('app').get('ClientGroups');
+            clients = Store('app').get('ClientGroups');
 
           $scope.data = {
             teams: {
@@ -317,12 +276,10 @@ define(
 
           angular.forEach(
             teams,
-            function (team)
-            {
+            function (team) {
               var members = Store('app').get(team.uuid);
 
-              if (members && members.length > 0)
-              {
+              if (members && members.length > 0) {
                 $scope.data.teams.list.push(
                   {
                     uuid: team.uuid,
@@ -334,23 +291,22 @@ define(
 
                 angular.forEach(
                   members,
-                  function (member)
-                  {
+                  function (member) {
                     var imgURL = '';
 
                     var avatar = '<div class="roundedPicSmall memberStateNone" ' +
-                                 'style="float: left; background-image: url(' +
-                                 imgURL +
-                                 ');" memberId="' +
-                                 member.uuid +
-                                 '"></div>';
+                      'style="float: left; background-image: url(' +
+                      imgURL +
+                      ');" memberId="' +
+                      member.uuid +
+                      '"></div>';
 
                     var name = avatar +
-                               '<div style="float: left; margin: 15px 0 0 5px; font-size: 14px;">' +
-                               member.firstName +
-                               ' ' +
-                               member.lastName +
-                               '</div>';
+                      '<div style="float: left; margin: 15px 0 0 5px; font-size: 14px;">' +
+                      member.firstName +
+                      ' ' +
+                      member.lastName +
+                      '</div>';
 
                     var obj = {
                       'head': name,
@@ -364,12 +320,10 @@ define(
 
           angular.forEach(
             clients,
-            function (client)
-            {
+            function (client) {
               var members = Store('app').get(client.id);
 
-              if (members && members.length > 0)
-              {
+              if (members && members.length > 0) {
                 $scope.data.clients.list.push(
                   {
                     uuid: client.id,
@@ -380,31 +334,29 @@ define(
 
                 angular.forEach(
                   members,
-                  function (member)
-                  {
+                  function (member) {
                     // TODO: Remove this one later on!
                     // var imgfile = Storage.avatar.geturl(member.uuid);
                     var imgfile = '';
                     var imgURL = $scope.imgHost + imgfile;
 
-                    if (typeof imgfile == 'undefined')
-                    {
+                    if (typeof imgfile == 'undefined') {
                       imgURL = config.app.noImgURL;
                     }
 
                     var avatar = '<div class="roundedPicSmall memberStateNone" ' +
-                                 'style="float: left; background-image: url(' +
-                                 imgURL +
-                                 ');" memberId="' +
-                                 member.uuid +
-                                 '"></div>';
+                      'style="float: left; background-image: url(' +
+                      imgURL +
+                      ');" memberId="' +
+                      member.uuid +
+                      '"></div>';
 
                     var name = avatar +
-                               '<div style="float: left; margin: 15px 0 0 5px; font-size: 14px;">' +
-                               member.firstName +
-                               ' ' +
-                               member.lastName +
-                               '</div>';
+                      '<div style="float: left; margin: 15px 0 0 5px; font-size: 14px;">' +
+                      member.firstName +
+                      ' ' +
+                      member.lastName +
+                      '</div>';
 
                     var obj = {
                       'head': name,
@@ -416,15 +368,12 @@ define(
               }
             });
 
-          function switchData ()
-          {
-            switch ($scope.section)
-            {
+          function switchData() {
+            switch ($scope.section) {
               case 'teams':
                 $scope.list = $scope.data.teams.list;
 
-                if (typeof $scope.currentTeam == 'undefined')
-                {
+                if (typeof $scope.currentTeam == 'undefined') {
                   $scope.currentTeam = $scope.data.teams.list[0].uuid;
                 }
 
@@ -434,8 +383,7 @@ define(
               case 'clients':
                 $scope.list = $scope.data.clients.list;
 
-                if (typeof $scope.currentClientGroup == 'undefined')
-                {
+                if (typeof $scope.currentClientGroup == 'undefined') {
                   $scope.currentClientGroup = $scope.data.clients.list[0].uuid;
                 }
 
@@ -445,27 +393,22 @@ define(
 
           }
 
-          $scope.changeCurrent = function (current)
-          {
+          $scope.changeCurrent = function (current) {
             console.log('current ->', current);
 
             angular.forEach(
               $scope.data[$scope.section].list,
-              function (node)
-              {
-                if (node.uuid == current)
-                {
+              function (node) {
+                if (node.uuid == current) {
                   $scope.currentName = node.name;
                 }
               });
 
-            if ($scope.section == 'teams')
-            {
+            if ($scope.section == 'teams') {
               $scope.currentTeam = current;
               $scope.data.members = $scope.data[$scope.section].members[$scope.currentTeam];
             }
-            else if ($scope.section == 'clients')
-            {
+            else if ($scope.section == 'clients') {
               $scope.currentClientGroup = current;
               $scope.data.members = $scope.data[$scope.section].members[$scope.currentClientGroup];
             }
@@ -476,30 +419,24 @@ define(
             var startTime = Number(Date.today()) - (7 * 24 * 60 * 60 * 1000);
             var endTime = Number(Date.today()) + (7 * 24 * 60 * 60 * 1000);
 
-            var storeTask = function (tasks, startTime, endTime)
-            {
+            var storeTask = function (tasks, startTime, endTime) {
               // clear the array to keep tasks sync with sever side after changing
               $scope.data[$scope.section].tasks = [];
 
               angular.forEach(
-                tasks, function (task, i)
-                {
-                  if (task != null)
-                  {
+                tasks, function (task, i) {
+                  if (task != null) {
                     var memberId = '';
 
-                    if ($scope.section == 'teams')
-                    {
+                    if ($scope.section == 'teams') {
                       memberId = task.assignedTeamMemberUuid;
                     }
 
-                    if ($scope.section == 'clients')
-                    {
+                    if ($scope.section == 'clients') {
                       memberId = task.relatedClientUuid;
                     }
 
-                    if (typeof $scope.data[$scope.section].tasks[memberId] == 'undefined')
-                    {
+                    if (typeof $scope.data[$scope.section].tasks[memberId] == 'undefined') {
                       $scope.data[$scope.section].tasks[memberId] = new Array();
                     }
 
@@ -514,8 +451,7 @@ define(
                 });
             };
 
-            if ($scope.data.section == 'teams')
-            {
+            if ($scope.data.section == 'teams') {
               $location.search(
                 {
                   uuid: $scope.currentTeam
@@ -529,15 +465,15 @@ define(
                   to: endTime
                 }
               ).then(
-                function (tasks) { storeTask(tasks, startTime, endTime) },
-                function (error)
-                {
+                function (tasks) {
+                  storeTask(tasks, startTime, endTime)
+                },
+                function (error) {
                   console.log('error happend when getting the tasks for the team members ' + error);
                 }
               );
             }
-            else if ($scope.data.section == 'clients')
-            {
+            else if ($scope.data.section == 'clients') {
               $location.search(
                 {
                   uuid: $scope.currentClientGroup
@@ -552,13 +488,14 @@ define(
                 },
                 null,
                 {
-                  error: function (error)
-                  {
+                  error: function (error) {
                     console.log('error happend when getting the tasks for the team members ' + error);
                   }
                 }
               ).then(
-                function (tasks) { storeTask(tasks, startTime, endTime) }
+                function (tasks) {
+                  storeTask(tasks, startTime, endTime)
+                }
               );
             }
           };
@@ -621,8 +558,7 @@ define(
             }
           };
 
-          if ($.browser.msie && $.browser.version == '8.0')
-          {
+          if ($.browser.msie && $.browser.version == '8.0') {
             $scope.timeline.options = {
               start: $scope.periods.days[Dater.current.today() - 7].last.timeStamp,
               end: $scope.periods.days[Dater.current.today() + 7].last.timeStamp,
@@ -632,8 +568,7 @@ define(
           }
 
           angular.forEach(
-            config.app.timeline.config.states, function (state, index)
-            {
+            config.app.timeline.config.states, function (state, index) {
               $scope.timeline.config.legenda[index] = true;
             });
 
@@ -644,32 +579,27 @@ define(
           };
 
           $scope.daterange = Dater.readable.date($scope.timeline.range.start) + ' / ' +
-                             Dater.readable.date($scope.timeline.range.end);
+            Dater.readable.date($scope.timeline.range.end);
 
-          $scope.processRelatedUsers = function (selectedSlot)
-          {
+          $scope.processRelatedUsers = function (selectedSlot) {
             var relatedUsers = [];
             var memberId = angular.element(selectedSlot.group).attr('memberId');
 
-            if ($scope.views.teams)
-            {
+            if ($scope.views.teams) {
               $scope.relatedUserLabel = $rootScope.ui.teamup.clients;
 
               var member = $rootScope.getTeamMemberById(memberId);
 
-              if (typeof member.teamUuids != 'undefined' && member.teamUuids.length > 0)
-              {
+              if (typeof member.teamUuids != 'undefined' && member.teamUuids.length > 0) {
                 relatedUsers = $rootScope.getClientsByTeam(member.teamUuids);
               }
             }
-            else if ($scope.views.clients)
-            {
+            else if ($scope.views.clients) {
               $scope.relatedUserLabel = $rootScope.ui.planboard.members;
 
               var client = $rootScope.getClientByID(memberId);
 
-              if (typeof client.clientGroupUuid != 'undefined' && client.clientGroupUuid != '')
-              {
+              if (typeof client.clientGroupUuid != 'undefined' && client.clientGroupUuid != '') {
                 relatedUsers = $rootScope.getMembersByClient(client.clientGroupUuid);
               }
             }
@@ -677,18 +607,15 @@ define(
             return relatedUsers;
           };
 
-          $scope.resetInlineForms = function ()
-          {
+          $scope.resetInlineForms = function () {
             $scope.slot = {};
             $scope.original = {};
             $scope.resetViews();
 
-            if ($scope.section == 'teams')
-            {
+            if ($scope.section == 'teams') {
               $scope.changeCurrent($scope.currentTeam);
             }
-            else if ($scope.section == 'clients')
-            {
+            else if ($scope.section == 'clients') {
               $scope.changeCurrent($scope.currentClientGroup);
             }
           };

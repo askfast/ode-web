@@ -1,70 +1,77 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Dater',
       [
         '$rootScope', 'Store',
-        function ($rootScope, Store)
-        {
+        function ($rootScope, Store) {
           return {
             current: {
-              today: function () { return Date.today().getDayOfYear() + 1 },
-              week: function () { return Date.today().getWeekOfYear() },
-              month: function () { return new Date().getMonth() + 1 }
+              today: function () {
+                return Date.today().getDayOfYear() + 1
+              },
+              week: function () {
+                return Date.today().getWeekOfYear()
+              },
+              month: function () {
+                return new Date().getMonth() + 1
+              }
             },
 
             readable: {
-              date: function (date) { return  new Date(date).toString(config.app.formats.date) }
+              date: function (date) {
+                return  new Date(date).toString(config.app.formats.date)
+              }
             },
 
             convert: {
-              absolute: function (date, time, flag)
-              {
+              absolute: function (date, time, flag) {
                 var dates = date.split('-'),
-                    result = new Date(
-                      Date.parse(
-                          dates[2] +
-                          '-' +
-                          dates[1] +
-                          '-' +
-                          dates[0] +
-                          ' ' +
-                          time)).getTime();
+                  result = new Date(
+                    Date.parse(
+                        dates[2] +
+                        '-' +
+                        dates[1] +
+                        '-' +
+                        dates[0] +
+                        ' ' +
+                        time)).getTime();
 
                 return (flag) ? result / 1000 : result;
               }
             },
 
             calculate: {
-              diff: function (range) { return new Date(range.end).getTime() - new Date(range.start).getTime() }
+              diff: function (range) {
+                return new Date(range.end).getTime() - new Date(range.start).getTime()
+              }
             },
 
-            getThisYear: function () { return new Date().toString('yyyy') },
+            getThisYear: function () {
+              return new Date().toString('yyyy')
+            },
 
-            getMonthTimeStamps: function ()
-            {
+            getMonthTimeStamps: function () {
               var months = {},
-                  year = this.getThisYear();
+                year = this.getThisYear();
 
-              for (var i = 0; i < 12; i ++)
-              {
+              for (var i = 0; i < 12; i++) {
                 var firstDay = new Date(year, i).moveToFirstDayOfMonth(),
-                    lastDay = new Date(year, i).moveToLastDayOfMonth(),
-                    month = {
-                      first: {
-                        day: firstDay,
-                        timeStamp: firstDay.getTime()
-                      },
-                      last: {
-                        day: lastDay,
-                        timeStamp: lastDay.getTime()
-                      },
-                      totalDays: Date.getDaysInMonth(year, i)
-                    };
+                  lastDay = new Date(year, i).moveToLastDayOfMonth(),
+                  month = {
+                    first: {
+                      day: firstDay,
+                      timeStamp: firstDay.getTime()
+                    },
+                    last: {
+                      day: lastDay,
+                      timeStamp: lastDay.getTime()
+                    },
+                    totalDays: Date.getDaysInMonth(year, i)
+                  };
 
                 months[i + 1] = month;
               }
@@ -72,24 +79,20 @@ define(
               return months;
             },
 
-            getWeekTimeStamps: function ()
-            {
+            getWeekTimeStamps: function () {
               var nweeks = [],
-                  weeks = {},
-                  nextMonday,
-                  year = this.getThisYear(),
-                  firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth(),
-                  firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
-                  firstMonday = new Date(firstMondayOfYear);
+                weeks = {},
+                nextMonday,
+                year = this.getThisYear(),
+                firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth(),
+                firstMondayOfYear = new Date(year, 0).moveToFirstDayOfMonth().last().sunday().addWeeks(0),
+                firstMonday = new Date(firstMondayOfYear);
 
-              for (var i = 0; i < 53; i ++)
-              {
-                if (i == 0)
-                {
+              for (var i = 0; i < 53; i++) {
+                if (i == 0) {
                   nextMonday = firstMondayOfYear.addWeeks(1);
                 }
-                else
-                {
+                else {
                   nextMonday = new Date(nweeks[i - 1]).addWeeks(1);
                 }
 
@@ -100,8 +103,7 @@ define(
 
               var firstMondayofNextYear = new Date(nweeks[51].addWeeks(1));
 
-              for (var i = 0; i < 55; i ++)
-              {
+              for (var i = 0; i < 55; i++) {
                 weeks[i + 1] = {
                   first: {
                     day: nweeks[i],
@@ -120,30 +122,25 @@ define(
               return weeks;
             },
 
-            getDayTimeStamps: function ()
-            {
+            getDayTimeStamps: function () {
               var nextDay,
-                  ndays = [],
-                  days = {},
-                  year = this.getThisYear(),
-                  firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
+                ndays = [],
+                days = {},
+                year = this.getThisYear(),
+                firstDayInYear = new Date(year, 0).moveToFirstDayOfMonth();
 
-              for (var i = 0; i < 366; i ++)
-              {
-                if (i == 0)
-                {
+              for (var i = 0; i < 366; i++) {
+                if (i == 0) {
                   nextDay = firstDayInYear;
                 }
-                else
-                {
+                else {
                   nextDay = new Date(ndays[i - 1]).addDays(1);
                 }
 
                 ndays.push(new Date(nextDay));
               }
 
-              for (var i = 0; i < 366; i ++)
-              {
+              for (var i = 0; i < 366; i++) {
                 days[i + 1] = {
                   first: {
                     day: ndays[i],
@@ -156,22 +153,19 @@ define(
                 };
               }
 
-              if (! days[366].timeStamp)
-              {
+              if (!days[366].timeStamp) {
                 delete days[366];
 
                 days.total = 365;
               }
-              else
-              {
+              else {
                 days.total = 366;
               }
 
               return days;
             },
 
-            registerPeriods: function ()
-            {
+            registerPeriods: function () {
               var periods = Store('app').get('periods') || '{}';
 
               Store('app').save(
@@ -182,8 +176,7 @@ define(
                 });
             },
 
-            getPeriods: function ()
-            {
+            getPeriods: function () {
               return Store('app').get('periods');
             }
           }

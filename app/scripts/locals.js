@@ -203,16 +203,15 @@ define(
           restoreSelected: 'Restore Selected Messages',
           loadingMessage: 'Loading message...',
           escalation: 'Escalation message',
-          escalationBody: function (diff, startDate, startTime, endDate, endTime)
-          {
+          escalationBody: function (diff, startDate, startTime, endDate, endTime) {
             return 'We have ' +
-                   diff +
-                   ' shortage in between ' +
-                   startDate + ' ' +
-                   startTime + ' and ' +
-                   endDate + ' ' +
-                   endTime + '. ' +
-                   'Would you please make yourself available if you are available for that period?';
+              diff +
+              ' shortage in between ' +
+              startDate + ' ' +
+              startTime + ' and ' +
+              endDate + ' ' +
+              endTime + '. ' +
+              'Would you please make yourself available if you are available for that period?';
           },
           removed: 'Message removed successfully.',
           removing: 'Removing the message...',
@@ -733,16 +732,15 @@ define(
           restoreSelected: 'Geselecteerde berichten terugplaatsen',
           loadingMessage: 'Bericht laden...',
           escalation: 'Escalatiebericht',
-          escalationBody: function (diff, startDate, startTime, endDate, endTime)
-          {
+          escalationBody: function (diff, startDate, startTime, endDate, endTime) {
             return 'Er is een tekort van ' +
-                   diff +
-                   ' mensen tussen ' +
-                   startDate + ' ' +
-                   startTime + ' en ' +
-                   endDate + ' ' +
-                   endTime + '. ' +
-                   'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
+              diff +
+              ' mensen tussen ' +
+              startDate + ' ' +
+              startTime + ' en ' +
+              endDate + ' ' +
+              endTime + '. ' +
+              'Zet uzelf a.u.b. op beschikbaar indien u beschikbaar bent voor die periode';
           },
           removed: 'Bericht succesvol verwijderd.',
           removing: 'Bericht verwijderen...',

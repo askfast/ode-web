@@ -1,103 +1,101 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Groups',
       [
         '$resource', '$q', 'Storage', '$rootScope', 'Slots', '$location', 'Strings',
-        function ($resource, $q, Storage, $rootScope, Slots, $location, Strings)
-        {
+        function ($resource, $q, Storage, $rootScope, Slots, $location, Strings) {
           var Groups = $resource(
               config.host + '/network/:action/:id',
-              {},
-              {
-                query: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                },
-                get: {
-                  method: 'GET',
-                  params: {id: ''}
-                },
-                save: {
-                  method: 'POST',
-                  params: {id: ''},
-                  isArray: true
-                },
-                edit: {
-                  method: 'PUT',
-                  params: {id: ''}
-                },
-                remove: {
-                  method: 'DELETE',
-                  params: {id: ''},
-                  isArray: true
-                },
-                search: {
-                  method: 'POST',
-                  params: {id: '', action: 'searchPaigeUser', fields: 'role'},
-                  isArray: true
-                }
+            {},
+            {
+              query: {
+                method: 'GET',
+                params: {},
+                isArray: true
+              },
+              get: {
+                method: 'GET',
+                params: {id: ''}
+              },
+              save: {
+                method: 'POST',
+                params: {id: ''},
+                isArray: true
+              },
+              edit: {
+                method: 'PUT',
+                params: {id: ''}
+              },
+              remove: {
+                method: 'DELETE',
+                params: {id: ''},
+                isArray: true
+              },
+              search: {
+                method: 'POST',
+                params: {id: '', action: 'searchPaigeUser', fields: 'role'},
+                isArray: true
               }
+            }
           );
 
 
           var Containers = $resource(
               config.host + '/node/:id/container',
-              {},
-              {
-                get: {
-                  method: 'GET',
-                  params: {id: ''},
-                  isArray: true
-                }
+            {},
+            {
+              get: {
+                method: 'GET',
+                params: {id: ''},
+                isArray: true
               }
+            }
           );
 
 
           var Parents = $resource(
               config.host + '/parent',
-              {},
-              {
-                get: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                }
+            {},
+            {
+              get: {
+                method: 'GET',
+                params: {},
+                isArray: true
               }
+            }
           );
 
 
           var Members = $resource(
               config.host + '/network/:id/members/:mid',
-              {},
-              {
-                query: {
-                  method: 'GET',
-                  params: {id: '', fields: '[role, settingsWebPaige, PhoneAddresses]'},
-                  isArray: true
-                },
-                get: {
-                  method: 'GET',
-                  params: {id: ''}
-                },
-                save: {
-                  method: 'POST',
-                  params: {}
-                },
-                add: {
-                  method: 'POST',
-                  params: {id: '', mid: ''}
-                },
-                remove: {
-                  method: 'DELETE',
-                  params: {id: '', mid: ''}
-                }
+            {},
+            {
+              query: {
+                method: 'GET',
+                params: {id: '', fields: '[role, settingsWebPaige, PhoneAddresses]'},
+                isArray: true
+              },
+              get: {
+                method: 'GET',
+                params: {id: ''}
+              },
+              save: {
+                method: 'POST',
+                params: {}
+              },
+              add: {
+                method: 'POST',
+                params: {id: '', mid: ''}
+              },
+              remove: {
+                method: 'DELETE',
+                params: {id: '', mid: ''}
               }
+            }
           );
 
 
@@ -106,38 +104,38 @@ define(
            */
           var Guards = $resource(
               config.host + '/network/guard/:id/:team',
-              {},
-              {
-                global: {
-                  method: 'GET',
-                  isArray: true
-                },
-                position: {
-                  method: 'GET',
-                  params: {id: '', team: ''}
-                }
+            {},
+            {
+              global: {
+                method: 'GET',
+                isArray: true
+              },
+              position: {
+                method: 'GET',
+                params: {id: '', team: ''}
               }
+            }
           );
 
 
           /**
            * Get current smart alarming guard data
            */
-          Groups.prototype.guardMonitor = function ()
-          {
+          Groups.prototype.guardMonitor = function () {
             var deferred = $q.defer();
 
             var guard = angular.fromJson(Storage.get('guard')) || {};
 
             Guards.global(
               null,
-              function (result)
-              {
+              function (result) {
                 var returned = '';
 
                 angular.forEach(
                   result[0],
-                  function (chr) { returned += chr }
+                  function (chr) {
+                    returned += chr
+                  }
                 );
 
                 guard.monitor = returned;
@@ -148,8 +146,7 @@ define(
 
                 deferred.resolve(returned);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -161,10 +158,9 @@ define(
           /**
            * Get guard role for smart alarming
            */
-          Groups.prototype.guardRole = function ()
-          {
+          Groups.prototype.guardRole = function () {
             var deferred = $q.defer(),
-                _this = this;
+              _this = this;
 
             _this.guard = angular.fromJson(Storage.get('guard'));
 
@@ -173,8 +169,7 @@ define(
                 id: _this.guard.monitor,
                 team: 'status'
               },
-              function (results)
-              {
+              function (results) {
                 var members = angular.fromJson(Storage.get('members'));
 
                 _this.guard.synced = new Date().getTime();
@@ -183,23 +178,19 @@ define(
 
                 angular.forEach(
                   results.station,
-                  function (user)
-                  {
+                  function (user) {
                     var _member;
 
-                    if (user[0] != 'agent' || user[1] != 'state')
-                    {
+                    if (user[0] != 'agent' || user[1] != 'state') {
                       _member = {
                         name: (members && members[user[0]] && members[user[0]].name) || user[0],
                         state: user[1]
                       };
 
-                      if (members[user[0]])
-                      {
+                      if (members[user[0]]) {
                         _member.role = members[user[0]].resources.role;
                       }
-                      else
-                      {
+                      else {
                         _member.role = '0';
                       }
 
@@ -214,19 +205,15 @@ define(
 
                 angular.forEach(
                   results.selection,
-                  function (selected, id)
-                  {
+                  function (selected, id) {
                     _this.guard.selection[id] = { user: selected.agentID };
 
-                    if (selected.agentID != null)
-                    {
+                    if (selected.agentID != null) {
                       _this.guard.truck.push(selected.agentID);
                     }
 
-                    if ($location.path() != '/tv')
-                    {
-                      if (selected.agentID == $rootScope.app.resources.uuid)
-                      {
+                    if ($location.path() != '/tv') {
+                      if (selected.agentID == $rootScope.app.resources.uuid) {
                         _this.guard.role = results.map[id].name;
                       }
                     }
@@ -235,8 +222,7 @@ define(
 
                 angular.forEach(
                   results.map,
-                  function (mapped, id)
-                  {
+                  function (mapped, id) {
                     _this.guard.selection[id].role = mapped.name;
                   }
                 );
@@ -249,10 +235,8 @@ define(
 
                 angular.forEach(
                   _this.guard.users,
-                  function (user, id)
-                  {
-                    if (_this.guard.truck.indexOf(id) == - 1)
-                    {
+                  function (user, id) {
+                    if (_this.guard.truck.indexOf(id) == -1) {
                       var obj = {};
                       obj[id] = user;
 
@@ -265,8 +249,7 @@ define(
 
                 deferred.resolve(_this.guard);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -278,32 +261,25 @@ define(
           /**
            * Get parent group data
            */
-          Groups.prototype.parents = function (all)
-          {
+          Groups.prototype.parents = function (all) {
             var deferred = $q.defer();
 
             Parents.get(
               null,
-              function (result)
-              {
-                if (! all)
-                {
-                  if (result.length == 0)
-                  {
+              function (result) {
+                if (!all) {
+                  if (result.length == 0) {
                     deferred.resolve(null);
                   }
-                  else
-                  {
+                  else {
                     deferred.resolve(result[0].uuid);
                   }
                 }
-                else
-                {
+                else {
                   deferred.resolve(result);
                 }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -316,26 +292,25 @@ define(
            * TODO: (Extract only the groups which are in the local list)
            * Get container (parent) group data
            */
-          Groups.prototype.containers = function (id)
-          {
+          Groups.prototype.containers = function (id) {
             var deferred = $q.defer(),
-                cons = [];
+              cons = [];
 
             Containers.get(
               { id: id },
-              function (result)
-              {
+              function (result) {
                 /**
                  * Group save call returns only uuid and that is parsed as json
                  * by angular, this is a fix for converting returned object to plain string
                  */
                 angular.forEach(
                   result,
-                  function (_r)
-                  {
+                  function (_r) {
                     var returned = [];
 
-                    angular.forEach(_r, function (chr) { returned += chr });
+                    angular.forEach(_r, function (chr) {
+                      returned += chr
+                    });
 
                     cons.push(returned);
                   }
@@ -343,8 +318,7 @@ define(
 
                 deferred.resolve(cons);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -356,8 +330,7 @@ define(
           /**
            * Add Member to a group
            */
-          Groups.prototype.addMember = function (candidate)
-          {
+          Groups.prototype.addMember = function (candidate) {
             var deferred = $q.defer();
 
             Members.add(
@@ -366,12 +339,10 @@ define(
                 mid: candidate.id
               },
               {},
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -383,8 +354,7 @@ define(
           /**
            * Remove member from group
            */
-          Groups.prototype.removeMember = function (memberId, groupId)
-          {
+          Groups.prototype.removeMember = function (memberId, groupId) {
             var deferred = $q.defer();
 
             Members.remove(
@@ -392,12 +362,10 @@ define(
                 id: groupId,
                 mid: memberId
               },
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -409,17 +377,14 @@ define(
           /**
            * Remove members from a group (bulk action)
            */
-          Groups.prototype.removeMembers = function (selection, group)
-          {
+          Groups.prototype.removeMembers = function (selection, group) {
             var deferred = $q.defer(),
-                calls = [];
+              calls = [];
 
             angular.forEach(
               selection,
-              function (value, id)
-              {
-                if (value)
-                {
+              function (value, id) {
+                if (value) {
                   calls.push(Groups.prototype.removeMember(id, group.uuid));
                 }
               }
@@ -427,17 +392,18 @@ define(
 
             $q.all(calls)
               .then(
-              function (result) { deferred.resolve(result) }
+              function (result) {
+                deferred.resolve(result)
+              }
             );
 
             return deferred.promise;
           };
 
 
-          Groups.prototype.wish = function (id)
-          {
+          Groups.prototype.wish = function (id) {
             var deferred = $q.defer(),
-                count = 0;
+              count = 0;
 
             Slots.wishes(
               {
@@ -445,16 +411,13 @@ define(
                 start: 255600,
                 end: 860400
               }).then(
-              function (results)
-              {
+              function (results) {
                 angular.forEach(
                   results,
-                  function (slot)
-                  {
+                  function (slot) {
                     if (slot.start == 255600 &&
-                        slot.end == 860400 &&
-                        slot.count != null)
-                    {
+                      slot.end == 860400 &&
+                      slot.count != null) {
                       count = slot.count;
                     }
                   }
@@ -471,35 +434,35 @@ define(
           /**
            * General query function from groups and their members
            */
-          Groups.prototype.query = function (only)
-          {
+          Groups.prototype.query = function (only) {
             var deferred = $q.defer();
 
             Groups.query(
-              function (groups)
-              {
+              function (groups) {
                 angular.forEach(
                   groups,
-                  function (group) { group.name = Strings.toTitleCase(group.name) }
+                  function (group) {
+                    group.name = Strings.toTitleCase(group.name)
+                  }
                 );
 
                 Storage.add('groups', angular.toJson(groups));
 
-                if (! only)
-                {
+                if (!only) {
                   var calls = [];
 
                   angular.forEach(
                     groups,
-                    function (group) { calls.push(Groups.prototype.get(group.uuid)) }
+                    function (group) {
+                      calls.push(Groups.prototype.get(group.uuid))
+                    }
                   );
 
                   //              calls.push(Groups.prototype.get('all'));
 
                   $q.all(calls)
                     .then(
-                    function (results)
-                    {
+                    function (results) {
                       Groups.prototype.uniqueMembers();
 
                       var data = {};
@@ -508,18 +471,15 @@ define(
 
                       angular.forEach(
                         groups,
-                        function (group)
-                        {
+                        function (group) {
                           data.groups = groups;
 
                           data.members[group.uuid] = [];
 
                           angular.forEach(
                             results,
-                            function (result)
-                            {
-                              if (result.id == group.uuid)
-                              {
+                            function (result) {
+                              if (result.id == group.uuid) {
                                 data.members[group.uuid] = result.data;
                               }
                             }
@@ -531,13 +491,11 @@ define(
                     }
                   );
                 }
-                else
-                {
+                else {
                   deferred.resolve(groups);
                 }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -549,14 +507,12 @@ define(
           /**
            * Get group data
            */
-          Groups.prototype.get = function (id)
-          {
+          Groups.prototype.get = function (id) {
             var deferred = $q.defer();
 
             Members.query(
               { id: id },
-              function (result)
-              {
+              function (result) {
                 /**
                  * DIRTY CHECK!
                  *
@@ -566,13 +522,11 @@ define(
                 var returned;
 
                 if (result.length == 4 &&
-                    result[0][0] == 'n' &&
-                    result[1][0] == 'u')
-                {
+                  result[0][0] == 'n' &&
+                  result[1][0] == 'u') {
                   returned = [];
                 }
-                else
-                {
+                else {
                   returned = result;
                 }
 
@@ -585,8 +539,7 @@ define(
                   }
                 );
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -598,20 +551,16 @@ define(
           /**
            * Make an unique list of members
            */
-          Groups.prototype.uniqueMembers = function ()
-          {
+          Groups.prototype.uniqueMembers = function () {
             angular.forEach(
               angular.fromJson(Storage.get('groups')),
-              function (group)
-              {
+              function (group) {
                 var members = angular.fromJson(Storage.get('members')) || {};
 
                 angular.forEach(
                   angular.fromJson(Storage.get(group.uuid)),
-                  function (member)
-                  {
-                    if (member.resources.role != 0 && member.resources.role != 4)
-                    {
+                  function (member) {
+                    if (member.resources.role != 0 && member.resources.role != 4) {
                       members[member.uuid] = member;
                     }
                   }
@@ -628,32 +577,27 @@ define(
           /**
            * Save group
            */
-          Groups.prototype.save = function (group)
-          {
+          Groups.prototype.save = function (group) {
             var deferred = $q.defer();
 
             /**
              * Check if group id supplied
              * if save submitted from add / edit form
              */
-            if (group.id)
-            {
+            if (group.id) {
               Groups.edit(
                 { id: group.id },
                 { name: group.name },
-                function ()
-                {
+                function () {
                   deferred.resolve(group.id);
                 }
               );
             }
-            else
-            {
+            else {
               Groups.save(
                 { id: $rootScope.app.resources.uuid },
                 group,
-                function (result)
-                {
+                function (result) {
                   /**
                    * Group save call returns only uuid and that is parsed as json
                    * by angular, this is a fix for converting returned object to plain string
@@ -666,10 +610,8 @@ define(
 
                   angular.forEach(
                     result[0],
-                    function (chr)
-                    {
-                      if (chr.length == 1 && ! angular.isObject(chr))
-                      {
+                    function (chr) {
+                      if (chr.length == 1 && !angular.isObject(chr)) {
                         returned += chr;
                       }
                     }
@@ -677,8 +619,7 @@ define(
 
                   deferred.resolve(returned);
                 },
-                function (error)
-                {
+                function (error) {
                   deferred.resolve({error: error});
                 }
               );
@@ -691,18 +632,15 @@ define(
           /**
            * Delete group
            */
-          Groups.prototype.remove = function (id)
-          {
+          Groups.prototype.remove = function (id) {
             var deferred = $q.defer();
 
             Groups.remove(
               { id: id },
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -714,23 +652,20 @@ define(
           /**
            * Search candidate members
            */
-          Groups.prototype.search = function (query)
-          {
+          Groups.prototype.search = function (query) {
             var deferred = $q.defer();
 
             Groups.search(
               null,
               { key: query },
-              function (results)
-              {
+              function (results) {
                 var processed = [];
 
                 results.sort(
-                  function (a, b)
-                  {
+                  function (a, b) {
                     var aName = a.name.toLowerCase();
                     var bName = b.name.toLowerCase();
-                    if (aName < bName) return - 1;
+                    if (aName < bName) return -1;
                     if (aName > bName) return 1;
                     return 0;
                   }
@@ -738,8 +673,7 @@ define(
 
                 angular.forEach(
                   results,
-                  function (result)
-                  {
+                  function (result) {
                     processed.push(
                       {
                         id: result.id,
@@ -753,8 +687,7 @@ define(
 
                 deferred.resolve(processed);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -766,23 +699,19 @@ define(
           /**
            * Get groups of given member
            */
-          Groups.prototype.getMemberGroups = function (id)
-          {
+          Groups.prototype.getMemberGroups = function (id) {
             var groups = angular.fromJson(Storage.get('groups')),
-                memberGroups = [];
+              memberGroups = [];
 
             angular.forEach(
               groups,
-              function (group)
-              {
+              function (group) {
                 var localGroup = angular.fromJson(Storage.get(group.uuid));
 
                 angular.forEach(
                   localGroup,
-                  function (member)
-                  {
-                    if (member.uuid === id)
-                    {
+                  function (member) {
+                    if (member.uuid === id) {
                       memberGroups.push(
                         {
                           uuid: group.uuid,

@@ -1,24 +1,25 @@
 define(
   ['directives/directives'],
-  function (directives)
-  {
+  function (directives) {
     'use strict';
 
     // Chosen multiple selection
     directives.directive(
       'chosen',
-      function ()
-      {
-        var linker = function (scope, element)
-        {
+      function () {
+        var linker = function (scope, element) {
           scope.$watch(
             'receviersList',
-            function () { element.trigger('liszt:updated') }
+            function () {
+              element.trigger('liszt:updated')
+            }
           );
 
           scope.$watch(
             'message.receviers',
-            function () { angular.element(element[0]).trigger('liszt:updated') }
+            function () {
+              angular.element(element[0]).trigger('liszt:updated')
+            }
           );
 
           element.chosen();
@@ -34,8 +35,7 @@ define(
     // Upload images
     directives.directive(
       'uploader', [
-        function ()
-        {
+        function () {
           return {
             restrict: 'E',
             scope: {
@@ -43,32 +43,30 @@ define(
             },
             controller: [
               '$scope', '$rootScope', 'Session' ,
-              function ($scope, $rootScope, Session)
-              {
+              function ($scope, $rootScope, Session) {
                 $scope.progress = 0;
                 $scope.avatar = '';
                 $scope.uploadLabel = $rootScope.ui.profile.click2upload;
 
                 var session = Session.get();
 
-                if (session)
-                {
+                if (session) {
                   $scope.sessionId = session;
                 }
 
-                $scope.sendFile = function (el)
-                {
+                $scope.sendFile = function (el) {
                   var $form = angular.element(el).parents('form');
 
-                  if (angular.element(el).val() == '')
-                  {
+                  if (angular.element(el).val() == '') {
                     return false;
                   }
 
                   $form.attr('action', $scope.action);
 
                   $scope.$apply(
-                    function () { $scope.progress = 0 }
+                    function () {
+                      $scope.progress = 0
+                    }
                   );
 
                   $form.ajaxSubmit(
@@ -77,50 +75,44 @@ define(
                       headers: {
                         'X-SESSION_ID': $scope.sessionId
                       },
-                      uploadProgress: function (event, position, total, percentComplete)
-                      {
+                      uploadProgress: function (event, position, total, percentComplete) {
                         $scope.$apply(
-                          function () { $scope.progress = percentComplete;}
+                          function () {
+                            $scope.progress = percentComplete;
+                          }
                         );
                       },
-                      error: function (event, statusText, responseText, form)
-                      {
+                      error: function (event, statusText, responseText, form) {
                         $form.removeAttr('action');
 
                         console.log('response : ', responseText);
                       },
-                      success: function (responseText, statusText, xhr, form)
-                      {
+                      success: function (responseText, statusText, xhr, form) {
                         var ar = angular.element(el).val().split('\\'),
-                            filename = ar[ar.length - 1];
+                          filename = ar[ar.length - 1];
 
                         $form.removeAttr('action');
 
                         $scope.$apply(
-                          function ()
-                          {
+                          function () {
                             $scope.avatar = filename;
 
                             console.log($scope, $scope.$parent.data.uuid);
 
-                            if ($scope.$parent.data.clientId)
-                            {
+                            if ($scope.$parent.data.clientId) {
                               $scope.$parent.$root.avatarChange($scope.$parent.data.clientId);
                             }
-                            else if ($scope.$parent.data.uuid)
-                            {
+                            else if ($scope.$parent.data.uuid) {
                               $scope.$parent.$root.avatarChange($scope.$parent.data.uuid);
                             }
 
                             var avatarType = '';
                             var avatarTagStyle = $('.roundedPicLarge').attr('style');
                             var size = 0;
-                            try
-                            {
+                            try {
                               size = parseInt(avatarTagStyle.split('?')[1].split('&')[0].split('=')[1], 10);
                             }
-                            catch (e)
-                            {
+                            catch (e) {
                               console.log(e);
                             }
 
@@ -135,10 +127,11 @@ define(
                 };
               }
             ],
-            link: function (scope, elem, attrs, ctrl)
-            {
+            link: function (scope, elem, attrs, ctrl) {
               elem.find('.fake-uploader').click(
-                function () { elem.find('input[type="file"]').click() }
+                function () {
+                  elem.find('input[type="file"]').click()
+                }
               );
             },
             replace: false,
@@ -151,8 +144,7 @@ define(
     // TODO: Check whether it is being used.
     directives.directive(
       'profile', [
-        function ()
-        {
+        function () {
           return {
             restrict: 'E',
             scope: {
@@ -160,13 +152,12 @@ define(
             },
             controller: [
               '$scope',
-              function ($scope)
-              {
-                $scope.loadMember = function (el) {}
+              function ($scope) {
+                $scope.loadMember = function (el) {
+                }
               }
             ],
-            link: function (scope, elem, attrs, ctrl)
-            {
+            link: function (scope, elem, attrs, ctrl) {
               console.log('profile directive ->', attrs.memberId);
             },
             replace: false,
@@ -180,18 +171,16 @@ define(
     // TODO: Is it really needed? Maybe use ng-submit
     directives.directive(
       'ngenter',
-      function ()
-      {
-        return function (scope, element, attrs)
-        {
+      function () {
+        return function (scope, element, attrs) {
           element.bind(
             'keydown keypress',
-            function (event)
-            {
-              if (event.which === 13)
-              {
+            function (event) {
+              if (event.which === 13) {
                 scope.$apply(
-                  function () { scope.$eval(attrs.ngenter) }
+                  function () {
+                    scope.$eval(attrs.ngenter)
+                  }
                 );
 
                 event.preventDefault();
@@ -204,10 +193,8 @@ define(
 
     // Setup the background image
     directives.directive(
-      'backImg', function ()
-      {
-        return function (scope, element, attrs)
-        {
+      'backImg', function () {
+        return function (scope, element, attrs) {
           var url = attrs.backImg;
           element.css(
             {
@@ -221,15 +208,12 @@ define(
 
     directives.directive(
       'linkIconHovered',
-      function ()
-      {
+      function () {
         return {
-          link: function (scope, element, attrs)
-          {
+          link: function (scope, element, attrs) {
             element.parent().bind(
               'mouseenter',
-              function ()
-              {
+              function () {
                 element.removeClass('icon-link');
                 element.addClass('icon-link2');
               }
@@ -237,8 +221,7 @@ define(
 
             element.parent().bind(
               'mouseleave',
-              function ()
-              {
+              function () {
                 element.removeClass('icon-link2');
                 element.addClass('icon-link');
               }

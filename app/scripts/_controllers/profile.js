@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
@@ -20,9 +19,7 @@ define(
         '$filter',
         'TeamUp',
         '$timeout',
-        function ($rootScope, $scope, $q, $location, $window, $route, data, Store, Teams,
-                  Dater, $filter, TeamUp, $timeout)
-        {
+        function ($rootScope, $scope, $q, $location, $window, $route, data, Store, Teams, Dater, $filter, TeamUp, $timeout) {
           $rootScope.fixStyles();
 
           $scope.self = this;
@@ -49,14 +46,11 @@ define(
 
           angular.forEach(
             $scope.profilemeta.teamUuids,
-            function (teamId)
-            {
+            function (teamId) {
               angular.forEach(
                 $scope.selectTeams,
-                function (team)
-                {
-                  if (team.uuid == teamId)
-                  {
+                function (team) {
+                  if (team.uuid == teamId) {
                     teams.push(team);
                   }
                 }
@@ -64,14 +58,11 @@ define(
             }
           );
 
-          if (teams.length == 0)
-          {
+          if (teams.length == 0) {
             angular.forEach(
               $scope.selectTeams,
-              function (team)
-              {
-                if (team.uuid == sessionStorage.getItem(data.uuid + '_team'))
-                {
+              function (team) {
+                if (team.uuid == sessionStorage.getItem(data.uuid + '_team')) {
                   teams.push(team);
                 }
               }
@@ -87,8 +78,7 @@ define(
 
           setView($location.hash());
 
-          function setView (hash)
-          {
+          function setView(hash) {
             $scope.views = {
               profile: false,
               edit: false,
@@ -100,12 +90,10 @@ define(
             $scope.views.user = (($rootScope.app.resources.uuid == $route.current.params.userId));
           }
 
-          $scope.setViewTo = function (hash)
-          {
+          $scope.setViewTo = function (hash) {
             $scope.$watch(
               $location.hash(),
-              function ()
-              {
+              function () {
                 $location.hash(hash);
 
                 setView(hash);
@@ -114,33 +102,26 @@ define(
           };
 
           // Save a profile
-          $scope.save = function (resources)
-          {
+          $scope.save = function (resources) {
             // let user know that user need to re-relogin if the login-user's role is changed.
-            if ($scope.currentRole != resources.role && $rootScope.app.resources.uuid == resources.uuid)
-            {
-              if (! confirm($rootScope.ui.profile.roleChangePrompt))
-              {
+            if ($scope.currentRole != resources.role && $rootScope.app.resources.uuid == resources.uuid) {
+              if (!confirm($rootScope.ui.profile.roleChangePrompt)) {
                 return;
               }
             }
 
             // check if the member is belong to any team, warn user to put his/herself to a team
-            if (resources.teamUuids == null || typeof resources.teamUuids[0] == 'undefined')
-            {
+            if (resources.teamUuids == null || typeof resources.teamUuids[0] == 'undefined') {
               resources.teamUuids = [];
 
-              if ($scope.teams.length == 0)
-              {
+              if ($scope.teams.length == 0) {
                 //resources.teamUuids.push($scope.selectTeams[0].uuid);
                 resources.teamUuids.push(sessionStorage.getItem(resources.uuid + '_team'));
               }
-              else
-              {
+              else {
                 resources.teamUuids.push($scope.teams[0].uuid);
               }
-              if (resources.teamUuids[0] == null)
-              {
+              if (resources.teamUuids[0] == null) {
                 $rootScope.notifier.error($rootScope.ui.profile.specifyTeam);
                 return;
               }
@@ -149,12 +130,10 @@ define(
             $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
             // deal with birthday
-            try
-            {
+            try {
               resources.birthDate = Dater.convert.absolute(resources.birthday, 0);
             }
-            catch (error)
-            {
+            catch (error) {
               console.log(error);
               $rootScope.notifier.error($rootScope.ui.teamup.birthdayError);
 
@@ -171,15 +150,12 @@ define(
               },
               resources
             ).then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error('Error with saving profile information.');
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
                   TeamUp._(
@@ -188,25 +164,20 @@ define(
                       third: $route.current.params.userId
                     },
                     null,
-                    function (resources)
-                    {
-                      if ($route.current.params.userId == $rootScope.app.resources.uuid)
-                      {
+                    function (resources) {
+                      if ($route.current.params.userId == $rootScope.app.resources.uuid) {
                         $rootScope.app.resources = result;
 
                         Store('app').save('resources', resources);
                       }
                     }
                   ).then(
-                    function (data)
-                    {
-                      if (data.error)
-                      {
+                    function (data) {
+                      if (data.error) {
                         $rootScope.notifier.error('Error with getting profile data.');
                         console.warn('error ->', data);
                       }
-                      else
-                      {
+                      else {
                         $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
 
                         $scope.data = data;
@@ -219,15 +190,13 @@ define(
                         resources.birthday = $filter('nicelyDate')(resources.birthDate);
 
                         // will logout if the role is changed for the user him/her-self.
-                        if ($scope.currentRole != resources.role && $rootScope.app.resources.uuid == $route.current.params.userId)
-                        {
+                        if ($scope.currentRole != resources.role && $rootScope.app.resources.uuid == $route.current.params.userId) {
                           $rootScope.nav("logout");
                         }
 
                         // refresh the teams in the background
                         angular.forEach(
-                          resources.teamUuids, function (teamId)
-                          {
+                          resources.teamUuids, function (teamId) {
                             // FIXME: Message is not absent in localization file so turned off
                             // $rootScope.statusBar.display($rootScope.ui.profile.refreshTeam);
 
@@ -235,7 +204,9 @@ define(
                               false,
                               { uuid: teamId }
                             ).then(
-                              function () { $rootScope.statusBar.off() }
+                              function () {
+                                $rootScope.statusBar.off()
+                              }
                             );
                           }
                         );
@@ -247,28 +218,26 @@ define(
             );
           };
 
-          $scope.editProfile = function () { setView('edit') };
+          $scope.editProfile = function () {
+            setView('edit')
+          };
 
           // Change an avatar
-          $scope.editImg = function ()
-          {
+          $scope.editImg = function () {
             $scope.uploadURL = $scope.imgHost + $scope.ns + "/team/member/" + $route.current.params.userId + "/photo?square=true";
             $scope.setViewTo('editImg');
           };
 
-          $scope.confirmDeleteProfile = function ()
-          {
+          $scope.confirmDeleteProfile = function () {
             $timeout(
-              function ()
-              {
+              function () {
                 angular.element('#confirmProfileModal').modal('show');
               }
             );
           };
 
           // Remove a profile completely
-          $scope.deleteProfile = function ()
-          {
+          $scope.deleteProfile = function () {
             angular.element('#confirmProfileModal').modal('hide');
 
             $rootScope.statusBar.display($rootScope.ui.teamup.deletingMember);
@@ -277,37 +246,39 @@ define(
               'memberDelete',
               { third: $scope.profilemeta.uuid }
             ).then(
-              function (result)
-              {
-                if (result.uuid)
-                {
+              function (result) {
+                if (result.uuid) {
                   $rootScope.notifier.success($rootScope.ui.teamup.dataChanged);
 
                   angular.forEach(
-                    $scope.profilemeta.teamUuids, function (teamId, i)
-                    {
+                    $scope.profilemeta.teamUuids, function (teamId, i) {
                       $rootScope.statusBar.display($rootScope.ui.teamup.refreshing);
 
                       Teams.query(
                         false,
                         { 'uuid': teamId }
                       ).then(
-                        function () { $rootScope.statusBar.off() }
+                        function () {
+                          $rootScope.statusBar.off()
+                        }
                       );
                     });
 
                   TeamUp._('teamMemberFree')
                     .then(
-                    function (result)
-                    {
+                    function (result) {
                       Store('app').save('members', result);
 
                       $rootScope.statusBar.off();
                     },
-                    function (error) { console.log(error) }
+                    function (error) {
+                      console.log(error)
+                    }
                   );
                 }
-              }, function (error) { console.log(error) }
+              }, function (error) {
+                console.log(error)
+              }
             );
           };
         }

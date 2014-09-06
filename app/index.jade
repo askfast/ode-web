@@ -13,38 +13,20 @@ block watermark
 
 
 
-block navbar_original
-	.navbar.navbar-inverse.navbar-fixed-top
-		.container
-			button.navbar-toggle(type='button', data-toggle='collapse', data-target='.bs-navbar-collapse')
-				span.icon-bar
-				span.icon-bar
-				span.icon-bar
-			a.navbar-brand(href='#/home') Home
-			.nav-collapse.collapse.bs-navbar-collapse
-				ul.nav.navbar-nav
-					li
-						a(href='#/partial1') Partial1
-					li
-						a(href='#/partial2') Partial2
-
-
 block navbar
 	.navbar.navbar-inverse.navbar-fixed-top.ng-cloak(
-	ng-hide='(location=="login" || location=="forgotpass" || location=="register")',
-	bs-navbar='')
+  ng-hide='(location=="login" || location=="forgotpass" || location=="register")',
+  bs-navbar='')
 		.navbar-inner
 			.container-fluid
-				button.navbar-toggle(type='button',
-				data-toggle='collapse',
-				data-target='.bs-navbar-collapse')
+				a.btn.btn-navbar(data-toggle='collapse',
+        data-target='.nav-collapse')
 					span.icon-bar
 					span.icon-bar
 					span.icon-bar
-					// span.icon-bar {{ui.message.messages}}
-				a.navbar-brand(ng-click='') StandBy
-				.navbar-collapse.collapse
-					ul.nav.navbar-nav
+				a.brand(href='#dashboard') StandBy
+				#collapsed.nav-collapse.collapse
+					ul.nav
 						li(data-match-route='/dashboard')
 							a(href='#dashboard', ng-click='collapseNav()') Dashboard
 						li(data-match-route='/planboard')
@@ -56,8 +38,7 @@ block navbar
 								| {{app.unreadMessages}}
 						li(data-match-route='/groups', ng-hide='app.resources.role > 1')
 							a(href='#groups') {{ui.groups.groups}}
-
-					ul.nav.pull-right(ng-hide='browser.mobile', style='display:none')
+					ul.nav.pull-right(ng-hide='browser.mobile')
 						li
 							a(href='#faq#web')
 								i.icon-question-sign.icon-white
@@ -89,7 +70,6 @@ block navbar
 						li#fullscreener(ng-show='config.fullscreen && browser.webkit')
 							a(ng-click='fullScreen()')
 								i.icon-fullscreen.icon-white
-
 					ul.nav.pull-right(ng-show='browser.mobile',
 					style='{{(browser.landscape) && "margin-right:-20px"}}; display:none')
 						li

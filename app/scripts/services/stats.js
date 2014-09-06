@@ -1,78 +1,66 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Stats',
       [
-        function ()
-        {
+        function () {
           return {
             /**
              * Group agg stats
              */
-            aggs: function (data, start, end)
-            {
+            aggs: function (data, start, end) {
               var stats = {
-                    less: 0,
-                    even: 0,
-                    more: 0
-                  },
-                  durations = {
-                    less: 0,
-                    even: 0,
-                    more: 0,
-                    total: 0
-                  },
-                  total = 0;
+                  less: 0,
+                  even: 0,
+                  more: 0
+                },
+                durations = {
+                  less: 0,
+                  even: 0,
+                  more: 0,
+                  total: 0
+                },
+                total = 0;
 
               angular.forEach(
                 data,
-                function (slot)
-                {
+                function (slot) {
                   var slotStart = slot.start;
 
-                  if (slotStart < start)
-                  {
+                  if (slotStart < start) {
                     slotStart = start;
                   }
 
                   var slotEnd = slot.end;
 
-                  if (slotEnd > end)
-                  {
+                  if (slotEnd > end) {
                     slotEnd = end;
                   }
 
                   var slotDiff = slotEnd - slotStart;
 
-                  if (slot.diff < 0)
-                  {
+                  if (slot.diff < 0) {
                     stats.less += slotDiff;
                   }
-                  else if (slot.diff == 0)
-                  {
+                  else if (slot.diff == 0) {
                     stats.even += slotDiff;
                   }
-                  else
-                  {
+                  else {
                     stats.more += slotDiff;
                   }
                   ;
                   total += slotDiff;
 
-                  if (slot.diff < 0)
-                  {
+                  if (slot.diff < 0) {
                     durations.less += slotDiff;
                   }
-                  else if (slot.diff == 0)
-                  {
+                  else if (slot.diff == 0) {
                     durations.even += slotDiff;
                   }
-                  else
-                  {
+                  else {
                     durations.more += slotDiff;
                   }
 
@@ -95,45 +83,38 @@ define(
             /**
              * Group pie stats
              */
-            pies: function (data, start, end)
-            {
+            pies: function (data, start, end) {
               var stats = {
-                    less: 0,
-                    even: 0,
-                    more: 0
-                  },
-                  total = 0;
+                  less: 0,
+                  even: 0,
+                  more: 0
+                },
+                total = 0;
 
               angular.forEach(
                 data,
-                function (slot)
-                {
+                function (slot) {
                   var slotStart = slot.start;
 
-                  if (slotStart < start)
-                  {
+                  if (slotStart < start) {
                     slotStart = start;
                   }
 
                   var slotEnd = slot.end;
 
-                  if (slotEnd > end)
-                  {
+                  if (slotEnd > end) {
                     slotEnd = end;
                   }
 
                   var slotDiff = slotEnd - slotStart;
 
-                  if (slot.diff < 0)
-                  {
+                  if (slot.diff < 0) {
                     stats.less += slotDiff;
                   }
-                  else if (slot.diff == 0)
-                  {
+                  else if (slot.diff == 0) {
                     stats.even += slotDiff;
                   }
-                  else
-                  {
+                  else {
                     stats.more += slotDiff;
                   }
 
@@ -142,8 +123,7 @@ define(
               );
 
               // If the total is 0 that means there were not slots.
-              if (total == 0)
-              {
+              if (total == 0) {
                 total = end - start;
               }
 
@@ -157,38 +137,32 @@ define(
             /**
              * Member stats
              */
-            member: function (data, start, end)
-            {
+            member: function (data, start, end) {
               var stats = {},
-                  total = 0;
+                total = 0;
 
               angular.forEach(
                 data,
-                function (slot)
-                {
+                function (slot) {
                   // Make sure calculations only go over the period which is requested!
                   var slotStart = slot.start;
 
-                  if (slotStart < start)
-                  {
+                  if (slotStart < start) {
                     slotStart = start;
                   }
 
                   var slotEnd = slot.end;
 
-                  if (slotEnd > end)
-                  {
+                  if (slotEnd > end) {
                     slotEnd = end;
                   }
 
                   var delta = slotEnd - slotStart;
 
-                  if (stats[slot.text])
-                  {
+                  if (stats[slot.text]) {
                     stats[slot.text] += delta;
                   }
-                  else
-                  {
+                  else {
                     stats[slot.text] = delta;
                   }
 
@@ -199,8 +173,7 @@ define(
               // Based on the total requested period calculate the 'empty' time. And insert is as no planning.
               var totalDiff = (end - start) - total;
 
-              if (totalDiff > 0)
-              {
+              if (totalDiff > 0) {
                 stats["com.ask-cs.State.NoPlanning"] = totalDiff;
               }
 
@@ -212,8 +185,7 @@ define(
 
               angular.forEach(
                 stats,
-                function (stat, index)
-                {
+                function (stat, index) {
                   ratios.push(
                     {
                       state: index,

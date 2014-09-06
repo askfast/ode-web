@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
@@ -21,10 +20,7 @@ define(
         'Groups',
         'Announcer',
         '$timeout',
-        function (
-          $scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer, $timeout
-          )
-        {
+        function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer, $timeout) {
           $rootScope.notification.status = false;
 
           /**
@@ -71,15 +67,15 @@ define(
 
           angular.forEach(
             Storage.local.settings().app.widgets.groups,
-            function (value, group) { selection[group] = value }
+            function (value, group) {
+              selection[group] = value
+            }
           );
 
           angular.forEach(
             groups,
-            function (group)
-            {
-              if (! selection[group.uuid])
-              {
+            function (group) {
+              if (!selection[group.uuid]) {
                 selection[group.uuid] = {
                   divisions: ($rootScope.config.timeline.config.divisions.length > 0),
                   status: false
@@ -92,10 +88,8 @@ define(
 
           angular.forEach(
             groups,
-            function (group)
-            {
-              if (group.uuid != 'all')
-              {
+            function (group) {
+              if (group.uuid != 'all') {
                 filteredGroups.push(group);
               }
             }
@@ -107,18 +101,15 @@ define(
             divisions: ($rootScope.config.timeline.config.divisions.length > 0)
           };
 
-          $scope.checkAnyPies = function ()
-          {
+          $scope.checkAnyPies = function () {
             var ret = true;
 
             $scope.loading.pies = false;
 
             angular.forEach(
               Storage.local.settings().app.widgets.groups,
-              function (group)
-              {
-                if (group.status === true)
-                {
+              function (group) {
+                if (group.status === true) {
                   ret = false;
                 }
               }
@@ -134,25 +125,20 @@ define(
           /**
            * Get group overviews
            */
-          function getOverviews ()
-          {
+          function getOverviews() {
             $scope.loadingPies = true;
 
-            if (! $scope.checkAnyPies())
-            {
+            if (!$scope.checkAnyPies()) {
               Dashboard.pies()
                 .then(
-                function (pies)
-                {
+                function (pies) {
                   $scope.loadingPies = false;
 
-                  if (pies.error)
-                  {
+                  if (pies.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.dashboard.getOverviews);
                     console.warn('error ->', pies.error);
                   }
-                  else
-                  {
+                  else {
                     $scope.shortageHolders = {};
 
                     $scope.loading.pies = false;
@@ -164,46 +150,39 @@ define(
 
                     angular.forEach(
                       pies,
-                      function (pie)
-                      {
+                      function (pie) {
                         // Check whether if it is an array what data processor gives back
-                        if (pie.weeks.current.state instanceof Array)
-                        {
+                        if (pie.weeks.current.state instanceof Array) {
                           pie.weeks.current.state = pie.weeks.current.state[0];
                         }
 
                         if (pie.weeks.current.state.diff === null) pie.weeks.current.state.diff = 0;
                         if (pie.weeks.current.state.wish === null) pie.weeks.current.state.wish = 0;
 
-                        if (pie.weeks.current.state.wish == 0)
-                        {
+                        if (pie.weeks.current.state.wish == 0) {
                           pie.weeks.current.state.cls = 'disabled';
                         }
-                        else
-                        {
-                          if (pie.weeks.current.state.diff > 0)
-                          {
+                        else {
+                          if (pie.weeks.current.state.diff > 0) {
                             pie.weeks.current.state.cls = 'more';
                           }
-                          else if (pie.weeks.current.state.diff === 0)
-                          {
+                          else if (pie.weeks.current.state.diff === 0) {
                             pie.weeks.current.state.cls = 'even';
                           }
-                          else if (pie.weeks.current.state.diff < 0)
-                          {
+                          else if (pie.weeks.current.state.diff < 0) {
                             pie.weeks.current.state.cls = 'less';
                           }
                         }
 
                         pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
-                                                        new Date(pie.weeks.current.state.start * 1000)
-                                                          .toString($rootScope.config.formats.datetime) :
-                                                        $rootScope.ui.dashboard.possiblyAvailable;
+                          new Date(pie.weeks.current.state.start * 1000)
+                            .toString($rootScope.config.formats.datetime) :
+                          $rootScope.ui.dashboard.possiblyAvailable;
 
                         pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
-                                                      new Date(pie.weeks.current.state.end * 1000)
-                                                        .toString($rootScope.config.formats.datetime) :
-                                                      $rootScope.ui.dashboard.possiblyAvailable;
+                          new Date(pie.weeks.current.state.end * 1000)
+                            .toString($rootScope.config.formats.datetime) :
+                          $rootScope.ui.dashboard.possiblyAvailable;
 
                         pie.shortages = {
                           current: pie.weeks.current.shortages,
@@ -224,52 +203,43 @@ define(
                   }
                 })
                 .then(
-                function ()
-                {
+                function () {
                   angular.forEach(
                     $scope.pies,
-                    function (pie)
-                    {
+                    function (pie) {
                       pieMaker('weeklyPieCurrent-', pie.id + '-' + pie.division, pie.weeks.current.ratios);
                       pieMaker('weeklyPieNext-', pie.id + '-' + pie.division, pie.weeks.next.ratios);
                     }
                   );
 
-                  function pieMaker ($id, id, _ratios)
-                  {
+                  function pieMaker($id, id, _ratios) {
                     $timeout(
-                      function ()
-                      {
-                        if ($.browser.msie && $.browser.version == '8.0')
-                        {
+                      function () {
+                        if ($.browser.msie && $.browser.version == '8.0') {
                           $('#' + $id + id).html('');
                         }
-                        else
-                        {
-                          if (document.getElementById($id + id))
-                          {
+                        else {
+                          if (document.getElementById($id + id)) {
                             document.getElementById($id + id).innerHTML = '';
                           }
                         }
 
                         var ratios = [],
-                            colorMap = {
-                              more: '#6cad6c',
-                              // more: '#415e6b',
-                              even: '#e09131',
-                              // even: '#ba6a24',
-                              less: '#d34545'
-                              // less: '#a0a0a0'
-                            },
-                            colors = [],
-                            xratios = [];
+                          colorMap = {
+                            more: '#6cad6c',
+                            // more: '#415e6b',
+                            even: '#e09131',
+                            // even: '#ba6a24',
+                            less: '#d34545'
+                            // less: '#a0a0a0'
+                          },
+                          colors = [],
+                          xratios = [];
 
                         angular.forEach(
                           _ratios,
-                          function (ratio, index)
-                          {
-                            if (ratio !== 0)
-                            {
+                          function (ratio, index) {
+                            if (ratio !== 0) {
                               ratios.push(
                                 {
                                   ratio: ratio,
@@ -281,20 +251,20 @@ define(
                         );
 
                         ratios = ratios.sort(
-                          function (a, b) { return b.ratio - a.ratio }
+                          function (a, b) {
+                            return b.ratio - a.ratio
+                          }
                         );
 
                         angular.forEach(
                           ratios,
-                          function (ratio)
-                          {
+                          function (ratio) {
                             colors.push(ratio.color);
                             xratios.push(ratio.ratio);
                           }
                         );
 
-                        try
-                        {
+                        try {
                           new Raphael($id + id)
                             .piechart(
                             40, 40, 40,
@@ -305,8 +275,7 @@ define(
                             }
                           );
                         }
-                        catch (e)
-                        {
+                        catch (e) {
                           // console.warn(' Raphael error ->', e);
                         }
 
@@ -315,8 +284,7 @@ define(
                 }
               );
             }
-            else
-            {
+            else {
               $rootScope.statusBar.off();
             }
           }
@@ -325,14 +293,15 @@ define(
           /**
            * Get pie overviews
            */
-          $timeout(function () { getOverviews() }, 25);
+          $timeout(function () {
+            getOverviews()
+          }, 25);
 
 
           /**
            * Process Smart Alarm team members for view
            */
-          function prepareSaMembers (setup)
-          {
+          function prepareSaMembers(setup) {
             var cached = angular.fromJson(Storage.get('guard'));
 
             $scope.saMembers = {
@@ -344,17 +313,14 @@ define(
 
             angular.forEach(
               setup.selection,
-              function (selection)
-              {
-                function translateName (user)
-                {
+              function (selection) {
+                function translateName(user) {
                   return (user !== null) ?
-                         setup.users[user].name :
-                         $rootScope.ui.dashboard.notAssigned
+                    setup.users[user].name :
+                    $rootScope.ui.dashboard.notAssigned
                 }
 
-                switch (selection.role)
-                {
+                switch (selection.role) {
                   case 'bevelvoerder':
                     $scope.saMembers.truck.push(
                       {
@@ -432,15 +398,15 @@ define(
 
                 $rootScope.app.guard.role = setup.role;
 
-                if (setup.users[$rootScope.app.resources.uuid])
-                {
+                if (setup.users[$rootScope.app.resources.uuid]) {
                   $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
                 }
-                else
-                {
+                else {
                   Slots.currentState()
                     .then(
-                    function (state) { $rootScope.app.guard.currentState = state.label }
+                    function (state) {
+                      $rootScope.app.guard.currentState = state.label
+                    }
                   );
                 }
 
@@ -453,24 +419,20 @@ define(
 
                 angular.forEach(
                   states,
-                  function (state)
-                  {
+                  function (state) {
                     reserves[state] = [];
 
                     angular.forEach(
                       setup.reserves[state],
-                      function (member)
-                      {
+                      function (member) {
                         // console.log('member ->', member);
 
                         angular.forEach(
                           member,
-                          function (meta, userID)
-                          {
+                          function (meta, userID) {
                             // console.log('meta ->', meta);
 
-                            if (meta.role != 0)
-                            {
+                            if (meta.role != 0) {
                               reserves[state].push(
                                 {
                                   id: userID,
@@ -497,10 +459,8 @@ define(
           /**
            * Fetch smartAlarm information
            */
-          if ($rootScope.config.profile.smartAlarm)
-          {
-            if (angular.fromJson(Storage.get('guard')).selection)
-            {
+          if ($rootScope.config.profile.smartAlarm) {
+            if (angular.fromJson(Storage.get('guard')).selection) {
               $scope.loading.smartAlarm = false;
 
               prepareSaMembers(angular.fromJson(Storage.get('guard')));
@@ -508,11 +468,12 @@ define(
 
             Groups.guardMonitor()
               .then(
-              function ()
-              {
+              function () {
                 Groups.guardRole()
                   .then(
-                  function (setup) { prepareSaMembers(setup) }
+                  function (setup) {
+                    prepareSaMembers(setup)
+                  }
                 );
               }
             );
@@ -523,12 +484,10 @@ define(
 
           angular.forEach(
             groups,
-            function (group)
-            {
+            function (group) {
               group.name = group.name.replace(
                 /\w\S*/g,
-                function (name)
-                {
+                function (name) {
                   return name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
                 }
               );
@@ -560,10 +519,8 @@ define(
 
           $scope.divisions = $rootScope.config.timeline.config.divisions;
 
-          if ($rootScope.config.timeline.config.divisions.length > 0)
-          {
-            if ($scope.divisions[0].id !== 'all')
-            {
+          if ($rootScope.config.timeline.config.divisions.length > 0) {
+            if ($scope.divisions[0].id !== 'all') {
               $scope.divisions.unshift(
                 {
                   id: 'all',
@@ -583,15 +540,12 @@ define(
           /**
            * Get availability
            */
-          $scope.getAvailability = function (groupID, divisionID)
-          {
-            if (! groupID)
-            {
+          $scope.getAvailability = function (groupID, divisionID) {
+            if (!groupID) {
               groupID = $scope.current.group;
             }
 
-            if (! divisionID)
-            {
+            if (!divisionID) {
               divisionID = $scope.current.division;
             }
 
@@ -599,78 +553,63 @@ define(
               groupID,
               divisionID
             ).then(
-              function (results)
-              {
+              function (results) {
                 var ordered = {};
 
                 angular.forEach(
                   angular.fromJson(angular.toJson(results.members)),
-                  function (slots, id)
-                  {
+                  function (slots, id) {
                     if (members[id] &&
-                        (members[id].resources.role != 0 && members[id].resources.role != 4))
-                    {
+                      (members[id].resources.role != 0 && members[id].resources.role != 4)) {
                       var _member = {
                         id: id,
                         state: (slots.length > 0) ? slots[0].state : 'no-state',
                         label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
                         end: (slots.length > 0 && slots[0].end !== undefined) ?
-                             slots[0].end * 1000 :
-                             $rootScope.ui.dashboard.possiblyAvailable,
+                          slots[0].end * 1000 :
+                          $rootScope.ui.dashboard.possiblyAvailable,
                         name: (members && members[id]) ?
-                              members[id].resources.firstName + ' ' + members[id].resources.lastName :
-                              id
+                          members[id].resources.firstName + ' ' + members[id].resources.lastName :
+                          id
                       };
 
-                      if (slots.length > 0)
-                      {
-                        if (! ordered.available)
-                        {
+                      if (slots.length > 0) {
+                        if (!ordered.available) {
                           ordered.available = [];
                         }
 
-                        if (! ordered.unavailable)
-                        {
+                        if (!ordered.unavailable) {
                           ordered.unavailable = [];
                         }
 
-                        if (slots[0].state == 'com.ask-cs.State.Unreached')
-                        {
+                        if (slots[0].state == 'com.ask-cs.State.Unreached') {
                           ordered.unavailable.push(_member);
                         }
-                        else if (slots[0].state == 'com.ask-cs.State.Unavailable')
-                        {
+                        else if (slots[0].state == 'com.ask-cs.State.Unavailable') {
                           ordered.unavailable.push(_member);
                         }
-                        else
-                        {
-                          if (slots[0].state == 'com.ask-cs.State.Available')
-                          {
+                        else {
+                          if (slots[0].state == 'com.ask-cs.State.Available') {
                             _member.style = 'sa-icon-reserve-available';
                           }
 
-                          if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                          {
+                          if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarNoord') {
                             _member.style = 'sa-icon-reserve-available-north';
                           }
 
-                          if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                          {
+                          if (slots[0].state == 'com.ask-cs.State.KNRM.BeschikbaarZuid') {
                             _member.style = 'sa-icon-reserve-available-south';
                           }
 
-                          if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                          {
+                          if (slots[0].state == 'com.ask-cs.State.KNRM.SchipperVanDienst') {
                             _member.style = 'sa-icon-reserve-available-schipper';
                           }
 
                           ordered.available.push(_member);
                         }
                       }
-                      else
-                      {
-                        if (! ordered.possible)
-                        {
+                      else {
+                        if (!ordered.possible) {
                           ordered.possible = [];
                         }
 
@@ -682,28 +621,23 @@ define(
 
                 $scope.loadingAvailability = false;
 
-                var sortByEnd = function (a, b)
-                {
-                  if (a.end < b.end)
-                  {
-                    return - 1;
+                var sortByEnd = function (a, b) {
+                  if (a.end < b.end) {
+                    return -1;
                   }
 
-                  if (a.end > b.end)
-                  {
+                  if (a.end > b.end) {
                     return 1;
                   }
 
                   return 0;
                 };
 
-                if (ordered.hasOwnProperty('available'))
-                {
+                if (ordered.hasOwnProperty('available')) {
                   ordered.available.sort(sortByEnd);
                 }
 
-                if (ordered.hasOwnProperty('unavailable'))
-                {
+                if (ordered.hasOwnProperty('unavailable')) {
                   ordered.unavailable.sort(sortByEnd);
                 }
 
@@ -711,10 +645,8 @@ define(
 
                 angular.forEach(
                   ordered.available,
-                  function (available)
-                  {
-                    if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst')
-                    {
+                  function (available) {
+                    if (available.state == 'com.ask-cs.State.KNRM.SchipperVanDienst') {
                       _availables.push(available);
                     }
                   }
@@ -722,10 +654,8 @@ define(
 
                 angular.forEach(
                   ordered.available,
-                  function (available)
-                  {
-                    if (available.state == 'com.ask-cs.State.Available')
-                    {
+                  function (available) {
+                    if (available.state == 'com.ask-cs.State.Available') {
                       _availables.push(available);
                     }
                   }
@@ -733,10 +663,8 @@ define(
 
                 angular.forEach(
                   ordered.available,
-                  function (available)
-                  {
-                    if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord')
-                    {
+                  function (available) {
+                    if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarNoord') {
                       _availables.push(available);
                     }
                   }
@@ -744,10 +672,8 @@ define(
 
                 angular.forEach(
                   ordered.available,
-                  function (available)
-                  {
-                    if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid')
-                    {
+                  function (available) {
+                    if (available.state == 'com.ask-cs.State.KNRM.BeschikbaarZuid') {
                       _availables.push(available);
                     }
                   }
@@ -763,15 +689,13 @@ define(
             );
           };
 
-          $scope.getGroupAvailability = function ()
-          {
+          $scope.getGroupAvailability = function () {
             $scope.current.division = 'all';
 
             $scope.getAvailability($scope.current.group, $scope.current.division);
           };
 
-          $scope.getDivisionAvailability = function ()
-          {
+          $scope.getDivisionAvailability = function () {
             $scope.getAvailability($scope.current.group, $scope.current.division);
           };
 
@@ -780,16 +704,13 @@ define(
           /**
            * Save widget settings
            */
-          $scope.saveOverviewWidget = function (selection)
-          {
+          $scope.saveOverviewWidget = function (selection) {
             $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
             angular.forEach(
               selection,
-              function (selected)
-              {
-                if (! selected.status)
-                {
+              function (selected) {
+                if (!selected.status) {
                   selected.divisions = false;
                 }
               }
@@ -806,13 +727,14 @@ define(
                   }
                 }
               }).then(
-              function ()
-              {
+              function () {
                 $rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
                 Profile.get($rootScope.app.resources.uuid, true)
                   .then(
-                  function () { getOverviews() }
+                  function () {
+                    getOverviews()
+                  }
                 );
               }
             );
@@ -822,12 +744,10 @@ define(
           /**
            * Fetcher for p2000 alarm messages
            */
-          $scope.getP2000 = function ()
-          {
+          $scope.getP2000 = function () {
             Dashboard.p2000().
               then(
-              function (result)
-              {
+              function (result) {
                 $scope.loading.alerts = false;
 
                 $scope.alarms = result.alarms;
@@ -844,41 +764,36 @@ define(
            * Alarm sync
            */
           $rootScope.alarmSync = {
-            start: function ()
-            {
+            start: function () {
               $window.planboardSync = $window.setInterval(
-                function ()
-                {
-                  if ($location.path() == '/dashboard')
-                  {
+                function () {
+                  if ($location.path() == '/dashboard') {
                     $scope.$apply()
                     {
                       $scope.getP2000();
 
-                      if ($rootScope.config.profile.smartAlarm)
-                      {
-                        if (angular.fromJson(Storage.get('guard').selection))
-                        {
+                      if ($rootScope.config.profile.smartAlarm) {
+                        if (angular.fromJson(Storage.get('guard').selection)) {
                           prepareSaMembers(angular.fromJson(Storage.get('guard')));
                         }
 
                         Groups.guardRole()
                           .then(
-                          function (setup)
-                          {
+                          function (setup) {
                             prepareSaMembers(setup);
                           }
                         );
                       }
-                      else
-                      {
+                      else {
                         $scope.getAvailability($scope.current.group);
                       }
                     }
                   }
                 }, $rootScope.config.timers.ALARM_SYNC);
             },
-            clear: function () { $window.clearInterval($window.alarmSync) }
+            clear: function () {
+              $window.clearInterval($window.alarmSync)
+            }
           };
 
 
@@ -891,28 +806,25 @@ define(
           /**
            * Show more or less alarms
            */
-          $scope.toggle = function (more)
-          {
+          $scope.toggle = function (more) {
             $scope.alarms.list = (more) ? $scope.alarms.short : $scope.alarms.long;
 
             $scope.more.text = (more) ?
-                               $rootScope.ui.dashboard.showMore :
-                               $rootScope.ui.dashboard.showLess;
+              $rootScope.ui.dashboard.showMore :
+              $rootScope.ui.dashboard.showLess;
 
-            $scope.more.status = ! $scope.more.status;
+            $scope.more.status = !$scope.more.status;
           };
 
 
           /**
            * Fix popover position
            */
-          $scope.fixPopoverPos = function ()
-          {
+          $scope.fixPopoverPos = function () {
             setTimeout(
-              function ()
-              {
+              function () {
                 var spanWidth = $('#dashboard .span9').css('width'),
-                    popWidth = $('#dashboard .popover').css('width');
+                  popWidth = $('#dashboard .popover').css('width');
 
                 $('.popover').css(
                   {
@@ -928,14 +840,12 @@ define(
           /**
            * Get alarms for the first time
            */
-          if ($rootScope.config.profile.smartAlarm)
-          {
+          if ($rootScope.config.profile.smartAlarm) {
             $.ajax(
               {
                 url: $rootScope.config.profile.p2000.url,
                 dataType: 'json',
-                success: function (results)
-                {
+                success: function (results) {
                   $rootScope.statusBar.off();
 
                   var processed = Announcer.process(results, true);
@@ -946,8 +856,7 @@ define(
                   };
 
                   $scope.$apply(
-                    function ()
-                    {
+                    function () {
                       $scope.loading.alerts = false;
 
                       $scope.alarms = result.alarms;
@@ -958,26 +867,25 @@ define(
                     }
                   );
                 },
-                error: function ()
-                {
+                error: function () {
                   console.log('ERROR with getting p2000 for the first time!');
                 }
               }
             );
           }
-          else
-          {
+          else {
             Dashboard.getCapcodes().
               then(
-              function (capcodes)
-              {
+              function (capcodes) {
                 var _capcodes = '';
 
                 capcodes = capcodes.sort();
 
                 angular.forEach(
                   capcodes,
-                  function (code) { _capcodes += code + ', ' }
+                  function (code) {
+                    _capcodes += code + ', '
+                  }
                 );
 
                 $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
@@ -986,8 +894,7 @@ define(
                   {
                     url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
                     dataType: 'jsonp',
-                    success: function (results)
-                    {
+                    success: function (results) {
                       $rootScope.statusBar.off();
 
                       var processed = Announcer.process(results);
@@ -998,8 +905,7 @@ define(
                       };
 
                       $scope.$apply(
-                        function ()
-                        {
+                        function () {
                           $scope.loading.alerts = false;
 
                           $scope.alarms = result.alarms;
@@ -1010,8 +916,7 @@ define(
                         }
                       );
                     },
-                    error: function ()
-                    {
+                    error: function () {
                       console.log('ERROR with getting p2000 for the first time!');
                     }
                   }
@@ -1024,8 +929,7 @@ define(
           /**
            * Broadcast fireSetPrefixedAvailability calls
            */
-          $scope.setPrefixedAvailability = function (availability, period)
-          {
+          $scope.setPrefixedAvailability = function (availability, period) {
             Storage.session.add(
               'setPrefixedAvailability',
               angular.toJson(

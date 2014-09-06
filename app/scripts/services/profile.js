@@ -1,109 +1,106 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Profile',
       [
         '$rootScope', '$resource', '$q', 'Storage', 'Groups', 'Slots', 'MD5',
-        function ($rootScope, $resource, $q, Storage, Groups, Slots, MD5)
-        {
+        function ($rootScope, $resource, $q, Storage, Groups, Slots, MD5) {
           var Profile = $resource(
               config.host + '/node/:id/:section',
-              {},
-              {
-                get: {
-                  method: 'GET',
-                  params: { id: '', section: 'resource' }
-                },
-                save: {
-                  method: 'PUT',
-                  params: { section: 'resource' }
-                },
-                remove: {
-                  method: 'DELETE',
-                  params: {},
-                  isArray: true
-                },
-                role: {
-                  method: 'PUT',
-                  params: { section: 'role' },
-                  isArray: true
-                },
-                membership: {
-                  method: 'PUT',
-                  params: { id: '', section: 'membership' },
-                  isArray: true
-                }
+            {},
+            {
+              get: {
+                method: 'GET',
+                params: { id: '', section: 'resource' }
+              },
+              save: {
+                method: 'PUT',
+                params: { section: 'resource' }
+              },
+              remove: {
+                method: 'DELETE',
+                params: {},
+                isArray: true
+              },
+              role: {
+                method: 'PUT',
+                params: { section: 'role' },
+                isArray: true
+              },
+              membership: {
+                method: 'PUT',
+                params: { id: '', section: 'membership' },
+                isArray: true
               }
+            }
           );
 
 
           var Register = $resource(
               config.host + '/register',
-              {
-                direct: 'true',
-                module: 'default'
-              },
-              {
-                profile: {
-                  method: 'GET',
-                  params: {uuid: '', pass: '', name: '', phone: ''},
-                  isArray: true
-                }
+            {
+              direct: 'true',
+              module: 'default'
+            },
+            {
+              profile: {
+                method: 'GET',
+                params: {uuid: '', pass: '', name: '', phone: ''},
+                isArray: true
               }
+            }
           );
 
 
           var UserExists = $resource(
               config.host + '/user_exists',
-              {},
-              {
-                check: {
-                  method: 'GET',
-                  params: {username: ''}
-                }
+            {},
+            {
+              check: {
+                method: 'GET',
+                params: {username: ''}
               }
+            }
           );
 
 
           var PincodeExists = $resource(
               config.host + '/node/:id/pincode_exists',
-              {},
-              {
-                check: {
-                  method: 'GET',
-                  params: {}
-                }
+            {},
+            {
+              check: {
+                method: 'GET',
+                params: {}
               }
+            }
           );
 
 
           var Resources = $resource(
               config.host + '/resources',
-              {
+            {
+            },
+            {
+              get: {
+                method: 'GET',
+                params: {}
               },
-              {
-                get: {
-                  method: 'GET',
-                  params: {}
-                },
-                save: {
-                  method: 'POST',
-                  params: {},
-                  isArray: true
-                }
+              save: {
+                method: 'POST',
+                params: {},
+                isArray: true
               }
+            }
           );
 
 
           /**
            * Change password for user
            */
-          Profile.prototype.register = function (profile)
-          {
+          Profile.prototype.register = function (profile) {
             var deferred = $q.defer();
 
             var uuid = profile.username.toLowerCase();
@@ -118,15 +115,13 @@ define(
                 name: String(profile.firstName + ' ' + profile.lastName),
                 phone: profile.PhoneAddress || ''
               },
-              function (registered)
-              {
+              function (registered) {
                 // console.log('registered ->', registered);
 
                 // Profile.prototype.role(uuid, ($rootScope.config.profile.smartAlarm) ? 1 : profile.role.id)
                 Profile.prototype.role(uuid, profile.role.id)
                   .then(
-                  function (roled)
-                  {
+                  function (roled) {
                     Profile.prototype.save(
                       uuid, {
                         firstName: profile.firstName,
@@ -136,13 +131,11 @@ define(
                         PostZip: profile.PostZip,
                         PostCity: profile.PostCity
                       }).then(
-                      function (resourced)
-                      {
+                      function (resourced) {
                         var calls = [];
 
                         angular.forEach(
-                          profile.groups, function (group)
-                          {
+                          profile.groups, function (group) {
                             calls.push(
                               Groups.addMember(
                                 {
@@ -153,13 +146,12 @@ define(
 
                         $q.all(calls)
                           .then(
-                          function (grouped)
-                          {
+                          function (grouped) {
                             deferred.resolve(
                               {
                                 registered: ($rootScope.config.profile.smartAlarm) ?
-                                            registered[0] :
-                                            registered,
+                                  registered[0] :
+                                  registered,
                                 roled: roled,
                                 resourced: resourced,
                                 grouped: grouped
@@ -170,8 +162,7 @@ define(
 
                   }); // role
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             ); // register
@@ -183,16 +174,18 @@ define(
           /**
            * Check if username exists
            */
-          Profile.prototype.userExists = function (username)
-          {
+          Profile.prototype.userExists = function (username) {
             var deferred = $q.defer();
 
-            if (username != '' || username.length > 0)
-            {
+            if (username != '' || username.length > 0) {
               UserExists.check(
                 { username: username },
-                function () { deferred.resolve(true) },
-                function () { deferred.resolve(false) }
+                function () {
+                  deferred.resolve(true)
+                },
+                function () {
+                  deferred.resolve(false)
+                }
               );
             }
 
@@ -203,19 +196,21 @@ define(
           /**
            * Check if pincode exists
            */
-          Profile.prototype.pincodeExists = function (id, pincode)
-          {
+          Profile.prototype.pincodeExists = function (id, pincode) {
             var deferred = $q.defer();
 
-            if (pincode != '' || pincode.length > 0)
-            {
+            if (pincode != '' || pincode.length > 0) {
               PincodeExists.check(
                 {
                   id: id,
                   pincode: pincode
                 },
-                function () { deferred.resolve(true) },
-                function () { deferred.resolve(false) }
+                function () {
+                  deferred.resolve(true)
+                },
+                function () {
+                  deferred.resolve(false)
+                }
               );
             }
 
@@ -226,19 +221,16 @@ define(
           /**
            * Set role of given user
            */
-          Profile.prototype.role = function (id, role)
-          {
+          Profile.prototype.role = function (id, role) {
             var deferred = $q.defer();
 
             Profile.role(
               { id: id },
               role,
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -250,19 +242,16 @@ define(
           /**
            * Change password for user
            */
-          Profile.prototype.changePassword = function (passwords)
-          {
+          Profile.prototype.changePassword = function (passwords) {
             var deferred = $q.defer();
 
             Resources.save(
               null,
               { askPass: MD5(passwords.new1) },
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -274,19 +263,16 @@ define(
           /**
            * Set the groups for user
            */
-          Profile.prototype.membership = function (id, groups)
-          {
+          Profile.prototype.membership = function (id, groups) {
             var deferred = $q.defer();
 
             Profile.membership(
               { id: id },
               groups,
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -298,23 +284,19 @@ define(
           /**
            * Get profile of given user
            */
-          Profile.prototype.get = function (id, localize)
-          {
+          Profile.prototype.get = function (id, localize) {
             var deferred = $q.defer();
 
             Profile.get(
               { id: id },
-              function (result)
-              {
+              function (result) {
                 result.role = (result.role || result.role == 0) ? result.role : 3;
 
-                if (id == $rootScope.app.resources.uuid)
-                {
+                if (id == $rootScope.app.resources.uuid) {
                   $rootScope.app.resources = result;
                 }
 
-                if (localize)
-                {
+                if (localize) {
                   Storage.add('resources', angular.toJson(result));
                 }
 
@@ -329,14 +311,12 @@ define(
           /**
            * Get profile of given user with slots
            */
-          Profile.prototype.getWithSlots = function (id, localize, params)
-          {
+          Profile.prototype.getWithSlots = function (id, localize, params) {
             var deferred = $q.defer();
 
             Profile.prototype.get(id, localize)
               .then(
-              function (resources)
-              {
+              function (resources) {
                 Slots.user(
                   {
                     user: id,
@@ -344,8 +324,7 @@ define(
                     end: params.end
                   }
                 ).then(
-                  function (slots)
-                  {
+                  function (slots) {
                     deferred.resolve(
                       angular.extend(
                         resources, {
@@ -366,8 +345,7 @@ define(
           /**
            * Get user slots
            */
-          Profile.prototype.getSlots = function (id, params)
-          {
+          Profile.prototype.getSlots = function (id, params) {
             var deferred = $q.defer();
 
             Slots.user(
@@ -376,8 +354,7 @@ define(
                 start: params.start / 1000,
                 end: params.end / 1000
               }).then(
-              function (slots)
-              {
+              function (slots) {
                 deferred.resolve(
                   {
                     slots: slots,
@@ -396,30 +373,28 @@ define(
           /**
            * Get local resource data
            */
-          Profile.prototype.local = function () { return angular.fromJson(Storage.get('resources')) };
+          Profile.prototype.local = function () {
+            return angular.fromJson(Storage.get('resources'))
+          };
 
 
           /**
            * Save profile
            */
-          Profile.prototype.save = function (id, resources)
-          {
+          Profile.prototype.save = function (id, resources) {
             var deferred = $q.defer();
 
-            if (resources.firstName != undefined && resources.lastName != undefined)
-            {
+            if (resources.firstName != undefined && resources.lastName != undefined) {
               resources.name = resources.firstName + ' ' + resources.lastName;
             }
 
             Profile.save(
               { id: id },
               resources,
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -431,20 +406,17 @@ define(
           /**
            * Save profile
            */
-          Profile.prototype.remove = function (id)
-          {
+          Profile.prototype.remove = function (id) {
             var deferred = $q.defer();
 
             Profile.remove(
               {
                 id: id
               },
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );

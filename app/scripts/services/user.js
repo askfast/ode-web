@@ -1,15 +1,13 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'User',
       [
         '$resource', '$q', '$location', 'Storage', '$rootScope',
-        function ($resource, $q, $location, Storage, $rootScope)
-        {
+        function ($resource, $q, $location, Storage, $rootScope) {
           var self = this;
 
 
@@ -18,137 +16,134 @@ define(
 
           var Login = $resource(
               config.host + '/login',
-              {
-              },
-              {
-                process: {
-                  method: 'GET',
-                  params: {
-                    uuid: '',
-                    pass: ''
-                  }
+            {
+            },
+            {
+              process: {
+                method: 'GET',
+                params: {
+                  uuid: '',
+                  pass: ''
                 }
               }
+            }
           );
 
 
           var Logout = $resource(
               config.host + '/logout',
-              {
-              },
-              {
-                process: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                }
+            {
+            },
+            {
+              process: {
+                method: 'GET',
+                params: {},
+                isArray: true
               }
+            }
           );
 
 
           var Resources = $resource(
               config.host + '/resources',
-              {
-              },
-              {
-                get: {
-                  method: 'GET',
-                  params: {}
-                }
+            {
+            },
+            {
+              get: {
+                method: 'GET',
+                params: {}
               }
+            }
           );
 
           var Domain = $resource(
               config.host + '/domain',
-              {
-              },
-              {
-                get: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                }
+            {
+            },
+            {
+              get: {
+                method: 'GET',
+                params: {},
+                isArray: true
               }
+            }
           );
 
 
           var Divisions = $resource(
               config.host + '/divisions',
-              {
-              },
-              {
-                get: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                }
+            {
+            },
+            {
+              get: {
+                method: 'GET',
+                params: {},
+                isArray: true
               }
+            }
           );
 
 
           var States = $resource(
               config.host + '/states',
-              {
-              },
-              {
-                get: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                }
+            {
+            },
+            {
+              get: {
+                method: 'GET',
+                params: {},
+                isArray: true
               }
+            }
           );
 
 
           var Reset = $resource(
               config.host + '/passwordReset',
-              {
-              },
-              {
-                password: {
-                  method: 'GET',
-                  params: {
-                    uuid: '',
-                    path: ''
-                  },
-                  isArray: true
-                }
+            {
+            },
+            {
+              password: {
+                method: 'GET',
+                params: {
+                  uuid: '',
+                  path: ''
+                },
+                isArray: true
               }
+            }
           );
 
 
           var changePassword = $resource(
               config.host + '/passwordReset',
-              {
-              },
-              {
-                reset: {
-                  method: 'GET',
-                  params: {
-                    uuid: '',
-                    pass: '',
-                    key: ''
-                  },
-                  isArray: true
-                }
-              });
+            {
+            },
+            {
+              reset: {
+                method: 'GET',
+                params: {
+                  uuid: '',
+                  pass: '',
+                  key: ''
+                },
+                isArray: true
+              }
+            });
 
 
           /**
            * Divisions
            */
-          User.prototype.divisions = function ()
-          {
+          User.prototype.divisions = function () {
             var deferred = $q.defer();
 
             Divisions.get(
               {},
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve(error);
               }
             );
@@ -160,33 +155,31 @@ define(
           /**
            * States
            */
-          User.prototype.states = function ()
-          {
+          User.prototype.states = function () {
             var deferred = $q.defer();
 
             States.get(
               {},
-              function (results)
-              {
+              function (results) {
                 var states = [];
 
                 angular.forEach(
                   results,
-                  function (node)
-                  {
+                  function (node) {
                     var state = '';
 
                     angular.forEach(
                       node,
-                      function (_s) { state += _s; });
+                      function (_s) {
+                        state += _s;
+                      });
 
                     states.push(state);
                   });
 
                 deferred.resolve(states);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve(error);
               }
             );
@@ -199,8 +192,7 @@ define(
            * TODO: RE-FACTORY
            * User login
            */
-          User.prototype.password = function (uuid)
-          {
+          User.prototype.password = function (uuid) {
             var deferred = $q.defer();
 
             Reset.password(
@@ -208,25 +200,21 @@ define(
                 uuid: uuid.toLowerCase(),
                 path: $location.absUrl()
               },
-              function (result)
-              {
+              function (result) {
                 if (angular.equals(result, []) ||
-                    angular.equals(
-                      result, [
-                        {}
-                      ]
-                    )
+                  angular.equals(
+                    result, [
+                      {}
+                    ]
                   )
-                {
+                  ) {
                   deferred.resolve("ok");
                 }
-                else
-                {
+                else {
                   deferred.resolve(result);
                 }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve(error);
               }
             );
@@ -238,8 +226,7 @@ define(
           /**
            * User login
            */
-          User.prototype.login = function (uuid, pass)
-          {
+          User.prototype.login = function (uuid, pass) {
             var deferred = $q.defer();
 
             Login.process(
@@ -247,19 +234,15 @@ define(
                 uuid: uuid,
                 pass: pass
               },
-              function (result)
-              {
-                if (angular.equals(result, []))
-                {
+              function (result) {
+                if (angular.equals(result, [])) {
                   deferred.reject("Something went wrong with login!");
                 }
-                else
-                {
+                else {
                   deferred.resolve(result);
                 }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve(error);
               }
             );
@@ -272,8 +255,7 @@ define(
            * RE-FACTORY
            * change user password
            */
-          User.prototype.changePass = function (uuid, newpass, key)
-          {
+          User.prototype.changePass = function (uuid, newpass, key) {
             var deferred = $q.defer();
 
             /**
@@ -285,12 +267,10 @@ define(
                 pass: newpass,
                 key: key
               },
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve(error);
               }
             );
@@ -302,18 +282,15 @@ define(
           /**
            * User logout
            */
-          User.prototype.logout = function ()
-          {
+          User.prototype.logout = function () {
             var deferred = $q.defer();
 
             Logout.process(
               null,
-              function (result)
-              {
+              function (result) {
                 deferred.resolve(result);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -325,29 +302,24 @@ define(
           /**
            * Get user resources
            */
-          User.prototype.resources = function ()
-          {
+          User.prototype.resources = function () {
             var deferred = $q.defer();
 
             Resources.get(
               null,
-              function (result)
-              {
+              function (result) {
                 result.role = (result.role || result.role == 0) ? result.role : 3;
 
-                if (angular.equals(result, []))
-                {
+                if (angular.equals(result, [])) {
                   deferred.reject("User has no resources!");
                 }
-                else
-                {
+                else {
                   Storage.add('resources', angular.toJson(result));
 
                   deferred.resolve(result);
                 }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -359,40 +331,39 @@ define(
           /**
            * Get user domain
            */
-          User.prototype.domain = function ()
-          {
+          User.prototype.domain = function () {
             var deferred = $q.defer();
 
             Domain.get(
               null,
-              function (results)
-              {
-                if (angular.equals(results, []))
-                {
-                  deferred.reject("User has no domain!");
-                }
-                else
-                {
-                  Storage.add('domain', angular.toJson(results));
+              function (domains) {
+                var domain = $rootScope.unite(domains[0]);
+                Storage.add('domain', angular.toJson(domain));
+                deferred.resolve(domain);
 
-                  var domainnames = [];
-
-                  angular.forEach(
-                    results, function (node)
-                    {
-                      var domainname = '';
-                      angular.forEach(node, function (_s) { domainname += _s; });
-                      domainnames.push(domainname);
-                    });
-
-                  deferred.resolve(domainnames);
-                }
+//                if (angular.equals(domains, [])) {
+//                  deferred.reject("User has no domain!");
+//                } else {
+//                  var domainnames = [];
+//
+//                  _.each(domains, function (node) {
+//                    var domainname = '';
+//                    angular.forEach(node, function (_s) {
+//                      domainname += _s;
+//                    });
+//                    domainnames.push(domainname);
+//                  });
+//
+//                  Storage.add('domain', angular.toJson(domainnames));
+//
+//                  console.log('domains ->', domainnames);
+//
+//                  deferred.resolve(domainnames);
+//                }
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
-              }
-            );
+              });
 
             return deferred.promise;
           };

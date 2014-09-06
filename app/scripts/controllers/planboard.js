@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
@@ -17,8 +16,7 @@ define(
         'Dater',
         'Storage',
         '$timeout',
-        function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, $timeout)
-        {
+        function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, $timeout) {
           $rootScope.notification.status = false;
 
           /**
@@ -43,16 +41,14 @@ define(
            * Get groups and settings
            */
           var groups = Storage.local.groups(),
-          settings = Storage.local.settings(),
-          groupId,
-          validGroup = false;
+            settings = Storage.local.settings(),
+            groupId,
+            validGroup = false;
 
           angular.forEach(
             groups,
-            function (_group)
-            {
-              if (_group.uuid == settings.app.group)
-              {
+            function (_group) {
+              if (_group.uuid == settings.app.group) {
                 validGroup = true
               }
             }
@@ -100,15 +96,13 @@ define(
            */
           var stamps = {};
 
-          if (Dater.current.today() > 360)
-          {
+          if (Dater.current.today() > 360) {
             stamps = {
               start: $scope.periods.days[358].last.timeStamp,
               end: $scope.periods.days[365].last.timeStamp
             }
           }
-          else
-          {
+          else {
             stamps = {
               start: $scope.periods.days[Dater.current.today() - 1].last.timeStamp,
               end: $scope.periods.days[Dater.current.today() + 6].last.timeStamp
@@ -163,8 +157,7 @@ define(
           /**
            * IE8 fix for inability of - signs in date object
            */
-          if ($.browser.msie && $.browser.version == '8.0')
-          {
+          if ($.browser.msie && $.browser.version == '8.0') {
             $scope.timeline.options = {
               start: $scope.periods.days[Dater.current.today()].last.timeStamp,
               end: $scope.periods.days[Dater.current.today() + 7].last.timeStamp,
@@ -179,7 +172,9 @@ define(
            */
           angular.forEach(
             $rootScope.config.timeline.config.states,
-            function (state, index) { $scope.timeline.config.legenda[index] = true }
+            function (state, index) {
+              $scope.timeline.config.legenda[index] = true
+            }
           );
 
 
@@ -197,12 +192,11 @@ define(
            * Prepare timeline range for date ranger widget
            */
           $scope.daterange = Dater.readable.date($scope.timeline.range.start) + ' / ' +
-                             Dater.readable.date($scope.timeline.range.end);
+            Dater.readable.date($scope.timeline.range.end);
 
 
           $timeout(
-            function ()
-            {
+            function () {
               /**
                * States for drop down
                */
@@ -250,11 +244,9 @@ define(
 
               angular.forEach(
                 $scope.timeline.config.states,
-                function (state, key)
-                {
+                function (state, key) {
                   // show only user editable states
-                  if (state.display && $rootScope.app.resources.role <= state.minRole)
-                  {
+                  if (state.display && $rootScope.app.resources.role <= state.minRole) {
                     states[key] = state.label;
                   }
                 }
@@ -276,10 +268,8 @@ define(
            */
           $scope.divisions = $scope.timeline.config.divisions;
 
-          if ($scope.timeline.config.divisions.length > 0)
-          {
-            if ($scope.divisions[0].id !== 'all')
-            {
+          if ($scope.timeline.config.divisions.length > 0) {
+            if ($scope.divisions[0].id !== 'all') {
               $scope.divisions.unshift(
                 {
                   id: 'all',
@@ -292,7 +282,9 @@ define(
 
             angular.forEach(
               $scope.divisions,
-              function (division) { $scope.groupPieHide[division.id] = false }
+              function (division) {
+                $scope.groupPieHide[division.id] = false
+              }
             );
           }
 
@@ -300,8 +292,7 @@ define(
           /**
            * Reset views for default views
            */
-          $scope.resetViews = function ()
-          {
+          $scope.resetViews = function () {
             $scope.views = {
               slot: {
                 add: false,
@@ -321,23 +312,22 @@ define(
            */
           $rootScope.$on(
             'resetPlanboardViews',
-            function () { $scope.resetViews() }
+            function () {
+              $scope.resetViews()
+            }
           );
 
 
           /**
            * Slot form toggle
            */
-          $scope.toggleSlotForm = function ()
-          {
-            if ($scope.views.slot.add)
-            {
+          $scope.toggleSlotForm = function () {
+            if ($scope.views.slot.add) {
               $rootScope.planboardSync.start();
 
               $scope.resetInlineForms();
             }
-            else
-            {
+            else {
               $rootScope.planboardSync.clear();
 
               /**
@@ -355,8 +345,7 @@ define(
           /**
            * Reset inline forms
            */
-          $scope.resetInlineForms = function ()
-          {
+          $scope.resetInlineForms = function () {
             $scope.slot = {};
 
             $scope.original = {};
@@ -368,8 +357,7 @@ define(
           /**
            * Send shortage message
            */
-          $scope.sendShortageMessage = function (slot)
-          {
+          $scope.sendShortageMessage = function (slot) {
             $rootScope.statusBar.display($rootScope.ui.planboard.preCompilingStortageMessage);
 
             Storage.session.add(

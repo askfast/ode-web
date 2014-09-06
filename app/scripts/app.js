@@ -12,19 +12,21 @@ define(
     'angular-resource',
     'angular-route',
     'angular-strap',
-    'ui-bootstrap',
+
+    // 'ui-bootstrap',
+
     // 'ng-vis',
 
     // 'angular-google-maps',
 
     // 'angular-dragdrop',
-    // 'ui-sortable',        
-    'ui.bootstrap.pagination'
+    // 'ui-sortable',
+
+    // 'ui.bootstrap.pagination'
   ],
-  function (angular)
-  {
+  function (angular) {
     return angular.module(
-      'TeamUp',
+      'StandBy',
       [
         'controllers',
         'services',
@@ -37,7 +39,8 @@ define(
         // 'mgcrea.ngStrap'
 
         '$strap.directives',
-        'ui.bootstrap.modal',
+
+        // 'ui.bootstrap.modal',
 
         // 'NgVis',
 
@@ -47,7 +50,7 @@ define(
         // 'ui.sortable',   
         // 'collapse',
 
-        'ui.bootstrap.pagination'
+        // 'ui.bootstrap.pagination'
       ]);
   }
 );

@@ -1,22 +1,17 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'MD5',
-      function ()
-      {
-        return function (string)
-        {
-          function RotateLeft (lValue, iShiftBits)
-          {
+      function () {
+        return function (string) {
+          function RotateLeft(lValue, iShiftBits) {
             return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
           }
 
-          function AddUnsigned (lX, lY)
-          {
+          function AddUnsigned(lX, lY) {
             var lX4, lY4, lX8, lY8, lResult;
             lX8 = (lX & 0x80000000);
             lY8 = (lY & 0x80000000);
@@ -26,76 +21,74 @@ define(
 
             if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
 
-            if (lX4 | lY4)
-            {
-              if (lResult & 0x40000000)
-              {
+            if (lX4 | lY4) {
+              if (lResult & 0x40000000) {
                 return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
               }
-              else
-              {
+              else {
                 return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
               }
             }
-            else
-            {
+            else {
               return (lResult ^ lX8 ^ lY8);
             }
           }
 
-          function F (x, y, z) { return (x & y) | ((~ x) & z) }
+          function F(x, y, z) {
+            return (x & y) | ((~x) & z)
+          }
 
-          function G (x, y, z) { return (x & z) | (y & (~ z)) }
+          function G(x, y, z) {
+            return (x & z) | (y & (~z))
+          }
 
-          function H (x, y, z) { return (x ^ y ^ z) }
+          function H(x, y, z) {
+            return (x ^ y ^ z)
+          }
 
-          function I (x, y, z) { return (y ^ (x | (~ z))) }
+          function I(x, y, z) {
+            return (y ^ (x | (~z)))
+          }
 
-          function FF (a, b, c, d, x, s, ac)
-          {
+          function FF(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
 
             return AddUnsigned(RotateLeft(a, s), b);
           }
 
-          function GG (a, b, c, d, x, s, ac)
-          {
+          function GG(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
 
             return AddUnsigned(RotateLeft(a, s), b);
           }
 
-          function HH (a, b, c, d, x, s, ac)
-          {
+          function HH(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
 
             return AddUnsigned(RotateLeft(a, s), b);
           }
 
-          function II (a, b, c, d, x, s, ac)
-          {
+          function II(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
 
             return AddUnsigned(RotateLeft(a, s), b);
           }
 
-          function ConvertToWordArray (string)
-          {
+          function ConvertToWordArray(string) {
             var lWordCount,
-                lMessageLength = string.length,
-                lNumberOfWords_temp1 = lMessageLength + 8,
-                lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64,
-                lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16,
-                lWordArray = Array(lNumberOfWords - 1),
-                lBytePosition = 0,
-                lByteCount = 0;
+              lMessageLength = string.length,
+              lNumberOfWords_temp1 = lMessageLength + 8,
+              lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64,
+              lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16,
+              lWordArray = Array(lNumberOfWords - 1),
+              lBytePosition = 0,
+              lByteCount = 0;
 
-            while (lByteCount < lMessageLength)
-            {
+            while (lByteCount < lMessageLength) {
               lWordCount = (lByteCount - (lByteCount % 4)) / 4;
               lBytePosition = (lByteCount % 4) * 8;
               lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
-              lByteCount ++;
+              lByteCount++;
             }
 
             lWordCount = (lByteCount - (lByteCount % 4)) / 4;
@@ -106,15 +99,13 @@ define(
             return lWordArray;
           }
 
-          function WordToHex (lValue)
-          {
+          function WordToHex(lValue) {
             var WordToHexValue = "",
-                WordToHexValue_temp = "",
-                lByte,
-                lCount;
+              WordToHexValue_temp = "",
+              lByte,
+              lCount;
 
-            for (lCount = 0; lCount <= 3; lCount ++)
-            {
+            for (lCount = 0; lCount <= 3; lCount++) {
               lByte = (lValue >>> (lCount * 8)) & 255;
               WordToHexValue_temp = "0" + lByte.toString(16);
               WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
@@ -123,27 +114,22 @@ define(
             return WordToHexValue;
           };
 
-          function Utf8Encode (string)
-          {
+          function Utf8Encode(string) {
             string = string.replace(/\r\n/g, "\n");
 
             var utftext = "";
 
-            for (var n = 0; n < string.length; n ++)
-            {
+            for (var n = 0; n < string.length; n++) {
               var c = string.charCodeAt(n);
 
-              if (c < 128)
-              {
+              if (c < 128) {
                 utftext += String.fromCharCode(c);
               }
-              else if ((c > 127) && (c < 2048))
-              {
+              else if ((c > 127) && (c < 2048)) {
                 utftext += String.fromCharCode((c >> 6) | 192);
                 utftext += String.fromCharCode((c & 63) | 128);
               }
-              else
-              {
+              else {
                 utftext += String.fromCharCode((c >> 12) | 224);
                 utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                 utftext += String.fromCharCode((c & 63) | 128);
@@ -169,8 +155,7 @@ define(
           c = 0x98BADCFE;
           d = 0x10325476;
 
-          for (k = 0; k < x.length; k += 16)
-          {
+          for (k = 0; k < x.length; k += 16) {
             AA = a;
             BB = b;
             CC = c;

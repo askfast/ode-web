@@ -1,15 +1,13 @@
 define(
   ['services/services', 'config'],
-  function (services, config)
-  {
+  function (services, config) {
     'use strict';
 
     services.factory(
       'Dashboard',
       [
         '$rootScope', '$resource', '$q', 'Storage', 'Slots', 'Dater', 'Announcer',
-        function ($rootScope, $resource, $q, Storage, Slots, Dater, Announcer)
-        {
+        function ($rootScope, $resource, $q, Storage, Slots, Dater, Announcer) {
           /**
            * TODO: Still being used?
            */
@@ -32,37 +30,33 @@ define(
            */
           var Backend = $resource(
               config.host + '/capcodes',
-              {},
-              {
-                capcodes: {
-                  method: 'GET',
-                  params: {},
-                  isArray: true
-                }
+            {},
+            {
+              capcodes: {
+                method: 'GET',
+                params: {},
+                isArray: true
               }
+            }
           );
 
 
           /**
            * Get group aggs for pie charts
            */
-          Dashboard.prototype.pies = function ()
-          {
+          Dashboard.prototype.pies = function () {
             var deferred = $q.defer(),
-                groups = angular.fromJson(Storage.get('groups')),
-                settings = Storage.local.settings().app.widgets.groups,
-                calls = [];
+              groups = angular.fromJson(Storage.get('groups')),
+              settings = Storage.local.settings().app.widgets.groups,
+              calls = [];
 
             if (settings.length === 0) console.warn('no settings');
 
             angular.forEach(
               groups,
-              function (group)
-              {
-                if (settings[group.uuid] && settings[group.uuid].status)
-                {
-                  if ($rootScope.config.timeline.config.divisions.length == 0)
-                  {
+              function (group) {
+                if (settings[group.uuid] && settings[group.uuid].status) {
+                  if ($rootScope.config.timeline.config.divisions.length == 0) {
                     calls.push(
                       Slots.pie(
                         {
@@ -71,15 +65,11 @@ define(
                           division: 'both'
                         }));
                   }
-                  else
-                  {
-                    if (settings[group.uuid].divisions)
-                    {
+                  else {
+                    if (settings[group.uuid].divisions) {
                       angular.forEach(
-                        $rootScope.config.timeline.config.divisions, function (division)
-                        {
-                          if (division.id !== 'all')
-                          {
+                        $rootScope.config.timeline.config.divisions, function (division) {
+                          if (division.id !== 'all') {
                             calls.push(
                               Slots.pie(
                                 {
@@ -90,8 +80,7 @@ define(
                           }
                         });
                     }
-                    else
-                    {
+                    else {
                       calls.push(
                         Slots.pie(
                           {
@@ -106,8 +95,7 @@ define(
 
             $q.all(calls)
               .then(
-              function (results)
-              {
+              function (results) {
                 $rootScope.statusBar.off();
 
                 deferred.resolve(results);
@@ -117,34 +105,34 @@ define(
           };
 
 
-          Dashboard.prototype.getCapcodes = function ()
-          {
+          Dashboard.prototype.getCapcodes = function () {
             var deferred = $q.defer();
 
-            function concatCode (code)
-            {
+            function concatCode(code) {
               var _code = '';
 
-              angular.forEach(code, function (_c) { _code += _c; });
+              angular.forEach(code, function (_c) {
+                _code += _c;
+              });
 
               return String(_code);
             }
 
             Backend.capcodes(
               null,
-              function (results)
-              {
+              function (results) {
                 var codes = [];
 
                 angular.forEach(
                   results,
-                  function (res) { codes.push(concatCode(res)) }
+                  function (res) {
+                    codes.push(concatCode(res))
+                  }
                 );
 
                 deferred.resolve(codes);
               },
-              function (error)
-              {
+              function (error) {
                 deferred.resolve({error: error});
               }
             );
@@ -157,20 +145,17 @@ define(
            * TODO: Still being used since harcoded in controller itself?
            * Get p2000 announcements
            */
-          Dashboard.prototype.p2000 = function ()
-          {
+          Dashboard.prototype.p2000 = function () {
             var deferred = $q.defer();
 
             $rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
-            if ($rootScope.config.profile.smartAlarm)
-            {
+            if ($rootScope.config.profile.smartAlarm) {
               $.ajax(
                 {
                   url: $rootScope.config.profile.p2000.url,
                   dataType: 'json',
-                  success: function (results)
-                  {
+                  success: function (results) {
                     $rootScope.statusBar.off();
 
                     var processed = Announcer.process(results, true);
@@ -181,25 +166,21 @@ define(
                         synced: new Date().getTime()
                       });
                   },
-                  error: function ()
-                  {
+                  error: function () {
                     deferred.resolve({error: error});
                   }
                 });
 
             }
-            else
-            {
+            else {
               Dashboard.prototype.getCapcodes().
                 then(
-                function (capcodes)
-                {
+                function (capcodes) {
                   $.ajax(
                     {
                       url: config.profile.p2000.url + '?code=' + capcodes,
                       dataType: 'jsonp',
-                      success: function (results)
-                      {
+                      success: function (results) {
                         $rootScope.statusBar.off();
 
                         var processed = Announcer.process(results);
@@ -210,8 +191,7 @@ define(
                             synced: new Date().getTime()
                           });
                       },
-                      error: function ()
-                      {
+                      error: function () {
                         deferred.resolve({error: error});
                       }
                     });

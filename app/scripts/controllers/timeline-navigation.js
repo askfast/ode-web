@@ -1,28 +1,24 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
       'timeline-navigation',
       [
         '$rootScope', '$scope', '$window',
-        function ($rootScope, $scope, $window)
-        {
+        function ($rootScope, $scope, $window) {
           /**
            * Day & Week & Month toggle actions
            */
-          $scope.timelineScoper = function (period)
-          {
+          $scope.timelineScoper = function (period) {
             $scope.timeline.current.day = $scope.current.day;
             $scope.timeline.current.week = $scope.current.week;
             $scope.timeline.current.month = $scope.current.month;
 
             $scope.timeline.current.year = Number(new Date().toString('yyyy'));
 
-            switch (period)
-            {
+            switch (period) {
               case 'day':
                 $scope.timeline.scope = {
                   day: true,
@@ -71,16 +67,12 @@ define(
           /**
            * Go one period in past
            */
-          $scope.timelineBefore = function ()
-          {
+          $scope.timelineBefore = function () {
             var thisYear = new Date().toString('yyyy');
 
-            if ($scope.timeline.scope.day)
-            {
-              if ($scope.timeline.current.year === Number(thisYear) + 1)
-              {
-                if ($scope.timeline.current.day === 1)
-                {
+            if ($scope.timeline.scope.day) {
+              if ($scope.timeline.current.year === Number(thisYear) + 1) {
+                if ($scope.timeline.current.day === 1) {
                   $scope.timeline.current.year = thisYear;
 
                   $scope.timeline.current.day = $scope.periods.days.total;
@@ -91,9 +83,8 @@ define(
                       end: $scope.periods.days[$scope.timeline.current.day].last.timeStamp
                     });
                 }
-                else
-                {
-                  $scope.timeline.current.day --;
+                else {
+                  $scope.timeline.current.day--;
 
                   $scope.timeliner.load(
                     {
@@ -102,11 +93,9 @@ define(
                     });
                 }
               }
-              else
-              {
-                if ($scope.timeline.current.day != 1)
-                {
-                  $scope.timeline.current.day --;
+              else {
+                if ($scope.timeline.current.day != 1) {
+                  $scope.timeline.current.day--;
 
                   $scope.timeliner.load(
                     {
@@ -116,12 +105,9 @@ define(
                 }
               }
             }
-            else if ($scope.timeline.scope.week)
-            {
-              if ($scope.timeline.current.year === Number(thisYear) + 1)
-              {
-                if ($scope.timeline.current.week === 1)
-                {
+            else if ($scope.timeline.scope.week) {
+              if ($scope.timeline.current.year === Number(thisYear) + 1) {
+                if ($scope.timeline.current.week === 1) {
                   $scope.timeline.current.year = thisYear;
 
                   $scope.timeline.current.week = 52;
@@ -132,9 +118,8 @@ define(
                       end: $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
                     });
                 }
-                else
-                {
-                  $scope.timeline.current.week --;
+                else {
+                  $scope.timeline.current.week--;
 
                   $scope.timeliner.load(
                     {
@@ -143,11 +128,9 @@ define(
                     });
                 }
               }
-              else
-              {
-                if ($scope.timeline.current.week != 1)
-                {
-                  $scope.timeline.current.week --;
+              else {
+                if ($scope.timeline.current.week != 1) {
+                  $scope.timeline.current.week--;
 
                   $scope.timeliner.load(
                     {
@@ -155,10 +138,9 @@ define(
                       end: $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
                     });
                 }
-                else if ($scope.timeline.current.month == 12)
-                {
+                else if ($scope.timeline.current.month == 12) {
                   $scope.timeline.current.week = 53;
-                  $scope.timeline.current.week --;
+                  $scope.timeline.current.week--;
 
                   $scope.timeliner.load(
                     {
@@ -168,12 +150,9 @@ define(
                 }
               }
             }
-            else if ($scope.timeline.scope.month)
-            {
-              if ($scope.timeline.current.year === Number(thisYear) + 1)
-              {
-                if ($scope.timeline.current.month === 1)
-                {
+            else if ($scope.timeline.scope.month) {
+              if ($scope.timeline.current.year === Number(thisYear) + 1) {
+                if ($scope.timeline.current.month === 1) {
                   $scope.timeline.current.year = thisYear;
 
                   $scope.timeline.current.month = 12;
@@ -184,9 +163,8 @@ define(
                       end: $scope.periods.months[$scope.timeline.current.month].last.timeStamp
                     });
                 }
-                else
-                {
-                  $scope.timeline.current.month --;
+                else {
+                  $scope.timeline.current.month--;
 
                   $scope.timeliner.load(
                     {
@@ -195,11 +173,9 @@ define(
                     });
                 }
               }
-              else
-              {
-                if ($scope.timeline.current.month != 1)
-                {
-                  $scope.timeline.current.month --;
+              else {
+                if ($scope.timeline.current.month != 1) {
+                  $scope.timeline.current.month--;
 
                   $scope.timeliner.load(
                     {
@@ -215,20 +191,16 @@ define(
           /**
            * Go one period in future
            */
-          $scope.timelineAfter = function ()
-          {
+          $scope.timelineAfter = function () {
             var thisYear = new Date().toString('yyyy');
 
-            if ($scope.timeline.scope.day)
-            {
-              if ($scope.timeline.current.year === Number(thisYear))
-              {
+            if ($scope.timeline.scope.day) {
+              if ($scope.timeline.current.year === Number(thisYear)) {
                 /**
                  * Total days in a month can change so get it start periods cache
                  */
-                if ($scope.timeline.current.day != $scope.periods.days.total)
-                {
-                  $scope.timeline.current.day ++;
+                if ($scope.timeline.current.day != $scope.periods.days.total) {
+                  $scope.timeline.current.day++;
 
                   $scope.timeliner.load(
                     {
@@ -236,8 +208,7 @@ define(
                       end: $scope.periods.days[$scope.timeline.current.day].last.timeStamp
                     });
                 }
-                else
-                {
+                else {
                   $scope.timeline.current.year = Number(thisYear) + 1;
 
                   $scope.timeline.current.day = 1;
@@ -249,11 +220,10 @@ define(
                     });
                 }
               }
-              else
-              {
+              else {
                 $scope.timeline.current.year = Number(thisYear) + 1;
 
-                $scope.timeline.current.day ++;
+                $scope.timeline.current.day++;
 
                 $scope.timeliner.load(
                   {
@@ -262,19 +232,15 @@ define(
                   });
               }
             }
-            else if ($scope.timeline.scope.week)
-            {
-              if ($scope.timeline.current.year == thisYear)
-              {
-                if ($scope.timeline.current.week == 1 && $scope.timeline.current.month == 12)
-                {
+            else if ($scope.timeline.scope.week) {
+              if ($scope.timeline.current.year == thisYear) {
+                if ($scope.timeline.current.week == 1 && $scope.timeline.current.month == 12) {
                   // deal with situation that last days in the end of the year share the first week with starting days in the next year.
                   $scope.timeline.current.week = 53;
                 }
 
-                if ($scope.timeline.current.week != 53)
-                {
-                  $scope.timeline.current.week ++;
+                if ($scope.timeline.current.week != 53) {
+                  $scope.timeline.current.week++;
 
                   $scope.timeliner.load(
                     {
@@ -282,8 +248,7 @@ define(
                       end: $scope.periods.weeks[$scope.timeline.current.week].last.timeStamp
                     });
                 }
-                else
-                {
+                else {
                   $scope.timeline.current.year = Number(thisYear) + 1;
 
                   $scope.timeline.current.week = 1;
@@ -295,11 +260,9 @@ define(
                     });
                 }
               }
-              else
-              {
-                if ($scope.timeline.current.week != 53)
-                {
-                  $scope.timeline.current.week ++;
+              else {
+                if ($scope.timeline.current.week != 53) {
+                  $scope.timeline.current.week++;
 
                   $scope.timeliner.load(
                     {
@@ -309,13 +272,10 @@ define(
                 }
               }
             }
-            else if ($scope.timeline.scope.month)
-            {
-              if ($scope.timeline.current.year == thisYear)
-              {
-                if ($scope.timeline.current.month != 12)
-                {
-                  $scope.timeline.current.month ++;
+            else if ($scope.timeline.scope.month) {
+              if ($scope.timeline.current.year == thisYear) {
+                if ($scope.timeline.current.month != 12) {
+                  $scope.timeline.current.month++;
 
                   $scope.timeliner.load(
                     {
@@ -323,8 +283,7 @@ define(
                       end: $scope.periods.months[$scope.timeline.current.month].last.timeStamp
                     });
                 }
-                else
-                {
+                else {
                   $scope.timeline.current.year = Number(thisYear) + 1;
 
                   $scope.timeline.current.month = 1;
@@ -336,11 +295,9 @@ define(
                     });
                 }
               }
-              else
-              {
-                if ($scope.timeline.current.month != 12)
-                {
-                  $scope.timeline.current.month ++;
+              else {
+                if ($scope.timeline.current.month != 12) {
+                  $scope.timeline.current.month++;
 
                   $scope.timeliner.load(
                     {
@@ -356,10 +313,8 @@ define(
           /**
            * Go to this week
            */
-          $scope.timelineThisWeek = function ()
-          {
-            if ($scope.timeline.current.week != new Date().getWeek())
-            {
+          $scope.timelineThisWeek = function () {
+            if ($scope.timeline.current.week != new Date().getWeek()) {
               $scope.timeliner.load(
                 {
                   start: $scope.periods.weeks[new Date().getWeek()].first.timeStamp,
@@ -377,11 +332,9 @@ define(
           /**
            * Go one week in past
            */
-          $scope.timelineWeekBefore = function ()
-          {
-            if ($scope.timeline.current.week != 1)
-            {
-              $scope.timeline.current.week --;
+          $scope.timelineWeekBefore = function () {
+            if ($scope.timeline.current.week != 1) {
+              $scope.timeline.current.week--;
 
               $scope.timeliner.load(
                 {
@@ -400,11 +353,9 @@ define(
           /**
            * Go one week in future
            */
-          $scope.timelineWeekAfter = function ()
-          {
-            if ($scope.timeline.current.week != 53)
-            {
-              $scope.timeline.current.week ++;
+          $scope.timelineWeekAfter = function () {
+            if ($scope.timeline.current.week != 53) {
+              $scope.timeline.current.week++;
 
               $scope.timeliner.load(
                 {
@@ -423,8 +374,7 @@ define(
           /**
            * Timeline zoom in
            */
-          $scope.timelineZoomIn = function ()
-          {
+          $scope.timelineZoomIn = function () {
             $scope.self.timeline.zoom($rootScope.config.timeline.config.zoom, Date.now());
           };
 
@@ -432,22 +382,19 @@ define(
           /**
            * Timeline zoom out
            */
-          $scope.timelineZoomOut = function ()
-          {
-            $scope.self.timeline.zoom(- $rootScope.config.timeline.config.zoom, Date.now());
+          $scope.timelineZoomOut = function () {
+            $scope.self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now());
           };
 
 
           /**
            * Redraw timeline on window resize
            */
-          $window.onresize = function ()
-          {
+          $window.onresize = function () {
             $scope.self.timeline.redraw();
           };
 
-          $scope.fullWidth = function ()
-          {
+          $scope.fullWidth = function () {
             $scope.self.timeline.redraw();
           }
         }

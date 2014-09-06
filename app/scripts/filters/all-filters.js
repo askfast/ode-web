@@ -1,16 +1,13 @@
 define(
   ['filters/filters', 'config'],
-  function (filters, config)
-  {
+  function (filters, config) {
     'use strict';
 
     filters.filter(
       'convertToDateObj',
       [
-        function ()
-        {
-          return function (date)
-          {
+        function () {
+          return function (date) {
             return Date(date);
           }
         }
@@ -23,22 +20,17 @@ define(
       .filter(
       'translateRole',
       [
-        function ()
-        {
-          return function (role)
-          {
+        function () {
+          return function (role) {
             var urole;
 
             angular.forEach(
               config.roles,
-              function (prole)
-              {
-                if (prole.id == role)
-                {
+              function (prole) {
+                if (prole.id == role) {
                   urole = prole.label;
                 }
-                else if (role == 0)
-                {
+                else if (role == 0) {
                   urole = 'Super admin';
                 }
               }
@@ -56,18 +48,14 @@ define(
       .filter(
       'translateDivision',
       [
-        function ()
-        {
-          return function (divid)
-          {
+        function () {
+          return function (divid) {
             var filtered;
 
             angular.forEach(
               config.timeline.config.divisions,
-              function (division)
-              {
-                if (division.id == divid)
-                {
+              function (division) {
+                if (division.id == divid) {
                   filtered = division.label;
                 }
               }
@@ -86,19 +74,15 @@ define(
       'rangeMainFilter',
       [
         'Dater',
-        function (Dater)
-        {
+        function (Dater) {
           var periods = Dater.getPeriods();
 
-          return function (dates)
-          {
-            if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000)
-            {
-              dates.start = new Date(dates.end).addDays(- 1);
+          return function (dates) {
+            if ((new Date(dates.end).getTime() - new Date(dates.start).getTime()) == 86401000) {
+              dates.start = new Date(dates.end).addDays(-1);
             }
 
-            var cFirst = function (str)
-            {
+            var cFirst = function (str) {
               return str.charAt(0).toUpperCase() + str.substr(1);
             };
 
@@ -118,41 +102,38 @@ define(
             };
 
             var dates = {
-                  start: {
-                    real: new Date(dates.start).toString('dddd d MMMM'),
-                    month: new Date(dates.start).toString('MMMM'),
-                    day: new Date(dates.start).toString('d')
-                  },
-                  end: {
-                    real: new Date(dates.end).toString('dddd d MMMM'),
-                    month: new Date(dates.end).toString('MMMM'),
-                    day: new Date(dates.end).toString('d')
-                  }
+                start: {
+                  real: new Date(dates.start).toString('dddd d MMMM'),
+                  month: new Date(dates.start).toString('MMMM'),
+                  day: new Date(dates.start).toString('d')
                 },
-                monthNumber = Date.getMonthNumberFromName(dates.start.month);
+                end: {
+                  real: new Date(dates.end).toString('dddd d MMMM'),
+                  month: new Date(dates.end).toString('MMMM'),
+                  day: new Date(dates.end).toString('d')
+                }
+              },
+              monthNumber = Date.getMonthNumberFromName(dates.start.month);
 
             if ((((Math.round(dates.start.day) + 1) == dates.end.day && dates.start.hour == dates.end.hour) || dates.start.day == dates.end.day) &&
-                dates.start.month == dates.end.month)
-            {
+              dates.start.month == dates.end.month) {
               return  ndates.start.real +
-                      ', ' +
-                      ndates.start.year;
+                ', ' +
+                ndates.start.year;
             }
-            else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays)
-            {
+            else if (dates.start.day == 1 && dates.end.day == periods.months[monthNumber + 1].totalDays) {
               return  ndates.start.month +
-                      ', ' +
-                      ndates.start.year;
+                ', ' +
+                ndates.start.year;
             }
-            else
-            {
+            else {
               return  ndates.start.real +
-                      ', ' +
-                      ndates.start.year +
-                      ' / ' +
-                      ndates.end.real +
-                      ', ' +
-                      ndates.end.year;
+                ', ' +
+                ndates.start.year +
+                ' / ' +
+                ndates.end.real +
+                ', ' +
+                ndates.end.year;
             }
 
           }
@@ -167,14 +148,10 @@ define(
       'rangeMainWeekFilter',
       [
         'Dater',
-        function (Dater)
-        {
-          return function (dates)
-          {
-            if (dates)
-            {
-              var cFirst = function (str)
-              {
+        function (Dater) {
+          return function (dates) {
+            if (dates) {
+              var cFirst = function (str) {
                 return str.charAt(0).toUpperCase() + str.substr(1);
               };
 
@@ -184,13 +161,12 @@ define(
               };
 
               return  newDates.start +
-                      ' / ' +
-                      newDates.end +
-                      ', ' +
-                      Dater.getThisYear();
+                ' / ' +
+                newDates.end +
+                ', ' +
+                Dater.getThisYear();
             }
-            else
-            {
+            else {
               return false;
             }
           }
@@ -205,22 +181,17 @@ define(
       'rangeInfoFilter',
       [
         '$rootScope', 'Dater',
-        function ($rootScope, Dater)
-        {
+        function ($rootScope, Dater) {
           var periods = Dater.getPeriods();
 
-          return function (timeline)
-          {
+          return function (timeline) {
             var diff = new Date(timeline.range.end).getTime() - new Date(timeline.range.start).getTime();
 
-            if (diff > (2419200000 + 259200000))
-            {
+            if (diff > (2419200000 + 259200000)) {
               return $rootScope.ui.planboard.rangeInfoTotalSelectedDays + Math.round(diff / 86400000);
             }
-            else
-            {
-              if (timeline.scope.day)
-              {
+            else {
+              if (timeline.scope.day) {
                 var hours = {
                   start: new Date(timeline.range.start).toString('HH:mm'),
                   end: new Date(timeline.range.end).toString('HH:mm')
@@ -232,21 +203,19 @@ define(
                 if (hours.end == '00:00') hours.end = '24:00';
 
                 return  $rootScope.ui.planboard.rangeInfoTime +
-                        hours.start +
-                        ' / ' +
-                        hours.end;
+                  hours.start +
+                  ' / ' +
+                  hours.end;
               }
-              else if (timeline.scope.week)
-              {
+              else if (timeline.scope.week) {
                 return  $rootScope.ui.planboard.rangeInfoWeekNumber +
-                        timeline.current.week;
+                  timeline.current.week;
               }
-              else if (timeline.scope.month)
-              {
+              else if (timeline.scope.month) {
                 return  $rootScope.ui.planboard.rangeInfoMonth +
-                        timeline.current.month +
-                        $rootScope.ui.planboard.rangeInfoTotalDays +
-                        periods.months[timeline.current.month].totalDays;
+                  timeline.current.month +
+                  $rootScope.ui.planboard.rangeInfoTotalDays +
+                  periods.months[timeline.current.month].totalDays;
               }
             }
           };
@@ -261,12 +230,9 @@ define(
       'rangeInfoWeekFilter',
       [
         '$rootScope',
-        function ($rootScope)
-        {
-          return function (timeline)
-          {
-            if (timeline)
-            {
+        function ($rootScope) {
+          return function (timeline) {
+            if (timeline) {
               return $rootScope.ui.planboard.rangeInfoWeekNumber + timeline.current.week;
             }
           };
@@ -283,20 +249,16 @@ define(
       'convertRatios',
       [
         '$rootScope',
-        function ($rootScope)
-        {
-          return function (stats)
-          {
+        function ($rootScope) {
+          return function (stats) {
             var ratios = '';
 
             angular.forEach(
               stats,
-              function (stat)
-              {
+              function (stat) {
                 var state = stat.state.replace(/^bar-+/, '');
 
-                switch (state)
-                {
+                switch (state) {
                   case 'Available':
                     state = $rootScope.ui.states.available;
                     break;
@@ -337,10 +299,8 @@ define(
       'calculateDeltaTime',
       [
         '$rootScope',
-        function ($rootScope)
-        {
-          return function (stamp)
-          {
+        function ($rootScope) {
+          return function (stamp) {
             var delta = Math.abs(stamp - Date.now().getTime()) / 1000;
 
             var days = Math.floor(delta / 86400);
@@ -353,29 +313,27 @@ define(
 
             var output = '';
 
-            if (days != 0)
-            {
+            if (days != 0) {
               output += days;
             }
 
-            if (hours != 0)
-            {
-              if (days != 0)
-              { output += $rootScope.ui.dashboard.time.days + ' : ' }
+            if (hours != 0) {
+              if (days != 0) {
+                output += $rootScope.ui.dashboard.time.days + ' : '
+              }
 
               output += hours;
             }
 
-            if (minutes != 0)
-            {
-              if (hours != 0)
-              { output += $rootScope.ui.dashboard.time.hours + ' : ' }
+            if (minutes != 0) {
+              if (hours != 0) {
+                output += $rootScope.ui.dashboard.time.hours + ' : '
+              }
 
               output += minutes + $rootScope.ui.dashboard.time.minutes
             }
 
-            if (hours == 0 && minutes == 0)
-            {
+            if (hours == 0 && minutes == 0) {
               output += ' ' + $rootScope.ui.dashboard.time.days
             }
 
@@ -390,17 +348,15 @@ define(
      */
       .filter(
       'calculateTimeInDays',
-      function ()
-      {
-        return function (stamp)
-        {
+      function () {
+        return function (stamp) {
           var day = 1000 * 60 * 60 * 24,
-              hour = 1000 * 60 * 60,
-              days = 0,
-              hours = 0,
-              stamp = stamp * 1000,
-              hours = stamp % day,
-              days = stamp - hours;
+            hour = 1000 * 60 * 60,
+            days = 0,
+            hours = 0,
+            stamp = stamp * 1000,
+            hours = stamp % day,
+            days = stamp - hours;
 
           return  Math.floor(days / day);
         };
@@ -413,17 +369,15 @@ define(
      */
       .filter(
       'calculateTimeInHours',
-      function ()
-      {
-        return function (stamp)
-        {
+      function () {
+        return function (stamp) {
           var day = 1000 * 60 * 60 * 24,
-              hour = 1000 * 60 * 60,
-              days = 0,
-              hours = 0,
-              stamp = stamp * 1000,
-              hours = stamp % day,
-              days = stamp - hours;
+            hour = 1000 * 60 * 60,
+            days = 0,
+            hours = 0,
+            stamp = stamp * 1000,
+            hours = stamp % day,
+            days = stamp - hours;
 
           return  Math.floor(hours / hour);
         };
@@ -436,20 +390,18 @@ define(
      */
       .filter(
       'calculateTimeInMinutes',
-      function ()
-      {
-        return function (stamp)
-        {
+      function () {
+        return function (stamp) {
           var day = 1000 * 60 * 60 * 24,
-              hour = 1000 * 60 * 60,
-              minute = 1000 * 60,
-              days = 0,
-              hours = 0,
-              minutes = 0,
-              stamp = stamp * 1000,
-              hours = stamp % day,
-              days = stamp - hours,
-              minutes = stamp % hour;
+            hour = 1000 * 60 * 60,
+            minute = 1000 * 60,
+            days = 0,
+            hours = 0,
+            minutes = 0,
+            stamp = stamp * 1000,
+            hours = stamp % day,
+            days = stamp - hours,
+            minutes = stamp % hour;
 
           return  Math.floor(minutes / minute);
         };
@@ -463,14 +415,10 @@ define(
       .filter(
       'convertEve',
       [
-        function ()
-        {
-          return function (url)
-          {
-            if (/\//.test(url))
-            {
-              if (config.profile.smartAlarm)
-              {
+        function () {
+          return function (url) {
+            if (/\//.test(url)) {
+              if (config.profile.smartAlarm) {
                 return url;
               }
 
@@ -480,8 +428,7 @@ define(
 
               return eve[eve.length - 2];
             }
-            else
-            {
+            else {
               return url
             }
           };
@@ -497,18 +444,14 @@ define(
       'convertUserIdToName',
       [
         'Storage',
-        function (Storage)
-        {
+        function (Storage) {
           var members = angular.fromJson(Storage.get('members'));
 
-          return function (id)
-          {
-            if (members == null || typeof members[id] == "undefined")
-            {
+          return function (id) {
+            if (members == null || typeof members[id] == "undefined") {
               return id;
             }
-            else
-            {
+            else {
               return members[id].resources.firstName + ' ' + members[id].resources.lastName;
             }
           };
@@ -523,10 +466,8 @@ define(
       'nicelyDate',
       [
         '$rootScope',
-        function ($rootScope)
-        {
-          return function (date)
-          {
+        function ($rootScope) {
+          return function (date) {
             if (typeof date == 'string') date = Number(date);
 
             return new Date(date).toString($rootScope.config.formats.datetimefull);
@@ -542,10 +483,8 @@ define(
      */
       .filter(
       'convertTimeStamp',
-      function ()
-      {
-        return function (stamp)
-        {
+      function () {
+        return function (stamp) {
           console.warn(typeof stamp);
 
           return new Date(stamp).toString('dd-MM-yyyy HH:mm');
@@ -560,10 +499,8 @@ define(
      */
       .filter(
       'noTitle',
-      function ()
-      {
-        return function (title)
-        {
+      function () {
+        return function (title) {
           return (title == "") ? "- No Title -" : title;
         }
       }
@@ -576,10 +513,8 @@ define(
      */
       .filter(
       'stripSpan',
-      function ()
-      {
-        return function (string)
-        {
+      function () {
+        return function (string) {
           return string.match(/<span class="label">(.*)<\/span>/);
         }
       }
@@ -591,12 +526,9 @@ define(
      */
       .filter(
       'stripHtml',
-      function ()
-      {
-        return function (string)
-        {
-          if (string)
-          {
+      function () {
+        return function (string) {
+          if (string) {
             return string.split('>')[1].split('<')[0];
           }
         }
@@ -611,19 +543,14 @@ define(
       'groupIdToName',
       [
         'Storage',
-        function (Storage)
-        {
-          return function (id, comma)
-          {
+        function (Storage) {
+          return function (id, comma) {
             var groups = angular.fromJson(Storage.get('groups')),
-                names = '';
+              names = '';
 
-            for (var i in groups)
-            {
-              if (groups[i].uuid == id)
-              {
-                if (comma)
-                {
+            for (var i in groups) {
+              if (groups[i].uuid == id) {
+                if (comma) {
                   names += ', ';
                 }
 
@@ -645,14 +572,11 @@ define(
       'divisionIdToName',
       [
         '$rootScope',
-        function ($rootScope)
-        {
-          return function (id)
-          {
+        function ($rootScope) {
+          return function (id) {
             var divisions = $rootScope.config.timeline.config.divisions;
 
-            for (var i in divisions)
-            {
+            for (var i in divisions) {
               if (divisions[i].id == id) return divisions[i].label;
             }
           }
@@ -667,13 +591,11 @@ define(
       'i18n_spec',
       [
         '$rootScope',
-        function ($rootScope)
-        {
-          return function (string, type)
-          {
+        function ($rootScope) {
+          return function (string, type) {
             var types = type.split("."),
-                ret = $rootScope.ui[types[0]][types[1]],
-                ret = ret.replace('$v', string);
+              ret = $rootScope.ui[types[0]][types[1]],
+              ret = ret.replace('$v', string);
 
             return ret;
           }
@@ -688,10 +610,8 @@ define(
       'truncateGroupTitle',
       [
         'Strings',
-        function (Strings)
-        {
-          return function (title)
-          {
+        function (Strings) {
+          return function (title) {
             return Strings.truncate(title, 20, true);
           }
         }
@@ -705,10 +625,8 @@ define(
       'toTitleCase',
       [
         'Strings',
-        function (Strings)
-        {
-          return function (txt)
-          {
+        function (Strings) {
+          return function (txt) {
             return Strings.toTitleCase(txt);
           }
         }
@@ -720,15 +638,12 @@ define(
      */
       .filter(
       'countBox',
-      function ()
-      {
-        return function (box)
-        {
+      function () {
+        return function (box) {
           var total = 0;
 
           angular.forEach(
-            box, function (bulk)
-            {
+            box, function (bulk) {
               total = total + bulk.length;
             });
 
@@ -745,17 +660,14 @@ define(
       'nicelyOffsets',
       [
         'Dater', 'Storage', 'Offsetter',
-        function (Dater, Storage, Offsetter)
-        {
-          return function (data)
-          {
+        function (Dater, Storage, Offsetter) {
+          return function (data) {
             var offsets = Offsetter.factory(data),
-                compiled = '';
+              compiled = '';
 
             angular.forEach(
               offsets,
-              function (offset)
-              {
+              function (offset) {
                 compiled += '<div style="display:block; margin-bottom: 5px;">';
 
                 compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
@@ -793,30 +705,23 @@ define(
       'nicelyAudience',
       [
         'Storage',
-        function (Storage)
-        {
-          return function (data)
-          {
-            if (data)
-            {
+        function (Storage) {
+          return function (data) {
+            if (data) {
               var members = angular.fromJson(Storage.get('members')),
-                  groups = angular.fromJson(Storage.get('groups')),
-                  audience = [];
+                groups = angular.fromJson(Storage.get('groups')),
+                audience = [];
 
               angular.forEach(
-                data, function (recipient)
-                {
+                data, function (recipient) {
                   var name;
 
-                  if (members[recipient])
-                  {
+                  if (members[recipient]) {
                     name = members[recipient].name;
                   }
-                  else
-                  {
+                  else {
                     angular.forEach(
-                      groups, function (group)
-                      {
+                      groups, function (group) {
                         if (group.uuid == recipient) name = group.name;
                       });
                   }
@@ -837,17 +742,16 @@ define(
       .filter(
       'convertToObject',
       [
-        function ()
-        {
-          return function (arr)
-          {
-            if (arr)
-            {
+        function () {
+          return function (arr) {
+            if (arr) {
               var obj = {};
 
               angular.forEach(
                 arr,
-                function (item, index) { obj[index] = item }.bind(obj)
+                function (item, index) {
+                  obj[index] = item
+                }.bind(obj)
               );
 
               return obj;
@@ -863,22 +767,17 @@ define(
       .filter(
       'filterSupers',
       [
-        function ()
-        {
-          return function (users)
-          {
-            if (users)
-            {
+        function () {
+          return function (users) {
+            if (users) {
               var filtered = [];
 
               angular.forEach(
                 users,
-                function (user)
-                {
+                function (user) {
                   if (user.resources &&
-                      (user.resources.role != 0 && user.resources.role != 4)
-                    )
-                  {
+                    (user.resources.role != 0 && user.resources.role != 4)
+                    ) {
                     filtered.push(user);
                   }
                 }
@@ -889,7 +788,6 @@ define(
           }
         }
       ]);
-
 
 
   }

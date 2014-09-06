@@ -1,14 +1,12 @@
 define(
   ['services/services'],
-  function (services)
-  {
+  function (services) {
     'use strict';
 
     services.factory(
       'GoogleGEO',
       [
-        function ()
-        {
+        function () {
           return new google.maps.Geocoder();
         }
       ]

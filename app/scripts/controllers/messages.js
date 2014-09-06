@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
@@ -17,8 +16,7 @@ define(
         'Storage',
         'Timer',
         'Offsetter',
-        function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter)
-        {
+        function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Timer, Offsetter) {
           $rootScope.notification.status = false;
 
           /**
@@ -55,24 +53,19 @@ define(
            */
           $scope.paginate = {
 
-            set: function (page, box)
-            {
+            set: function (page, box) {
               $scope.page[box] = page;
             },
 
-            next: function (box)
-            {
-              if ($scope.page[box] + 1 != $scope.messages[box].length)
-              {
-                $scope.page[box] ++;
+            next: function (box) {
+              if ($scope.page[box] + 1 != $scope.messages[box].length) {
+                $scope.page[box]++;
               }
             },
 
-            before: function (box)
-            {
-              if ($scope.page[box] != 0)
-              {
-                $scope.page[box] --;
+            before: function (box) {
+              if ($scope.page[box] != 0) {
+                $scope.page[box]--;
               }
             }
           };
@@ -126,8 +119,7 @@ define(
           /**
            * View setter
            */
-          function setView (hash)
-          {
+          function setView(hash) {
             $scope.views = {
               compose: false,
               message: false,
@@ -145,12 +137,10 @@ define(
           /**
            * Switch between the views and set hash accordingly
            */
-          $scope.setViewTo = function (hash)
-          {
+          $scope.setViewTo = function (hash) {
             $scope.$watch(
               hash,
-              function ()
-              {
+              function () {
                 $location.hash(hash);
 
                 setView(hash);
@@ -164,14 +154,12 @@ define(
           /**
            * If no params or hashes given in url
            */
-          if (! $location.hash())
-          {
+          if (!$location.hash()) {
             view = 'inbox';
 
             $location.hash('inbox');
           }
-          else
-          {
+          else {
             view = $location.hash();
           }
 
@@ -191,14 +179,11 @@ define(
           /**
            * Extract view action from url and set message view
            */
-          if ($location.search().uuid)
-          {
-            if ($location.hash() == 'scheaduler')
-            {
+          if ($location.search().uuid) {
+            if ($location.hash() == 'scheaduler') {
               setNotificationView($location.search().uuid);
             }
-            else
-            {
+            else {
               setMessageView($location.search().uuid);
             }
           }
@@ -208,8 +193,7 @@ define(
            * TODO: Possible bug.. Still issues with changing state of the message
            * Set given group for view
            */
-          function setMessageView (id)
-          {
+          function setMessageView(id) {
             $rootScope.statusBar.display($rootScope.ui.message.loadingMessage);
 
             setView('message');
@@ -228,19 +212,15 @@ define(
              * can have 'NEW' state as well but those states are not shown
              * Maybe only for 'trash' box to show state in later stages
              */
-            if ($scope.message.state == "NEW" && $scope.message.box == 'inbox')
-            {
+            if ($scope.message.state == "NEW" && $scope.message.box == 'inbox') {
               Messages.changeState([id], 'READ')
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.messages.changeState);
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     // console.log('state changed');
                   }
                 }
@@ -250,10 +230,8 @@ define(
 
               angular.forEach(
                 $scope.messages.inbox,
-                function (message)
-                {
-                  if (message.uuid == $scope.message.uuid)
-                  {
+                function (message) {
+                  if (message.uuid == $scope.message.uuid) {
                     message.state = "READ";
                   }
 
@@ -273,15 +251,16 @@ define(
           /**
            * Request for a message
            */
-          $scope.requestMessage = function (current, origin)
-          {
+          $scope.requestMessage = function (current, origin) {
             $scope.origin = origin;
 
             setMessageView(current);
 
             $scope.$watch(
               $location.search(),
-              function () { $location.search({uuid: current}) }
+              function () {
+                $location.search({uuid: current})
+              }
             );
           };
 
@@ -289,13 +268,14 @@ define(
           /**
            * Count the schedules
            */
-          $scope.scheaduleCounter = function ()
-          {
+          $scope.scheaduleCounter = function () {
             var count = 0;
 
             angular.forEach(
               $scope.scheaduled.offsets,
-              function () { count ++ }
+              function () {
+                count++
+              }
             );
 
             $scope.scheaduleCount = count;
@@ -305,8 +285,7 @@ define(
           /**
            * Set view for notification
            */
-          function setNotificationView (id)
-          {
+          function setNotificationView(id) {
             $scope.origin = 'notifications';
 
             $scope.scheadulerPane = true;
@@ -315,25 +294,22 @@ define(
 
             angular.forEach(
               scheaduled.types,
-              function (type)
-              {
+              function (type) {
                 if (type == 'sms')    $scope.broadcast.sms = true;
                 if (type == 'email')  $scope.broadcast.email = true;
               }
             );
 
             var members = angular.fromJson(Storage.get('members')),
-                groups = angular.fromJson(Storage.get('groups')),
-                receivers = [];
+              groups = angular.fromJson(Storage.get('groups')),
+              receivers = [];
 
             angular.forEach(
               scheaduled.recipients,
-              function (recipient)
-              {
+              function (recipient) {
                 var name;
 
-                if (members[recipient])
-                {
+                if (members[recipient]) {
                   name = members[recipient].name;
 
                   receivers.push(
@@ -344,14 +320,11 @@ define(
                     }
                   );
                 }
-                else
-                {
+                else {
                   angular.forEach(
                     groups,
-                    function (group)
-                    {
-                      if (group.uuid == recipient)
-                      {
+                    function (group) {
+                      if (group.uuid == recipient) {
                         name = group.name;
 
                         receivers.push(
@@ -376,29 +349,21 @@ define(
 
             angular.forEach(
               $("div#composeTab select.chzn-select option"),
-              function (option)
-              {
+              function (option) {
                 angular.forEach(
                   scheaduled.recipients,
-                  function (recipient)
-                  {
-                    if (members[recipient])
-                    {
-                      if (option.innerHTML == members[recipient].name)
-                      {
+                  function (recipient) {
+                    if (members[recipient]) {
+                      if (option.innerHTML == members[recipient].name) {
                         option.selected = true;
                       }
                     }
-                    else
-                    {
+                    else {
                       angular.forEach(
                         groups,
-                        function (group)
-                        {
-                          if (group.uuid == recipient)
-                          {
-                            if (option.innerHTML == group.name)
-                            {
+                        function (group) {
+                          if (group.uuid == recipient) {
+                            if (option.innerHTML == group.name) {
                               option.selected = true;
                             }
                           }
@@ -431,7 +396,9 @@ define(
 
             angular.forEach(
               $scope.scheaduled.offsets,
-              function () { count ++ }
+              function () {
+                count++
+              }
             );
 
             $scope.scheaduleCount = count;
@@ -443,8 +410,7 @@ define(
           /**
            * Request for a notification
            */
-          $scope.requestNotification = function (id)
-          {
+          $scope.requestNotification = function (id) {
             $rootScope.statusBar.display($rootScope.ui.message.loadingNotifications);
 
             setView('scheaduler');
@@ -455,7 +421,9 @@ define(
 
             $scope.$watch(
               $location.search(),
-              function () { $location.search({uuid: id}) }
+              function () {
+                $location.search({uuid: id})
+              }
             );
 
             $rootScope.statusBar.off();
@@ -465,20 +433,17 @@ define(
           /**
            * Compose message view toggle
            */
-          $scope.composeMessage = function ()
-          {
+          $scope.composeMessage = function () {
             /**
              * Close composer
              */
-            if ($scope.views.compose)
-            {
+            if ($scope.views.compose) {
               $scope.closeTabs();
             }
             /**
              * Open composer
              */
-            else
-            {
+            else {
               /**
                * TODO: Why not working properly? Look into this one
                * Reset them
@@ -494,8 +459,9 @@ define(
 
               angular.forEach(
                 $("div#composeTab select.chzn-select option"),
-                function (option)
-                { option.selected = false }
+                function (option) {
+                  option.selected = false
+                }
               );
 
               $("div#composeTab select.chzn-select").trigger("liszt:updated");
@@ -516,8 +482,7 @@ define(
           /**
            * Reset views
            */
-          $scope.closeTabs = function ()
-          {
+          $scope.closeTabs = function () {
             $scope.message = {};
 
             $location.search({});
@@ -533,13 +498,14 @@ define(
           /**
            * Toggle selections
            */
-          $scope.toggleSelection = function (messages, inbox, master)
-          {
+          $scope.toggleSelection = function (messages, inbox, master) {
             var flag = (master) ? true : false;
 
             angular.forEach(
               messages,
-              function (message) { $scope.selection[inbox][message.uuid] = flag }
+              function (message) {
+                $scope.selection[inbox][message.uuid] = flag
+              }
             );
           };
 
@@ -547,8 +513,7 @@ define(
           /**
            * Remove message
            */
-          $scope.removeMessage = function (id)
-          {
+          $scope.removeMessage = function (id) {
             $rootScope.statusBar.display($rootScope.ui.message.removing);
 
             var bulk = [];
@@ -557,24 +522,20 @@ define(
 
             Messages.remove(bulk)
               .then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessage);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.message.removed);
 
                   $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
                   Messages.query()
                     .then(
-                    function (messages)
-                    {
+                    function (messages) {
                       $scope.messages = messages.messages;
 
                       $rootScope.loading = false;
@@ -592,8 +553,7 @@ define(
           /**
            * Remove messages
            */
-          $scope.removeMessages = function (selection)
-          {
+          $scope.removeMessages = function (selection) {
             // console.log('it is coming to bulk remove ->', selection.length);
 
             $rootScope.statusBar.display($rootScope.ui.message.removingSelected);
@@ -602,29 +562,27 @@ define(
 
             angular.forEach(
               selection,
-              function (flag, id) { if (flag) ids.push(id) }
+              function (flag, id) {
+                if (flag) ids.push(id)
+              }
             );
 
             Messages.remove(ids)
               .then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.messages.removeMessages);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.message.removed);
 
                   $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
                   Messages.query()
                     .then(
-                    function (messages)
-                    {
+                    function (messages) {
                       $scope.messages = messages.messages;
 
                       $rootScope.statusBar.off();
@@ -638,8 +596,7 @@ define(
           /**
            * Restore a message
            */
-          $scope.restoreMessage = function (id)
-          {
+          $scope.restoreMessage = function (id) {
             $rootScope.statusBar.display($rootScope.ui.message.restoring);
 
             var bulk = [];
@@ -648,24 +605,20 @@ define(
 
             Messages.restore(bulk)
               .then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessage);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.message.restored);
 
                   $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
                   Messages.query()
                     .then(
-                    function (messages)
-                    {
+                    function (messages) {
                       $scope.messages = messages.messages;
 
                       $rootScope.statusBar.off();
@@ -680,38 +633,32 @@ define(
           /**
            * Restore messages
            */
-          $scope.restoreMessages = function (selection)
-          {
+          $scope.restoreMessages = function (selection) {
             $rootScope.statusBar.display($rootScope.ui.message.restoringSelected);
 
             var ids = [];
 
             angular.forEach(
-              selection, function (flag, id)
-              {
+              selection, function (flag, id) {
                 if (flag) ids.push(id);
               });
 
             Messages.restore(ids)
               .then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.messages.restoreMessages);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.message.removed);
 
                   $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
                   Messages.query()
                     .then(
-                    function (messages)
-                    {
+                    function (messages) {
                       $scope.messages = messages.messages;
 
                       $rootScope.statusBar.off();
@@ -726,38 +673,31 @@ define(
           /**
            * Empty trash
            */
-          $scope.emptyTrash = function ()
-          {
+          $scope.emptyTrash = function () {
             $rootScope.statusBar.display($rootScope.ui.message.emptying);
 
             Messages.emptyTrash()
               .then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.messages.emptyTrash);
 
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.notifier.success($rootScope.ui.message.emptied);
 
                   $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
                   Messages.query()
                     .then(
-                    function (messages)
-                    {
-                      if (messages.error)
-                      {
+                    function (messages) {
+                      if (messages.error) {
                         $rootScope.notifier.error($rootScope.ui.errors.messages.query);
 
                         console.warn('error ->', messages);
                       }
-                      else
-                      {
+                      else {
                         $scope.messages = messages.messages;
 
                         $rootScope.statusBar.off();
@@ -773,8 +713,7 @@ define(
           /**
            * Reply a message
            */
-          $scope.reply = function (message)
-          {
+          $scope.reply = function (message) {
             setView('compose');
 
             $scope.setViewTo('compose');
@@ -792,8 +731,8 @@ define(
             // console.log('processed requester ->', senderId);
 
             var name = (typeof members[senderId] == 'undefined' ) ?
-                       senderId :
-                       members[senderId].name;
+              senderId :
+              members[senderId].name;
 
             // console.log('name ->', name);
 
@@ -815,46 +754,38 @@ define(
           /**
            * Send message
            */
-          $scope.send = function (message, broadcast)
-          {
+          $scope.send = function (message, broadcast) {
             $rootScope.statusBar.display($rootScope.ui.message.sending);
 
-            if (message.receivers)
-            {
+            if (message.receivers) {
               Messages.send(
                 message,
                 broadcast
               ).then(
-                function (uuid)
-                {
+                function (uuid) {
                   // console.log('uuid ->', uuid);
 
-                  if (uuid.error)
-                  {
+                  if (uuid.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.messages.send);
 
                     console.warn('error ->', uuid);
                   }
-                  else
-                  {
+                  else {
                     $rootScope.notifier.success($rootScope.ui.message.sent);
 
                     $rootScope.statusBar.display($rootScope.ui.message.refreshing);
 
                     Messages.query()
                       .then(
-                      function (messages)
-                      {
+                      function (messages) {
                         // console.log('messages ->', angular.fromJson(messages));
 
-                        if (messages.error)
-                        {
+                        if (messages.error) {
                           $rootScope.notifier.error($rootScope.ui.errors.messages.query);
 
                           console.warn('error ->', messages);
                         }
-                        else
-                        {
+                        else {
                           $scope.messages = messages.messages;
 
                           $scope.closeTabs();
@@ -869,8 +800,7 @@ define(
                 }
               );
             }
-            else
-            {
+            else {
               $rootScope.notifier.error($rootScope.ui.message.noReceivers);
 
               $rootScope.statusBar.off();
@@ -884,18 +814,15 @@ define(
            */
           $("div#composeTab select.chzn-select").chosen()
             .change(
-            function ()
-            {
+            function () {
               $.each(
                 $(this).next().find("ul li.result-selected"),
-                function (i, li)
-                {
+                function (i, li) {
                   var name = $(li).html();
 
                   $.each(
                     $("div#composeTab select.chzn-select option"),
-                    function (j, opt)
-                    {
+                    function (j, opt) {
                       if (opt.innerHTML == name) opt.selected = true;
                     }
                   );
@@ -908,17 +835,13 @@ define(
           /**
            * Re-render receivers list
            */
-          function renderReceiversList ()
-          {
+          function renderReceiversList() {
             angular.forEach(
-              $scope.message.receivers, function (receiver)
-              {
+              $scope.message.receivers, function (receiver) {
                 angular.forEach(
                   $("div#composeTab select.chzn-select option"),
-                  function (option)
-                  {
-                    if (option.innerHTML == receiver.name)
-                    {
+                  function (option) {
+                    if (option.innerHTML == receiver.name) {
                       option.selected = true;
                     }
                   }
@@ -933,19 +856,16 @@ define(
           /**
            * Extract escalation information
            */
-          if ($location.search().escalate)
-          {
+          if ($location.search().escalate) {
             var escalation = angular.fromJson(Storage.session.get('escalation')),
-                name = escalation.group.split('>')[1].split('<')[0],
-                uuid = escalation.group.split('uuid=')[1].split('#view')[0];
+              name = escalation.group.split('>')[1].split('<')[0],
+              uuid = escalation.group.split('uuid=')[1].split('#view')[0];
 
             setTimeout(
-              function ()
-              {
+              function () {
                 angular.forEach(
                   $("div#composeTab select.chzn-select option"),
-                  function (option)
-                  {
+                  function (option) {
                     if (option.innerHTML == name) option.selected = true;
                   }
                 );
@@ -981,9 +901,15 @@ define(
            * Bulk cleaners for mailboxes
            */
           $scope.clean = {
-            inbox: function () { Messages.clean($scope.messages.inbox) },
-            outbox: function () { Messages.clean($scope.messages.outbox) },
-            trash: function () { Messages.clean($scope.messages.trash) }
+            inbox: function () {
+              Messages.clean($scope.messages.inbox)
+            },
+            outbox: function () {
+              Messages.clean($scope.messages.outbox)
+            },
+            trash: function () {
+              Messages.clean($scope.messages.trash)
+            }
           };
 
 
@@ -995,14 +921,12 @@ define(
             /**
              * Make data ready for insertion
              */
-            job: function (message, broadcast, scheaduled)
-            {
+            job: function (message, broadcast, scheaduled) {
               var members = [],
-                  types = [];
+                types = [];
 
               angular.forEach(
-                message.receivers, function (receiver)
-                {
+                message.receivers, function (receiver) {
                   members.push(receiver.id);
                 });
 
@@ -1028,21 +952,17 @@ define(
             /**
              * Scheduler jobs lister
              */
-            list: function (callback)
-            {
+            list: function (callback) {
               $rootScope.statusBar.display($rootScope.ui.message.notificationsRefresh);
 
               Messages.scheaduled.list()
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsList);
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     $scope.scheadules = result;
 
                     $rootScope.statusBar.off();
@@ -1057,19 +977,15 @@ define(
              * TODO: NOT IN USE!
              * Get a scheduler job
              */
-            get: function (uuid)
-            {
+            get: function (uuid) {
               Messages.scheaduled.get(uuid)
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsGet);
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     // console.log('notification fetched ->', result);
 
                     $scope.scheaduled = result;
@@ -1081,14 +997,11 @@ define(
             /**
              * Save a schedule job
              */
-            save: function (message, broadcast, scheaduled)
-            {
-              if (scheaduled.uuid)
-              {
+            save: function (message, broadcast, scheaduled) {
+              if (scheaduled.uuid) {
                 this.edit(message, broadcast, scheaduled);
               }
-              else
-              {
+              else {
                 this.add(message, broadcast, scheaduled)
               }
             },
@@ -1097,29 +1010,24 @@ define(
             /**
              * Add a schedule job
              */
-            add: function (message, broadcast, scheaduled)
-            {
+            add: function (message, broadcast, scheaduled) {
               var self = this;
 
               $rootScope.statusBar.display($rootScope.ui.message.notificationsAdd);
 
               Messages.scheaduled.create(this.job(message, broadcast, scheaduled))
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsAdd);
 
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     $rootScope.notifier.success($rootScope.ui.message.notificationSaved);
 
                     self.list(
-                      function ()
-                      {
+                      function () {
                         $scope.setViewTo('notifications');
                       });
                   }
@@ -1130,29 +1038,24 @@ define(
             /**
              * Edit a schedule job
              */
-            edit: function (message, broadcast, scheaduled)
-            {
+            edit: function (message, broadcast, scheaduled) {
               var self = this;
 
               $rootScope.statusBar.display($rootScope.ui.message.notificationsEditing);
 
               Messages.scheaduled.edit(scheaduled.uuid, this.job(message, broadcast, scheaduled))
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsEdit);
 
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     $rootScope.notifier.success($rootScope.ui.message.notificationsEdited);
 
                     self.list(
-                      function ()
-                      {
+                      function () {
                         $scope.setViewTo('notifications');
 
                         // $location.search({uuid: scheaduled.uuid}).hash('scheaduler');
@@ -1165,29 +1068,24 @@ define(
             /**
              * Remove a schedule job
              */
-            remove: function (uuid)
-            {
+            remove: function (uuid) {
               var self = this;
 
               $rootScope.statusBar.display($rootScope.ui.message.notificationsDeleting);
 
               Messages.scheaduled.remove(uuid)
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.messages.notificationsDelete);
 
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     $rootScope.notifier.success($rootScope.ui.message.notificationsDeleted);
 
                     self.list(
-                      function ()
-                      {
+                      function () {
                         $scope.setViewTo('notifications');
                       });
                   }

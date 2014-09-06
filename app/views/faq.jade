@@ -1,165 +1,165 @@
 .page-header
-	h2 FAQ
-	.row-fluid
-		.tabbable.tabs-left
-			ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
-				li(class="{{(views.web==true) && 'active'}}")
-					a(href='faq#webTab', data-toggle='tab', ng-click='setViewTo("web")')
-						span.entypo 
-						| Web
-				li(class="{{(views.ios==true) && 'active'}}")
-					a(href='help#iosTab', data-toggle='tab', ng-click='setViewTo("ios")')
-						span.entypo 
-						| IOS
-				li(class="{{(views.android==true) && 'active'}}")
-					a(href='help#androidTab', data-toggle='tab', ng-click='setViewTo("android")')
-						span.entypo 
-						| Android
-			.tab-content
-				#webTab.tab-pane(class="{{(views.web==true) && 'active'}}")
-					.tab-header
-						h3.pull-left Web applicatie
-					hr
-					h4 Hoe zet ik mezelf snel op niet beschikbaar voor de komende 24 uur?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/WvJrUboUt5Q', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zet ik mezelf voor elk weekend op beschikbaar?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/W-aV3cELuGQ', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe bekijk ik mijn beschikbaarheid voor de volgende week?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/2GsGyi6YR1Q', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe krijg ik een nieuw wachtwoord als ik het ben vergeten?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/WyQvuG1xx2w', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe controleer ik of er een tekort dreigt in mijn groep(en)?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/FgJhLnubWEg', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4
-						| Hoe verander ik mijn persoonlijke informatie (bijv. telefoonnummer of wachtwoord)?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/1r_IKDyOLfY', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe stuur ik een bericht naar collega's of groepen?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/aEKbWuYRjqM', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe stel ik de taal in StandBy in?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/-vllVFnaXeQ', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe stel ik in de Agenda een standaard groep in?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/K8NsoyF1cl0', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					section(ng-show='app.resources.role == 1')
-						.tab-header
-							h3.pull-left Voor planners
-						hr
-						h4 Hoe kan ik de beschikbaarheid van een collega inzien en wijzigen?
-						iframe(width='560', height='315', src='//www.youtube.com/embed/zlxMuFHlxIM', frameborder='0', allowfullscreen='allowfullscreen')
-						br
-						br
-						br
-						h4 Hoe maak ik een nieuwe gebruiker aan?
-						iframe(width='560', height='315', src='//www.youtube.com/embed/ISXhqAW2ywk', frameborder='0', allowfullscreen='allowfullscreen')
-						br
-						br
-						br
-						h4 Hoe voeg ik een gebruiker toe aan een groep en/of hoe pas ik dit aan?
-						iframe(width='560', height='315', src='//www.youtube.com/embed/UpcJdi2eOgM', frameborder='0', allowfullscreen='allowfullscreen')
-						br
-						br
-						br
-						h4 Hoe verwijder ik iemand uit een groep?
-						iframe(width='560', height='315', src='//www.youtube.com/embed/5c0-g208j-E', frameborder='0', allowfullscreen='allowfullscreen')
-						br
-						br
-						br
-						h4 Hoe verwijder ik een gebruiker uit Standby?
-						iframe(width='560', height='315', src='//www.youtube.com/embed/e6kURIR6LQE', frameborder='0', allowfullscreen='allowfullscreen')
-						br
-						br
-						br
-				#iosTab.tab-pane(class="{{(views.ios==true) && 'active'}}")
-					.tab-header
-						h3.pull-left iOS
-					hr
-					h4 Hoe installeer ik de StandBy IOS app?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/7eKXip3eppE', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zet ik mezelf voor de komende 6 uur op niet beschikbaar?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/Cr0WpvjtE6s', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zet ik mezelf beschikbaar voor iedere dinsdagavond van 17:00-2300?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/YBjf6TCDj6o', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4
-						| Hoe stuur ik een bericht naar alle collega's in een groep (bijv. alle opstappers)?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/rK-TZGITUug', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zie ik mijn huidige status en die van de groep(en)?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/gLRrA2esQ6I', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zet ik de geo-fencing optie aan of uit?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/cWvvPkkUYyo', frameborder='0', allowfullscreen='allowfullscreen')
-				#androidTab.tab-pane(class="{{(views.android==true) && 'active'}}")
-					.tab-header
-						h3.pull-left Android
-					hr
-					h4 Hoe installeer ik de StandBy Android app?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/1L82fHvAkpc', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe weet ik welke versie van de app ik gebruik?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/ykLd2EG5nRY', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zet ik mijzelf voor de komende 6 uur op niet beschikbaar?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/iuX3zcmkN7g', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zet ik mijzelf elke dinsdag tussen 17:00 en 23:00 uur beschikbaar?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/SBx3y925uK8', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe stuur ik een bericht naar alle collega's in een groep?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/ivgkBnpwwS4', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zie ik mijn huidige status en die van de groep(en)?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/IDP6fg8TIT8', frameborder='0', allowfullscreen='allowfullscreen')
-					br
-					br
-					br
-					h4 Hoe zet ik de geo-fencing optie aan of uit?
-					iframe(width='560', height='315', src='//www.youtube.com/embed/exgsLkThN_c', frameborder='0', allowfullscreen='allowfullscreen')
+  h2 FAQ
+  .row-fluid
+    .tabbable.tabs-left
+      ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
+        li(class="{{(views.web==true) && 'active'}}")
+          a(href='faq#webTab', data-toggle='tab', ng-click='setViewTo("web")')
+            span.entypo 
+            | Web
+        li(class="{{(views.ios==true) && 'active'}}")
+          a(href='help#iosTab', data-toggle='tab', ng-click='setViewTo("ios")')
+            span.entypo 
+            | IOS
+        li(class="{{(views.android==true) && 'active'}}")
+          a(href='help#androidTab', data-toggle='tab', ng-click='setViewTo("android")')
+            span.entypo 
+            | Android
+      .tab-content
+        #webTab.tab-pane(class="{{(views.web==true) && 'active'}}")
+          .tab-header
+            h3.pull-left Web applicatie
+          hr
+          h4 Hoe zet ik mezelf snel op niet beschikbaar voor de komende 24 uur?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/WvJrUboUt5Q', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zet ik mezelf voor elk weekend op beschikbaar?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/W-aV3cELuGQ', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe bekijk ik mijn beschikbaarheid voor de volgende week?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/2GsGyi6YR1Q', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe krijg ik een nieuw wachtwoord als ik het ben vergeten?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/WyQvuG1xx2w', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe controleer ik of er een tekort dreigt in mijn groep(en)?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/FgJhLnubWEg', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4
+            | Hoe verander ik mijn persoonlijke informatie (bijv. telefoonnummer of wachtwoord)?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/1r_IKDyOLfY', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe stuur ik een bericht naar collega's of groepen?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/aEKbWuYRjqM', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe stel ik de taal in StandBy in?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/-vllVFnaXeQ', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe stel ik in de Agenda een standaard groep in?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/K8NsoyF1cl0', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          section(ng-show='app.resources.role == 1')
+            .tab-header
+              h3.pull-left Voor planners
+            hr
+            h4 Hoe kan ik de beschikbaarheid van een collega inzien en wijzigen?
+            iframe(width='560', height='315', src='//www.youtube.com/embed/zlxMuFHlxIM', frameborder='0', allowfullscreen='allowfullscreen')
+            br
+            br
+            br
+            h4 Hoe maak ik een nieuwe gebruiker aan?
+            iframe(width='560', height='315', src='//www.youtube.com/embed/ISXhqAW2ywk', frameborder='0', allowfullscreen='allowfullscreen')
+            br
+            br
+            br
+            h4 Hoe voeg ik een gebruiker toe aan een groep en/of hoe pas ik dit aan?
+            iframe(width='560', height='315', src='//www.youtube.com/embed/UpcJdi2eOgM', frameborder='0', allowfullscreen='allowfullscreen')
+            br
+            br
+            br
+            h4 Hoe verwijder ik iemand uit een groep?
+            iframe(width='560', height='315', src='//www.youtube.com/embed/5c0-g208j-E', frameborder='0', allowfullscreen='allowfullscreen')
+            br
+            br
+            br
+            h4 Hoe verwijder ik een gebruiker uit Standby?
+            iframe(width='560', height='315', src='//www.youtube.com/embed/e6kURIR6LQE', frameborder='0', allowfullscreen='allowfullscreen')
+            br
+            br
+            br
+        #iosTab.tab-pane(class="{{(views.ios==true) && 'active'}}")
+          .tab-header
+            h3.pull-left iOS
+          hr
+          h4 Hoe installeer ik de StandBy IOS app?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/7eKXip3eppE', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zet ik mezelf voor de komende 6 uur op niet beschikbaar?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/Cr0WpvjtE6s', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zet ik mezelf beschikbaar voor iedere dinsdagavond van 17:00-2300?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/YBjf6TCDj6o', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4
+            | Hoe stuur ik een bericht naar alle collega's in een groep (bijv. alle opstappers)?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/rK-TZGITUug', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zie ik mijn huidige status en die van de groep(en)?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/gLRrA2esQ6I', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zet ik de geo-fencing optie aan of uit?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/cWvvPkkUYyo', frameborder='0', allowfullscreen='allowfullscreen')
+        #androidTab.tab-pane(class="{{(views.android==true) && 'active'}}")
+          .tab-header
+            h3.pull-left Android
+          hr
+          h4 Hoe installeer ik de StandBy Android app?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/1L82fHvAkpc', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe weet ik welke versie van de app ik gebruik?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/ykLd2EG5nRY', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zet ik mijzelf voor de komende 6 uur op niet beschikbaar?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/iuX3zcmkN7g', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zet ik mijzelf elke dinsdag tussen 17:00 en 23:00 uur beschikbaar?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/SBx3y925uK8', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe stuur ik een bericht naar alle collega's in een groep?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/ivgkBnpwwS4', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zie ik mijn huidige status en die van de groep(en)?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/IDP6fg8TIT8', frameborder='0', allowfullscreen='allowfullscreen')
+          br
+          br
+          br
+          h4 Hoe zet ik de geo-fencing optie aan of uit?
+          iframe(width='560', height='315', src='//www.youtube.com/embed/exgsLkThN_c', frameborder='0', allowfullscreen='allowfullscreen')

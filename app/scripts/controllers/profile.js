@@ -1,7 +1,6 @@
 define(
   ['controllers/controllers', 'config'],
-  function (controllers, config)
-  {
+  function (controllers, config) {
     'use strict';
 
     controllers.controller(
@@ -20,9 +19,7 @@ define(
         'Dater',
         'MD5',
         '$timeout',
-        function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups,
-                  Dater, MD5, $timeout)
-        {
+        function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout) {
           $rootScope.notification.status = false;
 
           /**
@@ -41,39 +38,33 @@ define(
 
           $scope.userPassword = '';
 
-          $scope.showDeleteUserModal = function () { $('#deleteUserModal').modal('show') };
+          $scope.showDeleteUserModal = function () {
+            $('#deleteUserModal').modal('show')
+          };
 
-          $scope.deleteUser = function (userPassword)
-          {
+          $scope.deleteUser = function (userPassword) {
             $scope.deleteUserError = false;
 
-            if (userPassword != '' && userPassword != undefined)
-            {
-              if ($rootScope.app.resources.role <= 1)
-              {
-                if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)
-                {
+            if (userPassword != '' && userPassword != undefined) {
+              if ($rootScope.app.resources.role <= 1) {
+                if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId) {
                   // console.log('pass ->', MD5(userPassword), $rootScope.app.resources.askPass);
                   // Switched from $rootScope.app.resources.askPass to localStorage
-                  if (MD5(userPassword) == Storage.get('askPass'))
-                  {
+                  if (MD5(userPassword) == Storage.get('askPass')) {
                     $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
 
                     Profile.remove(data.resources.uuid)
                       .then(
-                      function (result)
-                      {
+                      function (result) {
                         $rootScope.statusBar.off();
 
                         $scope.userPassword = '';
 
-                        if (result.hasOwnProperty('error'))
-                        {
+                        if (result.hasOwnProperty('error')) {
                           $scope.deleteUserError = true;
                           $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.general;
                         }
-                        else
-                        {
+                        else {
                           $rootScope.notifier.success($rootScope.ui.profile.remove.success);
 
                           $location.path('/groups').hash('').search({});
@@ -81,8 +72,7 @@ define(
                       }
                     );
                   }
-                  else
-                  {
+                  else {
                     $rootScope.statusBar.off();
 
                     $scope.userPassword = '';
@@ -91,24 +81,21 @@ define(
                     $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.password;
                   }
                 }
-                else
-                {
+                else {
                   $rootScope.statusBar.off();
 
                   $scope.deleteUserError = true;
                   $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.self;
                 }
               }
-              else
-              {
+              else {
                 $rootScope.statusBar.off();
 
                 $scope.deleteUserError = true;
                 $scope.deleteUserErrorMessage = $rootScope.ui.errors.profile.remove.auth;
               }
             }
-            else
-            {
+            else {
               $rootScope.statusBar.off();
 
               $scope.deleteUserError = true;
@@ -133,10 +120,8 @@ define(
           /**
            * Set data for view
            */
-          if (($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId))
-          {
-            if (data && data.slots)
-            {
+          if (($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)) {
+            if (data && data.slots) {
               data.user = data.slots.data;
             }
           }
@@ -147,34 +132,27 @@ define(
           $scope.data = data;
 
           $timeout(
-            function ()
-            {
-              if (data.hasOwnProperty('resources'))
-              {
+            function () {
+              if (data.hasOwnProperty('resources')) {
                 $scope.profileRole = data.resources.role;
 
-                if (! data.resources.hasOwnProperty('EmailAddress'))
-                {
+                if (!data.resources.hasOwnProperty('EmailAddress')) {
                   $scope.data.resources.EmailAddress = '';
                 }
 
-                if (! data.resources.hasOwnProperty('pagerId'))
-                {
+                if (!data.resources.hasOwnProperty('pagerId')) {
                   $scope.data.resources.pagerId = '';
                 }
 
-                if (! data.resources.hasOwnProperty('PostAddress'))
-                {
+                if (!data.resources.hasOwnProperty('PostAddress')) {
                   $scope.data.resources.PostAddress = '';
                 }
 
-                if (! data.resources.hasOwnProperty('PostZip'))
-                {
+                if (!data.resources.hasOwnProperty('PostZip')) {
                   $scope.data.resources.PostZip = '';
                 }
 
-                if (! data.resources.hasOwnProperty('PostCity'))
-                {
+                if (!data.resources.hasOwnProperty('PostCity')) {
                   $scope.data.resources.PostCity = '';
                 }
               }
@@ -188,13 +166,14 @@ define(
 
           angular.forEach(
             $rootScope.config.roles,
-            function (role) { roles[role.id] = role.label }
+            function (role) {
+              roles[role.id] = role.label
+            }
           );
 
           $scope.roles = roles;
 
-          if (! data.resources.PhoneAddresses)
-          {
+          if (!data.resources.PhoneAddresses) {
             data.resources.PhoneAddresses = [];
           }
 
@@ -214,20 +193,17 @@ define(
             third: angular.isDefined(data.resources.PhoneAddresses[2])
           };
 
-          $scope.addPhoneNumber = function (index)
-          {
+          $scope.addPhoneNumber = function (index) {
             $scope.phoneViews[index] = true;
           };
 
-          $scope.removePhoneNumber = function (num, index)
-          {
+          $scope.removePhoneNumber = function (num, index) {
             $scope.phoneViews[index] = false;
 
             $scope.profileResetPhoneNumberChecker(num);
 
             $timeout(
-              function ()
-              {
+              function () {
                 $scope.data.resources.PhoneAddresses.splice(num - 1, 1);
 
                 delete $scope.profilemeta.phones[num];
@@ -243,8 +219,7 @@ define(
             3: {}
           };
 
-          $scope.profileResetPhoneNumberChecker = function (index)
-          {
+          $scope.profileResetPhoneNumberChecker = function (index) {
             $scope.profilePhoneNumberParsed[index] = {};
 
             $scope.profilePhoneNumberParsed[index].result = true;
@@ -252,10 +227,8 @@ define(
 
           $scope.$watch(
             'profilemeta.phones[1]',
-            function (value)
-            {
-              if (value == '')
-              {
+            function (value) {
+              if (value == '') {
                 $scope.profileResetPhoneNumberChecker(1);
               }
             }
@@ -263,10 +236,8 @@ define(
 
           $scope.$watch(
             'profilemeta.phones[2]',
-            function (value)
-            {
-              if (value == '')
-              {
+            function (value) {
+              if (value == '') {
                 $scope.profileResetPhoneNumberChecker(2);
               }
             }
@@ -274,10 +245,8 @@ define(
 
           $scope.$watch(
             'profilemeta.phones[3]',
-            function (value)
-            {
-              if (value == '')
-              {
+            function (value) {
+              if (value == '') {
                 $scope.profileResetPhoneNumberChecker(3);
               }
             }
@@ -287,46 +256,37 @@ define(
           $scope.profileResetPhoneNumberChecker(2);
           $scope.profileResetPhoneNumberChecker(3);
 
-          $scope.profilePhoneNumberParser = function ()
-          {
+          $scope.profilePhoneNumberParser = function () {
             var checked;
 
             angular.forEach(
               [1, 2, 3],
-              function (index)
-              {
+              function (index) {
                 checked = $scope.profilemeta.phones[index];
 
-                if (checked != '')
-                {
-                  if (checked && checked.length > 0)
-                  {
+                if (checked != '') {
+                  if (checked && checked.length > 0) {
                     var result,
-                        all;
+                      all;
 
                     result = all = phoneNumberParser(checked, 'NL');
 
                     $scope.profilePhoneNumberParsed[index].result = true;
 
-                    if (result)
-                    {
+                    if (result) {
                       var error = $rootScope.ui.errors.phone.notValid,
-                          invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
-                          message;
+                        invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+                        message;
 
-                      if (result.error)
-                      {
+                      if (result.error) {
                         $scope.profilePhoneNumberParsed[index] = {
                           result: false,
                           message: error
                         };
                       }
-                      else
-                      {
-                        if (! result.validation.isPossibleNumber)
-                        {
-                          switch (result.validation.isPossibleNumberWithReason)
-                          {
+                      else {
+                        if (!result.validation.isPossibleNumber) {
+                          switch (result.validation.isPossibleNumberWithReason) {
                             case 'INVALID_COUNTRY_CODE':
                               message = invalidCountry;
                               break;
@@ -343,32 +303,27 @@ define(
                             message: message
                           };
                         }
-                        else
-                        {
-                          if (! result.validation.isValidNumber)
-                          {
+                        else {
+                          if (!result.validation.isValidNumber) {
                             $scope.profilePhoneNumberParsed[index] = {
                               result: false,
                               message: error
                             };
                           }
-                          else
-                          {
-                            if (! result.validation.isValidNumberForRegion)
-                            {
+                          else {
+                            if (!result.validation.isValidNumberForRegion) {
                               $scope.profilePhoneNumberParsed[index] = {
                                 result: false,
                                 message: invalidCountry
                               };
                             }
-                            else
-                            {
+                            else {
                               $scope.profilePhoneNumberParsed[index] = {
                                 result: true,
                                 message: $rootScope.ui.success.phone.message +
-                                         result.validation.phoneNumberRegion +
-                                         $rootScope.ui.success.phone.as +
-                                         result.validation.getNumberType
+                                  result.validation.phoneNumberRegion +
+                                  $rootScope.ui.success.phone.as +
+                                  result.validation.getNumberType
                               };
 
                               $scope.profilemeta.phones[index] = result.formatting.e164;
@@ -377,12 +332,9 @@ define(
 
                               angular.forEach(
                                 [1, 2, 3],
-                                function (_index)
-                                {
-                                  if (index != _index)
-                                  {
-                                    if ($scope.profilemeta.phones[_index] == result.formatting.e164)
-                                    {
+                                function (_index) {
+                                  if (index != _index) {
+                                    if ($scope.profilemeta.phones[_index] == result.formatting.e164) {
                                       $scope.profilePhoneNumberParsed[index] = {
                                         result: false,
                                         message: $rootScope.ui.profile.duplicateNumber
@@ -399,8 +351,7 @@ define(
 
                     $scope.profilePhoneNumberParsed[index].all = all;
                   }
-                  else
-                  {
+                  else {
                     $scope.profilePhoneNumberParsed[index].result = true;
 
                     delete $scope.profilePhoneNumberParsed[index].message;
@@ -413,7 +364,9 @@ define(
           };
 
           $timeout(
-            function () { $scope.profilePhoneNumberParser() },
+            function () {
+              $scope.profilePhoneNumberParser()
+            },
             50
           );
 
@@ -421,7 +374,7 @@ define(
            * Get groups of user
            */
           $scope.groups = $route.current.params.userId &&
-                          Groups.getMemberGroups($route.current.params.userId.toLowerCase());
+            Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
           $scope.availableGroups = angular.fromJson(Storage.get('groups'));
 
@@ -445,17 +398,13 @@ define(
           /**
            * Slot form toggle
            */
-          $scope.toggleSlotForm = function ()
-          {
-            if ($scope.forms.add)
-            {
+          $scope.toggleSlotForm = function () {
+            if ($scope.forms.add) {
               $scope.resetInlineForms();
             }
-            else
-            {
+            else {
               $timeout(
-                function ()
-                {
+                function () {
                   $scope.slot = {};
 
                   $scope.slot = {
@@ -486,11 +435,9 @@ define(
           /**
            * Reset inline forms
            */
-          $scope.resetInlineForms = function ()
-          {
+          $scope.resetInlineForms = function () {
             $timeout(
-              function ()
-              {
+              function () {
                 $scope.slot = {};
 
                 $scope.original = {};
@@ -508,20 +455,16 @@ define(
            */
           setView($location.hash());
 
-          function setGroupSelection ()
-          {
+          function setGroupSelection() {
             $scope.userGroups = [];
 
             angular.forEach(
               $("div#editTab select.chzn-select option"),
-              function (option)
-              {
+              function (option) {
                 angular.forEach(
                   $scope.groups,
-                  function (userGroup)
-                  {
-                    if (option.innerHTML == userGroup.name)
-                    {
+                  function (userGroup) {
+                    if (option.innerHTML == userGroup.name) {
                       $scope.userGroups.push(userGroup);
 
                       option.selected = true;
@@ -534,25 +477,20 @@ define(
             $("div#editTab select.chzn-select").trigger("liszt:updated");
           }
 
-          $scope.detectChanges = function ()
-          {
+          $scope.detectChanges = function () {
             $timeout(
-              function ()
-              {
+              function () {
                 var selectedGroups = [];
 
                 angular.forEach(
                   $(".chzn-choices .search-choice span"),
-                  function (option)
-                  {
+                  function (option) {
                     angular.forEach(
                       Storage.local.groups(),
-                      function (group)
-                      {
+                      function (group) {
                         var _g = new RegExp(option.innerHTML);
 
-                        if (_g.test(group.name))
-                        {
+                        if (_g.test(group.name)) {
                           selectedGroups.push(group);
                         }
                       }
@@ -569,8 +507,7 @@ define(
           /**
            * View setter
            */
-          function setView (hash)
-          {
+          function setView(hash) {
             $scope.views = {
               profile: false,
               edit: false,
@@ -579,12 +516,13 @@ define(
             };
 
             $timeout(
-              function () { setGroupSelection() },
+              function () {
+                setGroupSelection()
+              },
               100
             );
 
-            if (hash == 'edit')
-            {
+            if (hash == 'edit') {
               $rootScope.phoneNumberParser($scope.profilemeta.PhoneAddress);
             }
 
@@ -598,12 +536,10 @@ define(
           /**
            * Switch between the views and set hash accordingly
            */
-          $scope.setViewTo = function (hash)
-          {
+          $scope.setViewTo = function (hash) {
             $scope.$watch(
               $location.hash(),
-              function ()
-              {
+              function () {
                 $location.hash(hash);
 
                 setView(hash);
@@ -615,36 +551,29 @@ define(
 
           $scope.pincodeExistsValidation = true;
 
-          $scope.pincodeExists = function ()
-          {
-            if (! angular.isDefined($scope.profilemeta.pincode) ||
-                $scope.profilemeta.pincode == '')
-            {
+          $scope.pincodeExists = function () {
+            if (!angular.isDefined($scope.profilemeta.pincode) ||
+              $scope.profilemeta.pincode == '') {
               $scope.pincodeExistsValidation = false;
               $scope.pincodeExistsValidationMessage = $rootScope.ui.profile.pincodeNotValid;
             }
-            else
-            {
-              if (angular.isDefined($scope.profilemeta.pincode))
-              {
-                if ($scope.checkPincode)
-                {
+            else {
+              if (angular.isDefined($scope.profilemeta.pincode)) {
+                if ($scope.checkPincode) {
                   clearTimeout($scope.checkPincode);
 
                   $scope.checkPincode = null;
                 }
 
                 $scope.checkPincode = setTimeout(
-                  function ()
-                  {
+                  function () {
                     $scope.checkPincode = null;
 
                     Profile.pincodeExists(
                       $scope.profilemeta.uuid,
                       $scope.profilemeta.pincode
                     ).then(
-                      function (result)
-                      {
+                      function (result) {
                         $scope.pincodeExistsValidation = result;
                         $scope.pincodeExistsValidationMessage = $rootScope.ui.profile.pincodeInUse;
                       }
@@ -660,11 +589,9 @@ define(
           /**
            * Save user
            */
-          $scope.save = function (resources)
-          {
-            if (! angular.isDefined($scope.profilemeta.pincode) ||
-                $scope.profilemeta.pincode == '' || ! $scope.pincodeExistsValidation)
-            {
+          $scope.save = function (resources) {
+            if (!angular.isDefined($scope.profilemeta.pincode) ||
+              $scope.profilemeta.pincode == '' || !$scope.pincodeExistsValidation) {
               $rootScope.notifier.error($rootScope.ui.profile.pincodeCorrect);
 
               $rootScope.statusBar.off();
@@ -674,8 +601,7 @@ define(
               return false;
             }
 
-            if (! $scope.pincodeExistsValidation)
-            {
+            if (!$scope.pincodeExistsValidation) {
               $rootScope.notifier.error($rootScope.ui.profile.pincodeInUse);
 
               $rootScope.statusBar.off();
@@ -687,15 +613,13 @@ define(
 
             $rootScope.statusBar.display($rootScope.ui.profile.saveProfile);
 
-            if (resources.Password)
-            {
+            if (resources.Password) {
               resources.askPass = MD5(resources.Password);
             }
 
-            if ((! $scope.profilePhoneNumberParsed[1].result && $scope.profilemeta.phones[1] != '') ||
-                (! $scope.profilePhoneNumberParsed[2].result && $scope.profilemeta.phones[2] != '') ||
-                (! $scope.profilePhoneNumberParsed[3].result && $scope.profilemeta.phones[3] != ''))
-            {
+            if ((!$scope.profilePhoneNumberParsed[1].result && $scope.profilemeta.phones[1] != '') ||
+              (!$scope.profilePhoneNumberParsed[2].result && $scope.profilemeta.phones[2] != '') ||
+              (!$scope.profilePhoneNumberParsed[3].result && $scope.profilemeta.phones[3] != '')) {
               $rootScope.notifier.error($rootScope.ui.errors.phone.notValidOnSubmit);
 
               $rootScope.statusBar.off();
@@ -709,18 +633,14 @@ define(
 
             angular.forEach(
               resources.phones,
-              function (phone, index)
-              {
-                if (angular.isDefined(phone) && phone.length > 0)
-                {
+              function (phone, index) {
+                if (angular.isDefined(phone) && phone.length > 0) {
                   parsed = phoneNumberParser(resources.phones[index], 'NL');
 
                   resources.PhoneAddresses[index - 1] = parsed.formatting.e164;
                 }
-                else
-                {
-                  if (index == 1)
-                  {
+                else {
+                  if (index == 1) {
                     resources.PhoneAddresses = [];
                   }
                 }
@@ -734,10 +654,8 @@ define(
 
             angular.forEach(
               resources.PhoneAddresses,
-              function (phone)
-              {
-                if (phone !== undefined && phone !== null && phone !== "")
-                {
+              function (phone) {
+                if (phone !== undefined && phone !== null && phone !== "") {
                   phones.push(phone);
                 }
               }
@@ -749,19 +667,15 @@ define(
               $route.current.params.userId,
               resources
             ).then(
-              function (result)
-              {
-                if (result.error)
-                {
+              function (result) {
+                if (result.error) {
                   $rootScope.notifier.error($rootScope.ui.errors.profile.save);
                   console.warn('error ->', result);
                 }
-                else
-                {
+                else {
                   $rootScope.statusBar.display($rootScope.ui.profile.changingRole);
 
-                  if (! angular.isDefined($scope.profileRole) || $scope.profileRole == '')
-                  {
+                  if (!angular.isDefined($scope.profileRole) || $scope.profileRole == '') {
                     $scope.profileRole = (data.resources.role == 0) ? '0' : '3';
                   }
 
@@ -770,53 +684,46 @@ define(
                     $scope.profileRole
                     // $scope.data.resources.role
                   ).then(
-                    function (result)
-                    {
-                      if (result.error)
-                      {
+                    function (result) {
+                      if (result.error) {
                         console.warn('error with changing user role!');
                       }
-                      else
-                      {
+                      else {
                         $rootScope.statusBar.display($rootScope.ui.profile.settingGroups);
 
                         var userGroups = [];
 
                         angular.forEach(
                           $scope.userGroups,
-                          function (group) { userGroups.push(group.uuid) }
+                          function (group) {
+                            userGroups.push(group.uuid)
+                          }
                         );
 
                         Profile.membership(
                           $route.current.params.userId,
                           userGroups
                         ).then(
-                          function (result)
-                          {
-                            if (result.error)
-                            {
+                          function (result) {
+                            if (result.error) {
                               $rootScope.notifier.error($rootScope.ui.errors.profile.settingGroups);
                               console.warn('error ->', result);
                             }
-                            else
-                            {
+                            else {
                               $rootScope.statusBar.display($rootScope.ui.groups.refreshingGroupMember);
 
                               Groups.query().
                                 then(
-                                function (data)
-                                {
-                                  if (data.error)
-                                  {
+                                function (data) {
+                                  if (data.error) {
                                     $rootScope.notifier.error($rootScope.ui.errors.groups.query);
                                     console.warn('error ->', data);
                                   }
-                                  else
-                                  {
+                                  else {
                                     var userId = $route.current.params.userId.toLowerCase();
 
                                     $scope.groups = $route.current.params.userId &&
-                                                    Groups.getMemberGroups(userId);
+                                      Groups.getMemberGroups(userId);
 
                                     $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
@@ -827,26 +734,21 @@ define(
                                       userId,
                                       flag
                                     ).then(
-                                      function (data)
-                                      {
-                                        if (data.error)
-                                        {
+                                      function (data) {
+                                        if (data.error) {
                                           $rootScope.notifier.error($rootScope.ui.errors.profile.get);
                                           console.warn('error ->', data);
                                         }
-                                        else
-                                        {
+                                        else {
                                           $rootScope.notifier.success($rootScope.ui.profile.dataChanged);
 
                                           if ($scope.profilemeta.phones[1] == '' &&
-                                              $scope.profilemeta.phones[2] != '')
-                                          {
+                                            $scope.profilemeta.phones[2] != '') {
                                             $scope.profilemeta.phones[1] = $scope.profilemeta.phones[2];
 
                                             $scope.phoneViews.second = false;
 
-                                            if ($scope.profilemeta.phones[3] != '')
-                                            {
+                                            if ($scope.profilemeta.phones[3] != '') {
                                               $scope.profilemeta.phones[2] = $scope.profilemeta.phones[3];
 
                                               delete $scope.profilemeta.phones[3];
@@ -854,15 +756,13 @@ define(
                                               $scope.phoneViews.second = true;
                                               $scope.phoneViews.third = false;
                                             }
-                                            else
-                                            {
+                                            else {
                                               delete $scope.profilemeta.phones[2];
                                             }
                                           }
 
                                           if ($scope.profilemeta.phones[2] == '' &&
-                                              $scope.profilemeta.phones[3] != '')
-                                          {
+                                            $scope.profilemeta.phones[3] != '') {
                                             $scope.profilemeta.phones[2] = $scope.profilemeta.phones[3];
 
                                             $scope.phoneViews.third = false;
@@ -870,18 +770,18 @@ define(
                                             delete $scope.profilemeta.phones[3];
                                           }
 
-                                          $timeout(function () { $scope.data = data });
+                                          $timeout(function () {
+                                            $scope.data = data
+                                          });
 
                                           angular.forEach(
                                             [
                                               {id: 2, name: 'second'},
                                               {id: 3, name: 'third'}
                                             ],
-                                            function (rank)
-                                            {
+                                            function (rank) {
                                               if ($scope.profilemeta.phones[rank.id] == undefined ||
-                                                  $scope.profilemeta.phones[rank.id] == '')
-                                              {
+                                                $scope.profilemeta.phones[rank.id] == '') {
                                                 $scope.phoneViews[rank.name] = false;
                                               }
                                             }
@@ -912,17 +812,14 @@ define(
           /**
            * Change passwords
            */
-          $scope.change = function (passwords)
-          {
-            if (passwords.new1 == '' || passwords.new2 == '')
-            {
+          $scope.change = function (passwords) {
+            if (passwords.new1 == '' || passwords.new2 == '') {
               $rootScope.notifier.error($rootScope.ui.profile.pleaseFill, true);
 
               return false;
             }
 
-            if (passwords.new1 != passwords.new2)
-            {
+            if (passwords.new1 != passwords.new2) {
               $rootScope.notifier.error($rootScope.ui.profile.passNotMatch, true);
 
               return false;
@@ -931,34 +828,27 @@ define(
             // console.log('askPass ->', $rootScope.app.resources.askPass);
             // console.log('current ->', passwords.current, MD5(passwords.current));
 
-            if ($rootScope.app.resources.askPass == MD5(passwords.current))
-            {
+            if ($rootScope.app.resources.askPass == MD5(passwords.current)) {
               $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
               Profile.changePassword(passwords)
                 .then(
-                function (result)
-                {
-                  if (result.error)
-                  {
+                function (result) {
+                  if (result.error) {
                     $rootScope.notifier.error($rootScope.ui.errors.profile.changePassword);
                     console.warn('error ->', result);
                   }
-                  else
-                  {
+                  else {
                     $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
                     Profile.get($rootScope.app.resources.uuid, true)
                       .then(
-                      function (data)
-                      {
-                        if (data.error)
-                        {
+                      function (data) {
+                        if (data.error) {
                           $rootScope.notifier.error($rootScope.ui.errors.profile.get);
                           console.warn('error ->', data);
                         }
-                        else
-                        {
+                        else {
                           $rootScope.notifier.success($rootScope.ui.profile.passChanged);
 
                           $scope.data = data;
@@ -969,8 +859,7 @@ define(
                   }
                 });
             }
-            else
-            {
+            else {
               // console.log('passwrong ->', $rootScope.ui.profile.passwrong);
 
               $rootScope.notifier.error($rootScope.ui.profile.passwrong, true);
@@ -981,8 +870,7 @@ define(
            * Render timeline if hash is timeline
            */
           if ($route.current.params.userId &&
-              $rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase())
-          {
+            $rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase()) {
             timelinebooter();
           }
 
@@ -990,20 +878,16 @@ define(
            * TODO: Is it really needed? Since the timeline-booter is disabled
            * Redraw timeline
            */
-          $scope.redraw = function ()
-          {
+          $scope.redraw = function () {
             setTimeout(
-              function ()
-              {
-                if ($scope.self.timeline)
-                {
+              function () {
+                if ($scope.self.timeline) {
                   $scope.self.timeline.redraw();
                 }
               }, $rootScope.config.timers.TICKER);
           };
 
-          function timelinebooter ()
-          {
+          function timelinebooter() {
             $scope.timeline = {
               id: 'userTimeline',
               main: false,
@@ -1032,15 +916,16 @@ define(
 
             angular.forEach(
               $scope.timeline.config.states,
-              function (state, key) { states[key] = state.label }
+              function (state, key) {
+                states[key] = state.label
+              }
             );
 
             $scope.states = states;
 
             angular.forEach(
               $rootScope.config.timeline.config.states,
-              function (state, index)
-              {
+              function (state, index) {
                 $scope.timeline.config.legenda[index] = true;
               }
             );
@@ -1050,7 +935,7 @@ define(
              * Prepare timeline range for date-ranger widget
              */
             $scope.daterange = Dater.readable.date($scope.timeline.range.start) + ' / ' +
-                               Dater.readable.date($scope.timeline.range.end);
+              Dater.readable.date($scope.timeline.range.end);
 
 
             $('#timeline').html('');

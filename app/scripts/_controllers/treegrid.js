@@ -1,15 +1,13 @@
 define(
   ['controllers/controllers'],
-  function (controllers)
-  {
+  function (controllers) {
     'use strict';
 
     controllers.controller(
       'treegrid',
       [
         '$rootScope', '$scope', '$window',
-        function ($rootScope, $scope, $window)
-        {
+        function ($rootScope, $scope, $window) {
           $scope.treeGrid = {
 
             options: {
@@ -30,15 +28,13 @@ define(
             caches: {},
             connections: {},
 
-            areas: function ()
-            {
+            areas: function () {
               this.options.grid.height = angular.element('#wrap').height() - (270 + 200) + 'px'
             },
 
-            build: function (id, data)
-            {
+            build: function (id, data) {
               var _this = this,
-                  key = $scope.treeGrid.grid + '_' + id;
+                key = $scope.treeGrid.grid + '_' + id;
 
               this.grids[key] = new links.TreeGrid(
                 document.getElementById($scope.treeGrid.grid + '_' + id),
@@ -49,13 +45,14 @@ define(
 
               angular.forEach(
                 this.stores,
-                function (store)
-                {
+                function (store) {
                   var filtered = [];
 
                   angular.forEach(
                     store.data,
-                    function (node) { node._id && filtered.push(node) }
+                    function (node) {
+                      node._id && filtered.push(node)
+                    }
                   );
 
                   store.data = store.filteredData = filtered;
@@ -69,40 +66,43 @@ define(
               links.events.addListener(
                 this.grids[key],
                 'expand',
-                function (properties) { console.log('expanding ->', key, properties) }
+                function (properties) {
+                  console.log('expanding ->', key, properties)
+                }
               );
 
               links.events.addListener(
                 this.grids[key],
                 'collapse',
-                function (properties) { console.log('collapsing ->', key, properties) }
+                function (properties) {
+                  console.log('collapsing ->', key, properties)
+                }
               );
 
               links.events.addListener(
                 this.grids[key],
                 'select',
-                function (properties) { console.log('selecting ->', key, properties) }
+                function (properties) {
+                  console.log('selecting ->', key, properties)
+                }
               );
 
               links.events.addListener(
                 this.grids[key],
                 'remove',
-                function (event)
-                {
+                function (event) {
                   var items = event.items;
 
-                  for (var i = 0; i < items.length; i ++)
-                  {
+                  for (var i = 0; i < items.length; i++) {
                     _this.stores[key].removeLink(items[i]);
                   }
                 }
               );
             },
 
-            store: function (id, data)
-            {
+            store: function (id, data) {
               var _this = this,
-                  key = $scope.treeGrid.grid + '_' + id;
+                key = $scope.treeGrid.grid + '_' + id;
 
               this.stores[key] = new links.DataTable(
                 this.process(id, data),
@@ -111,31 +111,25 @@ define(
 
               this.stores[key].totalItems = this.stores[key].data.length;
 
-              this.stores[key].appendItems = function (items, callback)
-              {
-                function isUnique (item, data)
-                {
+              this.stores[key].appendItems = function (items, callback) {
+                function isUnique(item, data) {
                   var result = true;
 
-                  for (var i = 0; i < data.length; i ++)
-                  {
+                  for (var i = 0; i < data.length; i++) {
                     if (item._id == data[i]._id) result = false;
                   }
 
-                  if (item.nodes)
-                  {
+                  if (item.nodes) {
                     result = false
                   }
 
                   return result;
                 }
 
-                for (var i = 0; i < items.length; i ++)
-                {
+                for (var i = 0; i < items.length; i++) {
                   var unique = isUnique(items[i], this.data);
 
-                  if (unique)
-                  {
+                  if (unique) {
                     items[i]._actions = [
                       {
                         event: 'remove',
@@ -147,12 +141,10 @@ define(
                   }
                 }
 
-                if (unique)
-                {
+                if (unique) {
                   this.updateFilters();
 
-                  if (callback)
-                  {
+                  if (callback) {
                     callback(
                       {
                         'totalItems': this.filteredData.length,
@@ -165,22 +157,19 @@ define(
                 }
               };
 
-              this.stores[key].linkItems = function (sourceItems, targetItem, callback, errback)
-              {
+              this.stores[key].linkItems = function (sourceItems, targetItem, callback, errback) {
                 var index = this.data.indexOf(targetItem);
 
-                if (index == - 1)
-                {
+                if (index == -1) {
                   errback('Error: targetItem not found in data');
 
                   return;
                 }
 
                 var names = [],
-                    ids = [];
+                  ids = [];
 
-                for (var i = 0; i < sourceItems.length; i ++)
-                {
+                for (var i = 0; i < sourceItems.length; i++) {
                   names.push(sourceItems[i].name);
                   ids.push(sourceItems[i]._id);
                 }
@@ -208,12 +197,10 @@ define(
                 this.update();
               };
 
-              this.stores[key].unlink = function (item)
-              {
+              this.stores[key].unlink = function (item) {
                 var index = this.data.indexOf(item);
 
-                if (index == - 1)
-                {
+                if (index == -1) {
                   throw Error('item not found in data');
                 }
 
@@ -225,13 +212,14 @@ define(
                 this.update();
               };
 
-              this.stores[key].removeLink = function (item)
-              {
+              this.stores[key].removeLink = function (item) {
                 var filtered = [];
 
                 angular.forEach(
                   _this.stores[item._parent].data,
-                  function (data) { (data._id != item._id) && filtered.push(data) }
+                  function (data) {
+                    (data._id != item._id) && filtered.push(data)
+                  }
                 );
 
                 _this.stores[item._parent].data = _this.stores[item._parent].filteredData = filtered;
@@ -241,16 +229,14 @@ define(
                 this.trigger('change', undefined);
 
                 var processed = [],
-                    pieces = item._parent.split('_'),
-                    section = pieces[0],
-                    last = pieces[pieces.length - 1];
+                  pieces = item._parent.split('_'),
+                  section = pieces[0],
+                  last = pieces[pieces.length - 1];
 
                 angular.forEach(
                   _this.connections[section][last],
-                  function (connection)
-                  {
-                    if (connection._id != item._id)
-                    {
+                  function (connection) {
+                    if (connection._id != item._id) {
                       connection._actions = [
                         {
                           event: 'remove',
@@ -271,11 +257,12 @@ define(
               links.events.addListener(
                 this.stores[key],
                 'change',
-                function ()
-                {
+                function () {
                   angular.forEach(
                     _this.stores[key].data,
-                    function (data) { data._parent = key }
+                    function (data) {
+                      data._parent = key
+                    }
                   );
 
                   _this.caches[key] = _this.stores[key].data;
@@ -285,40 +272,32 @@ define(
               links.events.addListener(
                 this.stores[key],
                 'unlink',
-                function (event)
-                {
+                function (event) {
                   var items = event.items;
 
-                  for (var i = 0; i < items.length; i ++)
-                  {
+                  for (var i = 0; i < items.length; i++) {
                     _this.stores[key].unlink(items[i]);
                   }
                 }
               );
 
-              if ($scope.treeGrid.grid == 'teamClients' && id == 'right')
-              {
-                if (this.connections.teamClients.length > 0)
-                {
+              if ($scope.treeGrid.grid == 'teamClients' && id == 'right') {
+                if (this.connections.teamClients.length > 0) {
                   angular.forEach(
                     this.connections.teamClients,
-                    function (connection)
-                    {
+                    function (connection) {
                       var index;
 
                       angular.forEach(
                         _this.stores['teamClients_right'].data,
-                        function (data, ind)
-                        {
-                          if (connection.targetItem.id == data._id)
-                          {
+                        function (data, ind) {
+                          if (connection.targetItem.id == data._id) {
                             index = ind;
 
                             var names = [],
-                                ids = [];
+                              ids = [];
 
-                            for (var i = 0; i < connection.sourceItems.length; i ++)
-                            {
+                            for (var i = 0; i < connection.sourceItems.length; i++) {
                               names.push(connection.sourceItems[i].name);
                               ids.push(connection.sourceItems[i].id);
                             }
@@ -348,23 +327,23 @@ define(
               return this.stores[key];
             },
 
-            process: function (id, data)
-            {
+            process: function (id, data) {
               var _this = this,
-                  filtered = [],
-                  key = $scope.treeGrid.grid + '_' + id;
+                filtered = [],
+                key = $scope.treeGrid.grid + '_' + id;
 
               angular.forEach(
                 data,
-                function (node) { (node.id) && filtered.push(node) }
+                function (node) {
+                  (node.id) && filtered.push(node)
+                }
               );
 
               this.processed[key] = [];
 
               angular.forEach(
                 filtered,
-                function (node)
-                {
+                function (node) {
                   var fid = _this.grid + '_' + id + '_' + node.id;
 
                   var record = {
@@ -373,32 +352,31 @@ define(
                     _parent: fid
                   };
 
-                  if (_this.type == '1:n' && id == 'right')
-                  {
+                  if (_this.type == '1:n' && id == 'right') {
                     if (_this.grid == 'teams' &&
-                        _this.connections.teams[node.id] &&
-                        _this.connections.teams[node.id].length > 0)
-                    {
+                      _this.connections.teams[node.id] &&
+                      _this.connections.teams[node.id].length > 0) {
                       setTimeout(
-                        function ()
-                        {
+                        function () {
                           _this.stores[fid].appendItems(
                             _this.connections.teams[node.id],
-                            function (results) { _this.stores[fid].totalItems = results.totalItems }
+                            function (results) {
+                              _this.stores[fid].totalItems = results.totalItems
+                            }
                           );
                         }, 100);
                     }
 
                     if (_this.grid == 'clients' &&
-                        _this.connections.clients[node.id] &&
-                        _this.connections.clients[node.id].length > 0)
-                    {
+                      _this.connections.clients[node.id] &&
+                      _this.connections.clients[node.id].length > 0) {
                       setTimeout(
-                        function ()
-                        {
+                        function () {
                           _this.stores[fid].appendItems(
                             _this.connections.clients[node.id],
-                            function (results) { _this.stores[fid].totalItems = results.totalItems }
+                            function (results) {
+                              _this.stores[fid].totalItems = results.totalItems
+                            }
                           );
                         }, 100);
                     }
@@ -407,7 +385,7 @@ define(
 
                     record.nodes = _this.store(
                         id + '_' + node.id,
-                        data
+                      data
                     );
 
                     // record.name += ' (' + _this.stores[fid].totalItems + ')';
@@ -419,19 +397,16 @@ define(
               return this.processed[key];
             },
 
-            configure: function (id)
-            {
+            configure: function (id) {
               var options = {
                 showHeader: false,
                 dataTransfer: {}
               };
 
-              switch (this.type)
-              {
+              switch (this.type) {
                 case '1:1':
 
-                  switch (id)
-                  {
+                  switch (id) {
                     case 'left':
                       options.dataTransfer = {
                         allowedEffect: 'link'
@@ -458,8 +433,7 @@ define(
               return options;
             },
 
-            init: function ()
-            {
+            init: function () {
               this.areas();
               this.build('left', this.data.left);
               this.build('right', this.data.right);
@@ -468,39 +442,40 @@ define(
 
           $rootScope.$on(
             'TreeGridManager',
-            function ()
-            {
+            function () {
               $scope.treeGrid.grid = arguments[1];
               $scope.treeGrid.type = arguments[2];
               $scope.treeGrid.data = arguments[3];
               $scope.treeGrid.connections = arguments[4];
 
-              (function ($scope)
-              {
+              (function ($scope) {
                 setTimeout(
-                  function () { $scope.treeGrid.init() }, 100
+                  function () {
+                    $scope.treeGrid.init()
+                  }, 100
                 )
               })($scope);
             }
           );
 
-          $window.onresize = function () { $scope.treeGrid.init() };
+          $window.onresize = function () {
+            $scope.treeGrid.init()
+          };
 
-          $scope.extract = function (sources)
-          {
+          $scope.extract = function (sources) {
             var connections = {};
 
             angular.forEach(
               sources,
-              function (source)
-              {
-                if (source.nodes.data.length > 0)
-                {
+              function (source) {
+                if (source.nodes.data.length > 0) {
                   var nodes = [];
 
                   angular.forEach(
                     source.nodes.data,
-                    function (node) { nodes.push(node._id) }
+                    function (node) {
+                      nodes.push(node._id)
+                    }
                   );
 
                   connections[source._id] = nodes;
@@ -512,17 +487,14 @@ define(
           };
 
           $scope.save = {
-            teamClients: function ()
-            {
+            teamClients: function () {
               var data = $scope.treeGrid.stores['teamClients_right'].data,
-                  connections = {};
+                connections = {};
 
               angular.forEach(
                 data,
-                function (node)
-                {
-                  if (node._ids || node.links)
-                  {
+                function (node) {
+                  if (node._ids || node.links) {
                     connections[node._id] = node._ids;
                   }
                 }
@@ -531,16 +503,14 @@ define(
               $rootScope.$broadcast('save:teamClients', connections);
             },
 
-            teams: function ()
-            {
+            teams: function () {
               $rootScope.$broadcast(
                 'save:teams',
                 $scope.extract($scope.treeGrid.stores['teams_right'].data)
               );
             },
 
-            clients: function ()
-            {
+            clients: function () {
               $rootScope.$broadcast(
                 'save:clients',
                 $scope.extract($scope.treeGrid.stores['clients_right'].data)
@@ -549,17 +519,14 @@ define(
           };
 
           $scope.getData = {
-            teamClients: function ()
-            {
+            teamClients: function () {
               var data = $scope.treeGrid.stores['teamClients_right'].data,
-                  connections = {};
+                connections = {};
 
               angular.forEach(
                 data,
-                function (node)
-                {
-                  if (node._ids || node.links)
-                  {
+                function (node) {
+                  if (node._ids || node.links) {
                     connections[node._id] = node._ids;
                   }
                 }
@@ -568,9 +535,13 @@ define(
               return connections;
             },
 
-            teams: function () { return $scope.extract($scope.treeGrid.stores['teams_right'].data) },
+            teams: function () {
+              return $scope.extract($scope.treeGrid.stores['teams_right'].data)
+            },
 
-            clients: function () { return $scope.extract($scope.treeGrid.stores['clients_right'].data) }
+            clients: function () {
+              return $scope.extract($scope.treeGrid.stores['clients_right'].data)
+            }
           };
         }
       ]
