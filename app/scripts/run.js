@@ -2,55 +2,14 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
   'use strict';
 
   app.run([
-    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$window',
-    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window) {
+    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$window', 'States', 'Browsers',
+    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers) {
       $rootScope.config = config;
       $rootScope.config.init();
 
       Session.check();
 
       $('#notification').removeClass('ng-cloak');
-
-      $rootScope.browser = $.browser;
-
-      angular.extend($rootScope.browser, { screen: $window.screen });
-
-      if ($rootScope.browser.ios) {
-        angular.extend(
-          $rootScope.browser, {
-            landscape: !!(Math.abs($window.orientation) == 90),
-            portrait: !!(Math.abs($window.orientation) != 90)
-          });
-      } else {
-        angular.extend(
-          $rootScope.browser, {
-            landscape: !!(Math.abs($window.orientation) != 90),
-            portrait: !!(Math.abs($window.orientation) == 90)
-          });
-      }
-
-      $window.onresize = function () {
-        $rootScope.browser.screen = $window.screen
-      };
-
-      $window.onorientationchange = function () {
-        $rootScope.$apply(
-          function () {
-            if ($rootScope.browser.ios) {
-              angular.extend(
-                $rootScope.browser, {
-                  landscape: !!(Math.abs($window.orientation) == 90),
-                  portrait: !!(Math.abs($window.orientation) != 90)
-                });
-            } else {
-              angular.extend(
-                $rootScope.browser, {
-                  landscape: !!(Math.abs($window.orientation) != 90),
-                  portrait: !!(Math.abs($window.orientation) == 90)
-                });
-            }
-          });
-      };
 
       $rootScope.changeLanguage = function (lang) {
         $rootScope.ui = locals.ui[lang]

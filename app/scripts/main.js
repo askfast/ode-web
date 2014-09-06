@@ -142,6 +142,7 @@ require(
     'states',
 
     'services/announcer',
+    'services/browsers',
     'services/dashboard',
     'services/dater',
     'services/groups',
