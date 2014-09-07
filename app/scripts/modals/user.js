@@ -4,16 +4,11 @@ define(['services/services'], function (services) {
   services.factory('User', function ($rootScope, $resource, $q, $http, Log, md5, StandBy, Session, Store) {
     var User = $resource();
 
-    User.prototype.login = function (credentials) {
+    User.prototype.login = function (username, password) {
       var deferred = $q.defer();
 
-      var user = {
-        uuid: credentials.username.toLowerCase(),
-        pass: md5.createHash(credentials.password)
-      };
-
       try {
-        StandBy._('login', user).then(function (result) {
+        StandBy._('login', { uuid: username.toLowerCase(), pass: md5.createHash(password) }).then(function (result) {
           if (!result.error) {
             Session.set(result['X-SESSION_ID']);
           }
@@ -51,6 +46,7 @@ define(['services/services'], function (services) {
           Store('user').save('resources', result);
 
           $rootScope.app.resources = result;
+          $rootScope.app2.resources = result;
 
           deferred.resolve(result);
         });

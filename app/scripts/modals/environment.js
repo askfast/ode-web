@@ -13,7 +13,7 @@ define(['services/services'], function (services) {
 
           Store('environment').save('domain', result);
 
-          $rootScope.app.environment.domain = result;
+          $rootScope.app2.environment.domain = result;
 
           deferred.resolve(result);
         });
@@ -33,7 +33,7 @@ define(['services/services'], function (services) {
 
           Store('environment').save('states', result);
 
-          $rootScope.app.environment.states = result;
+          $rootScope.app2.environment.states = result;
 
           deferred.resolve(result);
         });
@@ -53,7 +53,7 @@ define(['services/services'], function (services) {
 
           Store('environment').save('divisions', result);
 
-          $rootScope.app.environment.divisions = result;
+          $rootScope.app2.environment.divisions = result;
 
           deferred.resolve(result);
         });

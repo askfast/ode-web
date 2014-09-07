@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('login', function ($rootScope, $location, $q, $scope, Session, UserLegacy, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) {
+  controllers.controller('login', function ($rootScope, $location, $q, $scope, Session, UserLegacy, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5, User, Environment, Network) {
     if ($routeParams.uuid && $routeParams.key) {
       $scope.views = {
         changePass: true
@@ -88,7 +88,11 @@ define(['controllers/controllers'], function (controllers) {
 
       Storage.add('askPass', MD5($scope.logindata.password));
 
+      // Legacy
       authenticate($scope.logindata.username, MD5($scope.logindata.password));
+
+      // New code
+      // authenticate($scope.logindata.username, $scope.logindata.password);
     };
 
     if ($location.search().username && $location.search().password) {
@@ -103,54 +107,65 @@ define(['controllers/controllers'], function (controllers) {
         }));
       }
 
+      // New code
 
-//        User.login($scope.data).then(function (result) {
-//          if (result.error && result.error.status) {
-//            $scope.warning = {
-//              status: true,
+//      User.login(uuid, pass).then(function (result) {
+//        if (result.error && result.error.status) {
+//          $scope.alert = {
+//            login: {
+//              display: true,
+//              type: 'alert-error',
+//              // message: $rootScope.ui.login.alert_wrongUserPass
 //              message: (result.error.status == 400 ||
 //                result.error.status == 403 ||
 //                result.error.status == 404) ?
 //                'Wrong username or password!' :
 //                'There has been an error with your login!'
-//            };
+//            }
+//          };
 //
-//            return false;
-//          } else {
-//            $scope.view = 'preloaded';
+//          angular.element('#login button[type=submit]').text($rootScope.ui.login.button_login).removeAttr('disabled');
 //
-//            $scope.preloaded = 'Loading user resources.';
+//          return false;
+//        } else {
 //
-//            User.resources().then(function (resources) {
-//              $scope.preloaded = 'Setting up environment.';
+//          angular.element('#login').hide();
+//          angular.element('#download').hide();
+//          angular.element('#preloader').show();
 //
-//              Environment.setup().then(function () {
-//                $scope.preloaded = 'Getting groups list.';
+//          progress(30, $rootScope.ui.login.loading_User);
 //
-//                Network.groups().then(function () {
-//                  $scope.preloaded = 'Populating group members.';
+//          User.resources().then(function (resources) {
+//            progress(50, 'Setting up environment.');
 //
-//                  Network.population().then(function () {
-//                    $scope.preloaded = 'Getting calculating group availability overviews.';
+//            Environment.setup().then(function () {
+//              progress(70, $rootScope.ui.login.loading_Group);
 //
-//                    Planboard.clusters().then(function () {
-//                      $scope.preloaded = 'Getting user availability.';
+//              Network.groups().then(function (groups) {
+//                progress(70, 'Populating group members.');
 //
-//                      Planboard.availability(resources.uuid).then(function () {
-//                        $scope.preloaded = 'Getting member availabilities.';
-//
-//                        Planboard.availabilities().then(function () {
-//                          $location.path('/dashboard')
-//                        });
-//                      });
-//                    });
-//                  });
+//                Network.population().then(function () {
+//                  configure(resources, groups);
+////                  Planboard.clusters().then(function () {
+////                    $scope.preloaded = 'Getting user availability.';
+////
+////                    Planboard.availability(resources.uuid).then(function () {
+////                      $scope.preloaded = 'Getting member availabilities.';
+////
+////                      Planboard.availabilities().then(function () {
+////                        $location.path('/dashboard')
+////                      });
+////                    });
+////                  });
 //                });
 //              });
 //            });
-//          }
-//        });
+//          });
+//        }
+//      });
 
+
+      // Legacy
 
       UserLegacy.login(uuid.toLowerCase(), pass).then(function (result) {
         if (result.status == 400 || result.status == 404) {
@@ -215,6 +230,8 @@ define(['controllers/controllers'], function (controllers) {
           });
         }
       });
+
+
     }
 
     function configure(resources, groups) {

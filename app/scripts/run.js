@@ -17,7 +17,7 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 
       var settings = angular.fromJson(Storage.get('settings'));
       if (settings) {
-        $rootScope.app.settings =  settings;
+        $rootScope.app.settings = settings;
       } else {
         $rootScope.app.settings = {
           language: config.lang
@@ -124,12 +124,16 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
         }
       };
 
-      $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]) };
+      $rootScope.fullScreen = function () {
+        screenfull.toggle($('html')[0])
+      };
 
       if (!config.profile.mobileApp.status)
         $('#copyrights span.muted').css({ right: 0 });
 
-      $('.nav a').on('click', function () { $('.btn-navbar').click() });
+      $('.nav a').on('click', function () {
+        $('.btn-navbar').click()
+      });
 
       // ----------------------------------------------------------
 
@@ -240,10 +244,46 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
       $rootScope.unite = function (chunks) {
         var text = '';
 
-        _.each(chunks, function (chunk) { text += chunk });
+        _.each(chunks, function (chunk) {
+          text += chunk
+        });
 
         return text;
-      }
+      };
+
+      // ----------------------------------------------------------
+
+      $rootScope.app2 = $rootScope.app2 || {
+        config: config,
+        session: {},
+        resources: {},
+        environment: {
+          domain: '',
+          states: [],
+          divisions: []
+        },
+        preloaded: {
+          ratio: 0,
+          missioned: 0,
+          accomplished: 1
+        }
+      };
+
+      $rootScope.missioned = function (missioned) {
+        $rootScope.app.preloaded = {
+          ratio: 0,
+          missioned: missioned,
+          accomplished: 1
+        };
+      };
+
+      $rootScope.ticked = function () {
+        $rootScope.app.preloaded.ratio = Math.ceil(
+          Math.abs(
+              $rootScope.app.preloaded.accomplished++ * 100 /
+              $rootScope.app.preloaded.missioned)
+        );
+      };
     }
   ]);
 });
