@@ -4,37 +4,51 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
   app.run([
     '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$window', 'States', 'Browsers', 'Notifications',
     function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers, Notifications) {
-      $rootScope.config = config;
-      $rootScope.config.init();
-
       Session.check();
 
-      $('#notification').removeClass('ng-cloak');
+      if (!Storage.get('periods'))
+        Dater.registerPeriods();
+
+      // ----------------------------------------------------------
+
+      $rootScope.app = $rootScope.app || {};
+      $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+      $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
+
+      var settings = angular.fromJson(Storage.get('settings'));
+      if (settings) {
+        $rootScope.app.settings =  settings;
+      } else {
+        $rootScope.app.settings = {
+          language: config.lang
+        };
+
+        Storage.add('settings', angular.toJson($rootScope.app.settings));
+      }
+
+      // ----------------------------------------------------------
+
+      $rootScope.config = config;
+      $rootScope.config.init();
+      $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
+
+      _.each(angular.fromJson(Storage.get('states')), function (state) {
+        $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
+      });
+
+      // ----------------------------------------------------------
 
       $rootScope.changeLanguage = function (lang) {
-        $rootScope.ui = locals.ui[lang]
+        $rootScope.ui = locals.ui[lang];
+
+        $rootScope.app.settings.language = lang;
       };
 
       $rootScope.ui = locals.ui[$rootScope.config.lang];
 
-      if (!Storage.get('periods')) {
-        Dater.registerPeriods();
-      }
+      // ----------------------------------------------------------
 
-      $rootScope.app = $rootScope.app || {};
-
-      $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
-
-      $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
-
-      $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
-
-      angular.forEach(
-        angular.fromJson(Storage.get('states')),
-        function (state) {
-          $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
-        }
-      );
+      // TODO: Make a general service called reminders for these kind of messages
 
       var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
 
@@ -50,14 +64,18 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
         Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
       };
 
-      if (!$rootScope.app.unreadMessages) {
+      // ----------------------------------------------------------
+
+      // TODO: Fired in login as well?
+
+      if (!$rootScope.app.unreadMessages)
         Messages.unreadCount();
-      }
+
+      // ----------------------------------------------------------
 
       if (angular.fromJson(Storage.get('guard'))) {
         $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
       } else {
-        // TODO: Some changes in the constructor. Review this later on
         $rootScope.app.guard = {
           monitor: '',
           role: '',
@@ -66,64 +84,70 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
         };
       }
 
+      // ----------------------------------------------------------
+
+      // TODO: Investigate whether is still in use?
+
       $rootScope.fireDeleteRequest = function (options) {
-        switch (options.section) {
-          case 'groups':
-            $rootScope.$broadcast('fireGroupDelete', { id: options.id });
-            break;
-        }
+        if (options.section == 'groups')
+          $rootScope.$broadcast('fireGroupDelete', { id: options.id });
       };
+
+      // ----------------------------------------------------------
+
+      // TODO: Make a general directive for styling fixes
+
+      $('#notification').removeClass('ng-cloak');
 
       $rootScope.fixStyles = function () {
         $rootScope.timelineLoaded = false;
 
         var tabHeight = $('.tabs-left .nav-tabs').height();
 
-        $.each(
-          $('.tab-content').children(), function () {
-            var $parent = $(this),
-              $this = $(this).attr('id'),
-              contentHeight = $('.tabs-left .tab-content #' + $this).height();
+        $.each($('.tab-content').children(), function () {
+          var $parent = $(this),
+            $this = $(this).attr('id'),
+            contentHeight = $('.tabs-left .tab-content #' + $this).height();
 
-            if (tabHeight > contentHeight) {
-              $('.tabs-left .tab-content #' + $this).css(
-                {
-                  height: $('.tabs-left .nav-tabs').height() - 41
-                }
-              );
-            }
+          if (tabHeight > contentHeight) {
+            $('.tabs-left .tab-content #' + $this).css({
+              height: $('.tabs-left .nav-tabs').height() - 41
+            });
           }
-        );
+        });
 
         if ($.os.mac || $.os.linux) {
-          $('.nav-tabs-app li a span').css(
-            {
-              paddingTop: '10px',
-              marginBottom: '0px'
-            });
+          $('.nav-tabs-app li a span').css({
+            paddingTop: '10px',
+            marginBottom: '0px'
+          });
         }
       };
 
-      $rootScope.fullScreen = function () {
-        screenfull.toggle($('html')[0])
-      };
+      $rootScope.fullScreen = function () { screenfull.toggle($('html')[0]) };
 
-      if (!config.profile.mobileApp.status) {
+      if (!config.profile.mobileApp.status)
         $('#copyrights span.muted').css({ right: 0 });
-      }
 
-      $rootScope.downloadMobileApp = function (type) {
-        $rootScope.statusBar.display($rootScope.ui.downloads.inAction);
+      $('.nav a').on('click', function () { $('.btn-navbar').click() });
 
-        Messages.email(type)
-          .then(
-          function () {
-            $rootScope.notifier.success($rootScope.ui.downloads.success);
+      // ----------------------------------------------------------
 
-            $rootScope.statusBar.off();
-          }
-        );
-      };
+      // TODO: Depreciated function. Keep emailing functionality in messages
+
+//      $rootScope.downloadMobileApp = function (type) {
+//        $rootScope.statusBar.display($rootScope.ui.downloads.inAction);
+//
+//        Messages.email(type).then(function () {
+//          $rootScope.notifier.success($rootScope.ui.downloads.success);
+//
+//          $rootScope.statusBar.off();
+//        });
+//      };
+
+      // ----------------------------------------------------------
+
+      // TODO: Move to a service
 
       $rootScope.resetPhoneNumberChecker = function () {
         $rootScope.phoneNumberParsed = {};
@@ -199,8 +223,7 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
             }
 
             $rootScope.phoneNumberParsed.all = all;
-          }
-          else {
+          } else {
             $rootScope.phoneNumberParsed.result = true;
 
             delete $rootScope.phoneNumberParsed.message;
@@ -210,16 +233,14 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
         }
       };
 
-      $('.nav a').on('click', function () {
-        $('.btn-navbar').click()
-      });
+      // ----------------------------------------------------------
+
+      // TODO: Make a utilities service for sharing
 
       $rootScope.unite = function (chunks) {
         var text = '';
 
-        _.each(chunks, function (chunk) {
-          text += chunk;
-        });
+        _.each(chunks, function (chunk) { text += chunk });
 
         return text;
       }

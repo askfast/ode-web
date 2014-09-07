@@ -1,597 +1,487 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('login', [
-    '$rootScope', '$location', '$q', '$scope', 'Session', 'User', 'Groups', 'Messages', 'Storage', '$routeParams', 'Settings', 'Profile', 'MD5',
-    function ($rootScope, $location, $q, $scope, Session, User, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) {
-      var self = this;
+  controllers.controller('login', function ($rootScope, $location, $q, $scope, Session, UserLegacy, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5) {
+    if ($routeParams.uuid && $routeParams.key) {
+      $scope.views = {
+        changePass: true
+      };
 
-      if ($routeParams.uuid && $routeParams.key) {
-        $scope.views = {
-          changePass: true
-        };
-
-        $scope.changepass = {
-          uuid: $routeParams.uuid,
-          key: $routeParams.key
-        }
+      $scope.changepass = {
+        uuid: $routeParams.uuid,
+        key: $routeParams.key
       }
-      else {
-        $scope.views = {
-          login: true,
-          forgot: false
-        };
+    } else {
+      $scope.views = {
+        login: true,
+        forgot: false
+      };
+    }
+
+    $scope.alert = {
+      login: {
+        display: false,
+        type: '',
+        message: ''
+      },
+      forgot: {
+        display: false,
+        type: '',
+        message: ''
       }
-
-      $scope.alert = {
-        login: {
-          display: false,
-          type: '',
-          message: ''
-        },
-        forgot: {
-          display: false,
-          type: '',
-          message: ''
-        }
-      };
-
-      if (!Storage.session.get('app')) Storage.session.add('app', '{}');
-
-      $('.navbar').hide();
-      $('#footer').hide();
-      $('#watermark').hide();
-      // $('#notification').hide();
-      $('body').css({
-        'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
-        'backgroundSize': 'cover'
-      });
-
-      if (navigator.userAgent.indexOf("Firefox") >= 0) {
-        $('#login form').attr('autocomplete', 'off');
-      }
-
-      var logindata = angular.fromJson(Storage.get('logindata'));
-
-      if (logindata && logindata.remember) $scope.logindata = logindata;
-
-      $scope.login = function () {
-        var registeredNotifications = Storage.get('registeredNotifications');
-        var periods = Storage.get('periods');
-        var periodsNext = Storage.get('periodsNext');
-        Storage.clearAll();
-        Storage.session.clearAll();
-        Storage.add('registeredNotifications', registeredNotifications);
-        Storage.add('periods', periods);
-        Storage.add('periodsNext', periodsNext);
-
-        $('#alertDiv').hide();
-
-        if (!$scope.logindata || !$scope.logindata.username || !$scope.logindata.password) {
-          $scope.alert = {
-            login: {
-              display: true,
-              type: 'alert-error',
-              message: $rootScope.ui.login.alert_fillfiled
-            }
-          };
-
-          $('#login button[type=submit]')
-            .text($rootScope.ui.login.button_login)
-            .removeAttr('disabled');
-
-          return false;
-        }
-
-        $('#login button[type=submit]')
-          .text($rootScope.ui.login.button_loggingIn)
-          .attr('disabled', 'disabled');
-
-        Storage.add('logindata', angular.toJson({
-          username: $scope.logindata.username,
-          password: $scope.logindata.password,
-          remember: $scope.logindata.remember
-        }));
-
-        Storage.add(
-          'askPass',
-          MD5($scope.logindata.password)
-        );
-
-        createLocalGuardContainer();
-
-        self.auth($scope.logindata.username, MD5($scope.logindata.password));
-      };
-
-
-      function createLocalGuardContainer() {
-        if ($rootScope.config.smartAlarm) {
-          Storage.add('guard', angular.toJson({
-            monitor: '',
-            role: ''
-          }));
-        }
-      }
-
-      self.auth = function (uuid, pass) {
-        User.login(uuid.toLowerCase(), pass).then(
-          function (result) {
-            if (result.status == 400 || result.status == 404) {
-              $scope.alert = {
-                login: {
-                  display: true,
-                  type: 'alert-error',
-                  message: $rootScope.ui.login.alert_wrongUserPass
-                }
-              };
-
-              $('#login button[type=submit]')
-                .text($rootScope.ui.login.button_login)
-                .removeAttr('disabled');
-
-              return false;
-            } else {
-              Session.set(result["X-SESSION_ID"]);
-
-              self.preloader();
-            }
-          }
-        );
-      };
-
-      if ($location.search().username && $location.search().password) {
-        createLocalGuardContainer();
-
-        self.auth($location.search().username, $location.search().password);
-      }
-
-      self.preloader = function () {
-        $('#login').hide();
-        $('#download').hide();
-        $('#preloader').show();
-
-        self.progress(30, $rootScope.ui.login.loading_User);
-
-        User.states().then(function (states) {
-          Storage.add('states', angular.toJson(states));
-
-          _.each(states, function (state) {
-            $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
-          });
-
-          User.divisions().then(function (divisions) {
-            $rootScope.config.timeline.config.divisions = divisions;
-
-            Storage.add('divisions', angular.toJson(divisions));
-
-            User.resources().then(function (resources) {
-              if (resources.error) {
-                console.warn('error ->', resources);
-              } else {
-                $rootScope.app.resources = resources;
-
-                self.progress(60, $rootScope.ui.login.loading_Group);
-
-                User.domain().then(function (domain) {
-                  $rootScope.app.domain = domain;
-
-                  self.progress(70, $rootScope.ui.login.loading_Group);
-
-                  Groups.query(true).then(function (groups) {
-                      if (groups.error) {
-                        console.warn('error ->', groups);
-                      } else {
-                        var calls = [];
-
-                        _.each(
-                          groups,
-                          function (group) {
-                            calls.push(Groups.get(group.uuid))
-                          }
-                        );
-
-                        $q.all(calls).then(
-                          function () {
-                            Groups.uniqueMembers();
-
-                            // TODO: Move settings checkup to a module!
-                            var settings = angular.fromJson(resources.settingsWebPaige) || {},
-                              sync = false,
-                              parenting = false,
-                              defaults = $rootScope.config.defaults.settingsWebPaige,
-                              _groups = function (groups) {
-                                var _groups = {};
-                                _.each(
-                                  groups,
-                                  function (group) {
-                                    _groups[group.uuid] = {
-                                      status: true,
-                                      divisions: false
-                                    };
-                                  }
-                                );
-
-                                return _groups;
-                              };
-
-                            // Check if there is any settings at all
-                            if (settings != null || settings != undefined) {
-                              // check for user settings-all
-                              if (settings.user) {
-                                // check for user-language settings
-                                if (settings.user.language) {
-                                  // console.warn('user HAS language settings');
-
-                                  $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
-                                  defaults.user.language = settings.user.language;
-                                }
-                                else {
-                                  // console.warn('user has NO language!!');
-
-                                  $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
-                                  sync = true;
-                                }
-                              }
-                              else {
-                                // console.log('NO user settings at all !!');
-
-                                sync = true;
-                              }
-
-                              // check for app settings-all
-                              if (settings.app) {
-                                // check for app-widget settings
-                                if (settings.app.widgets) {
-                                  // check for app-widget-groups setting
-                                  if (settings.app.widgets.groups) {
-                                    // console.log('settings for groups =>', settings.app.widgets.groups);
-
-                                    var oldGroupSetup = false;
-
-                                    if (!jQuery.isEmptyObject(settings.app.widgets.groups)) {
-                                      _.each(
-                                        settings.app.widgets.groups,
-                                        function (value) {
-                                          // console.log('value ->', value);
-
-                                          if (typeof value !== 'object' || value == {}) {
-                                            oldGroupSetup = true;
-                                          }
-                                        }
-                                      );
-                                    }
-                                    else {
-                                      oldGroupSetup = true;
-                                    }
-
-                                    if (oldGroupSetup) {
-                                      // console.warn('OLD SETUP => user has NO app widgets groups!!');
-
-                                      defaults.app.widgets.groups = _groups(groups);
-                                      sync = true;
-                                    }
-                                    else {
-                                      // console.warn('user HAS app widgets groups settings');
-
-                                      defaults.app.widgets.groups = settings.app.widgets.groups;
-                                    }
-                                  }
-                                  else {
-                                    // console.warn('user has NO app widgets groups!!');
-
-                                    defaults.app.widgets.groups = _groups(groups);
-                                    sync = true;
-                                  }
-                                }
-                                else {
-                                  // console.warn('user has NO widget settings!!');
-
-                                  defaults.app.widgets = { groups: _groups(groups) };
-                                  sync = true;
-                                }
-
-                                // check for app group setting
-                                if (settings.app.group && settings.app.group != undefined) {
-                                  var exists = true;
-
-                                  _.each(
-                                    groups,
-                                    function (_group) {
-                                      var firstGroup = new RegExp(settings.app.group);
-
-                                      if (!firstGroup.test(_group.uuid)) {
-                                        if (!exists) {
-                                          exists = false;
-                                        }
-                                      }
-                                      else {
-                                        exists = true;
-                                      }
-                                    }
-                                  );
-
-                                  if (!exists) {
-                                    sync = true;
-                                  }
-                                }
-                                else {
-                                  // console.warn('user has NO first group setting!!');
-
-                                  parenting = true;
-                                  sync = true;
-                                }
-                              }
-                              else {
-                                // console.log('NO app settings!!');
-
-                                defaults.app = { widgets: { groups: _groups(groups) } };
-
-                                sync = true;
-                              }
-                            }
-                            else {
-                              // console.log('NO SETTINGS AT ALL!!');
-
-                              defaults = {
-                                user: $rootScope.config.defaults.settingsWebPaige.user,
-                                app: {
-                                  widgets: {
-                                    groups: _groups(groups)
-                                  },
-                                  group: groups[0].uuid
-                                }
-                              };
-
-                              sync = true;
-                            }
-
-                            // sync settings with missing parts also parenting check
-                            if (sync) {
-                              if (parenting) {
-                                // console.warn('setting up parent group for the user');
-
-                                Groups.parents()
-                                  .then(
-                                  function (_parent) {
-                                    // console.warn('parent group been fetched ->', _parent);
-
-                                    if (_parent != null) {
-                                      // console.warn('found parent parent -> ', _parent);
-
-                                      defaults.app.group = _parent;
-                                    }
-                                    else {
-                                      // console.warn('setting the first group in the list for user ->', groups[0].uuid);
-
-                                      defaults.app.group = groups[0].uuid;
-                                    }
-
-                                    // console.warn('SAVE ME (with parenting) ->', defaults);
-
-                                    Settings.save(
-                                      resources.uuid,
-                                      defaults
-                                    ).then(
-                                      function () {
-                                        User.resources()
-                                          .then(
-                                          function (got) {
-                                            // console.log('gotted (with setting parent group) ->', got);
-
-                                            $rootScope.app.resources = got;
-
-                                            finalize();
-                                          }
-                                        )
-                                      }
-                                    );
-                                  }
-                                );
-                              }
-                              else {
-                                // console.warn('SAVE ME ->', defaults);
-
-                                defaults.app.group = groups[0].uuid;
-
-                                Settings.save(
-                                  resources.uuid,
-                                  defaults
-                                ).then(
-                                  function () {
-                                    User.resources()
-                                      .then(
-                                      function (got) {
-                                        // console.log('gotted ->', got);
-
-                                        $rootScope.app.resources = got;
-
-                                        finalize();
-                                      }
-                                    );
-                                  }
-                                );
-                              }
-                            }
-                            else {
-                              try {
-                                ga(
-                                  'send', 'pageview', {
-                                    'dimension1': resources.uuid,
-                                    'dimension2': $rootScope.app.domain
-                                  }
-                                );
-
-                                ga('send', 'event', 'Login', resources.uuid);
-                              }
-                              catch (err) {
-                                // console.warn('Google analytics library!', err);
-                              }
-
-                              finalize();
-                            }
-                          }
-                        );
-                      }
-                    }
-                  );
-                });
-              }
-            });
-          });
-        });
-      };
-
-      function finalize() {
-        self.progress(100, $rootScope.ui.login.loading_everything);
-
-        self.redirectToDashboard();
-
-        self.getMessages();
-      }
-
-      self.getMessages = function () {
-        Messages.query().then(function (messages) {
-          if (messages.error) {
-            console.warn('error ->', messages);
-          }
-          else {
-            $rootScope.app.unreadMessages = Messages.unreadCount();
-
-            Storage.session.unreadMessages = Messages.unreadCount();
-          }
-        });
-      };
-
-      self.redirectToDashboard = function () {
-        $location.search({});
-
-        $location.path('/dashboard');
-
-        setTimeout(
-          function () {
-            $('body').css({ 'background': 'none' });
-            $('.navbar').show();
-            // $('#mobile-status-bar').show();
-            // $('#notification').show();
-            if (!$rootScope.browser.mobile) $('#footer').show();
-            $('#watermark').show();
-            $('body').css({ 'background': 'url(../images/bg.jpg) repeat' });
-          }, $rootScope.config.timers.TICKER);
-      };
-
-      self.progress = function (ratio, message) {
-        $('#preloader .progress .bar').css({ width: ratio + '%' });
-        $('#preloader span').text(message);
-      };
-
-      $scope.forgot = function () {
-        $('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
-
-        User.password($scope.remember.id).then(function (result) {
-          if (result == "ok") {
-            $scope.alert = {
-              forget: {
-                display: true,
-                type: 'alert-success',
-                message: $rootScope.ui.login.checkYourMail
-              }
-            };
-          } else {
-            $scope.alert = {
-              forget: {
-                display: true,
-                type: 'alert-error',
-                message: $rootScope.ui.errors.login.forgotCantFind
-              }
-            };
-          }
-
-          $('#forgot button[type=submit]')
-            .text($rootScope.ui.login.button_changePassword)
-            .removeAttr('disabled');
-        });
-      };
-
-      self.changePass = function (uuid, newpass, key) {
-        User.changePass(uuid, newpass, key).then(function (result) {
-          if (result.status == 400 || result.status == 500 || result.status == 409) {
-            $scope.alert = {
-              changePass: {
-                display: true,
-                type: 'alert-error',
-                message: $rootScope.ui.errors.login.changePass
-              }
-            };
-          } else {
-            $scope.alert = {
-              changePass: {
-                display: true,
-                type: 'alert-success',
-                message: $rootScope.ui.login.passwordChanged
-              }
-            };
-
-            $location.path("/message");
-          }
-
-          $('#changePass button[type=submit]')
-            .text($rootScope.ui.login.button_changePassword)
-            .removeAttr('disabled');
-        });
-      };
-
-      $scope.changePass = function () {
-        $('#alertDiv').hide();
-
-        if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass) {
-          $scope.alert = {
-            changePass: {
-              display: true,
-              type: 'alert-error',
-              message: $rootScope.ui.errors.login.changePassAllFields
-            }
-          };
-
-          $('#changePass button[type=submit]')
-            .text($rootScope.ui.login.button_changePassword)
-            .removeAttr('disabled');
-
-          return false;
-        } else if ($scope.changeData.newPass != $scope.changeData.retypePass) {
-          $scope.alert = {
-            changePass: {
-              display: true,
-              type: 'alert-error',
-              message: $rootScope.ui.errors.login.changePassNoMatch
-            }
-          };
-
-          $('#changePass button[type=submit]')
-            .text($rootScope.ui.login.button_changePassword)
-            .removeAttr('disabled');
-
-          return false;
-        }
-
-        $('#changePass button[type=submit]')
-          .text($rootScope.ui.login.button_changingPassword)
-          .attr('disabled', 'disabled');
-
-        self.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key);
-      };
-
-
-      if (localStorage.hasOwnProperty('sessionTimeout')) {
-        localStorage.removeItem('sessionTimeout');
-
+    };
+
+    // -----------------------------------------------------------------------
+    // if (!Storage.session.get('app')) Storage.session.add('app', '{}');
+    // -----------------------------------------------------------------------
+
+    angular.element('.navbar').hide();
+    angular.element('#footer').hide();
+    angular.element('#watermark').hide();
+    angular.element('body').css({
+      'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+      'backgroundSize': 'cover'
+    });
+    if (navigator.userAgent.indexOf("Firefox") >= 0)
+      angular.element('#login form').attr('autocomplete', 'off');
+
+    // -----------------------------------------------------------------------
+
+    var logindata = angular.fromJson(Storage.get('logindata'));
+    if (logindata && logindata.remember) $scope.logindata = logindata;
+
+    // -----------------------------------------------------------------------
+
+    $scope.login = function () {
+      var registeredNotifications = Storage.get('registeredNotifications');
+      var periods = Storage.get('periods');
+      var periodsNext = Storage.get('periodsNext');
+      Storage.clearAll();
+      Storage.session.clearAll();
+      Storage.add('registeredNotifications', registeredNotifications);
+      Storage.add('periods', periods);
+      Storage.add('periodsNext', periodsNext);
+
+      angular.element('#alertDiv').hide();
+
+      angular.element('#login button[type=submit]').text($rootScope.ui.login.button_loggingIn).attr('disabled', 'disabled');
+
+      if (!$scope.logindata || !$scope.logindata.username || !$scope.logindata.password) {
         $scope.alert = {
           login: {
             display: true,
             type: 'alert-error',
-            message: $rootScope.ui.login.sessionTimeout
+            message: $rootScope.ui.login.alert_fillfiled
           }
         };
+
+        angular.element('#login button[type=submit]').text($rootScope.ui.login.button_login).removeAttr('disabled');
+
+        return false;
+      }
+
+      Storage.add('logindata', angular.toJson({
+        username: $scope.logindata.username,
+        password: $scope.logindata.password,
+        remember: $scope.logindata.remember
+      }));
+
+      Storage.add('askPass', MD5($scope.logindata.password));
+
+      authenticate($scope.logindata.username, MD5($scope.logindata.password));
+    };
+
+    if ($location.search().username && $location.search().password) {
+      authenticate($location.search().username, $location.search().password);
+    }
+
+    function authenticate(uuid, pass) {
+      if ($rootScope.config.smartAlarm) {
+        Storage.add('guard', angular.toJson({
+          monitor: '',
+          role: ''
+        }));
+      }
+
+
+//        User.login($scope.data).then(function (result) {
+//          if (result.error && result.error.status) {
+//            $scope.warning = {
+//              status: true,
+//              message: (result.error.status == 400 ||
+//                result.error.status == 403 ||
+//                result.error.status == 404) ?
+//                'Wrong username or password!' :
+//                'There has been an error with your login!'
+//            };
+//
+//            return false;
+//          } else {
+//            $scope.view = 'preloaded';
+//
+//            $scope.preloaded = 'Loading user resources.';
+//
+//            User.resources().then(function (resources) {
+//              $scope.preloaded = 'Setting up environment.';
+//
+//              Environment.setup().then(function () {
+//                $scope.preloaded = 'Getting groups list.';
+//
+//                Network.groups().then(function () {
+//                  $scope.preloaded = 'Populating group members.';
+//
+//                  Network.population().then(function () {
+//                    $scope.preloaded = 'Getting calculating group availability overviews.';
+//
+//                    Planboard.clusters().then(function () {
+//                      $scope.preloaded = 'Getting user availability.';
+//
+//                      Planboard.availability(resources.uuid).then(function () {
+//                        $scope.preloaded = 'Getting member availabilities.';
+//
+//                        Planboard.availabilities().then(function () {
+//                          $location.path('/dashboard')
+//                        });
+//                      });
+//                    });
+//                  });
+//                });
+//              });
+//            });
+//          }
+//        });
+
+
+      UserLegacy.login(uuid.toLowerCase(), pass).then(function (result) {
+        if (result.status == 400 || result.status == 404) {
+          $scope.alert = {
+            login: {
+              display: true,
+              type: 'alert-error',
+              message: $rootScope.ui.login.alert_wrongUserPass
+            }
+          };
+
+          angular.element('#login button[type=submit]').text($rootScope.ui.login.button_login).removeAttr('disabled');
+
+          return false;
+        } else {
+          Session.set(result["X-SESSION_ID"]);
+
+          angular.element('#login').hide();
+          angular.element('#download').hide();
+          angular.element('#preloader').show();
+
+          progress(30, $rootScope.ui.login.loading_User);
+
+          UserLegacy.states().then(function (states) {
+            Storage.add('states', angular.toJson(states));
+
+            _.each(states, function (state) {
+              $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
+            });
+
+            UserLegacy.divisions().then(function (divisions) {
+              $rootScope.config.timeline.config.divisions = divisions;
+
+              Storage.add('divisions', angular.toJson(divisions));
+
+              UserLegacy.resources().then(function (resources) {
+                $rootScope.app.resources = resources;
+
+                progress(60, $rootScope.ui.login.loading_Group);
+
+                UserLegacy.domain().then(function (domain) {
+                  $rootScope.app.domain = domain;
+
+                  progress(70, $rootScope.ui.login.loading_Group);
+
+                  Groups.query(true).then(function (groups) {
+                    var calls = [];
+
+                    _.each(groups, function (group) {
+                      calls.push(Groups.get(group.uuid));
+                    });
+
+                    $q.all(calls).then(function () {
+                      Groups.uniqueMembers();
+
+                      configure(resources, groups);
+                    });
+                  });
+                });
+              });
+            });
+          });
+        }
+      });
+    }
+
+    function configure(resources, groups) {
+      var settings = angular.fromJson(resources.settingsWebPaige) || {},
+        sync = false,
+        parenting = false,
+        defaults = $rootScope.config.defaults.settingsWebPaige;
+
+      var _groups = function (groups) {
+        var _groups = {};
+        _.each(groups, function (group) {
+          _groups[group.uuid] = {
+            status: true,
+            divisions: false
+          };
+        });
+
+        return _groups;
+      };
+
+      if (settings != null || settings != undefined) {
+        if (settings.user) {
+          if (settings.user.language) {
+            $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
+            defaults.user.language = settings.user.language;
+          } else {
+            $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+            sync = true;
+          }
+        } else {
+          sync = true;
+        }
+
+        if (settings.app) {
+          if (settings.app.widgets) {
+            if (settings.app.widgets.groups) {
+              var oldGroupSetup = false;
+
+              if (!jQuery.isEmptyObject(settings.app.widgets.groups)) {
+                _.each(settings.app.widgets.groups, function (value) {
+                  if (typeof value !== 'object' || value == {})
+                    oldGroupSetup = true;
+                });
+              } else {
+                oldGroupSetup = true;
+              }
+
+              if (oldGroupSetup) {
+                defaults.app.widgets.groups = _groups(groups);
+                sync = true;
+              } else {
+                defaults.app.widgets.groups = settings.app.widgets.groups;
+              }
+            } else {
+              defaults.app.widgets.groups = _groups(groups);
+              sync = true;
+            }
+          } else {
+            defaults.app.widgets = { groups: _groups(groups) };
+            sync = true;
+          }
+
+          if (settings.app.group && settings.app.group != undefined) {
+            var exists = true;
+
+            _.each(groups, function (_group) {
+              var firstGroup = new RegExp(settings.app.group);
+
+              if (!firstGroup.test(_group.uuid)) {
+                if (!exists) exists = false;
+              } else {
+                exists = true;
+              }
+            });
+
+            if (!exists) sync = true;
+          } else {
+            parenting = true;
+            sync = true;
+          }
+        } else {
+          defaults.app = {
+            widgets: {
+              groups: _groups(groups)
+            }
+          };
+
+          sync = true;
+        }
+      } else {
+        defaults = {
+          user: $rootScope.config.defaults.settingsWebPaige.user,
+          app: {
+            widgets: {
+              groups: _groups(groups)
+            },
+            group: groups[0].uuid
+          }
+        };
+        sync = true;
+      }
+
+      if (sync) {
+        if (parenting) {
+          Groups.parents().then(function (_parent) {
+            if (_parent != null) {
+              defaults.app.group = _parent;
+            }
+            else {
+              defaults.app.group = groups[0].uuid;
+            }
+
+            Settings.save(resources.uuid, defaults).then(function () {
+              User.resources().then(function (got) {
+                $rootScope.app.resources = got;
+                finalize();
+              });
+            });
+          });
+        } else {
+          defaults.app.group = groups[0].uuid;
+
+          Settings.save(resources.uuid, defaults).then(function () {
+            User.resources().then(function (got) {
+              $rootScope.app.resources = got;
+              finalize();
+            });
+          });
+        }
+      } else {
+        try {
+          ga('send', 'pageview', {
+            'dimension1': resources.uuid,
+            'dimension2': $rootScope.app.domain
+          });
+
+          ga('send', 'event', 'Login', resources.uuid);
+        } catch (err) {
+          // console.warn('Google analytics library!', err);
+        }
+
+        finalize();
       }
     }
-  ]);
+
+    function finalize() {
+      progress(100, $rootScope.ui.login.loading_everything);
+
+      $location.search({});
+
+      setTimeout(function () {
+        angular.element('body').css({ 'background': 'url(../images/bg.jpg) repeat' });
+        angular.element('.navbar').show();
+        angular.element('#watermark').show();
+        if (!$rootScope.browser.mobile)
+          angular.element('#footer').show();
+      }, $rootScope.config.timers.TICKER);
+
+      Messages.query().then(function () {
+        $rootScope.app.unreadMessages = Messages.unreadCount();
+        Storage.session.unreadMessages = Messages.unreadCount();
+      });
+
+      $location.path('/dashboard');
+    }
+
+    function progress(ratio, message) {
+      angular.element('#preloader .progress .bar').css({ width: ratio + '%' });
+      angular.element('#preloader span').text(message);
+    }
+
+    // -----------------------------------------------------------------------
+
+    $scope.forgot = function () {
+      angular.element('#forgot button[type=submit]').text($rootScope.ui.login.setting).attr('disabled', 'disabled');
+
+      User.password($scope.remember.id).then(function (result) {
+        if (result == "ok") {
+          $scope.alert = {
+            forget: {
+              display: true,
+              type: 'alert-success',
+              message: $rootScope.ui.login.checkYourMail
+            }
+          };
+        } else {
+          $scope.alert = {
+            forget: {
+              display: true,
+              type: 'alert-error',
+              message: $rootScope.ui.errors.login.forgotCantFind
+            }
+          };
+        }
+
+        angular.element('#forgot button[type=submit]').text($rootScope.ui.login.button_changePassword).removeAttr('disabled');
+      });
+    };
+
+    $scope.changePass = function () {
+      angular.element('#alertDiv').hide();
+
+      if (!$scope.changeData || !$scope.changeData.newPass || !$scope.changeData.retypePass) {
+        $scope.alert = {
+          changePass: {
+            display: true,
+            type: 'alert-error',
+            message: $rootScope.ui.errors.login.changePassAllFields
+          }
+        };
+
+        angular.element('#changePass button[type=submit]').text($rootScope.ui.login.button_changePassword).removeAttr('disabled');
+
+        return false;
+      } else if ($scope.changeData.newPass != $scope.changeData.retypePass) {
+        $scope.alert = {
+          changePass: {
+            display: true,
+            type: 'alert-error',
+            message: $rootScope.ui.errors.login.changePassNoMatch
+          }
+        };
+
+        angular.element('#changePass button[type=submit]').text($rootScope.ui.login.button_changePassword).removeAttr('disabled');
+
+        return false;
+      }
+
+      angular.element('#changePass button[type=submit]').text($rootScope.ui.login.button_changingPassword).attr('disabled', 'disabled');
+
+      User.changePass($scope.changepass.uuid, MD5($scope.changeData.newPass), $scope.changepass.key).then(function (result) {
+        if (result.status == 400 || result.status == 500 || result.status == 409) {
+          $scope.alert = {
+            changePass: {
+              display: true,
+              type: 'alert-error',
+              message: $rootScope.ui.errors.login.changePass
+            }
+          };
+        } else {
+          $scope.alert = {
+            changePass: {
+              display: true,
+              type: 'alert-success',
+              message: $rootScope.ui.login.passwordChanged
+            }
+          };
+
+          $location.path("/message");
+        }
+
+        angular.element('#changePass button[type=submit]').text($rootScope.ui.login.button_changePassword).removeAttr('disabled');
+      });
+    };
+
+    // -----------------------------------------------------------------------
+
+    if (localStorage.hasOwnProperty('sessionTimeout')) {
+      localStorage.removeItem('sessionTimeout');
+
+      $scope.alert = {
+        login: {
+          display: true,
+          type: 'alert-error',
+          message: $rootScope.ui.login.sessionTimeout
+        }
+      };
+    }
+  });
 });

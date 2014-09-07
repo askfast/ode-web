@@ -4,7 +4,7 @@ define(
     'use strict';
 
     services.factory(
-      'User',
+      'UserLegacy',
       [
         '$resource', '$q', '$location', 'Storage', '$rootScope',
         function ($resource, $q, $location, Storage, $rootScope) {

@@ -56,23 +56,6 @@
       text-align: left;
     }
 
-    span.version {
-      display: block;
-      margin-top: 10px;
-      margin-bottom: -20px;
-      text-align: center;
-      font-size: 11px;
-
-      a {
-        color: #aaa;
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-
     .alert {
       margin-left: 5px;
       width: 240px;
@@ -86,6 +69,22 @@
         display: inline;
         margin: 0 auto;
       }
+    }
+  }
+}
+
+span.version {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 11px;
+
+  a {
+    color: #aaa;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 }
