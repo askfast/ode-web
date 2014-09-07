@@ -690,20 +690,11 @@ define(['controllers/controllers'], function (controllers) {
         });
       }
 
-
-      /**
-       * Broadcast fireSetPrefixedAvailability calls
-       */
       $scope.setPrefixedAvailability = function (availability, period) {
-        Storage.session.add(
-          'setPrefixedAvailability',
-          angular.toJson(
-            {
-              availability: availability,
-              period: period
-            }
-          )
-        );
+        Storage.session.add('setPrefixedAvailability', angular.toJson({
+          availability: availability,
+          period: period
+        }));
 
         $location.path('/planboard').search({ setPrefixedAvailability: true });
       }
