@@ -20,7 +20,7 @@ define(['services/services'], function (services) {
       try {
         StandBy._('groups').then(function (result) {
           _.each(result, function (group) {
-            group.name = capitalize(group.name)
+            group.name = capitalize(group.name);
           });
 
           result = _.sortBy(result, 'name');
@@ -58,19 +58,14 @@ define(['services/services'], function (services) {
         members = {},
         groups = Store('network').get('groups');
 
-      $rootScope.missioned(groups.length);
-
       try {
         _.each(groups, function (group) {
           queue.push(
             StandBy._('members', { second: group.uuid }).then(function (results) {
-                $rootScope.ticked();
+              Store('network').save('group.' + group.uuid, _.filter(results, filter));
 
-                Store('network').save('group.' + group.uuid, _.filter(results, filter));
-
-                members[group.uuid] = results;
-              }
-            ));
+              members[group.uuid] = results;
+            }));
         });
 
         $q.all(queue).then(function () {

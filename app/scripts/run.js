@@ -1,143 +1,180 @@
 define(['app', 'config', 'locals'], function (app, config, locals) {
   'use strict';
 
-  app.run([
-    '$rootScope', '$location', '$timeout', 'Session', 'Dater', 'Storage', 'Messages', '$window', 'States', 'Browsers', 'Notifications',
-    function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers, Notifications) {
-      Session.check();
+  app.run(function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers, Notifications, Store) {
+    if (Session.check())
+      $location.path('/dashboard');
 
-      if (!Storage.get('periods'))
-        Dater.registerPeriods();
+    // ----------------------------------------------------------
 
-      // ----------------------------------------------------------
+    // TODO: Lose this later onw with VisJS/MomentJS navigation
+    if (!Storage.get('periods'))
+      Dater.registerPeriods();
 
-      $rootScope.app = $rootScope.app || {};
-      $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
-      $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
+    // ----------------------------------------------------------
 
-      var settings = angular.fromJson(Storage.get('settings'));
-      if (settings) {
-        $rootScope.app.settings = settings;
-      } else {
-        $rootScope.app.settings = {
-          language: config.lang
-        };
+    $rootScope.StandBy = $rootScope.StandBy ||
+    {
+      config: config,
+      session: {},
+      resources: {},
+      environment: {
+        domain: '',
+        states: [],
+        divisions: []
+      },
+      settings: {}
+    };
 
-        Storage.add('settings', angular.toJson($rootScope.app.settings));
-      }
+    if (!_.isUndefined($rootScope.StandBy.session) && Session.check()) {
+      $rootScope.StandBy.session = angular.fromJson(sessionStorage.getItem('session'));
+    }
 
-      // ----------------------------------------------------------
+    if (!_.isUndefined($rootScope.StandBy.resources) && Store('user').get('resources') != '') {
+      $rootScope.StandBy.resources = Store('user').get('resources');
+    }
 
-      $rootScope.config = config;
-      $rootScope.config.init();
-      $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
+    if (!_.isUndefined($rootScope.StandBy.environment.domain) && Store('environment').get('domain') != '') {
+      $rootScope.StandBy.environment.domain = Store('environment').get('domain');
+    }
 
-      _.each(angular.fromJson(Storage.get('states')), function (state) {
-        $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
-      });
+    if (!_.isUndefined($rootScope.StandBy.environment.states) && Store('environment').get('states') != '') {
+      $rootScope.StandBy.environment.states = Store('environment').get('states');
+    }
 
-      // ----------------------------------------------------------
+    if (!_.isUndefined($rootScope.StandBy.environment.divisions) && Store('environment').get('divisions') != '') {
+      $rootScope.StandBy.environment.divisions = Store('environment').get('divisions');
+    }
 
-      $rootScope.changeLanguage = function (lang) {
-        $rootScope.ui = locals.ui[lang];
+    // console.log('app ->', $rootScope.StandBy);
 
-        $rootScope.app.settings.language = lang;
+//      $rootScope.app = $rootScope.app || {};
+//      $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
+//      $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
+
+    var settings = angular.fromJson(Storage.get('settings'));
+    if (settings) {
+      $rootScope.app.settings = settings;
+    } else {
+      $rootScope.app.settings = {
+        language: config.lang
       };
 
-      $rootScope.ui = locals.ui[$rootScope.config.lang];
+      Storage.add('settings', angular.toJson($rootScope.app.settings));
+    }
 
-      // ----------------------------------------------------------
+    // ----------------------------------------------------------
 
-      // TODO: Make a general service called reminders for these kind of messages
+    $rootScope.config = config;
+    $rootScope.config.init();
+    $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
-      var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+    _.each(angular.fromJson(Storage.get('states')), function (state) {
+      $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
+    });
 
-      if (registeredNotifications) {
-        $rootScope.registeredNotifications = registeredNotifications;
-      } else {
-        Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
-      }
+    // ----------------------------------------------------------
 
-      $rootScope.registerNotification = function (setting, value) {
-        $rootScope.registeredNotifications[setting] = value;
+    $rootScope.changeLanguage = function (lang) {
+      $rootScope.ui = locals.ui[lang];
 
-        Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
+      $rootScope.app.settings.language = lang;
+    };
+
+    $rootScope.ui = locals.ui[$rootScope.config.lang];
+
+    // ----------------------------------------------------------
+
+    // TODO: Make a general service called reminders for these kind of messages
+
+    var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+
+    if (registeredNotifications) {
+      $rootScope.registeredNotifications = registeredNotifications;
+    } else {
+      Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
+    }
+
+    $rootScope.registerNotification = function (setting, value) {
+      $rootScope.registeredNotifications[setting] = value;
+
+      Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
+    };
+
+    // ----------------------------------------------------------
+
+    // TODO: Fired in login as well?
+
+    if (!$rootScope.app.unreadMessages)
+      Messages.unreadCount();
+
+    // ----------------------------------------------------------
+
+    if (angular.fromJson(Storage.get('guard'))) {
+      $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
+    } else {
+      $rootScope.app.guard = {
+        monitor: '',
+        role: '',
+        currentState: '',
+        currentStateClass: ''
       };
+    }
 
-      // ----------------------------------------------------------
+    // ----------------------------------------------------------
 
-      // TODO: Fired in login as well?
+    // TODO: Investigate whether is still in use?
 
-      if (!$rootScope.app.unreadMessages)
-        Messages.unreadCount();
+    $rootScope.fireDeleteRequest = function (options) {
+      if (options.section == 'groups')
+        $rootScope.$broadcast('fireGroupDelete', { id: options.id });
+    };
 
-      // ----------------------------------------------------------
+    // ----------------------------------------------------------
 
-      if (angular.fromJson(Storage.get('guard'))) {
-        $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
-      } else {
-        $rootScope.app.guard = {
-          monitor: '',
-          role: '',
-          currentState: '',
-          currentStateClass: ''
-        };
-      }
+    // TODO: Make a general directive for styling fixes
 
-      // ----------------------------------------------------------
+    $('#notification').removeClass('ng-cloak');
 
-      // TODO: Investigate whether is still in use?
+    $rootScope.fixStyles = function () {
+      $rootScope.timelineLoaded = false;
 
-      $rootScope.fireDeleteRequest = function (options) {
-        if (options.section == 'groups')
-          $rootScope.$broadcast('fireGroupDelete', { id: options.id });
-      };
+      var tabHeight = $('.tabs-left .nav-tabs').height();
 
-      // ----------------------------------------------------------
+      $.each($('.tab-content').children(), function () {
+        var $parent = $(this),
+          $this = $(this).attr('id'),
+          contentHeight = $('.tabs-left .tab-content #' + $this).height();
 
-      // TODO: Make a general directive for styling fixes
-
-      $('#notification').removeClass('ng-cloak');
-
-      $rootScope.fixStyles = function () {
-        $rootScope.timelineLoaded = false;
-
-        var tabHeight = $('.tabs-left .nav-tabs').height();
-
-        $.each($('.tab-content').children(), function () {
-          var $parent = $(this),
-            $this = $(this).attr('id'),
-            contentHeight = $('.tabs-left .tab-content #' + $this).height();
-
-          if (tabHeight > contentHeight) {
-            $('.tabs-left .tab-content #' + $this).css({
-              height: $('.tabs-left .nav-tabs').height() - 41
-            });
-          }
-        });
-
-        if ($.os.mac || $.os.linux) {
-          $('.nav-tabs-app li a span').css({
-            paddingTop: '10px',
-            marginBottom: '0px'
+        if (tabHeight > contentHeight) {
+          $('.tabs-left .tab-content #' + $this).css({
+            height: $('.tabs-left .nav-tabs').height() - 41
           });
         }
-      };
-
-      $rootScope.fullScreen = function () {
-        screenfull.toggle($('html')[0])
-      };
-
-      if (!config.profile.mobileApp.status)
-        $('#copyrights span.muted').css({ right: 0 });
-
-      $('.nav a').on('click', function () {
-        $('.btn-navbar').click()
       });
 
-      // ----------------------------------------------------------
+      if ($.os.mac || $.os.linux) {
+        $('.nav-tabs-app li a span').css({
+          paddingTop: '10px',
+          marginBottom: '0px'
+        });
+      }
+    };
 
-      // TODO: Depreciated function. Keep emailing functionality in messages
+    $rootScope.fullScreen = function () {
+      screenfull.toggle($('html')[0])
+    };
+
+    if (!config.profile.mobileApp.status)
+      $('#copyrights span.muted').css({ right: 0 });
+
+    $('.nav a').on('click', function () {
+      $('.btn-navbar').click()
+    });
+
+    // ----------------------------------------------------------
+
+    // TODO: Depreciated function. Keep emailing functionality in messages
 
 //      $rootScope.downloadMobileApp = function (type) {
 //        $rootScope.statusBar.display($rootScope.ui.downloads.inAction);
@@ -149,141 +186,106 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 //        });
 //      };
 
-      // ----------------------------------------------------------
+    // ----------------------------------------------------------
 
-      // TODO: Move to a service
+    // TODO: Move to a service
 
-      $rootScope.resetPhoneNumberChecker = function () {
-        $rootScope.phoneNumberParsed = {};
+    $rootScope.resetPhoneNumberChecker = function () {
+      $rootScope.phoneNumberParsed = {};
 
-        $rootScope.phoneNumberParsed.result = false;
-      };
+      $rootScope.phoneNumberParsed.result = false;
+    };
 
-      $rootScope.resetPhoneNumberChecker();
+    $rootScope.resetPhoneNumberChecker();
 
-      $rootScope.phoneNumberParser = function (checked) {
-        if (checked != '') {
-          if (checked && checked.length > 0) {
-            var result, all;
+    $rootScope.phoneNumberParser = function (checked) {
+      if (checked != '') {
+        if (checked && checked.length > 0) {
+          var result, all;
 
-            result = all = phoneNumberParser(checked, 'NL');
+          result = all = phoneNumberParser(checked, 'NL');
 
-            $rootScope.phoneNumberParsed.result = true;
+          $rootScope.phoneNumberParsed.result = true;
 
-            if (result) {
-              var error = $rootScope.ui.errors.phone.notValid,
-                invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
-                message;
+          if (result) {
+            var error = $rootScope.ui.errors.phone.notValid,
+              invalidCountry = $rootScope.ui.errors.phone.invalidCountry,
+              message;
 
-              if (result.error) {
+            if (result.error) {
+              $rootScope.phoneNumberParsed = {
+                result: false,
+                message: error
+              };
+            } else {
+              if (!result.validation.isPossibleNumber) {
+                switch (result.validation.isPossibleNumberWithReason) {
+                  case 'INVALID_COUNTRY_CODE':
+                    message = invalidCountry;
+                    break;
+                  case 'TOO_SHORT':
+                    message = error + $rootScope.ui.errors.phone.tooShort;
+                    break;
+                  case 'TOO_LONG':
+                    message = error + $rootScope.ui.errors.phone.tooLong;
+                    break;
+                }
+
                 $rootScope.phoneNumberParsed = {
                   result: false,
-                  message: error
+                  message: message
                 };
               } else {
-                if (!result.validation.isPossibleNumber) {
-                  switch (result.validation.isPossibleNumberWithReason) {
-                    case 'INVALID_COUNTRY_CODE':
-                      message = invalidCountry;
-                      break;
-                    case 'TOO_SHORT':
-                      message = error + $rootScope.ui.errors.phone.tooShort;
-                      break;
-                    case 'TOO_LONG':
-                      message = error + $rootScope.ui.errors.phone.tooLong;
-                      break;
-                  }
-
+                if (!result.validation.isValidNumber) {
                   $rootScope.phoneNumberParsed = {
                     result: false,
-                    message: message
+                    message: error
                   };
                 } else {
-                  if (!result.validation.isValidNumber) {
+                  if (!result.validation.isValidNumberForRegion) {
                     $rootScope.phoneNumberParsed = {
                       result: false,
-                      message: error
+                      message: invalidCountry
                     };
                   } else {
-                    if (!result.validation.isValidNumberForRegion) {
-                      $rootScope.phoneNumberParsed = {
-                        result: false,
-                        message: invalidCountry
-                      };
-                    } else {
-                      $rootScope.phoneNumberParsed = {
-                        result: true,
-                        message: $rootScope.ui.success.phone.message +
-                          result.validation.phoneNumberRegion +
-                          $rootScope.ui.success.phone.as +
-                          result.validation.getNumberType
-                      };
+                    $rootScope.phoneNumberParsed = {
+                      result: true,
+                      message: $rootScope.ui.success.phone.message +
+                        result.validation.phoneNumberRegion +
+                        $rootScope.ui.success.phone.as +
+                        result.validation.getNumberType
+                    };
 
-                      $('#inputPhoneNumber').removeClass('error');
-                    }
+                    $('#inputPhoneNumber').removeClass('error');
                   }
                 }
               }
             }
-
-            $rootScope.phoneNumberParsed.all = all;
-          } else {
-            $rootScope.phoneNumberParsed.result = true;
-
-            delete $rootScope.phoneNumberParsed.message;
-
-            $('#inputPhoneNumber').removeClass('error');
           }
+
+          $rootScope.phoneNumberParsed.all = all;
+        } else {
+          $rootScope.phoneNumberParsed.result = true;
+
+          delete $rootScope.phoneNumberParsed.message;
+
+          $('#inputPhoneNumber').removeClass('error');
         }
-      };
+      }
+    };
 
-      // ----------------------------------------------------------
+    // ----------------------------------------------------------
 
-      // TODO: Make a utilities service for sharing
+    // TODO: Make a utilities service for sharing
 
-      $rootScope.unite = function (chunks) {
-        var text = '';
+    $rootScope.unite = function (chunks) {
+      var text = '';
 
-        _.each(chunks, function (chunk) {
-          text += chunk
-        });
+      _.each(chunks, function (chunk) {
+        text += chunk;
+      });
 
-        return text;
-      };
-
-      // ----------------------------------------------------------
-
-      $rootScope.app2 = $rootScope.app2 || {
-        config: config,
-        session: {},
-        resources: {},
-        environment: {
-          domain: '',
-          states: [],
-          divisions: []
-        },
-        preloaded: {
-          ratio: 0,
-          missioned: 0,
-          accomplished: 1
-        }
-      };
-
-      $rootScope.missioned = function (missioned) {
-        $rootScope.app.preloaded = {
-          ratio: 0,
-          missioned: missioned,
-          accomplished: 1
-        };
-      };
-
-      $rootScope.ticked = function () {
-        $rootScope.app.preloaded.ratio = Math.ceil(
-          Math.abs(
-              $rootScope.app.preloaded.accomplished++ * 100 /
-              $rootScope.app.preloaded.missioned)
-        );
-      };
-    }
-  ]);
+      return text;
+    };
+  });
 });
