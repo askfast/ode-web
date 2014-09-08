@@ -45,8 +45,7 @@ define(['services/services'], function (services) {
         StandBy._('resources').then(function (result) {
           Store('user').save('resources', result);
 
-          $rootScope.app.resources = result;
-          $rootScope.app2.resources = result;
+          $rootScope.StandBy.resources = result;
 
           deferred.resolve(result);
         });

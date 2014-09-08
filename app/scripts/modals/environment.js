@@ -9,13 +9,13 @@ define(['services/services'], function (services) {
 
       try {
         StandBy._('domain').then(function (result) {
-          $rootScope.ticked();
+          var domain = $rootScope.unite(result[0]);
 
-          Store('environment').save('domain', result);
+          Store('environment').save('domain', domain);
 
-          $rootScope.app2.environment.domain = result;
+          $rootScope.StandBy.environment.domain = domain;
 
-          deferred.resolve(result);
+          deferred.resolve(domain);
         });
       } catch (e) {
         Log.error('Something went wrong with environment domain call:', e);
@@ -28,14 +28,17 @@ define(['services/services'], function (services) {
       var deferred = $q.defer();
 
       try {
-        StandBy._('states').then(function (result) {
-          $rootScope.ticked();
+        StandBy._('states').then(function (results) {
+          var states = [];
+          _.each(results, function (result) {
+            states.push($rootScope.unite(result));
+          });
 
-          Store('environment').save('states', result);
+          Store('environment').save('states', states);
 
-          $rootScope.app2.environment.states = result;
+          $rootScope.StandBy.environment.states = states;
 
-          deferred.resolve(result);
+          deferred.resolve(states);
         });
       } catch (e) {
         Log.error('Something went wrong with environment states call:', e);
@@ -49,11 +52,12 @@ define(['services/services'], function (services) {
 
       try {
         StandBy._('divisions').then(function (result) {
-          $rootScope.ticked();
+          // result = (result.length == 0) ? [] : result;
+          // console.log('divisions ->', result);
 
           Store('environment').save('divisions', result);
 
-          $rootScope.app2.environment.divisions = result;
+          $rootScope.StandBy.environment.divisions = result;
 
           deferred.resolve(result);
         });
@@ -66,8 +70,6 @@ define(['services/services'], function (services) {
 
     Environment.prototype.setup = function () {
       var deferred = $q.defer();
-
-      $rootScope.missioned(3);
 
       var queue = [
         Environment.prototype.domain(),

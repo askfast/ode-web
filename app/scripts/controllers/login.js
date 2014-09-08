@@ -89,10 +89,10 @@ define(['controllers/controllers'], function (controllers) {
       Storage.add('askPass', MD5($scope.logindata.password));
 
       // Legacy
-      authenticate($scope.logindata.username, MD5($scope.logindata.password));
+      // authenticate($scope.logindata.username, MD5($scope.logindata.password));
 
       // New code
-      // authenticate($scope.logindata.username, $scope.logindata.password);
+      authenticate($scope.logindata.username, $scope.logindata.password);
     };
 
     if ($location.search().username && $location.search().password) {
@@ -109,18 +109,71 @@ define(['controllers/controllers'], function (controllers) {
 
       // New code
 
-//      User.login(uuid, pass).then(function (result) {
-//        if (result.error && result.error.status) {
+      User.login(uuid, pass).then(function (result) {
+        if (result.error && result.error.status) {
+          $scope.alert = {
+            login: {
+              display: true,
+              type: 'alert-error',
+              // message: $rootScope.ui.login.alert_wrongUserPass
+              message: (result.error.status == 400 ||
+                result.error.status == 403 ||
+                result.error.status == 404) ?
+                'Wrong username or password!' :
+                'There has been an error with your login!'
+            }
+          };
+
+          angular.element('#login button[type=submit]').text($rootScope.ui.login.button_login).removeAttr('disabled');
+
+          return false;
+        } else {
+
+          angular.element('#login').hide();
+          angular.element('#download').hide();
+          angular.element('#preloader').show();
+
+          progress(30, $rootScope.ui.login.loading_User);
+
+          User.resources().then(function (resources) {
+            progress(50, 'Setting up environment.');
+
+            Environment.setup().then(function () {
+              progress(70, $rootScope.ui.login.loading_Group);
+
+              Network.groups().then(function (groups) {
+                progress(70, 'Populating group members.');
+
+                Network.population().then(function () {
+                  configure(resources, groups);
+//                  Planboard.clusters().then(function () {
+//                    $scope.preloaded = 'Getting user availability.';
+//
+//                    Planboard.availability(resources.uuid).then(function () {
+//                      $scope.preloaded = 'Getting member availabilities.';
+//
+//                      Planboard.availabilities().then(function () {
+//                        $location.path('/dashboard')
+//                      });
+//                    });
+//                  });
+                });
+              });
+            });
+          });
+        }
+      });
+
+
+      // Legacy
+
+//      UserLegacy.login(uuid.toLowerCase(), pass).then(function (result) {
+//        if (result.status == 400 || result.status == 404) {
 //          $scope.alert = {
 //            login: {
 //              display: true,
 //              type: 'alert-error',
-//              // message: $rootScope.ui.login.alert_wrongUserPass
-//              message: (result.error.status == 400 ||
-//                result.error.status == 403 ||
-//                result.error.status == 404) ?
-//                'Wrong username or password!' :
-//                'There has been an error with your login!'
+//              message: $rootScope.ui.login.alert_wrongUserPass
 //            }
 //          };
 //
@@ -128,6 +181,7 @@ define(['controllers/controllers'], function (controllers) {
 //
 //          return false;
 //        } else {
+//          Session.set(result["X-SESSION_ID"]);
 //
 //          angular.element('#login').hide();
 //          angular.element('#download').hide();
@@ -135,28 +189,41 @@ define(['controllers/controllers'], function (controllers) {
 //
 //          progress(30, $rootScope.ui.login.loading_User);
 //
-//          User.resources().then(function (resources) {
-//            progress(50, 'Setting up environment.');
+//          UserLegacy.states().then(function (states) {
+//            Storage.add('states', angular.toJson(states));
 //
-//            Environment.setup().then(function () {
-//              progress(70, $rootScope.ui.login.loading_Group);
+//            _.each(states, function (state) {
+//              $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
+//            });
 //
-//              Network.groups().then(function (groups) {
-//                progress(70, 'Populating group members.');
+//            UserLegacy.divisions().then(function (divisions) {
+//              $rootScope.config.timeline.config.divisions = divisions;
 //
-//                Network.population().then(function () {
-//                  configure(resources, groups);
-////                  Planboard.clusters().then(function () {
-////                    $scope.preloaded = 'Getting user availability.';
-////
-////                    Planboard.availability(resources.uuid).then(function () {
-////                      $scope.preloaded = 'Getting member availabilities.';
-////
-////                      Planboard.availabilities().then(function () {
-////                        $location.path('/dashboard')
-////                      });
-////                    });
-////                  });
+//              Storage.add('divisions', angular.toJson(divisions));
+//
+//              UserLegacy.resources().then(function (resources) {
+//                $rootScope.app.resources = resources;
+//
+//                progress(60, $rootScope.ui.login.loading_Group);
+//
+//                UserLegacy.domain().then(function (domain) {
+//                  $rootScope.app.domain = domain;
+//
+//                  progress(70, $rootScope.ui.login.loading_Group);
+//
+//                  Groups.query(true).then(function (groups) {
+//                    var calls = [];
+//
+//                    _.each(groups, function (group) {
+//                      calls.push(Groups.get(group.uuid));
+//                    });
+//
+//                    $q.all(calls).then(function () {
+//                      Groups.uniqueMembers();
+//
+//                      configure(resources, groups);
+//                    });
+//                  });
 //                });
 //              });
 //            });
@@ -165,72 +232,7 @@ define(['controllers/controllers'], function (controllers) {
 //      });
 
 
-      // Legacy
-
-      UserLegacy.login(uuid.toLowerCase(), pass).then(function (result) {
-        if (result.status == 400 || result.status == 404) {
-          $scope.alert = {
-            login: {
-              display: true,
-              type: 'alert-error',
-              message: $rootScope.ui.login.alert_wrongUserPass
-            }
-          };
-
-          angular.element('#login button[type=submit]').text($rootScope.ui.login.button_login).removeAttr('disabled');
-
-          return false;
-        } else {
-          Session.set(result["X-SESSION_ID"]);
-
-          angular.element('#login').hide();
-          angular.element('#download').hide();
-          angular.element('#preloader').show();
-
-          progress(30, $rootScope.ui.login.loading_User);
-
-          UserLegacy.states().then(function (states) {
-            Storage.add('states', angular.toJson(states));
-
-            _.each(states, function (state) {
-              $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
-            });
-
-            UserLegacy.divisions().then(function (divisions) {
-              $rootScope.config.timeline.config.divisions = divisions;
-
-              Storage.add('divisions', angular.toJson(divisions));
-
-              UserLegacy.resources().then(function (resources) {
-                $rootScope.app.resources = resources;
-
-                progress(60, $rootScope.ui.login.loading_Group);
-
-                UserLegacy.domain().then(function (domain) {
-                  $rootScope.app.domain = domain;
-
-                  progress(70, $rootScope.ui.login.loading_Group);
-
-                  Groups.query(true).then(function (groups) {
-                    var calls = [];
-
-                    _.each(groups, function (group) {
-                      calls.push(Groups.get(group.uuid));
-                    });
-
-                    $q.all(calls).then(function () {
-                      Groups.uniqueMembers();
-
-                      configure(resources, groups);
-                    });
-                  });
-                });
-              });
-            });
-          });
-        }
-      });
-
+      //
 
     }
 
