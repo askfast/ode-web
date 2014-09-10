@@ -196,7 +196,9 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
       User.prototype.locate = function (location)
       {
         var deferred = $q.defer();
-
+        if(location==null) {
+          location = '';
+        }
         Domain.locate(
           {},
           '"' + location + '"',

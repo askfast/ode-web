@@ -261,7 +261,6 @@ angular.module('WebPaige.Controllers.Login', [])
             {
               $('#locations').show();
             }
-
             $scope.locations = locations;
           }
         );
