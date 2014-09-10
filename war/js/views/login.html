@@ -2,24 +2,43 @@
 
   <download-mobile-app ng-show="browser.mobile && browser.screen.width < 768"></download-mobile-app>
 
-	<!-- preloader -->
-	<div id="preloader">
-		<img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}" />
-	  <h4>{{ui.login.setting_up_app}}</h4>
-	  <div class="progress progress-striped active" class="span3">
-	    <div class="bar"></div>
-	  </div>
-	  <span class="muted"></span>
-	</div>
-	<!-- end preloader -->
+  <!-- preloader -->
+  <div id="preloader">
+    <img ng-src="{{config.profile.logos.login}}" alt="{{config.profile.title}}"/>
+    <h4>{{ui.login.setting_up_app}}</h4>
 
-	<!-- loginForm -->
-	<div id="login"
+    <div class="progress progress-striped active" class="span3">
+      <div class="bar"></div>
+    </div>
+    <span class="muted"></span>
+  </div>
+  <!-- end preloader -->
+
+  <!-- locations -->
+  <div id="locations" class="boxed">
+    <form>
+      <logos></logos>
+      <h4 class="form-signin-heading">Locaties</h4>
+
+      <select ng-model="location"
+              ng-options="location for location in locations">
+        <option value="">-- default locatie --</option>
+      </select>
+
+      <button class="btn btn-success dropdown-toggle"
+        ng-click="setLocation(location)">Ga door met app</button>
+
+    </form>
+  </div>
+  <!-- end locations -->
+
+  <!-- loginForm -->
+  <div id="login"
        class="boxed"
        ng-show="views.login"
        ng-hide="views.help || views.changePass">
-		<form ng-submit="login()">
-        <logos></logos>
+    <form ng-submit="login()">
+      <logos></logos>
 
       <h4 class="form-signin-heading" ng-show="config.profile.own">{{config.profile.title}}</h4>
       <h4 class="form-signin-heading" ng-hide="config.profile.own">{{ui.login.header}}</h4>
@@ -28,41 +47,42 @@
            ng-show="alert.login.display">
         <button class="close"
                 type="button"
-                ng-click="alert.login=false">×</button>
+                ng-click="alert.login=false">×
+        </button>
         {{alert.login.message}}
       </div>
 
-		  <input type="text"
+      <input type="text"
              ng-model="logindata.username"
              placeholder="{{ui.login.placeholder_username}}"
              autofocus>
 
-		  <input type="password"
+      <input type="password"
              ng-model="logindata.password"
              placeholder="{{ui.login.placeholder_password}}">
 
-		  <label class="checkbox span3">
-		    <input type="checkbox"
+      <label class="checkbox span3">
+        <input type="checkbox"
                ng-model="logindata.remember">{{ui.login.label_rememberMe}}
-		  </label>
+      </label>
 
-		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.button_login}}</button>
+      <button class="btn btn-large btn-primary" type="submit">{{ui.login.button_login}}</button>
 
-		  <p>
-		  	<small>
+      <p>
+        <small>
           <a ng-click="views.forgot=true; views.login=false;">{{ui.login.forgot_password}}</a>
           <span>&nbsp;|&nbsp;</span>
-		  		<a ng-click="views.help=true">{{ui.help.help}}</a>
-		  	</small>
-		  </p>
+          <a ng-click="views.help=true">{{ui.help.help}}</a>
+        </small>
+      </p>
 
-		  <p>
-		  	<small>
-			  	<a ng-click="changeLanguage('en')">English</a>
-			  	&nbsp;|&nbsp;
-			  	<a ng-click="changeLanguage('nl')">Nederlands</a>
-		  	</small>
-		  </p>
+      <p>
+        <small>
+          <a ng-click="changeLanguage('en')">English</a>
+          &nbsp;|&nbsp;
+          <a ng-click="changeLanguage('nl')">Nederlands</a>
+        </small>
+      </p>
 
 
       <img src="img/standby_logo_small.png" alt="StandBy Logo" ng-hide="config.profile.own"/>
@@ -70,71 +90,75 @@
         <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
       </span>
 
-		</form>
+    </form>
 
-	</div>
-	<!-- end loginForm -->
+  </div>
+  <!-- end loginForm -->
 
-	<!-- help -->
-	<div id="login" class="boxed" ng-show="views.help" ng-hide="views.login || views.forgot || views.changePass">
-		<form ng-submit="">
-          <logos></logos>
-		  <h4 class="form-signin-heading">{{ui.help.help}}</h4>
+  <!-- help -->
+  <div id="login" class="boxed" ng-show="views.help" ng-hide="views.login || views.forgot || views.changePass">
+    <form>
+      <logos></logos>
+      <h4 class="form-signin-heading">{{ui.help.help}}</h4>
 
-		  <p ng-repeat="content in ui.login.help.content" style="text-align: left;">{{content}}</p>
-		  
-		  <p>
-		  	<small>
-			  	<a ng-click="views.help=false; views.login=true">{{ui.login.help.cta}}</a>
-		  	</small>
-		  </p>
-		</form>
-	</div>
-	<!-- end help -->
+      <p ng-repeat="content in ui.login.help.content" style="text-align: left;">{{content}}</p>
 
-	<!-- remember login -->
-	<div id="forgot" class="boxed" ng-show="views.forgot">
-		<form ng-submit="forgot()">
-          <logos></logos>
-		  <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>
-	      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
-	        <button class="close" type="button" ng-click="alert.forget=false">×</button>
-	        {{alert.forget.message}}
-	      </div>
-		  <input 
-		    class="" 
-		    type="text" 
-		    ng-model="remember.id"
-		    placeholder="{{ui.login.placeholder_username}}">
+      <p>
+        <small>
+          <a ng-click="views.help=false; views.login=true">{{ui.login.help.cta}}</a>
+        </small>
+      </p>
+    </form>
+  </div>
+  <!-- end help -->
 
-		  <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
-		  <p><small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small></p>
+  <!-- remember login -->
+  <div id="forgot" class="boxed" ng-show="views.forgot">
+    <form ng-submit="forgot()">
+      <logos></logos>
+      <h4 class="form-signin-heading">{{ui.login.forgetPassword}}</h4>
+
+      <div class="alert {{alert.forget.type}}" ng-show="alert.forget.display">
+        <button class="close" type="button" ng-click="alert.forget=false">×</button>
+        {{alert.forget.message}}
+      </div>
+      <input
+        class=""
+        type="text"
+        ng-model="remember.id"
+        placeholder="{{ui.login.placeholder_username}}">
+
+      <button class="btn btn-large btn-primary" type="submit">{{ui.login.resetPassword}}</button>
+      <p>
+        <small><a ng-click="views.login=true; views.forgot=false">{{ui.login.returnLogin}}</a></small>
+      </p>
 
       <img src="img/standby_logo_small.png" alt="StandBy Logo" ng-hide="config.profile.own"/>
 		  <span class="version">
         <a href="version.html" target="_blank">StandBy v{{config.version}}</a>
       </span>
-		</form>
-	</div>
-	<!-- end remember login -->
+    </form>
+  </div>
+  <!-- end remember login -->
 
-	<!-- change pass --> 
-	<div id="changePass" class="boxed" ng-show="views.changePass">
-		<form ng-submit="changePass()">
-            <logos></logos>
-			<h4 class="form-signin-heading">{{changepass.uuid}}</h4>
-			<div class="alert {{alert.changePass.type}}" ng-show="alert.changePass.display">
-				<button class="close" type="button" ng-click="alert.changePass=false">×</button>
-				{{alert.changePass.message}}
-			</div>
-			<input class="" type="password" ng-model="changeData.newPass" placeholder="{{ui.login.ph_newPass}}">
-			<input class="" type="password" ng-model="changeData.retypePass" placeholder="{{ui.login.ph_retypePass}}">
-			
-			<button class="btn btn-large btn-primary" type="submit">{{ui.login.changePassword}}</button>
-		  <br><span class="version"><a href="version.html" target="_blank">StandBy v{{config.version}}</a></span>
-		</form>
-	</div>
-	<!-- end change pass -->
+  <!-- change pass -->
+  <div id="changePass" class="boxed" ng-show="views.changePass">
+    <form ng-submit="changePass()">
+      <logos></logos>
+      <h4 class="form-signin-heading">{{changepass.uuid}}</h4>
+
+      <div class="alert {{alert.changePass.type}}" ng-show="alert.changePass.display">
+        <button class="close" type="button" ng-click="alert.changePass=false">×</button>
+        {{alert.changePass.message}}
+      </div>
+      <input class="" type="password" ng-model="changeData.newPass" placeholder="{{ui.login.ph_newPass}}">
+      <input class="" type="password" ng-model="changeData.retypePass" placeholder="{{ui.login.ph_retypePass}}">
+
+      <button class="btn btn-large btn-primary" type="submit">{{ui.login.changePassword}}</button>
+      <br><span class="version"><a href="version.html" target="_blank">StandBy v{{config.version}}</a></span>
+    </form>
+  </div>
+  <!-- end change pass -->
 
   <download-mobile-app ng-hide="browser.mobile && browser.screen.width < 768"></download-mobile-app>
 

@@ -23,6 +23,10 @@
   }
 }
 
+#preloader, #locations {
+  display: none;
+}
+
 // Box style
 .boxed {
   margin: 0;
@@ -87,20 +91,5 @@
         margin: 0 auto;
       }
     }
-  }
-}
-
-#demo_users {
-  position: absolute;
-  right: 20px;
-  bottom: 0;
-
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none; 
-  }
-
-  li {  
   }
 }

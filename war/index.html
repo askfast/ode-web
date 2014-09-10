@@ -103,6 +103,10 @@
             <!-- desktop version -->
             <ul class="nav pull-right" ng-hide="browser.mobile">
 
+              <li ng-show="app.location.length > 0">
+                <a><i>Locatie: {{app.location}}</i></a>
+              </li>
+
               <li>
                 <a href="#faq#web">
                   <i class="icon-question-sign icon-white"></i> FAQ

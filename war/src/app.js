@@ -2403,13 +2403,23 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
       );
 
       var Domain = $resource(
-          $config.host + '/domain',
+          $config.host + '/domain/:level',
           {
           },
           {
             get: {
               method: 'GET',
               params: {},
+              isArray: true
+            },
+            locations: {
+              method: 'GET',
+              params: { level: 'locations' },
+              isArray: true
+            },
+            locate: {
+              method: 'POST',
+              params: { level: 'location' },
               isArray: true
             }
           }
@@ -2477,6 +2487,72 @@ angular.module('WebPaige.Modals.User', ['ngResource'])
             }
           });
 
+
+      /**
+       * Locations
+       */
+      User.prototype.locations = function ()
+      {
+        var deferred = $q.defer();
+
+        Domain.locations(
+          {},
+          function (results)
+          {
+            var locations = [];
+
+            angular.forEach(
+              results,
+              function (result)
+              {
+                var location = '';
+
+                angular.forEach(
+                  result,
+                  function (_s) { location += _s; });
+
+                if (location.length > 0)
+                {
+                  locations.push(location);
+                }
+              }
+            );
+
+            deferred.resolve(locations);
+          },
+          function (error)
+          {
+            deferred.resolve(error);
+          }
+        );
+
+        return deferred.promise;
+      };
+
+
+
+      /**
+       * Locations
+       */
+      User.prototype.locate = function (location)
+      {
+        var deferred = $q.defer();
+
+        Domain.locate(
+          {},
+          '"' + location + '"',
+          function (result)
+          {
+            deferred.resolve(result);
+          },
+          function (error)
+          {
+            deferred.resolve(error);
+          }
+        );
+
+        return deferred.promise;
+      };
 
       /**
        * Divisions
@@ -10260,7 +10336,7 @@ angular.module('WebPaige.Controllers.Login', [])
             {
               Session.set(result["X-SESSION_ID"]);
 
-              self.preloader();
+              self.locations();
             }
           }
         );
@@ -10273,6 +10349,45 @@ angular.module('WebPaige.Controllers.Login', [])
         self.auth($location.search().username, $location.search().password);
       }
 
+      self.locations = function ()
+      {
+        $('download-mobile-app').hide();
+
+        User.locations()
+          .then(
+          function (locations)
+          {
+            $('#login').hide();
+
+            if (locations.length == 0)
+            {
+              $('#preloader').show();
+              self.preloader();
+              return;
+            }
+            else
+            {
+              $('#locations').show();
+            }
+
+            $scope.locations = locations;
+          }
+        );
+      };
+
+      $scope.setLocation = function (location)
+      {
+        User.locate(location)
+          .then(
+          function (result)
+          {
+            $rootScope.app.location = location;
+            $('#locations').hide();
+            $('#preloader').show();
+            self.preloader();
+          }
+        );
+      };
 
       /**
        * TODO: What happens if preloader stucks?
@@ -10282,10 +10397,6 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       self.preloader = function ()
       {
-        $('#login').hide();
-        $('#download').hide();
-        $('#preloader').show();
-
         self.progress(30, $rootScope.ui.login.loading_User);
 
         User.states()

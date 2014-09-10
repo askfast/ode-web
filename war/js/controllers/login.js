@@ -228,7 +228,7 @@ angular.module('WebPaige.Controllers.Login', [])
             {
               Session.set(result["X-SESSION_ID"]);
 
-              self.preloader();
+              self.locations();
             }
           }
         );
@@ -241,6 +241,45 @@ angular.module('WebPaige.Controllers.Login', [])
         self.auth($location.search().username, $location.search().password);
       }
 
+      self.locations = function ()
+      {
+        $('download-mobile-app').hide();
+
+        User.locations()
+          .then(
+          function (locations)
+          {
+            $('#login').hide();
+
+            if (locations.length == 0)
+            {
+              $('#preloader').show();
+              self.preloader();
+              return;
+            }
+            else
+            {
+              $('#locations').show();
+            }
+
+            $scope.locations = locations;
+          }
+        );
+      };
+
+      $scope.setLocation = function (location)
+      {
+        User.locate(location)
+          .then(
+          function (result)
+          {
+            $rootScope.app.location = location;
+            $('#locations').hide();
+            $('#preloader').show();
+            self.preloader();
+          }
+        );
+      };
 
       /**
        * TODO: What happens if preloader stucks?
@@ -250,10 +289,6 @@ angular.module('WebPaige.Controllers.Login', [])
        */
       self.preloader = function ()
       {
-        $('#login').hide();
-        $('#download').hide();
-        $('#preloader').show();
-
         self.progress(30, $rootScope.ui.login.loading_User);
 
         User.states()

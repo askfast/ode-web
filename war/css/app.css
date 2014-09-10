@@ -10,14 +10,12 @@
   font-weight: normal;
   font-style: normal;
 }
-
 @font-face {
   font-family: "EntypoRegular";
   src: url("../fonts/entypo.woff") format("woff"), url("../fonts/entypo.ttf") format("truetype"), url("../fonts/entypo.svg#EntypoRegular") format("svg");
   font-weight: normal;
   font-style: normal;
 }
-
 span.entypo {
   margin: 0;
   padding: 0;
@@ -335,6 +333,10 @@ dl dd {
   padding-bottom: 25px;
 }
 
+#preloader, #locations {
+  display: none;
+}
+
 .boxed {
   margin: 0;
 }
@@ -386,17 +388,6 @@ dl dd {
 .boxed form .alert button[type=submit] {
   display: inline;
   margin: 0 auto;
-}
-
-#demo_users {
-  position: absolute;
-  right: 20px;
-  bottom: 0;
-}
-#demo_users ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
 }
 
 #dashboard {
@@ -1117,10 +1108,6 @@ label {
   display: none;
 }
 
-#preloader {
-  display: none;
-}
-
 #loading {
   position: absolute;
   top: 40%;
@@ -1593,10 +1580,10 @@ div.timeline-event-dot {
 }
 
 div.timeline-event-range {
-                          /*border-style: solid;
-border-width: 1px;
-border-radius: 2px;
--moz-border-radius: 2px;  /* For Firefox 3.6 and older */
+  /*border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  -moz-border-radius: 2px;  /* For Firefox 3.6 and older */
 }
 
 div.timeline-event-range-drag-left {
