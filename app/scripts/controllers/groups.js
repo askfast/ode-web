@@ -481,7 +481,7 @@ define(
             _.each(
               selection,
               function (value, user) {
-                console.log('value ->', value, $rootScope.app.members[user]);
+                console.log('value ->', value, $rootScope.StandBy.members[user]);
 
                 if (value) {
                   selected = true;

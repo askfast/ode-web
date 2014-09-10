@@ -117,8 +117,8 @@ define(
             id: 'mainTimeline',
             main: true,
             user: {
-              id: $rootScope.app.resources.uuid,
-              role: $rootScope.app.resources.role
+              id: $rootScope.StandBy.resources.uuid,
+              role: $rootScope.StandBy.resources.role
             },
             current: $scope.current,
             /**
@@ -246,7 +246,7 @@ define(
                 $scope.timeline.config.states,
                 function (state, key) {
                   // show only user editable states
-                  if (state.display && $rootScope.app.resources.role <= state.minRole) {
+                  if (state.display && $rootScope.StandBy.resources.role <= state.minRole) {
                     states[key] = state.label;
                   }
                 }

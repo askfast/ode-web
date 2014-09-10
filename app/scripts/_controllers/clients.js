@@ -849,7 +849,7 @@ define(
               creationTime: new Date().getTime(),
               clientUuid: $scope.currentCLient,
               body: null,
-              author: $scope.$root.getTeamMemberById($rootScope.app.resources.uuid),
+              author: $scope.$root.getTeamMemberById($rootScope.StandBy.resources.uuid),
               client: $scope.$root.getClientByID($scope.currentCLient),
               editMode: false
             };

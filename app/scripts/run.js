@@ -26,6 +26,9 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
       settings: {}
     };
 
+    // TODO: Create this only if there is a correct setting for it
+    $rootScope.StandBy.guard = {};
+
     if (!_.isUndefined($rootScope.StandBy.session) && Session.check()) {
       $rootScope.StandBy.session = angular.fromJson(sessionStorage.getItem('session'));
     }
@@ -45,6 +48,19 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
     if (!_.isUndefined($rootScope.StandBy.environment.divisions) && Store('environment').get('divisions') != '') {
       $rootScope.StandBy.environment.divisions = Store('environment').get('divisions');
     }
+
+    if (angular.fromJson(Storage.get('guard'))) {
+      $rootScope.StandBy.guard = angular.fromJson(Storage.get('guard'));
+    } else {
+      $rootScope.StandBy.guard = {
+        monitor: '',
+        role: '',
+        currentState: '',
+        currentStateClass: ''
+      };
+    }
+
+    console.log('StandBy ->', $rootScope.StandBy);
 
     // console.log('app ->', $rootScope.StandBy);
 
@@ -109,17 +125,6 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
       Messages.unreadCount();
 
     // ----------------------------------------------------------
-
-    if (angular.fromJson(Storage.get('guard'))) {
-      $rootScope.app.guard = angular.fromJson(Storage.get('guard'));
-    } else {
-      $rootScope.app.guard = {
-        monitor: '',
-        role: '',
-        currentState: '',
-        currentStateClass: ''
-      };
-    }
 
     // ----------------------------------------------------------
 

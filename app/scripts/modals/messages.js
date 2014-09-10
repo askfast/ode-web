@@ -592,7 +592,7 @@ define(
                 }
               });
 
-            $rootScope.app.unreadMessages = counter;
+            $rootScope.StandBy.unreadMessages = counter;
           };
 
 

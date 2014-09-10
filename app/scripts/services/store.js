@@ -218,21 +218,21 @@ define(['services/services'], function (services) {
           LawnChair(
             function () {
               this.get(keys, function (result) {
-                  var i;
+                var i;
 
-                  if (result) {
-                    i = result.length - 1;
+                if (result) {
+                  i = result.length - 1;
 
-                    while (i >= 0) {
-                      target[i] = updateCacheFromStorage(target[i], result[i]);
-                      i--;
-                    }
+                  while (i >= 0) {
+                    target[i] = updateCacheFromStorage(target[i], result[i]);
+                    i--;
                   }
+                }
 
-                  if (callback) {
-                    callback(target);
-                  }
-                });
+                if (callback) {
+                  callback(target);
+                }
+              });
             });
 
           return target;
@@ -243,33 +243,24 @@ define(['services/services'], function (services) {
 
           value = getDefault(key);
 
-          LawnChair(
-            function () {
-              this.get(
-                key,
-                function (result) {
-                  if (result) {
-                    value = updateCacheFromStorage(value, result);
-                  }
+          LawnChair(function () {
+            this.get(key, function (result) {
+              if (result) {
+                value = updateCacheFromStorage(value, result);
+              }
 
-                  if (value.hasOwnProperty("0")) {
-                    value = _.map(
-                      value,
-                      function (_value) {
-                        return _value
-                      }
-                    );
+              if (value.hasOwnProperty("0")) {
+                value = _.map(value, function (_value) {
+                  return _value
+                });
 
-                    value.pop();
-                  }
+                value.pop();
+              }
 
-                  if (callback) {
-                    callback(value);
-                  }
-                }
-              );
-            }
-          );
+              if (callback)
+                callback(value);
+            });
+          });
 
           return value;
         },

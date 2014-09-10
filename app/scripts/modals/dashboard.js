@@ -36,65 +36,106 @@ define(['services/services', 'config'], function (services, config) {
 
 
     /**
-     * Get group aggs for pie charts
+     * Get group pie charts
      */
     Dashboard.prototype.pies = function () {
       var deferred = $q.defer(),
-        groups = angular.fromJson(Storage.get('groups')),
-      // settings = Storage.local.settings().app.widgets.groups,
-        settings = angular.fromJson(Store('user').get('resources').settingsWebPaige),
+        // groups = angular.fromJson(Storage.get('groups')),
+        groups = Store('network').get('groups'),
+        settings = angular.fromJson(Store('user').get('resources').settingsWebPaige).app.widgets.groups,
         calls = [];
 
       if (settings.length === 0) console.warn('no settings');
 
-      angular.forEach(
-        groups,
-        function (group) {
-          if (settings[group.uuid] && settings[group.uuid].status) {
-            if ($rootScope.config.timeline.config.divisions.length == 0) {
-              calls.push(
-                Slots.pie(
-                  {
-                    id: group.uuid,
-                    name: group.name,
-                    division: 'both'
-                  }));
-            }
-            else {
-              if (settings[group.uuid].divisions) {
-                angular.forEach(
-                  $rootScope.config.timeline.config.divisions, function (division) {
-                    if (division.id !== 'all') {
-                      calls.push(
-                        Slots.pie(
-                          {
-                            id: group.uuid,
-                            name: group.name,
-                            division: division.id
-                          }));
-                    }
-                  });
-              }
-              else {
-                calls.push(
-                  Slots.pie(
-                    {
+      console.log('groups ->', groups);
+      console.log('settings ->', settings);
+
+
+
+//      _.each(settings, function (setting, id) {
+//        console.log('group ->', setting, id);
+//
+//        if (settings[group.uuid] && settings[group.uuid].status) {
+//          if ($rootScope.config.timeline.config.divisions.length == 0) {
+//
+//            // console.log('there is one ->', group);
+//
+//            calls.push(Slots.pie({
+//              id: group.uuid,
+//              name: group.name,
+//              division: 'both'
+//            }));
+//          } else {
+//            if (settings[group.uuid].divisions) {
+//              _.each($rootScope.config.timeline.config.divisions, function (division) {
+//                if (division.id !== 'all') {
+//                  calls.push(
+//                    Slots.pie({
+//                      id: group.uuid,
+//                      name: group.name,
+//                      division: division.id
+//                    }));
+//                }
+//              });
+//            } else {
+//              calls.push(
+//                Slots.pie({
+//                  id: group.uuid,
+//                  name: group.name,
+//                  division: 'both'
+//                }));
+//            }
+//          }
+//        }
+//      });
+
+
+      console.log('setting ->', $rootScope.StandBy.config.timeline.config);
+      console.log('divisions ->', $rootScope.StandBy.environment.divisions);
+
+      // config.timeline.config.divisions
+
+
+      angular.forEach(groups, function (group) {
+        if (settings[group.uuid] && settings[group.uuid].status) {
+          if ($rootScope.config.timeline.config.divisions.length == 0) {
+
+            // console.log('there is one ->', group);
+
+            calls.push(Slots.pie({
+              id: group.uuid,
+              name: group.name,
+              division: 'both'
+            }));
+          } else {
+            if (settings[group.uuid].divisions) {
+              _.each($rootScope.config.timeline.config.divisions, function (division) {
+                if (division.id !== 'all') {
+                  calls.push(
+                    Slots.pie({
                       id: group.uuid,
                       name: group.name,
-                      division: 'both'
+                      division: division.id
                     }));
-              }
+                }
+              });
+            } else {
+              calls.push(
+                Slots.pie({
+                  id: group.uuid,
+                  name: group.name,
+                  division: 'both'
+                }));
             }
           }
-        });
+        }
+      });
 
-      $q.all(calls)
-        .then(
-        function (results) {
-          $rootScope.statusBar.off();
+      $q.all(calls).then(function (results) {
+        $rootScope.statusBar.off();
 
-          deferred.resolve(results);
-        });
+        deferred.resolve(results);
+      });
 
       return deferred.promise;
     };

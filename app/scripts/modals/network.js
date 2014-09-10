@@ -80,9 +80,8 @@ define(['services/services'], function (services) {
                 }
               });
 
-              return _.filter(
-                _.map(
-                  _.indexBy(basket, function (node) {
+              return _.indexBy(_.filter(
+                _.map(_.indexBy(basket, function (node) {
                     return node.uuid;
                   }),
                   function (member) {
@@ -90,7 +89,9 @@ define(['services/services'], function (services) {
                   }
                 ),
                 filter
-              )
+              ), function (member) {
+                return member.uuid;
+              });
             };
 
             Store('network').save('population', members);

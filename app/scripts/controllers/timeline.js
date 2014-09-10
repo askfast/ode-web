@@ -85,7 +85,7 @@ define(
                * User timeline
                * Allow only if it is not user
                */
-              else if ($route.current.params.userId != $rootScope.app.resources.uuid) {
+              else if ($route.current.params.userId != $rootScope.StandBy.resources.uuid) {
                 if ($scope.self.timeline) {
                   range = $scope.self.timeline.getVisibleChartRange();
 

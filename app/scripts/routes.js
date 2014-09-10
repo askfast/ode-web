@@ -174,7 +174,7 @@ define(['app'], function (app) {
           data: [
             '$rootScope', 'Profile', '$route', 'Dater',
             function ($rootScope, Profile, $route, Dater) {
-              if ($route.current.params.userId.toLowerCase() != $rootScope.app.resources.uuid) {
+              if ($route.current.params.userId.toLowerCase() != $rootScope.StandBy.resources.uuid) {
                 var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
 
                 return Profile.getWithSlots(
@@ -209,7 +209,7 @@ define(['app'], function (app) {
             '$rootScope', '$route', '$location',
             function ($rootScope, $route, $location) {
               if (!$route.current.params.userId || !$location.hash()) {
-                $location.path('/profile/' + $rootScope.app.resources.uuid).hash('profile');
+                $location.path('/profile/' + $rootScope.StandBy.resources.uuid).hash('profile');
               }
             }
           ]

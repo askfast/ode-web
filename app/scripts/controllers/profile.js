@@ -46,8 +46,8 @@ define(
             $scope.deleteUserError = false;
 
             if (userPassword != '' && userPassword != undefined) {
-              if ($rootScope.app.resources.role <= 1) {
-                if ($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId) {
+              if ($rootScope.StandBy.resources.role <= 1) {
+                if ($rootScope.StandBy.resources.uuid.toLowerCase() != $route.current.params.userId) {
                   // console.log('pass ->', MD5(userPassword), $rootScope.app.resources.askPass);
                   // Switched from $rootScope.app.resources.askPass to localStorage
                   if (MD5(userPassword) == Storage.get('askPass')) {
@@ -120,7 +120,7 @@ define(
           /**
            * Set data for view
            */
-          if (($rootScope.app.resources.uuid.toLowerCase() != $route.current.params.userId)) {
+          if (($rootScope.StandBy.resources.uuid.toLowerCase() != $route.current.params.userId)) {
             if (data && data.slots) {
               data.user = data.slots.data;
             }
@@ -529,7 +529,7 @@ define(
             $scope.views[hash] = true;
 
             $scope.views.user = (
-              $rootScope.app.resources.uuid.toLowerCase() == $route.current.params.userId
+              $rootScope.StandBy.resources.uuid.toLowerCase() == $route.current.params.userId
               );
           }
 
@@ -728,7 +728,7 @@ define(
                                     $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
 
-                                    var flag = (userId == $rootScope.app.resources.uuid);
+                                    var flag = (userId == $rootScope.StandBy.resources.uuid);
 
                                     Profile.get(
                                       userId,
@@ -828,7 +828,7 @@ define(
             // console.log('askPass ->', $rootScope.app.resources.askPass);
             // console.log('current ->', passwords.current, MD5(passwords.current));
 
-            if ($rootScope.app.resources.askPass == MD5(passwords.current)) {
+            if ($rootScope.StandBy.resources.askPass == MD5(passwords.current)) {
               $rootScope.statusBar.display($rootScope.ui.profile.changingPass);
 
               Profile.changePassword(passwords)
@@ -841,7 +841,7 @@ define(
                   else {
                     $rootScope.statusBar.display($rootScope.ui.profile.refreshing);
 
-                    Profile.get($rootScope.app.resources.uuid, true)
+                    Profile.get($rootScope.StandBy.resources.uuid, true)
                       .then(
                       function (data) {
                         if (data.error) {
@@ -870,7 +870,7 @@ define(
            * Render timeline if hash is timeline
            */
           if ($route.current.params.userId &&
-            $rootScope.app.resources.uuid != $route.current.params.userId.toLowerCase()) {
+            $rootScope.StandBy.resources.uuid != $route.current.params.userId.toLowerCase()) {
             timelinebooter();
           }
 

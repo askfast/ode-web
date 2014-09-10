@@ -348,7 +348,7 @@ define(['controllers/controllers'], function (controllers) {
 
             Settings.save(resources.uuid, defaults).then(function () {
               User.resources().then(function (got) {
-                $rootScope.app.resources = got;
+                $rootScope.StandBy.resources = got;
                 finalize();
               });
             });
@@ -358,7 +358,7 @@ define(['controllers/controllers'], function (controllers) {
 
           Settings.save(resources.uuid, defaults).then(function () {
             User.resources().then(function (got) {
-              $rootScope.app.resources = got;
+              $rootScope.StandBy.resources = got;
               finalize();
             });
           });
@@ -367,7 +367,7 @@ define(['controllers/controllers'], function (controllers) {
         try {
           ga('send', 'pageview', {
             'dimension1': resources.uuid,
-            'dimension2': $rootScope.app.domain
+            'dimension2': $rootScope.StandBy.environment.domain
           });
 
           ga('send', 'event', 'Login', resources.uuid);
@@ -393,7 +393,7 @@ define(['controllers/controllers'], function (controllers) {
       }, $rootScope.config.timers.TICKER);
 
       Messages.query().then(function () {
-        $rootScope.app.unreadMessages = Messages.unreadCount();
+        $rootScope.StandBy.unreadMessages = Messages.unreadCount();
         Storage.session.unreadMessages = Messages.unreadCount();
       });
 

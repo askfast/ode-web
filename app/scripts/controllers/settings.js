@@ -37,7 +37,7 @@ define(['controllers/controllers', 'locals'], function (controllers, locals) {
         $rootScope.statusBar.display($rootScope.ui.settings.saving);
 
         Settings.save(
-          $rootScope.app.resources.uuid,
+          $rootScope.StandBy.resources.uuid,
           settings
         ).then(
           function () {
@@ -46,7 +46,7 @@ define(['controllers/controllers', 'locals'], function (controllers, locals) {
             $rootScope.statusBar.display($rootScope.ui.settings.refreshing);
 
             Profile.get(
-              $rootScope.app.resources.uuid,
+              $rootScope.StandBy.resources.uuid,
               true
             ).then(
               function (result) {
@@ -76,7 +76,7 @@ define(['controllers/controllers', 'locals'], function (controllers, locals) {
       $scope.authGoogle = function () {
         window.location = 'http://3rc2.ask-services.appspot.com/auth/google' +
           '?agentUrl=http://3rc2.ask-services.appspot.com/eveagents/personalagent/' +
-          $rootScope.app.resources.uuid +
+          $rootScope.StandBy.resources.uuid +
           '/' +
           '&agentMethod=createGoogleAgents' +
           '&applicationCallback=' +
@@ -89,7 +89,7 @@ define(['controllers/controllers', 'locals'], function (controllers, locals) {
          * Fix a return value
          */
           '?account=' +
-          $rootScope.app.resources.uuid +
+          $rootScope.StandBy.resources.uuid +
           encodeURIComponent('#') +
           '/settings';
       };

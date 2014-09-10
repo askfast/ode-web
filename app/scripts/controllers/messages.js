@@ -935,7 +935,7 @@ define(
               if (broadcast.email) types.push('email');
 
               return {
-                sender: $rootScope.app.resources.uuid,
+                sender: $rootScope.StandBy.resources.uuid,
                 recipients: members,
                 label: scheaduled.title,
                 subject: message.subject,

@@ -269,7 +269,7 @@ define(
                   console.warn('error ->', resources);
                 }
                 else {
-                  $rootScope.app.resources = resources;
+                  $rootScope.StandBy.resources = resources;
 
                   Store('app').save('resources', resources);
 

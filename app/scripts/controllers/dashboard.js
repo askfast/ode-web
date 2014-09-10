@@ -296,13 +296,13 @@ define(['controllers/controllers'], function (controllers) {
             break;
         }
 
-        $rootScope.app.guard.role = setup.role;
+        $rootScope.StandBy.environment.guard.role = setup.role;
 
-        if (setup.users[$rootScope.app.resources.uuid]) {
-          $rootScope.app.guard.currentState = setup.users[$rootScope.app.resources.uuid].state;
+        if (setup.users[$rootScope.StandBy.resources.uuid]) {
+          $rootScope.StandBy.guard.currentState = setup.users[$rootScope.StandBy.resources.uuid].state;
         } else {
           Slots.currentState().then(function (state) {
-            $rootScope.app.guard.currentState = state.label
+            $rootScope.StandBy.guard.currentState = state.label
           });
         }
 
@@ -346,7 +346,9 @@ define(['controllers/controllers'], function (controllers) {
       });
     }
 
-    var members = Storage.local.members();
+    // var members = Storage.local.members();
+    // var members = _.indexBy(Store('network').get('unique'), function (mem) { return mem.uuid });
+    var members = Store('network').get('unique');
 
     _.each(groups, function (group) {
       group.name = group.name.replace(/\w\S*/g, function (name) {
@@ -539,7 +541,7 @@ define(['controllers/controllers'], function (controllers) {
         }
       });
 
-      Settings.save($rootScope.app.resources.uuid, {
+      Settings.save($rootScope.StandBy.resources.uuid, {
         user: Storage.local.settings().user,
         app: {
           group: Storage.local.settings().app.group,
@@ -550,7 +552,7 @@ define(['controllers/controllers'], function (controllers) {
       }).then(function () {
         $rootScope.statusBar.display($rootScope.ui.dashboard.refreshGroupOverviews);
 
-        Profile.get($rootScope.app.resources.uuid, true).then(function () {
+        Profile.get($rootScope.StandBy.resources.uuid, true).then(function () {
           getOverviews()
         });
       });
