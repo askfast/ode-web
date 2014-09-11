@@ -2,8 +2,8 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
   'use strict';
 
   app.run(function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers, Notifications, Store) {
-    if (Session.check())
-      $location.path('/dashboard');
+//    if (Session.check())
+//      $location.path('/dashboard');
 
     // ----------------------------------------------------------
 
@@ -65,12 +65,6 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
     }
 
     console.log('StandBy ->', $rootScope.StandBy);
-
-    // console.log('app ->', $rootScope.StandBy);
-
-//      $rootScope.app = $rootScope.app || {};
-//      $rootScope.app.resources = angular.fromJson(Storage.get('resources'));
-//      $rootScope.app.domain = angular.fromJson(Storage.get('domain'));
 
     var settings = angular.fromJson(Storage.get('settings'));
     if (settings) {

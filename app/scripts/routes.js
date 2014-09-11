@@ -1,302 +1,175 @@
 define(['app'], function (app) {
   'use strict';
 
-  app.config(['$locationProvider', '$routeProvider', '$httpProvider', function ($locationProvider, $routeProvider, $httpProvider) {
+  app.config(function ($locationProvider, $routeProvider, $httpProvider) {
 
-
-    /**
-     * Login router
-     */
     $routeProvider
-      .when(
-      '/login',
-      {
+      .when('/login', {
         templateUrl: 'views/login.html',
         controller: 'login'
       })
 
-
-    /**
-     * Logout router
-     */
-      .when(
-      '/logout',
-      {
+      .when('/logout', {
         templateUrl: 'views/logout.html',
         controller: 'logout'
       })
 
-
-    /**
-     * Dashboard router
-     */
-      .when(
-      '/dashboard',
-      {
+      .when('/dashboard', {
         templateUrl: 'views/dashboard.html',
         controller: 'dashboard'
       })
 
-
-    /**
-     * TV Monitor / Dashboard router
-     */
-      .when(
-      '/tv',
-      {
+      .when('/tv', {
         templateUrl: 'views/tv.html',
         controller: 'tv',
         resolve: {
-          data: [
-            '$route', '$http',
-            function ($route, $http) {
-              if ($route.current.params.sessionID) {
-                $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
-              }
+          data: function ($route, $http) {
+            if ($route.current.params.sessionID) {
+              $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
             }
-          ]
+          }
         }
       })
 
-
-    /**
-     * Planboard router
-     */
-      .when(
-      '/planboard',
-      {
+      .when('/planboard', {
         templateUrl: 'views/planboard.html',
         controller: 'planboard',
         resolve: {
-          data: [
-            '$route', 'Slots', 'Storage', 'Dater',
-            function ($route, Slots, Storage, Dater) {
-              var periods = Storage.local.periods(),
-                settings = Storage.local.settings(),
-                groups = Storage.local.groups(),
-                groupId,
-                validGroup = false;
+          data: function ($route, Slots, Storage, Dater, Store) {
+            var periods = Storage.local.periods(),
+              // settings = Storage.local.settings(),
+              settings = angular.fromJson(Store('user').get('resources').settingsWebPaige),
+              // groups = Storage.local.groups(),
+              groups = Store('network').get('groups'),
+              groupId,
+              validGroup = false;
 
-              angular.forEach(
-                groups,
-                function (_group) {
-                  if (_group.uuid == settings.app.group) {
-                    validGroup = true
-                  }
-                }
-              );
-
-              groupId = (validGroup) ? settings.app.group : groups[0].uuid;
-
-              var stamps = {};
-
-              if (Dater.current.today() > 360) {
-                stamps = {
-                  start: periods.days[358].last.timeStamp,
-                  end: periods.days[365].last.timeStamp
-                }
+            _.each(groups, function (_group) {
+              if (_group.uuid == settings.app.group) {
+                validGroup = true
               }
-              else {
-                stamps = {
-                  start: periods.days[Dater.current.today() - 1].last.timeStamp,
-                  end: periods.days[Dater.current.today() + 6].last.timeStamp
-                }
-              }
+            });
 
-              return  Slots.all(
-                {
-                  groupId: groupId,
-                  stamps: stamps,
-                  month: Dater.current.month(),
-                  layouts: {
-                    user: true,
-                    group: true,
-                    members: false
-                  }
-                }
-              );
-            }
-          ]
+            groupId = (validGroup) ? settings.app.group : groups[0].uuid;
+
+            return  Slots.all({
+              groupId: groupId,
+              stamps: (Dater.current.today() > 360) ? {
+                start: periods.days[358].last.timeStamp,
+                end: periods.days[365].last.timeStamp
+              } : {
+                start: periods.days[Dater.current.today() - 1].last.timeStamp,
+                end: periods.days[Dater.current.today() + 6].last.timeStamp
+              },
+              month: Dater.current.month(),
+              layouts: {
+                user: true,
+                group: true,
+                members: false
+              }
+            });
+          }
         },
         reloadOnSearch: false
       })
 
-
-    /**
-     * Messages router
-     */
-      .when(
-      '/messages',
-      {
+      .when('/messages', {
         templateUrl: 'views/messages.html',
         controller: 'messages',
         resolve: {
-          data: [
-            '$route', 'Messages',
-            function ($route, Messages) {
-              return Messages.query()
-            }
-          ]
+          data: function (Messages) {
+            return Messages.query();
+          }
         },
         reloadOnSearch: false
       })
 
-
-    /**
-     * Groups router
-     */
-      .when(
-      '/groups',
-      {
+      .when('/groups', {
         templateUrl: 'views/groups.html',
         controller: 'groups',
         resolve: {
-          data: [
-            'Groups',
-            function (Groups) {
-              return Groups.query();
-            }
-          ]
+          data: function (Groups) {
+            return Groups.query();
+          }
         },
         reloadOnSearch: false
       })
 
-
-    /**
-     * Profile (user specific) router
-     */
-      .when(
-      '/profile/:userId',
-      {
+      .when('/profile/:userId', {
         templateUrl: 'views/profile.html',
         controller: 'profile',
         resolve: {
-          data: [
-            '$rootScope', 'Profile', '$route', 'Dater',
-            function ($rootScope, Profile, $route, Dater) {
-              if ($route.current.params.userId.toLowerCase() != $rootScope.StandBy.resources.uuid) {
-                var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
+          data: function ($rootScope, Profile, $route, Dater) {
+            if ($route.current.params.userId.toLowerCase() != $rootScope.StandBy.resources.uuid) {
+              var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
 
-                return Profile.getWithSlots(
-                  $route.current.params.userId.toLowerCase(),
-                  false,
-                  {
-                    start: periods.weeks[Dater.current.week()].first.timeStamp / 1000,
-                    end: periods.weeks[Dater.current.week()].last.timeStamp / 1000
-                  }
-                );
-              }
-              else {
-                return Profile.get($route.current.params.userId.toLowerCase(), false);
-              }
+              return Profile.getWithSlots($route.current.params.userId.toLowerCase(), false, {
+                start: periods.weeks[Dater.current.week()].first.timeStamp / 1000,
+                end: periods.weeks[Dater.current.week()].last.timeStamp / 1000
+              });
+            } else {
+              return Profile.get($route.current.params.userId.toLowerCase(), false);
             }
-          ]
+          }
         },
         reloadOnSearch: false
       })
 
-
-    /**
-     * Profile (user hiself) router
-     */
-      .when(
-      '/profile',
-      {
+      .when('/profile', {
         templateUrl: 'views/profile.html',
         controller: 'profile',
         resolve: {
-          data: [
-            '$rootScope', '$route', '$location',
-            function ($rootScope, $route, $location) {
-              if (!$route.current.params.userId || !$location.hash()) {
-                $location.path('/profile/' + $rootScope.StandBy.resources.uuid).hash('profile');
-              }
+          data: function ($rootScope, $route, $location) {
+            if (!$route.current.params.userId || !$location.hash()) {
+              $location.path('/profile/' + $rootScope.StandBy.resources.uuid).hash('profile');
             }
-          ]
+          }
         }
       })
 
-
-    /**
-     * Settings router
-     */
-      .when(
-      '/settings',
-      {
+      .when('/settings', {
         templateUrl: 'views/settings.html',
         controller: 'settings',
         resolve: {
-          data: [
-            'Settings',
-            function (Settings) {
-              return angular.fromJson(Settings.get());
-            }
-          ]
+          data: function (Settings) {
+            return angular.fromJson(Settings.get());
+          }
         }
       })
 
-
-    /**
-     * FAQ router
-     */
-      .when(
-      '/faq',
-      {
+      .when('/faq', {
         templateUrl: 'views/faq.html',
         controller: 'faq'
       })
 
-
-    /**
-     * Help router
-     */
-      .when(
-      '/help',
-      {
+      .when('/help', {
         templateUrl: 'views/help.html',
         controller: 'help'
       })
 
-
-    /**
-     * Router fallback
-     */
-      .otherwise(
-      {
-        redirectTo: '/login'
-      });
+      .otherwise({ redirectTo: '/login' });
 
 
-    $httpProvider.interceptors.push(
-      [
-        '$q', 'Log', '$location' ,
-        function ($q, Log, $location) {
-          return {
-            request: function (config) {
-              return config || $q.when(config);
-            },
-            requestError: function (rejection) {
-              // console.warn('request error ->', rejection);
-              // Log.error(rejection);
-              return $q.reject(rejection);
-            },
-            response: function (response) {
-              return response || $q.when(response);
-            },
-            responseError: function (rejection) {
-              console.warn('response error ->', rejection);
+    $httpProvider.interceptors.push(function ($q, Log, $location) {
+      return {
+        request: function (config) {
+          return config || $q.when(config);
+        },
+        requestError: function (rejection) {
+          return $q.reject(rejection);
+        },
+        response: function (response) {
+          return response || $q.when(response);
+        },
+        responseError: function (rejection) {
 //              if (rejection.status == 403) {
 //                localStorage.setItem('sessionTimeout', '');
 //                $location.path('/logout');
 //                window.location.href = 'logout.html';
 //              }
-
-              // Log.error(rejection);
-              return $q.reject(rejection);
-            }
-          };
+          return $q.reject(rejection);
         }
-      ]);
-  }
-  ]);
+      };
+    });
+  });
 });

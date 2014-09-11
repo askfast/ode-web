@@ -26,13 +26,12 @@ define(['controllers/controllers'], function (controllers) {
      * TODO: Check somewhere that user-settings widget-groups are synced with the
      * real groups list and if a group is missing in settings-groups add by default!
      */
-    // var groups = Storage.local.groups();
     var groups = Store('network').get('groups');
 
     var selection = {};
 
-    // REFACTORING
     var settings = angular.fromJson(Store('user').get('resources').settingsWebPaige);
+
     _.each(settings.app.widgets.groups, function (value, group) {
       selection[group] = value
     });
@@ -57,8 +56,6 @@ define(['controllers/controllers'], function (controllers) {
     $scope.popover = {
       groups: filteredGroups,
       selection: selection,
-      // divisions: ($rootScope.config.timeline.config.divisions.length > 0)
-      // REFACTORING
       divisions: ($rootScope.StandBy.environment.divisions.length > 0)
     };
 
@@ -346,8 +343,6 @@ define(['controllers/controllers'], function (controllers) {
       });
     }
 
-    // var members = Storage.local.members();
-    // var members = _.indexBy(Store('network').get('unique'), function (mem) { return mem.uuid });
     var members = Store('network').get('unique');
 
     _.each(groups, function (group) {
@@ -377,7 +372,6 @@ define(['controllers/controllers'], function (controllers) {
       display: false
     };
 
-    // $scope.divisions = $rootScope.config.timeline.config.divisions;
     $scope.divisions = $rootScope.StandBy.environment.divisions || [];
 
     if ($scope.divisions.length > 0) {
