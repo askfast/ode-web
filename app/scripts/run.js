@@ -43,6 +43,10 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 
     if (!_.isUndefined($rootScope.StandBy.environment.states) && Store('environment').get('states') != '') {
       $rootScope.StandBy.environment.states = Store('environment').get('states');
+
+      _.each(Store('environment').get('states'), function (state) {
+        $rootScope.StandBy.config.timeline.config.states[state] = $rootScope.StandBy.config.statesall[state]
+      });
     }
 
     if (!_.isUndefined($rootScope.StandBy.environment.divisions) && Store('environment').get('divisions') != '') {
@@ -83,11 +87,11 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 
     $rootScope.config = config;
     $rootScope.config.init();
-    $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
+    // $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
-    _.each(angular.fromJson(Storage.get('states')), function (state) {
-      $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
-    });
+//    _.each(angular.fromJson(Storage.get('states')), function (state) {
+//      $rootScope.StandBy.config.timeline.config.states[state] = $rootScope.StandBy.config.statesall[state]
+//    });
 
     // ----------------------------------------------------------
 

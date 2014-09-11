@@ -296,7 +296,7 @@ define(['controllers/controllers'], function (controllers) {
             break;
         }
 
-        $rootScope.StandBy.environment.guard.role = setup.role;
+        $rootScope.StandBy.guard.role = setup.role;
 
         if (setup.users[$rootScope.StandBy.resources.uuid]) {
           $rootScope.StandBy.guard.currentState = setup.users[$rootScope.StandBy.resources.uuid].state;
@@ -367,7 +367,7 @@ define(['controllers/controllers'], function (controllers) {
 
     $scope.groups = groups;
 
-    $scope.states = $rootScope.config.timeline.config.states;
+    $scope.states = $rootScope.StandBy.config.timeline.config.states;
 
     $scope.states['no-state'] = {
       className: 'no-state',

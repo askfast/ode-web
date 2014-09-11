@@ -38,6 +38,10 @@ define(['services/services'], function (services) {
 
           $rootScope.StandBy.environment.states = states;
 
+          _.each(states, function (state) {
+            $rootScope.StandBy.config.timeline.config.states[state] = $rootScope.StandBy.config.statesall[state]
+          });
+
           deferred.resolve(states);
         });
       } catch (e) {
