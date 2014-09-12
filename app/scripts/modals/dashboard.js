@@ -56,7 +56,7 @@ define(['services/services', 'config'], function (services, config) {
             }));
           } else {
             if (settings[group.uuid].divisions) {
-              _.each($rootScope.config.timeline.config.divisions, function (division) {
+              _.each($rootScope.StandBy.config.timeline.config.divisions, function (division) {
                 if (division.id !== 'all') {
                   calls.push(
                     Slots.pie({
@@ -133,10 +133,10 @@ define(['services/services', 'config'], function (services, config) {
 
       $rootScope.statusBar.display($rootScope.ui.dashboard.gettingAlarms);
 
-      if ($rootScope.config.profile.smartAlarm) {
+      if ($rootScope.StandBy.config.profile.smartAlarm) {
         $.ajax(
           {
-            url: $rootScope.config.profile.p2000.url,
+            url: $rootScope.StandBy.config.profile.p2000.url,
             dataType: 'json',
             success: function (results) {
               $rootScope.statusBar.off();

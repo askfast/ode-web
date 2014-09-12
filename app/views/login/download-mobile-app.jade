@@ -3,11 +3,11 @@
     button.btn.btn-success.dropdown-toggle(data-toggle='dropdown', style='width: 190px')
       | Download mobiele app {{position}}
     ul.dropdown-menu.pull-right
-      li(ng-show='config.profile.mobileApp.android')
-        a(ng-href='{{config.profile.mobileApp.android}}', target='_blank')
+      li(ng-show='StandBy.config.profile.mobileApp.android')
+        a(ng-href='{{StandBy.config.profile.mobileApp.android}}', target='_blank')
           | Download Android App
-      li(ng-show='config.profile.mobileApp.ios')
-        a(ng-href='{{config.profile.mobileApp.ios}}', target='itunes_store')
+      li(ng-show='StandBy.config.profile.mobileApp.ios')
+        a(ng-href='{{StandBy.config.profile.mobileApp.ios}}', target='itunes_store')
           | Download iPhone App
   span(ng-show='browser.mobile && browser.screen.width < 768')
     br

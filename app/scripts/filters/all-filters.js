@@ -470,7 +470,7 @@ define(
           return function (date) {
             if (typeof date == 'string') date = Number(date);
 
-            return new Date(date).toString($rootScope.config.formats.datetimefull);
+            return new Date(date).toString($rootScope.StandBy.config.formats.datetimefull);
           };
         }
       ])
@@ -574,7 +574,7 @@ define(
         '$rootScope',
         function ($rootScope) {
           return function (id) {
-            var divisions = $rootScope.config.timeline.config.divisions;
+            var divisions = $rootScope.StandBy.config.timeline.config.divisions;
 
             for (var i in divisions) {
               if (divisions[i].id == id) return divisions[i].label;

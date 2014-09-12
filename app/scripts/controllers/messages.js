@@ -721,7 +721,7 @@ define(
 
             // console.log('requester ->', message.requester);
 
-            //        var senderId = ($rootScope.config.profile.smartAlarm) ?
+            //        var senderId = ($rootScope.StandBy.config.profile.smartAlarm) ?
             //                       message.requester :
             //                       message.requester.split('personalagent/')[1].split('/')[0];
 
@@ -870,7 +870,7 @@ define(
                 );
 
                 $("div#composeTab select.chzn-select").trigger("liszt:updated");
-              }, $rootScope.config.timers.TICKER);
+              }, $rootScope.StandBy.config.timers.TICKER);
 
             $scope.message = {
               subject: $rootScope.ui.message.escalation,

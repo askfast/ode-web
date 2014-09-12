@@ -1,11 +1,11 @@
 #login.boxed(ng-show='views.login',
 ng-hide='views.help || views.changePass')
   form(ng-submit='login()')
-    img(ng-src='{{config.profile.logos.login}}',
-    alt='{{config.profile.title}}')
-    h4.form-signin-heading(ng-show='config.profile.own')
-      | {{config.profile.title}}
-    h4.form-signin-heading(ng-hide='config.profile.own')
+    img(ng-src='{{StandBy.config.profile.logos.login}}',
+    alt='{{StandBy.config.profile.title}}')
+    h4.form-signin-heading(ng-show='StandBy.config.profile.own')
+      | {{StandBy.config.profile.title}}
+    h4.form-signin-heading(ng-hide='StandBy.config.profile.own')
       | {{ui.login.header}}
     .alert(class="{{alert.login.type}}",
     ng-show='alert.login.display')

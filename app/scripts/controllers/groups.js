@@ -53,7 +53,7 @@ define(['controllers/controllers'], function (controllers) {
     /**
      * Grab and set roles for view
      */
-    $scope.roles = $rootScope.config.roles;
+    $scope.roles = $rootScope.StandBy.config.roles;
 
 
     /**
@@ -127,7 +127,7 @@ define(['controllers/controllers'], function (controllers) {
       $scope.members.sort(function (a, b) {
         var aName, bName;
 
-        if ($rootScope.config.profile.meta != 'demo') {
+        if ($rootScope.StandBy.config.profile.meta != 'demo') {
           aName = a.resources.lastName.toLowerCase();
           bName = b.resources.lastName.toLowerCase();
         } else {

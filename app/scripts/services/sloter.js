@@ -59,7 +59,7 @@ define(['services/services'], function (services) {
 
       tooltip: function (periods) {
         var convertTimestamp = function (stamp) {
-          return new Date(stamp * 1000).toString($rootScope.config.formats.datetime)
+          return new Date(stamp * 1000).toString($rootScope.StandBy.config.formats.datetime)
         };
 
         var content = convertTimestamp(periods.start) + ' / ' +
@@ -523,7 +523,7 @@ define(['services/services'], function (services) {
         _.each(_this.filtered(data, current), function (agg) {
           var id;
 
-          id = ($rootScope.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
+          id = ($rootScope.StandBy.config.timeline.config.divisions.length > 0) ? agg.division.id : '';
 
           if ($.browser.msie && $.browser.version == '8.0') {
             $('#' + 'groupPie-' + id).html('');
@@ -600,7 +600,7 @@ define(['services/services'], function (services) {
         if (data.aggs) {
           setTimeout(function () {
             _this.pies(data, current)
-          }, $rootScope.config.timers.TICKER);
+          }, $rootScope.StandBy.config.timers.TICKER);
         }
 
         return timedata;

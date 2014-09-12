@@ -110,7 +110,7 @@ define(
 
                 Messages.prototype.unreadCount();
 
-                //            if (! $rootScope.config.profile.smartAlarm)
+                //            if (! $rootScope.StandBy.config.profile.smartAlarm)
                 //            {
                 Messages.prototype.scheaduled.list()
                   .then(

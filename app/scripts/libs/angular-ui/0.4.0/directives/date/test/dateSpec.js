@@ -216,14 +216,14 @@ describe('uiDate', function() {
     it('should watch attribute and update date widget accordingly', function() {
       inject(function($compile, $rootScope) {
         var element;
-        $rootScope.config = {
+        $rootScope.StandBy.config = {
           minDate: 5
         };
         element = $compile("<input ui-date='config' ng-model='x'/>")($rootScope);
         $rootScope.$apply();
         expect(element.datepicker("option", "minDate")).toBe(5);
         $rootScope.$apply(function() {
-          $rootScope.config.minDate = 10;
+          $rootScope.StandBy.config.minDate = 10;
         });
         expect(element.datepicker("option", "minDate")).toBe(10);
       });

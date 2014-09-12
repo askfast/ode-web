@@ -96,7 +96,7 @@ define(['services/services', 'config'], function (services, config) {
 
               $q.all(calls).then(function (grouped) {
                 deferred.resolve({
-                  registered: ($rootScope.config.profile.smartAlarm) ? registered[0] : registered,
+                  registered: ($rootScope.StandBy.config.profile.smartAlarm) ? registered[0] : registered,
                   roled: roled,
                   resourced: resourced,
                   grouped: grouped

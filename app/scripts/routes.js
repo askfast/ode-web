@@ -37,17 +37,14 @@ define(['app'], function (app) {
         resolve: {
           data: function ($route, Slots, Storage, Dater, Store) {
             var periods = Storage.local.periods(),
-              // settings = Storage.local.settings(),
               settings = angular.fromJson(Store('user').get('resources').settingsWebPaige),
-              // groups = Storage.local.groups(),
               groups = Store('network').get('groups'),
               groupId,
               validGroup = false;
 
             _.each(groups, function (_group) {
-              if (_group.uuid == settings.app.group) {
-                validGroup = true
-              }
+              if (_group.uuid == settings.app.group)
+                validGroup = true;
             });
 
             groupId = (validGroup) ? settings.app.group : groups[0].uuid;
@@ -120,9 +117,8 @@ define(['app'], function (app) {
         controller: 'profile',
         resolve: {
           data: function ($rootScope, $route, $location) {
-            if (!$route.current.params.userId || !$location.hash()) {
+            if (!$route.current.params.userId || !$location.hash())
               $location.path('/profile/' + $rootScope.StandBy.resources.uuid).hash('profile');
-            }
           }
         }
       })

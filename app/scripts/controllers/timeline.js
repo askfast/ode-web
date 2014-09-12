@@ -140,14 +140,14 @@ define(
 
               $scope.slot = {
                 start: {
-                  date: new Date().toString($rootScope.config.formats.date),
-                  time: new Date().toString($rootScope.config.formats.time),
+                  date: new Date().toString($rootScope.StandBy.config.formats.date),
+                  time: new Date().toString($rootScope.StandBy.config.formats.time),
                   // datetime: new Date().toISOString().replace("Z", "")
                   datetime: new Date().toString("yyyy-MM-ddTHH:mm:ss")
                 },
                 end: {
-                  date: new Date().toString($rootScope.config.formats.date),
-                  time: new Date().addHours(1).toString('HH:00'), //$rootScope.config.formats.time,
+                  date: new Date().toString($rootScope.StandBy.config.formats.date),
+                  time: new Date().addHours(1).toString('HH:00'), //$rootScope.StandBy.config.formats.time,
                   datetime: new Date().addHours(1).toString("yyyy-MM-ddTHH:00:00")
                   // datetime: new Date().addHours(1).toISOString().replace("Z", "")
                 },
@@ -251,7 +251,7 @@ define(
                 $scope.timeline.options.end = new Date(options.end);
               }
 
-              angular.extend($scope.timeline.options, $rootScope.config.timeline.options);
+              angular.extend($scope.timeline.options, $rootScope.StandBy.config.timeline.options);
 
               if ($scope.timeline.main) {
                 $scope.self.timeline.draw(
@@ -267,8 +267,8 @@ define(
               }
               else {
                 var timeout = ($location.hash() == 'timeline') ?
-                  $rootScope.config.timers.TICKER :
-                  $rootScope.config.timers.MEMBER_TIMELINE_RENDER;
+                  $rootScope.StandBy.config.timers.TICKER :
+                  $rootScope.StandBy.config.timers.MEMBER_TIMELINE_RENDER;
 
                 $rootScope.timelineLoaded = false;
 
@@ -569,16 +569,16 @@ define(
 
                 $scope.slot = {
                   start: {
-                    date: new Date(values.start).toString($rootScope.config.formats.date),
-                    time: new Date(values.start).toString($rootScope.config.formats.time),
+                    date: new Date(values.start).toString($rootScope.StandBy.config.formats.date),
+                    time: new Date(values.start).toString($rootScope.StandBy.config.formats.time),
                     // datetime: new Date(values.start).toISOString().replace("Z", "")
 
                     // datetime: new Date(values.start).toUTCString()
                     datetime: getDateTimeToPicker(values.start)
                   },
                   end: {
-                    date: new Date(values.end).toString($rootScope.config.formats.date),
-                    time: new Date(values.end).toString($rootScope.config.formats.time),
+                    date: new Date(values.end).toString($rootScope.StandBy.config.formats.date),
+                    time: new Date(values.end).toString($rootScope.StandBy.config.formats.time),
                     // datetime: new Date(values.end).toISOString().replace("Z", "")
 
                     // datetime: new Date(values.end).toUTCString()
@@ -646,7 +646,7 @@ define(
                 function () {
                   $scope.timeliner.redraw();
                 },
-                $rootScope.config.timers.TICKER);
+                $rootScope.StandBy.config.timers.TICKER);
             }
           };
 
@@ -874,13 +874,13 @@ define(
 
                     $scope.slot = {
                       start: {
-                        date: new Date(values.start).toString($rootScope.config.formats.date),
-                        time: new Date(values.start).toString($rootScope.config.formats.time),
+                        date: new Date(values.start).toString($rootScope.StandBy.config.formats.date),
+                        time: new Date(values.start).toString($rootScope.StandBy.config.formats.time),
                         datetime: new Date(values.start).toISOString()
                       },
                       end: {
-                        date: new Date(values.end).toString($rootScope.config.formats.date),
-                        time: new Date(values.end).toString($rootScope.config.formats.time),
+                        date: new Date(values.end).toString($rootScope.StandBy.config.formats.date),
+                        time: new Date(values.end).toString($rootScope.StandBy.config.formats.time),
                         datetime: new Date(values.end).toISOString()
                       },
                       recursive: (values.group.match(/recursive/)) ? true : false,
@@ -992,14 +992,14 @@ define(
               function () {
                 $scope.slot = {
                   start: {
-                    date: new Date(values.start).toString($rootScope.config.formats.date),
-                    time: new Date(values.start).toString($rootScope.config.formats.time),
+                    date: new Date(values.start).toString($rootScope.StandBy.config.formats.date),
+                    time: new Date(values.start).toString($rootScope.StandBy.config.formats.time),
                     // datetime: new Date(values.start).toISOString()
                     datetime: convertDateTimeToLocal(values.start)
                   },
                   end: {
-                    date: new Date(values.end).toString($rootScope.config.formats.date),
-                    time: new Date(values.end).toString($rootScope.config.formats.time),
+                    date: new Date(values.end).toString($rootScope.StandBy.config.formats.date),
+                    time: new Date(values.end).toString($rootScope.StandBy.config.formats.time),
                     // datetime: new Date(values.end).toISOString()
                     datetime: convertDateTimeToLocal(values.end)
                   },
@@ -1346,7 +1346,7 @@ define(
               function () {
                 $scope.self.timeline.redraw()
               },
-              $rootScope.config.timers.TICKER
+              $rootScope.StandBy.config.timers.TICKER
             );
           }
 
@@ -1377,7 +1377,7 @@ define(
                       true
                     );
                   }
-                }, $rootScope.config.timers.PLANBOARD_SYNC);
+                }, $rootScope.StandBy.config.timers.PLANBOARD_SYNC);
             },
 
             /**

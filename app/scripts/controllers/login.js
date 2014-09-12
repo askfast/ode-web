@@ -39,7 +39,7 @@ define(['controllers/controllers'], function (controllers) {
     angular.element('#footer').hide();
     angular.element('#watermark').hide();
     angular.element('body').css({
-      'background': 'url(../' + $rootScope.config.profile.background + ') no-repeat center center fixed',
+      'background': 'url(../' + $rootScope.StandBy.config.profile.background + ') no-repeat center center fixed',
       'backgroundSize': 'cover'
     });
     if (navigator.userAgent.indexOf("Firefox") >= 0)
@@ -100,7 +100,7 @@ define(['controllers/controllers'], function (controllers) {
     }
 
     function authenticate(uuid, pass) {
-      if ($rootScope.config.smartAlarm) {
+      if ($rootScope.StandBy.config.smartAlarm) {
         Storage.add('guard', angular.toJson({
           monitor: '',
           role: ''
@@ -193,11 +193,11 @@ define(['controllers/controllers'], function (controllers) {
 //            Storage.add('states', angular.toJson(states));
 //
 //            _.each(states, function (state) {
-//              $rootScope.config.timeline.config.states[state] = $rootScope.config.statesall[state]
+//              $rootScope.StandBy.config.timeline.config.states[state] = $rootScope.StandBy.config.statesall[state]
 //            });
 //
 //            UserLegacy.divisions().then(function (divisions) {
-//              $rootScope.config.timeline.config.divisions = divisions;
+//              $rootScope.StandBy.config.timeline.config.divisions = divisions;
 //
 //              Storage.add('divisions', angular.toJson(divisions));
 //
@@ -240,7 +240,7 @@ define(['controllers/controllers'], function (controllers) {
       var settings = angular.fromJson(resources.settingsWebPaige) || {},
         sync = false,
         parenting = false,
-        defaults = $rootScope.config.defaults.settingsWebPaige;
+        defaults = $rootScope.StandBy.config.defaults.settingsWebPaige;
 
       var _groups = function (groups) {
         var _groups = {};
@@ -260,7 +260,7 @@ define(['controllers/controllers'], function (controllers) {
             $rootScope.changeLanguage(angular.fromJson(resources.settingsWebPaige).user.language);
             defaults.user.language = settings.user.language;
           } else {
-            $rootScope.changeLanguage($rootScope.config.defaults.settingsWebPaige.user.language);
+            $rootScope.changeLanguage($rootScope.StandBy.config.defaults.settingsWebPaige.user.language);
             sync = true;
           }
         } else {
@@ -325,7 +325,7 @@ define(['controllers/controllers'], function (controllers) {
         }
       } else {
         defaults = {
-          user: $rootScope.config.defaults.settingsWebPaige.user,
+          user: $rootScope.StandBy.config.defaults.settingsWebPaige.user,
           app: {
             widgets: {
               groups: _groups(groups)
@@ -390,7 +390,7 @@ define(['controllers/controllers'], function (controllers) {
         angular.element('#watermark').show();
         if (!$rootScope.browser.mobile)
           angular.element('#footer').show();
-      }, $rootScope.config.timers.TICKER);
+      }, $rootScope.StandBy.config.timers.TICKER);
 
       Messages.query().then(function () {
         $rootScope.StandBy.unreadMessages = Messages.unreadCount();

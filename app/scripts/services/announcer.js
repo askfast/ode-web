@@ -28,7 +28,7 @@ define(
                   results.rows, function (alarm) {
                     processed.push(
                       {
-                        msgCode: $rootScope.config.profile.p2000.codes,
+                        msgCode: $rootScope.StandBy.config.profile.p2000.codes,
                         day: new Date(alarm.value.timestamp).toString('dd-MM-yy'),
                         time: new Date(alarm.value.timestamp).toString('HH:mm:ss'),
                         body: alarm.value.message

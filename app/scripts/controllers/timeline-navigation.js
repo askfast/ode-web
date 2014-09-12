@@ -375,7 +375,7 @@ define(
            * Timeline zoom in
            */
           $scope.timelineZoomIn = function () {
-            $scope.self.timeline.zoom($rootScope.config.timeline.config.zoom, Date.now());
+            $scope.self.timeline.zoom($rootScope.StandBy.config.timeline.config.zoom, Date.now());
           };
 
 
@@ -383,7 +383,7 @@ define(
            * Timeline zoom out
            */
           $scope.timelineZoomOut = function () {
-            $scope.self.timeline.zoom(-$rootScope.config.timeline.config.zoom, Date.now());
+            $scope.self.timeline.zoom(-$rootScope.StandBy.config.timeline.config.zoom, Date.now());
           };
 
 

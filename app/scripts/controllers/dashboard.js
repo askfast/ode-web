@@ -39,7 +39,7 @@ define(['controllers/controllers'], function (controllers) {
     _.each(groups, function (group) {
       if (!selection[group.uuid]) {
         selection[group.uuid] = {
-          divisions: ($rootScope.config.timeline.config.divisions.length > 0),
+          divisions: ($rootScope.StandBy.config.timeline.config.divisions.length > 0),
           status: false
         };
       }
@@ -118,12 +118,12 @@ define(['controllers/controllers'], function (controllers) {
 
                 pie.weeks.current.state.start = (pie.weeks.current.state.start !== undefined) ?
                   new Date(pie.weeks.current.state.start * 1000)
-                    .toString($rootScope.config.formats.datetime) :
+                    .toString($rootScope.StandBy.config.formats.datetime) :
                   $rootScope.ui.dashboard.possiblyAvailable;
 
                 pie.weeks.current.state.end = (pie.weeks.current.state.end !== undefined) ?
                   new Date(pie.weeks.current.state.end * 1000)
-                    .toString($rootScope.config.formats.datetime) :
+                    .toString($rootScope.StandBy.config.formats.datetime) :
                   $rootScope.ui.dashboard.possiblyAvailable;
 
                 pie.shortages = {
@@ -200,7 +200,7 @@ define(['controllers/controllers'], function (controllers) {
                 console.warn(' Raphael error ->', e);
               }
 
-            }, $rootScope.config.timers.TICKER);
+            }, $rootScope.StandBy.config.timers.TICKER);
           }
         });
       } else {
@@ -329,7 +329,7 @@ define(['controllers/controllers'], function (controllers) {
       });
     }
 
-    if ($rootScope.config.profile.smartAlarm) {
+    if ($rootScope.StandBy.config.profile.smartAlarm) {
       if (angular.fromJson(Storage.get('guard')).selection) {
         $scope.loading.smartAlarm = false;
 
@@ -573,7 +573,7 @@ define(['controllers/controllers'], function (controllers) {
               {
                 $scope.getP2000();
 
-                if ($rootScope.config.profile.smartAlarm) {
+                if ($rootScope.StandBy.config.profile.smartAlarm) {
                   if (angular.fromJson(Storage.get('guard').selection)) {
                     prepareSaMembers(angular.fromJson(Storage.get('guard')));
                   }
@@ -586,7 +586,7 @@ define(['controllers/controllers'], function (controllers) {
                 }
               }
             }
-          }, $rootScope.config.timers.ALARM_SYNC);
+          }, $rootScope.StandBy.config.timers.ALARM_SYNC);
       },
       clear: function () {
         $window.clearInterval($window.alarmSync)
@@ -615,12 +615,12 @@ define(['controllers/controllers'], function (controllers) {
           left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
             + 'px'
         });
-      }, $rootScope.config.timers.TICKER);
+      }, $rootScope.StandBy.config.timers.TICKER);
     };
 
-    if ($rootScope.config.profile.smartAlarm) {
+    if ($rootScope.StandBy.config.profile.smartAlarm) {
       $.ajax({
-        url: $rootScope.config.profile.p2000.url,
+        url: $rootScope.StandBy.config.profile.p2000.url,
         dataType: 'json',
         success: function (results) {
           $rootScope.statusBar.off();
@@ -659,7 +659,7 @@ define(['controllers/controllers'], function (controllers) {
         $scope.capcodes = _capcodes.substring(0, _capcodes.length - 2);
 
         $.ajax({
-          url: $rootScope.config.profile.p2000.url + '?code=' + capcodes,
+          url: $rootScope.StandBy.config.profile.p2000.url + '?code=' + capcodes,
           dataType: 'jsonp',
           success: function (results) {
             $rootScope.statusBar.off();

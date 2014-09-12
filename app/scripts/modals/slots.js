@@ -96,8 +96,8 @@ define(['services/services', 'config'], function (services, config) {
       var deferred = $q.defer(),
         calls = [];
 
-      if ($rootScope.config.timeline.config.divisions.length > 0) {
-        _.each($rootScope.config.timeline.config.divisions, function (division) {
+      if ($rootScope.StandBy.config.timeline.config.divisions.length > 0) {
+        _.each($rootScope.StandBy.config.timeline.config.divisions, function (division) {
           if (division.id !== 'all') {
             var params = {
               id: options.id,
@@ -363,7 +363,7 @@ define(['services/services', 'config'], function (services, config) {
         Slots.query(params, function (result) {
           deferred.resolve(
             (result.length > 0) ?
-              $rootScope.config.statesall[result[0]['text']] :
+              $rootScope.StandBy.config.statesall[result[0]['text']] :
             {
               color: 'gray',
               label: 'Mogelijk inzetbaar'

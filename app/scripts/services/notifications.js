@@ -82,7 +82,7 @@ define(['services/services'], function (services) {
           setTimeout(
             function () {
               $rootScope.notification.status = false;
-            }, $rootScope.config.timers.NOTIFICATION_DELAY);
+            }, $rootScope.StandBy.config.timers.NOTIFICATION_DELAY);
         }
       };
 

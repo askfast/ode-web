@@ -75,14 +75,14 @@ define(['controllers/controllers'], function (controllers) {
         month: false
       },
       config: {
-        bar: $rootScope.config.timeline.config.bar,
-        layouts: $rootScope.config.timeline.config.layouts,
-        wishes: $rootScope.config.timeline.config.wishes,
+        bar: $rootScope.StandBy.config.timeline.config.bar,
+        layouts: $rootScope.StandBy.config.timeline.config.layouts,
+        wishes: $rootScope.StandBy.config.timeline.config.wishes,
         legenda: {},
-        legendarer: $rootScope.config.timeline.config.legendarer,
-        states: $rootScope.config.timeline.config.states,
-        divisions: $rootScope.config.timeline.config.divisions,
-        densities: $rootScope.config.timeline.config.densities
+        legendarer: $rootScope.StandBy.config.timeline.config.legendarer,
+        states: $rootScope.StandBy.config.timeline.config.states,
+        divisions: $rootScope.StandBy.config.timeline.config.divisions,
+        densities: $rootScope.StandBy.config.timeline.config.densities
       }
     };
 
@@ -95,7 +95,7 @@ define(['controllers/controllers'], function (controllers) {
       };
     }
 
-    _.each($rootScope.config.timeline.config.states, function (state, index) {
+    _.each($rootScope.StandBy.config.timeline.config.states, function (state, index) {
       $scope.timeline.config.legenda[index] = true
     });
 

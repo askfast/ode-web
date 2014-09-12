@@ -304,13 +304,13 @@ define(['controllers/controllers'], function (controllers) {
 
           $scope.slot = {
             start: {
-              date: new Date().toString($rootScope.config.formats.date),
-              time: new Date().toString($rootScope.config.formats.time),
+              date: new Date().toString($rootScope.StandBy.config.formats.date),
+              time: new Date().toString($rootScope.StandBy.config.formats.time),
               datetime: new Date().toISOString()
             },
             end: {
-              date: new Date().toString($rootScope.config.formats.date),
-              time: new Date().addHours(1).toString($rootScope.config.formats.time),
+              date: new Date().toString($rootScope.StandBy.config.formats.date),
+              time: new Date().addHours(1).toString($rootScope.StandBy.config.formats.time),
               datetime: new Date().toISOString()
             },
             state: '',
@@ -654,7 +654,7 @@ define(['controllers/controllers'], function (controllers) {
         if ($scope.self.timeline) {
           $scope.self.timeline.redraw();
         }
-      }, $rootScope.config.timers.TICKER);
+      }, $rootScope.StandBy.config.timers.TICKER);
     };
 
     function timelinebooter() {
@@ -677,8 +677,8 @@ define(['controllers/controllers'], function (controllers) {
         },
         config: {
           legenda: {},
-          legendarer: $rootScope.config.timeline.config.legendarer,
-          states: $rootScope.config.timeline.config.states
+          legendarer: $rootScope.StandBy.config.timeline.config.legendarer,
+          states: $rootScope.StandBy.config.timeline.config.states
         }
       };
 
@@ -690,7 +690,7 @@ define(['controllers/controllers'], function (controllers) {
 
       $scope.states = states;
 
-      _.each($rootScope.config.timeline.config.states, function (state, index) {
+      _.each($rootScope.StandBy.config.timeline.config.states, function (state, index) {
         $scope.timeline.config.legenda[index] = true;
       });
 

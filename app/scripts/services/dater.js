@@ -45,7 +45,7 @@ define(['services/services'], function (services) {
 
       readable: {
         date: function (date) {
-          return  new Date(date).toString($rootScope.config.formats.date);
+          return  new Date(date).toString($rootScope.StandBy.config.formats.date);
         }
       },
 

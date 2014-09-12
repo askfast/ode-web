@@ -244,7 +244,7 @@ define(['services/services', 'config'], function (services, config) {
       var settings = angular.fromJson(getFromLocalStorage('resources'));
 
       return (!settings.settingsWebPaige) ?
-        $rootScope.config.defaults.settingsWebPaige :
+        $rootScope.StandBy.config.defaults.settingsWebPaige :
         angular.fromJson(settings.settingsWebPaige);
     };
 

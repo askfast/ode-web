@@ -71,7 +71,7 @@ define(['services/services'], function (services) {
       }
 
       if ($.browser.msie && $.browser.version == '8.0') {
-        document.title = $rootScope.config.profile.title;
+        document.title = $rootScope.StandBy.config.profile.title;
       }
     }
   ]);

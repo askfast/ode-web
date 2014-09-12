@@ -79,9 +79,9 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 
     // ----------------------------------------------------------
 
-    $rootScope.config = config;
-    $rootScope.config.init();
-    // $rootScope.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
+    $rootScope.StandBy.config = config;
+    $rootScope.StandBy.config.init();
+    // $rootScope.StandBy.config.timeline.config.divisions = angular.fromJson(Storage.get('divisions'));
 
 //    _.each(angular.fromJson(Storage.get('states')), function (state) {
 //      $rootScope.StandBy.config.timeline.config.states[state] = $rootScope.StandBy.config.statesall[state]
@@ -95,7 +95,7 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
       $rootScope.app.settings.language = lang;
     };
 
-    $rootScope.ui = locals.ui[$rootScope.config.lang];
+    $rootScope.ui = locals.ui[$rootScope.StandBy.config.lang];
 
     // ----------------------------------------------------------
 

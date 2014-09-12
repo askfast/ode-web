@@ -242,7 +242,7 @@ define(
                     prepareSaMembers(setup);
                   });
               }
-            }, $rootScope.config.timers.TV_SYNC);
+            }, $rootScope.StandBy.config.timers.TV_SYNC);
 
 
           /**
@@ -250,7 +250,7 @@ define(
            */
           $.ajax(
             {
-              url: $rootScope.config.profile.p2000.url,
+              url: $rootScope.StandBy.config.profile.p2000.url,
               dataType: 'json',
               success: function (results) {
                 $rootScope.statusBar.off();
