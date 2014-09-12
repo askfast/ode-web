@@ -443,9 +443,9 @@ define(
       .filter(
       'convertUserIdToName',
       [
-        'Storage',
-        function (Storage) {
-          var members = angular.fromJson(Storage.get('members'));
+        'Store',
+        function (Store) {
+          var members = Store('network').get('unique');
 
           return function (id) {
             if (members == null || typeof members[id] == "undefined") {

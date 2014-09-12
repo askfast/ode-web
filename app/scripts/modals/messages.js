@@ -6,8 +6,8 @@ define(
     services.factory(
       'Messages',
       [
-        '$rootScope', '$resource', '$q', 'Storage', '$http',
-        function ($rootScope, $resource, $q, Storage, $http) {
+        '$rootScope', '$resource', '$q', 'Store', '$http',
+        function ($rootScope, $resource, $q, Store, $http) {
           var Messages = $resource(
               config.host + '/question/:action',
             {
@@ -106,7 +106,7 @@ define(
                   }
                 );
 
-                Storage.add('messages', angular.toJson(messages));
+                Store('messages').save('all', messages);
 
                 Messages.prototype.unreadCount();
 
@@ -155,7 +155,8 @@ define(
 
               Notifications.query(
                 function (result) {
-                  Storage.add('notifications', angular.toJson(result));
+                  Store('notifications').save('all', result);
+                  //Storage.add('notifications', angular.toJson(result));
 
                   angular.forEach(
                     result,
@@ -269,7 +270,7 @@ define(
              * Get local cache of notifications
              */
             local: function () {
-              return angular.fromJson(Storage.get('notifications'));
+              return Store('notifications').get('all');
             },
 
             /**
@@ -349,7 +350,7 @@ define(
            * Serve messages from localStorage
            */
           Messages.prototype.local = function () {
-            return angular.fromJson(Storage.get('messages'))
+            return Store('messages').get('all');
           };
 
 
@@ -378,21 +379,23 @@ define(
            * Serve receivers list
            */
           Messages.prototype.receviers = function () {
-            var members = angular.fromJson(Storage.get('members')),
-              groups = angular.fromJson(Storage.get('groups')),
+            var members = Store('network').get('unique'),
+              groups = Store('network').get('groups'),
               receivers = [];
 
             angular.forEach(
               members, function (member) {
-                receivers.push(
-                  {
-                    id: member.uuid,
-                    // name: member.name,
-                    name: member.resources.firstName + ' ' + member.resources.lastName,
-                    lastName: member.resources.lastName,
-                    firstName: member.resources.firstName,
-                    group: $rootScope.ui.message.receiversUsers
-                  });
+                if(member.id!=null) {
+                  receivers.push(
+                    {
+                      id: member.uuid,
+                      // name: member.name,
+                      name: member.resources.firstName + ' ' + member.resources.lastName,
+                      lastName: member.resources.lastName,
+                      firstName: member.resources.firstName,
+                      group: $rootScope.ui.message.receiversUsers
+                    });
+                }
               });
 
             //      console.log('groups ->')
@@ -620,7 +623,7 @@ define(
              * Change message state locally as well if it is READ
              */
             if (state == 'READ') {
-              var messages = angular.fromJson(Storage.get('messages')),
+              var messages = Store('message').get('all'),
                 converted = [];
 
               angular.forEach(
@@ -633,9 +636,9 @@ define(
                   converted.push(message);
                 });
 
-              Storage.remove('messages');
+              Store('messages').remove('all');
 
-              Storage.add(angular.toJson('messages', converted));
+              Store('messages').save('all', converted);
 
               Messages.prototype.unreadCount();
             }
