@@ -165,19 +165,19 @@ section#planboard(ng-controller='timeline')
         input.input-mini(name='wish-count',
         type='text',
         ng-model='slot.wish',
-        ng-hide='app.resources.role > 1')
+        ng-hide='StandBy.resources.role > 1')
         input.input-mini(name='wish-count',
         type='text',
         ng-model='slot.wish',
         disabled='disabled',
-        ng-show='app.resources.role > 1')
+        ng-show='StandBy.resources.role > 1')
       .form-elements-group(ng-show='views.member')
         small: i {{ui.planboard.combine_reoccuring}}
       .form-elements-actions.pull-right
         div(ng-show='(slot.diff < 0)')
           button.btn.btn-success(type='button',
           ng-click='sendShortageMessage(slot)',
-          ng-hide='app.resources.role > 1') {{ui.planboard.sendMsgToMember}}
+          ng-hide='StandBy.resources.role > 1') {{ui.planboard.sendMsgToMember}}
         div(ng-show='views.slot.add')
           button.btn.btn-success(type='button',
           ng-click='timelineOnAdd("true", slot)') {{ui.planboard.add}}
@@ -190,7 +190,7 @@ section#planboard(ng-controller='timeline')
         div(ng-show='views.wish')
           button.btn.btn-success(type='button',
           ng-click='wisher(slot)',
-          ng-hide='app.resources.role > 1')
+          ng-hide='StandBy.resources.role > 1')
             | {{ui.planboard.setWish}}
 
   .row-fluid
@@ -248,7 +248,7 @@ section#planboard(ng-controller='timeline')
                   class="{{(timeline.current.layouts.members==true) && 'active'}}",
                   ng-model='timeline.current.layouts.members',
                   ng-click='requestTimeline("members")',
-                  ng-show='(app.resources.role < 3) || timeline.config.layouts.members') {{ui.planboard.members}}
+                  ng-show='(StandBy.resources.role < 3) || timeline.config.layouts.members') {{ui.planboard.members}}
             hr
             .alert.alert-warning(ng-show='registeredNotifications.timeLineDragging')
               button.close(type='button',
@@ -340,7 +340,7 @@ section#planboard(ng-controller='timeline')
                 class="{{(timeline.current.layouts.members==true) && 'active'}}",
                 ng-model='timeline.current.layouts.members',
                 ng-click='requestTimeline("members")',
-                ng-show='(app.resources.role < 3) || timeline.config.layouts.members') {{ui.planboard.members}}
+                ng-show='(StandBy.resources.role < 3) || timeline.config.layouts.members') {{ui.planboard.members}}
           hr
           .legenda
             .legenda-row

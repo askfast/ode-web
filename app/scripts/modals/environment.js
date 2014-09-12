@@ -5,6 +5,18 @@ define(['services/services'], function (services) {
     var Environment = $resource();
 
     Environment.prototype.domain = function () {
+      return StandBy._('domain').then(function (result) {
+        var domain = $rootScope.unite(result[0]);
+
+        Store('environment').save('domain', domain);
+
+        $rootScope.StandBy.environment.domain = domain;
+
+        return domain;
+      });
+    };
+
+    Environment.prototype.domain_ = function () {
       var deferred = $q.defer();
 
       try {

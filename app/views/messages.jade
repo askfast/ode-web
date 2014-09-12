@@ -27,7 +27,7 @@
           span.entypo &#128228;
           | {{ui.message.outbox}}
       li(class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}",
-      ng-hide='app.resources.role > 1')
+      ng-hide='StandBy.resources.role > 1')
         a(href='messages#notificationsTab', data-toggle='tab', ng-click='resetViews(); setViewTo("notifications")')
           span.entypo &#128276;
           | {{ui.message.notifications}}
@@ -53,11 +53,11 @@
               label.control-label {{ui.message.broadcast}}
               input(type='checkbox',
               ng-model='broadcast.sms',
-              ng-hide='app.resources.role > 2',
+              ng-hide='StandBy.resources.role > 2',
               style="margin:-3px 5px 0 0",
               id="broadcastSmsCheckBox")
               label(for='broadcastSmsCheckBox', style='display: inline;')
-                span(ng-hide='app.resources.role > 2') {{ui.message.sms}}
+                span(ng-hide='StandBy.resources.role > 2') {{ui.message.sms}}
               input#broadcastEmailCheckBox(type='checkbox', ng-model='broadcast.email', style='margin: -3px 5px 0 15px;')
               label(for='broadcastEmailCheckBox', style='display: inline;') {{ui.message.email}}
 
@@ -78,7 +78,7 @@
               label.control-label {{ui.message.message}}
               textarea.span7(rows='7', ng-model='message.body')
 
-            .control-group(ng-hide='app.resources.role > 1')
+            .control-group(ng-hide='StandBy.resources.role > 1')
               label.control-label {{ui.message.repeat}}
               .btn-group(data-toggle='buttons-radio')
                 button.btn.btn-small(type='button',

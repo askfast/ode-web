@@ -51,7 +51,8 @@
 
   .tab-content
 
-    #addGroupTab.tab-pane(ng-show='views.add', class="{{(views.add==true) && 'active'}}")
+    // add group
+    div#addGroupTab.tab-pane(ng-show='views.add', class="{{(views.add==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.addNewGroup}}
         button.btn.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
@@ -66,7 +67,8 @@
             button.btn.btn-success(type='submit',
             ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
 
-    #editGroupTab.tab-pane(ng-show='views.edit', class="{{(views.edit==true) && 'active'}}")
+    // edit group
+    div#editGroupTab.tab-pane(ng-show='views.edit', class="{{(views.edit==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.editGroup}}
         button.btn.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
@@ -81,7 +83,8 @@
             button.btn.btn-success(type='submit',
             ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
 
-    #newMemberTab.tab-pane(ng-show='views.member', class="{{(views.member==true) && 'active'}}")
+    // register member
+    div#newMemberTab.tab-pane(ng-show='views.member', class="{{(views.member==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.registerMember}}
         button.btn.pull-right(type='button',
@@ -183,7 +186,8 @@
             button.btn.btn-success(type='submit',
             ng-click='memberSubmit(memberForm)') {{ui.groups.saveMember}}
 
-    #searchTab.tab-pane(ng-show='views.search', class="{{(views.search==true) && 'active'}}")
+    // search member
+    div#searchTab.tab-pane(ng-show='views.search', class="{{(views.search==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.searchedFor}} '{{search.queried}}'
         button.btn.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
@@ -220,7 +224,8 @@
           small
             i {{candidates.length | i18n_spec:'groups.resultCount'}}
 
-    #groupTab.tab-pane(class="{{(views.view==true) && 'active'}}")
+    // group listing
+    div#groupTab.tab-pane(class="{{(views.view==true) && 'active'}}")
       .tab-header
         .pull-left
           select(ng-model='current',
@@ -303,6 +308,7 @@
                 .pull-right
                   a.btn.btn-mini(href='#/profile/{{member.uuid}}#profile')
                     i.icon-user
+                  | &nbsp;
                   span(ng-hide='member.resources.role == 0')
                     a.btn.btn-mini(href='#/profile/{{member.uuid}}#edit')
                       i.icon-edit
