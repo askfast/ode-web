@@ -124,6 +124,30 @@ module.exports = function (grunt)
       }
     },
 
+    /**
+     * Compass
+     */
+    compass: {
+      options: {
+        sassDir: 'sass',
+        relativeAssets: false,
+        noLineComments: true
+      },
+      dist: {
+        options: {
+          cssDir: 'war/dist',
+          outputStyle: 'compressed'
+        }
+      },
+      dev: {
+        options: {
+          cssDir: 'war/css',
+          debugInfo: false,
+          outputStyle: 'expanded'
+        }
+      }
+    },
+
     htmlmin: {
       dist: {
         options: {
@@ -172,7 +196,7 @@ module.exports = function (grunt)
         files: [
           'sass/**/*.scss'
         ],
-        tasks: ['sass']
+        tasks: ['compass:dev']
       },
       html: {
         files: [
@@ -189,12 +213,13 @@ module.exports = function (grunt)
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-contrib-compass');
 
   grunt.registerTask('watchjs',   ['watch:js']);
   grunt.registerTask('watchcss',  ['watch:css']);
   grunt.registerTask('watchhtml', ['watch:html']);
   grunt.registerTask('html',      ['htmlmin']);
-  grunt.registerTask('sasser',    ['sass']);
+  grunt.registerTask('sasser',    ['compass:dist']);
   grunt.registerTask('webpaige',  ['concat', 'uglify', 'sasser', 'htmlmin']);
 
 };
