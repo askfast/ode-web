@@ -95,36 +95,6 @@ module.exports = function (grunt)
     },
 
     /**
-     * sass compiler
-     */
-    sass: {
-      options: {
-        trace: true,
-        cacheLocation:  'sass/.sass-cache'
-      },
-      dist: {
-        options: {
-          style: 'compressed'
-        },
-        files: {
-          'war/dist/bootstrap.css':   'sass/bootstrap.scss',
-          'war/dist/responsive.css':  'sass/responsive.scss',
-          'war/dist/app.css':         'sass/app.scss'
-        }
-      },
-      dev: {
-        options: {
-          style: 'expanded' // nested (default), compact, compressed, or expanded
-        },
-        files: {
-          'war/css/bootstrap.css':   'sass/bootstrap.scss',
-          'war/css/responsive.css':  'sass/responsive.scss',
-          'war/css/app.css':         'sass/app.scss'
-        }
-      }
-    },
-
-    /**
      * Compass
      */
     compass: {
