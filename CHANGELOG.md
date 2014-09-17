@@ -1,6 +1,22 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.6.0
+- fix: message when adding slots in past
+  [link] (https://trello.com/c/3md2w0ki)
+- fix: show message when creating timeslot in other ones timeline
+- fix: selecting a period broke the timeline
+  [link] (https://trello.com/c/2kRDKKEq)
+- fix: bulk selection in message center
+  [link] (https://trello.com/c/sx1AJaWC)
+- fix: color pallet for slim alarmeren
+  [link] (https://trello.com/c/4BilU7a4)
+- fix: replying to some users didn't work
+  [link] (https://trello.com/c/MBssr0yX)
+- feature: show download buttons before login
+  [link] (https://trello.com/c/H5HpT5bY)
+
+
 2.5.2
 - hot fix: Fixed issue with overwriting current groups during editing them in profile edit.
 
