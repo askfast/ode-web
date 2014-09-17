@@ -626,9 +626,14 @@ angular.module('WebPaige.Controllers.Dashboard', [])
                          slots[0].end * 1000 :
                          $rootScope.ui.dashboard.possiblyAvailable,
                     name: (members && members[id]) ?
-                          members[id].resources.firstName + ' ' + members[id].resources.lastName :
-                          id
+                          members[id].resources.firstName + ' ' + members[id].resources.lastName : id,
+                    currentPresence: (members[id].resources.currentPresence==null ? false : members[id].resources.currentPresence),
+                    borderStyle: ''
                   };
+
+                  if(_member.currentPresence === true) {
+                    _member.borderStyle = 'sa-icon-active';
+                  }
 
                   if (slots.length > 0)
                   {

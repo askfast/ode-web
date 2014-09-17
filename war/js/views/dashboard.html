@@ -279,8 +279,7 @@
 
             <div class="sa-member"
                  ng-repeat="member in availability.members.available">
-
-                <span class="sa-member-icon {{member.style}}">
+                <span class="sa-member-icon {{member.style}} {{member.borderStyle}}">
                   <strong>{{member.label}}{{$index+1}}</strong>
                 </span>
 
@@ -321,7 +320,7 @@
                  ng-repeat="member in availability.members.unavailable"
                  ng-show="(member.state != 'no-state')">
 
-                <span class="sa-member-icon sa-icon-reserve-unavailable">
+                <span class="sa-member-icon sa-icon-reserve-unavailable {{member.borderStyle}}">
                   <strong>{{member.label}}{{$index+1}}</strong>
                 </span>
 
@@ -361,7 +360,7 @@
             <div class="sa-member"
                  ng-repeat="member in availability.members.possible">
 
-            <span class="sa-member-icon sa-icon-reserve-noplanning">
+            <span class="sa-member-icon sa-icon-reserve-noplanning {{member.borderStyle}}">
               <strong>{{member.label}}{{$index+1}}</strong>
             </span>
 

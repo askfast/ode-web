@@ -447,8 +447,8 @@
           margin-right: 15px;
           float: left;
           display: block;
-          min-width: 54px;
-          height: 36px;
+          min-width: 52px;
+          height: 34px;
           text-align: center;
           -webkit-border-radius: 5px;
           -moz-border-radius: 5px;
@@ -458,46 +458,54 @@
           padding-top: 18px;
           // background-color: #415e6b;
           background-color: #6cad6c;
+          border: 2px solid #6cad6c;
 
           strong {
             font-size: 24px;
           }
         }
 
-
         .sa-icon-not-assigned {
           // background-color: #253943;
           background-color: #d34545;
+          border-color: #d34545;
         }
 
         .sa-icon-driver {
           // background-color: #253943;
           background-color: #f6e500;
+          border-color: #f6e500;
         }
 
         .sa-icon-commander {
           // background-color: #ba6a24;
           background-color: #648ea0;
+          border-color: #648ea0;
         }
 
         .sa-icon-reserve-available {
           background-color: #6cad6c;
+          border-color: #6cad6c;
         }
 
         .sa-icon-reserve-available-north {
           background-color: #242424;
+          border-color: #242424;
         }
 
         .sa-icon-reserve-available-south {
           background-color: #8a85c7;
+          border-color: #8a85c7;
         }
 
         .sa-icon-reserve-available-schipper {
           background-color: #f6e500;
+          border-color: #f6e500;
         }
 
         .sa-icon-reserve-unavailable {
           background-color: #d34545;
+          border-color: #d34545;
         }
 
         // TODO: Depreciated!
@@ -507,7 +515,12 @@
 
         .sa-icon-reserve-noplanning {
           background-color: #a0a0a0;
+          border-color: #a0a0a0;
           // background-color: #ececec;
+        }
+
+        .sa-icon-active {
+          border-color: green;
         }
 
         .sa-member-card {
