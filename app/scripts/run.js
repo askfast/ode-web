@@ -1,14 +1,14 @@
 define(['app', 'config', 'locals'], function (app, config, locals) {
   'use strict';
 
-  app.run(function ($rootScope, $location, $timeout, Session, Dater, Storage, Messages, $window, States, Browsers, Notifications, Store) {
+  app.run(function ($rootScope, $location, $timeout, Session, Dater, Messages, $window, States, Browsers, Notifications, Store) {
 //    if (Session.check())
 //      $location.path('/dashboard');
 
     // ----------------------------------------------------------
 
     // TODO: Lose this later onw with VisJS/MomentJS navigation
-    if (!Storage.get('periods'))
+    if (Store('app').get('periods')==null || Store('app').get('periods').value==null)
       Dater.registerPeriods();
 
     // ----------------------------------------------------------
@@ -53,8 +53,8 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
       $rootScope.StandBy.environment.divisions = Store('environment').get('divisions');
     }
 
-    if (angular.fromJson(Storage.get('guard'))) {
-      $rootScope.StandBy.guard = angular.fromJson(Storage.get('guard'));
+    if (Store('smartAlarm').get('guard')) {
+      $rootScope.StandBy.guard = Store('smartAlarm').get('guard');
     } else {
       $rootScope.StandBy.guard = {
         monitor: '',
@@ -66,7 +66,7 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 
     console.log('StandBy ->', $rootScope.StandBy);
 
-    var settings = angular.fromJson(Storage.get('settings'));
+    var settings = Store('settings').get('mine');
     if (settings) {
       $rootScope.app.settings = settings;
     } else {
@@ -74,7 +74,8 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
         language: config.lang
       };
 
-      Storage.add('settings', angular.toJson($rootScope.app.settings));
+      Store('settings').save('mine', $rootScope.app.settings);
+      //Storage.add('settings', angular.toJson($rootScope.app.settings));
     }
 
     // ----------------------------------------------------------
@@ -101,18 +102,18 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 
     // TODO: Make a general service called reminders for these kind of messages
 
-    var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+    var registeredNotifications = Store('notifications').get('registeredNotifications');
 
     if (registeredNotifications) {
       $rootScope.registeredNotifications = registeredNotifications;
     } else {
-      Storage.add('registeredNotifications', angular.toJson({ timeLineDragging: true }));
+      Store('notifications').save('registeredNotifications', { timeLineDragging: true });
     }
 
     $rootScope.registerNotification = function (setting, value) {
       $rootScope.registeredNotifications[setting] = value;
 
-      Storage.add('registeredNotifications', angular.toJson($rootScope.registeredNotifications));
+      Store('notifications').save('registeredNotifications', $rootScope.registeredNotifications);
     };
 
     // ----------------------------------------------------------

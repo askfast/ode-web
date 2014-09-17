@@ -238,6 +238,14 @@ define(['services/services'], function (services) {
           return target;
         },
 
+        has: function(key, callback) {
+          LawnChair(function () {
+            this.exists(key, function (result) {
+                callback(result);
+            });
+          });
+        },
+
         get: function (key, callback) {
           var value;
 
@@ -265,15 +273,15 @@ define(['services/services'], function (services) {
           return value;
         },
 
-        all: (isArray ? allAsArray : allAsCollection),
-
-        remove: removeEntry,
-
         nuke: function () {
           LawnChair(function () {
             this.nuke();
           });
         },
+
+        all: (isArray ? allAsArray : allAsCollection),
+
+        remove: removeEntry,
 
         destroy: function () {
           var key;

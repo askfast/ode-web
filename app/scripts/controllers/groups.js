@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('groups', function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Storage, Slots, $timeout, Settings, Store) {
+  controllers.controller('groups', function ($rootScope, $scope, $location, data, Groups, Profile, $route, $routeParams, Slots, $timeout, Settings, Store) {
     /**
      * Fix styles
      */
@@ -623,7 +623,7 @@ define(['controllers/controllers'], function (controllers) {
 
     $scope.toggleSelection = function (group, master) {
       var flag = (master) ? false : true,
-        members = angular.fromJson(Storage.get(group.uuid));
+        members = Store('network').get(group.uuid);
 
       _.each(members, function (member) {
         $scope.selection[member.uuid] = flag

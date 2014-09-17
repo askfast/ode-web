@@ -1,7 +1,7 @@
 define(['services/services'], function (services) {
   'use strict';
 
-  services.factory('Settings', function ($rootScope, $resource, $q, Storage, Profile, Store) {
+  services.factory('Settings', function ($rootScope, $resource, $q, Profile, Store) {
     var Settings = $resource();
 
     Settings.prototype.get = function () {

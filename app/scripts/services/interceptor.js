@@ -24,7 +24,7 @@ define(
               // console.warn('response error ->', rejection);
 
               if (rejection.status == 403) {
-                localStorage.setItem('sessionTimeout', '');
+                Store('environment').remove('sessionTimeout');
 
                 $window.location.href = 'logout.html';
               }

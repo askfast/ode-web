@@ -213,7 +213,7 @@ define(['controllers/controllers'], function (controllers) {
     }, 25);
 
     function prepareSaMembers(setup) {
-      var cached = angular.fromJson(Storage.get('guard'));
+      var cached = Store('smartAlarm').get('guard');
 
       $scope.saMembers = {
         truck: [],
@@ -330,10 +330,10 @@ define(['controllers/controllers'], function (controllers) {
     }
 
     if ($rootScope.StandBy.config.profile.smartAlarm) {
-      if (angular.fromJson(Storage.get('guard')).selection) {
+      if (Store('smartAlarm').get('guard').selection) {
         $scope.loading.smartAlarm = false;
 
-        prepareSaMembers(angular.fromJson(Storage.get('guard')));
+        prepareSaMembers(Store('smartAlarm').get('guard'));
       }
 
       Groups.guardMonitor().then(function () {
@@ -574,8 +574,9 @@ define(['controllers/controllers'], function (controllers) {
                 $scope.getP2000();
 
                 if ($rootScope.StandBy.config.profile.smartAlarm) {
-                  if (angular.fromJson(Storage.get('guard').selection)) {
-                    prepareSaMembers(angular.fromJson(Storage.get('guard')));
+                  if (Store('smartAlarm').get('guard').selection) {
+                    console.log('Guard', Store('smartAlarm').get('guard').selection);
+                    prepareSaMembers(Store('smartAlarm').get('guard'));
                   }
 
                   Groups.guardRole().then(function (setup) {

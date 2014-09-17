@@ -36,7 +36,7 @@ define(['app'], function (app) {
         controller: 'planboard',
         resolve: {
           data: function ($route, Slots, Storage, Dater, Store) {
-            var periods = Storage.local.periods(),
+            var periods = Store('app').get('periods'),
               settings = angular.fromJson(Store('user').get('resources').settingsWebPaige),
               groups = Store('network').get('groups'),
               groupId,
@@ -98,7 +98,8 @@ define(['app'], function (app) {
         resolve: {
           data: function ($rootScope, Profile, $route, Dater) {
             if ($route.current.params.userId.toLowerCase() != $rootScope.StandBy.resources.uuid) {
-              var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
+              var periods = Store('app').get('periods');
+              //var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));
 
               return Profile.getWithSlots($route.current.params.userId.toLowerCase(), false, {
                 start: periods.weeks[Dater.current.week()].first.timeStamp / 1000,
@@ -146,7 +147,7 @@ define(['app'], function (app) {
       .otherwise({ redirectTo: '/login' });
 
 
-    $httpProvider.interceptors.push(function ($q, Log, $location) {
+    $httpProvider.interceptors.push(function ($q, Log, $location, Store) {
       return {
         request: function (config) {
           return config || $q.when(config);
@@ -158,11 +159,12 @@ define(['app'], function (app) {
           return response || $q.when(response);
         },
         responseError: function (rejection) {
-//              if (rejection.status == 403) {
-//                localStorage.setItem('sessionTimeout', '');
-//                $location.path('/logout');
-//                window.location.href = 'logout.html';
-//              }
+              if (rejection.status == 403) {
+                Store('environment').remove('sessionTimeout');
+                //localStorage.setItem('sessionTimeout', '');
+                $location.path('/logout');
+                window.location.href = 'logout.html';
+              }
           return $q.reject(rejection);
         }
       };

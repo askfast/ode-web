@@ -6,14 +6,14 @@ define(
     controllers.controller(
       'logout',
       [
-        '$rootScope', '$scope', '$window', 'Session', 'User', 'Storage',
-        function ($rootScope, $scope, $window, Session, User, Storage) {
+        '$rootScope', '$scope', '$window', 'Session', 'User', 'Store',
+        function ($rootScope, $scope, $window, Session, User, Store) {
           $('.navbar').hide();
           $('#footer').hide();
           // $('#notification').hide();
 
-          var logindata = angular.fromJson(Storage.get('logindata'));
-          var registeredNotifications = angular.fromJson(Storage.get('registeredNotifications'));
+          var logindata = Store('environment').get('logindata');
+          var registeredNotifications = Store('environment').get('registeredNotifications');
 
           User.logout()
             .then(
@@ -22,12 +22,17 @@ define(
                 console.warn('error ->', result);
               }
               else {
-                Storage.clearAll();
+                Store('network').nuke();
+                Store('environment').nuke();
+                Store('messages').nuke();
+                Store('records').nuke();
+                Store('smartAlarm').nuke();
+                Store('notifications').nuke();
+                Store('user').nuke();
+                Store('app').nuke();
 
-                Storage.session.clearAll();
-
-                Storage.add('logindata', angular.toJson(logindata));
-                Storage.add('registeredNotifications', angular.toJson(registeredNotifications));
+                Store('environment').save('logindata', logindata);
+                Store('environment').save('registeredNotifications', registeredNotifications);
 
                 $window.location.href = 'logout.html';
               }

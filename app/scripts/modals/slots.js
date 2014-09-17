@@ -344,7 +344,8 @@ define(['services/services', 'config'], function (services, config) {
     };
 
     Slots.prototype.currentState = function () {
-      var resources = angular.fromJson(Storage.get('resources'));
+      var deferred = $q.defer(),
+        resources = Store('user').get('resources');
 
       if (resources) {
         // TODO: Use mathematical formula to calculate it
@@ -353,8 +354,7 @@ define(['services/services', 'config'], function (services, config) {
         now = String(Date.now().getTime());
         now = Number(now.substr(0, now.length - 3));
 
-        var deferred = $q.defer(),
-          params = {
+        var params = {
             user: resources.uuid,
             start: now,
             end: now + 1
@@ -370,6 +370,8 @@ define(['services/services', 'config'], function (services, config) {
             }
           );
         });
+      } else {
+        deferred.resolve([]);
       }
 
       return deferred.promise;
@@ -404,7 +406,7 @@ define(['services/services', 'config'], function (services, config) {
 
             Slots.prototype.aggs(groupParams).then(function (aggs) {
               if (options.layouts.members) {
-                var allMembers = angular.fromJson(Storage.get(options.groupId)),
+                var allMembers = Store('network').get('group.'+options.groupId),
                   calls = [];
 
                 MemberSlots.query({
@@ -415,7 +417,7 @@ define(['services/services', 'config'], function (services, config) {
                   },
                   function (members) {
                     var mems = [];
-
+                    console.log('Members -> ',members);
                     _.each(members, function (mdata, index) {
                         _.each(mdata, function (tslot) {
                           tslot.text = tslot.state
@@ -429,13 +431,15 @@ define(['services/services', 'config'], function (services, config) {
                           }
                         });
 
-                        mems.push({
-                          id: index,
-                          lastName: member.resources.lastName,
-                          role: member.resources.role,
-                          data: mdata,
-                          stats: Stats.member(mdata, params.start, params.end)
-                        });
+                        if(member!=null) {
+                          mems.push({
+                            id: index,
+                            lastName: member.resources.lastName,
+                            role: member.resources.role,
+                            data: mdata,
+                            stats: Stats.member(mdata, params.start, params.end)
+                          });
+                        }
                       }
                     );
 
@@ -530,7 +534,7 @@ define(['services/services', 'config'], function (services, config) {
     };
 
     Slots.prototype.local = function () {
-      return angular.fromJson(Storage.get('slots'));
+      return Store('user').get('slots');
     };
 
     Slots.prototype.add = function (slot, user) {
