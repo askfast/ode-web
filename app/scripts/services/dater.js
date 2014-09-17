@@ -1,7 +1,7 @@
 define(['services/services'], function (services) {
   'use strict';
 
-  services.factory('Dater', ['$rootScope', 'Storage', function ($rootScope, Storage) {
+  services.factory('Dater', ['$rootScope', 'Store', function ($rootScope, Store) {
     return {
 
       current: {
@@ -199,30 +199,28 @@ define(['services/services'], function (services) {
       },
 
       registerPeriods: function () {
-        var periods = angular.fromJson(Storage.get('periods') || '{}'),
-          periodsNext = angular.fromJson(Storage.get('periodsNext') || '{}');
+        var periods = Store('app').get('periods'),
+          periodsNext = Store('app').get('periodsNext');
 
         var thisYear = this.getThisYear(),
           nextYear = Number(thisYear) + 1;
 
-        Storage.add('periods', angular.toJson(
-          {
+        Store('app').save('periods', {
             months: this.getMonthTimeStamps(thisYear),
             weeks: this.getWeekTimeStamps(thisYear),
             days: this.getDayTimeStamps(thisYear)
-          }));
+          });
 
-        Storage.add('periodsNext', angular.toJson(
-          {
+        Store('app').save('periodsNext', {
             months: this.getMonthTimeStamps(nextYear),
             weeks: this.getWeekTimeStamps(nextYear),
             days: this.getDayTimeStamps(nextYear)
-          }));
+          });
 
       },
 
       getPeriods: function (next) {
-        return angular.fromJson(Storage.get((!next) ? 'periods' : 'periodsNext'));
+        return Store('app').get((!next) ? 'periods' : 'periodsNext');
       },
 
       translateToDutch: function (date) {

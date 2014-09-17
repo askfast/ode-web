@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('login', function ($rootScope, $location, $q, $scope, Session, UserLegacy, Groups, Messages, Storage, $routeParams, Settings, Profile, MD5, User, Environment, Network) {
+  controllers.controller('login', function ($rootScope, $location, $q, $scope, Session, UserLegacy, Groups, Messages, Storage, Store, $routeParams, Settings, Profile, MD5, User, Environment, Network) {
     if ($routeParams.uuid && $routeParams.key) {
       $scope.views = {
         changePass: true
@@ -47,20 +47,30 @@ define(['controllers/controllers'], function (controllers) {
 
     // -----------------------------------------------------------------------
 
-    var logindata = angular.fromJson(Storage.get('logindata'));
+    var logindata = Store('environment').get('logindata');
     if (logindata && logindata.remember) $scope.logindata = logindata;
 
     // -----------------------------------------------------------------------
 
     $scope.login = function () {
-      var registeredNotifications = Storage.get('registeredNotifications');
-      var periods = Storage.get('periods');
-      var periodsNext = Storage.get('periodsNext');
+      var registeredNotifications = Store('notifications').get('registeredNotifications');
+      var periods = Store('app').get('periods');
+      var periodsNext = Store('app').get('periodsNext');
+
+      Store('network').nuke();
+      Store('environment').nuke();
+      Store('messages').nuke();
+      Store('records').nuke();
+      Store('smartAlarm').nuke();
+      Store('notifications').nuke();
+      Store('user').nuke();
+      Store('app').nuke();
+
       Storage.clearAll();
       Storage.session.clearAll();
-      Storage.add('registeredNotifications', registeredNotifications);
-      Storage.add('periods', periods);
-      Storage.add('periodsNext', periodsNext);
+      Store('notifications').save('registeredNotifications', registeredNotifications);
+      Store('app').save('periods', periods);
+      Store('app').save('periodsNext', periodsNext);
 
       angular.element('#alertDiv').hide();
 
@@ -80,13 +90,13 @@ define(['controllers/controllers'], function (controllers) {
         return false;
       }
 
-      Storage.add('logindata', angular.toJson({
+      Store('environment').save('logindata', {
         username: $scope.logindata.username,
         password: $scope.logindata.password,
         remember: $scope.logindata.remember
-      }));
+      });
 
-      Storage.add('askPass', MD5($scope.logindata.password));
+      Store('environment').save('askPass', MD5($scope.logindata.password));
 
       // Legacy
       // authenticate($scope.logindata.username, MD5($scope.logindata.password));
@@ -101,10 +111,10 @@ define(['controllers/controllers'], function (controllers) {
 
     function authenticate(uuid, pass) {
       if ($rootScope.StandBy.config.smartAlarm) {
-        Storage.add('guard', angular.toJson({
+        Store('smartAlarm').save('guard', {
           monitor: '',
           role: ''
-        }));
+        });
       }
 
       // New code
@@ -394,7 +404,7 @@ define(['controllers/controllers'], function (controllers) {
 
       Messages.query().then(function () {
         $rootScope.StandBy.unreadMessages = Messages.unreadCount();
-        Storage.session.unreadMessages = Messages.unreadCount();
+        //Storage.session.unreadMessages = Messages.unreadCount();
       });
 
       $location.path('/dashboard');
@@ -490,9 +500,21 @@ define(['controllers/controllers'], function (controllers) {
     };
 
     // -----------------------------------------------------------------------
+    Store('environment').has('sessionTimeout', function(res){
+      if(res) {
+        Store('environment').remove('sessionTimeout');
 
-    if (localStorage.hasOwnProperty('sessionTimeout')) {
-      localStorage.removeItem('sessionTimeout');
+        $scope.alert = {
+          login: {
+            display: true,
+            type: 'alert-error',
+            message: $rootScope.ui.login.sessionTimeout
+          }
+        };
+      }
+    });
+    /*if (Store('environment').has('sessionTimeout')) {
+      Store('environment').remove('sessionTimeout');
 
       $scope.alert = {
         login: {
@@ -501,6 +523,6 @@ define(['controllers/controllers'], function (controllers) {
           message: $rootScope.ui.login.sessionTimeout
         }
       };
-    }
+    }*/
   });
 });

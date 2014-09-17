@@ -1,7 +1,7 @@
 define(['services/services'], function (services) {
   'use strict';
 
-  services.factory('Sloter', function ($rootScope, Storage, Store) {
+  services.factory('Sloter', function ($rootScope, Store) {
     return {
       get: {
         groups: function () {
@@ -17,8 +17,10 @@ define(['services/services'], function (services) {
         members: function () {
           var members = {};
 
-          _.each(Storage.local.members(), function (member) {
-            members[member.uuid] = member.resources.firstName + ' ' + member.resources.lastName;
+          _.each(Store('network').get('unique'), function (member) {
+            if(member!=null && member.uuid!=null) {
+              members[member.uuid] = member.resources.firstName + ' ' + member.resources.lastName;
+            }
           });
 
           return members;
