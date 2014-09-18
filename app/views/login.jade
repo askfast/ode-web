@@ -1,10 +1,9 @@
 #welcome
-  download-mobile-app(ng-show='browser.mobile && browser.screen.width < 768')
-  preloaded
-  login-form
-  login-help
-  forgot-password
-  change-password
-  download-mobile-app(ng-hide='browser.mobile && browser.screen.width < 768')
-  img(src='images/standby_logo_small.png', alt='StandBy Logo', ng-hide='StandBy.config.profile.own')
-  span.version: a(href='version.html', target='_blank') StandBy v{{StandBy.config.version}}
+	download-mobile-app(ng-show='browser.mobile && browser.screen.width < 768')
+	preloaded
+	login-form
+	login-help
+	forgot-password
+	change-password
+	img(src='images/standby_logo_small.png', alt='StandBy Logo', ng-hide='StandBy.config.profile.own')
+	download-mobile-app(ng-hide='browser.mobile && browser.screen.width < 768')
