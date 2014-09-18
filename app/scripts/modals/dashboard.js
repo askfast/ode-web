@@ -1,7 +1,7 @@
 define(['services/services', 'config'], function (services, config) {
   'use strict';
 
-  services.factory('Dashboard', function ($rootScope, $resource, $q, Storage, Slots, Dater, Announcer, Store) {
+  services.factory('Dashboard', function ($rootScope, $resource, $q, Slots, Dater, Announcer, Store) {
     /**
      * TODO: Still being used?
      */

@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('dashboard', function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Storage, Settings, Profile, Groups, Announcer, $timeout, Store) {
+  controllers.controller('dashboard', function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Settings, Profile, Groups, Announcer, $timeout, Store) {
     $rootScope.notification.status = false;
 
     $rootScope.fixStyles();
@@ -536,9 +536,9 @@ define(['controllers/controllers'], function (controllers) {
       });
 
       Settings.save($rootScope.StandBy.resources.uuid, {
-        user: Storage.local.settings().user,
+        user: angular.fromJson(Store('user').get('resources').settingsWebPaige).user,
         app: {
-          group: Storage.local.settings().app.group,
+          group: angular.fromJson(Store('user').get('resources').settingsWebPaige).app.group,
           widgets: {
             groups: selection
           }
@@ -690,10 +690,10 @@ define(['controllers/controllers'], function (controllers) {
     }
 
     $scope.setPrefixedAvailability = function (availability, period) {
-      Storage.session.add('setPrefixedAvailability', angular.toJson({
+      Store('environment').save('setPrefixedAvailability', {
         availability: availability,
         period: period
-      }));
+      });
 
       $location.path('/planboard').search({ setPrefixedAvailability: true });
     }

@@ -14,10 +14,9 @@ define(
         '$window',
         'Slots',
         'Dater',
-        'Storage',
         'Sloter',
         'Profile',
-        function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Storage, Sloter, Profile) {
+        function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Sloter, Profile) {
           // TODO: Define diff in the watcher maybe?
           var range,
             diff;
@@ -792,7 +791,7 @@ define(
             Slots.add(values, $scope.timeline.user.id)
               .then(
               function (result) {
-                Storage.session.remove('setPrefixedAvailability');
+                Store('environment').remove('setPrefixedAvailability');
 
                 $rootScope.$broadcast('resetPlanboardViews');
 
@@ -816,7 +815,7 @@ define(
            * Listen for incoming prefixed availability changes
            */
           if ($location.search().setPrefixedAvailability) {
-            var options = angular.fromJson(Storage.session.get('setPrefixedAvailability'));
+            var options = Store('environment').get('setPrefixedAvailability');
 
             $scope.setAvailability(options.availability, options.period);
           }

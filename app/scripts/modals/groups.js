@@ -1,7 +1,7 @@
 define(['services/services', 'config'], function (services, config) {
   'use strict';
 
-  services.factory('Groups', function ($resource, $q, Storage, $rootScope, Slots, $location, Strings, Store) {
+  services.factory('Groups', function ($resource, $q, $rootScope, Slots, $location, Strings, Store) {
     var Groups = $resource(
         config.host + '/network/:action/:id',
       {},
@@ -118,7 +118,7 @@ define(['services/services', 'config'], function (services, config) {
     Groups.prototype.guardMonitor = function () {
       var deferred = $q.defer();
 
-      var guard = angular.fromJson(Storage.get('guard')) || {};
+      var guard = Store('smartAlarm').get('guard') || {};
 
       Guards.global(
         null,
@@ -134,7 +134,7 @@ define(['services/services', 'config'], function (services, config) {
 
           guard.monitor = returned;
 
-          Storage.add('guard', angular.toJson(guard));
+          Store('smartAlarm').save('guard', guard);
 
           $rootScope.StandBy.guard.monitor = returned;
 
@@ -156,7 +156,7 @@ define(['services/services', 'config'], function (services, config) {
       var deferred = $q.defer(),
         _this = this;
 
-      _this.guard = angular.fromJson(Storage.get('guard'));
+      _this.guard = Store('smartAlarm').get('guard');
 
       Guards.position(
         {
@@ -164,7 +164,6 @@ define(['services/services', 'config'], function (services, config) {
           team: 'status'
         },
         function (results) {
-          // var members = angular.fromJson(Storage.get('members'));
           var members = _.indexBy(Store('network').get('unique'), function (mem) {
             return mem.uuid
           });
@@ -242,7 +241,7 @@ define(['services/services', 'config'], function (services, config) {
             }
           );
 
-          Storage.add('guard', angular.toJson(_this.guard));
+          Store('smartAlarm').save('guard', _this.guard);
 
           deferred.resolve(_this.guard);
         },
@@ -443,7 +442,7 @@ define(['services/services', 'config'], function (services, config) {
             }
           );
 
-          Storage.add('groups', angular.toJson(groups));
+          Store('network').save('groups', groups);
 
           if (!only) {
             var calls = [];
@@ -527,7 +526,7 @@ define(['services/services', 'config'], function (services, config) {
             returned = result;
           }
 
-          Storage.add(id, angular.toJson(returned));
+          Store('network').save('group'.id, returned);
 
           deferred.resolve(
             {
@@ -551,12 +550,12 @@ define(['services/services', 'config'], function (services, config) {
     Groups.prototype.uniqueMembers = function () {
 
       angular.forEach(
-        angular.fromJson(Storage.get('groups')),
+        Store('network').get('groups'),
         function (group) {
-          var members = angular.fromJson(Storage.get('members')) || {};
+          var members = Store('network').get('unique') || {};
 
           angular.forEach(
-            angular.fromJson(Storage.get(group.uuid)),
+            Store('network').get('group.'+group.uuid),
             function (member) {
               if (member.resources.role != 0 && member.resources.role != 4) {
                 members[member.uuid] = member;
@@ -566,7 +565,7 @@ define(['services/services', 'config'], function (services, config) {
 
           // $rootScope.app.members = members;
 
-          Storage.add('members', angular.toJson(members));
+          Store('network').save('unique', members);
         }
       );
     };
@@ -698,13 +697,13 @@ define(['services/services', 'config'], function (services, config) {
      * Get groups of given member
      */
     Groups.prototype.getMemberGroups = function (id) {
-      var groups = angular.fromJson(Storage.get('groups')),
+      var groups = Store('network').get('groups'),
         memberGroups = [];
 
       angular.forEach(
         groups,
         function (group) {
-          var localGroup = angular.fromJson(Storage.get(group.uuid));
+          var localGroup = Store('network').get('group'+group.uuid);
 
           angular.forEach(
             localGroup,

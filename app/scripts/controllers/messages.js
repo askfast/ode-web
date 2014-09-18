@@ -13,9 +13,8 @@ define(
         '$route',
         'data',
         'Messages',
-        'Storage',
         'Offsetter',
-        function ($scope, $rootScope, $q, $location, $route, data, Messages, Storage, Offsetter) {
+        function ($scope, $rootScope, $q, $location, $route, data, Messages, Offsetter) {
           $rootScope.notification.status = false;
 
           /**
@@ -299,8 +298,8 @@ define(
               }
             );
 
-            var members = angular.fromJson(Storage.get('members')),
-              groups = angular.fromJson(Storage.get('groups')),
+            var members = Store('network').get('unique'),
+              groups = Store('network').get('groups'),
               receivers = [];
 
             _.each(
@@ -490,7 +489,7 @@ define(
 
             $scope.setViewTo($scope.origin);
 
-            Storage.session.remove('escalation');
+            Store('environment').remove('escalation');
           };
 
 
@@ -717,7 +716,7 @@ define(
 
             $scope.setViewTo('compose');
 
-            var members = angular.fromJson(Storage.get('members'));
+            var members = Store('network').get('members');
 
             // console.log('requester ->', message.requester);
 
@@ -856,7 +855,7 @@ define(
            * Extract escalation information
            */
           if ($location.search().escalate) {
-            var escalation = angular.fromJson(Storage.session.get('escalation')),
+            var escalation = Store('environment').get('escalation'),
               name = escalation.group.split('>')[1].split('<')[0],
               uuid = escalation.group.split('uuid=')[1].split('#view')[0];
 

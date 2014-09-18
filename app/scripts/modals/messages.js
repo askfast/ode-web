@@ -156,7 +156,6 @@ define(
               Notifications.query(
                 function (result) {
                   Store('notifications').save('all', result);
-                  //Storage.add('notifications', angular.toJson(result));
 
                   angular.forEach(
                     result,

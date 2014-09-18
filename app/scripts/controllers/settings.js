@@ -1,7 +1,7 @@
 define(['controllers/controllers', 'locals'], function (controllers, locals) {
   'use strict';
 
-  controllers.controller('settings', function ($rootScope, $scope, $window, data, Settings, Profile, Storage, Store) {
+  controllers.controller('settings', function ($rootScope, $scope, $window, data, Settings, Profile, Store) {
     $rootScope.notification.status = false;
 
     $rootScope.fixStyles();

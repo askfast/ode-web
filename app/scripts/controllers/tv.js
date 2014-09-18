@@ -13,17 +13,17 @@ define(
         '$location',
         'Dashboard',
         'Dater',
-        'Storage',
         'Settings',
         'Profile',
         'Groups',
         'Announcer',
+        'Store',
         '$http',
-        function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Storage, Settings, Profile, Groups, Announcer, $http) {
+        function ($scope, $rootScope, $q, $window, $location, Dashboard, Dater, Settings, Profile, Groups, Announcer, Store, $http) {
           $rootScope.notifier.destroy();
 
           if (!$http.defaults.headers.common['X-SESSION_ID']) {
-            var session = angular.fromJson(Storage.cookie.get('session'));
+            var session = Store('session').get('sessionId');
 
             $http.defaults.headers.common['X-SESSION_ID'] = session.id;
           }
@@ -58,7 +58,7 @@ define(
            * Process Smart Alarm team members for view
            */
           function prepareSaMembers(setup) {
-            var cached = angular.fromJson(Storage.get('guard'));
+            var cached = Store('smartAlarm').get('guard');
 
             $scope.saMembers = {
               truck: [],
@@ -184,12 +184,12 @@ define(
                 function () {
                   Groups.uniqueMembers();
 
-                  var guard = angular.fromJson(Storage.get('guard'));
+                  var guard = Store('smartAlarm').get('guard');
 
                   if (guard && guard.selection) {
                     $scope.loading.smartAlarm = false;
 
-                    prepareSaMembers(angular.fromJson(Storage.get('guard')));
+                    prepareSaMembers(Store('smartAlarm').get('guard'));
                   }
 
 
@@ -230,10 +230,10 @@ define(
               {
                 $scope.getP2000();
 
-                var guard = angular.fromJson(Storage.get('guard'));
+                var guard = Store('smartAlarm').get('guard');
 
                 if (guard && guard.selection) {
-                  prepareSaMembers(angular.fromJson(Storage.get('guard')));
+                  prepareSaMembers(Store('smartAlarm').get('guard'));
                 }
 
                 Groups.guardRole()

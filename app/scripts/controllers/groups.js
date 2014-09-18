@@ -69,7 +69,6 @@ define(['controllers/controllers'], function (controllers) {
      * If no params or hashes given in url
      */
     if (!params.uuid && !$location.hash()) {
-      // var settings = Storage.local.settings();
       var settings = angular.fromJson(Store('user').get('resources').settingsWebPaige);
 
       uuid = settings.app.group;

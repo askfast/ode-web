@@ -542,10 +542,10 @@ define(
       .filter(
       'groupIdToName',
       [
-        'Storage',
-        function (Storage) {
+        'Store',
+        function (Store) {
           return function (id, comma) {
-            var groups = angular.fromJson(Storage.get('groups')),
+            var groups = angular.fromJson(Store('network').get('groups')),
               names = '';
 
             for (var i in groups) {
@@ -659,8 +659,8 @@ define(
       .filter(
       'nicelyOffsets',
       [
-        'Dater', 'Storage', 'Offsetter',
-        function (Dater, Storage, Offsetter) {
+        'Dater', 'Offsetter',
+        function (Dater, Offsetter) {
           return function (data) {
             var offsets = Offsetter.factory(data),
               compiled = '';
@@ -704,12 +704,12 @@ define(
       .filter(
       'nicelyAudience',
       [
-        'Storage',
-        function (Storage) {
+        'Store',
+        function (Store) {
           return function (data) {
             if (data) {
-              var members = angular.fromJson(Storage.get('members')),
-                groups = angular.fromJson(Storage.get('groups')),
+              var members = Store('network').get('unique'),
+                groups = Store('network').get('groups'),
                 audience = [];
 
               angular.forEach(

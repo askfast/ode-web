@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('planboard', function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, Storage, $timeout, Store) {
+  controllers.controller('planboard', function ($rootScope, $scope, $q, $window, $location, data, Slots, Dater, $timeout, Store) {
     $rootScope.notification.status = false;
 
     $rootScope.fixStyles();
@@ -186,7 +186,7 @@ define(['controllers/controllers'], function (controllers) {
     $scope.sendShortageMessage = function (slot) {
       $rootScope.statusBar.display($rootScope.ui.planboard.preCompilingStortageMessage);
 
-      Storage.session.add('escalation', angular.toJson({
+      Store('environment').save('escalation', {
         group: slot.group,
         start: {
           date: slot.start.date,
@@ -197,7 +197,7 @@ define(['controllers/controllers'], function (controllers) {
           time: slot.end.time
         },
         diff: slot.diff
-      }));
+      });
 
       $location.path('/messages').search({ escalate: true }).hash('compose');
     };

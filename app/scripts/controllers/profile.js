@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('profile', function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Storage, Groups, Dater, MD5, $timeout) {
+  controllers.controller('profile', function ($rootScope, $scope, $q, $location, $window, $route, data, Profile, Store, Groups, Dater, MD5, $timeout) {
     $rootScope.notification.status = false;
 
     $rootScope.fixStyles();
@@ -24,7 +24,8 @@ define(['controllers/controllers'], function (controllers) {
       if (userPassword != '' && userPassword != undefined) {
         if ($rootScope.StandBy.resources.role <= 1) {
           if ($rootScope.StandBy.resources.uuid.toLowerCase() != $route.current.params.userId) {
-            if (MD5(userPassword) == Storage.get('askPass')) {
+
+            if (MD5(userPassword) == Store('environment').get('askPass')) {
               $rootScope.statusBar.display($rootScope.ui.profile.remove.inProgress);
 
               Profile.remove(data.resources.uuid).then(function (result) {
@@ -282,7 +283,7 @@ define(['controllers/controllers'], function (controllers) {
 
     $scope.groups = $route.current.params.userId && Groups.getMemberGroups($route.current.params.userId.toLowerCase());
 
-    $scope.availableGroups = angular.fromJson(Storage.get('groups'));
+    $scope.availableGroups = Store('network').get('groups');
 
     $scope.passwords = {
       current: '',
@@ -362,7 +363,7 @@ define(['controllers/controllers'], function (controllers) {
         var selectedGroups = [];
 
         _.each($(".chzn-choices .search-choice span"), function (option) {
-          _.each(Storage.local.groups(), function (group) {
+          _.each(Store('network').get('groups'), function (group) {
               var _g = new RegExp(option.innerHTML);
 
               if (_g.test(group.name))

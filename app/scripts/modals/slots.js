@@ -1,7 +1,7 @@
 define(['services/services', 'config'], function (services, config) {
   'use strict';
 
-  services.factory('Slots', function ($rootScope, $resource, $q, Storage, Dater, Sloter, Stats, Store) {
+  services.factory('Slots', function ($rootScope, $resource, $q, Dater, Sloter, Stats, Store) {
     var Slots = $resource(config.host + '/askatars/:user/slots', {user: ''}, {
       query: {
         method: 'GET',
@@ -417,7 +417,6 @@ define(['services/services', 'config'], function (services, config) {
                   },
                   function (members) {
                     var mems = [];
-                    console.log('Members -> ',members);
                     _.each(members, function (mdata, index) {
                         _.each(mdata, function (tslot) {
                           tslot.text = tslot.state

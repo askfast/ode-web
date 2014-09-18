@@ -1,7 +1,7 @@
 define(['services/services', 'config'], function (services, config) {
   'use strict';
 
-  services.factory('Profile', function ($rootScope, $resource, $q, Storage, Groups, Slots, MD5, Store) {
+  services.factory('Profile', function ($rootScope, $resource, $q, Groups, Slots, MD5, Store) {
     var Profile = $resource(config.host + '/node/:id/:section', {}, {
       get: {
         method: 'GET',
@@ -200,7 +200,7 @@ define(['services/services', 'config'], function (services, config) {
           $rootScope.StandBy.resources = result;
 
         if (localize)
-          Storage.add('resources', angular.toJson(result));
+          Store('user').save('resources', result);
 
         deferred.resolve({resources: result});
       });
@@ -253,7 +253,7 @@ define(['services/services', 'config'], function (services, config) {
     };
 
     Profile.prototype.local = function () {
-      return angular.fromJson(Storage.get('resources'))
+      return Store('user').get('resources');
     };
 
     Profile.prototype.save = function (id, resources) {
