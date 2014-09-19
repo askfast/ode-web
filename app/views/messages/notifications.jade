@@ -1,0 +1,42 @@
+.tab-header
+	h3.pull-left {{ui.message.notifications}}
+hr
+p(ng-hide='scheadules.length > 0')
+	| {{ui.message.notificationsEmpty}}
+div(ng-show='scheadules.length > 0')
+	table.table.table-striped
+		thead
+			tr
+				th(width='60')
+				th(width='50')
+				th {{ui.message.notificationHeaderLabel}}
+				th {{ui.message.notificationHeaderReceivers}}
+				th {{ui.message.notificationHeaderFrequency}}
+				th
+		tbody
+			tr(ng-repeat='scheadule in scheadules')
+				td
+					span.label.label-success(ng-show='scheadule.active') {{ui.message.enabled}}
+					span.label(ng-hide='scheadule.active') {{ui.message.disabled}}
+				td.scheadule-icons
+					div
+						span.entypo.sms(ng-show='scheadule.sms') 
+					div
+						span.entypo.mail(ng-show='scheadule.mail') 
+				td
+					a(ng-click='requestNotification(scheadule.uuid)') {{scheadule.label}}
+				td
+					span.muted
+						small
+							i {{scheadule.recipients | nicelyAudience}}
+				td
+					div(ng-bind-html-unsafe='scheadule.offsets | nicelyOffsets')
+				td
+					.pull-right
+						button.btn.btn-mini(ng-click='requestNotification(scheadule.uuid)')
+							i.icon-edit
+						button.btn.btn-danger.btn-mini(type='submit', ng-click='scheaduler.remove(scheadule.uuid)')
+							i.icon-trash.icon-white
+	span.muted.pull-right
+		small
+			i {{ui.message.inTotal}}: {{scheadules.length}}

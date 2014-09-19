@@ -1,0 +1,60 @@
+.tab-header
+	h3.pull-left {{ui.message.inbox}}
+	form.pull-right
+		input.span12.search-query(type='text',
+		placeholder='{{ui.message.ph_filterMessage}}',
+		ng-model='query.inbox')
+hr
+p(ng-hide='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
+	| {{ui.message.noMessage}}
+div(ng-show='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
+	table.table.table-striped
+		thead
+			tr
+				th
+					input(type='checkbox',
+					ng-model='selectionMaster.inbox',
+					ng-click='toggleSelection(messages.inbox[page.inbox], "inbox", selectionMaster.inbox)')
+				th(width='60')
+				th {{ui.message.from}}
+				th {{ui.message.subject}}
+				th {{ui.message.date}}
+				th
+		tbody
+			tr(ng-repeat='message in messages.inbox[page.inbox] | filter:query.inbox | orderBy:"creationTime":true')
+				td
+					input(type='checkbox',
+					ng-model='selection.inbox[message.uuid]',
+					ng-checked='selection.inbox[message.uuid]')
+				td
+					span.label.label-warning(ng-show='(message.state=="NEW")') {{ui.message.newMsg}}
+				td
+					a(href='#/profile/{{message.requester | convertEve}}#profile')
+						| {{message.requester | convertEve | convertUserIdToName}}
+				td
+					a(ng-click='requestMessage(message.uuid, "inbox")') {{message.subject}}
+				td {{message.creationTime | nicelyDate}}
+				td
+					.pull-right
+						button.btn.btn-mini(ng-click='reply(message)')
+							i.icon-share-alt
+						button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMessage(message.uuid)')
+							i.icon-trash.icon-white
+	button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.inbox)')
+		i.icon-trash.icon-white
+		| {{ui.message.deleteSelected}}
+	.btn-toolbar.pull-right(style='margin: 0;')
+		.btn-group
+			button.btn.btn-small(ng-click='paginate.before("inbox")',
+			class="{{(page.inbox==0) && 'disabled'}}")
+				| « {{ui.message.paginationPrevious}}
+			button.btn.btn-small(ng-click='paginate.next("inbox")',
+			class="{{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}")
+				| {{ui.message.paginationNext}} »
+	br
+	br
+	span.muted.pull-right
+		small
+			i
+				| {{ui.message.paginationPage}}: {{page.inbox + 1}} {{ui.message.paginationOf}}
+				| {{messages.inbox.length}}, {{ui.message.paginationInTotal}}: {{messages.inbox | countBox}}
