@@ -448,7 +448,7 @@ define(['services/services'], function (services) {
         });
 
         _.each(data.members, function (member) {
-            var user = ($rootScope.app.resources.uuid == member.id) ? 'profile' : 'timeline';
+            var user = ($rootScope.StandBy.resources.uuid == member.id) ? 'profile' : 'timeline';
 
             var link = (privilage <= 1) ?
               _this.wrapper('d-' + member.lastName[0].toLowerCase()) +
