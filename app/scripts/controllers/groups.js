@@ -621,11 +621,12 @@ define(['controllers/controllers'], function (controllers) {
     };
 
     $scope.toggleSelection = function (group, master) {
+      // Inverse the value because it was the previous value
       var flag = (master) ? false : true,
         members = Store('network').get(group.uuid);
 
       _.each(members, function (member) {
-        $scope.selection[member.uuid] = flag
+        $scope.selection[member.uuid] = flag;
       });
     };
 

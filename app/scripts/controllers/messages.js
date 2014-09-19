@@ -14,7 +14,8 @@ define(
         'data',
         'Messages',
         'Offsetter',
-        function ($scope, $rootScope, $q, $location, $route, data, Messages, Offsetter) {
+        'Store',
+        function ($scope, $rootScope, $q, $location, $route, data, Messages, Offsetter, Store) {
           $rootScope.notification.status = false;
 
           /**
@@ -83,9 +84,9 @@ define(
            * Selection masters
            */
           $scope.selectionMaster = {
-            inbox: '',
-            outbox: '',
-            trash: ''
+            inbox: false,
+            outbox: false,
+            trash: false
           };
 
 
@@ -497,7 +498,8 @@ define(
            * Toggle selections
            */
           $scope.toggleSelection = function (messages, inbox, master) {
-            var flag = (master) ? true : false;
+            // Inverse the master because it's the previous value
+            var flag = (master) ? false : true;
 
             _.each(
               messages,
