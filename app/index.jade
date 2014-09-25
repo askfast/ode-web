@@ -49,23 +49,23 @@ block navbar
               a.dropdown-toggle(href='',
               data-toggle='dropdown')
                 i.icon-user.icon-white
-                | &nbsp;{{StandBy.resources.name}}
-                span(ng-show='StandBy.resources.role == 0') [SU]
+                | &nbsp;{{StandBy.resources.name}}&nbsp;
+                span(ng-show='StandBy.resources.role == 0')[SU]&nbsp;
                 b.caret
               ul.dropdown-menu
                 li
                   a(href='#profile')
                     i.icon-user
-                    | {{ui.profile.profile}}
+                    | &nbsp;{{ui.profile.profile}}
                 li
                   a(href='#settings')
                     i.icon-wrench
-                    | {{ui.settings.settings}}
+                    | &nbsp;{{ui.settings.settings}}
                 li.divider
                 li
                   a(href='#logout')
                     i.icon-off
-                    | {{ui.login.logout}}
+                    | &nbsp;{{ui.login.logout}}
             li#fullscreener(ng-show='StandBy.config.fullscreen && browser.webkit')
               a(ng-click='fullScreen()')
                 i.icon-fullscreen.icon-white

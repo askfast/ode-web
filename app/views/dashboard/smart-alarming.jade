@@ -3,22 +3,22 @@
     .head
       h4 SlimAlarmeren
 
-      div.pull-right
-        small(ng-show='app.guard.currentState')
+      div.pull-right.ca-state
+        small(ng-show='StandBy.guard.currentState')
           i.icon-fire
-          | Status
+          | &nbsp;Status&nbsp;&nbsp;
 
-        span.label(ng-show='app.guard.currentState=="available" || app.guard.currentState=="Beschikbaar"',
+        span.label(ng-show="StandBy.guard.currentState=='available' || StandBy.guard.currentState=='Beschikbaar'",
         style='background-color: #6cad6c;') BESCHIKBAAR
-        span.label(ng-show='app.guard.currentState=="noplanning" || app.guard.currentState=="Mogelijk inzetbaar"',
+        span.label(ng-show="StandBy.guard.currentState=='noplanning' || StandBy.guard.currentState=='Mogelijk inzetbaar'",
         style='background-color: #a0a0a0;') GEEN PLANNING
-        span.label(ng-show='app.guard.currentState=="unavailable" || app.guard.currentState=="Niet Beschikbaar"',
+        span.label(ng-show="StandBy.guard.currentState=='unavailable' || StandBy.guard.currentState=='Niet Beschikbaar'",
         style='background-color: #d34545;') NIET BESCHIKBAAR
         span.label.label-inverse(style='margin-left: 5px;') {{app.guard.role.toUpperCase()}}
 
         .btn-group(style='margin: -10px 0 0 8px;')
           button.btn.btn-mini.dropdown-toggle(data-toggle='dropdown')
-            | Nieuwe beschikbaarheid
+            | Nieuwe beschikbaarheid&nbsp;
             span.caret
           ul.dropdown-menu.pull-right.fast-availability(style='font-size: 10px;')
             li
