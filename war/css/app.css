@@ -3232,7 +3232,11 @@ div.timeline-event-range {
   }
 }
 .log-RECEIEVED {
-  background-color: #6cad6c;
+    background-color: #6cad6c;
+}
+
+.log-RECEIVED {
+    background-color: #6cad6c;
 }
 
 .log-MISSED {
