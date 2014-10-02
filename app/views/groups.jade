@@ -18,7 +18,7 @@
       ng-model='search.query')
       button.btn(type='submit')
         i.icon-search
-        | {{ui.groups.search}}
+        | &nbsp;{{ui.groups.search}}
 
 .tabbable.tabs-left
 
@@ -244,13 +244,13 @@
           data-title='Behoefte wijzigen')
             span.badge.badge-inset(ng-show='wished')
               | {{wish}}
-            | {{ui.groups.requiredPeople}}
+            | &nbsp;{{ui.groups.requiredPeople}}
           button.btn(type='button', ng-click='editGroup(group)', style='margin-right: 5px;')
             i.icon-edit
-            | {{ui.groups.editGroup}}
+            | &nbsp;{{ui.groups.editGroup}}
           button.btn.btn-danger(type='button', ng-click='confirmGroupDelete(group.uuid)')
             i.icon-trash.icon-white
-            | {{ui.groups.deleteGroup}}
+            | &nbsp;{{ui.groups.deleteGroup}}
       hr
       p(ng-hide='(data.members[group.uuid]|filter:filtered|filterSupers).length > 0')
         | {{ui.groups.noMembers}}
@@ -308,10 +308,11 @@
                 .pull-right
                   a.btn.btn-mini(href='#/profile/{{member.uuid}}#profile')
                     i.icon-user
-                  | &nbsp;
                   span(ng-hide='member.resources.role == 0')
+                    | &nbsp;&nbsp;
                     a.btn.btn-mini(href='#/profile/{{member.uuid}}#edit')
                       i.icon-edit
+                    | &nbsp;
                     button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMember(member.uuid, group.uuid)')
                       i.icon-remove.icon-white
         button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMembers(selection, group)')

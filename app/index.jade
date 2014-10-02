@@ -146,9 +146,9 @@ block footer
             li
               span.muted(style='display: block; margin-top: 4px;')
                 small
-                  | Ask Community Systems, 2013   |
+                  | Ask Community Systems, 2013 &nbsp; | &nbsp;&nbsp;
                   i
-                    a(href='version.html', target='_blank', style='color: #dddddd;') StandBy v{{config.version}}
+                    a(href='versions.html', target='_blank', style='color: #dddddd;') StandBy v{{StandBy.config.version}}
       p.muted(ng-show='loading.status')
         img(src='images/ajax-loader.gif')
         small

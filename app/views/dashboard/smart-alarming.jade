@@ -3,10 +3,11 @@
     .head
       h4 SlimAlarmeren
 
-      div.pull-right.ca-state
+      div.pull-right.sa-state
         small(ng-show='StandBy.guard.currentState')
           i.icon-fire
-          | &nbsp;Status&nbsp;&nbsp;
+          | &nbsp;Status
+        | &nbsp;&nbsp;
 
         span.label(ng-show="StandBy.guard.currentState=='available' || StandBy.guard.currentState=='Beschikbaar'",
         style='background-color: #6cad6c;') BESCHIKBAAR
@@ -92,7 +93,7 @@
     p(ng-hide='loading.smartAlarm', style='margin-top: 10px;')
       small.pull-left
         span.text-warning {{ui.planboard.lastSyncTime}}
-        span.muted {{saSynced | nicelyDate}}
+        span.muted &nbsp; {{saSynced | nicelyDate}}
 
     button.btn.btn-mini.pull-right(ng-click='toggleReserves=!toggleReserves', ng-hide='loading.smartAlarm')
       span(ng-hide='toggleReserves') Toon reserves
