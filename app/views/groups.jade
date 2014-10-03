@@ -239,7 +239,8 @@
           ng-model='filtered')
           button.btn(type='button',
           style='margin-right: 5px;',
-          bs-popover__='"views/groups-wish.html"',
+          data-content-template="views/groups-wish.html",
+          bs-popover='',
           data-placement='bottom',
           data-title='Behoefte wijzigen')
             span.badge.badge-inset(ng-show='wished')
