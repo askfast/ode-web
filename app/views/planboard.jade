@@ -5,7 +5,7 @@ section#planboard(ng-controller='timeline')
   time-travel
   time-slot
 
-  div.row-fluid
+  div.row
     .tabbable.tabs-left
       ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
         li.active
@@ -73,11 +73,11 @@ section#planboard(ng-controller='timeline')
               ng-show='divisions.length > 0')
             .pull-right
               .btn-group
-                button.btn(type='button',
+                button.btn.btn-default(type='button',
                 class="{{(timeline.current.layouts.group==true) && 'active'}}"
                 ng-model='timeline.current.layouts.group',
                 ng-click='requestTimeline("group")') {{ui.planboard.group}}
-                button.btn(type='button',
+                button.btn.btn-default(type='button',
                 class="{{(timeline.current.layouts.members==true) && 'active'}}",
                 ng-model='timeline.current.layouts.members',
                 ng-click='requestTimeline("members")',
@@ -141,7 +141,7 @@ section#planboard(ng-controller='timeline')
                 li(ng-repeat='member in data.members')
                   h4 {{member.id | convertUserIdToName}}
                   .progress
-                    .bar(ng-repeat='stat in member.stats',
+                    .progress-bar(ng-repeat='stat in member.stats',
                     ng-style='{ "width": stat.ratio + "%" }',
                     class="{{stat.state}}")
                   small.muted {{member.stats | convertRatios}}

@@ -13,11 +13,11 @@
 
   form.form-search.pull-right(ng-submit='searchMembers(search.query)')
     .input-append
-      input.span2.search-query(type='text',
+      input.col-md-2.search-query(type='text',
       placeholder='{{ui.groups.searchFor}}',
       ng-model='search.query')
-      button.btn(type='submit')
-        i.icon-search
+      button.btn.btn-default(type='submit')
+        i.glyphicon.glyphicon-search
         | &nbsp;{{ui.groups.search}}
 
 .tabbable.tabs-left
@@ -55,14 +55,14 @@
     div#addGroupTab.tab-pane(ng-show='views.add', class="{{(views.add==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.addNewGroup}}
-        button.btn.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+        button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
       hr
       form
         fieldset
           .control-group
             label.control-label {{ui.groups.name}}
             .controls
-              input.span4(type='text', ng-model='groupForm.name')
+              input.col-md-4(type='text', ng-model='groupForm.name')
           .form-actions
             button.btn.btn-success(type='submit',
             ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
@@ -71,14 +71,14 @@
     div#editGroupTab.tab-pane(ng-show='views.edit', class="{{(views.edit==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.editGroup}}
-        button.btn.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+        button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
       hr
       form
         fieldset
           .control-group
             label.control-label {{ui.groups.name}}
             .controls
-              input.span4(type='text', ng-model='groupForm.name')
+              input.col-md-4(type='text', ng-model='groupForm.name')
           .form-actions
             button.btn.btn-success(type='submit',
             ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
@@ -87,7 +87,7 @@
     div#newMemberTab.tab-pane(ng-show='views.member', class="{{(views.member==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.registerMember}}
-        button.btn.pull-right(type='button',
+        button.btn.btn-default.pull-right(type='button',
         ng-click='closeTabs()') {{ui.groups.close}}
       hr
       form(name='registerUserForm')
@@ -111,39 +111,39 @@
           .control-group
             label.control-label {{ui.groups.firstName}}
             .controls
-              input.span4(type='text', ng-model='memberForm.firstName')
+              input.col-md-4(type='text', ng-model='memberForm.firstName')
           .control-group
             label.control-label {{ui.groups.lastName}}
             .controls
-              input.span4(type='text', ng-model='memberForm.lastName')
+              input.col-md-4(type='text', ng-model='memberForm.lastName')
           .control-group
             label.control-label {{ui.groups.email}}
             .controls
-              input.span4(type='email',
+              input.col-md-4(type='email',
               name='email',
               ng-model='memberForm.EmailAddress',
               ng-minlength='3',
               ng-maxlength='50')
               .error-container(ng-show='registerUserForm.email.$dirty && registerUserForm.email.$invalid')
-                p.text-error(ng-show='registerUserForm.email.$error.minlength')
+                p.text-danger(ng-show='registerUserForm.email.$error.minlength')
                   small
                     i {{ui.errors.email.min}}
-                p.text-error(ng-show='registerUserForm.email.$error.email')
+                p.text-danger(ng-show='registerUserForm.email.$error.email')
                   small
                     i {{ui.errors.email.notValid}}
-                p.text-error(ng-show='registerUserForm.email.$error.maxlength')
+                p.text-danger(ng-show='registerUserForm.email.$error.maxlength')
                   small
                     i {{ui.errors.email.max}}
           .control-group
             label.control-label {{ui.groups.phone}}
             .controls
-              input#inputPhoneNumber.span3(type='text',
+              input#inputPhoneNumber.col-md-3(type='text',
               ng-model='memberForm.PhoneAddress',
               ng-change='phoneNumberParser(memberForm.PhoneAddress)')
-              // <p class="text-error" ng-show="!memberForm.PhoneAddress">
+              // <p class="text-danger" ng-show="!memberForm.PhoneAddress">
               // <small><i>Please fill your phone number!</i></small>
               // </p>
-              p.text-error(ng-hide='phoneNumberParsed.result')
+              p.text-danger(ng-hide='phoneNumberParsed.result')
                 small
                   i {{phoneNumberParsed.message}}
               p.text-success(ng-show='phoneNumberParsed.result')
@@ -152,27 +152,27 @@
           .control-group
             label.control-label {{ui.profile.pagerId}}
             .controls
-              input.span5(type='text', ng-model='memberForm.pagerId')
+              input.col-md-5(type='text', ng-model='memberForm.pagerId')
           .control-group
             label.control-label {{ui.groups.address}}
             .controls
-              input.span5(type='text', ng-model='memberForm.PostAddress')
+              input.col-md-5(type='text', ng-model='memberForm.PostAddress')
           .control-group
             label.control-label {{ui.groups.postCode}}
             .controls
-              input.span2(type='text', ng-model='memberForm.PostZip')
+              input.col-md-2(type='text', ng-model='memberForm.PostZip')
           .control-group
             label.control-label {{ui.groups.city}}
             .controls
-              input.span3(type='text', ng-model='memberForm.PostCity')
+              input.col-md-3(type='text', ng-model='memberForm.PostCity')
           hr
           .control-group
             label.control-label {{ui.groups.userName}}
             .controls
-              input.span3(type='text',
+              input.col-md-3(type='text',
               ng-model='memberForm.username',
               ng-change='userExists()')
-              p.text-error(ng-hide='userExistsValidation')
+              p.text-danger(ng-hide='userExistsValidation')
                 small
                   i {{ui.groups.registerUserName.exists}}
               p.text-success(ng-show='userExistsValidation && memberForm.username.length > 0')
@@ -181,7 +181,7 @@
           .control-group
             label.control-label {{ui.groups.password}}
             .controls
-              input.span3(type='password', ng-model='memberForm.password')
+              input.col-md-3(type='password', ng-model='memberForm.password')
           .form-actions
             button.btn.btn-success(type='submit',
             ng-click='memberSubmit(memberForm)') {{ui.groups.saveMember}}
@@ -190,7 +190,7 @@
     div#searchTab.tab-pane(ng-show='views.search', class="{{(views.search==true) && 'active'}}")
       .tab-header
         h3.pull-left {{ui.groups.searchedFor}} '{{search.queried}}'
-        button.btn.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+        button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
       hr
       p(ng-hide='candidates.length > 0')
         | {{ui.groups.sorryCanNotFind}}
@@ -218,7 +218,7 @@
                   ng-model='candidate.group',
                   ng-options='group.name for group in data.groups')
                     option(value='') {{ui.groups.selectGroup}}
-                  button.btn.btn-success.btn-small(style='margin-left: 5px;',
+                  button.btn.btn-success.btn-sm(style='margin-left: 5px;',
                   ng-click='addMember(candidate)') {{ui.groups.addToGroup}}
         span.muted.pull-right
           small
@@ -233,11 +233,11 @@
           ng-selected='current',
           ng-change='requestGroup(current); sorter="resources.lastName"; reverse=false;')
         .pull-right
-          input.span2.search-query(type='text',
+          input.col-md-2.search-query(type='text',
           placeholder='{{ui.groups.filterMembers}}',
           style='margin-right: 5px;',
           ng-model='filtered')
-          button.btn(type='button',
+          button.btn.btn-default(type='button',
           style='margin-right: 5px;',
           data-content-template="views/groups-wish.html",
           bs-popover='',
@@ -246,11 +246,11 @@
             span.badge.badge-inset(ng-show='wished')
               | {{wish}}
             | &nbsp;{{ui.groups.requiredPeople}}
-          button.btn(type='button', ng-click='editGroup(group)', style='margin-right: 5px;')
-            i.icon-edit
+          button.btn.btn-default(type='button', ng-click='editGroup(group)', style='margin-right: 5px;')
+            i.glyphicon.glyphicon-edit
             | &nbsp;{{ui.groups.editGroup}}
           button.btn.btn-danger(type='button', ng-click='confirmGroupDelete(group.uuid)')
-            i.icon-trash.icon-white
+            i.glyphicon.glyphicon-trash.glyphicon-white
             | &nbsp;{{ui.groups.deleteGroup}}
       hr
       p(ng-hide='(data.members[group.uuid]|filter:filtered|filterSupers).length > 0')
@@ -307,17 +307,17 @@
               td(ng-show='PhoneAddressesExist') {{member.resources.PhoneAddresses[0]}}
               td
                 .pull-right
-                  a.btn.btn-mini(href='#/profile/{{member.uuid}}#profile')
-                    i.icon-user
+                  a.btn.btn-default.btn-xs(href='#/profile/{{member.uuid}}#profile')
+                    i.glyphicon.glyphicon-user
                   span(ng-hide='member.resources.role == 0')
                     | &nbsp;&nbsp;
-                    a.btn.btn-mini(href='#/profile/{{member.uuid}}#edit')
-                      i.icon-edit
+                    a.btn.btn-default.btn-xs(href='#/profile/{{member.uuid}}#edit')
+                      i.glyphicon.glyphicon-edit
                     | &nbsp;
-                    button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMember(member.uuid, group.uuid)')
-                      i.icon-remove.icon-white
-        button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMembers(selection, group)')
-          i.icon-trash.icon-white
+                    button.btn.btn-danger.btn-xs(type='submit', ng-click='removeMember(member.uuid, group.uuid)')
+                      i.glyphicon.glyphicon-remove.glyphicon-white
+        button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMembers(selection, group)')
+          i.glyphicon.glyphicon-trash.glyphicon-white
           | {{ui.groups.removeSelectedMembers}}
         span.muted.pull-right
           small

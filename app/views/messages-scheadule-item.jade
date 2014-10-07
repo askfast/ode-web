@@ -1,7 +1,7 @@
 .scheadule
   .timer
     input(name='time-start', type='text', ng-model='s.time', bs-timepicker='bs-timepicker')
-    i.icon-time
+    i.glyphicon.glyphicon-time
   ul
     li
       label(for='monday-{{s.exact}}')
@@ -32,6 +32,6 @@
         input(type='checkbox', ng-model='s.sun', id="sunday-{{s.exact}}")
         | zondag
     li
-      i.icon-calendar
-  button.btn.btn-small.btn-danger(type='button', ng-click='remover(s.exact)')
-    i.icon-trash.icon-white
+      i.glyphicon.glyphicon-calendar
+  button.btn.btn-sm.btn-danger(type='button', ng-click='remover(s.exact)')
+    i.glyphicon.glyphicon-trash.glyphicon-white

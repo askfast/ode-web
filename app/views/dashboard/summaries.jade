@@ -1,11 +1,11 @@
 div.widget
   div.head
     h4 {{ui.dashboard.overview}}
-    button#dashboardPopoverBtn.btn.btn-small(bs-popover_='"views/dashboard/summary-manager.html"',
+    button#dashboardPopoverBtn.btn.btn-default.btn-sm(bs-popover_='"views/dashboard/summary-manager.html"',
     data-placement='{{(browser.mobile) && "left" || "bottom"}}',
     data-title='Overzicht instellingen',
     ng-click='fixPopoverPos()')
-      i.icon-cog
+      i.glyphicon.glyphicon-cog
   hr
   p(ng-hide='loading.pies || !checkAnyPies()',
   ng-show='checkAnyPies()') Er zijn geen groepen geselecteerd.
@@ -17,7 +17,7 @@ div.widget
           | {{pie.name}}
           span(ng-show='(pie.division != "both")')  ({{ pie.division | translateDivision }})
       .blocks
-        .span4
+        .col-md-4
           .block
             .icon
               .scoreboard(class='{{pie.state.cls}}')
@@ -32,7 +32,7 @@ div.widget
               br
               h5 {{pie.state.end}}
               small.muted tot
-        .span4
+        .col-md-4
           .block
             .icon
               .pie(id='weeklyPieCurrent-{{pie.id}}-{{pie.division}}')
@@ -49,7 +49,7 @@ div.widget
               | ,
               h5 {{pie.weeks.current.ratios.less}}%
               small.muted {{ui.dashboard.statLess}}
-        .span4
+        .col-md-4
           .block
             .icon
               .pie(id='weeklyPieNext-{{pie.id}}-{{pie.division}}')

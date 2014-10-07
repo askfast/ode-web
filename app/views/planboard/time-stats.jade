@@ -12,11 +12,11 @@ div#statisticsTab.tab-pane
       ng-show='divisions.length > 0')
     .pull-right
       .btn-group
-        button.btn(type='button',
+        button.btn.btn-default(type='button',
         class="{{(timeline.current.layouts.group==true) && 'active'}}"
         ng-model='timeline.current.layouts.group',
         ng-click='requestTimeline("group")') {{ui.planboard.group}}
-        button.btn(type='button',
+        button.btn.btn-default(type='button',
         class="{{(timeline.current.layouts.members==true) && 'active'}}",
         ng-model='timeline.current.layouts.members',
         ng-click='requestTimeline("members")',
@@ -104,7 +104,7 @@ div#statisticsTab.tab-pane
         li(ng-repeat='member in data.members')
           h4 {{member.id | convertUserIdToName}}
           .progress
-            .bar(ng-repeat='stat in member.stats',
+            .progress-bar(ng-repeat='stat in member.stats',
             ng-style='{ "width": stat.ratio + "%" }',
             class="{{stat.state}}")
           small.muted {{member.stats | convertRatios}}

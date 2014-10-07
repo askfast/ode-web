@@ -1,28 +1,28 @@
-div#timeline-controls.row-fluid(ng-controller='timeline-navigation')
+div#timeline-controls.row(ng-controller='timeline-navigation')
 
   .pull-left(style='margin-top: 10px;')
 
     .control-group.pull-left(style='margin-right: 10px;')
       input(type='text', style='width: 190px;', name='daterange', ng-model='daterange', daterangepicker='')
-      i.icon-calendar(style='position: relative; margin: -3px 0 0 -24px;')
+      i.glyphicon.glyphicon-calendar(style='position: relative; margin: -3px 0 0 -24px;')
 
     .btn-group.pull-left(style='margin-right: 5px;')
-      button.btn(type='button', ng-model='timeline.scope.day', ng-click='timelineScoper("day")', class="{{(timeline.scope.day==true) && 'active'}}")
+      button.btn.btn-default(type='button', ng-model='timeline.scope.day', ng-click='timelineScoper("day")', class="{{(timeline.scope.day==true) && 'active'}}")
         | {{ui.planboard.day}}
-      button.btn(type='button', ng-model='timeline.scope.week', ng-click='timelineScoper("week")', class="{{(timeline.scope.week==true) && 'active'}}")
+      button.btn.btn-default(type='button', ng-model='timeline.scope.week', ng-click='timelineScoper("week")', class="{{(timeline.scope.week==true) && 'active'}}")
         | {{ui.planboard.week}}
-      button.btn(type='button', ng-model='timeline.scope.month', ng-click='timelineScoper("month")', class="{{(timeline.scope.month==true) && 'active'}}")
+      button.btn.btn-default(type='button', ng-model='timeline.scope.month', ng-click='timelineScoper("month")', class="{{(timeline.scope.month==true) && 'active'}}")
         | {{ui.planboard.month}}
 
     .btn-group.pull-left(style='margin-right: 5px;')
-      button#timelineBeforeBtn.btn(type='button', ng-click='timelineBefore(timeline.scope)')
-        i.icon-arrow-left
-      button#timelineZoomInBtn.btn(type='button', ng-click='timelineZoomIn()')
-        i.icon-zoom-in
-      button#timelineZoomOutBtn.btn(type='button', ng-click='timelineZoomOut()')
-        i.icon-zoom-out
-      button#timelineAfterBtn.btn(type='button', ng-click='timelineAfter(timeline.scope)')
-        i.icon-arrow-right
+      button#timelineBeforeBtn.btn.btn-default(type='button', ng-click='timelineBefore(timeline.scope)')
+        i.glyphicon.glyphicon-arrow-left
+      button#timelineZoomInBtn.btn.btn-default(type='button', ng-click='timelineZoomIn()')
+        i.glyphicon.glyphicon-zoom-in
+      button#timelineZoomOutBtn.btn.btn-default(type='button', ng-click='timelineZoomOut()')
+        i.glyphicon.glyphicon-zoom-out
+      button#timelineAfterBtn.btn.btn-default(type='button', ng-click='timelineAfter(timeline.scope)')
+        i.glyphicon.glyphicon-arrow-right
 
   div(class="{{ (browser.mobile) &&  'pull-left' || 'pull-right' }}", style="text-align: {{(browser.mobile) &&  'left' || 'right' }}")
     h4(style='font-weight: normal;')

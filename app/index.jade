@@ -13,16 +13,16 @@ block navbar
   .navbar.navbar-inverse.navbar-fixed-top.ng-cloak(
   ng-hide='(location=="login" || location=="forgotpass" || location=="register")',
   bs-navbar='')
-    .navbar-inner
       .container-fluid
-        a.btn.btn-navbar(data-toggle='collapse',
-        data-target='.nav-collapse')
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a.brand(href='#dashboard') StandBy
-        #collapsed.nav-collapse.collapse
-          ul.nav
+        .navbar-header
+          button.navbar-toggle(data-toggle='collapse',
+          data-target='.navbar-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='#dashboard') StandBy
+        #collapsed.navbar-collapse.collapse
+          ul.nav.navbar-nav
             li(data-match-route='/dashboard')
               a(href='#dashboard',
               ng-click='collapseNav()') Dashboard
@@ -36,52 +36,52 @@ block navbar
             li(data-match-route='/groups',
             ng-hide='StandBy.resources.role > 1')
               a(href='#groups') {{ui.groups.groups}}
-          ul.nav.pull-right(ng-hide='browser.mobile')
+          ul.nav.navbar-nav.pull-right(ng-hide='browser.mobile')
             li
               a(href='#faq#web')
-                i.icon-question-sign.icon-white
+                i.glyphicon.glyphicon-question-sign.glyphicon-white
                 | &nbsp;FAQ
             li
               a(href='#help#{{location}}')
-                i.icon-info-sign.icon-white
+                i.glyphicon.glyphicon-info-sign.glyphicon-white
                 | &nbsp;Handleiding
             li.dropdown
               a.dropdown-toggle(href='',
               data-toggle='dropdown')
-                i.icon-user.icon-white
+                i.glyphicon.glyphicon-user.glyphicon-white
                 | &nbsp;{{StandBy.resources.name}}&nbsp;
                 span(ng-show='StandBy.resources.role == 0')[SU]&nbsp;
                 b.caret
               ul.dropdown-menu
                 li
                   a(href='#profile')
-                    i.icon-user
+                    i.glyphicon.glyphicon-user
                     | &nbsp;{{ui.profile.profile}}
                 li
                   a(href='#settings')
-                    i.icon-wrench
+                    i.glyphicon.glyphicon-wrench
                     | &nbsp;{{ui.settings.settings}}
                 li.divider
                 li
                   a(href='#logout')
-                    i.icon-off
+                    i.glyphicon.glyphicon-off
                     | &nbsp;{{ui.login.logout}}
             li#fullscreener(ng-show='StandBy.config.fullscreen && browser.webkit')
               a(ng-click='fullScreen()')
-                i.icon-fullscreen.icon-white
-          ul.nav.pull-right(ng-show='browser.mobile',
+                i.glyphicon.glyphicon-fullscreen.glyphicon-white
+          ul.nav.navbar-nav.pull-right(ng-show='browser.mobile',
           style='{{(browser.landscape) && "margin-right:-20px"}}; display:none')
             li
               a(href='#profile')
-                i.icon-user.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+                i.glyphicon.glyphicon-user.glyphicon-white(ng-hide='browser.portrait || browser.screen.width < 768')
                 span(ng-show='browser.portrait || browser.screen.width < 768')
             li
               a(href='#settings')
-                i.icon-wrench.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+                i.glyphicon.glyphicon-wrench.glyphicon-white(ng-hide='browser.portrait || browser.screen.width < 768')
                 span(ng-show='browser.portrait || browser.screen.width < 768')
             li
               a(href='#logout')
-                i.icon-off.icon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+                i.glyphicon.glyphicon-off.glyphicon-white(ng-hide='browser.portrait || browser.screen.width < 768')
                 span(ng-show='browser.portrait || browser.screen.width < 768')
 
 block loading
@@ -114,7 +114,7 @@ block notifications
     span(ng-hide='notification.confirm') {{notification.message}}
     span(ng-show='notification.confirm')
       | {{ui.confirms.remove}}
-      button.btn.btn-mini.btn-danger(ng-click='fireDeleteRequest(notification.options)') Delete
+      button.btn.btn-xs.btn-danger(ng-click='fireDeleteRequest(notification.options)') Delete
 
 block mobile-status-bar
   #mobile-status-bar.ng-cloak(ng-show='loading.status && browser.mobile')

@@ -1,6 +1,6 @@
 section#dashboard(style='margin-top: -40px;')
-	.row-fluid
-		.sa.widget.span9(ng-show='StandBy.config.profile.smartAlarm')
+	.row
+		.sa.widget.col-md-9(ng-show='StandBy.config.profile.smartAlarm')
 			.head
 				h4 SlimAlarmeren
 			hr
@@ -41,7 +41,7 @@ section#dashboard(style='margin-top: -40px;')
 					span.text-warning {{ui.planboard.lastSyncTime}}
 					span.muted {{saSynced | nicelyDate}}
 
-		.widget.span3(ng-show='StandBy.config.profile.p2000.status')
+		.widget.col-md-3(ng-show='StandBy.config.profile.p2000.status')
 			.head
 				h4 {{ui.dashboard.announcements}}
 			hr

@@ -2,10 +2,10 @@
 	h3.pull-left {{ui.message.trash}}
 	.pull-right(style='margin-left: 10px;')
 		button.btn.btn-danger.pull-left(type='button', ng-click='emptyTrash()')
-			i.icon-trash.icon-white
+			i.glyphicon.glyphicon-trash.glyphicon-white
 			| {{ui.message.emptyTrash}}
 	form.pull-right
-		input.span12.search-query(type='text',
+		input.col-md-12.search-query(type='text',
 		placeholder='{{ui.message.filterMessages}}',
 		ng-model='query.trash')
 hr
@@ -31,7 +31,7 @@ div(ng-show='(messages.trash[page.trash] | filter:query.trash).length > 0')
 					ng-model='selection.trash[message.uuid]',
 					ng-checked='selection.trash[message.uuid]')
 				td
-					span.label {{message.box}}
+					span.label.label-default {{message.box}}
 				td
 					span(ng-repeat='receiver in message.responder')
 						a(href='#/profile/{{receiver | convertEve}}#profile')
@@ -41,17 +41,17 @@ div(ng-show='(messages.trash[page.trash] | filter:query.trash).length > 0')
 				td {{message.creationTime | nicelyDate}}
 				td
 					.pull-right
-						button.btn.btn-success.btn-mini(type='submit', ng-click='restoreMessage(message.uuid)')
-							i.icon-thumbs-up.icon-white
-	button.btn.btn-small.btn-success.pull-left(type='button', ng-click='restoreMessages(selection.trash)')
-		i.icon-thumbs-up.icon-white
+						button.btn.btn-success.btn-xs(type='submit', ng-click='restoreMessage(message.uuid)')
+							i.glyphicon.glyphicon-thumbs-up.glyphicon-white
+	button.btn.btn-sm.btn-success.pull-left(type='button', ng-click='restoreMessages(selection.trash)')
+		i.glyphicon.glyphicon-thumbs-up.glyphicon-white
 		| {{ui.message.restoreSelected}}
 	.btn-toolbar.pull-right(style='margin: 0;')
 		.btn-group
-			button.btn.btn-small(ng-click='paginate.before("trash")',
+			button.btn.btn-default.btn-sm(ng-click='paginate.before("trash")',
 			class="{{(page.trash==0) && 'disabled'}}")
 				| « {{ui.message.paginationPrevious}}
-			button.btn.btn-small(ng-click='paginate.next("trash")',
+			button.btn.btn-default.btn-sm(ng-click='paginate.next("trash")',
 			class="{{(page.trash + 1 == messages.trash.length) && 'disabled'}}")
 				| {{ui.message.paginationNext}} »
 	br
