@@ -93,11 +93,11 @@ $headings-color:          inherit;
 // Typography OLD
 // -------------------------
 //
-$baseFontFamily: $sansFontFamily;
+// $baseFontFamily: $sansFontFamily;
 //
 $baseLineHeight: 20px;
 //
-$altFontFamily: $serifFontFamily;
+// $altFontFamily: $serifFontFamily;
 //
 $headingsFontFamily: inherit;
 // empty to use BS default, $baseFontFamily
@@ -154,11 +154,11 @@ $caret-width-large:         5px;
 // -------------------------
 // Based on 14px font-size and 20px line-height
 
-$fontSizeLarge: $baseFontSize * 1.25;
+// $fontSizeLarge: $baseFontSize * 1.25;
 // ~18px
-$fontSizeSmall: $baseFontSize * 0.85;
+// $fontSizeSmall: $baseFontSize * 0.85;
 // ~12px
-$fontSizeMini: $baseFontSize * 0.75;
+// $fontSizeMini: $baseFontSize * 0.75;
 // ~11px
 
 $paddingLarge: 11px 19px;
@@ -248,7 +248,7 @@ $btnDangerBackground: #ba5855;
 $btnDangerBackgroundHighlight: #ab312f;
 //
 $btnInverseBackground: #444;
-$btnInverseBackgroundHighlight: $grayDarker;
+// $btnInverseBackgroundHighlight: $grayDarker;
 
 
 //== Forms
