@@ -67,11 +67,11 @@ div.row(ng-show='views.slot.add || views.slot.edit || views.group || views.wish 
         i.glyphicon.glyphicon-time.form-control-feedback
     .form-elements-group(ng-show='views.slot.add || views.slot.edit || views.member')
       label {{ui.planboard.state}}
-      select(ng-model='slot.state',
+      select.form-control(ng-model='slot.state',
       ng-options='option as value for (option, value) in states',
       ng-change='modifySlot(slot)',
       ng-show='views.slot.add || views.slot.edit')
-      select(ng-model='slot.state',
+      select.form-control(ng-model='slot.state',
       disabled='disabled',
       ng-options='option as value for (option, value) in states',
       ng-show='views.member')

@@ -1,11 +1,11 @@
 div#timeline-toolbar
   .pull-left
-    select(ng-model='timeline.current.group',
+    select.form-control(ng-model='timeline.current.group',
     ng-options='group.uuid as group.name for group in groups',
     ng-selected='timeline.current.group',
     ng-change='requestTimeline()',
     ng-show='timeline.current.layouts.group')
-    select(ng-model='timeline.current.division',
+    select.form-control(ng-model='timeline.current.division',
     ng-options='division.id as division.label for division in divisions',
     ng-selected='timeline.current.division',
     ng-change='changeDivision()',
