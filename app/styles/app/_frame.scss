@@ -101,19 +101,21 @@
   z-index: 100;
 
   .container-fluid {
-    display: table;
     padding-top: 10px;
     height: 100%;
 
     p {
-      display: table-cell;
       vertical-align: middle;
     }
   }
 
-  p.muted {
+  .footer-text {
+    display: block;
+    margin-top: 6px;
+  }
+
+  p.text-muted {
     float: left;
-    margin-top: 4px;
 
     img {
       margin-right: 5px;
@@ -166,7 +168,7 @@
           font-size: 14px;
         }
 
-        span.muted {
+        span.text-muted {
           //width: 200px;
 
           a {

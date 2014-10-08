@@ -144,12 +144,12 @@ block footer
             li
               img(src='images/standby_logo_footer.png', alt='StandBy Logo')
             li
-              span.muted(style='display: block; margin-top: 4px;')
+              span.text-muted.footer-text
                 small
                   | Ask Community Systems, 2013 &nbsp; | &nbsp;&nbsp;
                   i
                     a(href='versions.html', target='_blank', style='color: #dddddd;') StandBy v{{StandBy.config.version}}
-      p.muted(ng-show='loading.status')
+      p.text-muted.footer-text(ng-show='loading.status')
         img(src='images/ajax-loader.gif')
         small
           span(ng-show='app.preloader.status') {{app.preloader.count}}%
