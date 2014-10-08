@@ -44,27 +44,6 @@ ul.nav-tabs-app {
   }
 }
 
-.tabs-left {
-  .tab-content {
-    border-left: 1px solid #ddd;
-  }
-}
-
-.tabs-left > .nav-tabs {
-  border-right: none;
-}
-
-.nav-tabs-list {
-  margin-right: -1px;
-  width: 170px;
-}
-
-#tab-content-fixed {
-  padding: 20px;
-  border: 1px solid #ddd;
-  background-color: white;
-}
-
 // http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3
 .tabs-left > .nav-tabs {
   border-bottom: 0;
@@ -122,6 +101,29 @@ ul.nav-tabs-app {
   border: 1px solid #ddd;
   overflow: auto;
 }
+
+//Own tab styles
+.tabs-left {
+  .tab-content {
+    border-left: 1px solid #ddd;
+  }
+}
+
+.tabs-left > .nav-tabs {
+  border-right: none;
+}
+
+.nav-tabs-list {
+  margin-right: -1px;
+  width: 170px;
+}
+
+#tab-content-fixed {
+  padding: 20px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
 
 //Fixes tab icon placement
 .tabs-left > .nav-tabs > li > a {
