@@ -1,8 +1,7 @@
 section#widget-pies
   form
     fieldset
-      .control-group
-        .controls
+      .form-group
           ul
             li(ng-repeat='group in popover.groups', style='margin-top: 8px;')
               label
@@ -15,5 +14,5 @@ section#widget-pies
                 br
     hr
     .actions
-      button.btn.btn-small(type='button', ng-click='dismiss()') {{ui.dashboard.widgetCancel}}
-      button.btn.btn-primary.btn-small(type='button', ng-click='saveOverviewWidget(popover.selection); dismiss()') {{ui.dashboard.widgetSave}}
+      button.btn.btn-default.btn-sm(type='button', ng-click='dismiss()') {{ui.dashboard.widgetCancel}}
+      button.btn.btn-primary.btn-sm(type='button', ng-click='saveOverviewWidget(popover.selection); dismiss()') {{ui.dashboard.widgetSave}}
