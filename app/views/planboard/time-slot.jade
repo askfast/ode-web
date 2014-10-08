@@ -22,7 +22,8 @@ div.row-fluid(ng-show='views.slot.add || views.slot.edit || views.group || views
         input(name='date-start',
         type='text',
         ng-model='slot.start.date',
-        data-date-format='dd-mm-yyyy',
+        data-date-type='string',
+        data-date-format='dd-MM-yyyy',
         bs-datepicker='')
         i.icon-calendar
       .control-group.dater(ng-show='views.group || views.member')
@@ -51,7 +52,8 @@ div.row-fluid(ng-show='views.slot.add || views.slot.edit || views.group || views
         input(name='date-end',
         type='text',
         ng-model='slot.end.date',
-        data-date-format='dd-mm-yyyy',
+        data-date-type='string',
+        data-date-format='dd-MM-yyyy',
         bs-datepicker='')
         i.icon-calendar
       .control-group.dater(ng-show='views.group || views.member')
