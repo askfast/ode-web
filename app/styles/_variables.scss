@@ -86,7 +86,8 @@ $line-height-computed:    floor(($font-size-base * $line-height-base)); // ~20px
 
 //** By default, this inherits from the `<body>`.
 $headings-font-family:    inherit;
-$headings-font-weight:    500;
+$headings-font-weight:    bold;
+// $headings-font-weight:    500;
 $headings-line-height:    1.1;
 $headings-color:          inherit;
 
@@ -507,7 +508,8 @@ $nav-tabs-border-color:                     #ddd;
 
 $nav-tabs-link-hover-border-color:          $gray-lighter;
 
-$nav-tabs-active-link-hover-bg:             $body-bg;
+$nav-tabs-active-link-hover-bg:             $white;
+// $nav-tabs-active-link-hover-bg:             $body-bg;
 $nav-tabs-active-link-hover-color:          $gray;
 $nav-tabs-active-link-hover-border-color:   #ddd;
 
