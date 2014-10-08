@@ -220,7 +220,7 @@
                     option(value='') {{ui.groups.selectGroup}}
                   button.btn.btn-success.btn-sm(style='margin-left: 5px;',
                   ng-click='addMember(candidate)') {{ui.groups.addToGroup}}
-        span.muted.pull-right
+        span.text-muted.pull-right
           small
             i {{candidates.length | i18n_spec:'groups.resultCount'}}
 
@@ -319,7 +319,7 @@
         button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMembers(selection, group)')
           i.glyphicon.glyphicon-trash.glyphicon-white
           | {{ui.groups.removeSelectedMembers}}
-        span.muted.pull-right
+        span.text-muted.pull-right
           small
             i
               | {{(data.members[group.uuid]|filter:filtered|filterSupers).length | i18n_spec:'groups.memberCount'}}

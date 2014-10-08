@@ -26,7 +26,7 @@ div(ng-show='scheadules.length > 0')
 				td
 					a(ng-click='requestNotification(scheadule.uuid)') {{scheadule.label}}
 				td
-					span.muted
+					span.text-muted
 						small
 							i {{scheadule.recipients | nicelyAudience}}
 				td
@@ -37,6 +37,6 @@ div(ng-show='scheadules.length > 0')
 							i.glyphicon.glyphicon-edit
 						button.btn.btn-danger.btn-xs(type='submit', ng-click='scheaduler.remove(scheadule.uuid)')
 							i.glyphicon.glyphicon-trash.glyphicon-white
-	span.muted.pull-right
+	span.text-muted.pull-right
 		small
 			i {{ui.message.inTotal}}: {{scheadules.length}}

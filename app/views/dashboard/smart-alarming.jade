@@ -93,7 +93,7 @@
     p(ng-hide='loading.smartAlarm', style='margin-top: 10px;')
       small.pull-left
         span.text-warning {{ui.planboard.lastSyncTime}}
-        span.muted &nbsp; {{saSynced | nicelyDate}}
+        span.text-muted &nbsp; {{saSynced | nicelyDate}}
 
     button.btn.btn-default.btn-xs.pull-right(ng-click='toggleReserves=!toggleReserves', ng-hide='loading.smartAlarm')
       span(ng-hide='toggleReserves') Toon reserves

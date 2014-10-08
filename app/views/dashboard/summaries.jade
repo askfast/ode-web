@@ -28,10 +28,10 @@ div.widget
               h3 {{ui.dashboard.currentState}}
               hr
               h5 {{pie.state.start}}
-              small.muted van
+              small.text-muted van
               br
               h5 {{pie.state.end}}
-              small.muted tot
+              small.text-muted tot
         .col-md-4
           .block
             .icon
@@ -39,16 +39,16 @@ div.widget
             .body
               h3 {{ui.dashboard.thisWeek}}
               hr
-              small.muted {{pie.weeks.current.start.date}} / {{pie.weeks.current.end.date}}
+              small.text-muted {{pie.weeks.current.start.date}} / {{pie.weeks.current.end.date}}
               br
               h5 {{pie.weeks.current.ratios.more}}%
-              small.muted {{ui.dashboard.statMore}}
+              small.text-muted {{ui.dashboard.statMore}}
               | ,
               h5 {{pie.weeks.current.ratios.even}}%
-              small.muted {{ui.dashboard.statEven}}
+              small.text-muted {{ui.dashboard.statEven}}
               | ,
               h5 {{pie.weeks.current.ratios.less}}%
-              small.muted {{ui.dashboard.statLess}}
+              small.text-muted {{ui.dashboard.statLess}}
         .col-md-4
           .block
             .icon
@@ -56,21 +56,21 @@ div.widget
             .body
               h3 {{ui.dashboard.nextWeek}}
               hr
-              small.muted {{pie.weeks.next.start.date}} / {{pie.weeks.next.end.date}}
+              small.text-muted {{pie.weeks.next.start.date}} / {{pie.weeks.next.end.date}}
               br
               h5 {{pie.weeks.next.ratios.more}}%
-              small.muted {{ui.dashboard.statMore}}
+              small.text-muted {{ui.dashboard.statMore}}
               | ,
               h5 {{pie.weeks.next.ratios.even}}%
-              small.muted {{ui.dashboard.statEven}}
+              small.text-muted {{ui.dashboard.statEven}}
               | ,
               h5 {{pie.weeks.next.ratios.less}}%
-              small.muted {{ui.dashboard.statLess}}
+              small.text-muted {{ui.dashboard.statLess}}
   hr.lastline(ng-hide='loadingPies || checkAnyPies()')
   p(ng-hide='loadingPies || checkAnyPies()')
     small.pull-right
       span.text-warning {{ui.dashboard.periods}}:
-      span.muted
+      span.text-muted
         | {{periods.start}}
         | |
         | {{periods.end}}

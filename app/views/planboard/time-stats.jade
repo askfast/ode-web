@@ -64,13 +64,13 @@ div#statisticsTab.tab-pane
               .info
                 h4 {{ui.planboard.statPeopleMore}}
                 h5 {{agg.durations.more | calculateTimeInDays}}
-                small.muted {{ui.planboard.statDays}}
+                small.text-muted {{ui.planboard.statDays}}
                 | ,
                 h5 {{agg.durations.more | calculateTimeInHours}}
-                small.muted {{ui.planboard.statHours}}
+                small.text-muted {{ui.planboard.statHours}}
                 | ,
                 h5 {{agg.durations.more | calculateTimeInMinutes}}
-                small.muted {{ui.planboard.statMinutes}}
+                small.text-muted {{ui.planboard.statMinutes}}
             li
               .ratios.even
                 span.ratio {{agg.ratios.even}}
@@ -78,13 +78,13 @@ div#statisticsTab.tab-pane
               .info
                 h4 {{ui.planboard.statPeopleEven}}
                 h5 {{agg.durations.even | calculateTimeInDays}}
-                small.muted {{ui.planboard.statDays}}
+                small.text-muted {{ui.planboard.statDays}}
                 | ,
                 h5 {{agg.durations.even | calculateTimeInHours}}
-                small.muted {{ui.planboard.statHours}}
+                small.text-muted {{ui.planboard.statHours}}
                 | ,
                 h5 {{agg.durations.even | calculateTimeInMinutes}}
-                small.muted {{ui.planboard.statMinutes}}
+                small.text-muted {{ui.planboard.statMinutes}}
             li
               .ratios.less
                 span.ratio {{agg.ratios.less}}
@@ -92,13 +92,13 @@ div#statisticsTab.tab-pane
               .info
                 h4 {{ui.planboard.statPeopleLess}}
                 h5 {{agg.durations.less | calculateTimeInDays}}
-                small.muted {{ui.planboard.statDays}}
+                small.text-muted {{ui.planboard.statDays}}
                 | ,
                 h5 {{agg.durations.less | calculateTimeInHours}}
-                small.muted {{ui.planboard.statHours}}
+                small.text-muted {{ui.planboard.statHours}}
                 | ,
                 h5 {{agg.durations.less | calculateTimeInMinutes}}
-                small.muted {{ui.planboard.statMinutes}}
+                small.text-muted {{ui.planboard.statMinutes}}
     #memberBars
       ul
         li(ng-repeat='member in data.members')
@@ -107,15 +107,15 @@ div#statisticsTab.tab-pane
             .progress-bar(ng-repeat='stat in member.stats',
             ng-style='{ "width": stat.ratio + "%" }',
             class="{{stat.state}}")
-          small.muted {{member.stats | convertRatios}}
+          small.text-muted {{member.stats | convertRatios}}
   hr
   p
     small.pull-left
       span.text-warning {{ui.planboard.lastSyncTime}}
-      span.muted {{data.synced | nicelyDate}}
+      span.text-muted {{data.synced | nicelyDate}}
     small.pull-right
       span.text-warning {{ui.planboard.dataRangeStart}}
-      span.muted {{data.periods.start | nicelyDate}}
+      span.text-muted {{data.periods.start | nicelyDate}}
       | |
       span.text-warning {{ui.planboard.dataRangeEnd}}
-      span.muted {{data.periods.end | nicelyDate}}
+      span.text-muted {{data.periods.end | nicelyDate}}

@@ -417,13 +417,13 @@ section#profile
           p
             small.pull-left
               span.text-warning {{ui.planboard.lastSyncTime}}
-              span.muted {{data.synced | nicelyDate}}
+              span.text-muted {{data.synced | nicelyDate}}
             small.pull-right
               span.text-warning {{ui.planboard.dataRangeStart}}
-              span.muted {{data.periods.start | nicelyDate}}
+              span.text-muted {{data.periods.start | nicelyDate}}
               | |
               span.text-warning {{ui.planboard.dataRangeEnd}}
-              span.muted {{data.periods.end | nicelyDate}}
+              span.text-muted {{data.periods.end | nicelyDate}}
 
 #deleteUserModal.modal.hide.fade(tabindex='-1',
 role='dialog',
