@@ -17,8 +17,27 @@ define(
               //element.val(startDate.format('{MM}-{dd}-{yyyy}') + ' / ' + endDate.format('{MM}-{dd}-{yyyy}'));
 
               var options = {
-                // startDate: startDate,
-                // endDate: endDate,
+                startDate:      Date.today(),
+                endDate:        Date.today(),
+                format:         'DD-MM-YYYY',
+                separator:      ' / ',
+                minDate:        false,
+                maxDate:        false,
+                changed:        false,
+                cleared:        false,
+                showDropdowns:  false,
+                dateLimit:      false,
+                locale: {
+                  applyLabel:     'Toepassen',
+                  cancelLabel:    'Annuleren',
+                  fromLabel:      'van',
+                  toLabel:        'tot',
+                  weekLabel:      'W',
+                  customRangeLabel: 'Aangepaste periode',
+                  daysOfWeek:     Date.CultureInfo.shortestDayNames,
+                  monthNames:     Date.CultureInfo.monthNames,
+                  firstDay:       0
+                },
                 ranges: {}
               };
 
@@ -58,6 +77,16 @@ define(
                 function (start, end) {
                   scope.$apply(
                     function () {
+
+                      // Check for moment object and convert to Date object
+                      // (bootstrap-daterangepicker uses moment)
+                      if(start._isAMomentObject && end._isAMomentObject){
+                        start = start.toDate();
+                        // bootstrap-daterangepicker uses end of day,
+                        // make it the beginning using moment's function
+                        end = (end.startOf('day')).toDate();
+                      }
+
                       var diff = end.getTime() - start.getTime();
 
                       scope.timeline.scope = {
@@ -96,7 +125,7 @@ define(
               element.attr('data-toggle', 'daterangepicker');
 
               // TODO: Investigate if its really needed!!
-              element.daterangepicker({ autoclose: true });
+              // element.daterangepicker({ autoclose: true });
             }
           };
         }
