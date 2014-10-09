@@ -1,10 +1,12 @@
 div.widget
   div.head
     h4 {{ui.dashboard.overview}}
-    button#dashboardPopoverBtn.btn.btn-default.btn-sm(bs-popover_='"views/dashboard/summary-manager.html"',
+    button#dashboardPopoverBtn.btn.btn-default.btn-sm(type='button'
     data-placement='{{(browser.mobile) && "left" || "bottom"}}',
     data-title='Overzicht instellingen',
-    ng-click='fixPopoverPos()')
+    data-content-template="views/dashboard/summary-manager.html",
+    data-target='#dashboardPopoverBtn'
+    bs-popover='')
       i.glyphicon.glyphicon-cog
   hr
   p(ng-hide='loading.pies || !checkAnyPies()',

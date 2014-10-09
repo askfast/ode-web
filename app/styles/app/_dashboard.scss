@@ -1,5 +1,5 @@
 #dashboard {
-  overflow: hidden;
+  // overflow: hidden;
 
   .alert {
     margin-top: 15px;
@@ -363,6 +363,7 @@
 }
 
 #widget-pies {
+  min-width: 160px;
   padding-bottom: 0;
 
   ul {
@@ -407,7 +408,9 @@
   position: relative;
 
   .sa-state {
-    margin-top: 10px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
   }
 
   ul.sa-setup {

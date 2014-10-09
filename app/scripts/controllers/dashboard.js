@@ -606,18 +606,18 @@ define(['controllers/controllers'], function (controllers) {
       $scope.more.status = !$scope.more.status;
     };
 
-    $scope.fixPopoverPos = function () {
-      setTimeout(function () {
-        var spanWidth = $('#dashboard .span9').css('width'),
-          popWidth = $('#dashboard .popover').css('width');
+    // $scope.fixPopoverPos = function () {
+    //   setTimeout(function () {
+    //     var spanWidth = $('#dashboard .span9').css('width'),
+    //       popWidth = $('#dashboard .popover').css('width');
 
-        $('.popover').css({
-          top: $('#dashboardPopoverBtn').css('top'),
-          left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
-            + 'px'
-        });
-      }, $rootScope.StandBy.config.timers.TICKER);
-    };
+    //     $('.popover').css({
+    //       top: $('#dashboardPopoverBtn').css('top'),
+    //       left: ((spanWidth.substring(0, spanWidth.length - 2) - popWidth.substring(0, popWidth.length - 2) / 2) + 4)
+    //         + 'px'
+    //     });
+    //   }, $rootScope.StandBy.config.timers.TICKER);
+    // };
 
     if ($rootScope.StandBy.config.profile.smartAlarm) {
       $.ajax({
