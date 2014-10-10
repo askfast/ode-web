@@ -34,7 +34,11 @@ label {
   margin-right: 5px;
 
   input[type=text] {
-    width: 90px;
+    width: 100px;
+
+    &.input-sm{
+      width: 90px;
+    }
   }
 }
 
