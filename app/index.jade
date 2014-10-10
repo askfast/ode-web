@@ -36,7 +36,7 @@ block navbar
             li(data-match-route='/groups',
             ng-hide='StandBy.resources.role > 1')
               a(href='#groups') {{ui.groups.groups}}
-          ul.nav.navbar-nav.pull-right(ng-hide='browser.mobile')
+          ul.nav.navbar-nav.navbar-right(ng-hide='browser.mobile')
             li
               a(href='#faq#web')
                 i.glyphicon.glyphicon-question-sign.glyphicon-white
@@ -69,7 +69,7 @@ block navbar
             li#fullscreener(ng-show='StandBy.config.fullscreen && browser.webkit')
               a(ng-click='fullScreen()')
                 i.glyphicon.glyphicon-fullscreen.glyphicon-white
-          ul.nav.navbar-nav.pull-right(ng-show='browser.mobile',
+          ul.nav.navbar-nav.navbar-right(ng-show='browser.mobile',
           style='{{(browser.landscape) && "margin-right:-20px"}}; display:none')
             li
               a(href='#profile')
