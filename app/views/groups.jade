@@ -97,11 +97,10 @@
               select.form-control(ng-model='memberForm.role', ng-options='role.label for role in roles')
                 option(value='') {{ui.groups.selectRole}}
           .form-group
-            label.control-label {{ui.groups.groups}}
-              select.chzn-select(data-placeholder='',
-              multiple='multiple',
-              style='width: 530px;',
-              chosen='chosen',
+            label.control-label(style='width: 530px;') {{ui.groups.groups}}
+              select.chosen-select(data-placeholder=' ',
+              multiple='',
+              chosen='',
               ng-model='memberForm.groups',
               ng-options='group.name for group in data.groups')
               // <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p>

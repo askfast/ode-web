@@ -345,7 +345,7 @@ define(['controllers/controllers'], function (controllers) {
     function setGroupSelection() {
       $scope.userGroups = [];
 
-      _.each($("div#editTab select.chzn-select option"), function (option) {
+      _.each($("div#editTab select.chosen-select option"), function (option) {
         _.each($scope.groups, function (userGroup) {
           if (option.innerHTML == userGroup.name) {
             $scope.userGroups.push(userGroup);
@@ -355,14 +355,14 @@ define(['controllers/controllers'], function (controllers) {
         });
       });
 
-      $("div#editTab select.chzn-select").trigger("liszt:updated");
+      $("div#editTab select.chosen-select").trigger("chosen:updated");
     }
 
     $scope.detectChanges = function () {
       $timeout(function () {
         var selectedGroups = [];
 
-        _.each($(".chzn-choices .search-choice span"), function (option) {
+        _.each($(".chosen-choices .search-choice span"), function (option) {
           _.each(Store('network').get('groups'), function (group) {
               var _g = new RegExp(option.innerHTML);
 

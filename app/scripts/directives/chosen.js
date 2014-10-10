@@ -12,18 +12,20 @@ define(
             scope.$watch(
               'receviersList',
               function () {
-                element.trigger('liszt:updated')
+                element.trigger('chosen:updated')
               }
             );
 
             scope.$watch(
               'message.receviers',
               function () {
-                $(element[0]).trigger('liszt:updated')
+                $(element[0]).trigger('chosen:updated')
               }
             );
 
-            element.chosen();
+            element.chosen({
+              width: "95%"
+            });
           }
         };
       });

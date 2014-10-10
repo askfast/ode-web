@@ -19,12 +19,11 @@ form(ng-controller='scheaduler')
 			input#broadcastEmailCheckBox(type='checkbox', ng-model='broadcast.email', style='margin: -3px 5px 0 15px;')
 			label(for='broadcastEmailCheckBox', style='display: inline;') {{ui.message.email}}
 
-		.control-group
+		.control-group(style='width: 530px;')
 			label.control-label {{ui.message.receviers}}
-			select.chzn-select(data-placeholder=' ',
-			multiple='multiple',
-			style='width: 530px;',
-			chosen='chosen',
+			select.chosen-select(data-placeholder=' ',
+			multiple='',
+			chosen='',
 			ng-model='message.receivers',
 			ng-options='receiver.name group by receiver.group for receiver in receviersList | orderBy:"lastName"')
 

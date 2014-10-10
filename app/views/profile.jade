@@ -97,12 +97,10 @@ section#profile
                 select(ng-model='profileRole', ng-options='id as label for (id, label) in roles')
             .control-group(ng-hide='StandBy.resources.role > 1')
               | 1"
-              label.control-label Groups
-              .controls
-                select.chzn-select(data-placeholder=' ',
-                multiple='multiple',
-                style='width: 530px;',
-                chosen='chosen',
+              label.control-label(style='width: 530px;') Groups
+                select.chosen-select(data-placeholder=' ',
+                multiple='',
+                chosen='',
                 ng-model='userGroups',
                 ng-options='group.name for group in availableGroups',
                 ng-change='detectChanges()')
