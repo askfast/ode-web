@@ -347,7 +347,7 @@ define(
             };
 
             _.each(
-              $("div#composeTab select.chzn-select option"),
+              $("div#composeTab select.chosen-select option"),
               function (option) {
                 _.each(
                   scheaduled.recipients,
@@ -374,7 +374,7 @@ define(
               }
             );
 
-            $("div#composeTab select.chzn-select").trigger("liszt:updated");
+            $("div#composeTab select.chosen-select").trigger("chosen:updated");
 
             $scope.scheaduled = {
               uuid: scheaduled.uuid,
@@ -457,13 +457,13 @@ define(
               $scope.scheadulerPane = false;
 
               _.each(
-                $("div#composeTab select.chzn-select option"),
+                $("div#composeTab select.chosen-select option"),
                 function (option) {
                   option.selected = false
                 }
               );
 
-              $("div#composeTab select.chzn-select").trigger("liszt:updated");
+              $("div#composeTab select.chosen-select").trigger("chosen:updated");
 
               $scope.scheaduled = {
                 title: '',
@@ -812,7 +812,7 @@ define(
            * TODO: Is it still working? Fix for not displaying original sender in multiple receivers selector
            * in the case that user wants to add more receivers to the list
            */
-          $("div#composeTab select.chzn-select").chosen()
+          $("div#composeTab select.chosen-select").chosen({width: "95%"})
             .change(
             function () {
               $.each(
@@ -821,7 +821,7 @@ define(
                   var name = $(li).html();
 
                   $.each(
-                    $("div#composeTab select.chzn-select option"),
+                    $("div#composeTab select.chosen-select option"),
                     function (j, opt) {
                       if (opt.innerHTML == name) opt.selected = true;
                     }
@@ -839,7 +839,7 @@ define(
             _.each(
               $scope.message.receivers, function (receiver) {
                 _.each(
-                  $("div#composeTab select.chzn-select option"),
+                  $("div#composeTab select.chosen-select option"),
                   function (option) {
                     if (option.innerHTML == receiver.name) {
                       option.selected = true;
@@ -849,7 +849,7 @@ define(
               }
             );
 
-            $("div#composeTab select.chzn-select").trigger("liszt:updated");
+            $("div#composeTab select.chosen-select").trigger("chosen:updated");
           }
 
 
@@ -864,13 +864,13 @@ define(
             setTimeout(
               function () {
                 _.each(
-                  $("div#composeTab select.chzn-select option"),
+                  $("div#composeTab select.chosen-select option"),
                   function (option) {
                     if (option.innerHTML == name) option.selected = true;
                   }
                 );
 
-                $("div#composeTab select.chzn-select").trigger("liszt:updated");
+                $("div#composeTab select.chosen-select").trigger("chosen:updated");
               }, $rootScope.StandBy.config.timers.TICKER);
 
             $scope.message = {
