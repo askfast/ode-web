@@ -38,7 +38,7 @@ section#dashboard(style='margin-top: -40px;')
 							span Niet beschikbaar
 			p(ng-hide='loading.smartAlarm')
 				small.pull-left
-					span.text-warning {{ui.planboard.lastSyncTime}}
+					span.text-warning {{ui.planboard.lastSyncTime}} &nbsp;
 					span.text-muted {{saSynced | nicelyDate}}
 
 		.widget.col-md-3(ng-show='StandBy.config.profile.p2000.status')
