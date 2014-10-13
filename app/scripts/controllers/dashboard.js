@@ -229,13 +229,15 @@ define(['controllers/controllers'], function (controllers) {
             $rootScope.ui.dashboard.notAssigned
         }
 
+        var saClass = (selection.user==null ? 'sa-icon-not-assigned' : null);
+
         switch (selection.role) {
           case 'bevelvoerder':
             $scope.saMembers.truck.push({
               rank: 1,
               icon: $rootScope.ui.dashboard.alarmRoles.commanderInitial,
               role: $rootScope.ui.dashboard.alarmRoles.commander,
-              class: 'sa-icon-commander',
+              class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-commander'),
               name: translateName(selection.user),
               uuid: selection.user
             });
@@ -246,7 +248,7 @@ define(['controllers/controllers'], function (controllers) {
               rank: 0,
               icon: $rootScope.ui.dashboard.alarmRoles.driverInitial,
               role: $rootScope.ui.dashboard.alarmRoles.driver,
-              class: 'sa-icon-driver',
+              class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-driver'),
               name: translateName(selection.user),
               uuid: selection.user
             });
@@ -258,7 +260,8 @@ define(['controllers/controllers'], function (controllers) {
               icon: 'M1',
               role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 1',
               name: translateName(selection.user),
-              uuid: selection.user
+              uuid: selection.user,
+              class : saClass
             });
             break;
 
@@ -268,7 +271,8 @@ define(['controllers/controllers'], function (controllers) {
               icon: 'M2',
               role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 2',
               name: translateName(selection.user),
-              uuid: selection.user
+              uuid: selection.user,
+              class : saClass
             });
             break;
 
@@ -278,7 +282,8 @@ define(['controllers/controllers'], function (controllers) {
               icon: 'M3',
               role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 3',
               name: translateName(selection.user),
-              uuid: selection.user
+              uuid: selection.user,
+              class : saClass
             });
             break;
 
@@ -288,7 +293,8 @@ define(['controllers/controllers'], function (controllers) {
               icon: 'M4',
               role: $rootScope.ui.dashboard.alarmRoles.manpower + ' 4',
               name: translateName(selection.user),
-              uuid: selection.user
+              uuid: selection.user,
+              class : saClass
             });
             break;
         }
