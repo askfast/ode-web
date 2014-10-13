@@ -7,19 +7,21 @@
 hr
 form(ng-controller='scheaduler')
 	fieldset
-		.control-group
+		.form-group
 			label.control-label {{ui.message.broadcast}}
-			input(type='checkbox',
-			ng-model='broadcast.sms',
-			ng-hide='StandBy.resources.role > 2',
-			style="margin:-3px 5px 0 0",
-			id="broadcastSmsCheckBox")
-			label(for='broadcastSmsCheckBox', style='display: inline;')
-				span(ng-hide='StandBy.resources.role > 2') {{ui.message.sms}}
-			input#broadcastEmailCheckBox(type='checkbox', ng-model='broadcast.email', style='margin: -3px 5px 0 15px;')
-			label(for='broadcastEmailCheckBox', style='display: inline;') {{ui.message.email}}
+			div
+				input#broadcastSmsCheckBox(type='checkbox',
+				ng-model='broadcast.sms',
+				ng-hide='StandBy.resources.role > 2',
+				style="margin: 0 2px 0 0")
+				label(for='broadcastSmsCheckBox')
+					span(ng-hide='StandBy.resources.role > 2') {{ui.message.sms}}
+				input#broadcastEmailCheckBox(type='checkbox',
+				ng-model='broadcast.email',
+				style='margin: 0 2px 0 10px;')
+				label(for='broadcastEmailCheckBox') {{ui.message.email}}
 
-		.control-group(style='width: 530px;')
+		.form-group(style='width: 530px;')
 			label.control-label {{ui.message.receviers}}
 			select.chosen-select(data-placeholder=' ',
 			multiple='',
@@ -27,15 +29,15 @@ form(ng-controller='scheaduler')
 			ng-model='message.receivers',
 			ng-options='receiver.name group by receiver.group for receiver in receviersList | orderBy:"lastName"')
 
-		.control-group
+		.form-group
 			label.control-label {{ui.message.subject}}
-			input.col-md-5(type='text', ng-model='message.subject', placeholder='{{ui.message.typeSubject}}')
+			input.form-control(type='text', ng-model='message.subject', placeholder='{{ui.message.typeSubject}}')
 
-		.control-group
+		.form-group
 			label.control-label {{ui.message.message}}
-			textarea.col-md-7(rows='7', ng-model='message.body')
+			textarea.form-contro(rows='7', ng-model='message.body')
 
-		.control-group(ng-hide='StandBy.resources.role > 1')
+		.form-group(ng-hide='StandBy.resources.role > 1')
 			label.control-label {{ui.message.repeat}}
 			.btn-group(data-toggle='buttons-radio')
 				button.btn.btn-default.btn-sm(type='button',
@@ -54,17 +56,17 @@ form(ng-controller='scheaduler')
 					button.btn.btn-sm.btn-success(type='button', ng-click='addNewOffset()')
 						| {{ui.message.repeatNew}}
 			hr
-			.control-group
+			.form-group
 				label.control-label {{ui.message.notificationLabel}}
-				input.col-md-6(type='text', ng-model='scheaduled.title', placeholder='{{ui.message.notificationLabel}}')
+				input.form-control.col-md-6(type='text', ng-model='scheaduled.title', placeholder='{{ui.message.notificationLabel}}')
 
-			.control-group(ng-hide='scheaduleCount > 0')
+			.form-group(ng-hide='scheaduleCount > 0')
 				label.control-label {{ui.message.notifications}}
 				p.text-muted
 					small
 						i {{ui.message.notificationsEmpty}}
 
-			.control-group(ng-show='scheaduleCount > 0')
+			.form-group(ng-show='scheaduleCount > 0')
 				label.control-label {{ui.message.notifications}}
 				span(style='font-size: 11px;', ng-repeat='o in offsets')
 					| {{o}}
@@ -73,15 +75,14 @@ form(ng-controller='scheaduler')
 				div(ng-repeat='offset in scheaduled.offsets')
 					notification-item(scheadule='offset', remover='remover()')
 
-		.form-actions
+		.form-group
 			div(ng-show='scheaduled.uuid || scheaduled.status')
-				button(type='submit', ng-hide='scheaduleCount > 0')
-					| class="btn btn-success disabled"
+				button(type='submit', ng-hide='scheaduleCount > 0', class="btn btn-success disabled")
 					| {{ui.message.notificationSave}}
 				button(type='submit',
 				ng-click='scheaduler.save(message, broadcast, scheaduled)',
-				ng-show='scheaduleCount > 0')
-					| class="btn btn-success"
+				ng-show='scheaduleCount > 0',
+				class="btn btn-success")
 					| {{ui.message.notificationSave}}
 			button.btn.btn-success(type='submit',
 			ng-hide='scheaduled.uuid || scheaduled.status',
