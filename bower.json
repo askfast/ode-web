@@ -23,7 +23,7 @@
     "web-lib-moment": "https://github.com/askcs/web-lib-moment.git",
     "web-lib-session": "https://github.com/askcs/web-lib-session.git",
     "web-lib-vis": "https://github.com/askcs/web-lib-vis.git",
-    "bootstrap-sass-official": "~3.1.1",
+    "bootstrap-sass-official": "~3.2.0+2",
     "underscore": "~1.6.0",
     "jquery-form": "~3.46.0",
     "angular-md5": "~0.1.7",
