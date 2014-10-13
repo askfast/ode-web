@@ -340,7 +340,7 @@ define(['controllers/controllers'], function (controllers) {
     }
 
     function progress(ratio, message) {
-      angular.element('#preloader .progress .bar').css({ width: ratio + '%' });
+      angular.element('#preloader .progress .progress-bar').css({ width: ratio + '%' });
       angular.element('#preloader span').text(message);
     }
 
