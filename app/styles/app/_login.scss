@@ -2,7 +2,7 @@
 #welcome {
   margin: 30px auto 20px auto;
   padding: 35px 29px 19px 29px;
-  max-width: 300px;
+  max-width: 360px;
   border: 1px solid #d0cec1;
   border-radius: 5px;
   background-color: #fff;
@@ -39,7 +39,6 @@
     input[type=text], input[type=password] {
       margin-bottom: 15px;
       padding: 7px 9px;
-      width: 90%;
       height: auto;
     }
 
@@ -52,8 +51,8 @@
     .checkbox {
       margin: 0 auto 25px;
       padding-left: 35px;
-      width: 90%;
       text-align: left;
+      width: 100%;
     }
 
     .alert {

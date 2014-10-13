@@ -80,7 +80,7 @@ define(['controllers/controllers'], function (controllers) {
         $scope.alert = {
           login: {
             display: true,
-            type: 'alert-error',
+            type: 'alert-danger',
             message: $rootScope.ui.login.alert_fillfiled
           }
         };
@@ -124,7 +124,7 @@ define(['controllers/controllers'], function (controllers) {
           $scope.alert = {
             login: {
               display: true,
-              type: 'alert-error',
+              type: 'alert-danger',
               // message: $rootScope.ui.login.alert_wrongUserPass
               message: (result.error.status == 400 ||
                 result.error.status == 403 ||
@@ -362,7 +362,7 @@ define(['controllers/controllers'], function (controllers) {
           $scope.alert = {
             forget: {
               display: true,
-              type: 'alert-error',
+              type: 'alert-danger',
               message: $rootScope.ui.errors.login.forgotCantFind
             }
           };
@@ -379,7 +379,7 @@ define(['controllers/controllers'], function (controllers) {
         $scope.alert = {
           changePass: {
             display: true,
-            type: 'alert-error',
+            type: 'alert-danger',
             message: $rootScope.ui.errors.login.changePassAllFields
           }
         };
@@ -391,7 +391,7 @@ define(['controllers/controllers'], function (controllers) {
         $scope.alert = {
           changePass: {
             display: true,
-            type: 'alert-error',
+            type: 'alert-danger',
             message: $rootScope.ui.errors.login.changePassNoMatch
           }
         };
@@ -408,7 +408,7 @@ define(['controllers/controllers'], function (controllers) {
           $scope.alert = {
             changePass: {
               display: true,
-              type: 'alert-error',
+              type: 'alert-danger',
               message: $rootScope.ui.errors.login.changePass
             }
           };
@@ -436,7 +436,7 @@ define(['controllers/controllers'], function (controllers) {
         $scope.alert = {
           login: {
             display: true,
-            type: 'alert-error',
+            type: 'alert-danger',
             message: $rootScope.ui.login.sessionTimeout
           }
         };
@@ -448,7 +448,7 @@ define(['controllers/controllers'], function (controllers) {
       $scope.alert = {
         login: {
           display: true,
-          type: 'alert-error',
+          type: 'alert-danger',
           message: $rootScope.ui.login.sessionTimeout
         }
       };
