@@ -11,7 +11,7 @@
     class="{{(views.member==true) && 'active'}}",
     ng-click='newMemberForm(); setViewTo("member")') {{ui.groups.newMember}}
 
-  form.col-sm-3.col-lg-2.pull-right(ng-submit='searchMembers(search.query)')
+  form.pull-right(ng-submit='searchMembers(search.query)', style='width: 256px;')
     .input-group
       input.form-control.search-query(type='text',
       placeholder='{{ui.groups.searchFor}}',
@@ -201,7 +201,7 @@
                   span(ng-show='!$last') , 
               td
                 div(ng-hide='candidate.fields.role == 0')
-                  select(style='margin: 0; width: 160px;',
+                  select.form-control(style='margin: 0; width: 160px;',
                   ng-model='candidate.group',
                   ng-options='group.name for group in data.groups')
                     option(value='') {{ui.groups.selectGroup}}
@@ -305,7 +305,7 @@
                       i.glyphicon.glyphicon-remove.glyphicon-white
         button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMembers(selection, group)')
           i.glyphicon.glyphicon-trash.glyphicon-white
-          | {{ui.groups.removeSelectedMembers}}
+          | &nbsp;{{ui.groups.removeSelectedMembers}}
         span.text-muted.pull-right
           small
             i

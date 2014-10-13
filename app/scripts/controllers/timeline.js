@@ -16,7 +16,8 @@ define(
         'Dater',
         'Sloter',
         'Profile',
-        function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Sloter, Profile) {
+        'Store',
+        function ($rootScope, $scope, $q, $location, $route, $window, Slots, Dater, Sloter, Profile, Store) {
           // TODO: Define diff in the watcher maybe?
           var range,
             diff;
