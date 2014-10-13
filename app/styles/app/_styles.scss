@@ -86,7 +86,7 @@ dl {
 }
 
 .label-inset,
-.badge-inset {
+.badge.badge-inset {
   background-color: #6f9a6d;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.30);
 }
@@ -235,7 +235,7 @@ dl {
   }
 
   .scheadule {
-    overflow: hidden;
+    // overflow: hidden;
     margin-bottom: 5px;
   }
 
@@ -333,4 +333,9 @@ dl {
     bottom: 17px;
     left: 15px;
   }
+}
+
+// Broad fixes from transition to Bootstrap 3
+.glyphicon {
+  top: 2px;
 }

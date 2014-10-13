@@ -5,7 +5,7 @@ section#planboard(ng-controller='timeline')
   time-travel
   time-slot
 
-  div.row-fluid
+  div
     .tabbable.tabs-left
       ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
         li.active
@@ -49,35 +49,35 @@ section#planboard(ng-controller='timeline')
           p
             small.pull-left
               span.text-warning {{ui.planboard.lastSyncTime}}
-              span.muted &nbsp; {{data.synced | nicelyDate}}
+              span.text-muted &nbsp; {{data.synced | nicelyDate}}
             small.pull-right
               span.text-warning {{ui.planboard.dataRangeStart}}
-              span.muted {{data.periods.start | nicelyDate}}
+              span.text-muted {{data.periods.start | nicelyDate}}
               | &nbsp;&nbsp;| &nbsp;
               span.text-warning {{ui.planboard.dataRangeEnd}}
-              span.muted {{data.periods.end | nicelyDate}}
+              span.text-muted {{data.periods.end | nicelyDate}}
 
         // statistics
         div#statisticsTab.tab-pane
           // time-toolbar
           div#timeline-toolbar
             .pull-left
-              select(ng-model='timeline.current.group',
+              select.form-control(ng-model='timeline.current.group',
               ng-options='group.uuid as group.name for group in groups',
               ng-selected='timeline.current.group',
               ng-change='requestTimeline()')
-              select(ng-model='timeline.current.division',
+              select.form-control(ng-model='timeline.current.division',
               ng-options='division.id as division.label for division in divisions',
               ng-selected='timeline.current.division',
               ng-change='changeDivision()',
               ng-show='divisions.length > 0')
             .pull-right
               .btn-group
-                button.btn(type='button',
+                button.btn.btn-default(type='button',
                 class="{{(timeline.current.layouts.group==true) && 'active'}}"
                 ng-model='timeline.current.layouts.group',
                 ng-click='requestTimeline("group")') {{ui.planboard.group}}
-                button.btn(type='button',
+                button.btn.btn-default(type='button',
                 class="{{(timeline.current.layouts.members==true) && 'active'}}",
                 ng-model='timeline.current.layouts.members',
                 ng-click='requestTimeline("members")',
@@ -101,13 +101,13 @@ section#planboard(ng-controller='timeline')
                       .info
                         h4 {{ui.planboard.statPeopleMore}}
                         h5 {{agg.durations.more | calculateTimeInDays}}
-                        small.muted {{ui.planboard.statDays}}
+                        small.text-muted {{ui.planboard.statDays}}
                         | ,
                         h5 {{agg.durations.more | calculateTimeInHours}}
-                        small.muted {{ui.planboard.statHours}}
+                        small.text-muted {{ui.planboard.statHours}}
                         | ,
                         h5 {{agg.durations.more | calculateTimeInMinutes}}
-                        small.muted {{ui.planboard.statMinutes}}
+                        small.text-muted {{ui.planboard.statMinutes}}
                     li
                       .ratios.even
                         span.ratio {{agg.ratios.even}}
@@ -115,13 +115,13 @@ section#planboard(ng-controller='timeline')
                       .info
                         h4 {{ui.planboard.statPeopleEven}}
                         h5 {{agg.durations.even | calculateTimeInDays}}
-                        small.muted {{ui.planboard.statDays}}
+                        small.text-muted {{ui.planboard.statDays}}
                         | ,
                         h5 {{agg.durations.even | calculateTimeInHours}}
-                        small.muted {{ui.planboard.statHours}}
+                        small.text-muted {{ui.planboard.statHours}}
                         | ,
                         h5 {{agg.durations.even | calculateTimeInMinutes}}
-                        small.muted {{ui.planboard.statMinutes}}
+                        small.text-muted {{ui.planboard.statMinutes}}
                     li
                       .ratios.less
                         span.ratio {{agg.ratios.less}}
@@ -129,30 +129,30 @@ section#planboard(ng-controller='timeline')
                       .info
                         h4 {{ui.planboard.statPeopleLess}}
                         h5 {{agg.durations.less | calculateTimeInDays}}
-                        small.muted {{ui.planboard.statDays}}
+                        small.text-muted {{ui.planboard.statDays}}
                         | ,
                         h5 {{agg.durations.less | calculateTimeInHours}}
-                        small.muted {{ui.planboard.statHours}}
+                        small.text-muted {{ui.planboard.statHours}}
                         | ,
                         h5 {{agg.durations.less | calculateTimeInMinutes}}
-                        small.muted {{ui.planboard.statMinutes}}
+                        small.text-muted {{ui.planboard.statMinutes}}
             #memberBars
               ul
                 li(ng-repeat='member in data.members')
                   h4 {{member.id | convertUserIdToName}}
                   .progress
-                    .bar(ng-repeat='stat in member.stats',
+                    .progress-bar(ng-repeat='stat in member.stats',
                     ng-style='{ "width": stat.ratio + "%" }',
                     class="{{stat.state}}")
-                  small.muted {{member.stats | convertRatios}}
+                  small.text-muted {{member.stats | convertRatios}}
           hr
           p
             small.pull-left
               span.text-warning {{ui.planboard.lastSyncTime}}
-              span.muted &nbsp; {{data.synced | nicelyDate}}
+              span.text-muted &nbsp; {{data.synced | nicelyDate}}
             small.pull-right
               span.text-warning {{ui.planboard.dataRangeStart}}
-              span.muted {{data.periods.start | nicelyDate}}
+              span.text-muted {{data.periods.start | nicelyDate}}
               | &nbsp;&nbsp;| &nbsp;
               span.text-warning {{ui.planboard.dataRangeEnd}}
-              span.muted {{data.periods.end | nicelyDate}}
+              span.text-muted {{data.periods.end | nicelyDate}}

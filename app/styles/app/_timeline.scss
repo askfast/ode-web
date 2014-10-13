@@ -74,12 +74,11 @@
               display: block;
               font-size: 38px;
               font-weight: bold;
-              padding-top: 18px;
             }
 
             .percentage {
               display: block;
-              padding-top: 10px;
+              margin-top: -5px;
             }
           }
 
@@ -278,6 +277,7 @@
 
       input {
         margin: -2px 4px 0 0;
+        vertical-align: middle;
       }
     }
   }
@@ -286,7 +286,7 @@
     display: block;
     height: 12px;
     width: 12px;
-    margin-top: 4px;
+    // margin-top: 4px;
   }
 }
 
@@ -1102,9 +1102,19 @@ div.timeline-event-range {
   opacity: 0.5;
 }
 
-.daterangepicker.dropdown-menu {
+/*!
+ * Stylesheet for the Date Range Picker, for use with Bootstrap 3.x
+ *
+ * Copyright 2013 Dan Grossman ( http://www.dangrossman.info )
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Built for http://www.improvely.com
+ */
+
+ .daterangepicker.dropdown-menu {
   max-width: none;
-  z-index: 99999;
+  z-index: 3000;
 }
 
 .daterangepicker.opensleft .ranges, .daterangepicker.opensleft .calendar {
@@ -1117,40 +1127,73 @@ div.timeline-event-range {
   margin: 4px;
 }
 
+.daterangepicker.single .ranges, .daterangepicker.single .calendar {
+  float: none;
+}
+
 .daterangepicker .ranges {
   width: 185px;
   text-align: left;
 }
 
-.daterangepicker .ranges .range_inputs > div {
+.daterangepicker .ranges .range_inputs>div {
   float: left;
 }
 
-.daterangepicker .ranges .range_inputs > div:nth-child(2) {
+.daterangepicker .ranges .range_inputs>div:nth-child(2) {
   padding-left: 11px;
 }
 
 .daterangepicker .calendar {
   display: none;
-  max-width: 230px;
+  max-width: 270px;
+}
+
+.daterangepicker.show-calendar .calendar {
+    display: block;
+}
+
+.daterangepicker .calendar.single .calendar-date {
+  border: none;
 }
 
 .daterangepicker .calendar th, .daterangepicker .calendar td {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   white-space: nowrap;
   text-align: center;
+  min-width: 32px;
 }
 
-.daterangepicker .ranges label {
+.daterangepicker .daterangepicker_start_input label,
+.daterangepicker .daterangepicker_end_input label {
   color: #333;
+  display: block;
   font-size: 11px;
+  font-weight: normal;
+  height: 20px;
+  line-height: 20px;
   margin-bottom: 2px;
+  text-shadow: #fff 1px 1px 0px;
   text-transform: uppercase;
-  text-shadow: 1px 1px 0 #fff;
+  width: 74px;
 }
 
 .daterangepicker .ranges input {
   font-size: 11px;
+}
+
+.daterangepicker .ranges .input-mini {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #555;
+  display: block;
+  font-size: 11px;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin: 0 0 10px 0;
+  padding: 0 6px;
+  width: 74px;
 }
 
 .daterangepicker .ranges ul {
@@ -1163,9 +1206,7 @@ div.timeline-event-range {
   font-size: 13px;
   background: #f5f5f5;
   border: 1px solid #f5f5f5;
-
-  color: #65619b;
-
+  color: $link-color;
   padding: 3px 12px;
   margin-bottom: 8px;
   -webkit-border-radius: 5px;
@@ -1175,18 +1216,22 @@ div.timeline-event-range {
 }
 
 .daterangepicker .ranges li.active, .daterangepicker .ranges li:hover {
-
-  background: #65619b;
-  border: 1px solid #65619b;
-
+  background: $brand-primary;
+  border: 1px solid $brand-primary;
   color: #fff;
 }
 
-.daterangepicker .calendar {
+.daterangepicker .calendar-date {
   border: 1px solid #ddd;
   padding: 4px;
   border-radius: 4px;
   background: #fff;
+}
+
+.daterangepicker .calendar-time {
+  text-align: center;
+  margin: 8px auto 0 auto;
+  line-height: 30px;
 }
 
 .daterangepicker {
@@ -1276,47 +1321,34 @@ div.timeline-event-range {
 }
 
 .daterangepicker td.in-range {
-
-  background: #e8e6f9;
-
+  background: #ebf4f8;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
 }
 
+.daterangepicker td.start-date {
+  -webkit-border-radius: 4px 0 0 4px;
+  -moz-border-radius: 4px 0 0 4px;
+  border-radius: 4px 0 0 4px;
+}
+
+.daterangepicker td.end-date {
+  -webkit-border-radius: 0 4px 4px 0;
+  -moz-border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.daterangepicker td.start-date.end-date {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
 .daterangepicker td.active, .daterangepicker td.active:hover {
-  border-color: #65619b #65619b #7772b5;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  background-color: #7772b5;
-  background-image: -ms-linear-gradient(top, #7772b5, #65619b);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7772b5), to(#65619b));
-  background-image: -webkit-linear-gradient(top, #7772b5, #65619b);
-  background-image: -o-linear-gradient(top, #7772b5, #65619b);
-  background-image: -moz-linear-gradient(top, #7772b5, #65619b);
-  background-image: linear-gradient(top, #7772b5, #65619b);
-  background-repeat: repeat-x;
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#6e69a8',
-          endColorstr='#7772b5', GradientType=0);
-  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
-  *background-color: #7772b5;
-
-  /*  background-color: #006dcc;
-    background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-    background-image: -ms-linear-gradient(top, #0088cc, #0044cc);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-    background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-    background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-    background-image: linear-gradient(top, #0088cc, #0044cc);
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
-    border-color: #0044cc #0044cc #002a80;
-
-
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);*/
-
+  background-color: $link-color;
+  border-color: $link-hover-color;
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .daterangepicker td.week, .daterangepicker th.week {
@@ -1324,265 +1356,170 @@ div.timeline-event-range {
   color: #ccc;
 }
 
-/*
-  Datepicker for Bootstrap
-  Copyright 2012 Stefan Petre
-  Licensed under the Apache License v2.0
-  http://www.apache.org/licenses/LICENSE-2.0
-*/
-.datepicker {
-  z-index: 99999;
-  top: 0;
-  left: 0;
-  padding: 4px;
-  margin-top: 1px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  /*.dow { border-top: 1px solid #ddd !important; }*/
-}
-
-.datepicker:before {
-  content: '';
-  display: inline-block;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid #ccc;
-  border-bottom-color: rgba(0, 0, 0, 0.2);
-  position: absolute;
-  top: -7px;
-  left: 6px;
-}
-
-.datepicker:after {
-  content: '';
-  display: inline-block;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid #fff;
-  position: absolute;
-  top: -6px;
-  left: 7px;
-}
-
-.datepicker > div {
-  display: none;
-}
-
-.datepicker table {
-  width: 100%;
+.daterangepicker select.monthselect, .daterangepicker select.yearselect {
+  font-size: 12px;
+  padding: 1px;
+  height: auto;
   margin: 0;
+  cursor: default;
 }
 
-.datepicker td, .datepicker th {
-  text-align: center;
-  width: 20px;
-  height: 20px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+.daterangepicker select.monthselect {
+  margin-right: 2%;
+  width: 56%;
 }
 
-.datepicker td.day:hover {
-  background: #eee;
-  cursor: pointer;
+.daterangepicker select.yearselect {
+  width: 40%;
 }
 
-.datepicker td.old, .datepicker td.new {
-  color: #999;
+.daterangepicker select.hourselect, .daterangepicker select.minuteselect, .daterangepicker select.ampmselect {
+  width: 50px;
+  margin-bottom: 0;
 }
 
-.datepicker td.active, .datepicker td.active:hover {
-  background-color: #006dcc;
-  background-image: 0;
-  // background-image: 0 to(#0044cc));
-  background-image: linear-gradient(top, #0088cc, #0044cc);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc',
-          GradientType=0);
-  border-color: #04c #04c #002a80;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-
-.datepicker td.active:hover, .datepicker td.active:hover:hover, .datepicker td.active:active,
-.datepicker td.active:hover:active, .datepicker td.active.active,
-.datepicker td.active:hover.active, .datepicker td.active.disabled,
-.datepicker td.active:hover.disabled, .datepicker td.active[disabled],
-.datepicker td.active:hover[disabled] {
-  background-color: #04c;
-}
-
-.datepicker td.active:active, .datepicker td.active:hover:active, .datepicker td.active.active,
-.datepicker td.active:hover.active {
-  background-color: #039 \9;
-}
-
-.datepicker td span {
-  display: block;
-  width: 47px;
-  height: 54px;
-  line-height: 54px;
+.daterangepicker_start_input {
   float: left;
-  margin: 2px;
-  cursor: pointer;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
 }
 
-.datepicker td span:hover {
-  background: #eee;
+.daterangepicker_end_input {
+  float: left; 
+  padding-left: 11px
 }
 
-.datepicker td span.active {
-  background-color: #006dcc;
-  background-image: 0;
-  //background-image: 0 to(#0044cc));
-  background-image: linear-gradient(top, #0088cc, #0044cc);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc',
-          GradientType=0);
-  border-color: #04c #04c #002a80;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+.daterangepicker th.month {
+  width: auto;
 }
 
-.datepicker td span.active:hover, .datepicker td span.active:active, .datepicker td span.active.active,
-.datepicker td span.active.disabled, .datepicker td span.active[disabled] {
-  background-color: #04c;
+
+//=====================================
+// https://github.com/mgcrea/bootstrap-additions
+// Using for angular-strap
+/*
+ * Datepicker element
+ */
+.datepicker.dropdown-menu {
+  width: 250px;
+  height: 270px;
+}
+.datepicker.dropdown-menu button {
+  outline: none;
+  border: 0px;
+}
+.datepicker.dropdown-menu tbody {
+  height: 180px;
+}
+.datepicker.dropdown-menu tbody button {
+  padding: 6px;
+}
+.datepicker.dropdown-menu.datepicker-mode-1 tbody button,
+.datepicker.dropdown-menu.datepicker-mode-2 tbody button {
+  height: 65px;
+}
+.modal.center .modal-dialog {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  min-width: 320px;
+  max-width: 630px;
+  width: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
 }
 
-.datepicker td span.active:active, .datepicker td span.active.active {
-  background-color: #039 \9;
+/*
+ * Popovers corner placement
+ *
+ * Inherit exotic positionning from basic ones & fix arrow placement
+ */
+.popover.top-left {
+  margin-top: -10px;
 }
-
-.datepicker td span.old {
-  color: #999;
+.popover.top-left .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-width: 0;
+  border-top-color: #999999;
+  border-top-color: rgba(0, 0, 0, 0.25);
+  bottom: -11px;
+  left: 10%;
 }
-
-.datepicker th.switch {
-  width: 145px;
+.popover.top-left .arrow:after {
+  content: " ";
+  bottom: 1px;
+  margin-left: -10px;
+  border-bottom-width: 0;
+  border-top-color: #ffffff;
 }
-
-.datepicker th.next, .datepicker th.prev {
-  font-size: 19.5px;
+.popover.top-right {
+  margin-top: -10px;
 }
-
-.datepicker thead tr:first-child th {
-  cursor: pointer;
+.popover.top-right .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-width: 0;
+  border-top-color: #999999;
+  border-top-color: rgba(0, 0, 0, 0.25);
+  bottom: -11px;
+  left: 90%;
 }
-
-.datepicker thead tr:first-child th:hover {
-  background: #eee;
+.popover.top-right .arrow:after {
+  content: " ";
+  bottom: 1px;
+  margin-left: -10px;
+  border-bottom-width: 0;
+  border-top-color: #ffffff;
 }
-
-.input-append.date .add-on i, .input-prepend.date .add-on i {
-  display: block;
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
+.popover.bottom-left {
+  margin-top: 10px;
 }
-
-.bootstrap-timepicker.dropdown-menu {
-  border-radius: 4px 4px 4px 4px;
-  display: none;
-  left: 0;
-  margin-top: 1px;
-  padding: 4px;
-  top: 0;
-  min-width: 10px;
-  z-index: 99999;
+.popover.bottom-left .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999999;
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+  top: -11px;
+  left: 10%;
 }
-
-.bootstrap-timepicker.dropdown-menu.open {
-  display: inline-block;
+.popover.bottom-left .arrow:after {
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #ffffff;
 }
-
-.bootstrap-timepicker.dropdown-menu:before {
-  border-bottom: 7px solid rgba(0, 0, 0, 0.2);
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  content: "";
-  left: 6px;
-  position: absolute;
-  top: -7px;
+.popover.bottom-right {
+  margin-top: 10px;
 }
-
-.bootstrap-timepicker.dropdown-menu:after {
-  border-bottom: 6px solid #FFFFFF;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  content: "";
-  left: 7px;
-  position: absolute;
-  top: -6px;
+.popover.bottom-right .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999999;
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+  top: -11px;
+  left: 90%;
 }
-
-.bootstrap-timepicker.modal {
-  margin-left: -100px;
-  margin-top: 0;
-  top: 30%;
-  width: 200px;
+.popover.bottom-right .arrow:after {
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #ffffff;
 }
-
-.bootstrap-timepicker.modal .modal-content {
-  padding: 0;
+/*
+ * Timepicker element
+ */
+.timepicker.dropdown-menu {
+  padding: 0 4px;
 }
-
-.bootstrap-timepicker table {
-  margin: 0;
-  width: 100%;
+.timepicker.dropdown-menu button {
+  outline: none;
+  border: 0px;
 }
-
-.bootstrap-timepicker table td {
-  height: 30px;
-  margin: 0;
-  padding: 2px;
-  text-align: center;
-}
-
-.bootstrap-timepicker table td span {
-  width: 100%;
-}
-
-.bootstrap-timepicker table td a {
-  border: 1px solid transparent;
-  display: inline-block;
-  margin: 0;
-  outline: 0 none;
-  padding: 8px 0;
-  width: 3em;
-}
-
-.bootstrap-timepicker table td a:hover {
-  background-color: #EEEEEE;
-  border-color: #DDDDDD;
-  border-radius: 4px 4px 4px 4px;
-}
-
-.bootstrap-timepicker table td a i {
-  margin-top: 2px;
-}
-
-.bootstrap-timepicker table td input {
-  margin: 0;
-  text-align: center;
-  width: 25px;
-}
-
-.bootstrap-timepicker-component .add-on {
-  cursor: pointer;
-}
-
-.bootstrap-timepicker-component .add-on i {
-  display: block;
-  height: 16px;
-  width: 16px;
+.timepicker.dropdown-menu tbody button {
+  padding: 6px;
 }
 
 .time-tip {

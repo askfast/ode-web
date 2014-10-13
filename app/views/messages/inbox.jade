@@ -1,7 +1,7 @@
 .tab-header
 	h3.pull-left {{ui.message.inbox}}
 	form.pull-right
-		input.span12.search-query(type='text',
+		input.form-control.search-query(type='text',
 		placeholder='{{ui.message.ph_filterMessage}}',
 		ng-model='query.inbox')
 hr
@@ -36,24 +36,24 @@ div(ng-show='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
 				td {{message.creationTime | nicelyDate}}
 				td
 					.pull-right
-						button.btn.btn-mini(ng-click='reply(message)')
-							i.icon-share-alt
-						button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMessage(message.uuid)')
-							i.icon-trash.icon-white
-	button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.inbox)')
-		i.icon-trash.icon-white
+						button.btn.btn-default.btn-xs(ng-click='reply(message)')
+							i.glyphicon.glyphicon-share-alt
+						button.btn.btn-danger.btn-xs(type='submit', ng-click='removeMessage(message.uuid)')
+							i.glyphicon.glyphicon-trash.glyphicon-white
+	button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.inbox)')
+		i.glyphicon.glyphicon-trash.glyphicon-white
 		| {{ui.message.deleteSelected}}
 	.btn-toolbar.pull-right(style='margin: 0;')
 		.btn-group
-			button.btn.btn-small(ng-click='paginate.before("inbox")',
+			button.btn.btn-default.btn-sm(ng-click='paginate.before("inbox")',
 			class="{{(page.inbox==0) && 'disabled'}}")
 				| « {{ui.message.paginationPrevious}}
-			button.btn.btn-small(ng-click='paginate.next("inbox")',
+			button.btn.btn-default.btn-sm(ng-click='paginate.next("inbox")',
 			class="{{(page.inbox + 1 == messages.inbox.length) && 'disabled'}}")
 				| {{ui.message.paginationNext}} »
 	br
 	br
-	span.muted.pull-right
+	span.text-muted.pull-right
 		small
 			i
 				| {{ui.message.paginationPage}}: {{page.inbox + 1}} {{ui.message.paginationOf}}

@@ -3,8 +3,8 @@ section#dashboard
   br
   smart-alarming
   snapshots
-  .row-fluid
-    article(class="{{(!browser.mobile) && 'span9' || 'span12'}}")
+  .row
+    article(class="{{(!browser.mobile) && 'col-md-9' || 'col-md-12'}}")
       summaries
-    article(class="{{(!browser.mobile) && 'span3' || 'span12'}}", ng-show='StandBy.config.profile.p2000.status')
+    article(class="{{(!browser.mobile) && 'col-md-3' || 'col-md-12'}}", ng-show='StandBy.config.profile.p2000.status')
       alarms

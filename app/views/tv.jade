@@ -1,6 +1,6 @@
-section#dashboard(style='margin-top: -40px;')
-	.row-fluid
-		.sa.widget.span9(ng-show='StandBy.config.profile.smartAlarm')
+section#dashboard(style='margin-top: -20px;')
+	.row
+		.sa.widget.col-md-9(ng-show='StandBy.config.profile.smartAlarm')
 			.head
 				h4 SlimAlarmeren
 			hr
@@ -38,10 +38,10 @@ section#dashboard(style='margin-top: -40px;')
 							span Niet beschikbaar
 			p(ng-hide='loading.smartAlarm')
 				small.pull-left
-					span.text-warning {{ui.planboard.lastSyncTime}}
-					span.muted {{saSynced | nicelyDate}}
+					span.text-warning {{ui.planboard.lastSyncTime}} &nbsp;
+					span.text-muted {{saSynced | nicelyDate}}
 
-		.widget.span3(ng-show='StandBy.config.profile.p2000.status')
+		.widget.col-md-3(ng-show='StandBy.config.profile.p2000.status')
 			.head
 				h4 {{ui.dashboard.announcements}}
 			hr
@@ -61,7 +61,7 @@ section#dashboard(style='margin-top: -40px;')
 								p {{alarm.body}}
 						tr
 							td
-								small.muted
+								small.text-muted
 									i {{alarm.msgCode}}
 							td
 								span.label.label-natural.pull-right {{alarm.day}} {{alarm.time}}
@@ -69,8 +69,8 @@ section#dashboard(style='margin-top: -40px;')
 			p(ng-hide='loading.alerts')
 				small.pull-left
 					span.text-warning {{ui.planboard.lastSyncTime}}
-					span.muted {{synced.alarms | nicelyDate}}
+					span.text-muted {{synced.alarms | nicelyDate}}
 				br
 				small.pull-left
 					span.text-warning Capcode(s):
-					span.muted {{StandBy.config.profile.p2000.codes}}
+					span.text-muted {{StandBy.config.profile.p2000.codes}}

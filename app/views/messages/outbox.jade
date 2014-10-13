@@ -1,7 +1,7 @@
 .tab-header
 	h3.pull-left {{ui.message.outbox}}
 	form.pull-right
-		input.span12.search-query(type='text',
+		input.form-control.search-query(type='text',
 		placeholder='{{ui.message.filterMessages}}',
 		ng-model='query.outbox')
 hr
@@ -34,22 +34,22 @@ div(ng-show='(messages.outbox[page.outbox] | filter:query.outbox).length > 0')
 				td {{message.creationTime | nicelyDate}}
 				td
 					.pull-right
-						button.btn.btn-danger.btn-mini(type='submit', ng-click='removeMessage(message.uuid)')
-							i.icon-trash.icon-white
-	button.btn.btn-small.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.outbox)')
-		i.icon-trash.icon-white
+						button.btn.btn-danger.btn-xs(type='submit', ng-click='removeMessage(message.uuid)')
+							i.glyphicon.glyphicon-trash.glyphicon-white
+	button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.outbox)')
+		i.glyphicon.glyphicon-trash.glyphicon-white
 		| {{ui.message.deleteSelected}}
 	.btn-toolbar.pull-right(style='margin: 0;')
 		.btn-group
-			button.btn.btn-small(ng-click='paginate.before("outbox")',
+			button.btn.btn-default.btn-sm(ng-click='paginate.before("outbox")',
 			class="{{(page.outbox == 0) && 'disabled'}}")
 				| « {{ui.message.paginationPrevious}}
-			button.btn.btn-small(ng-click='paginate.next("outbox")',
+			button.btn.btn-default.btn-sm(ng-click='paginate.next("outbox")',
 			class="{{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}")
 				| {{ui.message.paginationNext}} »
 	br
 	br
-	span.muted.pull-right
+	span.text-muted.pull-right
 		small
 			i
 				| {{ui.message.paginationPage}}: {{page.outbox + 1}} {{ui.message.paginationOf}}

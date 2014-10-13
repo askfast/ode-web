@@ -1,24 +1,24 @@
-.row-fluid
-  .sa.widget.span12(ng-show='StandBy.config.profile.smartAlarm')
+.row
+  .sa.widget.col-md-12(ng-show='StandBy.config.profile.smartAlarm')
     .head
       h4 SlimAlarmeren
 
       div.pull-right.sa-state
         small(ng-show='StandBy.guard.currentState')
-          i.icon-fire
+          i.glyphicon.glyphicon-fire
           | &nbsp;Status
         | &nbsp;&nbsp;
 
-        span.label(ng-show="StandBy.guard.currentState=='available' || StandBy.guard.currentState=='Beschikbaar'",
+        span.label.label-default(ng-show="StandBy.guard.currentState=='available' || StandBy.guard.currentState=='Beschikbaar'",
         style='background-color: #6cad6c;') BESCHIKBAAR
-        span.label(ng-show="StandBy.guard.currentState=='noplanning' || StandBy.guard.currentState=='Mogelijk inzetbaar'",
+        span.label.label-default(ng-show="StandBy.guard.currentState=='noplanning' || StandBy.guard.currentState=='Mogelijk inzetbaar'",
         style='background-color: #a0a0a0;') GEEN PLANNING
-        span.label(ng-show="StandBy.guard.currentState=='unavailable' || StandBy.guard.currentState=='Niet Beschikbaar'",
+        span.label.label-default(ng-show="StandBy.guard.currentState=='unavailable' || StandBy.guard.currentState=='Niet Beschikbaar'",
         style='background-color: #d34545;') NIET BESCHIKBAAR
         span.label.label-inverse(style='margin-left: 5px;') {{app.guard.role.toUpperCase()}}
 
         .btn-group(style='margin: -10px 0 0 8px;')
-          button.btn.btn-mini.dropdown-toggle(data-toggle='dropdown')
+          button.btn.btn-default.btn-xs.dropdown-toggle(data-toggle='dropdown')
             | Nieuwe beschikbaarheid&nbsp;
             span.caret
           ul.dropdown-menu.pull-right.fast-availability(style='font-size: 10px;')
@@ -93,8 +93,8 @@
     p(ng-hide='loading.smartAlarm', style='margin-top: 10px;')
       small.pull-left
         span.text-warning {{ui.planboard.lastSyncTime}}
-        span.muted &nbsp; {{saSynced | nicelyDate}}
+        span.text-muted &nbsp; {{saSynced | nicelyDate}}
 
-    button.btn.btn-mini.pull-right(ng-click='toggleReserves=!toggleReserves', ng-hide='loading.smartAlarm')
+    button.btn.btn-default.btn-xs.pull-right(ng-click='toggleReserves=!toggleReserves', ng-hide='loading.smartAlarm')
       span(ng-hide='toggleReserves') Toon reserves
       span(ng-show='toggleReserves') Verberg reserves

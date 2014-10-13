@@ -193,7 +193,7 @@ define(['services/services'], function (services) {
 
           title = (privilage <= 1) ? link : '<span>' + name + '</span>';
 
-          title += ' <span class="label">' + agg.division.label + '</span>';
+          title += ' <span class="label label-default">' + agg.division.label + '</span>';
         }
 
         return title;
@@ -384,7 +384,7 @@ define(['services/services'], function (services) {
 
         title = (privilage == 1) ? link : '<span>' + name + '</span>';
 
-        title += ' <span class="label">Behoefte (elke divisie)</span>';
+        title += ' <span class="label label-default">Behoefte (elke divisie)</span>';
 
         _.each(data.aggs.wishes, function (wish) {
             var cn;

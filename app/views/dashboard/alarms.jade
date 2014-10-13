@@ -20,15 +20,15 @@ div.widget
         tr
           td(colspan='2')
             small
-              i.icon-bullhorn(style='margin-top: -2px; color: #a0a0a0 !important;')
+              i.glyphicon.glyphicon-bullhorn(style='margin-top: -2px; color: #a0a0a0 !important;')
               i {{alarm.msgCode}}
   hr.lastline(ng-hide='loading.alerts')
   p(ng-hide='loading.alerts')
     small.pull-left
       span.text-warning {{ui.planboard.lastSyncTime}}
-      span.muted {{synced.alarms | nicelyDate}}
+      span.text-muted {{synced.alarms | nicelyDate}}
     br
     small.pull-left
       span.text-warning Capcode(s):
-      span.muted {{capcodes}}
-      span.muted(ng-hide='capcodes') {{StandBy.config.profile.p2000.codes}}
+      span.text-muted {{capcodes}}
+      span.text-muted(ng-hide='capcodes') {{StandBy.config.profile.p2000.codes}}

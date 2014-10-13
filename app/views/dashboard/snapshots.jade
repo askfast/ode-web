@@ -1,5 +1,5 @@
-.row-fluid
-  #availabilities.sa.widget.span12
+.row
+  #availabilities.sa.widget.col-md-12
     div.head
       h4
         | Overzicht beschikbaarheid{{current.group | groupIdToName:true | toTitleCase}}
@@ -69,4 +69,4 @@
       hr
       small.pull-left(style='margin-top: -10px;', ng-hide='loadingAvailability')
         span.text-warning {{ui.planboard.lastSyncTime}}
-        span.muted &nbsp; {{availability.synced | nicelyDate}}
+        span.text-muted &nbsp; {{availability.synced | nicelyDate}}

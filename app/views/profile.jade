@@ -1,7 +1,7 @@
 section#profile
   .page-header: h2 {{data.resources.firstName}} {{data.resources.lastName}}
 
-  .row-fluid
+  .row
     .tabbable.tabs-left
       ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
         li(class="{{(views.profile==true) && 'active'}}")
@@ -97,44 +97,42 @@ section#profile
                 select(ng-model='profileRole', ng-options='id as label for (id, label) in roles')
             .control-group(ng-hide='StandBy.resources.role > 1')
               | 1"
-              label.control-label Groups
-              .controls
-                select.chzn-select(data-placeholder=' ',
-                multiple='multiple',
-                style='width: 530px;',
-                chosen='chosen',
+              label.control-label(style='width: 530px;') Groups
+                select.chosen-select(data-placeholder=' ',
+                multiple='',
+                chosen='',
                 ng-model='userGroups',
                 ng-options='group.name for group in availableGroups',
                 ng-change='detectChanges()')
             .control-group
               label.control-label {{ui.groups.firstName}}
               .controls
-                input.span4(type='text',
+                input.col-md-4(type='text',
                 ng-model='profilemeta.firstName',
                 value='{{data.resources.firstName}}')
             .control-group
               label.control-label {{ui.groups.lastName}}
               .controls
-                input.span4(type='text',
+                input.col-md-4(type='text',
                 ng-model='profilemeta.lastName',
                 value='{{data.resources.lastName}}')
             .control-group
               label.control-label {{ui.profile.email}}
               .controls
-                input.span4(type='email',
+                input.col-md-4(type='email',
                 name='email',
                 ng-model='profilemeta.EmailAddress',
                 ng-minlength='3',
                 ng-maxlength='50',
                 value='{{data.resources.EmailAddress}}')
                 .error-container(ng-show='profileForm.email.$dirty && profileForm.email.$invalid')
-                  p.text-error(ng-show='profileForm.email.$error.minlength')
+                  p.text-danger(ng-show='profileForm.email.$error.minlength')
                     small
                       i {{ui.errors.email.min}}
-                  p.text-error(ng-show='profileForm.email.$error.email')
+                  p.text-danger(ng-show='profileForm.email.$error.email')
                     small
                       i {{ui.errors.email.notValid}}
-                  p.text-error(ng-show='profileForm.email.$error.maxlength')
+                  p.text-danger(ng-show='profileForm.email.$error.maxlength')
                     small
                       i {{ui.errors.email.max}}
             .control-group
@@ -153,9 +151,9 @@ section#profile
                   ng-change='profilePhoneNumberParser()',
                   style='width: 155px;')
                   button.btn.btn-success(type='button', ng-click='addPhoneNumber("second")')
-                    i.icon-white.icon-plus
+                    i.glyphicon.glyphicon-white.glyphicon-plus
                     | Add new
-                p.text-error(ng-hide='profilePhoneNumberParsed[1].result')
+                p.text-danger(ng-hide='profilePhoneNumberParsed[1].result')
                   small
                     i {{profilePhoneNumberParsed[1].message}}
                 p.text-success(ng-show='profilePhoneNumberParsed[1].result')
@@ -174,15 +172,15 @@ section#profile
                   ng-model='profilemeta.phones[2]',
                   ng-change='profilePhoneNumberParser()',
                   style='width: 155px;')
-                  button.btn(type='button', ng-click='removePhoneNumber(2, "second")')
-                    i.icon-remove
+                  button.btn.btn-default(type='button', ng-click='removePhoneNumber(2, "second")')
+                    i.glyphicon.glyphicon-remove
                     | Remove
                   button.btn.btn-success(type='button',
                   ng-click='addPhoneNumber("third")',
                   ng-hide='phoneViews.third')
-                    i.icon-white.icon-plus
+                    i.glyphicon.glyphicon-white.glyphicon-plus
                     | Add new
-                p.text-error(ng-hide='profilePhoneNumberParsed[2].result')
+                p.text-danger(ng-hide='profilePhoneNumberParsed[2].result')
                   small
                     i {{profilePhoneNumberParsed[2].message}}
                 p.text-success(ng-show='profilePhoneNumberParsed[2].result')
@@ -195,10 +193,10 @@ section#profile
                   ng-model='profilemeta.phones[3]',
                   ng-change='profilePhoneNumberParser()',
                   style='width: 155px;')
-                  button.btn(type='button', ng-click='removePhoneNumber(3, "third")')
-                    i.icon-remove
+                  button.btn.btn-default(type='button', ng-click='removePhoneNumber(3, "third")')
+                    i.glyphicon.glyphicon-remove
                     | Remove
-                p.text-error(ng-hide='profilePhoneNumberParsed[3].result')
+                p.text-danger(ng-hide='profilePhoneNumberParsed[3].result')
                   small
                     i {{profilePhoneNumberParsed[3].message}}
                 p.text-success(ng-show='profilePhoneNumberParsed[3].result')
@@ -207,39 +205,39 @@ section#profile
             .control-group(ng-show='StandBy.resources.role == 0')
               label.control-label {{ui.profile.pagerId}}
               .controls
-                input.span5(type='text',
+                input.col-md-5(type='text',
                 ng-model='profilemeta.pagerId',
                 value='{{data.resources.pagerId}}')
             .control-group
               label.control-label {{ui.profile.address}}
               .controls
-                input.span5(type='text',
+                input.col-md-5(type='text',
                 ng-model='profilemeta.PostAddress',
                 value='{{data.resources.PostAddress}}')
             .control-group
               label.control-label {{ui.profile.postcode}}
               .controls
-                input.span2(type='text',
+                input.col-md-2(type='text',
                 ng-model='profilemeta.PostZip',
                 value='{{data.resources.PostZip}}')
             .control-group
               label.control-label {{ui.profile.city}}
               .controls
-                input.span3(type='text',
+                input.col-md-3(type='text',
                 ng-model='profilemeta.PostCity',
                 value='{{data.resources.PostCity}}')
             hr
             .control-group
               label.control-label {{ui.profile.username}}
               .controls
-                input.span3(type='text',
+                input.col-md-3(type='text',
                 ng-model='profilemeta.uuid',
                 value='{{data.resources.uuid}}',
                 disabled='disabled')
             .control-group(ng-hide='StandBy.resources.role > 1 || views.user')
               label.control-label {{ui.profile.password}}
               .controls
-                input.span3(type='text',
+                input.col-md-3(type='text',
                 ng-model='profilemeta.Password')
                 span.help-block(style='margin-top: -5px;')
                   small
@@ -247,12 +245,12 @@ section#profile
             .control-group
               label.control-label {{ui.profile.pincode}}
               .controls
-                input.span1(type='text',
+                input.col-md-1(type='text',
                 ng-model='profilemeta.pincode',
                 ui-mask='9999',
                 ng-change='pincodeExists()',
                 name='pincode')
-                p.text-error(ng-hide='pincodeExistsValidation')
+                p.text-danger(ng-hide='pincodeExistsValidation')
                   small
                     i {{pincodeExistsValidationMessage}}
                 span.help-block(style='margin-top: -5px;')
@@ -272,17 +270,17 @@ section#profile
             .control-group
               label.control-label {{ui.profile.currentPass}}
               .controls
-                input.span3(type='password',
+                input.col-md-3(type='password',
                 ng-model='passwords.current')
             .control-group
               label.control-label {{ui.profile.newPass}}
               .controls
-                input.span3(type='password',
+                input.col-md-3(type='password',
                 ng-model='passwords.new1')
             .control-group
               label.control-label {{ui.profile.newPassRepeat}}
               .controls
-                input.span3(type='password',
+                input.col-md-3(type='password',
                 ng-model='passwords.new2')
             .form-actions
               button.btn.btn-success(type='submit',
@@ -302,20 +300,20 @@ section#profile
           #timeline-controls.row-fluid(ng-controller='timeline-navigation')
             .pull-left(style='margin-top: 10px;')
               .btn-group.pull-left(style='margin-right: 5px;')
-                button.btn(type='button',
+                button.btn.btn-default(type='button',
                 ng-click='timelineThisWeek()') {{ui.dashboard.thisWeek}}
               .btn-group.pull-left(style='margin-right: 5px;')
-                button.btn(type='button', ng-click='timelineWeekBefore()')
-                  i.icon-arrow-left
+                button.btn.btn-default(type='button', ng-click='timelineWeekBefore()')
+                  i.glyphicon.glyphicon-arrow-left
                 button.btn(type='button', ng-click='timelineZoomIn()')
-                  i.icon-zoom-in
+                  i.glyphicon.glyphicon-zoom-in
                 button.btn(type='button', ng-click='timelineZoomOut()')
-                  i.icon-zoom-out
+                  i.glyphicon.glyphicon-zoom-out
                 button.btn(type='button', ng-click='timelineWeekAfter()')
-                  i.icon-arrow-right
+                  i.glyphicon.glyphicon-arrow-right
 
               .btn-group.pull-left
-                button.btn(type='button',
+                button.btn.btn-default(type='button',
                 class="{{(timeline.config.legendarer==true) && 'active'}}",
                 ng-click='showLegenda()',
                 ng-model='timeline.config.legendarer') {{ui.planboard.legenda}}
@@ -363,13 +361,13 @@ section#profile
                   ng-model='slot.start.date',
                   data-date-format='dd-mm-yyyy',
                   bs-datepicker='')
-                  i.icon-calendar
+                  i.glyphicon.glyphicon-calendar
                 .control-group.timer
                   input(name='time-start',
                   type='text',
                   ng-model='slot.start.time',
                   bs-timepicker='bs-timepicker')
-                  i.icon-time
+                  i.glyphicon.glyphicon-time
               .form-elements-group(ng-show='browser.mobile')
                 label {{ui.planboard.till}}
                 .control-group.dater-mobile
@@ -384,13 +382,13 @@ section#profile
                   ng-model='slot.end.date',
                   data-date-format='dd-mm-yyyy',
                   bs-datepicker='')
-                  i.icon-calendar
+                  i.glyphicon.glyphicon-calendar
                 .control-group.timer
                   input(name='time-end',
                   type='text',
                   ng-model='slot.end.time',
                   bs-timepicker='bs-timepicker')
-                  i.icon-time
+                  i.glyphicon.glyphicon-time
               .form-elements-group
                 label {{ui.planboard.state}}
                 select(ng-model='slot.state',
@@ -417,13 +415,13 @@ section#profile
           p
             small.pull-left
               span.text-warning {{ui.planboard.lastSyncTime}}
-              span.muted {{data.synced | nicelyDate}}
+              span.text-muted {{data.synced | nicelyDate}}
             small.pull-right
               span.text-warning {{ui.planboard.dataRangeStart}}
-              span.muted {{data.periods.start | nicelyDate}}
+              span.text-muted {{data.periods.start | nicelyDate}}
               | |
               span.text-warning {{ui.planboard.dataRangeEnd}}
-              span.muted {{data.periods.end | nicelyDate}}
+              span.text-muted {{data.periods.end | nicelyDate}}
 
 #deleteUserModal.modal.hide.fade(tabindex='-1',
 role='dialog',
@@ -434,7 +432,7 @@ aria-hidden='true')
     h3#deleteUserModalLabel {{ui.profile.remove.title}}
   .modal-body
     p {{ui.profile.remove.info}}
-    .alert.alert-error(ng-show='deleteUserError')
+    .alert.alert-warning(ng-show='deleteUserError')
       button.close(type='button', data-dismiss='alert') ×
       | {{deleteUserErrorMessage}}
     form
@@ -445,4 +443,4 @@ aria-hidden='true')
     button.btn.btn-danger(type='submit',
     ng-click='deleteUser(userPassword)',
     style='margin-right: 10px;') {{ui.profile.remove.button}}
-    button.btn(data-dismiss='modal', aria-hidden='true') {{ui.profile.remove.cancel}}
+    button.btn.btn-default(data-dismiss='modal', aria-hidden='true') {{ui.profile.remove.cancel}}

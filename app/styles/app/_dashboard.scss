@@ -1,5 +1,5 @@
 #dashboard {
-  overflow: hidden;
+  // overflow: hidden;
 
   .alert {
     margin-top: 15px;
@@ -151,7 +151,7 @@
 
         .blocks {
 
-          .span4 {
+          .col-md-4 {
             &:first-child {
               padding-left: 15px;
             }
@@ -310,7 +310,7 @@
             margin-top: -30px;
             // display: none;
 
-            .span4 {
+            .col-md-4 {
               padding-right: 40px;
 
               h4 {
@@ -363,6 +363,7 @@
 }
 
 #widget-pies {
+  min-width: 160px;
   padding-bottom: 0;
 
   ul {
@@ -409,7 +410,7 @@
   .sa-state {
     position: absolute;
     top: 10px;
-    right: 0;
+    right: 15px;
   }
 
   ul.sa-setup {
@@ -447,7 +448,7 @@
           float: left;
           display: block;
           min-width: 54px;
-          height: 36px;
+          height: 54px;
           text-align: center;
           -webkit-border-radius: 5px;
           -moz-border-radius: 5px;
@@ -455,6 +456,7 @@
           color: #fff;
           margin-bottom: 5px;
           padding-top: 18px;
+          line-height: 20px;
           // background-color: #415e6b;
           background-color: #6cad6c;
 
@@ -511,7 +513,7 @@
             margin-bottom: 5px;
 
             a {
-              color: $textColor;
+              color: $text-color;
             }
           }
 
