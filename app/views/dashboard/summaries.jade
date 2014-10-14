@@ -19,7 +19,7 @@ div.widget
           | {{pie.name}}
           span(ng-show='(pie.division != "both")')  ({{ pie.division | translateDivision }})
       .blocks
-        .col-md-4
+        .col-sm-4
           .block
             .icon
               .scoreboard(class='{{pie.state.cls}}')
@@ -30,11 +30,11 @@ div.widget
               h3 {{ui.dashboard.currentState}}
               hr
               h5 {{pie.state.start}}
-              small.text-muted van
+              small.text-muted &nbsp;van
               br
               h5 {{pie.state.end}}
-              small.text-muted tot
-        .col-md-4
+              small.text-muted &nbsp;tot
+        .col-sm-4
           .block
             .icon
               .pie(id='weeklyPieCurrent-{{pie.id}}-{{pie.division}}')
@@ -44,14 +44,14 @@ div.widget
               small.text-muted {{pie.weeks.current.start.date}} / {{pie.weeks.current.end.date}}
               br
               h5 {{pie.weeks.current.ratios.more}}%
-              small.text-muted {{ui.dashboard.statMore}}
-              | ,
+              small.text-muted &nbsp;{{ui.dashboard.statMore}}
+              | &nbsp;,
               h5 {{pie.weeks.current.ratios.even}}%
-              small.text-muted {{ui.dashboard.statEven}}
-              | ,
+              small.text-muted &nbsp;{{ui.dashboard.statEven}}
+              | &nbsp;,
               h5 {{pie.weeks.current.ratios.less}}%
-              small.text-muted {{ui.dashboard.statLess}}
-        .col-md-4
+              small.text-muted &nbsp;{{ui.dashboard.statLess}}
+        .col-sm-4
           .block
             .icon
               .pie(id='weeklyPieNext-{{pie.id}}-{{pie.division}}')
@@ -61,18 +61,18 @@ div.widget
               small.text-muted {{pie.weeks.next.start.date}} / {{pie.weeks.next.end.date}}
               br
               h5 {{pie.weeks.next.ratios.more}}%
-              small.text-muted {{ui.dashboard.statMore}}
-              | ,
+              small.text-muted &nbsp;{{ui.dashboard.statMore}}
+              | &nbsp;,
               h5 {{pie.weeks.next.ratios.even}}%
-              small.text-muted {{ui.dashboard.statEven}}
-              | ,
+              small.text-muted &nbsp;{{ui.dashboard.statEven}}
+              | &nbsp;,
               h5 {{pie.weeks.next.ratios.less}}%
-              small.text-muted {{ui.dashboard.statLess}}
+              small.text-muted &nbsp;{{ui.dashboard.statLess}}
   hr.lastline(ng-hide='loadingPies || checkAnyPies()')
   p(ng-hide='loadingPies || checkAnyPies()')
     small.pull-right
       span.text-warning {{ui.dashboard.periods}}:
       span.text-muted
         | {{periods.start}}
-        | |
+        | &nbsp;|&nbsp;
         | {{periods.end}}
