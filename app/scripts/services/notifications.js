@@ -3,7 +3,8 @@ define(['services/services'], function (services) {
 
   services.factory('Notifications', [
     '$rootScope',
-    function ($rootScope) {
+    '$timeout',
+    function ($rootScope, $timeout) {
       $rootScope.app = $rootScope.app || {};
 
       $rootScope.statusBar = {
@@ -72,14 +73,14 @@ define(['services/services'], function (services) {
           }
         },
         alert: function (message, permanent, confirm, options) {
-          this.init(true, '', message, confirm, options);
+          this.init(true, 'alert-warning', message, confirm, options);
 
           if (!permanent) {
             this.destroy();
           }
         },
         destroy: function () {
-          setTimeout(
+          $timeout(
             function () {
               $rootScope.notification.status = false;
             }, $rootScope.StandBy.config.timers.NOTIFICATION_DELAY);
