@@ -1,0 +1,13 @@
+.tab-header
+	h3.pull-left {{ui.settings.appSettings}}
+hr
+form
+	fieldset
+		.control-group
+			label.control-label Eerste groep keuze
+			select(ng-model='settings.app.group',
+			ng-options='option as value for (option, value) in groups')
+		br
+		.form-actions
+			button.btn.btn-success(type='submit', ng-click='save(settings)')
+				| {{ui.settings.saveSettings}}

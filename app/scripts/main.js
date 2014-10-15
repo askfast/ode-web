@@ -180,6 +180,8 @@ require([
   'directives/profile/profile-edit',
   'directives/profile/profile-password',
   'directives/profile/profile-timeline',
+  'directives/settings/settings-user',
+  'directives/settings/settings-app',
   'directives/chosen',
   'directives/date-range-picker',
   'directives/notification-item',
