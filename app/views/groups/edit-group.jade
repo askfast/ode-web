@@ -1,0 +1,12 @@
+.tab-header
+  h3.pull-left {{ui.groups.editGroup}}
+  button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+hr
+form
+  fieldset
+    .form-group
+      label.control-label {{ui.groups.name}}
+        input.form-control.col-md-4(type='text', ng-model='groupForm.name')
+    .form-actions
+      button.btn.btn-success(type='submit',
+      ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}

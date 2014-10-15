@@ -1,0 +1,35 @@
+.tab-header
+  h3.pull-left {{ui.groups.searchedFor}} '{{search.queried}}'
+  button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+hr
+p(ng-hide='candidates.length > 0')
+  | {{ui.groups.sorryCanNotFind}}
+div(ng-show='candidates.length > 0')
+  table.table.table-striped
+    thead
+      tr
+        th #
+        th {{ui.groups.name}}
+        th {{ui.groups.groups}}
+        th
+    tbody
+      tr(ng-repeat='candidate in candidates')
+        td {{$index + 1}}
+        td
+          a(href='#/profile/{{candidate.id}}#profile')
+            | {{candidate.name}}
+        td
+          span(ng-repeat='group in candidate.groups')
+            a(ng-click='requestGroup(group.uuid, true)') {{group.name}}
+            span(ng-show='!$last') , 
+        td
+          div(ng-hide='candidate.fields.role == 0')
+            select.form-control(style='margin: 0; width: 160px;',
+            ng-model='candidate.group',
+            ng-options='group.name for group in data.groups')
+              option(value='') {{ui.groups.selectGroup}}
+            button.btn.btn-success.btn-sm(style='margin-left: 5px;',
+            ng-click='addMember(candidate)') {{ui.groups.addToGroup}}
+  span.text-muted.pull-right
+    small
+      i {{candidates.length | i18n_spec:'groups.resultCount'}}
