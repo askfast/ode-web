@@ -31,8 +31,8 @@ block navbar
             li(data-match-route='/messages')
               a(href='#messages')
                 | {{ui.message.messages}} &nbsp;
-                span.badge.badge-success(ng-show="(app.unreadMessages > 0)")
-                  | {{app.unreadMessages}}
+                span.badge.badge-success(ng-show="(StandBy.unreadMessages > 0)")
+                  | {{StandBy.unreadMessages}}
             li(data-match-route='/groups',
             ng-hide='StandBy.resources.role > 1')
               a(href='#groups') {{ui.groups.groups}}
