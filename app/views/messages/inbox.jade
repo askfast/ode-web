@@ -42,7 +42,7 @@ div(ng-show='(messages.inbox[page.inbox] | filter:query.inbox).length > 0')
 							i.glyphicon.glyphicon-trash.glyphicon-white
 	button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.inbox)')
 		i.glyphicon.glyphicon-trash.glyphicon-white
-		| {{ui.message.deleteSelected}}
+		| &nbsp;{{ui.message.deleteSelected}}
 	.btn-toolbar.pull-right(style='margin: 0;')
 		.btn-group
 			button.btn.btn-default.btn-sm(ng-click='paginate.before("inbox")',
