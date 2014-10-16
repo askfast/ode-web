@@ -81,15 +81,15 @@ div
 
 						.form-group(ng-hide='StandBy.resources.role > 1')
 							label.control-label {{ui.message.repeat}}
-							.btn-group(data-toggle='buttons-radio')
-								button.btn.btn-default.btn-sm(type='button',
-								class="{{(scheaduled.status) && 'btn-success.active'}}",
+							.btn-group(data-toggle='buttons')
+								label.btn.btn-sm(class="{{((scheaduled.status) && 'btn-success active') || 'btn-default'}}",
 								ng-model='scheaduled.status',
 								ng-click='scheaduled.status = true; addNewOffset()') {{ui.message.repeatOn}}
-								button.btn.btn-default.btn-sm(type='button',
-								class="{{(!scheaduled.status) && 'active'}}",
+									input(type='radio' name='repeatToggle')
+								label.btn.btn-default.btn-sm(class="{{(!scheaduled.status) && 'active'}}",
 								ng-model='scheaduled.status',
 								ng-click='scheaduled.status = false') {{ui.message.repeatOff}}
+									input(type='radio' name='repeatToggle')
 
 						section#scheaduler-pane(ng-show='scheaduled.status')
 							header
