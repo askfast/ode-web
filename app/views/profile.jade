@@ -33,20 +33,395 @@ section#profile
             | {{ui.profile.timeline}}
 
       .tab-content
+        // profile
         div#profileTab.tab-pane(class="{{(views.profile==true) && 'active'}}")
-          profile-view
+          div(style='overflow: hidden; height: 35px;')
+            h3.pull-left(style='margin-top: 0;') {{ui.profile.profileView}}
+          hr
+          dl
+            dt {{ui.profile.userGroups}}
+            dd(ng-hide='groups.length > 0')
+              | -
+            dd(ng-show='groups.length > 0')
+              ol
+                li(ng-repeat='group in groups')
+                  span(ng-hide='StandBy.resources.role > 1')
+                    a(href='#/groups?uuid={{group.uuid}}#view') {{group.name}}
+                  span(ng-show='StandBy.resources.role > 1')
+                    | {{group.name}}
+            dt {{ui.profile.role}}
+            dd {{data.resources.role|translateRole}}
+            dt {{ui.profile.email}}
+            dd {{(data.resources.EmailAddress == '') && '-' || data.resources.EmailAddress}}
+            dt {{ui.profile.phone}}
+            dd(ng-hide='data.resources.PhoneAddresses.length > 0')
+              | -
+            dd(ng-show='data.resources.PhoneAddresses.length > 0')
+              table
+                tr(ng-repeat='phone in data.resources.PhoneAddresses')
+                  td(style='width: 75px;')
+                    span.label.label-inverse
+                      | {{($index == 0) && 'Standaard' || 'Extra.' + $index}}
+                  td {{phone}}
+            dt {{ui.profile.pagerId}}
+            dd {{(data.resources.pagerId == '') && '-' || data.resources.pagerId}}
+            dt {{ui.profile.address}}
+            dd {{(data.resources.PostAddress == '') && '-' || data.resources.PostAddress}}
+            dt {{ui.profile.postcode}}
+            dd {{(data.resources.PostZip == '') && '-' || data.resources.PostZip}}
+            dt {{ui.profile.city}}
+            dd {{(data.resources.PostCity == '') && '-' || data.resources.PostCity}}
+            section(ng-hide='data.resources.role == 0 || StandBy.resources.role > 1')
+              hr
+              dt {{ui.profile.username}}
+              dd {{data.resources.uuid}}
+              dt(ng-show='data.resources.pincode') {{ui.profile.pincode}}
+              dd(ng-show='data.resources.pincode') {{data.resources.pincode}}
 
+        // edit
         div#editTab.tab-pane(class="{{(views.edit==true) && 'active'}}")
-          profile-edit
+          div(style='overflow: hidden; height: 35px;')
+            h3.pull-left(style='margin-top: 0;') {{ui.profile.editProfile}}
+            div(ng-hide='StandBy.resources.uuid == profilemeta.uuid')
+              button.btn.btn-danger.pull-right(ng-click='showDeleteUserModal()',
+              role='button',
+              data-toggle='modal',
+              ng-hide='StandBy.resources.role > 1')
+                | {{ui.profile.remove.title}}
+          hr
 
+          form.form-vertical(name='profileForm')
+            .control-group(ng-hide='StandBy.resources.role > 1 || profileRole == 0')
+              label.control-label {{ui.profile.role}}
+              .controls
+                select(ng-model='profileRole', ng-options='id as label for (id, label) in roles')
+            .control-group(ng-hide='StandBy.resources.role > 1')
+              | 1"
+              label.control-label(style='width: 530px;') Groups
+                select.chosen-select(data-placeholder=' ',
+                multiple='',
+                chosen='',
+                ng-model='userGroups',
+                ng-options='group.name for group in availableGroups',
+                ng-change='detectChanges()')
+            .control-group
+              label.control-label {{ui.groups.firstName}}
+              .controls
+                input.col-md-4(type='text',
+                ng-model='profilemeta.firstName',
+                value='{{data.resources.firstName}}')
+            .control-group
+              label.control-label {{ui.groups.lastName}}
+              .controls
+                input.col-md-4(type='text',
+                ng-model='profilemeta.lastName',
+                value='{{data.resources.lastName}}')
+            .control-group
+              label.control-label {{ui.profile.email}}
+              .controls
+                input.col-md-4(type='email',
+                name='email',
+                ng-model='profilemeta.EmailAddress',
+                ng-minlength='3',
+                ng-maxlength='50',
+                value='{{data.resources.EmailAddress}}')
+                .error-container(ng-show='profileForm.email.$dirty && profileForm.email.$invalid')
+                  p.text-danger(ng-show='profileForm.email.$error.minlength')
+                    small
+                      i {{ui.errors.email.min}}
+                  p.text-danger(ng-show='profileForm.email.$error.email')
+                    small
+                      i {{ui.errors.email.notValid}}
+                  p.text-danger(ng-show='profileForm.email.$error.maxlength')
+                    small
+                      i {{ui.errors.email.max}}
+            .control-group
+              label.control-label {{ui.profile.phone}}
+              .controls
+                .input-prepend(ng-show='phoneViews.second')
+                  span.add-on(style='width: 70px;') Standaard
+                  input.inputPhoneNumbers.inputPhoneNumber-1(type='text',
+                  ng-model='profilemeta.phones[1]',
+                  ng-change='profilePhoneNumberParser()',
+                  style='width: 155px;')
+                .input-prepend.input-append(ng-hide='phoneViews.second')
+                  span.add-on(style='width: 70px;') Standaard
+                  input.inputPhoneNumbers.inputPhoneNumber-1(type='text',
+                  ng-model='profilemeta.phones[1]',
+                  ng-change='profilePhoneNumberParser()',
+                  style='width: 155px;')
+                  button.btn.btn-success(type='button', ng-click='addPhoneNumber("second")')
+                    i.glyphicon.glyphicon-white.glyphicon-plus
+                    | Add new
+                p.text-danger(ng-hide='profilePhoneNumberParsed[1].result')
+                  small
+                    i {{profilePhoneNumberParsed[1].message}}
+                p.text-success(ng-show='profilePhoneNumberParsed[1].result')
+                  small
+                    i {{profilePhoneNumberParsed[1].message}}
+              .controls(ng-show='phoneViews.second')
+                .input-prepend(ng-show='phoneViews.third')
+                  span.add-on(style='width: 70px;') Extra.1
+                  input.inputPhoneNumbers.inputPhoneNumber-2(type='text',
+                  ng-model='profilemeta.phones[2]',
+                  ng-change='profilePhoneNumberParser()',
+                  style='width: 155px;')
+                .input-prepend.input-append(ng-hide='phoneViews.third')
+                  span.add-on(style='width: 70px;') Extra.1
+                  input.inputPhoneNumbers.inputPhoneNumber-2(type='text',
+                  ng-model='profilemeta.phones[2]',
+                  ng-change='profilePhoneNumberParser()',
+                  style='width: 155px;')
+                  button.btn.btn-default(type='button', ng-click='removePhoneNumber(2, "second")')
+                    i.glyphicon.glyphicon-remove
+                    | Remove
+                  button.btn.btn-success(type='button',
+                  ng-click='addPhoneNumber("third")',
+                  ng-hide='phoneViews.third')
+                    i.glyphicon.glyphicon-white.glyphicon-plus
+                    | Add new
+                p.text-danger(ng-hide='profilePhoneNumberParsed[2].result')
+                  small
+                    i {{profilePhoneNumberParsed[2].message}}
+                p.text-success(ng-show='profilePhoneNumberParsed[2].result')
+                  small
+                    i {{profilePhoneNumberParsed[2].message}}
+              .controls(ng-show='phoneViews.third')
+                .input-prepend.input-append
+                  span.add-on(style='width: 70px;') Extra.2
+                  input.inputPhoneNumbers.inputPhoneNumber-3(type='text',
+                  ng-model='profilemeta.phones[3]',
+                  ng-change='profilePhoneNumberParser()',
+                  style='width: 155px;')
+                  button.btn.btn-default(type='button', ng-click='removePhoneNumber(3, "third")')
+                    i.glyphicon.glyphicon-remove
+                    | Remove
+                p.text-danger(ng-hide='profilePhoneNumberParsed[3].result')
+                  small
+                    i {{profilePhoneNumberParsed[3].message}}
+                p.text-success(ng-show='profilePhoneNumberParsed[3].result')
+                  small
+                    i {{profilePhoneNumberParsed[3].message}}
+            .control-group(ng-show='StandBy.resources.role == 0')
+              label.control-label {{ui.profile.pagerId}}
+              .controls
+                input.col-md-5(type='text',
+                ng-model='profilemeta.pagerId',
+                value='{{data.resources.pagerId}}')
+            .control-group
+              label.control-label {{ui.profile.address}}
+              .controls
+                input.col-md-5(type='text',
+                ng-model='profilemeta.PostAddress',
+                value='{{data.resources.PostAddress}}')
+            .control-group
+              label.control-label {{ui.profile.postcode}}
+              .controls
+                input.col-md-2(type='text',
+                ng-model='profilemeta.PostZip',
+                value='{{data.resources.PostZip}}')
+            .control-group
+              label.control-label {{ui.profile.city}}
+              .controls
+                input.col-md-3(type='text',
+                ng-model='profilemeta.PostCity',
+                value='{{data.resources.PostCity}}')
+            hr
+            .control-group
+              label.control-label {{ui.profile.username}}
+              .controls
+                input.col-md-3(type='text',
+                ng-model='profilemeta.uuid',
+                value='{{data.resources.uuid}}',
+                disabled='disabled')
+            .control-group(ng-hide='StandBy.resources.role > 1 || views.user')
+              label.control-label {{ui.profile.password}}
+              .controls
+                input.col-md-3(type='text',
+                ng-model='profilemeta.Password')
+                span.help-block(style='margin-top: -5px;')
+                  small
+                    i {{ui.profile.passwordChangeWarning}}
+            .control-group
+              label.control-label {{ui.profile.pincode}}
+              .controls
+                input.col-md-1(type='text',
+                ng-model='profilemeta.pincode',
+                ui-mask='9999',
+                ng-change='pincodeExists()',
+                name='pincode')
+                p.text-danger(ng-hide='pincodeExistsValidation')
+                  small
+                    i {{pincodeExistsValidationMessage}}
+                span.help-block(style='margin-top: -5px;')
+                  small
+                    i {{ui.profile.pincodeInfo}}
+            .form-actions
+              button.btn.btn-success(type='submit',
+              ng-click='save(profilemeta)') {{ui.profile.saveProfile}}
+
+        // password
         div#passwordTab.tab-pane(ng-show='views.user',
         class="{{(views.password==true) && 'active'}}")
-          profile-password
+          div(style='overflow: hidden; height: 35px;')
+            h3.pull-left(style='margin-top: 0;') {{ui.profile.passChange}}
+          hr
+          form.form-vertical
+            .control-group
+              label.control-label {{ui.profile.currentPass}}
+              .controls
+                input.col-md-3(type='password',
+                ng-model='passwords.current')
+            .control-group
+              label.control-label {{ui.profile.newPass}}
+              .controls
+                input.col-md-3(type='password',
+                ng-model='passwords.new1')
+            .control-group
+              label.control-label {{ui.profile.newPassRepeat}}
+              .controls
+                input.col-md-3(type='password',
+                ng-model='passwords.new2')
+            .form-actions
+              button.btn.btn-success(type='submit',
+              ng-click='change(passwords)') {{ui.profile.changePass}}
 
+        // user timeline
         div#userTimelineTab.tab-pane(ng-hide='views.user',
         ng-controller='timeline',
         class="{{(views.timeline==true) && 'active'}}")
-          profile-timeline
+          div(style='overflow: hidden; height: 35px;')
+            h3.pull-left(style='margin-top: 0;') {{ui.profile.timeline}}
+            .btn-group.pull-right
+              button.btn.btn-success(type='submit',
+              class="{{(forms.add==true) && 'active'}}",
+              ng-click='toggleSlotForm()') {{ui.profile.newAvail}}
+          hr
+          #timeline-controls.row-fluid(ng-controller='timeline-navigation')
+            .pull-left(style='margin-top: 10px;')
+              .btn-group.pull-left(style='margin-right: 5px;')
+                button.btn.btn-default(type='button',
+                ng-click='timelineThisWeek()') {{ui.dashboard.thisWeek}}
+              .btn-group.pull-left(style='margin-right: 5px;')
+                button.btn.btn-default(type='button', ng-click='timelineWeekBefore()')
+                  i.glyphicon.glyphicon-arrow-left
+                button.btn(type='button', ng-click='timelineZoomIn()')
+                  i.glyphicon.glyphicon-zoom-in
+                button.btn(type='button', ng-click='timelineZoomOut()')
+                  i.glyphicon.glyphicon-zoom-out
+                button.btn(type='button', ng-click='timelineWeekAfter()')
+                  i.glyphicon.glyphicon-arrow-right
+
+              .btn-group.pull-left
+                button.btn.btn-default(type='button',
+                class="{{(timeline.config.legendarer==true) && 'active'}}",
+                ng-click='showLegenda()',
+                ng-model='timeline.config.legendarer') {{ui.planboard.legenda}}
+
+            .pull-right(style='text-align: right;')
+              h4(style='font-weight: normal;')
+                | {{timeline.range | rangeMainWeekFilter}}
+                br
+                div(style='font-size: 15px; font-weight: lighter;')
+                  span {{timeline | rangeInfoWeekFilter}}
+
+          hr(ng-hide='forms.add || forms.edit')
+
+          .legenda(ng-show='timeline.config.legendarer')
+            .legenda-row
+              strong {{ui.planboard.members}}
+              ul
+                li(ng-repeat='(key, value) in timeline.config.states',
+                class="legenda-{{value.className}}")
+                  label
+                    .square
+                    input(type='checkbox',
+                    ng-click='alterLegenda(timeline.config.legenda)',
+                    ng-model='timeline.config.legenda[key]')
+                    | {{value.label}}
+            hr
+
+          #form-open.row-fluid(ng-show='forms.add || forms.edit')
+            form.form-inline.form-toggled
+              button.close(ng-click='resetInlineForms(); forms.add = false; forms.edit = false;') ×
+              h4(ng-show='forms.add') {{ui.profile.newAvail}}
+              h4(ng-show='forms.edit') {{ui.planboard.updateAvail}}
+              hr
+              .form-elements-group(ng-show='browser.mobile')
+                label {{ui.planboard.from}}
+                .control-group.dater-mobile
+                  input(name='date-start',
+                  type='datetime',
+                  ng-model='slot.start.datetime')
+              .form-elements-group(ng-hide='browser.mobile')
+                label {{ui.planboard.from}}
+                .control-group.dater
+                  input(name='date-start',
+                  type='text',
+                  ng-model='slot.start.date',
+                  data-date-format='dd-mm-yyyy',
+                  bs-datepicker='')
+                  i.glyphicon.glyphicon-calendar
+                .control-group.timer
+                  input(name='time-start',
+                  type='text',
+                  ng-model='slot.start.time',
+                  bs-timepicker='bs-timepicker')
+                  i.glyphicon.glyphicon-time
+              .form-elements-group(ng-show='browser.mobile')
+                label {{ui.planboard.till}}
+                .control-group.dater-mobile
+                  input(name='date-start',
+                  type='datetime',
+                  ng-model='slot.end.datetime')
+              .form-elements-group(ng-hide='browser.mobile')
+                label {{ui.planboard.till}}
+                .control-group.dater
+                  input(name='date-end',
+                  type='text',
+                  ng-model='slot.end.date',
+                  data-date-format='dd-mm-yyyy',
+                  bs-datepicker='')
+                  i.glyphicon.glyphicon-calendar
+                .control-group.timer
+                  input(name='time-end',
+                  type='text',
+                  ng-model='slot.end.time',
+                  bs-timepicker='bs-timepicker')
+                  i.glyphicon.glyphicon-time
+              .form-elements-group
+                label {{ui.planboard.state}}
+                select(ng-model='slot.state',
+                ng-options='option as value for (option, value) in states')
+                  option(value='') {{ui.planboard.selectAState}}
+              .form-elements-group.rightest
+                label {{ui.planboard.reoccuring}}
+                input(type='checkbox', ng-model='slot.recursive')
+              .form-elements-actions.pull-right
+                div(ng-show='forms.add')
+                  button.btn.btn-success(type='button',
+                  ng-click='timelineOnAdd("true", slot)') {{ui.planboard.add}}
+                div(ng-show='forms.edit')
+                  button.btn.btn-danger(type='button',
+                  ng-click='timelineOnRemove()') {{ui.planboard.del}}
+                  button.btn.btn-success(type='button',
+                  ng-click='timelineOnChange("true", original, slot)') {{ui.planboard.change}}
+
+          div(ng-hide='timelineLoaded')
+            p {{ui.planboard.loadingTimeline}}
+          #timeline(ng-show='timelineLoaded')
+            #userTimeline
+          hr
+          p
+            small.pull-left
+              span.text-warning {{ui.planboard.lastSyncTime}}
+              span.text-muted {{data.synced | nicelyDate}}
+            small.pull-right
+              span.text-warning {{ui.planboard.dataRangeStart}}
+              span.text-muted {{data.periods.start | nicelyDate}}
+              | |
+              span.text-warning {{ui.planboard.dataRangeEnd}}
+              span.text-muted {{data.periods.end | nicelyDate}}
 
 #deleteUserModal.modal.hide.fade(tabindex='-1',
 role='dialog',
