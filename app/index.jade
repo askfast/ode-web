@@ -37,6 +37,10 @@ block navbar
             ng-hide='StandBy.resources.role > 1')
               a(href='#groups') {{ui.groups.groups}}
           ul.nav.navbar-nav.navbar-right(ng-hide='browser.mobile')
+            li(ng-show='StandBy.location.length > 0')
+              a
+                i : Locatie: {{StandBy.location}}                  
+
             li
               a(href='#faq#web')
                 i.glyphicon.glyphicon-question-sign.glyphicon-white

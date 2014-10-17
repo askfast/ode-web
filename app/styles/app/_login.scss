@@ -23,6 +23,10 @@
   }
 }
 
+#preloader, #locations {
+  display: none;
+}
+
 // Box style
 .boxed {
   margin: 0;
@@ -85,20 +89,5 @@ span.version {
     &:hover {
       text-decoration: underline;
     }
-  }
-}
-
-#demo_users {
-  position: absolute;
-  right: 20px;
-  bottom: 0;
-
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
-
-  li {
   }
 }

@@ -141,23 +141,66 @@ define(['controllers/controllers'], function (controllers) {
           return false;
         } else {
 
-          angular.element('#login').hide();
-          angular.element('#download').hide();
-          angular.element('#preloader').show();
+          locations();
 
-          progress(30, $rootScope.ui.login.loading_User);
+        }
+      });
+    }
 
-          User.resources().then(function (resources) {
-            progress(50, 'Setting up environment.');
+    function locations() {
 
-            Environment.setup().then(function () {
-              progress(70, $rootScope.ui.login.loading_Group);
+       $('download-mobile-app').hide();
 
-              Network.groups().then(function (groups) {
-                progress(70, 'Populating group members.');
+        User.locations()
+          .then(
+          function (locations)
+          {
+            $('#login').hide();
 
-                Network.population().then(function () {
-                  configure(resources, groups);
+            if (locations.length == 0)
+            {
+              $('#preloader').show();
+              preloader();
+              return;
+            }
+            else
+            {
+              $('#locations').show();
+            }
+
+            $scope.locations = locations;
+          }
+        );
+    }
+
+    $scope.setLocation = function (location)
+    {
+      User.locate(location)
+        .then(
+        function (result)
+        {
+          $rootScope.app.location = location;
+          $('#locations').hide();
+          $('#preloader').show();
+          preloader();
+        }
+      );
+    };
+    
+    function preloader() {
+      progress(30, $rootScope.ui.login.loading_User);
+
+      User.resources().then(function (resources) {
+        progress(50, 'Setting up environment.');
+
+        Environment.setup().then(function () {
+          progress(70, $rootScope.ui.login.loading_Group);
+
+          Network.groups().then(function (groups) {
+            progress(70, 'Populating group members.');
+
+            Network.population().then(function () {
+              configure(resources, groups);
 //                  Planboard.clusters().then(function () {
 //                    $scope.preloaded = 'Getting user availability.';
 //
@@ -169,11 +212,9 @@ define(['controllers/controllers'], function (controllers) {
 //                      });
 //                    });
 //                  });
-                });
-              });
             });
           });
-        }
+        });
       });
     }
 
@@ -429,6 +470,7 @@ define(['controllers/controllers'], function (controllers) {
         angular.element('#changePass button[type=submit]').text($rootScope.ui.login.button_changePassword).removeAttr('disabled');
       });
     };
+
 
     // -----------------------------------------------------------------------
     Store('environment').has('sessionTimeout', function(res){

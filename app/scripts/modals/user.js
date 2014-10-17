@@ -1,8 +1,31 @@
-define(['services/services'], function (services) {
+define(['services/services', 'config'], function (services, config) {
   'use strict';
 
   services.factory('User', function ($rootScope, $resource, $q, $http, Log, md5, StandBy, Session, Store) {
     var User = $resource();
+
+    var Domain = $resource(
+        config.host + '/domain/:level',
+      {
+      },
+      {
+        get: {
+          method: 'GET',
+          params: {},
+          isArray: true
+        },
+        locations: {
+          method: 'GET',
+          params: { level: 'locations' },
+          isArray:  true
+        },
+        locate: {
+          method: 'post',
+          params: { level: 'location' },
+          isArray:  true
+        }
+      }
+    );
 
     User.prototype.login = function (username, password) {
       var deferred = $q.defer();
@@ -52,6 +75,72 @@ define(['services/services'], function (services) {
       } catch (e) {
         Log.error('Something went wrong with resources call:', e);
       }
+
+      return deferred.promise;
+    };
+
+    User.prototype.locations = function ()
+    {
+      var deferred = $q.defer();
+
+      Domain.locations(
+        {},
+        function (results)
+        {
+          var locations = [];
+
+          angular.forEach(
+            results,
+            function (result)
+            {
+              var location = '';
+
+              angular.forEach(
+                result,
+                function (_s) { location += _s; });
+
+              if (location.length > 0)
+              {
+                locations.push(location);
+              }
+            }
+          );
+
+          deferred.resolve(locations);
+        },
+        function (error)
+        {
+          deferred.resolve(error);
+        }
+      );
+
+      return deferred.promise;
+    };
+
+
+    /**
+     * Locate
+     */
+    User.prototype.locate = function (location)
+    {
+      var deferred = $q.defer();
+      
+      if(location==null) {
+        location = '';
+      }
+
+      Domain.locate(
+        {},
+        '"' + location + '"',
+        function (result)
+        {
+          deferred.resolve(result);
+        },
+        function (error)
+        {
+          deferred.resolve(error);
+        }
+      );
 
       return deferred.promise;
     };
