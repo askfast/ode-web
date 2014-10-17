@@ -132,14 +132,11 @@ block footer
                 button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
                   | Download mobiele app
                 ul.dropdown-menu.pull-right
-                  li(ng-show='(config.profile.meta == "demo")')
-                    a(href='https://play.google.com/store/apps/details?id=com.askcs.standbydemo', target='_blank')
+                  li(ng-show='StandBy.config.profile.mobileApp.android')
+                    a(ng-href='{{StandBy.config.profile.mobileApp.android}}', target='_blank')
                       | Download Android App
-                  li(ng-hide='(config.profile.meta == "demo")')
-                    a(href='https://play.google.com/store/apps/details?id=com.askcs.standby', target='_blank')
-                      | Download Android App
-                  li
-                    a(href='https://itunes.apple.com/nl/app/standby/id655588325?mt=8&uo=4', target='itunes_store')
+                  li(ng-show='StandBy.config.profile.mobileApp.ios')
+                    a(ng-href='{{StandBy.config.profile.mobileApp.ios}}', target='itunes_store')
                       | Download iPhone App
             li
               img(src='images/standby_logo_footer.png', alt='StandBy Logo')
