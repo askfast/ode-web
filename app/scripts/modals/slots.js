@@ -539,6 +539,10 @@ define(['services/services', 'config'], function (services, config) {
     Slots.prototype.add = function (slot, user) {
       var deferred = $q.defer();
 
+      // Always reset to 0 seconds
+      var start = moment.unix(slot.start).seconds(0);
+      slot.start = start.unix();
+
       Slots.save(
         {user: user}, slot,
         function (result) {
