@@ -38,10 +38,12 @@ define(['controllers/controllers'], function (controllers) {
     angular.element('.navbar').hide();
     angular.element('#footer').hide();
     angular.element('#watermark').hide();
-    angular.element('body').css({
-      'background': 'url(../' + $rootScope.StandBy.config.profile.background + ') no-repeat center center fixed',
-      'backgroundSize': 'cover'
-    });
+    if($rootScope.StandBy.config.profile.showBackground) {
+      angular.element('body').css({
+        'background': 'url(../' + $rootScope.StandBy.config.profile.background + ') no-repeat center center fixed',
+        'backgroundSize': 'cover'
+      });
+    }
     if (navigator.userAgent.indexOf("Firefox") >= 0)
       angular.element('#login form').attr('autocomplete', 'off');
 

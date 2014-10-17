@@ -1,8 +1,7 @@
 #login.boxed(ng-show='views.help',
 ng-hide='views.login || views.forgot || views.changePass')
   form.form-group
-    img(ng-src='{{StandBy.config.profile.logos.login}}',
-    alt='{{StandBy.config.profile.title}}')
+    logos
     h4.form-signin-heading {{ui.help.help}}
     p(ng-repeat='content in ui.login.help.content',
     style='text-align: left;')

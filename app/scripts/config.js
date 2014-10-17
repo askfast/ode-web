@@ -25,12 +25,14 @@ define(
       title: profile.title,
       logos: {
         login: 'scripts/profiles/' + profile.meta + '/img/login_logo.png',
+        sublogin: (profile.sublogo ? 'scripts/profiles/' + profile.meta + '/img/' + profile.sublogo : ''),
         app: ''
       },
       background: 'scripts/profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000: profile.p2000,
       mobileApp: profile.mobileApp,
-      smartAlarm: profile.smartAlarm
+      smartAlarm: profile.smartAlarm,
+      showBackground: (profile.showBackground==null ? true : profile.showBackground)
     },
 
     statesall: {

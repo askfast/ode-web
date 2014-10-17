@@ -1,8 +1,7 @@
 #login.boxed(ng-show='views.login',
 ng-hide='views.help || views.changePass')
 	form.form-group(ng-submit='login()')
-		img(ng-src='{{StandBy.config.profile.logos.login}}',
-		alt='{{StandBy.config.profile.title}}')
+		logos
 		h4.form-signin-heading(ng-show='StandBy.config.profile.own')
 			| {{StandBy.config.profile.title}}
 		h4.form-signin-heading(ng-hide='StandBy.config.profile.own')

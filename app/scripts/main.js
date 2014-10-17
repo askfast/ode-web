@@ -174,6 +174,7 @@ require([
   'directives/chosen',
   'directives/date-range-picker',
   'directives/notification-item',
+  'directives/logos',
   'filters/all-filters',
   'controllers/dashboard',
   'controllers/faq',
