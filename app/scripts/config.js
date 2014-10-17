@@ -86,8 +86,8 @@ define(
       }
     },
 
-    // host: profile.host(),
-    host: 'http://dev.ask-cs.com',
+    host: profile.host(),
+    // host: 'http://dev.ask-cs.com',
 
     formats: {
       date: 'dd-MM-yyyy',

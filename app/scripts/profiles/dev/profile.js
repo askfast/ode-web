@@ -9,12 +9,10 @@ var profile = {
 
   title: 'Development',
 
-  host: 'http://dev.ask-cs.com',
-
-  //  host: function ()
-  //  {
-  //    return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com';
-  //  },
+  host: function ()
+  {
+     return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com';
+  },
 
   states: [],
 
