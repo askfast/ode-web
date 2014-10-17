@@ -69,7 +69,7 @@ require.config({
     bootstrap: { deps: ['jquery'], exports: 'bootstrap' },
     lawnchair: { deps: [], exports: 'lawnchair' },
     dom: { deps: ['lawnchair'], exports: 'dom' },
-    config: {deps: ['jquery'] },
+    config: {deps: ['jquery'], exports: 'config' },
     // moment: { deps: [], exports: 'moment' },
     chosen: { deps: ['jquery'], exports: 'chosen' },
     timeline: { deps: [], exports: 'timeline' },
