@@ -9,7 +9,7 @@ define(
 
 
     title: 'WebPaige',
-    version: '2.6.0-SNAPSHOT',
+    version: '2.7.0-SNAPSHOT',
     lang: 'nl',
 
     fullscreen: true,
