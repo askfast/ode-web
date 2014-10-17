@@ -20,8 +20,7 @@
       hr
       p Overzicht beschikbaarheid aan het laden...
     section(ng-hide='loadingAvailability')
-      div(ng-show='ng-show', availability.members.available.length='availability.members.available.length')
-        | 0"
+      div(ng-show='availability.members.available.length > 0')
         hr
         ul.sa-setup
           li.sa-truck

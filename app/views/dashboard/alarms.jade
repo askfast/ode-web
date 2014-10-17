@@ -4,7 +4,7 @@ div.widget
   hr
   p(ng-show='loading.alerts') {{ui.dashboard.loadingP2000}}
   ul#announcements(ng-hide='loading.alerts')
-    li(ng-show='ng-show', alarms.list.length='alarms.list.length')
+    li(ng-show='alarms.list.length < 1') {{ui.dashboard.noP2000}}
     li(ng-repeat='alarm in alarms.list')
       table
         tr
