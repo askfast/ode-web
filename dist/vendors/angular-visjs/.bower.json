@@ -1,0 +1,14 @@
+{
+  "name": "angular-visjs",
+  "homepage": "https://github.com/visjs/angular-visjs",
+  "_release": "3fce8d8e0e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "3fce8d8e0e4033820b114b81a0360ebe1beef987"
+  },
+  "_source": "https://github.com/visjs/angular-visjs.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/visjs/angular-visjs.git",
+  "_direct": true
+}

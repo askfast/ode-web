@@ -1,0 +1,1 @@
+define(["services/services"],function(e){e.factory("Settings",function(e,t,n,r,i){var s=t();return s.prototype.get=function(){return angular.fromJson(i("user").get("resources").settingsWebPaige)||{}},s.prototype.save=function(e,t){var i=n.defer();return r.save(e,{settingsWebPaige:angular.toJson(t)}).then(function(){i.resolve({saved:!0})}),i.promise},new s})});

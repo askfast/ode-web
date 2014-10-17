@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("timeSlot",function(){return{restrict:"EA",templateUrl:"views/planboard/time-slot.html",link:function(e,t,n){}}})});

@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("forgotPassword",function(){return{restrict:"EA",templateUrl:"views/login/forgot-password.html",link:function(e,t,n){}}})});

@@ -1,0 +1,68 @@
+<section id="dashboard" style="margin-top: -20px">
+  <div class="row">
+    <div ng-show="StandBy.config.profile.smartAlarm" class="sa widget col-md-9">
+      <div class="head">
+        <h4>SlimAlarmeren</h4>
+      </div>
+      <hr>
+      <p ng-show="loading.smartAlarm">Indeling SlimAlarmeren lijst laden...</p>
+      <ul ng-hide="loading.smartAlarm" class="sa-setup">
+        <li class="sa-truck">
+          <div ng-repeat="trucker in saMembers.truck | orderBy:&quot;rank&quot;" class="sa-member"><span class="sa-member-icon {{(trucker.class) &amp;&amp; trucker.class}}"><strong>{{trucker.icon}}</strong></span>
+            <div class="sa-member-card">
+              <h5>{{trucker.name}}</h5>
+              <hr><span>{{trucker.role}}</span>
+            </div>
+          </div>
+        </li>
+        <li class="sa-reserves">
+          <div ng-repeat="reserve in saMembers.reserves.available" class="sa-member"><span class="sa-member-icon sa-icon-reserve-available"><strong>B{{$index+1}}</strong></span>
+            <div class="sa-member-card">
+              <h5>{{reserve.name}}</h5>
+              <hr><span>Beschikbaar</span>
+            </div>
+          </div>
+          <div ng-repeat="reserve in saMembers.reserves.noplanning" class="sa-member"><span class="sa-member-icon sa-icon-reserve-noplanning"><strong>{{$index+1}}</strong></span>
+            <div class="sa-member-card">
+              <h5>{{reserve.name}}</h5>
+              <hr><span>Mogelijk inzetbaar</span>
+            </div>
+          </div>
+          <div ng-repeat="reserve in saMembers.reserves.unavailable" class="sa-member"><span class="sa-member-icon sa-icon-reserve-unavailable"><strong>N{{$index+1}}</strong></span>
+            <div class="sa-member-card">
+              <h5>{{reserve.name}}</h5>
+              <hr><span>Niet beschikbaar</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <p ng-hide="loading.smartAlarm"><small class="pull-left"><span class="text-warning">{{ui.planboard.lastSyncTime}} &nbsp;</span><span class="text-muted">{{saSynced | nicelyDate}}</span></small></p>
+    </div>
+    <div ng-show="StandBy.config.profile.p2000.status" class="widget col-md-3">
+      <div class="head">
+        <h4>{{ui.dashboard.announcements}}</h4>
+      </div>
+      <hr>
+      <p ng-show="loading.alerts">{{ui.dashboard.loadingP2000}}</p>
+      <ul id="announcements" ng-hide="loading.alerts">
+        <li ng-show="alarms.list.length &lt; 1">{{ui.dashboard.noP2000}}</li>
+        <li ng-repeat="alarm in alarms.list">
+          <table>
+            <tr>
+              <td class="first"><span ng-show="alarm.prio.1" class="prio label label-important">PRIO 1</span><span ng-show="alarm.prio.2" class="prio label label-warning">PRIO 2</span><span ng-show="alarm.prio.3" class="prio label label-info">PRIO 3</span><span ng-show="alarm.prio.test" class="prio label label-inverse">PROEFALARM</span></td>
+              <td class="last">
+                <p>{{alarm.body}}</p>
+              </td>
+            </tr>
+            <tr>
+              <td><small class="text-muted"><i>{{alarm.msgCode}}</i></small></td>
+              <td><span class="label label-natural pull-right">{{alarm.day}} {{alarm.time}}</span></td>
+            </tr>
+          </table>
+        </li>
+      </ul>
+      <hr ng-hide="loading.alerts" class="lastline">
+      <p ng-hide="loading.alerts"><small class="pull-left"><span class="text-warning">{{ui.planboard.lastSyncTime}}</span><span class="text-muted">{{synced.alarms | nicelyDate}}</span></small><br><small class="pull-left"><span class="text-warning">Capcode(s):</span><span class="text-muted">{{StandBy.config.profile.p2000.codes}}</span></small></p>
+    </div>
+  </div>
+</section>

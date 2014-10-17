@@ -1,0 +1,7 @@
+/**
+ * @license AngularJS v1.0.5
+ * (c) 2010-2012 Google, Inc. http://angularjs.org
+ * License: MIT
+ */
+
+(function(e){function n(){var e=function(){};this.reportResult=e,this.reportEnd=e,this.runScenario=e,this.name="Angular Scenario Adapter",this.runTestConfiguration=function(e,n,r){return e.getTestCaseInfo().getType()!=t?!1:(this.reportResult=n,this.reportEnd=r,this.runScenario(),!0)},this.getTestRunsConfigurationFor=function(e,n,r){return r.push(new jstestdriver.TestRunConfiguration(new jstestdriver.TestCaseInfo("Angular Scenario Tests",function(){},t),[])),!0}}function i(e,t,n){if(e){e.pluginRegistrar.register(r),r.runScenario=t;var i=angular.scenario.Application.prototype,s=i.navigateTo,o=n&&n.relativeUrlPrefix||"/";i.navigateTo=function(e,t,n){return e.charAt(0)!="/"&&e.charAt(0)!="#"&&e!="about:blank"&&!e.match(/^https?/)&&(e=o+e),s.call(this,e,t,n)}}}function s(e){var t={success:"PASSED",error:"ERROR",failure:"FAILED"};return new jstestdriver.TestResult(e.fullDefinitionName,e.name,jstestdriver.TestResult.RESULT[t[e.status]],e.error||"",e.line||"",e.duration)}var t="scenario",r=new n;angular.scenario.output("jstd",function(e,t,n){n.on("SpecEnd",function(e){r.reportResult(s(e))}),n.on("RunnerEnd",function(){r.reportEnd()})}),i(e.jstestdriver,angular.scenario.setUpAndRun,e.jstdScenarioAdapter)})(window);

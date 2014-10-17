@@ -1,0 +1,260 @@
+<div class="page-header">
+  <h2 ng-hide="views.add || views.member">{{group.name}}</h2>
+  <h2 ng-show="views.add">{{ui.groups.newGroup}}</h2>
+  <h2 ng-show="views.member">{{ui.groups.newMember}}</h2>
+  <div class="btn-group pull-right">
+    <button type="button" ng-click="addGroupForm(); setViewTo(&quot;add&quot;)" class="btn btn-success {{(views.add==true) &amp;&amp; 'active'}}">{{ui.groups.newGroup}}</button>
+    <button type="button" ng-click="newMemberForm(); setViewTo(&quot;member&quot;)" class="btn btn-success {{(views.member==true) &amp;&amp; 'active'}}">{{ui.groups.newMember}}</button>
+  </div>
+  <form ng-submit="searchMembers(search.query)" style="width: 256px" class="pull-right">
+    <div class="input-group">
+      <input type="text" placeholder="{{ui.groups.searchFor}}" ng-model="search.query" class="form-control search-query"><span class="input-group-btn">
+        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;{{ui.groups.search}}</button></span>
+    </div>
+  </form>
+</div>
+<div class="tabbable tabs-left">
+  <ul style="margin-right: 0" class="nav nav-tabs nav-tabs-app">
+    <li ng-show="views.add" class="{{(views.add==true) &amp;&amp; 'active'}}"><a href="groups#addGroupTab" ng-click="setViewTo(&quot;add&quot;)" data-toggle="tab"><span class="entypo">&#9998;</span>{{ui.groups.addNewGroup}}</a></li>
+    <li ng-show="views.edit" class="{{(views.edit==true) &amp;&amp; 'active'}}"><a href="groups#editGroupTab" ng-click="setViewTo(&quot;edit&quot;)" data-toggle="tab"><span class="entypo">&#9998;</span>{{ui.groups.editGroup}}</a></li>
+    <li ng-show="views.member" class="{{(views.member==true) &amp;&amp; 'active'}}"><a href="groups#newMemberTab" ng-click="setViewTo(&quot;member&quot;)" data-toggle="tab"><span class="entypo">&#59136;</span>{{ui.groups.newMember}}</a></li>
+    <li ng-show="views.search" class="{{(views.search==true) &amp;&amp; 'active'}}"><a href="groups#searchTab" ng-click="setViewTo(&quot;search&quot;)" data-toggle="tab"><span class="entypo">&#128269;</span>{{ui.groups.searchResults}}</a></li>
+    <li id="groupTabLink" class="{{(views.view==true) &amp;&amp; 'active'}}"><a href="groups#groupTab" data-toggle="tab" ng-click="setViewTo(&quot;view&quot;)"><span class="entypo">&#128101;</span>{{ui.groups.groups}}</a></li>
+  </ul>
+  <div class="tab-content">
+    <!-- add group-->
+    <div id="addGroupTab" ng-show="views.add" class="tab-pane {{(views.add==true) &amp;&amp; 'active'}}">
+      <div class="tab-header">
+        <h3 class="pull-left">{{ui.groups.addNewGroup}}</h3>
+        <button type="button" ng-click="closeTabs()" class="btn btn-default pull-right">{{ui.groups.close}}</button>
+      </div>
+      <hr>
+      <form>
+        <fieldset>
+          <div class="form-group">
+            <div class="col-sm-4">
+              <label class="control-label">{{ui.groups.name}}</label>
+              <input type="text" ng-model="groupForm.name" class="form-control">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" ng-click="groupSubmit(groupForm)" class="btn btn-success">{{ui.groups.saveGroup}}</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <!-- edit group-->
+    <div id="editGroupTab" ng-show="views.edit" class="tab-pane {{(views.edit==true) &amp;&amp; 'active'}}">
+      <div class="tab-header">
+        <h3 class="pull-left">{{ui.groups.editGroup}}</h3>
+        <button type="button" ng-click="closeTabs()" class="btn btn-default pull-right">{{ui.groups.close}}</button>
+      </div>
+      <hr>
+      <form>
+        <fieldset>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.name}}
+              <input type="text" ng-model="groupForm.name" class="form-control col-md-4">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" ng-click="groupSubmit(groupForm)" class="btn btn-success">{{ui.groups.saveGroup}}</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <!-- register member-->
+    <div id="newMemberTab" ng-show="views.member" class="tab-pane {{(views.member==true) &amp;&amp; 'active'}}">
+      <div class="tab-header">
+        <h3 class="pull-left">{{ui.groups.registerMember}}</h3>
+        <button type="button" ng-click="closeTabs()" class="btn btn-default pull-right">{{ui.groups.close}}</button>
+      </div>
+      <hr>
+      <form name="registerUserForm">
+        <fieldset>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.role}}
+              <select ng-model="memberForm.role" ng-options="role.label for role in roles" class="form-control">
+                <option value="">{{ui.groups.selectRole}}</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-group">
+            <label style="width: 530px" class="control-label">{{ui.groups.groups}}
+              <select data-placeholder=" " multiple="multiple" chosen="" ng-model="memberForm.groups" ng-options="group.name for group in data.groups" class="chosen-select"></select>
+              <!-- <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p>-->
+            </label>
+          </div>
+          <hr>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.firstName}}
+              <input type="text" ng-model="memberForm.firstName" class="form-control col-md-4">
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.lastName}}
+              <input type="text" ng-model="memberForm.lastName" class="form-control col-md-4">
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.email}}
+              <input type="email" name="email" ng-model="memberForm.EmailAddress" ng-minlength="3" ng-maxlength="50" class="form-control col-md-4">
+              <div ng-show="registerUserForm.email.$dirty &amp;&amp; registerUserForm.email.$invalid" class="error-container">
+                <p ng-show="registerUserForm.email.$error.minlength" class="text-danger"><small><i>{{ui.errors.email.min}}</i></small></p>
+                <p ng-show="registerUserForm.email.$error.email" class="text-danger"><small><i>{{ui.errors.email.notValid}}</i></small></p>
+                <p ng-show="registerUserForm.email.$error.maxlength" class="text-danger"><small><i>{{ui.errors.email.max}}</i></small></p>
+              </div>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.phone}}
+              <input id="inputPhoneNumber" type="text" ng-model="memberForm.PhoneAddress" ng-change="phoneNumberParser(memberForm.PhoneAddress)" class="form-control col-md-3">
+              <!-- <p class="text-danger" ng-show="!memberForm.PhoneAddress">-->
+              <!-- <small><i>Please fill your phone number!</i></small>-->
+              <!-- </p>-->
+              <p ng-hide="phoneNumberParsed.result" class="text-danger"><small><i>{{phoneNumberParsed.message}}</i></small></p>
+              <p ng-show="phoneNumberParsed.result" class="text-success"><small><i>{{phoneNumberParsed.message}}</i></small></p>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.profile.pagerId}}
+              <input type="text" ng-model="memberForm.pagerId" class="form-control col-md-5">
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.address}}
+              <input type="text" ng-model="memberForm.PostAddress" class="form-control col-md-5">
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.postCode}}
+              <input type="text" ng-model="memberForm.PostZip" class="form-control col-md-2">
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.city}}
+              <input type="text" ng-model="memberForm.PostCity" class="form-control col-md-3">
+            </label>
+          </div>
+          <hr>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.userName}}
+              <input type="text" ng-model="memberForm.username" ng-change="userExists()" class="form-control col-md-3">
+              <p ng-hide="userExistsValidation" class="text-danger"><small><i>{{ui.groups.registerUserName.exists}}</i></small></p>
+              <p ng-show="userExistsValidation &amp;&amp; memberForm.username.length &gt; 0" class="text-success"><small><i>{{ui.groups.registerUserName.goodToGo}}</i></small></p>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">{{ui.groups.password}}
+              <input type="password" ng-model="memberForm.password" class="form-control col-md-3">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" ng-click="memberSubmit(memberForm)" class="btn btn-success">{{ui.groups.saveMember}}</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <!-- search member-->
+    <div id="searchTab" ng-show="views.search" class="tab-pane {{(views.search==true) &amp;&amp; 'active'}}">
+      <div class="tab-header">
+        <h3 class="pull-left">{{ui.groups.searchedFor}} '{{search.queried}}'</h3>
+        <button type="button" ng-click="closeTabs()" class="btn btn-default pull-right">{{ui.groups.close}}</button>
+      </div>
+      <hr>
+      <p ng-hide="candidates.length &gt; 0">{{ui.groups.sorryCanNotFind}}</p>
+      <div ng-show="candidates.length &gt; 0">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{{ui.groups.name}}</th>
+              <th>{{ui.groups.groups}}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="candidate in candidates">
+              <td>{{$index + 1}}</td>
+              <td><a href="#/profile/{{candidate.id}}#profile">{{candidate.name}}</a></td>
+              <td><span ng-repeat="group in candidate.groups"><a ng-click="requestGroup(group.uuid, true)">{{group.name}}</a><span ng-show="!$last">, </span></span></td>
+              <td>
+                <div ng-hide="candidate.fields.role == 0">
+                  <select style="margin: 0; width: 160px" ng-model="candidate.group" ng-options="group.name for group in data.groups" class="form-control">
+                    <option value="">{{ui.groups.selectGroup}}</option>
+                  </select>
+                  <button style="margin-left: 5px" ng-click="addMember(candidate)" class="btn btn-success btn-sm">{{ui.groups.addToGroup}}</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table><span class="text-muted pull-right"><small><i>{{candidates.length | i18n_spec:'groups.resultCount'}}</i></small></span>
+      </div>
+    </div>
+    <!-- group listing-->
+    <div id="groupTab" class="tab-pane {{(views.view==true) &amp;&amp; 'active'}}">
+      <div class="tab-header">
+        <div class="pull-left">
+          <select ng-model="current" ng-options="group.uuid as group.name for group in groups" ng-selected="current" ng-change="requestGroup(current); sorter=&quot;resources.lastName&quot;; reverse=false;" class="form-control"></select>
+        </div>
+        <div class="pull-right">
+          <button type="button" style="margin-right: 5px" data-content-template="views/groups-wish.html" bs-popover="" data-placement="bottom" data-title="Behoefte wijzigen" class="btn btn-default"><span ng-show="wished" class="badge badge-inset">{{wish}}</span>&nbsp;{{ui.groups.requiredPeople}}</button>
+          <button type="button" ng-click="editGroup(group)" style="margin-right: 5px" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i>&nbsp;{{ui.groups.editGroup}}</button>
+          <button type="button" ng-click="confirmGroupDelete(group.uuid)" class="btn btn-danger"><i class="glyphicon glyphicon-trash glyphicon-white"></i>&nbsp;{{ui.groups.deleteGroup}}</button>
+        </div>
+        <div style="margin-right: 5px" class="pull-right">
+          <input type="text" placeholder="{{ui.groups.filterMembers}}" ng-model="filtered" class="form-control search-query">
+        </div>
+      </div>
+      <hr>
+      <p ng-hide="(data.members[group.uuid]|filter:filtered|filterSupers).length &gt; 0">{{ui.groups.noMembers}}</p>
+      <div ng-show="(data.members[group.uuid]|filter:filtered|filterSupers).length &gt; 0">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>
+                <input type="checkbox" ng-model="selectionMaster" ng-click="toggleSelection(group, selectionMaster)">
+              </th>
+              <th><a ng-click="toggleSorter(&quot;resources.firstName&quot;)">{{ui.groups.firstName}}</a><span ng-show="(sorter==&quot;resources.firstName&quot;)"><span ng-hide="reverse">▲</span><span ng-show="reverse">▼</span></span></th>
+              <th><a ng-click="toggleSorter(&quot;resources.lastName&quot;)">{{ui.groups.lastName}}</a><span ng-show="(sorter==&quot;resources.lastName&quot;)"><span ng-hide="reverse">▲</span><span ng-show="reverse">▼</span></span></th>
+              <!--<th ng-hide="config.profile.smartAlarm">
+              -->
+              <th><a ng-click="toggleSorter(&quot;resources.role&quot;)">{{ui.groups.role}}</a><span ng-show="(sorter==&quot;resources.role&quot;)"><span ng-hide="reverse">▲</span><span ng-show="reverse">▼</span></span></th>
+              <th ng-show="PhoneAddressesExist">{{ui.groups.tel}}
+                <!--<a ng-click="toggleSorter('resources.phoneAddress')">{{ui.groups.tel}}</a>&nbsp;
+                -->
+                <!--<span ng-show="(sorter=='resources.phoneAddress')">
+                -->
+                <!--<span ng-hide="reverse">&#9650;</span>
+                -->
+                <!--<span ng-show="reverse">&#9660;</span>
+                -->
+                <!--</span>
+                -->
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse|filterSupers">
+              <td>
+                <input type="checkbox" ng-model="selection[member.uuid]" ng-checked="selectionMaster" ng-hide="member.resources.role == 0">
+              </td>
+              <td>{{member.resources.firstName}}</td>
+              <td>{{member.resources.lastName}}</td>
+              <!--<td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>
+              -->
+              <td>{{member.resources.role | translateRole}}</td>
+              <td ng-show="PhoneAddressesExist">{{member.resources.PhoneAddresses[0]}}</td>
+              <td>
+                <div class="pull-right"><a href="#/profile/{{member.uuid}}#profile" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i></a><span ng-hide="member.resources.role == 0">&nbsp;&nbsp;<a href="#/profile/{{member.uuid}}#edit" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>&nbsp;
+                    <button type="submit" ng-click="removeMember(member.uuid, group.uuid)" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove glyphicon-white"></i></button></span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" ng-click="removeMembers(selection, group)" class="btn btn-sm btn-danger pull-left"><i class="glyphicon glyphicon-trash glyphicon-white"></i>&nbsp;{{ui.groups.removeSelectedMembers}}</button><span class="text-muted pull-right"><small><i>{{(data.members[group.uuid]|filter:filtered|filterSupers).length | i18n_spec:'groups.memberCount'}}</i></small></span>
+      </div>
+    </div>
+  </div>
+</div>
