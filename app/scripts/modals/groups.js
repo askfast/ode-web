@@ -703,7 +703,7 @@ define(['services/services', 'config'], function (services, config) {
       angular.forEach(
         groups,
         function (group) {
-          var localGroup = Store('network').get('group'+group.uuid);
+          var localGroup = Store('network').get('group.'+group.uuid);
 
           angular.forEach(
             localGroup,
