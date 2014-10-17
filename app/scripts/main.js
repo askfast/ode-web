@@ -59,7 +59,7 @@ require.config({
   shim: {
     date: { deps: [], exports: 'date' },
     plugins: { deps: ['jquery'], exports: 'plugins' },
-    angular: { deps: ['jquery'], exports: 'angular' },
+    angular: { deps: ['jquery', 'config'], exports: 'angular' },
     'angular-resource': { deps: ['angular'] },
     'angular-route': { deps: ['angular'] },
     'angular-md5': { deps: ['angular'] },
