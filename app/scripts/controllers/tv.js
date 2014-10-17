@@ -73,6 +73,8 @@ define(
                   return (user !== null) ? setup.users[user].name : 'Niet ingedeeld'
                 }
 
+                var saClass = (selection.user==null ? 'sa-icon-not-assigned' : null);
+
                 switch (selection.role) {
                   case 'bevelvoerder':
                     $scope.saMembers.truck.push(
@@ -80,7 +82,7 @@ define(
                         rank: 1,
                         icon: 'B',
                         role: 'Bevelvoerder',
-                        class: 'sa-icon-commander',
+                        class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-commander'),
                         name: translateName(selection.user)
                       });
                     break;
@@ -91,7 +93,7 @@ define(
                         rank: 0,
                         icon: 'C',
                         role: 'Chauffeur',
-                        class: 'sa-icon-driver',
+                        class: (selection.user==null ? 'sa-icon-not-assigned' : 'sa-icon-driver'),
                         name: translateName(selection.user)
                       });
                     break;
@@ -102,7 +104,8 @@ define(
                         rank: 2,
                         icon: 'M1',
                         role: 'Manschap 1',
-                        name: translateName(selection.user)
+                        name: translateName(selection.user),
+                        class : saClass
                       });
                     break;
 
@@ -112,7 +115,8 @@ define(
                         rank: 3,
                         icon: 'M2',
                         role: 'Manschap 2',
-                        name: translateName(selection.user)
+                        name: translateName(selection.user),
+                        class : saClass
                       });
                     break;
 
@@ -122,7 +126,8 @@ define(
                         rank: 4,
                         icon: 'M3',
                         role: 'Manschap 3',
-                        name: translateName(selection.user)
+                        name: translateName(selection.user),
+                        class : saClass
                       });
                     break;
 
@@ -132,7 +137,8 @@ define(
                         rank: 5,
                         icon: 'M4',
                         role: 'Manschap 4',
-                        name: translateName(selection.user)
+                        name: translateName(selection.user),
+                        class : saClass
                       });
                     break;
                 }
