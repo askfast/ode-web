@@ -198,15 +198,14 @@ module.exports = (grunt) ->
         options:
           debugInfo: false
 
-    rev:
+    filerev:
       dist:
-        files:
-          src: [
-            '<%= paths.dist %>/scripts/main.js'
-            '<%= paths.dist %>/styles/{,*/}*.css'
-            '<%= paths.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-            '<%= paths.dist %>/styles/fonts/*'
-          ]
+        src: [
+          '<%= paths.dist %>/scripts/main.js'
+          '<%= paths.dist %>/styles/{,*/}*.css'
+          '<%= paths.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+          '<%= paths.dist %>/styles/fonts/*'
+        ]
 
     useminPrepare:
       html: '.tmp/index.html'
@@ -220,7 +219,10 @@ module.exports = (grunt) ->
       ]
       css: ['<%= paths.dist %>/styles/{,*/}*.css']
       options:
-        dirs: ['<%= paths.dist %>']
+        assetsDirs: [
+          '<%= paths.dist %>'
+          '<%= paths.dist %>/images'
+        ]
 
     svgmin:
       dist:
@@ -455,7 +457,7 @@ module.exports = (grunt) ->
     'copy:rest'
     'cssmin'
     'requirejs'
-    'rev'
+    'filerev'
     'usemin'
     'replace'
     'clean:rest'
