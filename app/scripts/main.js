@@ -5,6 +5,9 @@ if (window.location.port == '8080')
 
 require.config({
   paths: {
+    // Change profile here!
+    profile: 'profiles/dev/profile',
+    config: 'config',
     date: 'libs/date/1.0/date.min',
     angular: '../vendors/angular/angular.min',
     jquery: '../vendors/jquery/dist/jquery.min',
@@ -57,6 +60,8 @@ require.config({
     'locale_nl': 'i18n/angular-locale_nl'
   },
   shim: {
+    profile: {deps: ['jquery'], exports: 'profile' },
+    config: {deps: ['profile'], exports: 'config' },
     date: { deps: [], exports: 'date' },
     plugins: { deps: ['jquery'], exports: 'plugins' },
     angular: { deps: ['jquery', 'config'], exports: 'angular' },
@@ -69,7 +74,6 @@ require.config({
     bootstrap: { deps: ['jquery'], exports: 'bootstrap' },
     lawnchair: { deps: [], exports: 'lawnchair' },
     dom: { deps: ['lawnchair'], exports: 'dom' },
-    config: {deps: ['jquery'], exports: 'config' },
     // moment: { deps: [], exports: 'moment' },
     chosen: { deps: ['jquery'], exports: 'chosen' },
     timeline: { deps: [], exports: 'timeline' },
@@ -118,6 +122,7 @@ require([
   'angular-strap-tpl',
   // 'ui-bootstrap',
   'locals',
+  'profile',
   'config',
   'app',
   'run',
