@@ -367,7 +367,9 @@ define(['controllers/controllers'], function (controllers) {
       $location.search({});
 
       setTimeout(function () {
-        angular.element('body').css({ 'background': 'url(../images/bg.jpg) repeat' });
+        // Cancel out the background change for login
+        angular.element('body').css({ 'background': '' });
+
         angular.element('.navbar').show();
         angular.element('#watermark').show();
         if (!$rootScope.browser.mobile)
