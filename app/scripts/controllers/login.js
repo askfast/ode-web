@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('login', function ($rootScope, $location, $q, $scope, Session, UserLegacy, Groups, Messages, Storage, Store, $routeParams, Settings, Profile, MD5, User, Environment, Network) {
+  controllers.controller('login', function ($rootScope, $location, $q, $scope, $timeout, Session, UserLegacy, Groups, Messages, Storage, Store, $routeParams, Settings, Profile, MD5, User, Environment, Network) {
     if ($routeParams.uuid && $routeParams.key) {
       $scope.views = {
         changePass: true
@@ -366,7 +366,7 @@ define(['controllers/controllers'], function (controllers) {
 
       $location.search({});
 
-      setTimeout(function () {
+      $timeout(function () {
         // Cancel out the background change for login
         angular.element('body').css({ 'background': '' });
 
@@ -377,7 +377,9 @@ define(['controllers/controllers'], function (controllers) {
       }, $rootScope.StandBy.config.timers.TICKER);
 
       Messages.query().then(function () {
-        $rootScope.StandBy.unreadMessages = Messages.unreadCount();
+        $timeout(function(){
+          Messages.unreadCount();
+        }, $rootScope.StandBy.config.timers.TICKER);
         //Storage.session.unreadMessages = Messages.unreadCount();
       });
 
