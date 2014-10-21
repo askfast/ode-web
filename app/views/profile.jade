@@ -209,7 +209,7 @@ section#profile
                 small
                   i {{profilePhoneNumberParsed[3].message}}
           .row
-            .form-group.col-sm-6(ng-show='StandBy.resources.role == 0')
+            .form-group.col-sm-6(ng-show='StandBy.resources.role <= 1')
               label {{ui.profile.pagerId}}
               .controls
                 input.form-control(type='text',
