@@ -343,3 +343,7 @@ dl {
 .text-danger {
   color: #ba5855
 }
+
+.label-inverse {
+  @include label-variant($gray-dark);
+}
