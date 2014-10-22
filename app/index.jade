@@ -19,7 +19,7 @@ block navbar
 							ng-click='collapseNav()') Dashboard
 						li(data-match-route='/planboard')
 							a(href='#planboard') Agenda
-						li(data-match-route='/messages')
+						//- li(data-match-route='/messages')
 							a(href='#messages')
 								| {{ui.message.messages}} &nbsp;
 								span.badge.badge-success(ng-show="(StandBy.unreadMessages > 0)")
@@ -27,16 +27,18 @@ block navbar
 						li(data-match-route='/groups',
 						ng-hide='StandBy.resources.role > 1')
 							a(href='#groups') {{ui.groups.groups}}
+						li(data-match-route='/logs')
+            	a(href='#logs') Logs
 					ul.nav.navbar-nav.navbar-right(ng-hide='browser.mobile')
 						li(ng-show='StandBy.location.length > 0')
 							a
 								i : Locatie: {{StandBy.location}}
 
-						li
+						//- li
 							a(href='#faq#web')
 								i.glyphicon.glyphicon-question-sign.glyphicon-white
 								| &nbsp;FAQ
-						li
+						//- li
 							a(href='#help#{{location}}')
 								i.glyphicon.glyphicon-info-sign.glyphicon-white
 								| &nbsp;Handleiding
@@ -52,7 +54,7 @@ block navbar
 									a(href='#profile')
 										i.glyphicon.glyphicon-user
 										| &nbsp;{{ui.profile.profile}}
-								li
+								//- li
 									a(href='#settings')
 										i.glyphicon.glyphicon-wrench
 										| &nbsp;{{ui.settings.settings}}
@@ -127,7 +129,7 @@ block footer
 			#copyrights
 				#download-footer
 					ul
-						li(ng-show='StandBy.config.profile.mobileApp.status')
+						//- li(ng-show='StandBy.config.profile.mobileApp.status')
 							.btn-group.dropup
 								button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
 									| Download mobiele app

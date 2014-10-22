@@ -1,9 +1,10 @@
 section#dashboard
 	.page-header: h2 Dashboard
 	br
-	smart-alarming
+	//- smart-alarming
 	snapshots
-	.row
+	summaries
+	//- .row
 		article(class="{{(!browser.mobile) && 'col-sm-9' || 'col-sm-12'}}")
 			summaries
 		article(class="{{(!browser.mobile) && 'col-sm-3' || 'col-sm-12'}}", ng-show='StandBy.config.profile.p2000.status')
