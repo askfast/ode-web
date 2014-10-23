@@ -386,7 +386,11 @@ define(
           pincodeCorrect: 'This pincode is either in use or not valid. Please enter a correct pincode.',
           pincodeInfo: 'The pincode above is used for StandBy Call-in and is only requested when you are calling with a telephone number unknown by StandBy.',
           duplicateNumber: 'This phone number already exists. Please enter an another phone number.',
-          pagerId: 'PagerID'
+          pagerId: 'PagerID',
+          certificates: 'Certificates',
+          certificate: 'Certificaat',
+          expiresOn: 'expires on',
+          addCertificate: 'Add certificate'
         },
         settings: {
           settings: 'Settings',
@@ -914,7 +918,11 @@ define(
           pincodeCorrect: 'Deze pincode is in gebruik of niet geldig! Vul a.u.b. een geldige pincode.',
           pincodeInfo: 'De bovenstaande pincode gebruikt u voor StandBy Inbellen en heeft u alleen nodig als StandBy uw nummer niet herkent.',
           duplicateNumber: 'Nummer bestaat al. Andere nummer invoeren aub.',
-          pagerId: 'PagerID'
+          pagerId: 'PagerID',
+          certificates: 'Certificaten',
+          certificate: 'Certificaat',
+          expiresOn: 'verloopt op',
+          addCertificate: 'Certificaat toevoegen'
         },
         settings: {
           settings: 'Instellingen',

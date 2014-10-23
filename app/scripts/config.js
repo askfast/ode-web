@@ -32,6 +32,7 @@ define(
       p2000: profile.p2000,
       mobileApp: profile.mobileApp,
       smartAlarm: profile.smartAlarm,
+      profilePage: profile.profilePage,
       showBackground: (profile.showBackground==null ? true : profile.showBackground)
     },
 

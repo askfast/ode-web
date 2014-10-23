@@ -121,6 +121,11 @@ define(['controllers/controllers'], function (controllers) {
 
     $scope.profilemeta = data && data.resources;
 
+    // Certificates expire date: Convert timestamps to readable strings and add them as seperate object property
+    _.each($scope.profilemeta.certificates, function (certificate) {
+      certificate.expireDate = Dater.readable.date( new Date(certificate.expire) );
+    });
+
     $scope.profilemeta.phones = {
       1: data.resources.PhoneAddresses[0] || '',
       2: data.resources.PhoneAddresses[1],

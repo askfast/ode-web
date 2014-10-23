@@ -96,7 +96,7 @@ define(['app'], function (app) {
         templateUrl: 'views/profile.html',
         controller: 'profile',
         resolve: {
-          data: function ($rootScope, Profile, $route, Dater) {
+          data: function ($rootScope, Profile, $route, Dater, Store) {
             if ($route.current.params.userId.toLowerCase() != $rootScope.StandBy.resources.uuid) {
               var periods = Store('app').get('periods');
               //var periods = angular.fromJson(localStorage.getItem('WebPaige.periods'));

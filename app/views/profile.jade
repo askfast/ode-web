@@ -64,6 +64,19 @@ section#profile
                 td {{phone}}
           dt {{ui.profile.pagerId}}
           dd {{(data.resources.pagerId == '') && '-' || data.resources.pagerId}}
+
+          .certificates-container(ng-show='StandBy.config.profile.profilePage.editCertificates')
+          dt {{ui.profile.certificates}}
+          dd(ng-hide='data.resources.certificates.length > 0')
+            | -
+          dd(ng-show='data.resources.certificates.length > 0')
+            ol
+              li(ng-repeat='certificate in data.resources.certificates')
+                span
+                    | {{certificate.name}}
+                  em
+                    | ({{ui.profile.certificate}} {{ui.profile.expiresOn}} {{certificate.expireDate}})
+
           dt {{ui.profile.address}}
           dd {{(data.resources.PostAddress == '') && '-' || data.resources.PostAddress}}
           dt {{ui.profile.postcode}}
@@ -215,6 +228,40 @@ section#profile
                 input.form-control(type='text',
                 ng-model='profilemeta.pagerId',
                 value='{{data.resources.pagerId}}')
+          .row(ng-show='StandBy.config.profile.profilePage.editCertificates')
+            .form-group.col-sm-6(ng-show='StandBy.resources.role <= 1')
+              label {{ui.profile.certificates}}
+              .row
+                .col-sm-12
+                  button.btn.btn-success(ng-click='profilemeta.certificates.push({})',
+                      type='button')
+                    i.glyphicon.glyphicon-white.glyphicon-plus
+                    span {{ui.profile.addCertificate}}
+              .row
+                .col-sm-12
+                  .controls(ng-repeat="certificate in profilemeta.certificates")
+                    .row
+                      .col-sm-8
+                        input.form-control(type='text',
+                          id='certificate-{{$index+1}}',
+                          value='{{certificate.name}}')
+                      .col-sm-2
+
+                          .form-group.dater
+                            input.form-control.input-sm(name='date-end',
+                            type='text',
+                            ng-model='date',
+                            data-date-type='string',
+                            data-date-format='dd-MM-yyyy',
+                            data-icon-left='glyphicon glyphicon-arrow-left',
+                            data-icon-right='glyphicon glyphicon-arrow-right',
+                            bs-datepicker='')
+                            i.glyphicon.glyphicon-calendar.form-control-feedback
+
+                      .col-sm-2
+                        button.btn.btn-success(ng-click='profilemeta.certificates.remove(certificate)',
+                            type='button')
+                          i.glyphicon.glyphicon-remove
           .row
             .form-group.col-sm-6
               label {{ui.profile.address}}
