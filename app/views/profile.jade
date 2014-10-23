@@ -98,12 +98,12 @@ section#profile
           .row
             .form-group.col-sm-5(ng-hide='StandBy.resources.role > 1')
               label(style='width: 530px;') Groups
-                select.chosen-select(data-placeholder=' ',
-                multiple='',
-                chosen='',
-                ng-model='userGroups',
-                ng-options='group.name for group in availableGroups',
-                ng-change='detectChanges()')
+              select.chosen-select(data-placeholder=' ',
+              multiple='',
+              chosen='',
+              ng-model='userGroups',
+              ng-options='group.name for group in availableGroups',
+              ng-change='detectChanges()')
           .row
             .form-group.col-sm-5
               label {{ui.groups.firstName}}
