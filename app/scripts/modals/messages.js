@@ -384,7 +384,7 @@ define(
 
             angular.forEach(
               members, function (member) {
-                if(member.id!=null) {
+                if(member.uuid!=null) {
                   receivers.push(
                     {
                       id: member.uuid,
