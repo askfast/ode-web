@@ -157,7 +157,7 @@ define(['controllers/controllers'], function (controllers) {
           {
             $('#login').hide();
 
-            if (locations.length == 0)
+            if (locations.length <= 1)
             {
               $('#preloader').show();
               preloader();
