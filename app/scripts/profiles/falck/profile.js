@@ -11,7 +11,7 @@ var profile = {
 
   showBackground: false,
 
-  sublogo: 'falck_logo.png',
+  //sublogo: 'falck_logo.png',
 
   host: function ()
   {
