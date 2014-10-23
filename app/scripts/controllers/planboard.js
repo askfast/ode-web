@@ -114,7 +114,7 @@ define(['controllers/controllers'], function (controllers) {
 
       _.each($scope.timeline.config.states, function (state, key) {
         // show only user editable states
-        if (state.display && $rootScope.StandBy.resources.role <= state.minRole) {
+        if (state && state.display && $rootScope.StandBy.resources.role <= state.minRole) {
           states[key] = state.label;
         }
       });
