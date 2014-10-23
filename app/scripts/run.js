@@ -140,6 +140,12 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
 
     $('#notification').removeClass('ng-cloak');
 
+    $('#watermark').css({
+      'backgroundImage': 'url(../scripts/profiles/' + $rootScope.StandBy.config.profile.meta  + '/img/watermark.png)',
+      'backgroundRepeat': 'no-repeat'
+    });
+    if ($.browser.mobile) $('#watermark').css({ bottom: '-10px' });
+
     $rootScope.fixStyles = function () {
       $rootScope.timelineLoaded = false;
 
