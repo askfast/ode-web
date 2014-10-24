@@ -1,312 +1,312 @@
 .page-header
-  h2(ng-hide='views.add || views.member') {{group.name}}
-  h2(ng-show='views.add') {{ui.groups.newGroup}}
-  h2(ng-show='views.member') {{ui.groups.newMember}}
+	h2(ng-hide='views.add || views.member') {{group.name}}
+	h2(ng-show='views.add') {{ui.groups.newGroup}}
+	h2(ng-show='views.member') {{ui.groups.newMember}}
 
-  .btn-group.pull-right
-    button.btn.btn-success(type='button',
-    class="{{(views.add==true) && 'active'}}",
-    ng-click='addGroupForm(); setViewTo("add")') {{ui.groups.newGroup}}
-    button.btn.btn-success(type='button',
-    class="{{(views.member==true) && 'active'}}",
-    ng-click='newMemberForm(); setViewTo("member")') {{ui.groups.newMember}}
+	.btn-group.pull-right
+		button.btn.btn-success(type='button',
+		class="{{(views.add==true) && 'active'}}",
+		ng-click='addGroupForm(); setViewTo("add")') {{ui.groups.newGroup}}
+		button.btn.btn-success(type='button',
+		class="{{(views.member==true) && 'active'}}",
+		ng-click='newMemberForm(); setViewTo("member")') {{ui.groups.newMember}}
 
-  form.pull-right(ng-submit='searchMembers(search.query)', style='width: 256px;')
-    .input-group
-      input.form-control.search-query(type='text',
-      placeholder='{{ui.groups.searchFor}}',
-      ng-model='search.query')
-      span.input-group-btn
-        button.btn.btn-default(type='submit')
-          i.glyphicon.glyphicon-search
-          | &nbsp;{{ui.groups.search}}
+	form.pull-right(ng-submit='searchMembers(search.query)', style='width: 256px;')
+		.input-group
+			input.form-control.search-query(type='text',
+			placeholder='{{ui.groups.searchFor}}',
+			ng-model='search.query')
+			span.input-group-btn
+				button.btn.btn-default(type='submit')
+					i.glyphicon.glyphicon-search
+					| &nbsp;{{ui.groups.search}}
 
 .tabbable.tabs-left
 
-  ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0;')
+	ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0;')
 
-    li(ng-show='views.add',
-    class="{{(views.add==true) && 'active'}}")
-      a(href='groups#addGroupTab', ng-click='setViewTo("add")', data-toggle='tab')
-        span.entypo &#9998;
-        | {{ui.groups.addNewGroup}}
-    li(ng-show='views.edit',
-    class="{{(views.edit==true) && 'active'}}")
-      a(href='groups#editGroupTab', ng-click='setViewTo("edit")', data-toggle='tab')
-        span.entypo &#9998;
-        | {{ui.groups.editGroup}}
-    li(ng-show='views.member',
-    class="{{(views.member==true) && 'active'}}")
-      a(href='groups#newMemberTab', ng-click='setViewTo("member")', data-toggle='tab')
-        span.entypo &#59136;
-        | {{ui.groups.newMember}}
-    li(ng-show='views.search',
-    class="{{(views.search==true) && 'active'}}")
-      a(href='groups#searchTab', ng-click='setViewTo("search")', data-toggle='tab')
-        span.entypo &#128269;
-        | {{ui.groups.searchResults}}
-    li#groupTabLink(class="{{(views.view==true) && 'active'}}")
-      a(href='groups#groupTab', data-toggle='tab', ng-click='setViewTo("view")')
-        span.entypo &#128101;
-        | {{ui.groups.groups}}
+		li(ng-show='views.add',
+		class="{{(views.add==true) && 'active'}}")
+			a(href='groups#addGroupTab', ng-click='setViewTo("add")', data-toggle='tab')
+				span.entypo &#9998;
+				| {{ui.groups.addNewGroup}}
+		li(ng-show='views.edit',
+		class="{{(views.edit==true) && 'active'}}")
+			a(href='groups#editGroupTab', ng-click='setViewTo("edit")', data-toggle='tab')
+				span.entypo &#9998;
+				| {{ui.groups.editGroup}}
+		li(ng-show='views.member',
+		class="{{(views.member==true) && 'active'}}")
+			a(href='groups#newMemberTab', ng-click='setViewTo("member")', data-toggle='tab')
+				span.entypo &#59136;
+				| {{ui.groups.newMember}}
+		li(ng-show='views.search',
+		class="{{(views.search==true) && 'active'}}")
+			a(href='groups#searchTab', ng-click='setViewTo("search")', data-toggle='tab')
+				span.entypo &#128269;
+				| {{ui.groups.searchResults}}
+		li#groupTabLink(class="{{(views.view==true) && 'active'}}")
+			a(href='groups#groupTab', data-toggle='tab', ng-click='setViewTo("view")')
+				span.entypo &#128101;
+				| {{ui.groups.groups}}
 
-  .tab-content
+	.tab-content
 
-    // add group
-    div#addGroupTab.tab-pane(ng-show='views.add', class="{{(views.add==true) && 'active'}}")
-      .tab-header
-        h3.pull-left {{ui.groups.addNewGroup}}
-        button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
-      hr
-      form
-        fieldset
-          .form-group
-            .col-sm-4
-              label.control-label {{ui.groups.name}}
-              input.form-control(type='text', ng-model='groupForm.name')
-          .form-actions
-            button.btn.btn-success(type='submit',
-            ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
+		// add group
+		div#addGroupTab.tab-pane(ng-show='views.add', class="{{(views.add==true) && 'active'}}")
+			.tab-header
+				h3.pull-left {{ui.groups.addNewGroup}}
+				button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+			hr
+			form
+				fieldset
+					.form-group
+						.col-sm-4
+							label.control-label {{ui.groups.name}}
+							input.form-control(type='text', ng-model='groupForm.name')
+					.form-actions
+						button.btn.btn-success(type='submit',
+						ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
 
-    // edit group
-    div#editGroupTab.tab-pane(ng-show='views.edit', class="{{(views.edit==true) && 'active'}}")
-      .tab-header
-        h3.pull-left {{ui.groups.editGroup}}
-        button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
-      hr
-      form
-        fieldset
-          .form-group
-            label.control-label {{ui.groups.name}}
-              input.form-control.col-md-4(type='text', ng-model='groupForm.name')
-          .form-actions
-            button.btn.btn-success(type='submit',
-            ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
+		// edit group
+		div#editGroupTab.tab-pane(ng-show='views.edit', class="{{(views.edit==true) && 'active'}}")
+			.tab-header
+				h3.pull-left {{ui.groups.editGroup}}
+				button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+			hr
+			form
+				fieldset
+					.form-group
+						label.control-label {{ui.groups.name}}
+							input.form-control.col-md-4(type='text', ng-model='groupForm.name')
+					.form-actions
+						button.btn.btn-success(type='submit',
+						ng-click='groupSubmit(groupForm)') {{ui.groups.saveGroup}}
 
-    // register member
-    div#newMemberTab.tab-pane(ng-show='views.member', class="{{(views.member==true) && 'active'}}")
-      .tab-header
-        h3.pull-left {{ui.groups.registerMember}}
-        button.btn.btn-default.pull-right(type='button',
-        ng-click='closeTabs()') {{ui.groups.close}}
-      hr
-      form(name='registerUserForm')
-        fieldset
-          .form-group
-            label.control-label {{ui.groups.role}}
-              select.form-control(ng-model='memberForm.role', ng-options='role.label for role in roles')
-                option(value='') {{ui.groups.selectRole}}
-          .form-group
-            label.control-label(style='width: 530px;') {{ui.groups.groups}}
-              select.chosen-select(data-placeholder=' ',
-              multiple='',
-              chosen='',
-              ng-model='memberForm.groups',
-              ng-options='group.name for group in data.groups')
-              // <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p>
-          hr
-          .form-group
-            label.control-label {{ui.groups.firstName}}
-              input.form-control.col-md-4(type='text', ng-model='memberForm.firstName')
-          .form-group
-            label.control-label {{ui.groups.lastName}}
-              input.form-control.col-md-4(type='text', ng-model='memberForm.lastName')
-          .form-group
-            label.control-label {{ui.groups.email}}
-              input.form-control.col-md-4(type='email',
-              name='email',
-              ng-model='memberForm.EmailAddress',
-              ng-minlength='3',
-              ng-maxlength='50')
-              .error-container(ng-show='registerUserForm.email.$dirty && registerUserForm.email.$invalid')
-                p.text-danger(ng-show='registerUserForm.email.$error.minlength')
-                  small
-                    i {{ui.errors.email.min}}
-                p.text-danger(ng-show='registerUserForm.email.$error.email')
-                  small
-                    i {{ui.errors.email.notValid}}
-                p.text-danger(ng-show='registerUserForm.email.$error.maxlength')
-                  small
-                    i {{ui.errors.email.max}}
-          .form-group
-            label.control-label {{ui.groups.phone}}
-              input.form-control#inputPhoneNumber.col-md-3(type='text',
-              ng-model='memberForm.PhoneAddress',
-              ng-change='phoneNumberParser(memberForm.PhoneAddress)')
-              // <p class="text-danger" ng-show="!memberForm.PhoneAddress">
-              // <small><i>Please fill your phone number!</i></small>
-              // </p>
-              p.text-danger(ng-hide='phoneNumberParsed.result')
-                small
-                  i {{phoneNumberParsed.message}}
-              p.text-success(ng-show='phoneNumberParsed.result')
-                small
-                  i {{phoneNumberParsed.message}}
-          .form-group
-            label.control-label {{ui.profile.pagerId}}
-              input.form-control.col-md-5(type='text', ng-model='memberForm.pagerId')
-          .form-group
-            label.control-label {{ui.groups.address}}
-              input.form-control.col-md-5(type='text', ng-model='memberForm.PostAddress')
-          .form-group
-            label.control-label {{ui.groups.postCode}}
-              input.form-control.col-md-2(type='text', ng-model='memberForm.PostZip')
-          .form-group
-            label.control-label {{ui.groups.city}}
-              input.form-control.col-md-3(type='text', ng-model='memberForm.PostCity')
-          hr
-          .form-group
-            label.control-label {{ui.groups.userName}}
-              input.form-control.col-md-3(type='text',
-              ng-model='memberForm.username',
-              ng-change='userExists()')
-              p.text-danger(ng-hide='userExistsValidation')
-                small
-                  i {{ui.groups.registerUserName.exists}}
-              p.text-success(ng-show='userExistsValidation && memberForm.username.length > 0')
-                small
-                  i {{ui.groups.registerUserName.goodToGo}}
-          .form-group
-            label.control-label {{ui.groups.password}}
-              input.form-control.col-md-3(type='password', ng-model='memberForm.password')
-          .form-actions
-            button.btn.btn-success(type='submit',
-            ng-click='memberSubmit(memberForm)') {{ui.groups.saveMember}}
+		// register member
+		div#newMemberTab.tab-pane(ng-show='views.member', class="{{(views.member==true) && 'active'}}")
+			.tab-header
+				h3.pull-left {{ui.groups.registerMember}}
+				button.btn.btn-default.pull-right(type='button',
+				ng-click='closeTabs()') {{ui.groups.close}}
+			hr
+			form(name='registerUserForm')
+				fieldset
+					.form-group
+						label.control-label {{ui.groups.role}}
+							select.form-control(ng-model='memberForm.role', ng-options='role.label for role in roles')
+								option(value='') {{ui.groups.selectRole}}
+					.form-group
+						label.control-label(style='width: 530px;') {{ui.groups.groups}}
+							select.chosen-select(data-placeholder=' ',
+							multiple='',
+							chosen='',
+							ng-model='memberForm.groups',
+							ng-options='group.name for group in data.groups')
+							// <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p>
+					hr
+					.form-group
+						label.control-label {{ui.groups.firstName}}
+							input.form-control.col-md-4(type='text', ng-model='memberForm.firstName')
+					.form-group
+						label.control-label {{ui.groups.lastName}}
+							input.form-control.col-md-4(type='text', ng-model='memberForm.lastName')
+					.form-group
+						label.control-label {{ui.groups.email}}
+							input.form-control.col-md-4(type='email',
+							name='email',
+							ng-model='memberForm.EmailAddress',
+							ng-minlength='3',
+							ng-maxlength='50')
+							.error-container(ng-show='registerUserForm.email.$dirty && registerUserForm.email.$invalid')
+								p.text-danger(ng-show='registerUserForm.email.$error.minlength')
+									small
+										i {{ui.errors.email.min}}
+								p.text-danger(ng-show='registerUserForm.email.$error.email')
+									small
+										i {{ui.errors.email.notValid}}
+								p.text-danger(ng-show='registerUserForm.email.$error.maxlength')
+									small
+										i {{ui.errors.email.max}}
+					.form-group
+						label.control-label {{ui.groups.phone}}
+							input.form-control#inputPhoneNumber.col-md-3(type='text',
+							ng-model='memberForm.PhoneAddress',
+							ng-change='phoneNumberParser(memberForm.PhoneAddress)')
+							// <p class="text-danger" ng-show="!memberForm.PhoneAddress">
+							// <small><i>Please fill your phone number!</i></small>
+							// </p>
+							p.text-danger(ng-hide='phoneNumberParsed.result')
+								small
+									i {{phoneNumberParsed.message}}
+							p.text-success(ng-show='phoneNumberParsed.result')
+								small
+									i {{phoneNumberParsed.message}}
+					.form-group
+						label.control-label {{ui.profile.pagerId}}
+							input.form-control.col-md-5(type='text', ng-model='memberForm.pagerId')
+					.form-group
+						label.control-label {{ui.groups.address}}
+							input.form-control.col-md-5(type='text', ng-model='memberForm.PostAddress')
+					.form-group
+						label.control-label {{ui.groups.postCode}}
+							input.form-control.col-md-2(type='text', ng-model='memberForm.PostZip')
+					.form-group
+						label.control-label {{ui.groups.city}}
+							input.form-control.col-md-3(type='text', ng-model='memberForm.PostCity')
+					hr
+					.form-group
+						label.control-label {{ui.groups.userName}}
+							input.form-control.col-md-3(type='text',
+							ng-model='memberForm.username',
+							ng-change='userExists()')
+							p.text-danger(ng-hide='userExistsValidation')
+								small
+									i {{ui.groups.registerUserName.exists}}
+							p.text-success(ng-show='userExistsValidation && memberForm.username.length > 0')
+								small
+									i {{ui.groups.registerUserName.goodToGo}}
+					.form-group
+						label.control-label {{ui.groups.password}}
+							input.form-control.col-md-3(type='password', ng-model='memberForm.password')
+					.form-actions
+						button.btn.btn-success(type='submit',
+						ng-click='memberSubmit(memberForm)') {{ui.groups.saveMember}}
 
-    // search member
-    div#searchTab.tab-pane(ng-show='views.search', class="{{(views.search==true) && 'active'}}")
-      .tab-header
-        h3.pull-left {{ui.groups.searchedFor}} '{{search.queried}}'
-        button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
-      hr
-      p(ng-hide='candidates.length > 0')
-        | {{ui.groups.sorryCanNotFind}}
-      div(ng-show='candidates.length > 0')
-        table.table.table-striped
-          thead
-            tr
-              th #
-              th {{ui.groups.name}}
-              th {{ui.groups.groups}}
-              th
-          tbody
-            tr(ng-repeat='candidate in candidates')
-              td {{$index + 1}}
-              td
-                a(href='#/profile/{{candidate.id}}#profile')
-                  | {{candidate.name}}
-              td
-                span(ng-repeat='group in candidate.groups')
-                  a(ng-click='requestGroup(group.uuid, true)') {{group.name}}
-                  span(ng-show='!$last') , 
-              td
-                div(ng-hide='candidate.fields.role == 0')
-                  select.form-control(style='margin: 0; width: 160px;',
-                  ng-model='candidate.group',
-                  ng-options='group.name for group in data.groups')
-                    option(value='') {{ui.groups.selectGroup}}
-                  button.btn.btn-success.btn-sm(style='margin-left: 5px;',
-                  ng-click='addMember(candidate)') {{ui.groups.addToGroup}}
-        span.text-muted.pull-right
-          small
-            i {{candidates.length | i18n_spec:'groups.resultCount'}}
+		// search member
+		div#searchTab.tab-pane(ng-show='views.search', class="{{(views.search==true) && 'active'}}")
+			.tab-header
+				h3.pull-left {{ui.groups.searchedFor}} '{{search.queried}}'
+				button.btn.btn-default.pull-right(type='button', ng-click='closeTabs()') {{ui.groups.close}}
+			hr
+			p(ng-hide='candidates.length > 0')
+				| {{ui.groups.sorryCanNotFind}}
+			div(ng-show='candidates.length > 0')
+				table.table.table-striped
+					thead
+						tr
+							th #
+							th {{ui.groups.name}}
+							th {{ui.groups.groups}}
+							th
+					tbody
+						tr(ng-repeat='candidate in candidates')
+							td {{$index + 1}}
+							td
+								a(href='#/profile/{{candidate.id}}#profile')
+									| {{candidate.name}}
+							td
+								span(ng-repeat='group in candidate.groups')
+									a(ng-click='requestGroup(group.uuid, true)') {{group.name}}
+									span(ng-show='!$last') , 
+							td
+								div(ng-hide='candidate.fields.role == 0')
+									select.form-control(style='margin: 0; width: 160px;',
+									ng-model='candidate.group',
+									ng-options='group.name for group in data.groups')
+										option(value='') {{ui.groups.selectGroup}}
+									button.btn.btn-success.btn-sm(style='margin-left: 5px;',
+									ng-click='addMember(candidate)') {{ui.groups.addToGroup}}
+				span.text-muted.pull-right
+					small
+						i {{candidates.length | i18n_spec:'groups.resultCount'}}
 
-    // group listing
-    div#groupTab.tab-pane(class="{{(views.view==true) && 'active'}}")
-      .tab-header
-        .pull-left
-          select.form-control(ng-model='current',
-          ng-options='group.uuid as group.name for group in groups',
-          ng-selected='current',
-          ng-change='requestGroup(current); sorter="resources.lastName"; reverse=false;')
-        .pull-right
-          button.btn.btn-default(type='button',
-          style='margin-right: 5px;',
-          data-content-template="views/groups-wish.html",
-          bs-popover='',
-          data-placement='bottom',
-          data-title='Behoefte wijzigen')
-            span.badge.badge-inset(ng-show='wished')
-              | {{wish}}
-            | &nbsp;{{ui.groups.requiredPeople}}
-          button.btn.btn-default(type='button', ng-click='editGroup(group)', style='margin-right: 5px;')
-            i.glyphicon.glyphicon-edit
-            | &nbsp;{{ui.groups.editGroup}}
-          button.btn.btn-danger(type='button', ng-click='confirmGroupDelete(group.uuid)')
-            i.glyphicon.glyphicon-trash.glyphicon-white
-            | &nbsp;{{ui.groups.deleteGroup}}
-        .pull-right(style='margin-right: 5px;')
-          input.form-control.search-query(type='text',
-          placeholder='{{ui.groups.filterMembers}}',
-          ng-model='filtered')
-      hr
-      p(ng-hide='(data.members[group.uuid]|filter:filtered|filterSupers).length > 0')
-        | {{ui.groups.noMembers}}
-      div(ng-show='(data.members[group.uuid]|filter:filtered|filterSupers).length > 0')
-        table.table.table-striped
-          thead
-            tr
-              th
-                input(type='checkbox', ng-model='selectionMaster',
-                ng-click='toggleSelection(group, selectionMaster)')
-              th
-                a(ng-click='toggleSorter("resources.firstName")') {{ui.groups.firstName}}
-                span(ng-show='(sorter=="resources.firstName")')
-                  span(ng-hide='reverse') ▲
-                  span(ng-show='reverse') ▼
-              th
-                a(ng-click='toggleSorter("resources.lastName")') {{ui.groups.lastName}}
-                span(ng-show='(sorter=="resources.lastName")')
-                  span(ng-hide='reverse') ▲
-                  span(ng-show='reverse') ▼
-              //
-                <th ng-hide="config.profile.smartAlarm">
-              th
-                a(ng-click='toggleSorter("resources.role")') {{ui.groups.role}}
-                span(ng-show='(sorter=="resources.role")')
-                  span(ng-hide='reverse') ▲
-                  span(ng-show='reverse') ▼
-              th(ng-show='PhoneAddressesExist')
-                | {{ui.groups.tel}}
-                //
-                  <a ng-click="toggleSorter('resources.phoneAddress')">{{ui.groups.tel}}</a>&nbsp;
-                //
-                  <span ng-show="(sorter=='resources.phoneAddress')">
-                //
-                  <span ng-hide="reverse">&#9650;</span>
-                //
-                  <span ng-show="reverse">&#9660;</span>
-                //
-                  </span>
-              th
-          tbody
-            tr(ng-repeat='member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse|filterSupers')
-              td
-                input(type='checkbox',
-                ng-model='selection[member.uuid]',
-                ng-checked='selectionMaster',
-                ng-hide='member.resources.role == 0')
-              td {{member.resources.firstName}}
-              td {{member.resources.lastName}}
-              //
-                <td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>
-              td {{member.resources.role | translateRole}}
-              td(ng-show='PhoneAddressesExist') {{member.resources.PhoneAddresses[0]}}
-              td
-                .pull-right
-                  a.btn.btn-default.btn-xs(href='#/profile/{{member.uuid}}#profile')
-                    i.glyphicon.glyphicon-user
-                  span(ng-hide='member.resources.role == 0')
-                    | &nbsp;&nbsp;
-                    a.btn.btn-default.btn-xs(href='#/profile/{{member.uuid}}#edit')
-                      i.glyphicon.glyphicon-edit
-                    | &nbsp;
-                    button.btn.btn-danger.btn-xs(type='submit', ng-click='removeMember(member.uuid, group.uuid)')
-                      i.glyphicon.glyphicon-remove.glyphicon-white
-        button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMembers(selection, group)')
-          i.glyphicon.glyphicon-trash.glyphicon-white
-          | &nbsp;{{ui.groups.removeSelectedMembers}}
-        span.text-muted.pull-right
-          small
-            i
-              | {{(data.members[group.uuid]|filter:filtered|filterSupers).length | i18n_spec:'groups.memberCount'}}
+		// group listing
+		div#groupTab.tab-pane(class="{{(views.view==true) && 'active'}}")
+			.tab-header
+				.pull-left
+					select.form-control(ng-model='current',
+					ng-options='group.uuid as group.name for group in groups',
+					ng-selected='current',
+					ng-change='requestGroup(current); sorter="resources.lastName"; reverse=false;')
+				.pull-right
+					button.btn.btn-default(type='button',
+					style='margin-right: 5px;',
+					data-content-template="views/groups-wish.html",
+					bs-popover='',
+					data-placement='bottom',
+					data-title='Behoefte wijzigen')
+						span.badge.badge-inset(ng-show='wished')
+							| {{wish}}
+						| &nbsp;{{ui.groups.requiredPeople}}
+					button.btn.btn-default(type='button', ng-click='editGroup(group)', style='margin-right: 5px;')
+						i.glyphicon.glyphicon-edit
+						| &nbsp;{{ui.groups.editGroup}}
+					button.btn.btn-danger(type='button', ng-click='confirmGroupDelete(group.uuid)')
+						i.glyphicon.glyphicon-trash.glyphicon-white
+						| &nbsp;{{ui.groups.deleteGroup}}
+				.pull-right(style='margin-right: 5px;')
+					input.form-control.search-query(type='text',
+					placeholder='{{ui.groups.filterMembers}}',
+					ng-model='filtered')
+			hr
+			p(ng-hide='(data.members[group.uuid]|filter:filtered|filterSupers).length > 0')
+				| {{ui.groups.noMembers}}
+			div(ng-show='(data.members[group.uuid]|filter:filtered|filterSupers).length > 0')
+				table.table.table-striped
+					thead
+						tr
+							th
+								input(type='checkbox', ng-model='selectionMaster',
+								ng-click='toggleSelection(group, selectionMaster)')
+							th
+								a(ng-click='toggleSorter("resources.firstName")') {{ui.groups.firstName}}
+								span(ng-show='(sorter=="resources.firstName")')
+									span(ng-hide='reverse') ▲
+									span(ng-show='reverse') ▼
+							th
+								a(ng-click='toggleSorter("resources.lastName")') {{ui.groups.lastName}}
+								span(ng-show='(sorter=="resources.lastName")')
+									span(ng-hide='reverse') ▲
+									span(ng-show='reverse') ▼
+							//
+								<th ng-hide="config.profile.smartAlarm">
+							th
+								a(ng-click='toggleSorter("resources.role")') {{ui.groups.role}}
+								span(ng-show='(sorter=="resources.role")')
+									span(ng-hide='reverse') ▲
+									span(ng-show='reverse') ▼
+							th(ng-show='PhoneAddressesExist')
+								| {{ui.groups.tel}}
+								//
+									<a ng-click="toggleSorter('resources.phoneAddress')">{{ui.groups.tel}}</a>&nbsp;
+								//
+									<span ng-show="(sorter=='resources.phoneAddress')">
+								//
+									<span ng-hide="reverse">&#9650;</span>
+								//
+									<span ng-show="reverse">&#9660;</span>
+								//
+									</span>
+							th
+					tbody
+						tr(ng-repeat='member in data.members[group.uuid]|filter:filtered|orderBy:sorter:reverse|filterSupers')
+							td
+								input(type='checkbox',
+								ng-model='selection[member.uuid]',
+								ng-checked='selectionMaster',
+								ng-hide='member.resources.role == 0')
+							td {{member.resources.firstName}}
+							td {{member.resources.lastName}}
+							//
+								<td ng-hide="config.profile.smartAlarm">{{member.resources.role | translateRole}}</td>
+							td {{member.resources.role | translateRole}}
+							td(ng-show='PhoneAddressesExist') {{member.resources.PhoneAddresses[0]}}
+							td
+								.pull-right
+									a.btn.btn-default.btn-xs(href='#/profile/{{member.uuid}}#profile')
+										i.glyphicon.glyphicon-user
+									span(ng-hide='member.resources.role == 0')
+										| &nbsp;&nbsp;
+										a.btn.btn-default.btn-xs(href='#/profile/{{member.uuid}}#edit')
+											i.glyphicon.glyphicon-edit
+										| &nbsp;
+										button.btn.btn-danger.btn-xs(type='submit', ng-click='removeMember(member.uuid, group.uuid)')
+											i.glyphicon.glyphicon-remove.glyphicon-white
+				button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMembers(selection, group)')
+					i.glyphicon.glyphicon-trash.glyphicon-white
+					| &nbsp;{{ui.groups.removeSelectedMembers}}
+				span.text-muted.pull-right
+					small
+						i
+							| {{(data.members[group.uuid]|filter:filtered|filterSupers).length | i18n_spec:'groups.memberCount'}}
