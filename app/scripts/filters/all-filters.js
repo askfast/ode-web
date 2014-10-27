@@ -787,6 +787,85 @@ define(
             }
           }
         }
+      ])
+
+
+      .filter(
+      'avatar',
+      [
+        'Session', 'Store',
+        function (Session, Store) {
+          return function (id, type, size) {
+            var session = Session.get();
+
+            if (session && id) {
+              var path;
+
+              switch (type)
+              {
+                case 'team':
+                  path = '/team/member/';
+                  break;
+
+                case 'client':
+                  path = '/client/';
+                  break;
+
+                case 'avatar':
+                  path = 'images/';
+                  break;
+
+                case 'user':
+                  path = '/user/avatar/';
+                  break;
+
+                case 'image':
+                  path = '/images/';
+                  break;
+              }
+
+              var avatarChanged = function (id)
+              {
+                var changedTimes = 0;
+
+                angular.forEach(
+                  Store('app').get('avatarChangeRecord'),
+                  function (avatarId)
+                  {
+                    if (avatarId == id)
+                    {
+                      changedTimes ++;
+                    }
+                  }
+                );
+
+                return parseInt(changedTimes, 10);
+              };
+
+              // TODO: Better use a special parameter to specify the avatar is changed.
+              var newsize = parseInt(size, 10) + parseInt(avatarChanged(id), 10);
+
+              if (type == 'avatar' || type == 'image')
+              {
+                var _url = config.host +
+                           path +
+                           id +
+                           '?sid=' + session;
+
+
+                return _url;
+              }
+              else
+              {
+                return config.host +
+                       path +
+                       id +
+                       '/photo?width=' + newsize + '&height=' + newsize + '&sid=' +
+                       session;
+              }
+            }
+          }
+        }
       ]);
 
 

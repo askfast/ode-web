@@ -31,6 +31,18 @@ define(['app'], function (app) {
         }
       })
 
+      .when('/presence', {
+        templateUrl: 'views/presence.html',
+        controller: 'presence',
+        resolve: {
+          data: function ($route, $http) {
+            if ($route.current.params.sessionID) {
+              $http.defaults.headers.common['X-SESSION_ID'] = $route.current.params.sessionID;
+            }
+          }
+        }
+      })
+
       .when('/planboard', {
         templateUrl: 'views/planboard.html',
         controller: 'planboard',
