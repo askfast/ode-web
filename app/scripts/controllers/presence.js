@@ -90,10 +90,16 @@ define(
           }
 
           $scope.checkPresence = function () {
-            //members = Store('network').get('unique');
+            var _members = Store('network').get('unique');
             var members = $scope.availability.members.available;
             var present = [];
+
             _.each(members, function(member){
+              _.each(_members,function(_member){
+                if (member.uuid === _member.uuid) {
+                  member.resources = _member.resources;
+                }
+              });
               if (member.resources){
               // if (member.resources && member.resources.currentPresence){
                 // console.log(member.name + " is present");
@@ -118,11 +124,15 @@ define(
               // console.log($scope.present);
               // Network.population().then(function(result){
               $scope.getGroupAvailability()
-              .then($scope.checkPresence());
+              .then($scope.checkPresence(), function(){});
               // });
           }, 5000);
           // }, $rootScope.StandBy.config.timers.TV_SYNC);
 
+          $window.setInterval(
+            function () {
+              Network.population();
+          }, 7500);
           // Remove below after FALCK DEMO
           //=============================================
 
@@ -184,6 +194,7 @@ define(
                   (members[id].resources.role != 0 && members[id].resources.role != 4)) {
                   var _member = {
                     id: id,
+                    uuid: id,
                     state: (slots.length > 0) ? slots[0].state : 'no-state',
                     label: (slots.length > 0) ? $scope.states[slots[0].state].label[0] : '',
                     end: (slots.length > 0 && slots[0].end !== undefined) ?
@@ -284,13 +295,15 @@ define(
               });
 
               ordered.available = _availables;
-              console.log(ordered.available);
               $scope.availability = {
                 members: ordered,
                 synced: results.synced * 1000
               };
 
               deferred.resolve();
+            }, function(result) {
+              //Bad request, don't do anything
+              deferred.reject
             });
 
             return deferred.promise;
@@ -302,7 +315,7 @@ define(
             var deferred = $q.defer();
 
             $scope.getAvailability($scope.current.group, $scope.current.division)
-            .then(deferred.resolve());
+            .then(function(){deferred.resolve()}, function(){deferred.reject()});
 
             return deferred.promise;
           };

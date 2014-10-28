@@ -506,7 +506,7 @@ define(['services/services', 'config'], function (services, config) {
           });
         },
         function (error) {
-          deferred.resolve({error: error});
+          deferred.reject({error: error});
         });
 
       return deferred.promise;
