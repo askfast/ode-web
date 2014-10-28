@@ -1,6 +1,9 @@
 # StandBy CHANGELOG
 -----------------------------------------------------------------------------------------------------------
 
+2.6.1 | 28 October 2014
+- Update for Falck
+
 2.6.0
 - fix: message when adding slots in past
   [link] (https://trello.com/c/3md2w0ki)
