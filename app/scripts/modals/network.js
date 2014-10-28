@@ -5,9 +5,10 @@ define(['services/services'], function (services) {
     var Network = $resource();
 
     var capitalize = function (string) {
-      string = string.toLowerCase();
+      // string = string.toLowerCase();
 
-      return string.substring(0, 1).toUpperCase() + string.substring(1);
+      // return string.substring(0, 1).toUpperCase() + string.substring(1);
+      return string;
     };
 
     var filter = function (result) {
