@@ -1,0 +1,64 @@
+<div class="widget">
+  <div class="head">
+    <h4>{{ui.dashboard.overview}}</h4>
+    <button id="dashboardPopoverBtn" type="button" data-placement="{{(browser.mobile) &amp;&amp; &quot;left&quot; || &quot;bottom&quot;}}" data-title="Overzicht instellingen" data-content-template="views/dashboard/summary-manager.html" data-target="#dashboardPopoverBtn" bs-popover="" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-cog"></i></button>
+  </div>
+  <hr>
+  <p ng-hide="loading.pies || !checkAnyPies()" ng-show="checkAnyPies()">Er zijn geen groepen geselecteerd.</p>
+  <p ng-show="loadingPies">{{ui.dashboard.groupOverviews}}</p>
+  <ul id="pies" ng-hide="loadingPies || checkAnyPies()">
+    <li ng-repeat="pie in pies">
+      <header>
+        <h4>{{pie.name}}<span ng-show="(pie.division != &quot;both&quot;)"> ({{ pie.division | translateDivision }})</span></h4>
+      </header>
+      <div class="blocks">
+        <div class="col-sm-4">
+          <div class="block">
+            <div class="icon">
+              <div class="scoreboard {{pie.state.cls}}"><span class="state">{{pie.state.diff + pie.state.wish}}</span><span class="seperator">/</span><span class="wish">{{pie.state.wish}}</span></div>
+            </div>
+            <div class="body">
+              <h3>{{ui.dashboard.currentState}}</h3>
+              <hr>
+              <h5>{{pie.state.start}}</h5><small class="text-muted">&nbsp;van</small><br>
+              <h5>{{pie.state.end}}</h5><small class="text-muted">&nbsp;tot</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="block">
+            <div class="icon">
+              <div id="weeklyPieCurrent-{{pie.id}}-{{pie.division}}" class="pie"></div>
+            </div>
+            <div class="body">
+              <h3>{{ui.dashboard.thisWeek}}</h3>
+              <hr><small class="text-muted">{{pie.weeks.current.start.date}} / {{pie.weeks.current.end.date}}</small><br>
+              <h5>{{pie.weeks.current.ratios.more}}%</h5><small class="text-muted">&nbsp;{{ui.dashboard.statMore}}</small>&nbsp;,
+              <h5>{{pie.weeks.current.ratios.even}}%</h5><small class="text-muted">&nbsp;{{ui.dashboard.statEven}}</small>&nbsp;,
+              <h5>{{pie.weeks.current.ratios.less}}%</h5><small class="text-muted">&nbsp;{{ui.dashboard.statLess}}</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="block">
+            <div class="icon">
+              <div id="weeklyPieNext-{{pie.id}}-{{pie.division}}" class="pie"></div>
+            </div>
+            <div class="body">
+              <h3>{{ui.dashboard.nextWeek}}</h3>
+              <hr><small class="text-muted">{{pie.weeks.next.start.date}} / {{pie.weeks.next.end.date}}</small><br>
+              <h5>{{pie.weeks.next.ratios.more}}%</h5><small class="text-muted">&nbsp;{{ui.dashboard.statMore}}</small>&nbsp;,
+              <h5>{{pie.weeks.next.ratios.even}}%</h5><small class="text-muted">&nbsp;{{ui.dashboard.statEven}}</small>&nbsp;,
+              <h5>{{pie.weeks.next.ratios.less}}%</h5><small class="text-muted">&nbsp;{{ui.dashboard.statLess}}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <hr ng-hide="loadingPies || checkAnyPies()" class="lastline">
+  <p ng-hide="loadingPies || checkAnyPies()"><small class="pull-right"><span class="text-warning">{{ui.dashboard.periods}}:</span><span class="text-muted">
+        {{periods.start}}
+        &nbsp;|&nbsp;
+        {{periods.end}}</span></small></p>
+</div>

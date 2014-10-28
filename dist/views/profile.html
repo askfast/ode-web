@@ -40,6 +40,14 @@
           </dd>
           <dt>{{ui.profile.pagerId}}</dt>
           <dd>{{(data.resources.pagerId == '') && '-' || data.resources.pagerId}}</dd>
+          <div ng-show="StandBy.config.profile.profilePage.editCertificates" class="certificates-container"></div>
+          <dt>{{ui.profile.certificates}}</dt>
+          <dd ng-hide="data.resources.certificates.length &gt; 0">-</dd>
+          <dd ng-show="data.resources.certificates.length &gt; 0">
+            <ol>
+              <li ng-repeat="certificate in data.resources.certificates"><span>{{certificate.name}}</span><em>({{ui.profile.certificate}} {{ui.profile.expiresOn}} {{certificate.expireDate}})</em></li>
+            </ol>
+          </dd>
           <dt>{{ui.profile.address}}</dt>
           <dd>{{(data.resources.PostAddress == '') && '-' || data.resources.PostAddress}}</dd>
           <dt>{{ui.profile.postcode}}</dt>
@@ -75,9 +83,8 @@
           </div>
           <div class="row">
             <div ng-hide="StandBy.resources.role &gt; 1" class="form-group col-sm-5">
-              <label style="width: 530px">Groups
-                <select data-placeholder=" " multiple="multiple" chosen="" ng-model="userGroups" ng-options="group.name for group in availableGroups" ng-change="detectChanges()" class="chosen-select"></select>
-              </label>
+              <label style="width: 530px">Groups</label>
+              <select data-placeholder=" " multiple="multiple" chosen="" ng-model="userGroups" ng-options="group.name for group in availableGroups" ng-change="detectChanges()" class="chosen-select"></select>
             </div>
           </div>
           <div class="row">
@@ -150,10 +157,39 @@
             </div>
           </div>
           <div class="row">
-            <div ng-show="StandBy.resources.role == 0" class="form-group col-sm-6">
+            <div ng-show="StandBy.resources.role &lt;= 1" class="form-group col-sm-6">
               <label>{{ui.profile.pagerId}}</label>
               <div class="controls">
                 <input type="text" ng-model="profilemeta.pagerId" value="{{data.resources.pagerId}}" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div ng-show="StandBy.config.profile.profilePage.editCertificates" class="row">
+            <div ng-show="StandBy.resources.role &lt;= 1" class="form-group col-sm-6">
+              <label>{{ui.profile.certificates}}</label>
+              <div class="row">
+                <div class="col-sm-12">
+                  <button ng-click="profilemeta.certificates.push({})" type="button" class="btn btn-success"><i class="glyphicon glyphicon-white glyphicon-plus"></i><span>{{ui.profile.addCertificate}}</span></button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div ng-repeat="certificate in profilemeta.certificates" class="controls">
+                    <div class="row">
+                      <div class="col-sm-8">
+                        <input type="text" id="certificate-{{$index+1}}" value="{{certificate.name}}" class="form-control">
+                      </div>
+                      <div class="col-sm-2">
+                        <div class="form-group dater">
+                          <input name="date-end" type="text" ng-model="date" data-date-type="string" data-date-format="dd-MM-yyyy" data-icon-left="glyphicon glyphicon-arrow-left" data-icon-right="glyphicon glyphicon-arrow-right" bs-datepicker="" class="form-control input-sm"><i class="glyphicon glyphicon-calendar form-control-feedback"></i>
+                        </div>
+                      </div>
+                      <div class="col-sm-2">
+                        <button ng-click="profilemeta.certificates.remove(certificate)" type="button" class="btn btn-success"><i class="glyphicon glyphicon-remove"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

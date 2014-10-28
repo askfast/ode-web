@@ -1,0 +1,71 @@
+<div class="tab-header">
+  <h3 class="pull-left"><span ng-hide="views.scheaduler">{{ui.message.composeMessage}}</span><span ng-show="views.scheaduler">{{scheaduled.title | toTitleCase}}</span></h3>
+  <button type="submit" ng-click="(origin==&quot;inbox&quot;); closeTabs()" class="btn btn-default pull-right">{{ui.message.close}}</button>
+</div>
+<hr>
+<form ng-controller="scheaduler">
+  <fieldset>
+    <div class="form-group">
+      <label class="control-label">{{ui.message.broadcast}}</label>
+      <div>
+        <input id="broadcastSmsCheckBox" type="checkbox" ng-model="broadcast.sms" ng-hide="StandBy.resources.role &gt; 2" style="margin: 0 2px 0 0">
+        <label for="broadcastSmsCheckBox"><span ng-hide="StandBy.resources.role &gt; 2">{{ui.message.sms}}</span></label>
+        <input id="broadcastEmailCheckBox" type="checkbox" ng-model="broadcast.email" style="margin: 0 2px 0 10px">
+        <label for="broadcastEmailCheckBox">{{ui.message.email}}</label>
+      </div>
+    </div>
+    <div style="width: 530px" class="form-group">
+      <label class="control-label">{{ui.message.receviers}}</label>
+      <select data-placeholder=" " multiple="multiple" chosen="" ng-model="message.receivers" ng-options="receiver.name group by receiver.group for receiver in receviersList | orderBy:&quot;lastName&quot;" class="chosen-select"></select>
+    </div>
+    <div class="form-group">
+      <label class="control-label">{{ui.message.subject}}</label>
+      <input type="text" ng-model="message.subject" placeholder="{{ui.message.typeSubject}}" class="form-control">
+    </div>
+    <div class="form-group">
+      <label class="control-label">{{ui.message.message}}</label>
+      <textarea rows="7" ng-model="message.body" class="form-control"></textarea>
+    </div>
+    <div ng-hide="StandBy.resources.role &gt; 1" class="form-group">
+      <label class="control-label">{{ui.message.repeat}}</label>
+      <div data-toggle="buttons" class="btn-group">
+        <label ng-model="scheaduled.status" ng-click="scheaduled.status = true; addNewOffset()" class="btn btn-sm {{((scheaduled.status) &amp;&amp; 'btn-success active') || 'btn-default'}}">{{ui.message.repeatOn}}
+          <input type="radio" name="repeatToggle">
+        </label>
+        <label ng-model="scheaduled.status" ng-click="scheaduled.status = false" class="btn btn-default btn-sm {{(!scheaduled.status) &amp;&amp; 'active'}}">{{ui.message.repeatOff}}
+          <input type="radio" name="repeatToggle">
+        </label>
+      </div>
+    </div>
+    <section id="scheaduler-pane" ng-show="scheaduled.status">
+      <header>
+        <h4>{{ui.message.repeat}}</h4>
+        <div class="pull-right">
+          <button type="button" ng-click="addNewOffset()" class="btn btn-sm btn-success">{{ui.message.repeatNew}}</button>
+        </div>
+      </header>
+      <hr>
+      <div class="form-group">
+        <label class="control-label">{{ui.message.notificationLabel}}</label>
+        <input type="text" ng-model="scheaduled.title" placeholder="{{ui.message.notificationLabel}}" class="form-control col-md-6">
+      </div>
+      <div ng-hide="scheaduleCount &gt; 0" class="form-group">
+        <label class="control-label">{{ui.message.notifications}}</label>
+        <p class="text-muted"><small><i>{{ui.message.notificationsEmpty}}</i></small></p>
+      </div>
+      <div ng-show="scheaduleCount &gt; 0" class="form-group">
+        <label class="control-label">{{ui.message.notifications}}</label><span style="font-size: 11px" ng-repeat="o in offsets">{{o}}<br></span>
+        <div ng-repeat="offset in scheaduled.offsets">
+          <notification-item scheadule="offset" remover="remover()"></notification-item>
+        </div>
+      </div>
+    </section>
+    <div class="form-group">
+      <div ng-show="scheaduled.uuid || scheaduled.status">
+        <button type="submit" ng-hide="scheaduleCount &gt; 0" class="btn btn-success disabled">{{ui.message.notificationSave}}</button>
+        <button type="submit" ng-click="scheaduler.save(message, broadcast, scheaduled)" ng-show="scheaduleCount &gt; 0" class="btn btn-success">{{ui.message.notificationSave}}</button>
+      </div>
+      <button type="submit" ng-hide="scheaduled.uuid || scheaduled.status" ng-click="send(message, broadcast)" class="btn btn-success">{{ui.message.sendMessage}}</button>
+    </div>
+  </fieldset>
+</form>

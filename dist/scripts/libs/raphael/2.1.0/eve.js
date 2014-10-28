@@ -1,20 +1,5 @@
 // Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
+
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// ┌────────────────────────────────────────────────────────────┐ \\
-// │ Eve 0.5.0 - JavaScript Events Library                      │ \\
-// ├────────────────────────────────────────────────────────────┤ \\
-// │ Author Dmitry Baranovskiy (http://dmitry.baranovskiy.com/) │ \\
-// └────────────────────────────────────────────────────────────┘ \\
 
 (function(e){var t="0.5.0",n="hasOwnProperty",r=/[\.\/]/,i=/\s*,\s*/,s="*",o=function(){},u=function(e,t){return e-t},a,f,l={n:{}},c=function(){for(var e=0,t=this.length;e<t;e++)if(typeof this[e]!="undefined")return this[e]},h=function(){var e=this.length;while(--e)if(typeof this[e]!="undefined")return this[e]},p=Object.prototype.toString,d=String,v=Array.isArray||function(e){return e instanceof Array||p.call(e)=="[object Array]"};eve=function(e,t){var n=l,r=f,i=Array.prototype.slice.call(arguments,2),s=eve.listeners(e),o=0,p=!1,d,v=[],m={},g=[],y=a,b=[];g.firstDefined=c,g.lastDefined=h,a=e,f=0;for(var w=0,E=s.length;w<E;w++)"zIndex"in s[w]&&(v.push(s[w].zIndex),s[w].zIndex<0&&(m[s[w].zIndex]=s[w]));v.sort(u);while(v[o]<0){d=m[v[o++]],g.push(d.apply(t,i));if(f)return f=r,g}for(w=0;w<E;w++){d=s[w];if("zIndex"in d)if(d.zIndex==v[o]){g.push(d.apply(t,i));if(f)break;do{o++,d=m[v[o]],d&&g.push(d.apply(t,i));if(f)break}while(d)}else m[d.zIndex]=d;else{g.push(d.apply(t,i));if(f)break}}return f=r,a=y,g},eve._events=l,eve.listeners=function(e){var t=v(e)?e:e.split(r),n=l,i,o,u,a,f,c,h,p,d=[n],m=[];for(a=0,f=t.length;a<f;a++){p=[];for(c=0,h=d.length;c<h;c++){n=d[c].n,o=[n[t[a]],n[s]],u=2;while(u--)i=o[u],i&&(p.push(i),m=m.concat(i.f||[]))}d=p}return m},eve.separator=function(e){e?(e=d(e).replace(/(?=[\.\^\]\[\-])/g,"\\"),e="["+e+"]",r=new RegExp(e)):r=/[\.\/]/},eve.on=function(e,t){if(typeof t!="function")return function(){};var n=v(e)?v(e[0])?e:[e]:d(e).split(i);for(var s=0,o=n.length;s<o;s++)(function(e){var n=v(e)?e:d(e).split(r),i=l,s;for(var o=0,u=n.length;o<u;o++)i=i.n,i=i.hasOwnProperty(n[o])&&i[n[o]]||(i[n[o]]={n:{}});i.f=i.f||[];for(o=0,u=i.f.length;o<u;o++)if(i.f[o]==t){s=!0;break}!s&&i.f.push(t)})(n[s]);return function(e){+e==+e&&(t.zIndex=+e)}},eve.f=function(e){var t=[].slice.call(arguments,1);return function(){eve.apply(null,[e,null].concat(t).concat([].slice.call(arguments,0)))}},eve.stop=function(){f=1},eve.nt=function(e){var t=v(a)?a.join("."):a;return e?(new RegExp("(?:\\.|\\/|^)"+e+"(?:\\.|\\/|$)")).test(t):t},eve.nts=function(){return v(a)?a:a.split(r)},eve.off=eve.unbind=function(e,t){if(!e){eve._events=l={n:{}};return}var o=v(e)?v(e[0])?e:[e]:d(e).split(i);if(o.length>1){for(var u=0,a=o.length;u<a;u++)eve.off(o[u],t);return}o=v(e)?e:d(e).split(r);var f,c,h,u,a,p,m,g=[l];for(u=0,a=o.length;u<a;u++)for(p=0;p<g.length;p+=h.length-2){h=[p,1],f=g[p].n;if(o[u]!=s)f[o[u]]&&h.push(f[o[u]]);else for(c in f)f[n](c)&&h.push(f[c]);g.splice.apply(g,h)}for(u=0,a=g.length;u<a;u++){f=g[u];while(f.n){if(t){if(f.f){for(p=0,m=f.f.length;p<m;p++)if(f.f[p]==t){f.f.splice(p,1);break}!f.f.length&&delete f.f}for(c in f.n)if(f.n[n](c)&&f.n[c].f){var y=f.n[c].f;for(p=0,m=y.length;p<m;p++)if(y[p]==t){y.splice(p,1);break}!y.length&&delete f.n[c].f}}else{delete f.f;for(c in f.n)f.n[n](c)&&f.n[c].f&&delete f.n[c].f}f=f.n}}},eve.once=function(e,t){var n=function(){return eve.off(e,n),t.apply(this,arguments)};return eve.on(e,n)},eve.version=t,eve.toString=function(){return"You are running Eve "+t},typeof module!="undefined"&&module.exports?module.exports=eve:typeof define=="function"&&define.amd?define("eve",[],function(){return eve}):e.eve=eve})(this);

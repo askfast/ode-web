@@ -1,0 +1,52 @@
+<div class="tab-header">
+  <h3 class="pull-left">{{ui.message.trash}}</h3>
+  <div style="margin-left: 10px" class="pull-right">
+    <button type="button" ng-click="emptyTrash()" class="btn btn-danger pull-left"><i class="glyphicon glyphicon-trash glyphicon-white"></i>&nbsp;{{ui.message.emptyTrash}}</button>
+  </div>
+  <form class="pull-right">
+    <input type="text" placeholder="{{ui.message.filterMessages}}" ng-model="query.trash" class="form-control search-query">
+  </form>
+</div>
+<hr>
+<p ng-hide="(messages.trash[page.trash] | filter:query.trash).length &gt; 0">{{ui.message.noMsgInTrash}}</p>
+<div ng-show="(messages.trash[page.trash] | filter:query.trash).length &gt; 0">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          <input type="checkbox" ng-model="selectionMaster.trash" ng-click="toggleSelection(messages.trash[page.trash], &quot;trash&quot;, selectionMaster.trash)">
+        </th>
+        <th width="60">{{ui.message.box}}</th>
+        <th>{{ui.message.persons}}</th>
+        <th>{{ui.message.subject}}</th>
+        <th>{{ui.message.date}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="message in messages.trash[page.trash] | filter:query.trash | orderBy:&quot;creationTime&quot;:true">
+        <td>
+          <input type="checkbox" ng-model="selection.trash[message.uuid]" ng-checked="selection.trash[message.uuid]">
+        </td>
+        <td><span class="label label-default">{{message.box}}</span></td>
+        <td><span ng-repeat="receiver in message.responder"><a href="#/profile/{{receiver | convertEve}}#profile">{{receiver | convertEve | convertUserIdToName}}</a></span></td>
+        <td><a ng-click="requestMessage(message.uuid, &quot;trash&quot;)">{{message.subject}}</a></td>
+        <td>{{message.creationTime | nicelyDate}}</td>
+        <td>
+          <div class="pull-right">
+            <button type="submit" ng-click="restoreMessage(message.uuid)" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-thumbs-up glyphicon-white"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" ng-click="restoreMessages(selection.trash)" class="btn btn-sm btn-success pull-left"><i class="glyphicon glyphicon-thumbs-up glyphicon-white"></i>{{ui.message.restoreSelected}}</button>
+  <div style="margin: 0" class="btn-toolbar pull-right">
+    <div class="btn-group">
+      <button ng-click="paginate.before(&quot;trash&quot;)" class="btn btn-default btn-sm {{(page.trash==0) &amp;&amp; 'disabled'}}">« {{ui.message.paginationPrevious}}</button>
+      <button ng-click="paginate.next(&quot;trash&quot;)" class="btn btn-default btn-sm {{(page.trash + 1 == messages.trash.length) &amp;&amp; 'disabled'}}">{{ui.message.paginationNext}} »</button>
+    </div>
+  </div><br><br><span class="text-muted pull-right"><small><i>
+        {{ui.message.paginationPage}}: {{page.trash + 1}} {{ui.message.paginationOf}}
+        {{messages.trash.length}}, {{ui.message.paginationInTotal}}: {{messages.trash | countBox}}</i></small></span>
+</div>
