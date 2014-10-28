@@ -435,12 +435,12 @@ define(['services/services', 'config'], function (services, config) {
 
       Groups.query(
         function (groups) {
-          angular.forEach(
-            groups,
-            function (group) {
-              group.name = Strings.toTitleCase(group.name)
-            }
-          );
+          // angular.forEach(
+          //   groups,
+          //   function (group) {
+          //     group.name = Strings.toTitleCase(group.name)
+          //   }
+          // );
 
           Store('network').save('groups', groups);
 
