@@ -1,1 +1,0 @@
-define(["directives/directives"],function(e){e.directive("view",function(){return{restrict:"EA",templateUrl:"views/messages/view.html",link:function(e,t,n){}}})});

@@ -1,1 +1,0 @@
-define(["directives/directives"],function(e){e.directive("notificationItem",["$compile",function(e){return{restrict:"E",rep1ace:!0,templateUrl:"views/messages-scheadule-item.html",scope:{scheadule:"="},link:function(e,t,n){e.s=e.scheadule,e.remover=function(t){e.$parent.$parent.remover(t)}}}}])});

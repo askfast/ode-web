@@ -1,1 +1,0 @@
-define(["services/services"],function(e){e.factory("Log",["Store",function(e){return{record:function(t,n){var r=Date.now();return t+="_"+r,e("logs").save(t,{time:r,message:n})},error:function(t){var n,r,i;return e=e("error"),i=Date.now(),r={},n={},t.hasOwnProperty("message")?n={stack:t.stack,message:t.message}:n={trace:t},r[i]=n,e.save("error_"+i,r)}}}])});

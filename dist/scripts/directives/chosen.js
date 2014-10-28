@@ -1,1 +1,0 @@
-define(["directives/directives"],function(e){e.directive("chosen",function(){return{restrict:"A",link:function(e,t,n){e.$watch("receviersList",function(){t.trigger("chosen:updated")}),e.$watch("message.receviers",function(){$(t[0]).trigger("chosen:updated")}),t.chosen({width:"95%"})}}})});

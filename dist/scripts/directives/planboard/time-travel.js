@@ -1,1 +1,0 @@
-define(["directives/directives"],function(e){e.directive("timeTravel",function(){return{restrict:"EA",templateUrl:"views/planboard/time-travel.html",link:function(e,t,n){}}})});

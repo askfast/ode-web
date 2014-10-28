@@ -1,1 +1,0 @@
-define(["directives/directives"],function(e){e.directive("timeToolbar",function(){return{restrict:"EA",templateUrl:"views/planboard/time-toolbar.html",link:function(e,t,n){}}})});

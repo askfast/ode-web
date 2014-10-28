@@ -1,1 +1,0 @@
-define(["directives/directives"],function(e){e.directive("profileImg",function(){return{restrict:"A",link:function(e,t,n){var r=n.profileImg;t.css({"background-image":"url("+r+")","background-size":"cover"})}}})});

@@ -1,1 +1,0 @@
-define(["angular","controllers/controllers","services/services","filters/filters","directives/directives","angular-resource","angular-route","angular-md5","angular-strap"],function(e){return e.module("StandBy",["controllers","services","filters","directives","ngResource","ngRoute","ngMd5","mgcrea.ngStrap"])});

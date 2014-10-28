@@ -1,1 +1,0 @@
-define(["controllers/controllers","config"],function(e,t){e.controller("faq",["$rootScope","$scope","$location",function(e,t,n){function r(e){t.views={web:!1,ios:!1,android:!1},t.views[e]=!0}e.notification.status=!1,e.fixStyles(),t.setViewTo=function(e){t.$watch(e,function(){n.hash(e),r(e)})};var i;n.hash()?i=n.hash():(i="dashboard",n.hash("dashboard")),r(i)}])});
