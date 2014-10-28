@@ -1,0 +1,16 @@
+
+libs/chosen/chosen.css
+----------------
+libs/chosen/chosen.css
+
+libs/chosen/chosen.min.css
+----------------
+libs/chosen/chosen.min.css
+
+libs/chosen/docsupport/prism.css
+----------------
+libs/chosen/docsupport/prism.css
+
+libs/chosen/docsupport/style.css
+----------------
+libs/chosen/docsupport/style.css

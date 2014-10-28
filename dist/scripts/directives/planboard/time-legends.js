@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("timeLegends",function(){return{restrict:"EA",templateUrl:"views/planboard/time-legends.html",link:function(e,t,n){}}})});

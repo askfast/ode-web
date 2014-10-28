@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("outbox",function(){return{restrict:"EA",templateUrl:"views/messages/outbox.html",link:function(e,t,n){}}})});
