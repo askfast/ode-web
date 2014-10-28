@@ -33,7 +33,8 @@ define(
       mobileApp: profile.mobileApp,
       smartAlarm: profile.smartAlarm,
       profilePage: profile.profilePage,
-      showBackground: (profile.showBackground==null ? true : profile.showBackground)
+      showBackground: (profile.showBackground==null ? true : profile.showBackground),
+      helpManual: (profile.helpManual==null ? true : profile.helpManual)
     },
 
     statesall: {

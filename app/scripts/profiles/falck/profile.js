@@ -89,5 +89,10 @@ var profile = {
     ALARM_SYNC:             60000,
     PLANBOARD_SYNC:         10000,
     TV_SYNC:                8000
-  }
+  },
+
+  helpManual: false
 };
+
+
+

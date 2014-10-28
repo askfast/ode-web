@@ -83,7 +83,7 @@ var profile = {
 
   profilePage: {
     showCertificates: true,
-    editCertificates: false
+    editCertificates: true
   }
 
 };
