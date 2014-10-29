@@ -12,6 +12,7 @@ define(['services/services'], function (services) {
           planboard: false,
           messages: false,
           groups: false,
+          logs: false,
           profile: false,
           settings: false
         };
@@ -35,6 +36,11 @@ define(['services/services'], function (services) {
           case '/groups':
             $rootScope.loaderIcons.groups = true;
             $rootScope.location = 'groups';
+            break;
+
+          case '/logs':
+            $rootScope.loaderIcons.logs = true;
+            $rootScope.location = 'logs';
             break;
 
           case '/settings':
