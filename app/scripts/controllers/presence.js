@@ -39,7 +39,7 @@ define(
             }
           });
 
-          var members = Store('network').get('unique');;
+          var members = Store('network').get('unique');
 
           var presencePerGroup = function (present) {
             var presentGroups = {};

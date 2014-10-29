@@ -6,6 +6,10 @@ define(['controllers/controllers'], function (controllers) {
 
     $rootScope.fixStyles();
 
+    $('.navbar').show();
+    $('#footer').show();
+    $('#watermark').css({ bottom: '' });
+
     $rootScope.resetPhoneNumberChecker();
 
     $scope.self = this;
