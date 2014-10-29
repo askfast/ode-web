@@ -15,9 +15,6 @@ define(
            */
           $rootScope.fixStyles();
 
-          $('.navbar').show();
-          $('#footer').show();
-          $('#watermark').css({ bottom: '' });
 
           /**
            * View setter

@@ -119,22 +119,27 @@ define(
           };
 
           // $scope.checkPresence();
+          $rootScope.intervals = [];
 
-          $window.setInterval(
-            function () {
-              // console.log($scope.availability.members.available);
-              // console.log($scope.present);
-              // Network.population().then(function(result){
-              $scope.getGroupAvailability()
-              .then($scope.checkPresence(), function(){});
-              // });
-          }, 5000);
-          // }, $rootScope.StandBy.config.timers.TV_SYNC);
+          $rootScope.intervals.push(
+            $window.setInterval(
+              function () {
+                // console.log($scope.availability.members.available);
+                // console.log($scope.present);
+                // Network.population().then(function(result){
+                $scope.getGroupAvailability()
+                .then($scope.checkPresence(), function(){});
+                // });
+            }, 5000)
+            // }, $rootScope.StandBy.config.timers.TV_SYNC);
+          );
 
-          $window.setInterval(
-            function () {
-              Network.population();
-          }, 7500);
+          $rootScope.intervals.push(
+            $window.setInterval(
+              function () {
+                Network.population();
+            }, 7500)
+          );
           // Remove below after FALCK DEMO
           //=============================================
 

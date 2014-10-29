@@ -6,10 +6,6 @@ define(['controllers/controllers', 'locals'], function (controllers, locals) {
 
     $rootScope.fixStyles();
 
-    $('.navbar').show();
-    $('#footer').show();
-    $('#watermark').css({ bottom: '' });
-
     $scope.settings = angular.fromJson(data);
 
     var languages = {};

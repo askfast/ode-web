@@ -795,7 +795,7 @@ define(
       [
         'Session', 'Store',
         function (Session, Store) {
-          return function (id, type, size) {
+          return function (id, type, size, avatarId) {
             var session = Session.get();
 
             if (session && id) {
@@ -854,6 +854,13 @@ define(
 
 
                 return _url;
+              }
+              else if (avatarId){
+                return config.host +
+                       path +
+                       id +
+                       '/photo?width=' + newsize + '&height=' + newsize + '&sid=' +
+                       session + '&id=' + avatarId;
               }
               else
               {

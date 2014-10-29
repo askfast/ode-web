@@ -169,6 +169,16 @@ define(['app', 'config', 'locals'], function (app, config, locals) {
           marginBottom: '0px'
         });
       }
+
+      $('.navbar').show();
+      $('#footer').show();
+      $('#watermark').css({ bottom: '' });
+      if($rootScope.intervals){
+        _.each($rootScope.intervals, function(id){
+          $window.clearInterval(id);
+        });
+      }
+      $rootScope.intervals = null;
     };
 
     $rootScope.fullScreen = function () {

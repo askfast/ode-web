@@ -15,7 +15,7 @@ section#dashboard(style='margin-top: -20px;')
 							.sa-member(ng-repeat='member in group')
 								.media
 									.pull-left
-										.roundedPicMedium.memberStateNone(profile-img='{{member.uuid | avatar:"user":"100" }}')
+										.roundedPicMedium.memberStateNone(profile-img='{{member.uuid | avatar:"user":"100":member.resources.avatarPhotoId }}')
 									.sa-member-card.media-body
 										h5
 											a(href='#/profile/{{member.uuid}}#profile')

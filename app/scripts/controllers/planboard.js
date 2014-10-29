@@ -6,10 +6,6 @@ define(['controllers/controllers'], function (controllers) {
 
     $rootScope.fixStyles();
 
-    $('.navbar').show();
-    $('#footer').show();
-    $('#watermark').css({ bottom: '' });
-
     $scope.self = this;
 
     $scope.data = data;
