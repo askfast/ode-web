@@ -104,6 +104,8 @@ define(
               // if (member.resources && member.resources.currentPresence){
                 // console.log(member.name + " is present");
                 // console.log("Presence = " + member.resources.currentPresence.toString());
+                member.resources.groups = Groups.getMemberGroups(member.uuid);
+
                 if (member.resources.groups && member.resources.groups.length > 1) {
                   member.resources.groups = member.resources.groups.slice(0,1);
                 }
