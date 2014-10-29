@@ -16,7 +16,7 @@
               <div ng-repeat="member in group" class="sa-member">
                 <div class="media">
                   <div class="pull-left">
-                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot; }}" class="roundedPicMedium memberStateNone"></div>
+                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium memberStateNone"></div>
                   </div>
                   <div class="sa-member-card media-body">
                     <h5><a href="#/profile/{{member.uuid}}#profile">{{member.name | toTitleCase}}</a></h5>
