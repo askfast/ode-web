@@ -1,0 +1,56 @@
+.tab-header
+	h3.pull-left {{ui.message.outbox}}
+	form.pull-right
+		input.form-control.search-query(type='text',
+		placeholder='{{ui.message.filterMessages}}',
+		ng-model='query.outbox')
+hr
+p(ng-hide='(messages.outbox[page.outbox] | filter:query.outbox).length > 0')
+	| {{ui.message.noMessage}}
+div(ng-show='(messages.outbox[page.outbox] | filter:query.outbox).length > 0')
+	table.table.table-striped
+		thead
+			tr
+				th
+					input(type='checkbox',
+					ng-model='selectionMaster.outbox',
+					ng-click='toggleSelection(messages.outbox[page.outbox], "outbox", selectionMaster.outbox)')
+				th(style='max-width: 400px;') {{ui.message.receviers}}
+				th {{ui.message.subject}}
+				th {{ui.message.date}}
+				th
+		tbody
+			tr(ng-repeat='message in messages.outbox[page.outbox] | filter:query.outbox | orderBy:"creationTime":true')
+				td
+					input(type='checkbox',
+					ng-model='selection.outbox[message.uuid]',
+					ng-checked='selection.outbox[message.uuid]')
+				td
+					span(ng-repeat='receiver in message.responder')
+						a(href='#/profile/{{receiver | convertEve}}#profile')
+							| {{receiver | convertEve | convertUserIdToName}}
+				td
+					a(ng-click='requestMessage(message.uuid, "outbox")') {{message.subject}}
+				td {{message.creationTime | nicelyDate}}
+				td
+					.pull-right
+						button.btn.btn-danger.btn-xs(type='submit', ng-click='removeMessage(message.uuid)')
+							i.glyphicon.glyphicon-trash.glyphicon-white
+	button.btn.btn-sm.btn-danger.pull-left(type='button', ng-click='removeMessages(selection.outbox)')
+		i.glyphicon.glyphicon-trash.glyphicon-white
+		| {{ui.message.deleteSelected}}
+	.btn-toolbar.pull-right(style='margin: 0;')
+		.btn-group
+			button.btn.btn-default.btn-sm(ng-click='paginate.before("outbox")',
+			class="{{(page.outbox == 0) && 'disabled'}}")
+				| « {{ui.message.paginationPrevious}}
+			button.btn.btn-default.btn-sm(ng-click='paginate.next("outbox")',
+			class="{{(page.outbox + 1 == messages.outbox.length) && 'disabled'}}")
+				| {{ui.message.paginationNext}} »
+	br
+	br
+	span.text-muted.pull-right
+		small
+			i
+				| {{ui.message.paginationPage}}: {{page.outbox + 1}} {{ui.message.paginationOf}}
+				| {{messages.outbox.length}}, {{ui.message.paginationInTotal}}: {{messages.outbox | countBox}}

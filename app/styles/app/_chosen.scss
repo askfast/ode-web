@@ -1,0 +1,18 @@
+$chosen-background: $input-bg;
+$chosen-border: $input-border;
+$chosen-border-color: $input-border-focus;
+$chosen-border-radius: $input-border-radius;
+$chosen-multi-border-radius: $chosen-border-radius;
+$chosen-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+$chosen-drop-border: $input-border;
+$chosen-drop-box-shadow: 0 8px 8px rgba(0, 0, 0, .25);
+$chosen-drop-zindex: 1060;
+$chosen-focus-border: $input-border-focus;
+$chosen-focus-box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 8px $chosen-border-color;
+$chosen-focus-transition: border linear .2s, box-shadow linear .2s;
+$chosen-height: $input-height-base;
+$chosen-multi-height: $input-height-base + 6px;
+$chosen-sprite-path: '/scripts/libs/chosen/chosen-sprite.png';
+$chosen-sprite-retina-path: '/scripts/libs/chosen/chosen-sprite@2x.png';
+
+@import "../../vendors/bootstrap-chosen/bootstrap-chosen";

@@ -1,0 +1,47 @@
+<div class="tab-header">
+  <h3 class="pull-left">{{ui.message.outbox}}</h3>
+  <form class="pull-right">
+    <input type="text" placeholder="{{ui.message.filterMessages}}" ng-model="query.outbox" class="form-control search-query">
+  </form>
+</div>
+<hr>
+<p ng-hide="(messages.outbox[page.outbox] | filter:query.outbox).length &gt; 0">{{ui.message.noMessage}}</p>
+<div ng-show="(messages.outbox[page.outbox] | filter:query.outbox).length &gt; 0">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          <input type="checkbox" ng-model="selectionMaster.outbox" ng-click="toggleSelection(messages.outbox[page.outbox], &quot;outbox&quot;, selectionMaster.outbox)">
+        </th>
+        <th style="max-width: 400px">{{ui.message.receviers}}</th>
+        <th>{{ui.message.subject}}</th>
+        <th>{{ui.message.date}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="message in messages.outbox[page.outbox] | filter:query.outbox | orderBy:&quot;creationTime&quot;:true">
+        <td>
+          <input type="checkbox" ng-model="selection.outbox[message.uuid]" ng-checked="selection.outbox[message.uuid]">
+        </td>
+        <td><span ng-repeat="receiver in message.responder"><a href="#/profile/{{receiver | convertEve}}#profile">{{receiver | convertEve | convertUserIdToName}}</a></span></td>
+        <td><a ng-click="requestMessage(message.uuid, &quot;outbox&quot;)">{{message.subject}}</a></td>
+        <td>{{message.creationTime | nicelyDate}}</td>
+        <td>
+          <div class="pull-right">
+            <button type="submit" ng-click="removeMessage(message.uuid)" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash glyphicon-white"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" ng-click="removeMessages(selection.outbox)" class="btn btn-sm btn-danger pull-left"><i class="glyphicon glyphicon-trash glyphicon-white"></i>{{ui.message.deleteSelected}}</button>
+  <div style="margin: 0" class="btn-toolbar pull-right">
+    <div class="btn-group">
+      <button ng-click="paginate.before(&quot;outbox&quot;)" class="btn btn-default btn-sm {{(page.outbox == 0) &amp;&amp; 'disabled'}}">« {{ui.message.paginationPrevious}}</button>
+      <button ng-click="paginate.next(&quot;outbox&quot;)" class="btn btn-default btn-sm {{(page.outbox + 1 == messages.outbox.length) &amp;&amp; 'disabled'}}">{{ui.message.paginationNext}} »</button>
+    </div>
+  </div><br><br><span class="text-muted pull-right"><small><i>
+        {{ui.message.paginationPage}}: {{page.outbox + 1}} {{ui.message.paginationOf}}
+        {{messages.outbox.length}}, {{ui.message.paginationInTotal}}: {{messages.outbox | countBox}}</i></small></span>
+</div>

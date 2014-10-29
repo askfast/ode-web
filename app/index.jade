@@ -1,0 +1,175 @@
+extends layout
+
+block navbar
+	.navbar.navbar-inverse.navbar-fixed-top.ng-cloak(
+	ng-hide='(location=="login" || location=="forgotpass" || location=="register")',
+	bs-navbar='')
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(data-toggle='collapse',
+					data-target='.navbar-collapse')
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand(href='#dashboard') {{StandBy.config.profile.title}}
+				#collapsed.navbar-collapse.collapse
+					ul.nav.navbar-nav
+						li(data-match-route='/dashboard')
+							a(href='#dashboard',
+							ng-click='collapseNav()') Dashboard
+						li(data-match-route='/planboard')
+							a(href='#planboard') Agenda
+						li(data-match-route='/messages')
+							a(href='#messages')
+								| {{ui.message.messages}} &nbsp;
+								span.badge.badge-success(ng-show="(StandBy.unreadMessages > 0)")
+									| {{StandBy.unreadMessages}}
+						li(data-match-route='/groups',
+						ng-hide='StandBy.resources.role > 1')
+							a(href='#groups') {{ui.groups.groups}}
+					ul.nav.navbar-nav.navbar-right(ng-hide='browser.mobile')
+						li(ng-show='StandBy.location.length > 0')
+							a
+								i : Locatie: {{StandBy.location}}
+
+						li
+							a(href='#faq#web')
+								i.glyphicon.glyphicon-question-sign.glyphicon-white
+								| &nbsp;FAQ
+						li
+							a(href='#help#{{location}}')
+								i.glyphicon.glyphicon-info-sign.glyphicon-white
+								| &nbsp;Handleiding
+						li.dropdown
+							a.dropdown-toggle(href='',
+							data-toggle='dropdown')
+								i.glyphicon.glyphicon-user.glyphicon-white
+								| &nbsp;{{StandBy.resources.name}}&nbsp;
+								span(ng-show='StandBy.resources.role == 0')[SU]&nbsp;
+								b.caret
+							ul.dropdown-menu
+								li
+									a(href='#profile')
+										i.glyphicon.glyphicon-user
+										| &nbsp;{{ui.profile.profile}}
+								li
+									a(href='#settings')
+										i.glyphicon.glyphicon-wrench
+										| &nbsp;{{ui.settings.settings}}
+								li.divider
+								li
+									a(href='#presence')
+										i.glyphicon.glyphicon-flag
+										| &nbsp;Aanwezigheid
+								li.divider
+								li
+									a(href='#logout')
+										i.glyphicon.glyphicon-off
+										| &nbsp;{{ui.login.logout}}
+						li#fullscreener(ng-show='StandBy.config.fullscreen && browser.webkit')
+							a(ng-click='fullScreen()')
+								i.glyphicon.glyphicon-fullscreen.glyphicon-white
+					ul.nav.navbar-nav.navbar-right(ng-show='browser.mobile',
+					style='{{(browser.landscape) && "margin-right:-20px"}}; display:none')
+						li
+							a(href='#profile')
+								i.glyphicon.glyphicon-user.glyphicon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+								span(ng-show='browser.portrait || browser.screen.width < 768')
+						li
+							a(href='#settings')
+								i.glyphicon.glyphicon-wrench.glyphicon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+								span(ng-show='browser.portrait || browser.screen.width < 768')
+						li
+							a(href='#logout')
+								i.glyphicon.glyphicon-off.glyphicon-white(ng-hide='browser.portrait || browser.screen.width < 768')
+								span(ng-show='browser.portrait || browser.screen.width < 768')
+
+block loading
+	#loading.ng-cloak(ng-show='loadingBig')
+		div(ng-show='loaderIcons.general')
+			span.entypo &#9203;
+			p {{ui.loading.general}}...
+		div(ng-show='loaderIcons.dashboard')
+			span.entypo &#9716;
+			p {{ui.loading.general}} {{ui.loading.dashboard}}
+		div(ng-show='loaderIcons.planboard')
+			span.entypo &#128340;
+			p {{ui.loading.general}} {{ui.loading.planboard}}
+		div(ng-show='loaderIcons.messages')
+			span.entypo &#59255;
+			p {{ui.loading.general}} {{ui.loading.messages}}
+		div(ng-show='loaderIcons.groups')
+			span.entypo &#128101;
+			p {{ui.loading.general}} {{ui.loading.groups}}
+		div(ng-show='loaderIcons.profile')
+			span.entypo &#128100;
+			p {{ui.loading.general}} {{ui.loading.profile}}
+		div(ng-show='loaderIcons.settings')
+			span.entypo &#9874;
+			p {{ui.loading.general}} {{ui.loading.settings}}
+
+block notifications
+	#notification.alert.ng-cloak(class='{{notification.type}}', ng-show='notification.status')
+		button.close(type='button', ng-click='notification.status = false') ×
+		span(ng-hide='notification.confirm') {{notification.message}}
+		span(ng-show='notification.confirm')
+			| {{ui.confirms.remove}}
+			button.btn.btn-xs.btn-danger(ng-click='fireDeleteRequest(notification.options)') Delete
+
+block mobile-status-bar
+	#mobile-status-bar.ng-cloak(ng-show='loading.status && browser.mobile')
+		img(src='images/ajax-loader.gif')
+		small {{loading.message}}
+
+block footer
+	#footer.ng-cloak(ng-hide='browser.mobile')
+		.container-fluid
+			#copyrights
+				#download-footer
+					ul
+						li(ng-show='StandBy.config.profile.mobileApp.status')
+							.btn-group.dropup
+								button.btn.btn-success.dropdown-toggle(data-toggle='dropdown')
+									| Download mobiele app
+								ul.dropdown-menu.pull-right
+									li(ng-show='StandBy.config.profile.mobileApp.android')
+										a(ng-href='{{StandBy.config.profile.mobileApp.android}}', target='_blank')
+											| Download Android App
+									li(ng-show='StandBy.config.profile.mobileApp.ios')
+										a(ng-href='{{StandBy.config.profile.mobileApp.ios}}', target='itunes_store')
+											| Download iPhone App
+						li
+							img(src='images/standby_logo_footer.png', alt='StandBy Logo')
+						li
+							span.text-muted.footer-text
+								small
+									| Ask Community Systems, 2013 &nbsp; | &nbsp;&nbsp;
+									i
+										a(href='versions.html', target='_blank', style='color: #dddddd;') StandBy v{{StandBy.config.version}}
+			p.text-muted.footer-text(ng-show='loading.status')
+				img(src='images/ajax-loader.gif')
+				small
+					span(ng-show='app.preloader.status') {{app.preloader.count}}%
+					| {{loading.message}}
+
+block icons
+	link(rel='apple-touch-icon-precomposed', sizes='144x144', href='icons/apple-touch-icon-144-precomposed.png')
+	link(rel='apple-touch-icon-precomposed', sizes='114x114', href='icons/apple-touch-icon-114-precomposed.png')
+	link(rel='apple-touch-icon-precomposed', sizes='72x72', href='icons/apple-touch-icon-72-precomposed.png')
+	link(rel='apple-touch-icon-precomposed', href='icons/apple-touch-icon-57-precomposed.png')
+	link(rel='shortcut icon', href='icons/favicon.png')
+
+block iestuff
+	| <!--[if lt IE 7]>
+	p.browserupgrade
+		| You are using an
+		strong outdated
+		| browser. Please
+		a(href='http://browsehappy.com/') upgrade your browser today
+		| to better experience this site.
+	| <![endif]-->
+	| <!--[if lt IE 9]>
+	script(src='vendors/es5-shim/es5-shim.min.js')
+	script(src='vendors/es5-shim/es5-sham.min.js')
+	script(src='vendors/json3/lib/json3.min.js')
+	| <![endif]-->

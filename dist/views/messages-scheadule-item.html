@@ -1,0 +1,46 @@
+<div class="scheadule">
+  <div class="timer">
+    <div class="form-group has-feedback">
+      <input name="time-start" type="text" ng-model="s.time" data-length="3" data-time-type="string" data-time-format="HH:mm" bs-timepicker="" class="form-control"><i class="glyphicon glyphicon-time form-control-feedback"></i>
+    </div>
+  </div>
+  <ul>
+    <li>
+      <label for="monday-{{s.exact}}">
+        <input type="checkbox" ng-model="s.mon" id="monday-{{s.exact}}">maandag
+      </label>
+    </li>
+    <li>
+      <label for="tuesday-{{s.exact}}">
+        <input type="checkbox" ng-model="s.tue" id="tuesday-{{s.exact}}">dinsdag
+      </label>
+    </li>
+    <li>
+      <label for="wednesday-{{s.exact}}">
+        <input type="checkbox" ng-model="s.wed" id="wednesday-{{s.exact}}">woensdag
+      </label>
+    </li>
+    <li>
+      <label for="thursday-{{s.exact}}">
+        <input type="checkbox" ng-model="s.thu" id="thursday-{{s.exact}}">donderdag
+      </label>
+    </li>
+    <li>
+      <label for="friday-{{s.exact}}">
+        <input type="checkbox" ng-model="s.fri" id="friday-{{s.exact}}">vrijdag
+      </label>
+    </li>
+    <li>
+      <label for="saturday-{{s.exact}}">
+        <input type="checkbox" ng-model="s.sat" id="saturday-{{s.exact}}">zaterdag
+      </label>
+    </li>
+    <li>
+      <label for="sunday-{{s.exact}}">
+        <input type="checkbox" ng-model="s.sun" id="sunday-{{s.exact}}">zondag
+      </label>
+    </li>
+    <li><i class="glyphicon glyphicon-calendar"></i></li>
+  </ul>
+  <button type="button" ng-click="remover(s.exact)" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash glyphicon-white"></i></button>
+</div>

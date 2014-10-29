@@ -1,0 +1,46 @@
+.page-header: h2 {{ui.settings.settings}}
+
+.tabbable.tabs-left
+	ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
+		li.active
+			a(href='settings#userSettingsTab', data-toggle='tab')
+				span.entypo &#128100;
+				| {{ui.settings.user}}
+		li
+			a(href='settings#appSettingsTab', data-toggle='tab')
+				span.entypo &#9881;
+				| {{ui.settings.application}}
+
+	.tab-content
+
+		#userSettingsTab.tab-pane.active
+			.tab-header
+				h3.pull-left {{ui.settings.userSettings}}
+			hr
+			form
+				fieldset
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.settings.langSetting}}
+							select.form-control(ng-model='settings.user.language',
+							ng-options='option as value for (option, value) in languages')
+					br
+					.form-actions
+						button.btn.btn-success(type='submit',
+						ng-click='save(settings)') {{ui.settings.saveSettings}}
+
+		#appSettingsTab.tab-pane
+			.tab-header
+				h3.pull-left {{ui.settings.appSettings}}
+			hr
+			form
+				fieldset
+					.row
+						.form-group.col-sm-5
+							label.control-label Eerste groep keuze
+							select.form-control(ng-model='settings.app.group',
+							ng-options='option as value for (option, value) in groups')
+					br
+					.form-actions
+						button.btn.btn-success(type='submit', ng-click='save(settings)')
+							| {{ui.settings.saveSettings}}

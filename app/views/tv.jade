@@ -1,0 +1,76 @@
+section#dashboard(style='margin-top: -20px;')
+	.row
+		.sa.widget.col-md-9(ng-show='StandBy.config.profile.smartAlarm')
+			.head
+				h4 SlimAlarmeren
+			hr
+			p(ng-show='loading.smartAlarm') Indeling SlimAlarmeren lijst laden...
+			ul.sa-setup(ng-hide='loading.smartAlarm')
+				li.sa-truck
+					.sa-member(ng-repeat='trucker in saMembers.truck | orderBy:"rank"')
+						span.sa-member-icon(class="{{(trucker.class) && trucker.class}}")
+							strong {{trucker.icon}}
+						.sa-member-card
+							h5 {{trucker.name}}
+							hr
+							span {{trucker.role}}
+				li.sa-reserves
+					.sa-member(ng-repeat='reserve in saMembers.reserves.available')
+						span.sa-member-icon.sa-icon-reserve-available
+							strong B{{$index+1}}
+						.sa-member-card
+							h5 {{reserve.name}}
+							hr
+							span Beschikbaar
+					.sa-member(ng-repeat='reserve in saMembers.reserves.noplanning')
+						span.sa-member-icon.sa-icon-reserve-noplanning
+							strong {{$index+1}}
+						.sa-member-card
+							h5 {{reserve.name}}
+							hr
+							span Mogelijk inzetbaar
+					.sa-member(ng-repeat='reserve in saMembers.reserves.unavailable')
+						span.sa-member-icon.sa-icon-reserve-unavailable
+							strong N{{$index+1}}
+						.sa-member-card
+							h5 {{reserve.name}}
+							hr
+							span Niet beschikbaar
+			p(ng-hide='loading.smartAlarm')
+				small.pull-left
+					span.text-warning {{ui.planboard.lastSyncTime}} &nbsp;
+					span.text-muted {{saSynced | nicelyDate}}
+
+		.widget.col-md-3(ng-show='StandBy.config.profile.p2000.status')
+			.head
+				h4 {{ui.dashboard.announcements}}
+			hr
+			p(ng-show='loading.alerts') {{ui.dashboard.loadingP2000}}
+			ul#announcements(ng-hide='loading.alerts')
+				li(ng-show='alarms.list.length < 1')
+					{{ui.dashboard.noP2000}}
+				li(ng-repeat='alarm in alarms.list')
+					table
+						tr
+							td.first
+								span.prio.label.label-danger(ng-show='alarm.prio.1') PRIO 1
+								span.prio.label.label-warning(ng-show='alarm.prio.2') PRIO 2
+								span.prio.label.label-info(ng-show='alarm.prio.3') PRIO 3
+								span.prio.label.label-inverse(ng-show='alarm.prio.test') PROEFALARM
+							td.last
+								p {{alarm.body}}
+						tr
+							td
+								small.text-muted
+									i {{alarm.msgCode}}
+							td
+								span.label.label-natural.pull-right {{alarm.day}} {{alarm.time}}
+			hr.lastline(ng-hide='loading.alerts')
+			p(ng-hide='loading.alerts')
+				small.pull-left
+					span.text-warning {{ui.planboard.lastSyncTime}}
+					span.text-muted {{synced.alarms | nicelyDate}}
+				br
+				small.pull-left
+					span.text-warning Capcode(s):
+					span.text-muted {{StandBy.config.profile.p2000.codes}}

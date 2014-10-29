@@ -1,0 +1,64 @@
+{
+  "name": "StandBy",
+  "version": "0.0.0",
+  "description": "StandBy description",
+  "author": "Cengiz Ulusoy",
+  "dependencies": {
+    "grunt-svgmin": "^0.4.0"
+  },
+  "devDependencies": {
+    "connect-livereload": "*",
+    "grunt": "*",
+    "grunt-autoprefixer": "*",
+    "grunt-concurrent": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-compass": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-htmlmin": "*",
+    "grunt-contrib-imagemin": "*",
+    "grunt-contrib-jade": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-requirejs": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-conventional-changelog": "*",
+    "grunt-filerev": "^2.1.0",
+    "grunt-karma": "*",
+    "grunt-ng-annotate": "^0.4.0",
+    "grunt-release": "*",
+    "grunt-replace": "*",
+    "grunt-usemin": "*",
+    "karma": "*",
+    "karma-chrome-launcher": "*",
+    "karma-coffee-preprocessor": "*",
+    "karma-firefox-launcher": "*",
+    "karma-html2js-preprocessor": "*",
+    "karma-jasmine": "*",
+    "karma-ng-scenario": "*",
+    "karma-phantomjs-launcher": "*",
+    "karma-requirejs": "*",
+    "karma-script-launcher": "*",
+    "marked": "*",
+    "matchdep": "*",
+    "semver": "*"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "askcs/webpaigebase"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "licenses": [
+    {
+      "type": "BSD"
+    }
+  ]
+}

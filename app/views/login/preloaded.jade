@@ -1,0 +1,17 @@
+#preloader
+	logos
+	h4 {{ui.login.setting_up_app}}
+	.progress
+		.progress-bar-striped.active.progress-bar
+	span.text-muted
+
+#locations.boxed
+	logos
+	h4.form-signin-heading Locaties
+	form
+		.form-group
+			select.form-control(ng-model='location' ng-options='location for location in locations')
+				option(value='') -- Alle locaties --
+	
+	button.btn.btn-success.dropdown-toggle(ng-click='setLocation(location)')
+		| Ga door met app

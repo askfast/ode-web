@@ -1,0 +1,50 @@
+<div class="tab-header">
+  <h3 class="pull-left">{{ui.message.inbox}}</h3>
+  <form class="pull-right">
+    <input type="text" placeholder="{{ui.message.ph_filterMessage}}" ng-model="query.inbox" class="form-control search-query">
+  </form>
+</div>
+<hr>
+<p ng-hide="(messages.inbox[page.inbox] | filter:query.inbox).length &gt; 0">{{ui.message.noMessage}}</p>
+<div ng-show="(messages.inbox[page.inbox] | filter:query.inbox).length &gt; 0">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          <input type="checkbox" ng-model="selectionMaster.inbox" ng-click="toggleSelection(messages.inbox[page.inbox], &quot;inbox&quot;, selectionMaster.inbox)">
+        </th>
+        <th width="60"></th>
+        <th>{{ui.message.from}}</th>
+        <th>{{ui.message.subject}}</th>
+        <th>{{ui.message.date}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="message in messages.inbox[page.inbox] | filter:query.inbox | orderBy:&quot;creationTime&quot;:true">
+        <td>
+          <input type="checkbox" ng-model="selection.inbox[message.uuid]" ng-checked="selection.inbox[message.uuid]">
+        </td>
+        <td><span ng-show="(message.state==&quot;NEW&quot;)" class="label label-warning">{{ui.message.newMsg}}</span></td>
+        <td><a href="#/profile/{{message.requester | convertEve}}#profile">{{message.requester | convertEve | convertUserIdToName}}</a></td>
+        <td><a ng-click="requestMessage(message.uuid, &quot;inbox&quot;)">{{message.subject}}</a></td>
+        <td>{{message.creationTime | nicelyDate}}</td>
+        <td>
+          <div class="pull-right">
+            <button ng-click="reply(message)" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-share-alt"></i></button>
+            <button type="submit" ng-click="removeMessage(message.uuid)" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash glyphicon-white"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" ng-click="removeMessages(selection.inbox)" class="btn btn-sm btn-danger pull-left"><i class="glyphicon glyphicon-trash glyphicon-white"></i>&nbsp;{{ui.message.deleteSelected}}</button>
+  <div style="margin: 0" class="btn-toolbar pull-right">
+    <div class="btn-group">
+      <button ng-click="paginate.before(&quot;inbox&quot;)" class="btn btn-default btn-sm {{(page.inbox==0) &amp;&amp; 'disabled'}}">« {{ui.message.paginationPrevious}}</button>
+      <button ng-click="paginate.next(&quot;inbox&quot;)" class="btn btn-default btn-sm {{(page.inbox + 1 == messages.inbox.length) &amp;&amp; 'disabled'}}">{{ui.message.paginationNext}} »</button>
+    </div>
+  </div><br><br><span class="text-muted pull-right"><small><i>
+        {{ui.message.paginationPage}}: {{page.inbox + 1}} {{ui.message.paginationOf}}
+        {{messages.inbox.length}}, {{ui.message.paginationInTotal}}: {{messages.inbox | countBox}}</i></small></span>
+</div>
