@@ -672,13 +672,13 @@ define(
 
                 compiled += '<span class="badge">' + offset.time + '</span>&nbsp;';
 
-                if (offset.mon) compiled += '<span class="muted"><small><i> maandag,</i></small></span>';
-                if (offset.tue) compiled += '<span class="muted"><small><i> dinsdag,</i></small></span>';
-                if (offset.wed) compiled += '<span class="muted"><small><i> woensdag,</i></small></span>';
-                if (offset.thu) compiled += '<span class="muted"><small><i> donderdag,</i></small></span>';
-                if (offset.fri) compiled += '<span class="muted"><small><i> vrijdag,</i></small></span>';
-                if (offset.sat) compiled += '<span class="muted"><small><i> zaterdag,</i></small></span>';
-                if (offset.sun) compiled += '<span class="muted"><small><i> zondag,</i></small></span>';
+                if (offset.mon) compiled += '<span class="text-muted"><small><i> maandag,</i></small></span>';
+                if (offset.tue) compiled += '<span class="text-muted"><small><i> dinsdag,</i></small></span>';
+                if (offset.wed) compiled += '<span class="text-muted"><small><i> woensdag,</i></small></span>';
+                if (offset.thu) compiled += '<span class="text-muted"><small><i> donderdag,</i></small></span>';
+                if (offset.fri) compiled += '<span class="text-muted"><small><i> vrijdag,</i></small></span>';
+                if (offset.sat) compiled += '<span class="text-muted"><small><i> zaterdag,</i></small></span>';
+                if (offset.sun) compiled += '<span class="text-muted"><small><i> zondag,</i></small></span>';
 
                 compiled = compiled.substring(0, compiled.length - 20);
 
