@@ -6,7 +6,7 @@ if (window.location.port == '8080')
 require.config({
   paths: {
     // Change profile here!
-    profile: 'profiles/falck/profile',
+    profile: 'profiles/dev/profile',
     config: 'config',
     date: 'libs/date/1.0/date.min',
     angular: '../vendors/angular/angular.min',
