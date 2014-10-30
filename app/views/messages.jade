@@ -1,0 +1,147 @@
+.page-header
+	h2 {{ui.message.messages}}
+		.btn-group.pull-right
+			button.btn.btn-success(type='submit',
+			class="{{(views.compose==true) && 'active'}}",
+			ng-click='composeMessage(); setViewTo("compose")')
+				| {{ui.message.composeAMessage}}
+
+div
+	.tabbable.tabs-left
+
+		ul.nav.nav-tabs.nav-tabs-app(style='margin-right: 0px;')
+			li(ng-show='views.compose', class="{{(views.compose==true) && 'active'}}")
+				a(href='messages#composeTab', data-toggle='tab', ng-click='setViewTo("compose")')
+					span.entypo &#9998;
+					| {{ui.message.compose}}
+			li(ng-show='views.message', class="{{(views.message==true) && 'active'}}")
+				a(href='messages#viewTab', data-toggle='tab', ng-click='')
+					span.entypo &#128196;
+					| {{ui.message.message}}
+			li(class="{{(views.inbox==true) && 'active'}}")
+				a(href='messages#inboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("inbox")')
+					span.entypo &#128229;
+					| {{ui.message.inbox}}
+			li(class="{{(views.outbox==true) && 'active'}}")
+				a(href='messages#outboxTab', data-toggle='tab', ng-click='resetViews(); setViewTo("outbox")')
+					span.entypo &#128228;
+					| {{ui.message.outbox}}
+			li(class="{{(views.notifications==true || views.scheaduler==true) && 'active'}}",
+			ng-hide='StandBy.resources.role > 1')
+				a(href='messages#notificationsTab', data-toggle='tab', ng-click='resetViews(); setViewTo("notifications")')
+					span.entypo &#128276;
+					| {{ui.message.notifications}}
+			li(class="{{(views.trash==true) && 'active'}}")
+				a(href='messages#trashTab', data-toggle='tab', ng-click='resetViews(); setViewTo("trash")')
+					span.entypo &#9749;
+					| {{ui.message.trash}}
+
+		.tab-content
+
+			#composeTab.tab-pane(ng-show='views.compose || views.scheaduler',
+			class="{{(views.compose==true || views.scheaduler==true) && 'active'}}")
+				.tab-header
+					h3.pull-left
+						span(ng-hide='views.scheaduler') {{ui.message.composeMessage}}
+						span(ng-show='views.scheaduler') {{scheaduled.title | toTitleCase}}
+					button.btn.btn-default.pull-right(type='submit', ng-click='(origin=="inbox"); closeTabs()')
+						| {{ui.message.close}}
+				hr
+				form(ng-controller='scheaduler')
+					fieldset
+						.form-group
+							label.control-label {{ui.message.broadcast}}
+							div
+								input#broadcastSmsCheckBox(type='checkbox',
+								ng-model='broadcast.sms',
+								ng-hide='StandBy.resources.role > 2',
+								style="margin: 0 2px 0 0")
+								label(for='broadcastSmsCheckBox')
+									span(ng-hide='StandBy.resources.role > 2') {{ui.message.sms}}
+								input#broadcastEmailCheckBox(type='checkbox',
+								ng-model='broadcast.email',
+								style='margin: 0 2px 0 10px;')
+								label(for='broadcastEmailCheckBox') {{ui.message.email}}
+
+						.form-group(style='width: 530px;')
+							label.control-label {{ui.message.receviers}}
+							select.chosen-select(data-placeholder=' ',
+							multiple='',
+							chosen='',
+							ng-model='message.receivers',
+							ng-options='receiver.name group by receiver.group for receiver in receviersList | orderBy:"lastName"')
+
+						.form-group
+							label.control-label {{ui.message.subject}}
+							input.form-control(type='text', ng-model='message.subject', placeholder='{{ui.message.typeSubject}}')
+
+						.form-group
+							label.control-label {{ui.message.message}}
+							textarea.form-control(rows='7', ng-model='message.body')
+
+						.form-group(ng-hide='StandBy.resources.role > 1')
+							label.control-label {{ui.message.repeat}}
+							.btn-group(data-toggle='buttons')
+								label.btn.btn-sm(class="{{((scheaduled.status) && 'btn-success active') || 'btn-default'}}",
+								ng-model='scheaduled.status',
+								ng-click='scheaduled.status = true; addNewOffset()') {{ui.message.repeatOn}}
+									input(type='radio' name='repeatToggle')
+								label.btn.btn-default.btn-sm(class="{{(!scheaduled.status) && 'active'}}",
+								ng-model='scheaduled.status',
+								ng-click='scheaduled.status = false') {{ui.message.repeatOff}}
+									input(type='radio' name='repeatToggle')
+
+						section#scheaduler-pane(ng-show='scheaduled.status')
+							header
+								h4 {{ui.message.repeat}}
+								.pull-right
+									button.btn.btn-sm.btn-success(type='button', ng-click='addNewOffset()')
+										| {{ui.message.repeatNew}}
+							hr
+							.form-group
+								label.control-label {{ui.message.notificationLabel}}
+								input.form-control.col-md-6(type='text', ng-model='scheaduled.title', placeholder='{{ui.message.notificationLabel}}')
+
+							.form-group(ng-hide='scheaduleCount > 0')
+								label.control-label {{ui.message.notifications}}
+								p.text-muted
+									small
+										i {{ui.message.notificationsEmpty}}
+
+							.form-group(ng-show='scheaduleCount > 0')
+								label.control-label {{ui.message.notifications}}
+								span(style='font-size: 11px;', ng-repeat='o in offsets')
+									| {{o}}
+									br
+
+								div(ng-repeat='offset in scheaduled.offsets')
+									notification-item(scheadule='offset', remover='remover()')
+
+						.form-group
+							div(ng-show='scheaduled.uuid || scheaduled.status')
+								button(type='submit', ng-hide='scheaduleCount > 0', class="btn btn-success disabled")
+									| {{ui.message.notificationSave}}
+								button(type='submit',
+								ng-click='scheaduler.save(message, broadcast, scheaduled)',
+								ng-show='scheaduleCount > 0',
+								class="btn btn-success")
+									| {{ui.message.notificationSave}}
+							button.btn.btn-success(type='submit',
+							ng-hide='scheaduled.uuid || scheaduled.status',
+							ng-click='send(message, broadcast)') {{ui.message.sendMessage}}
+
+			#viewTab.tab-pane(ng-show='views.message',
+			class="{{(views.message==true) && 'active'}}")
+				view
+
+			#inboxTab.tab-pane(class="{{(views.inbox==true) && 'active'}}")
+				inbox
+
+			#outboxTab.tab-pane(class="{{(views.outbox==true) && 'active'}}")
+				outbox
+
+			#notificationsTab.tab-pane(class="{{(views.notifications==true) && 'active'}}")
+				notifications
+
+			#trashTab.tab-pane(class="{{(views.trash==true) && 'active'}}")
+				trash

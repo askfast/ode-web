@@ -1,0 +1,44 @@
+.scheadule
+	.timer
+		.form-group.has-feedback
+			input.form-control(name='time-start',
+			type='text',
+			ng-model='s.time',
+			data-length='3',
+			data-time-type="string",
+			data-time-format="HH:mm",
+			bs-timepicker='')
+			i.glyphicon.glyphicon-time.form-control-feedback
+	ul
+		li
+			label(for='monday-{{s.exact}}')
+				input(type='checkbox', ng-model='s.mon', id="monday-{{s.exact}}")
+				| maandag
+		li
+			label(for='tuesday-{{s.exact}}')
+				input(type='checkbox', ng-model='s.tue', id="tuesday-{{s.exact}}")
+				| dinsdag
+		li
+			label(for='wednesday-{{s.exact}}')
+				input(type='checkbox', ng-model='s.wed', id="wednesday-{{s.exact}}")
+				| woensdag
+		li
+			label(for='thursday-{{s.exact}}')
+				input(type='checkbox', ng-model='s.thu', id="thursday-{{s.exact}}")
+				| donderdag
+		li
+			label(for='friday-{{s.exact}}')
+				input(type='checkbox', ng-model='s.fri', id="friday-{{s.exact}}")
+				| vrijdag
+		li
+			label(for='saturday-{{s.exact}}')
+				input(type='checkbox', ng-model='s.sat', id="saturday-{{s.exact}}")
+				| zaterdag
+		li
+			label(for='sunday-{{s.exact}}')
+				input(type='checkbox', ng-model='s.sun', id="sunday-{{s.exact}}")
+				| zondag
+		li
+			i.glyphicon.glyphicon-calendar
+	button.btn.btn-sm.btn-danger(type='button', ng-click='remover(s.exact)')
+		i.glyphicon.glyphicon-trash.glyphicon-white

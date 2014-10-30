@@ -1,0 +1,23 @@
+<section id="widget-pies">
+  <form>
+    <fieldset>
+      <div class="form-group">
+        <ul>
+          <li ng-repeat="group in popover.groups" style="margin-top: 8px">
+            <label>
+              <input type="checkbox" ng-model="popover.selection[group.uuid].status">{{group.name}}
+            </label>
+            <label ng-show="popover.selection[group.uuid].status &amp;&amp; popover.divisions" style="margin-left: 20px">
+              <input type="checkbox" ng-model="popover.selection[group.uuid].divisions" style="margin-top: 0"><span style="margin: 0 0 0 5px"><i>Divisies</i></span><br>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </fieldset>
+    <hr>
+    <div class="actions">
+      <button type="button" ng-click="dismiss()" class="btn btn-default btn-sm">{{ui.dashboard.widgetCancel}}</button>
+      <button type="button" ng-click="saveOverviewWidget(popover.selection); dismiss()" class="btn btn-primary btn-sm">{{ui.dashboard.widgetSave}}</button>
+    </div>
+  </form>
+</section>

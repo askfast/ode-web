@@ -1,0 +1,109 @@
+<div class="page-header">
+  <h2>{{ui.message.messages}}
+    <div class="btn-group pull-right">
+      <button type="submit" ng-click="composeMessage(); setViewTo(&quot;compose&quot;)" class="btn btn-success {{(views.compose==true) &amp;&amp; 'active'}}">{{ui.message.composeAMessage}}</button>
+    </div>
+  </h2>
+</div>
+<div>
+  <div class="tabbable tabs-left">
+    <ul style="margin-right: 0px" class="nav nav-tabs nav-tabs-app">
+      <li ng-show="views.compose" class="{{(views.compose==true) &amp;&amp; 'active'}}"><a href="messages#composeTab" data-toggle="tab" ng-click="setViewTo(&quot;compose&quot;)"><span class="entypo">&#9998;</span>{{ui.message.compose}}</a></li>
+      <li ng-show="views.message" class="{{(views.message==true) &amp;&amp; 'active'}}"><a href="messages#viewTab" data-toggle="tab" ng-click=""><span class="entypo">&#128196;</span>{{ui.message.message}}</a></li>
+      <li class="{{(views.inbox==true) &amp;&amp; 'active'}}"><a href="messages#inboxTab" data-toggle="tab" ng-click="resetViews(); setViewTo(&quot;inbox&quot;)"><span class="entypo">&#128229;</span>{{ui.message.inbox}}</a></li>
+      <li class="{{(views.outbox==true) &amp;&amp; 'active'}}"><a href="messages#outboxTab" data-toggle="tab" ng-click="resetViews(); setViewTo(&quot;outbox&quot;)"><span class="entypo">&#128228;</span>{{ui.message.outbox}}</a></li>
+      <li ng-hide="StandBy.resources.role &gt; 1" class="{{(views.notifications==true || views.scheaduler==true) &amp;&amp; 'active'}}"><a href="messages#notificationsTab" data-toggle="tab" ng-click="resetViews(); setViewTo(&quot;notifications&quot;)"><span class="entypo">&#128276;</span>{{ui.message.notifications}}</a></li>
+      <li class="{{(views.trash==true) &amp;&amp; 'active'}}"><a href="messages#trashTab" data-toggle="tab" ng-click="resetViews(); setViewTo(&quot;trash&quot;)"><span class="entypo">&#9749;</span>{{ui.message.trash}}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="composeTab" ng-show="views.compose || views.scheaduler" class="tab-pane {{(views.compose==true || views.scheaduler==true) &amp;&amp; 'active'}}">
+        <div class="tab-header">
+          <h3 class="pull-left"><span ng-hide="views.scheaduler">{{ui.message.composeMessage}}</span><span ng-show="views.scheaduler">{{scheaduled.title | toTitleCase}}</span></h3>
+          <button type="submit" ng-click="(origin==&quot;inbox&quot;); closeTabs()" class="btn btn-default pull-right">{{ui.message.close}}</button>
+        </div>
+        <hr>
+        <form ng-controller="scheaduler">
+          <fieldset>
+            <div class="form-group">
+              <label class="control-label">{{ui.message.broadcast}}</label>
+              <div>
+                <input id="broadcastSmsCheckBox" type="checkbox" ng-model="broadcast.sms" ng-hide="StandBy.resources.role &gt; 2" style="margin: 0 2px 0 0">
+                <label for="broadcastSmsCheckBox"><span ng-hide="StandBy.resources.role &gt; 2">{{ui.message.sms}}</span></label>
+                <input id="broadcastEmailCheckBox" type="checkbox" ng-model="broadcast.email" style="margin: 0 2px 0 10px">
+                <label for="broadcastEmailCheckBox">{{ui.message.email}}</label>
+              </div>
+            </div>
+            <div style="width: 530px" class="form-group">
+              <label class="control-label">{{ui.message.receviers}}</label>
+              <select data-placeholder=" " multiple="multiple" chosen="" ng-model="message.receivers" ng-options="receiver.name group by receiver.group for receiver in receviersList | orderBy:&quot;lastName&quot;" class="chosen-select"></select>
+            </div>
+            <div class="form-group">
+              <label class="control-label">{{ui.message.subject}}</label>
+              <input type="text" ng-model="message.subject" placeholder="{{ui.message.typeSubject}}" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="control-label">{{ui.message.message}}</label>
+              <textarea rows="7" ng-model="message.body" class="form-control"></textarea>
+            </div>
+            <div ng-hide="StandBy.resources.role &gt; 1" class="form-group">
+              <label class="control-label">{{ui.message.repeat}}</label>
+              <div data-toggle="buttons" class="btn-group">
+                <label ng-model="scheaduled.status" ng-click="scheaduled.status = true; addNewOffset()" class="btn btn-sm {{((scheaduled.status) &amp;&amp; 'btn-success active') || 'btn-default'}}">{{ui.message.repeatOn}}
+                  <input type="radio" name="repeatToggle">
+                </label>
+                <label ng-model="scheaduled.status" ng-click="scheaduled.status = false" class="btn btn-default btn-sm {{(!scheaduled.status) &amp;&amp; 'active'}}">{{ui.message.repeatOff}}
+                  <input type="radio" name="repeatToggle">
+                </label>
+              </div>
+            </div>
+            <section id="scheaduler-pane" ng-show="scheaduled.status">
+              <header>
+                <h4>{{ui.message.repeat}}</h4>
+                <div class="pull-right">
+                  <button type="button" ng-click="addNewOffset()" class="btn btn-sm btn-success">{{ui.message.repeatNew}}</button>
+                </div>
+              </header>
+              <hr>
+              <div class="form-group">
+                <label class="control-label">{{ui.message.notificationLabel}}</label>
+                <input type="text" ng-model="scheaduled.title" placeholder="{{ui.message.notificationLabel}}" class="form-control col-md-6">
+              </div>
+              <div ng-hide="scheaduleCount &gt; 0" class="form-group">
+                <label class="control-label">{{ui.message.notifications}}</label>
+                <p class="text-muted"><small><i>{{ui.message.notificationsEmpty}}</i></small></p>
+              </div>
+              <div ng-show="scheaduleCount &gt; 0" class="form-group">
+                <label class="control-label">{{ui.message.notifications}}</label><span style="font-size: 11px" ng-repeat="o in offsets">{{o}}<br></span>
+                <div ng-repeat="offset in scheaduled.offsets">
+                  <notification-item scheadule="offset" remover="remover()"></notification-item>
+                </div>
+              </div>
+            </section>
+            <div class="form-group">
+              <div ng-show="scheaduled.uuid || scheaduled.status">
+                <button type="submit" ng-hide="scheaduleCount &gt; 0" class="btn btn-success disabled">{{ui.message.notificationSave}}</button>
+                <button type="submit" ng-click="scheaduler.save(message, broadcast, scheaduled)" ng-show="scheaduleCount &gt; 0" class="btn btn-success">{{ui.message.notificationSave}}</button>
+              </div>
+              <button type="submit" ng-hide="scheaduled.uuid || scheaduled.status" ng-click="send(message, broadcast)" class="btn btn-success">{{ui.message.sendMessage}}</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div id="viewTab" ng-show="views.message" class="tab-pane {{(views.message==true) &amp;&amp; 'active'}}">
+        <view></view>
+      </div>
+      <div id="inboxTab" class="tab-pane {{(views.inbox==true) &amp;&amp; 'active'}}">
+        <inbox></inbox>
+      </div>
+      <div id="outboxTab" class="tab-pane {{(views.outbox==true) &amp;&amp; 'active'}}">
+        <outbox></outbox>
+      </div>
+      <div id="notificationsTab" class="tab-pane {{(views.notifications==true) &amp;&amp; 'active'}}">
+        <notifications></notifications>
+      </div>
+      <div id="trashTab" class="tab-pane {{(views.trash==true) &amp;&amp; 'active'}}">
+        <trash></trash>
+      </div>
+    </div>
+  </div>
+</div>

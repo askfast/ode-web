@@ -1,0 +1,23 @@
+<div class="widget">
+  <div class="head">
+    <h4>{{ui.dashboard.announcements}}</h4>
+  </div>
+  <hr>
+  <p ng-show="loading.alerts">{{ui.dashboard.loadingP2000}}</p>
+  <ul id="announcements" ng-hide="loading.alerts">
+    <li ng-show="alarms.list.length &lt; 1">{{ui.dashboard.noP2000}}</li>
+    <li ng-repeat="alarm in alarms.list">
+      <table>
+        <tr>
+          <td class="first"><span ng-show="alarm.prio[&quot;1&quot;]" class="prio label label-danger">PRIO 1</span><span ng-show="alarm.prio[&quot;2&quot;]" class="prio label label-warning">PRIO 2</span><span ng-show="alarm.prio[&quot;3&quot;]" class="prio label label-info">PRIO 3</span><span ng-show="alarm.prio.test" class="prio label label-inverse">PROEFALARM</span></td>
+          <td class="last"><span style="margin-bottom: 7px" class="label label-natural">{{alarm.day}} {{alarm.time}}</span><br>{{alarm.body}}</td>
+        </tr>
+        <tr>
+          <td colspan="2"><small><i style="margin-top: -2px; color: #a0a0a0 !important" class="glyphicon glyphicon-bullhorn"></i><i>{{alarm.msgCode}}</i></small></td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+  <hr ng-hide="loading.alerts" class="lastline">
+  <p ng-hide="loading.alerts"><small class="pull-left"><span class="text-warning">{{ui.planboard.lastSyncTime}}</span><span class="text-muted">{{synced.alarms | nicelyDate}}</span></small><br><small class="pull-left"><span class="text-warning">Capcode(s):</span><span class="text-muted">{{capcodes}}</span><span ng-hide="capcodes" class="text-muted">{{StandBy.config.profile.p2000.codes}}</span></small></p>
+</div>

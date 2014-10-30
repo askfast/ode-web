@@ -1,0 +1,8 @@
+<div id="login" ng-show="views.help" ng-hide="views.login || views.forgot || views.changePass" class="boxed">
+  <form class="form-group">
+    <logos></logos>
+    <h4 class="form-signin-heading">{{ui.help.help}}</h4>
+    <p ng-repeat="content in ui.login.help.content" style="text-align: left">{{content}}</p>
+    <p><small><a ng-click="views.help=false; views.login=true">{{ui.login.help.cta}}</a></small></p>
+  </form>
+</div>

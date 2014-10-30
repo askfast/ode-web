@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("trash",function(){return{restrict:"EA",templateUrl:"views/messages/trash.html",link:function(e,t,n){}}})});

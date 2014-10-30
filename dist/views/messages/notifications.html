@@ -1,0 +1,39 @@
+<div class="tab-header">
+  <h3 class="pull-left">{{ui.message.notifications}}</h3>
+</div>
+<hr>
+<p ng-hide="scheadules.length &gt; 0">{{ui.message.notificationsEmpty}}</p>
+<div ng-show="scheadules.length &gt; 0">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th width="60"></th>
+        <th width="50"></th>
+        <th>{{ui.message.notificationHeaderLabel}}</th>
+        <th>{{ui.message.notificationHeaderReceivers}}</th>
+        <th>{{ui.message.notificationHeaderFrequency}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="scheadule in scheadules">
+        <td><span ng-show="scheadule.active" class="label label-success">{{ui.message.enabled}}</span><span ng-hide="scheadule.active" class="label label-default">{{ui.message.disabled}}</span></td>
+        <td class="scheadule-icons">
+          <div><span ng-show="scheadule.sms" class="entypo sms"></span></div>
+          <div><span ng-show="scheadule.mail" class="entypo mail"></span></div>
+        </td>
+        <td><a ng-click="requestNotification(scheadule.uuid)">{{scheadule.label}}</a></td>
+        <td><span class="text-muted"><small><i>{{scheadule.recipients | nicelyAudience}}</i></small></span></td>
+        <td>
+          <div ng-bind-html-unsafe="scheadule.offsets | nicelyOffsets"></div>
+        </td>
+        <td>
+          <div class="pull-right">
+            <button ng-click="requestNotification(scheadule.uuid)" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></button>
+            <button type="submit" ng-click="scheaduler.remove(scheadule.uuid)" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash glyphicon-white"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table><span class="text-muted pull-right"><small><i>{{ui.message.inTotal}}: {{scheadules.length}}</i></small></span>
+</div>

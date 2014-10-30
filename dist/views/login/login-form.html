@@ -1,0 +1,18 @@
+<div id="login" ng-show="views.login" ng-hide="views.help || views.changePass" class="boxed">
+  <form ng-submit="login()" class="form-group">
+    <logos></logos>
+    <h4 ng-show="StandBy.config.profile.own" class="form-signin-heading">{{StandBy.config.profile.title}}</h4>
+    <h4 ng-hide="StandBy.config.profile.own" class="form-signin-heading">{{ui.login.header}}</h4>
+    <div ng-show="alert.login.display" class="alert {{alert.login.type}}">
+      <button type="button" ng-click="alert.login=false" class="close">×</button>{{alert.login.message}}
+    </div>
+    <input type="text" ng-model="logindata.username" placeholder="{{ui.login.placeholder_username}}" autofocus="autofocus" class="form-control">
+    <input type="password" ng-model="logindata.password" placeholder="{{ui.login.placeholder_password}}" class="form-control">
+    <label class="checkbox col-md-3">
+      <input type="checkbox" ng-model="logindata.remember">{{ui.login.label_rememberMe}}
+    </label>
+    <button type="submit" class="btn btn-lg btn-primary">{{ui.login.button_login}}</button>
+    <p><small><a ng-click="views.forgot=true; views.login=false;">{{ui.login.forgot_password}}</a><span>&nbsp;|&nbsp;</span><a ng-click="views.help=true">{{ui.help.help}}</a></small></p>
+    <p><small><a ng-click="changeLanguage(&quot;en&quot;)">English</a><span>&nbsp;|&nbsp;</span><a ng-click="changeLanguage(&quot;nl&quot;)">Nederlands</a></small></p><img src="images/standby_logo_small.7a64879b.png" alt="StandBy Logo" ng-hide="StandBy.config.profile.own"><span class="version"><a href="version.html" target="_blank">StandBy v{{StandBy.config.version}}</a></span>
+  </form>
+</div>

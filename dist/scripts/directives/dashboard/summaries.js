@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("summaries",function(){return{restrict:"EA",templateUrl:"views/dashboard/summaries.html",link:function(e,t,n){}}})});

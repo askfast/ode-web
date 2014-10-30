@@ -1,0 +1,63 @@
+.tab-header
+	h3.pull-left {{ui.message.trash}}
+	.pull-right(style='margin-left: 10px;')
+		button.btn.btn-danger.pull-left(type='button', ng-click='emptyTrash()')
+			i.glyphicon.glyphicon-trash.glyphicon-white
+			| &nbsp;{{ui.message.emptyTrash}}
+	form.pull-right
+		input.form-control.search-query(type='text',
+		placeholder='{{ui.message.filterMessages}}',
+		ng-model='query.trash')
+hr
+p(ng-hide='(messages.trash[page.trash] | filter:query.trash).length > 0')
+	| {{ui.message.noMsgInTrash}}
+div(ng-show='(messages.trash[page.trash] | filter:query.trash).length > 0')
+	table.table.table-striped
+		thead
+			tr
+				th
+					input(type='checkbox',
+					ng-model='selectionMaster.trash',
+					ng-click='toggleSelection(messages.trash[page.trash], "trash", selectionMaster.trash)')
+				th(width='60') {{ui.message.box}}
+				th {{ui.message.persons}}
+				th {{ui.message.subject}}
+				th {{ui.message.date}}
+				th
+		tbody
+			tr(ng-repeat='message in messages.trash[page.trash] | filter:query.trash | orderBy:"creationTime":true')
+				td
+					input(type='checkbox',
+					ng-model='selection.trash[message.uuid]',
+					ng-checked='selection.trash[message.uuid]')
+				td
+					span.label.label-default {{message.box}}
+				td
+					span(ng-repeat='receiver in message.responder')
+						a(href='#/profile/{{receiver | convertEve}}#profile')
+							| {{receiver | convertEve | convertUserIdToName}}
+				td
+					a(ng-click='requestMessage(message.uuid, "trash")') {{message.subject}}
+				td {{message.creationTime | nicelyDate}}
+				td
+					.pull-right
+						button.btn.btn-success.btn-xs(type='submit', ng-click='restoreMessage(message.uuid)')
+							i.glyphicon.glyphicon-thumbs-up.glyphicon-white
+	button.btn.btn-sm.btn-success.pull-left(type='button', ng-click='restoreMessages(selection.trash)')
+		i.glyphicon.glyphicon-thumbs-up.glyphicon-white
+		| {{ui.message.restoreSelected}}
+	.btn-toolbar.pull-right(style='margin: 0;')
+		.btn-group
+			button.btn.btn-default.btn-sm(ng-click='paginate.before("trash")',
+			class="{{(page.trash==0) && 'disabled'}}")
+				| « {{ui.message.paginationPrevious}}
+			button.btn.btn-default.btn-sm(ng-click='paginate.next("trash")',
+			class="{{(page.trash + 1 == messages.trash.length) && 'disabled'}}")
+				| {{ui.message.paginationNext}} »
+	br
+	br
+	span.text-muted.pull-right
+		small
+			i
+				| {{ui.message.paginationPage}}: {{page.trash + 1}} {{ui.message.paginationOf}}
+				| {{messages.trash.length}}, {{ui.message.paginationInTotal}}: {{messages.trash | countBox}}
