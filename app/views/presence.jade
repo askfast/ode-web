@@ -3,10 +3,10 @@ section#dashboard(style='margin-top: -20px;')
 		#availabilities.sa.widget.col-md-12
 			div.head
 				h4
-					| Aanwezig
+					| {{ui.presence.present}}
 			div(ng-show='loadingPresence')
 				hr
-				p Aanwezigheid aan het laden...
+				p {{ui.presence.loading}}
 			section(ng-hide='loadingPresence')
 				div(ng-repeat="group in present")
 					hr

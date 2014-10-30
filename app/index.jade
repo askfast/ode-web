@@ -56,11 +56,11 @@ block navbar
 									a(href='#settings')
 										i.glyphicon.glyphicon-wrench
 										| &nbsp;{{ui.settings.settings}}
-								li.divider
-								li
+								li.divider(ng-show='StandBy.config.profile.presence')
+								li(ng-show='StandBy.config.profile.presence')
 									a(href='#presence')
 										i.glyphicon.glyphicon-flag
-										| &nbsp;Aanwezigheid
+										| &nbsp;{{ui.presence.presence}}
 								li.divider
 								li
 									a(href='#logout')

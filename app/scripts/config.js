@@ -28,6 +28,7 @@ define(
         sublogin: (profile.sublogo ? 'scripts/profiles/' + profile.meta + '/img/' + profile.sublogo : ''),
         app: ''
       },
+      presence: profile.presence,
       background: 'scripts/profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000: profile.p2000,
       mobileApp: profile.mobileApp,

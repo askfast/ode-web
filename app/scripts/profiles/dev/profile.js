@@ -9,6 +9,8 @@ var profile = {
 
   title: 'Development',
 
+  presence: true,
+
   host: function ()
   {
      return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com';
