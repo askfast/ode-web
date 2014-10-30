@@ -557,7 +557,7 @@ define(['services/services', 'config'], function (services, config) {
           angular.forEach(
             Store('network').get('group.'+group.uuid),
             function (member) {
-              if (member.resources.role != 0 && member.resources.role != 4) {
+              if (member.resources && member.resources.role != 0 && member.resources.role != 4) {
                 members[member.uuid] = member;
               }
             }
