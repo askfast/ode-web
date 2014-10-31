@@ -90,18 +90,18 @@ define(
           }
 
           $scope.checkPresence = function () {
-            var _members = Store('network').get('unique');
-            var members = $scope.availability.members.available;
+            var members = Store('network').get('unique');
+            // var members = $scope.availability.members.available;
             var present = [];
 
             _.each(members, function(member){
-              _.each(_members,function(_member){
-                if (member.uuid === _member.uuid) {
-                  member.resources = _member.resources;
-                }
-              });
-              if (member.resources){
-              // if (member.resources && member.resources.currentPresence){
+              // _.each(_members,function(_member){
+              //   if (member.uuid === _member.uuid) {
+              //     member.resources = _member.resources;
+              //   }
+              // });
+              // if (member.resources){
+              if (member.resources && member.resources.currentPresence){
                 // console.log(member.name + " is present");
                 // console.log("Presence = " + member.resources.currentPresence.toString());
                 member.resources.groups = Groups.getMemberGroups(member.uuid);
