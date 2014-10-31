@@ -9,6 +9,8 @@ var profile = {
 
   title: 'Falck',
 
+  presence: true,
+
   showBackground: false,
 
   //sublogo: 'falck_logo.png',

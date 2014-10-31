@@ -392,6 +392,12 @@ define(
           expiresOn: 'expires on',
           addCertificate: 'Add certificate'
         },
+        presence: {
+          presence: 'Presence',
+          present: 'Present',
+          absent: 'Absent',
+          loading: 'Loading presence...'
+        },
         settings: {
           settings: 'Settings',
           user: 'User',
@@ -923,6 +929,12 @@ define(
           certificate: 'Certificaat',
           expiresOn: 'verloopt op',
           addCertificate: 'Certificaat toevoegen'
+        },
+        presence: {
+          presence: 'Aanwezigheid',
+          present: 'Aanwezig',
+          absent: 'Afwezig',
+          loading: 'Aanwezigheid aan het laden...'
         },
         settings: {
           settings: 'Instellingen',
