@@ -2,11 +2,11 @@
   <div class="row">
     <div id="availabilities" class="sa widget col-md-12">
       <div class="head">
-        <h4>Aanwezig</h4>
+        <h4>{{ui.presence.present}}</h4>
       </div>
       <div ng-show="loadingPresence">
         <hr>
-        <p>Aanwezigheid aan het laden...</p>
+        <p>{{ui.presence.loading}}</p>
       </div>
       <section ng-hide="loadingPresence">
         <div ng-repeat="group in present">

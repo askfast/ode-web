@@ -2,14 +2,6 @@
   <div class="page-header">
     <h2>Dashboard</h2>
   </div><br>
-  <smart-alarming></smart-alarming>
   <snapshots></snapshots>
-  <div class="row">
-    <article class="{{(!browser.mobile) &amp;&amp; 'col-sm-9' || 'col-sm-12'}}">
-      <summaries></summaries>
-    </article>
-    <article ng-show="StandBy.config.profile.p2000.status" class="{{(!browser.mobile) &amp;&amp; 'col-sm-3' || 'col-sm-12'}}">
-      <alarms></alarms>
-    </article>
-  </div>
+  <summaries></summaries>
 </section>

@@ -13,7 +13,7 @@
   <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/apple-touch-icon-72-precomposed.png">
   <link rel="apple-touch-icon-precomposed" href="icons/apple-touch-icon-57-precomposed.png">
   <link rel="shortcut icon" href="icons/favicon.png">
-  <link rel="stylesheet" href="styles/main.3d4da0a2.css">
+  <link rel="stylesheet" href="styles/main.12970c48.css">
 </head>
 <body><!--[if lt IE 7]>
   <p class="browserupgrade">You are using an<strong>outdated</strong>browser. Please<a href="http://browsehappy.com/">upgrade your browser today</a>to better experience this site.</p><![endif]-->
@@ -31,19 +31,16 @@
         <ul class="nav navbar-nav">
           <li data-match-route="/dashboard"><a href="#dashboard" ng-click="collapseNav()">Dashboard</a></li>
           <li data-match-route="/planboard"><a href="#planboard">Agenda</a></li>
-          <li data-match-route="/messages"><a href="#messages">{{ui.message.messages}} &nbsp;<span ng-show="(StandBy.unreadMessages &gt; 0)" class="badge badge-success">{{StandBy.unreadMessages}}</span></a></li>
           <li data-match-route="/groups" ng-hide="StandBy.resources.role &gt; 1"><a href="#groups">{{ui.groups.groups}}</a></li>
+          <li data-match-route="/logs"><a href="#logs">Logs</a></li>
         </ul>
         <ul ng-hide="browser.mobile" class="nav navbar-nav navbar-right">
           <li ng-show="StandBy.location.length &gt; 0"><a><i>: Locatie: {{StandBy.location}}</i></a></li>
-          <li><a href="#faq#web"><i class="glyphicon glyphicon-question-sign glyphicon-white"></i>&nbsp;FAQ</a></li>
-          <li><a href="#help#{{location}}"><i class="glyphicon glyphicon-info-sign glyphicon-white"></i>&nbsp;Handleiding</a></li>
           <li class="dropdown"><a href="" data-toggle="dropdown" class="dropdown-toggle"><i class="glyphicon glyphicon-user glyphicon-white"></i>&nbsp;{{StandBy.resources.name}}&nbsp;<span ng-show="StandBy.resources.role == 0">[SU]&nbsp;</span><b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="#profile"><i class="glyphicon glyphicon-user"></i>&nbsp;{{ui.profile.profile}}</a></li>
-              <li><a href="#settings"><i class="glyphicon glyphicon-wrench"></i>&nbsp;{{ui.settings.settings}}</a></li>
-              <li class="divider"></li>
-              <li><a href="#presence"><i class="glyphicon glyphicon-flag"></i>&nbsp;Aanwezigheid</a></li>
+              <li ng-show="StandBy.config.profile.presence" class="divider"></li>
+              <li ng-show="StandBy.config.profile.presence"><a href="#presence"><i class="glyphicon glyphicon-flag"></i>&nbsp;{{ui.presence.presence}}</a></li>
               <li class="divider"></li>
               <li><a href="#logout"><i class="glyphicon glyphicon-off"></i>&nbsp;{{ui.login.logout}}</a></li>
             </ul>
@@ -97,16 +94,7 @@
       <div id="copyrights">
         <div id="download-footer">
           <ul>
-            <li ng-show="StandBy.config.profile.mobileApp.status">
-              <div class="btn-group dropup">
-                <button data-toggle="dropdown" class="btn btn-success dropdown-toggle">Download mobiele app</button>
-                <ul class="dropdown-menu pull-right">
-                  <li ng-show="StandBy.config.profile.mobileApp.android"><a ng-href="{{StandBy.config.profile.mobileApp.android}}" target="_blank">Download Android App</a></li>
-                  <li ng-show="StandBy.config.profile.mobileApp.ios"><a ng-href="{{StandBy.config.profile.mobileApp.ios}}" target="itunes_store">Download iPhone App</a></li>
-                </ul>
-              </div>
-            </li>
-            <li><img src="images/standby_logo_footer.8c0f6e53.png" alt="StandBy Logo"></li>
+            <li><img src="images/standby_logo_footer.cc0a229a.png" alt="StandBy Logo"></li>
             <li><span class="text-muted footer-text"><small>Ask Community Systems, 2013 &nbsp; | &nbsp;&nbsp;<i><a href="versions.html" target="_blank" style="color: #dddddd">StandBy v{{StandBy.config.version}}</a></i></small></span></li>
           </ul>
         </div>
@@ -114,7 +102,7 @@
       <p ng-show="loading.status" class="text-muted footer-text"><img src="images/ajax-loader.d292bf3f.gif"><small><span ng-show="app.preloader.status">{{app.preloader.count}}%</span>{{loading.message}}</small></p>
     </div>
   </div>
-  <script data-main="scripts/main.8399beaa" src="vendors/requirejs/require.js"></script>
+  <script data-main="scripts/main.3589842d" src="vendors/requirejs/require.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

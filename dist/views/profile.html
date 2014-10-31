@@ -38,8 +38,6 @@
               </tr>
             </table>
           </dd>
-          <dt>{{ui.profile.pagerId}}</dt>
-          <dd>{{(data.resources.pagerId == '') && '-' || data.resources.pagerId}}</dd>
           <div ng-show="StandBy.config.profile.profilePage.editCertificates" class="certificates-container"></div>
           <dt>{{ui.profile.certificates}}</dt>
           <dd ng-hide="data.resources.certificates.length &gt; 0">-</dd>
@@ -83,8 +81,9 @@
           </div>
           <div class="row">
             <div ng-hide="StandBy.resources.role &gt; 1" class="form-group col-sm-5">
-              <label style="width: 530px">Groups</label>
-              <select data-placeholder=" " multiple="multiple" chosen="" ng-model="userGroups" ng-options="group.name for group in availableGroups" ng-change="detectChanges()" class="chosen-select"></select>
+              <label style="width: 530px">Groups
+                <select data-placeholder=" " multiple="multiple" chosen="" ng-model="userGroups" ng-options="group.name for group in availableGroups" ng-change="detectChanges()" class="chosen-select"></select>
+              </label>
             </div>
           </div>
           <div class="row">
@@ -154,14 +153,6 @@
               </div>
               <p ng-hide="profilePhoneNumberParsed[3].result" class="text-danger"><small><i>{{profilePhoneNumberParsed[3].message}}</i></small></p>
               <p ng-show="profilePhoneNumberParsed[3].result" class="text-success"><small><i>{{profilePhoneNumberParsed[3].message}}</i></small></p>
-            </div>
-          </div>
-          <div class="row">
-            <div ng-show="StandBy.resources.role &lt;= 1" class="form-group col-sm-6">
-              <label>{{ui.profile.pagerId}}</label>
-              <div class="controls">
-                <input type="text" ng-model="profilemeta.pagerId" value="{{data.resources.pagerId}}" class="form-control">
-              </div>
             </div>
           </div>
           <div ng-show="StandBy.config.profile.profilePage.editCertificates" class="row">
