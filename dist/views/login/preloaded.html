@@ -1,0 +1,19 @@
+<div id="preloader">
+  <logos></logos>
+  <h4>{{ui.login.setting_up_app}}</h4>
+  <div class="progress">
+    <div class="progress-bar-striped active progress-bar"></div>
+  </div><span class="text-muted"></span>
+</div>
+<div id="locations" class="boxed">
+  <logos></logos>
+  <h4 class="form-signin-heading">Locaties</h4>
+  <form>
+    <div class="form-group">
+      <select ng-model="location" ng-options="location for location in locations" class="form-control">
+        <option value="">-- Alle locaties --</option>
+      </select>
+    </div>
+  </form>
+  <button ng-click="setLocation(location)" class="btn btn-success dropdown-toggle">Ga door met app</button>
+</div>

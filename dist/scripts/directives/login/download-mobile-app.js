@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("downloadMobileApp",function(){return{restrict:"E",rep1ace:!0,templateUrl:"views/login/download-mobile-app.html",link:function(e,t,n){e.upwards=$.browser.mobile&&$.browser.screen.width<768,$.browser.mozilla&&$.browser.version=="11.0"&&angular.element(".download-button").css({paddingLeft:"25px"})}}})});

@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("loginHelp",function(){return{restrict:"EA",templateUrl:"views/login/login-help.html",link:function(e,t,n){}}})});

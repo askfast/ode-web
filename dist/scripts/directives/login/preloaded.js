@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("preloaded",function(){return{restrict:"EA",templateUrl:"views/login/preloaded.html",link:function(e,t,n){}}})});

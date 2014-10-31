@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("alarms",function(){return{restrict:"EA",templateUrl:"views/dashboard/alarms.html",link:function(e,t,n){}}})});

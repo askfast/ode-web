@@ -299,3 +299,4 @@ release Live release for 120G 5-6-2013
 ## Changes in libraries
 	timepicker.js
 		* showMeridian property in libs/bootstrap-timepicker/timepicker.js changed to false for display in 24 hours clock.
+

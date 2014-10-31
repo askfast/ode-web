@@ -1,0 +1,25 @@
+<div class="tab-header">
+  <h3 class="pull-left">{{message.subject}}</h3>
+  <div class="pull-right">
+    <button type="button" ng-click="closeTabs()" class="btn btn-default">{{ui.message.close}}</button>
+  </div>
+</div>
+<hr>
+<dl>
+  <dt>{{ui.message.sender}}</dt>
+  <dd><a href="#/profile/{{message.requester|convertEve}}#profile">{{message.requester|convertEve|convertUserIdToName}}</a></dd>
+  <dt>{{ui.message.receviers}}</dt>
+  <dd><span ng-repeat="receiver in message.responder"><a href="#/profile/{{receiver|convertEve}}#profile">{{receiver|convertEve|convertUserIdToName}}</a></span></dd>
+  <dt>{{ui.message.date}}</dt>
+  <dd>{{message.creationTime | nicelyDate}}</dd>
+  <dt>{{ui.message.questionText}}</dt>
+  <dd>{{message.question_text}}</dd>
+</dl>
+<form>
+  <fieldset>
+    <div class="form-actions">
+      <button type="button" ng-click="reply(message)" class="btn btn-success">{{ui.message.reply}}</button>
+      <button type="button" ng-click="removeMessage(message.uuid)" class="btn btn-danger">{{ui.message.del}}</button>
+    </div>
+  </fieldset>
+</form>

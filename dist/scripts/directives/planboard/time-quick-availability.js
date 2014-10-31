@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("timeQuickAvailability",function(){return{restrict:"EA",templateUrl:"views/planboard/time-quick-availability.html",link:function(e,t,n){}}})});

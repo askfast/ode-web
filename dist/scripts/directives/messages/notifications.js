@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("notifications",function(){return{restrict:"EA",templateUrl:"views/messages/notifications.html",link:function(e,t,n){}}})});

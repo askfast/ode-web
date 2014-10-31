@@ -1,3 +1,2 @@
-## StandBy Web
-
-v2.6.0-SNAPSHOT
+# StandBy
+(Running on web-foundation)

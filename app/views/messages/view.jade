@@ -1,0 +1,27 @@
+.tab-header
+	h3.pull-left {{message.subject}}
+	.pull-right
+		button.btn.btn-default(type='button', ng-click='closeTabs()')
+			| {{ui.message.close}}
+hr
+dl
+	dt {{ui.message.sender}}
+	dd
+		a(href='#/profile/{{message.requester|convertEve}}#profile')
+			| {{message.requester|convertEve|convertUserIdToName}}
+	dt {{ui.message.receviers}}
+	dd
+		span(ng-repeat='receiver in message.responder')
+			a(href='#/profile/{{receiver|convertEve}}#profile')
+				| {{receiver|convertEve|convertUserIdToName}}
+	dt {{ui.message.date}}
+	dd {{message.creationTime | nicelyDate}}
+	dt {{ui.message.questionText}}
+	dd {{message.question_text}}
+form
+	fieldset
+		.form-actions
+			button.btn.btn-success(type='button', ng-click='reply(message)')
+				| {{ui.message.reply}}
+			button.btn.btn-danger(type='button', ng-click='removeMessage(message.uuid)')
+				| {{ui.message.del}}

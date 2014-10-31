@@ -1,0 +1,104 @@
+<section id="planboard" ng-controller="timeline">
+  <div class="page-header">
+    <h2>{{ui.planboard.planboard}}</h2>
+    <time-quick-availability></time-quick-availability>
+  </div>
+  <time-travel></time-travel>
+  <time-slot></time-slot>
+  <div>
+    <div class="tabbable tabs-left">
+      <ul style="margin-right: 0px" class="nav nav-tabs nav-tabs-app">
+        <li class="active"><a href="planboard#timelineTab" data-toggle="tab" ng-click="destroy.statistics();"><span class="entypo">&#128340;</span>{{ui.planboard.timeline}}</a></li>
+        <li><a href="planboard#statisticsTab" data-toggle="tab" ng-click="destroy.timeline();"><span class="entypo">&#128200;</span>{{ui.planboard.statistics}}</a></li>
+      </ul>
+      <div class="tab-content">
+        <!-- timeline-->
+        <div id="timelineTab" class="tab-pane active">
+          <div id="timeline">
+            <time-toolbar></time-toolbar>
+            <hr>
+            <!-- alert-window-->
+            <div ng-show="registeredNotifications.timeLineDragging" class="alert alert-warning">
+              <button type="button" ng-click="registerNotification(&quot;timeLineDragging&quot;, false)" data-dismiss="alert" class="close">×</button><small>U kunt ook uw<strong><i>beschikbaarheid wijzigen</i></strong>door te
+                dubbelklikken op reeds bestaande blokken of<strong><i>door te slepen</i></strong>met uw muis met de linkermuisknop en de<strong>SHIFT (Mac)</strong>of<strong>CTRL (Windows)</strong>knop tegelijkertijd ingedrukt.</small>
+            </div>
+            <time-legends ng-show="timeline.config.legendarer"></time-legends>
+            <div id="mainTimeline"></div>
+          </div>
+          <hr>
+          <p><small class="pull-left"><span class="text-warning">{{ui.planboard.lastSyncTime}}</span><span class="text-muted">&nbsp; {{data.synced | nicelyDate}}</span></small><small class="pull-right"><span class="text-warning">{{ui.planboard.dataRangeStart}}</span><span class="text-muted">{{data.periods.start | nicelyDate}}</span>&nbsp;&nbsp;| &nbsp;<span class="text-warning">{{ui.planboard.dataRangeEnd}}</span><span class="text-muted">{{data.periods.end | nicelyDate}}</span></small></p>
+        </div>
+        <!-- statistics-->
+        <div id="statisticsTab" class="tab-pane">
+          <!-- time-toolbar-->
+          <div id="timeline-toolbar">
+            <div class="pull-left">
+              <select ng-model="timeline.current.group" ng-options="group.uuid as group.name for group in groups" ng-selected="timeline.current.group" ng-change="requestTimeline()" class="form-control"></select>
+              <select ng-model="timeline.current.division" ng-options="division.id as division.label for division in divisions" ng-selected="timeline.current.division" ng-change="changeDivision()" ng-show="divisions.length &gt; 0" class="form-control"></select>
+            </div>
+            <div class="pull-right">
+              <div class="btn-group">
+                <button type="button" ng-model="timeline.current.layouts.group" ng-click="requestTimeline(&quot;group&quot;)" class="btn btn-default {{(timeline.current.layouts.group==true) &amp;&amp; 'active'}}">{{ui.planboard.group}}</button>
+                <button type="button" ng-model="timeline.current.layouts.members" ng-click="requestTimeline(&quot;members&quot;)" ng-show="(StandBy.resources.role &lt; 3) || timeline.config.layouts.members" class="btn btn-default {{(timeline.current.layouts.members==true) &amp;&amp; 'active'}}">{{ui.planboard.members}}</button>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <time-legends></time-legends>
+          <div id="stats">
+            <div id="groupStats" ng-repeat="agg in data.aggs">
+              <div ng-show="groupPieHide[agg.division.id] || (timeline.current.division == &quot;all&quot;)">
+                <div id="groupPie-{{agg.division.id}}" class="groupPies"></div>
+                <div class="groupStatInfo">
+                  <h3>{{agg.id | groupIdToName | toTitleCase}}<span ng-hide="!agg.division.label">  ({{ agg.division.label }})</span></h3>
+                  <hr>
+                  <ul>
+                    <li>
+                      <div class="ratios more"><span class="ratio">{{agg.ratios.more}}</span><span class="percentage">%</span></div>
+                      <div class="info">
+                        <h4>{{ui.planboard.statPeopleMore}}</h4>
+                        <h5>{{agg.durations.more | calculateTimeInDays}}</h5><small class="text-muted">{{ui.planboard.statDays}}</small>,
+                        <h5>{{agg.durations.more | calculateTimeInHours}}</h5><small class="text-muted">{{ui.planboard.statHours}}</small>,
+                        <h5>{{agg.durations.more | calculateTimeInMinutes}}</h5><small class="text-muted">{{ui.planboard.statMinutes}}</small>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="ratios even"><span class="ratio">{{agg.ratios.even}}</span><span class="percentage">%</span></div>
+                      <div class="info">
+                        <h4>{{ui.planboard.statPeopleEven}}</h4>
+                        <h5>{{agg.durations.even | calculateTimeInDays}}</h5><small class="text-muted">{{ui.planboard.statDays}}</small>,
+                        <h5>{{agg.durations.even | calculateTimeInHours}}</h5><small class="text-muted">{{ui.planboard.statHours}}</small>,
+                        <h5>{{agg.durations.even | calculateTimeInMinutes}}</h5><small class="text-muted">{{ui.planboard.statMinutes}}</small>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="ratios less"><span class="ratio">{{agg.ratios.less}}</span><span class="percentage">%</span></div>
+                      <div class="info">
+                        <h4>{{ui.planboard.statPeopleLess}}</h4>
+                        <h5>{{agg.durations.less | calculateTimeInDays}}</h5><small class="text-muted">{{ui.planboard.statDays}}</small>,
+                        <h5>{{agg.durations.less | calculateTimeInHours}}</h5><small class="text-muted">{{ui.planboard.statHours}}</small>,
+                        <h5>{{agg.durations.less | calculateTimeInMinutes}}</h5><small class="text-muted">{{ui.planboard.statMinutes}}</small>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div id="memberBars">
+              <ul>
+                <li ng-repeat="member in data.members">
+                  <h4>{{member.id | convertUserIdToName}}</h4>
+                  <div class="progress">
+                    <div ng-repeat="stat in member.stats" ng-style="{ &quot;width&quot;: stat.ratio + &quot;%&quot; }" class="progress-bar {{stat.state}}"></div>
+                  </div><small class="text-muted">{{member.stats | convertRatios}}</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <hr>
+          <p><small class="pull-left"><span class="text-warning">{{ui.planboard.lastSyncTime}}</span><span class="text-muted">&nbsp; {{data.synced | nicelyDate}}</span></small><small class="pull-right"><span class="text-warning">{{ui.planboard.dataRangeStart}}</span><span class="text-muted">{{data.periods.start | nicelyDate}}</span>&nbsp;&nbsp;| &nbsp;<span class="text-warning">{{ui.planboard.dataRangeEnd}}</span><span class="text-muted">{{data.periods.end | nicelyDate}}</span></small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,1 @@
+define(["directives/directives"],function(e){e.directive("loginForm",function(){return{restrict:"EA",templateUrl:"views/login/login-form.html",link:function(e,t,n){}}})});

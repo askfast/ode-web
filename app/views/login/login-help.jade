@@ -1,0 +1,11 @@
+#login.boxed(ng-show='views.help',
+ng-hide='views.login || views.forgot || views.changePass')
+	form.form-group
+		logos
+		h4.form-signin-heading {{ui.help.help}}
+		p(ng-repeat='content in ui.login.help.content',
+		style='text-align: left;')
+			| {{content}}
+		p
+			small: a(ng-click='views.help=false; views.login=true')
+				| {{ui.login.help.cta}}

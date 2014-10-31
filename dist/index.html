@@ -1,0 +1,126 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>StandBy Web</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="icons/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="icons/favicon.png">
+  <link rel="stylesheet" href="styles/main.3d4da0a2.css">
+</head>
+<body><!--[if lt IE 7]>
+  <p class="browserupgrade">You are using an<strong>outdated</strong>browser. Please<a href="http://browsehappy.com/">upgrade your browser today</a>to better experience this site.</p><![endif]-->
+  <!--[if lt IE 9]>
+  <script src="vendors/es5-shim/es5-shim.min.js"></script>
+  <script src="vendors/es5-shim/es5-sham.min.js"></script>
+  <script src="vendors/json3/lib/json3.min.js"></script><![endif]-->
+  <div id="watermark"></div>
+  <div ng-hide="(location==&quot;login&quot; || location==&quot;forgotpass&quot; || location==&quot;register&quot;)" bs-navbar="" class="navbar navbar-inverse navbar-fixed-top ng-cloak">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="#dashboard" class="navbar-brand">{{StandBy.config.profile.title}}</a>
+      </div>
+      <div id="collapsed" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li data-match-route="/dashboard"><a href="#dashboard" ng-click="collapseNav()">Dashboard</a></li>
+          <li data-match-route="/planboard"><a href="#planboard">Agenda</a></li>
+          <li data-match-route="/messages"><a href="#messages">{{ui.message.messages}} &nbsp;<span ng-show="(StandBy.unreadMessages &gt; 0)" class="badge badge-success">{{StandBy.unreadMessages}}</span></a></li>
+          <li data-match-route="/groups" ng-hide="StandBy.resources.role &gt; 1"><a href="#groups">{{ui.groups.groups}}</a></li>
+        </ul>
+        <ul ng-hide="browser.mobile" class="nav navbar-nav navbar-right">
+          <li ng-show="StandBy.location.length &gt; 0"><a><i>: Locatie: {{StandBy.location}}</i></a></li>
+          <li><a href="#faq#web"><i class="glyphicon glyphicon-question-sign glyphicon-white"></i>&nbsp;FAQ</a></li>
+          <li><a href="#help#{{location}}"><i class="glyphicon glyphicon-info-sign glyphicon-white"></i>&nbsp;Handleiding</a></li>
+          <li class="dropdown"><a href="" data-toggle="dropdown" class="dropdown-toggle"><i class="glyphicon glyphicon-user glyphicon-white"></i>&nbsp;{{StandBy.resources.name}}&nbsp;<span ng-show="StandBy.resources.role == 0">[SU]&nbsp;</span><b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#profile"><i class="glyphicon glyphicon-user"></i>&nbsp;{{ui.profile.profile}}</a></li>
+              <li><a href="#settings"><i class="glyphicon glyphicon-wrench"></i>&nbsp;{{ui.settings.settings}}</a></li>
+              <li class="divider"></li>
+              <li><a href="#presence"><i class="glyphicon glyphicon-flag"></i>&nbsp;Aanwezigheid</a></li>
+              <li class="divider"></li>
+              <li><a href="#logout"><i class="glyphicon glyphicon-off"></i>&nbsp;{{ui.login.logout}}</a></li>
+            </ul>
+          </li>
+          <li id="fullscreener" ng-show="StandBy.config.fullscreen &amp;&amp; browser.webkit"><a ng-click="fullScreen()"><i class="glyphicon glyphicon-fullscreen glyphicon-white"></i></a></li>
+        </ul>
+        <ul ng-show="browser.mobile" style="{{(browser.landscape) &amp;&amp; &quot;margin-right:-20px&quot;}}; display:none" class="nav navbar-nav navbar-right">
+          <li><a href="#profile"><i ng-hide="browser.portrait || browser.screen.width &lt; 768" class="glyphicon glyphicon-user glyphicon-white"></i><span ng-show="browser.portrait || browser.screen.width &lt; 768"></span></a></li>
+          <li><a href="#settings"><i ng-hide="browser.portrait || browser.screen.width &lt; 768" class="glyphicon glyphicon-wrench glyphicon-white"></i><span ng-show="browser.portrait || browser.screen.width &lt; 768"></span></a></li>
+          <li><a href="#logout"><i ng-hide="browser.portrait || browser.screen.width &lt; 768" class="glyphicon glyphicon-off glyphicon-white"></i><span ng-show="browser.portrait || browser.screen.width &lt; 768"></span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="loading" ng-show="loadingBig" class="ng-cloak">
+    <div ng-show="loaderIcons.general"><span class="entypo">&#9203;</span>
+      <p>{{ui.loading.general}}...</p>
+    </div>
+    <div ng-show="loaderIcons.dashboard"><span class="entypo">&#9716;</span>
+      <p>{{ui.loading.general}} {{ui.loading.dashboard}}</p>
+    </div>
+    <div ng-show="loaderIcons.planboard"><span class="entypo">&#128340;</span>
+      <p>{{ui.loading.general}} {{ui.loading.planboard}}</p>
+    </div>
+    <div ng-show="loaderIcons.messages"><span class="entypo">&#59255;</span>
+      <p>{{ui.loading.general}} {{ui.loading.messages}}</p>
+    </div>
+    <div ng-show="loaderIcons.groups"><span class="entypo">&#128101;</span>
+      <p>{{ui.loading.general}} {{ui.loading.groups}}</p>
+    </div>
+    <div ng-show="loaderIcons.profile"><span class="entypo">&#128100;</span>
+      <p>{{ui.loading.general}} {{ui.loading.profile}}</p>
+    </div>
+    <div ng-show="loaderIcons.settings"><span class="entypo">&#9874;</span>
+      <p>{{ui.loading.general}} {{ui.loading.settings}}</p>
+    </div>
+  </div>
+  <div id="notification" ng-show="notification.status" class="alert ng-cloak {{notification.type}}">
+    <button type="button" ng-click="notification.status = false" class="close">×</button><span ng-hide="notification.confirm">{{notification.message}}</span><span ng-show="notification.confirm">{{ui.confirms.remove}}
+      <button ng-click="fireDeleteRequest(notification.options)" class="btn btn-xs btn-danger">Delete</button></span>
+  </div>
+  <div id="wrap">
+    <div class="container-fluid">
+      <div ng-view=""></div>
+    </div>
+    <div id="push"></div>
+  </div>
+  <div id="mobile-status-bar" ng-show="loading.status &amp;&amp; browser.mobile" class="ng-cloak"><img src="images/ajax-loader.d292bf3f.gif"><small>{{loading.message}}</small></div>
+  <div id="footer" ng-hide="browser.mobile" class="ng-cloak">
+    <div class="container-fluid">
+      <div id="copyrights">
+        <div id="download-footer">
+          <ul>
+            <li ng-show="StandBy.config.profile.mobileApp.status">
+              <div class="btn-group dropup">
+                <button data-toggle="dropdown" class="btn btn-success dropdown-toggle">Download mobiele app</button>
+                <ul class="dropdown-menu pull-right">
+                  <li ng-show="StandBy.config.profile.mobileApp.android"><a ng-href="{{StandBy.config.profile.mobileApp.android}}" target="_blank">Download Android App</a></li>
+                  <li ng-show="StandBy.config.profile.mobileApp.ios"><a ng-href="{{StandBy.config.profile.mobileApp.ios}}" target="itunes_store">Download iPhone App</a></li>
+                </ul>
+              </div>
+            </li>
+            <li><img src="images/standby_logo_footer.8c0f6e53.png" alt="StandBy Logo"></li>
+            <li><span class="text-muted footer-text"><small>Ask Community Systems, 2013 &nbsp; | &nbsp;&nbsp;<i><a href="versions.html" target="_blank" style="color: #dddddd">StandBy v{{StandBy.config.version}}</a></i></small></span></li>
+          </ul>
+        </div>
+      </div>
+      <p ng-show="loading.status" class="text-muted footer-text"><img src="images/ajax-loader.d292bf3f.gif"><small><span ng-show="app.preloader.status">{{app.preloader.count}}%</span>{{loading.message}}</small></p>
+    </div>
+  </div>
+  <script data-main="scripts/main.8399beaa" src="vendors/requirejs/require.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-44867560-2');
+    ga('send', 'pageview');
+  </script>
+</body></html>
