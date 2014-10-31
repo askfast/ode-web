@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('dashboard', function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Settings, Profile, Groups, Announcer, $timeout, Store) {
+  controllers.controller('dashboard', function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Settings, Profile, Groups, Announcer, Network, $timeout, Store) {
     $rootScope.notification.status = false;
 
     $rootScope.fixStyles();
@@ -52,6 +52,92 @@ define(['controllers/controllers'], function (controllers) {
         filteredGroups.push(group);
       }
     });
+
+    var groupOrder = ["Hoofd BHV","BHV Ploegleider","BHV'er","EHBO'er"];
+
+    $scope.loadingPresence = true;
+
+    var presencePerGroup = function (present) {
+      var presentGroups = {};
+      var sortedGroups = [];
+      var otherGroups = [];
+
+      _.each(present, function (member){
+        if (!member.resources.groups) {
+            if (typeof presentGroups["ungrouped"] == 'undefined'){
+              presentGroups["ungrouped"] = [];
+            }
+
+            presentGroups["ungrouped"].push(member);
+        }
+        else {
+          _.each(groups, function (group){
+            if (member.resources.groups[0].uuid === group.uuid){
+              if (typeof presentGroups[group.name] == 'undefined'){
+                presentGroups[group.name] = [];
+              }
+
+              member.resources.groups[0].name = group.name;
+
+              presentGroups[group.name].push(member);
+            }
+          });
+        }
+      });
+
+      _.each(presentGroups, function (group, name){
+        if (groupOrder.indexOf(name) !== -1) {
+          sortedGroups[groupOrder.indexOf(name)] = group;
+        }
+        else {
+          otherGroups.push(group);
+        }
+      });
+
+      otherGroups.sort();
+
+      _.each(otherGroups, function (group){
+        sortedGroups.push(group);
+      });
+
+      sortedGroups = _.compact(sortedGroups);
+
+      return sortedGroups;
+    }
+
+
+    $scope.checkPresence = function () {
+      var members = Store('network').get('unique');
+      var present = [];
+
+      _.each(members, function(member){
+        if (member.resources && member.resources.currentPresence){
+          // console.log(member.name + " is present");
+          // console.log("Presence = " + member.resources.currentPresence.toString());
+          member.resources.groups = Groups.getMemberGroups(member.uuid);
+
+          if (member.resources.groups && member.resources.groups.length > 1) {
+            member.resources.groups = member.resources.groups.slice(0,1);
+          }
+
+          present.push(member);
+        }
+      });
+
+      $scope.loadingPresence = false;
+      $scope.present = presencePerGroup(present);
+    };
+
+     Network.population().then($scope.checkPresence());
+
+    $rootScope.intervals = [];
+
+    $rootScope.intervals.push(
+      $window.setInterval(
+        function () {
+          Network.population().then($scope.checkPresence);
+      }, $rootScope.StandBy.config.timers.ALARM_SYNC)
+    );
 
     $scope.popover = {
       groups: filteredGroups,
