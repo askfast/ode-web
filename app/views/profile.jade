@@ -370,11 +370,11 @@ section#profile
 						.btn-group.pull-left(style='margin-right: 5px;')
 							button.btn.btn-default(type='button', ng-click='timelineWeekBefore()')
 								i.glyphicon.glyphicon-arrow-left
-							button.btn(type='button', ng-click='timelineZoomIn()')
+							button.btn.btn-default(type='button', ng-click='timelineZoomIn()')
 								i.glyphicon.glyphicon-zoom-in
-							button.btn(type='button', ng-click='timelineZoomOut()')
+							button.btn.btn-default(type='button', ng-click='timelineZoomOut()')
 								i.glyphicon.glyphicon-zoom-out
-							button.btn(type='button', ng-click='timelineWeekAfter()')
+							button.btn.btn-default(type='button', ng-click='timelineWeekAfter()')
 								i.glyphicon.glyphicon-arrow-right
 
 						.btn-group.pull-left
@@ -420,19 +420,25 @@ section#profile
 								ng-model='slot.start.datetime')
 						.form-elements-group(ng-hide='browser.mobile')
 							label {{ui.planboard.from}}
-							.form-group.dater
+							.form-group.has-feedback.dater
 								input.form-control(name='date-start',
 								type='text',
 								ng-model='slot.start.date',
-								data-date-format='dd-mm-yyyy',
+								data-date-type='string',
+								data-date-format='dd-MM-yyyy',
+								data-icon-left='glyphicon glyphicon-arrow-left',
+								data-icon-right='glyphicon glyphicon-arrow-right',
 								bs-datepicker='')
-								i.glyphicon.glyphicon-calendar
-							.form-group.timer
+								i.glyphicon.glyphicon-calendar.form-control-feedback
+							.form-group.has-feedback.timer
 								input.form-control(name='time-start',
 								type='text',
 								ng-model='slot.start.time',
-								bs-timepicker='bs-timepicker')
-								i.glyphicon.glyphicon-time
+								data-length='3',
+								data-time-type="string",
+								data-time-format="HH:mm",
+								bs-timepicker='')
+								i.glyphicon.glyphicon-time.form-control-feedback
 						.form-elements-group(ng-show='browser.mobile')
 							label {{ui.planboard.till}}
 							.form-group.dater-mobile
@@ -441,19 +447,25 @@ section#profile
 								ng-model='slot.end.datetime')
 						.form-elements-group(ng-hide='browser.mobile')
 							label {{ui.planboard.till}}
-							.form-group.dater
+							.form-group.has-feedback.dater
 								input.form-control(name='date-end',
 								type='text',
 								ng-model='slot.end.date',
-								data-date-format='dd-mm-yyyy',
+								data-date-type='string',
+								data-date-format='dd-MM-yyyy',
+								data-icon-left='glyphicon glyphicon-arrow-left',
+								data-icon-right='glyphicon glyphicon-arrow-right',
 								bs-datepicker='')
-								i.glyphicon.glyphicon-calendar
-							.form-group.timer
+								i.glyphicon.glyphicon-calendar.form-control-feedback
+							.form-group.has-feedback.timer
 								input.form-control(name='time-end',
 								type='text',
 								ng-model='slot.end.time',
-								bs-timepicker='bs-timepicker')
-								i.glyphicon.glyphicon-time
+								data-length='3',
+								data-time-type="string",
+								data-time-format="HH:mm",
+								bs-timepicker='')
+								i.glyphicon.glyphicon-time.form-control-feedback
 						.form-elements-group
 							label {{ui.planboard.state}}
 							select(ng-model='slot.state',
