@@ -48,6 +48,19 @@ dl {
   margin: 25px 0;
 }
 
+#logoWatermark {
+  z-index: 1;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  top: 50%;
+  height: 500px;
+  width: 241px;
+  margin-left: -120px;
+  margin-top: -250px;
+  background: url(../scripts/profiles/falck/img/logoWatermark.png); /*Temporary only for Falck presence*/
+}
+
 #watermark {
   z-index: 1;
   position: fixed;
