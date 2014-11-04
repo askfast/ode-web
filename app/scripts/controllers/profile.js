@@ -15,7 +15,12 @@ define(['controllers/controllers'], function (controllers) {
     $scope.userPassword = '';
 
     $scope.showDeleteUserModal = function () {
-      $('#deleteUserModal').modal('show')
+      var deleteUserModal = $('#deleteUserModal');
+      deleteUserModal.on('shown.bs.modal', function(e){
+        $('.modal-backdrop').insertAfter(deleteUserModal);
+      });
+
+      deleteUserModal.modal('show');
     };
 
     $scope.deleteUser = function (userPassword) {

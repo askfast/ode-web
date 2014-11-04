@@ -92,12 +92,14 @@
 			hr
 			form(name='registerUserForm')
 				fieldset
-					.form-group
-						label.control-label {{ui.groups.role}}
-							select.form-control(ng-model='memberForm.role', ng-options='role.label for role in roles')
-								option(value='') {{ui.groups.selectRole}}
-					.form-group
-						label.control-label(style='width: 530px;') {{ui.groups.groups}}
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.role}}
+								select.form-control(ng-model='memberForm.role', ng-options='role.label for role in roles')
+									option(value='') {{ui.groups.selectRole}}
+					.row
+						.form-group.col-sm-5
+							label.control-label(style='width: 530px;') {{ui.groups.groups}}
 							select.chosen-select(data-placeholder=' ',
 							multiple='',
 							chosen='',
@@ -105,71 +107,81 @@
 							ng-options='group.name for group in data.groups')
 							// <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p>
 					hr
-					.form-group
-						label.control-label {{ui.groups.firstName}}
-							input.form-control.col-md-4(type='text', ng-model='memberForm.firstName')
-					.form-group
-						label.control-label {{ui.groups.lastName}}
-							input.form-control.col-md-4(type='text', ng-model='memberForm.lastName')
-					.form-group
-						label.control-label {{ui.groups.email}}
-							input.form-control.col-md-4(type='email',
-							name='email',
-							ng-model='memberForm.EmailAddress',
-							ng-minlength='3',
-							ng-maxlength='50')
-							.error-container(ng-show='registerUserForm.email.$dirty && registerUserForm.email.$invalid')
-								p.text-danger(ng-show='registerUserForm.email.$error.minlength')
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.firstName}}
+								input.form-control(type='text', ng-model='memberForm.firstName')
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.lastName}}
+								input.form-control(type='text', ng-model='memberForm.lastName')
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.email}}
+								input.form-control(type='email',
+								name='email',
+								ng-model='memberForm.EmailAddress',
+								ng-minlength='3',
+								ng-maxlength='50')
+								.error-container(ng-show='registerUserForm.email.$dirty && registerUserForm.email.$invalid')
+									p.text-danger(ng-show='registerUserForm.email.$error.minlength')
+										small
+											i {{ui.errors.email.min}}
+									p.text-danger(ng-show='registerUserForm.email.$error.email')
+										small
+											i {{ui.errors.email.notValid}}
+									p.text-danger(ng-show='registerUserForm.email.$error.maxlength')
+										small
+											i {{ui.errors.email.max}}
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.phone}}
+								input.form-control#inputPhoneNumber(type='text',
+								ng-model='memberForm.PhoneAddress',
+								ng-change='phoneNumberParser(memberForm.PhoneAddress)')
+								// <p class="text-danger" ng-show="!memberForm.PhoneAddress">
+								// <small><i>Please fill your phone number!</i></small>
+								// </p>
+								p.text-danger(ng-hide='phoneNumberParsed.result')
 									small
-										i {{ui.errors.email.min}}
-								p.text-danger(ng-show='registerUserForm.email.$error.email')
+										i {{phoneNumberParsed.message}}
+								p.text-success(ng-show='phoneNumberParsed.result')
 									small
-										i {{ui.errors.email.notValid}}
-								p.text-danger(ng-show='registerUserForm.email.$error.maxlength')
-									small
-										i {{ui.errors.email.max}}
-					.form-group
-						label.control-label {{ui.groups.phone}}
-							input.form-control#inputPhoneNumber.col-md-3(type='text',
-							ng-model='memberForm.PhoneAddress',
-							ng-change='phoneNumberParser(memberForm.PhoneAddress)')
-							// <p class="text-danger" ng-show="!memberForm.PhoneAddress">
-							// <small><i>Please fill your phone number!</i></small>
-							// </p>
-							p.text-danger(ng-hide='phoneNumberParsed.result')
-								small
-									i {{phoneNumberParsed.message}}
-							p.text-success(ng-show='phoneNumberParsed.result')
-								small
-									i {{phoneNumberParsed.message}}
-					.form-group
-						label.control-label {{ui.profile.pagerId}}
-							input.form-control.col-md-5(type='text', ng-model='memberForm.pagerId')
-					.form-group
-						label.control-label {{ui.groups.address}}
-							input.form-control.col-md-5(type='text', ng-model='memberForm.PostAddress')
-					.form-group
-						label.control-label {{ui.groups.postCode}}
-							input.form-control.col-md-2(type='text', ng-model='memberForm.PostZip')
-					.form-group
-						label.control-label {{ui.groups.city}}
-							input.form-control.col-md-3(type='text', ng-model='memberForm.PostCity')
+										i {{phoneNumberParsed.message}}
+					.row
+						.form-group.col-sm-6
+							label.control-label {{ui.profile.pagerId}}
+								input.form-control(type='text', ng-model='memberForm.pagerId')
+					.row
+						.form-group.col-sm-6
+							label.control-label {{ui.groups.address}}
+								input.form-control(type='text', ng-model='memberForm.PostAddress')
+					.row
+						.form-group.col-sm-4
+							label.control-label {{ui.groups.postCode}}
+								input.form-control(type='text', ng-model='memberForm.PostZip')
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.city}}
+								input.form-control(type='text', ng-model='memberForm.PostCity')
 					hr
-					.form-group
-						label.control-label {{ui.groups.userName}}
-							input.form-control.col-md-3(type='text',
-							ng-model='memberForm.username',
-							ng-change='userExists()')
-							p.text-danger(ng-hide='userExistsValidation')
-								small
-									i {{ui.groups.registerUserName.exists}}
-							p.text-success(ng-show='userExistsValidation && memberForm.username.length > 0')
-								small
-									i {{ui.groups.registerUserName.goodToGo}}
-					.form-group
-						label.control-label {{ui.groups.password}}
-							input.form-control.col-md-3(type='password', ng-model='memberForm.password')
-					.form-actions
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.userName}}
+								input.form-control(type='text',
+								ng-model='memberForm.username',
+								ng-change='userExists()')
+								p.text-danger(ng-hide='userExistsValidation')
+									small
+										i {{ui.groups.registerUserName.exists}}
+								p.text-success(ng-show='userExistsValidation && memberForm.username.length > 0')
+									small
+										i {{ui.groups.registerUserName.goodToGo}}
+					.row
+						.form-group.col-sm-5
+							label.control-label {{ui.groups.password}}
+								input.form-control(type='password', ng-model='memberForm.password')
+						.form-actions
 						button.btn.btn-success(type='submit',
 						ng-click='memberSubmit(memberForm)') {{ui.groups.saveMember}}
 

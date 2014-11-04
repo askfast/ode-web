@@ -296,7 +296,7 @@ section#profile
 						.form-group.col-sm-5(ng-hide='StandBy.resources.role > 1 || views.user')
 							label {{ui.profile.password}}
 							.controls
-								input.form-control(type='text',
+								input.form-control(type='password',
 								ng-model='profilemeta.Password')
 								span.help-block(style='margin-top: -5px;')
 									small
@@ -500,24 +500,26 @@ section#profile
 						span.text-warning {{ui.planboard.dataRangeEnd}}
 						span.text-muted {{data.periods.end | nicelyDate}}
 
-#deleteUserModal.modal.hide.fade(tabindex='-1',
+#deleteUserModal.modal.fade(tabindex='-1',
 role='dialog',
 aria-labelledby='deleteUserModalLabel',
 aria-hidden='true')
-	.modal-header
-		button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-		h3#deleteUserModalLabel {{ui.profile.remove.title}}
-	.modal-body
-		p {{ui.profile.remove.info}}
-		.alert.alert-warning(ng-show='deleteUserError')
-			button.close(type='button', data-dismiss='alert') ×
-			| {{deleteUserErrorMessage}}
-		form
-			.form-group
-				.controls
-					input.form-control(type='password', placeholder='Uw wachtwoord', ng-model='userPassword')
-	.modal-footer
-		button.btn.btn-danger(type='submit',
-		ng-click='deleteUser(userPassword)',
-		style='margin-right: 10px;') {{ui.profile.remove.button}}
-		button.btn.btn-default(data-dismiss='modal', aria-hidden='true') {{ui.profile.remove.cancel}}
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+				h3#deleteUserModalLabel {{ui.profile.remove.title}}
+			.modal-body
+				p {{ui.profile.remove.info}}
+				.alert.alert-warning(ng-show='deleteUserError')
+					button.close(type='button', data-dismiss='alert') ×
+					| {{deleteUserErrorMessage}}
+				form
+					.form-group
+						.controls
+							input.form-control(type='password', placeholder='Uw wachtwoord', ng-model='userPassword')
+			.modal-footer
+				button.btn.btn-danger(type='submit',
+				ng-click='deleteUser(userPassword)',
+				style='margin-right: 10px;') {{ui.profile.remove.button}}
+				button.btn.btn-default(data-dismiss='modal', aria-hidden='true') {{ui.profile.remove.cancel}}
