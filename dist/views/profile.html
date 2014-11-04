@@ -221,7 +221,7 @@
             <div ng-hide="StandBy.resources.role &gt; 1 || views.user" class="form-group col-sm-5">
               <label>{{ui.profile.password}}</label>
               <div class="controls">
-                <input type="text" ng-model="profilemeta.Password" class="form-control"><span style="margin-top: -5px" class="help-block"><small><i>{{ui.profile.passwordChangeWarning}}</i></small></span>
+                <input type="password" ng-model="profilemeta.Password" class="form-control"><span style="margin-top: -5px" class="help-block"><small><i>{{ui.profile.passwordChangeWarning}}</i></small></span>
               </div>
             </div>
           </div>
@@ -392,26 +392,30 @@
     </div>
   </div>
 </section>
-<div id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
-    <h3 id="deleteUserModalLabel">{{ui.profile.remove.title}}</h3>
-  </div>
-  <div class="modal-body">
-    <p>{{ui.profile.remove.info}}</p>
-    <div ng-show="deleteUserError" class="alert alert-warning">
-      <button type="button" data-dismiss="alert" class="close">×</button>{{deleteUserErrorMessage}}
-    </div>
-    <form>
-      <div class="form-group">
-        <div class="controls">
-          <input type="password" placeholder="Uw wachtwoord" ng-model="userPassword" class="form-control">
-        </div>
+<div id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+        <h3 id="deleteUserModalLabel">{{ui.profile.remove.title}}</h3>
       </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="submit" ng-click="deleteUser(userPassword)" style="margin-right: 10px" class="btn btn-danger">{{ui.profile.remove.button}}</button>
-    <button data-dismiss="modal" aria-hidden="true" class="btn btn-default">{{ui.profile.remove.cancel}}</button>
+      <div class="modal-body">
+        <p>{{ui.profile.remove.info}}</p>
+        <div ng-show="deleteUserError" class="alert alert-warning">
+          <button type="button" data-dismiss="alert" class="close">×</button>{{deleteUserErrorMessage}}
+        </div>
+        <form>
+          <div class="form-group">
+            <div class="controls">
+              <input type="password" placeholder="Uw wachtwoord" ng-model="userPassword" class="form-control">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" ng-click="deleteUser(userPassword)" style="margin-right: 10px" class="btn btn-danger">{{ui.profile.remove.button}}</button>
+        <button data-dismiss="modal" aria-hidden="true" class="btn btn-default">{{ui.profile.remove.cancel}}</button>
+      </div>
+    </div>
   </div>
 </div>

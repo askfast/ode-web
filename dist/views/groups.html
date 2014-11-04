@@ -72,84 +72,106 @@
       <hr>
       <form name="registerUserForm">
         <fieldset>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.role}}
-              <select ng-model="memberForm.role" ng-options="role.label for role in roles" class="form-control">
-                <option value="">{{ui.groups.selectRole}}</option>
-              </select>
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.role}}
+                <select ng-model="memberForm.role" ng-options="role.label for role in roles" class="form-control">
+                  <option value="">{{ui.groups.selectRole}}</option>
+                </select>
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label style="width: 530px" class="control-label">{{ui.groups.groups}}
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label style="width: 530px" class="control-label">{{ui.groups.groups}}</label>
               <select data-placeholder=" " multiple="multiple" chosen="" ng-model="memberForm.groups" ng-options="group.name for group in data.groups" class="chosen-select"></select>
               <!-- <p ng-repeat="group in memberForm.groups"><strong>{{group.uuid}}</strong></p>-->
-            </label>
+            </div>
           </div>
           <hr>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.firstName}}
-              <input type="text" ng-model="memberForm.firstName" class="form-control col-md-4">
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.firstName}}
+                <input type="text" ng-model="memberForm.firstName" class="form-control">
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.lastName}}
-              <input type="text" ng-model="memberForm.lastName" class="form-control col-md-4">
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.lastName}}
+                <input type="text" ng-model="memberForm.lastName" class="form-control">
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.email}}
-              <input type="email" name="email" ng-model="memberForm.EmailAddress" ng-minlength="3" ng-maxlength="50" class="form-control col-md-4">
-              <div ng-show="registerUserForm.email.$dirty &amp;&amp; registerUserForm.email.$invalid" class="error-container">
-                <p ng-show="registerUserForm.email.$error.minlength" class="text-danger"><small><i>{{ui.errors.email.min}}</i></small></p>
-                <p ng-show="registerUserForm.email.$error.email" class="text-danger"><small><i>{{ui.errors.email.notValid}}</i></small></p>
-                <p ng-show="registerUserForm.email.$error.maxlength" class="text-danger"><small><i>{{ui.errors.email.max}}</i></small></p>
-              </div>
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.email}}
+                <input type="email" name="email" ng-model="memberForm.EmailAddress" ng-minlength="3" ng-maxlength="50" class="form-control">
+                <div ng-show="registerUserForm.email.$dirty &amp;&amp; registerUserForm.email.$invalid" class="error-container">
+                  <p ng-show="registerUserForm.email.$error.minlength" class="text-danger"><small><i>{{ui.errors.email.min}}</i></small></p>
+                  <p ng-show="registerUserForm.email.$error.email" class="text-danger"><small><i>{{ui.errors.email.notValid}}</i></small></p>
+                  <p ng-show="registerUserForm.email.$error.maxlength" class="text-danger"><small><i>{{ui.errors.email.max}}</i></small></p>
+                </div>
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.phone}}
-              <input id="inputPhoneNumber" type="text" ng-model="memberForm.PhoneAddress" ng-change="phoneNumberParser(memberForm.PhoneAddress)" class="form-control col-md-3">
-              <!-- <p class="text-danger" ng-show="!memberForm.PhoneAddress">-->
-              <!-- <small><i>Please fill your phone number!</i></small>-->
-              <!-- </p>-->
-              <p ng-hide="phoneNumberParsed.result" class="text-danger"><small><i>{{phoneNumberParsed.message}}</i></small></p>
-              <p ng-show="phoneNumberParsed.result" class="text-success"><small><i>{{phoneNumberParsed.message}}</i></small></p>
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.phone}}
+                <input id="inputPhoneNumber" type="text" ng-model="memberForm.PhoneAddress" ng-change="phoneNumberParser(memberForm.PhoneAddress)" class="form-control">
+                <!-- <p class="text-danger" ng-show="!memberForm.PhoneAddress">-->
+                <!-- <small><i>Please fill your phone number!</i></small>-->
+                <!-- </p>-->
+                <p ng-hide="phoneNumberParsed.result" class="text-danger"><small><i>{{phoneNumberParsed.message}}</i></small></p>
+                <p ng-show="phoneNumberParsed.result" class="text-success"><small><i>{{phoneNumberParsed.message}}</i></small></p>
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.profile.pagerId}}
-              <input type="text" ng-model="memberForm.pagerId" class="form-control col-md-5">
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <label class="control-label">{{ui.profile.pagerId}}
+                <input type="text" ng-model="memberForm.pagerId" class="form-control">
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.address}}
-              <input type="text" ng-model="memberForm.PostAddress" class="form-control col-md-5">
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <label class="control-label">{{ui.groups.address}}
+                <input type="text" ng-model="memberForm.PostAddress" class="form-control">
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.postCode}}
-              <input type="text" ng-model="memberForm.PostZip" class="form-control col-md-2">
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-4">
+              <label class="control-label">{{ui.groups.postCode}}
+                <input type="text" ng-model="memberForm.PostZip" class="form-control">
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.city}}
-              <input type="text" ng-model="memberForm.PostCity" class="form-control col-md-3">
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.city}}
+                <input type="text" ng-model="memberForm.PostCity" class="form-control">
+              </label>
+            </div>
           </div>
           <hr>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.userName}}
-              <input type="text" ng-model="memberForm.username" ng-change="userExists()" class="form-control col-md-3">
-              <p ng-hide="userExistsValidation" class="text-danger"><small><i>{{ui.groups.registerUserName.exists}}</i></small></p>
-              <p ng-show="userExistsValidation &amp;&amp; memberForm.username.length &gt; 0" class="text-success"><small><i>{{ui.groups.registerUserName.goodToGo}}</i></small></p>
-            </label>
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.userName}}
+                <input type="text" ng-model="memberForm.username" ng-change="userExists()" class="form-control">
+                <p ng-hide="userExistsValidation" class="text-danger"><small><i>{{ui.groups.registerUserName.exists}}</i></small></p>
+                <p ng-show="userExistsValidation &amp;&amp; memberForm.username.length &gt; 0" class="text-success"><small><i>{{ui.groups.registerUserName.goodToGo}}</i></small></p>
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">{{ui.groups.password}}
-              <input type="password" ng-model="memberForm.password" class="form-control col-md-3">
-            </label>
-          </div>
-          <div class="form-actions">
+          <div class="row">
+            <div class="form-group col-sm-5">
+              <label class="control-label">{{ui.groups.password}}
+                <input type="password" ng-model="memberForm.password" class="form-control">
+              </label>
+            </div>
+            <div class="form-actions"></div>
             <button type="submit" ng-click="memberSubmit(memberForm)" class="btn btn-success">{{ui.groups.saveMember}}</button>
           </div>
         </fieldset>

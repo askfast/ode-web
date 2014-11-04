@@ -1,31 +1,62 @@
 <div class="row">
-  <div id="availabilities" class="sa widget col-md-12">
-    <div class="head">
-      <h4>{{ui.presence.present}}</h4>
-    </div>
-    <div ng-show="loadingPresence">
-      <hr>
-      <p>{{ui.presence.loading}}</p>
-    </div>
-    <section ng-hide="loadingPresence">
-      <div ng-repeat="group in present">
+  <div id="availabilities">
+    <div id="present" class="sa widget col-md-6">
+      <div class="head">
+        <h4>{{ui.presence.present}}</h4>
+      </div>
+      <div ng-show="loadingPresence">
         <hr>
-        <ul class="sa-setup presence">
-          <li class="sa-truck">
-            <div ng-repeat="member in group" class="sa-member">
-              <div class="media">
-                <div class="pull-left">
-                  <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium memberStateNone"></div>
-                </div>
-                <div class="sa-member-card media-body">
-                  <h5><a href="#/profile/{{member.uuid}}#profile">{{member.name | toTitleCase}}</a></h5>
-                  <hr><span ng-repeat="group in member.resources.groups">{{group.name}}</span>
+        <p>{{ui.presence.loading}}</p>
+      </div>
+      <section ng-hide="loadingPresence">
+        <div ng-repeat="group in present">
+          <hr>
+          <ul class="sa-setup presence">
+            <li class="sa-truck">
+              <div ng-repeat="member in group" class="sa-member">
+                <div class="media">
+                  <div class="pull-left">
+                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium memberStateNone"></div>
+                  </div>
+                  <div class="sa-member-card media-body">
+                    <h5><a href="#/profile/{{member.uuid}}#profile">{{member.name | toTitleCase}}</a></h5>
+                    <hr><span ng-repeat="group in member.resources.groups">{{group.name}}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <div id="absent" class="sa widget col-md-6">
+      <div class="head">
+        <h4>{{ui.presence.absent}}</h4>
       </div>
-    </section>
+      <div ng-show="loadingPresence">
+        <hr>
+        <p>{{ui.presence.loading}}</p>
+      </div>
+      <section ng-hide="loadingPresence">
+        <div ng-repeat="group in present">
+          <hr>
+          <ul class="sa-setup presence">
+            <li class="sa-truck">
+              <div ng-repeat="member in group" class="sa-member">
+                <div class="media">
+                  <div class="pull-left">
+                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium memberStateNone"></div>
+                  </div>
+                  <div class="sa-member-card media-body">
+                    <h5><a href="#/profile/{{member.uuid}}#profile">{{member.name | toTitleCase}}</a></h5>
+                    <hr><span ng-repeat="group in member.resources.groups">{{group.name}}</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
   </div>
 </div>
