@@ -151,6 +151,7 @@ require([
   'directives/login/login-help',
   'directives/login/preloaded',
   'directives/dashboard/smart-alarming',
+  'directives/dashboard/presence-overview',
   'directives/dashboard/snapshots',
   'directives/dashboard/summaries',
   'directives/dashboard/alarms',

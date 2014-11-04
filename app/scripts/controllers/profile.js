@@ -691,7 +691,9 @@ define(['controllers/controllers'], function (controllers) {
       var states = {};
 
       _.each($scope.timeline.config.states, function (state, key) {
-        states[key] = state.label
+        if (state && state.label){
+          states[key] = state.label;
+        }
       });
 
       $scope.states = states;
