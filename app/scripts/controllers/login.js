@@ -44,6 +44,9 @@ define(['controllers/controllers'], function (controllers) {
         'backgroundSize': 'cover'
       });
     }
+    angular.element('body').css({
+      'background': '#1dc8b6',
+    });
     if (navigator.userAgent.indexOf("Firefox") >= 0)
       angular.element('#login form').attr('autocomplete', 'off');
 
@@ -186,7 +189,7 @@ define(['controllers/controllers'], function (controllers) {
         }
       );
     };
-    
+
     function preloader() {
       progress(30, $rootScope.ui.login.loading_User);
 

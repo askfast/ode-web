@@ -1,5 +1,7 @@
 .navbar {
   z-index: 100;
+  font-weight: bold;
+  text-transform: uppercase;
 
   .brand {
     margin-top: 0px;
@@ -97,7 +99,7 @@
   left: 0;
   height: 50px;
   width: 100%;
-  background-color: #433c2d;
+  background-color: $brown;
   z-index: 100;
 
   .container-fluid {
@@ -202,6 +204,7 @@
     display: inline;
     margin-top: 0;
     padding-top: 0;
+    color: $turq;
   }
 
   .btn-group {

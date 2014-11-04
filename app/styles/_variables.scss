@@ -22,14 +22,29 @@ $white: #fff;
 $blue: #35a8c9;
 $blueDark: #7772b5;
 $green: #6f9a6d;
-$red: #ba5855;
+// $red: #ba5855;
 $yellow: #ffc40d;
 $pink: #c3325f;
 $purple: #7772b5;
-$brown: #433c2d;
-$orange: #e6a02f;
+// $brown: #433c2d;
+// $orange: #e6a02f;
 
-$brand-primary:         #7772b5;
+$turq: #1dc8b6;
+// teamup
+$orange: #f5a962;
+//  teamup
+$brown: #833c11;
+// teamup
+$beige: #f5e6d8;
+// teamup
+$graytu: #c8c8b4;
+//  teamup
+$red: #c85a3c;
+//  teamup
+$offwhite: #fffaf0;
+// teamup
+
+$brand-primary:         $orange;
 $brand-success:         #6f9a6d;
 $brand-info:            #35a8c9;
 $brand-warning:         lighten($orange, 15%);
@@ -41,14 +56,14 @@ $brand-danger:          #ba5855;
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-$body-bg:               #f5f4ee;
+$body-bg:               $offwhite;
 // $body-bg:               #fff;
 //** Global text color on `<body>`.
-$text-color:            #433c2d;
+$text-color:            $brown;
 // $text-color:            $gray-dark;
 
 //** Global textual link color.
-$link-color:            $brand-primary;
+$link-color:            $orange;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      darken($link-color, 15%);
 
@@ -456,19 +471,19 @@ $navbar-default-toggle-border-color:       #ddd;
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #f7f5eb;
 // $navbar-inverse-color:                      $gray-light;
-$navbar-inverse-bg:                         #433c2d;
+$navbar-inverse-bg:                         #833c11;
 // $navbar-inverse-bg:                         #222;
-$navbar-inverse-border:                     #3f382a;
+$navbar-inverse-border:                     #342f23;
 // $navbar-inverse-border:                     darken($navbar-inverse-bg, 10%);
 
 // Inverted navbar links
 $navbar-inverse-link-color:                 $white;
 // $navbar-inverse-link-color:                 $gray-light;
-$navbar-inverse-link-hover-color:           $white;
+$navbar-inverse-link-hover-color:           $orange;
 // $navbar-inverse-link-hover-color:           #fff;
 $navbar-inverse-link-hover-bg:              transparent;
-$navbar-inverse-link-active-color:          $navbar-inverse-link-hover-color;
-$navbar-inverse-link-active-bg:             #2d281d;
+$navbar-inverse-link-active-color:          $orange;
+$navbar-inverse-link-active-bg:             $navbar-inverse-bg;
 // $navbar-inverse-link-active-bg:             darken($navbar-inverse-bg, 10%);
 $navbar-inverse-link-disabled-color:        #444;
 $navbar-inverse-link-disabled-bg:           transparent;
@@ -511,7 +526,7 @@ $nav-tabs-link-hover-border-color:          $gray-lighter;
 
 $nav-tabs-active-link-hover-bg:             $white;
 // $nav-tabs-active-link-hover-bg:             $body-bg;
-$nav-tabs-active-link-hover-color:          $gray;
+$nav-tabs-active-link-hover-color:          $brown;
 $nav-tabs-active-link-hover-border-color:   #ddd;
 
 $nav-tabs-justified-link-border-color:            #ddd;
