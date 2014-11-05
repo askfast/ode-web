@@ -658,12 +658,11 @@ define(['controllers/controllers'], function (controllers) {
 
     $rootScope.alarmSync = {
       start: function () {
-        $window.planboardSync = $window.setInterval(
+        this.id = $window.setInterval(
           function () {
             if ($location.path() == '/dashboard') {
-              $scope.$apply()
-              {
-                $scope.getP2000();
+              $scope.$apply(function (scope) {
+                scope.getP2000();
 
                 if ($rootScope.StandBy.config.profile.smartAlarm) {
                   if (Store('smartAlarm').get('guard').selection) {
@@ -675,15 +674,17 @@ define(['controllers/controllers'], function (controllers) {
                     prepareSaMembers(setup);
                   });
                 } else {
-                  $scope.getAvailability($scope.current.group);
+                  scope.getAvailability(scope.current.group);
                 }
-              }
+              });
             }
           }, $rootScope.StandBy.config.timers.ALARM_SYNC);
+        $rootScope.intervals.push(this.id);
       },
       clear: function () {
-        $window.clearInterval($window.alarmSync)
-      }
+        $window.clearInterval(this.id);
+      },
+      id: ''
     };
 
     $rootScope.alarmSync.start();
