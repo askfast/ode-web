@@ -437,12 +437,6 @@ define(['controllers/controllers'], function (controllers) {
 
     var members = Store('network').get('unique');
 
-    _.each(groups, function (group) {
-      group.name = group.name.replace(/\w\S*/g, function (name) {
-        return name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-      });
-    });
-
     var initGroup;
 
     groups.unshift({
