@@ -29,6 +29,7 @@ define(
         app: ''
       },
       presence: profile.presence,
+      defaultProfilePicture: (profile.defaultProfilePicture ? 'scripts/profiles/' + profile.meta + '/img/' + profile.defaultProfilePicture : ''),
       background: 'scripts/profiles/' + profile.meta + '/img/login_bg.jpg', // jpg for smaller size,
       p2000: profile.p2000,
       mobileApp: profile.mobileApp,

@@ -11,6 +11,8 @@ var profile = {
 
   presence: true,
 
+  defaultProfilePicture: 'defaultProfilePicture.png',
+
   showBackground: false,
 
   //sublogo: 'falck_logo.png',

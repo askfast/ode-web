@@ -11,6 +11,8 @@ var profile = {
 
   presence: true,
 
+  defaultProfilePicture: 'defaultProfilePicture.png',
+
   host: function ()
   {
      return ($.browser.msie) ? '/proxy' : 'http://dev.ask-cs.com';
