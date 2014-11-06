@@ -53,14 +53,15 @@ define(['controllers/controllers'], function (controllers) {
       }
     });
 
-    var groupOrder = ["Hoofd BHV","BHV Ploegleider","BHV'er","EHBO'er"];
 
     $scope.loadingPresence = true;
 
     var presencePerGroup = function (present) {
-      var presentGroups = {};
-      var sortedGroups = [];
-      var otherGroups = [];
+      var presentGroups = {},
+          sortedGroups = [],
+          otherGroups = [];
+
+      var groupOrder = ["Hoofd BHV","BHV Ploegleider","BHV'er","EHBO'er"];
 
       _.each(present, function (member){
         if (!member.resources.groups) {
@@ -105,30 +106,79 @@ define(['controllers/controllers'], function (controllers) {
       return sortedGroups;
     }
 
+    var presencePerAvailability = function (present) {
+      var sortedGroups = [],
+          i;
+
+      var stateClasses = ['memberStateAvailable', 'memberStateOffline', 'memberStateBusy'];
+
+      _.each(present, function (member){
+        _.each($scope.availability.members, function (list, availability) {
+          switch(availability){
+            case 'available':
+            i = 0;
+            break;
+            case 'possible':
+            i = 1;
+            break;
+            case 'unavailable':
+            i = 2;
+            break;
+          }
+          _.each(list, function (_member) {
+            if (member.uuid === _member.id) {
+              if(typeof sortedGroups[i] == 'undefined'){
+                sortedGroups[i] = []
+              }
+              member.availabilityClass = stateClasses[i];
+              sortedGroups[i].push(member);
+            };
+          })
+        });
+      });
+
+      return sortedGroups;
+    }
 
     $scope.checkPresence = function () {
       var members = Store('network').get('unique');
-      var present = [];
+      var present = [],
+          absent = [];
 
       _.each(members, function(member){
-        if (member.resources && member.resources.currentPresence){
-          // console.log(member.name + " is present");
-          // console.log("Presence = " + member.resources.currentPresence.toString());
+        if (member.resources){
+
           member.resources.groups = Groups.getMemberGroups(member.uuid);
 
           if (member.resources.groups && member.resources.groups.length > 1) {
+
+            member.resources.groups.sort(function (a, b) {
+              if (a.name.toUpperCase() > b.name.toUpperCase()) {
+                return 1;
+              }
+              if (a.name.toUpperCase() < b.name.toUpperCase()) {
+                return -1;
+              }
+              return 0;
+            });
+
             member.resources.groups = member.resources.groups.slice(0,1);
           }
 
-          present.push(member);
+          if (member.resources.currentPresence){
+            present.push(member);
+          }
+          else {
+            absent.push(member);
+          }
         }
       });
 
+      // TODO: check config from profile?
+      $scope.present = presencePerAvailability(present);
+      $scope.absent = presencePerAvailability(absent);
       $scope.loadingPresence = false;
-      $scope.present = presencePerGroup(present);
     };
-
-     Network.population().then($scope.checkPresence());
 
     $rootScope.intervals = [];
 
@@ -477,6 +527,8 @@ define(['controllers/controllers'], function (controllers) {
     $scope.loadingAvailability = true;
 
     $scope.getAvailability = function (groupID, divisionID) {
+      var deferred = $q.defer();
+
       if (!groupID) {
         groupID = $scope.current.group;
       }
@@ -597,20 +649,43 @@ define(['controllers/controllers'], function (controllers) {
           members: ordered,
           synced: results.synced * 1000
         };
+
+        deferred.resolve($scope.availability);
+      },
+      function (results) {
+        deferred.reject(results);
       });
+
+      return deferred.promise;
     };
 
     $scope.getGroupAvailability = function () {
+      var deferred = $q.defer();
       $scope.current.division = 'all';
 
-      $scope.getAvailability($scope.current.group, $scope.current.division);
+      $scope.getAvailability($scope.current.group, $scope.current.division)
+      .then(function (results) {
+        deferred.resolve(results);
+      },
+      function (results) {
+        deferred.reject(results);
+      });
+      return deferred.promise;
     };
 
     $scope.getDivisionAvailability = function () {
       $scope.getAvailability($scope.current.group, $scope.current.division);
     };
 
-    $scope.getGroupAvailability();
+    // TODO: conditional on presence
+    $q.all([$scope.getGroupAvailability(), Network.population()])
+    .then(function(){
+      $scope.checkPresence();
+    },
+    function(){
+      // Only getGroupAvailability would reject
+      // TODO: handle rejection :(
+    });
 
     $scope.saveOverviewWidget = function (selection) {
       $rootScope.statusBar.display($rootScope.ui.settings.saving);
