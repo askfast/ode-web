@@ -15,7 +15,8 @@
 							.sa-member(ng-repeat='member in group')
 								.media
 									.pull-left
-										.roundedPicMedium.memberStateNone(profile-img='{{member.uuid | avatar:"user":"100":member.resources.avatarPhotoId }}')
+										.roundedPicMedium(profile-img='{{member.uuid | avatar:"user":"100":member.resources.avatarPhotoId }}',
+											class='{{member.availabilityClass || "memberStateNone"}}')
 									.sa-member-card.media-body
 										h5
 											a(href='#/profile/{{member.uuid}}#profile')
@@ -30,14 +31,15 @@
 				hr
 				p {{ui.presence.loading}}
 			section(ng-hide='loadingPresence')
-				div(ng-repeat="group in present")
+				div(ng-repeat="group in absent")
 					hr
 					ul.sa-setup.presence
 						li.sa-truck
 							.sa-member(ng-repeat='member in group')
 								.media
 									.pull-left
-										.roundedPicMedium.memberStateNone(profile-img='{{member.uuid | avatar:"user":"100":member.resources.avatarPhotoId }}')
+										.roundedPicMedium(profile-img='{{member.uuid | avatar:"user":"100":member.resources.avatarPhotoId }}',
+											class='{{member.availabilityClass || "memberStateNone"}}')
 									.sa-member-card.media-body
 										h5
 											a(href='#/profile/{{member.uuid}}#profile')
