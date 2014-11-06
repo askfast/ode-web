@@ -677,15 +677,22 @@ define(['controllers/controllers'], function (controllers) {
       $scope.getAvailability($scope.current.group, $scope.current.division);
     };
 
-    // TODO: conditional on presence
-    $q.all([$scope.getGroupAvailability(), Network.population()])
-    .then(function(){
-      $scope.checkPresence();
-    },
-    function(){
-      // Only getGroupAvailability would reject
-      // TODO: handle rejection :(
-    });
+    if ($rootScope.StandBy.config.profile.presence) {
+      $q.all([$scope.getGroupAvailability(), Network.population()])
+      .then(function(){
+        $scope.checkPresence();
+      },
+      function(){
+        // Only getGroupAvailability would reject, try once more
+        $scope.getGroupAvailability().then(function(){
+          $scope.checkPresence();
+        })
+      });
+    }
+    else {
+      $scope.getGroupAvailability();
+    }
+
 
     $scope.saveOverviewWidget = function (selection) {
       $rootScope.statusBar.display($rootScope.ui.settings.saving);
