@@ -793,8 +793,8 @@ define(
       .filter(
       'avatar',
       [
-        'Session', 'Store',
-        function (Session, Store) {
+        'Session', 'Store', '$rootScope',
+        function (Session, Store, $rootScope) {
           return function (id, type, size, avatarId) {
             var session = Session.get();
 
@@ -864,6 +864,10 @@ define(
               }
               else
               {
+                if($rootScope.StandBy.config.profile.defaultProfilePicture){
+                  return $rootScope.StandBy.config.profile.defaultProfilePicture;
+                }
+
                 return config.host +
                        path +
                        id +
