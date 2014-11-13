@@ -7,7 +7,7 @@ var profile = {
 
   own: true,
 
-  title: 'Decentrale Demo',
+  title: 'Teamtelefoon Demo',
 
   showBackground: false,
 
