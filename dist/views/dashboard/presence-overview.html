@@ -1,4 +1,4 @@
-<div class="row">
+<div ng-show="StandBy.config.profile.presence" class="row">
   <div id="availabilities">
     <div id="present" class="sa widget col-md-6">
       <div class="head">
@@ -16,7 +16,7 @@
               <div ng-repeat="member in group" class="sa-member">
                 <div class="media">
                   <div class="pull-left">
-                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium memberStateNone"></div>
+                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium {{member.availabilityClass || &quot;memberStateNone&quot;}}"></div>
                   </div>
                   <div class="sa-member-card media-body">
                     <h5><a href="#/profile/{{member.uuid}}#profile">{{member.name | toTitleCase}}</a></h5>
@@ -38,14 +38,14 @@
         <p>{{ui.presence.loading}}</p>
       </div>
       <section ng-hide="loadingPresence">
-        <div ng-repeat="group in present">
+        <div ng-repeat="group in absent">
           <hr>
           <ul class="sa-setup presence">
             <li class="sa-truck">
               <div ng-repeat="member in group" class="sa-member">
                 <div class="media">
                   <div class="pull-left">
-                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium memberStateNone"></div>
+                    <div profile-img="{{member.uuid | avatar:&quot;user&quot;:&quot;100&quot;:member.resources.avatarPhotoId }}" class="roundedPicMedium {{member.availabilityClass || &quot;memberStateNone&quot;}}"></div>
                   </div>
                   <div class="sa-member-card media-body">
                     <h5><a href="#/profile/{{member.uuid}}#profile">{{member.name | toTitleCase}}</a></h5>
