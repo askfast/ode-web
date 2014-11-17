@@ -33,6 +33,11 @@ define(['services/services', 'config'], function (services, config) {
         params: { first: 'states' },
         isArray: true
       },
+      channels: {
+        method: 'GET',
+        params: { first: 'channels' },
+        isArray: true
+      },
       // Network
       groups: {
         method: 'GET',

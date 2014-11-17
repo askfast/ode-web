@@ -1,7 +1,7 @@
 define(['controllers/controllers'], function (controllers) {
   'use strict';
 
-  controllers.controller('dashboard', function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Settings, Profile, Groups, Announcer, Network, $timeout, Store) {
+  controllers.controller('dashboard', function ($scope, $rootScope, $q, $window, $location, Dashboard, Slots, Dater, Settings, Profile, Groups, StandBy, Announcer, Network, $timeout, Store) {
     $rootScope.notification.status = false;
 
     $rootScope.fixStyles();
@@ -21,6 +21,15 @@ define(['controllers/controllers'], function (controllers) {
       alarms: new Date().getTime(),
       pies: new Date().getTime()
     };
+
+    // Fetch phone number and parse for display
+    StandBy._('channels').then(function (results){
+      _.each(results, function (channel){
+        if (channel.adapterType == 'broadsoft'){
+          $rootScope.phoneNumberParser(channel.address);
+        }
+      });
+    });
 
     /**
      * TODO: Check somewhere that user-settings widget-groups are synced with the
